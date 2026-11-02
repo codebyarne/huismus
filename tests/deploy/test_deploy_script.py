@@ -3,7 +3,8 @@
 """deploy/deploy.sh reports every outcome through deploy/notify.sh.
 
 Runs the real script against a throwaway git repo and origin, with fake
-docker, curl and sleep on PATH and a fake notify.sh that records its calls.
+docker, curl, sleep and flock on PATH and a fake notify.sh that records its
+calls.
 """
 
 import os
@@ -70,7 +71,13 @@ def pi(tmp_path):
 
     bin_dir = tmp_path / "bin"
     bin_dir.mkdir()
-    fakes = {"docker": FAKE_DOCKER, "curl": 'exit "${CURL_EXIT:-0}"', "sleep": "exit 0"}
+    # flock is faked too: macOS has none, and these tests run one deploy at a time.
+    fakes = {
+        "docker": FAKE_DOCKER,
+        "curl": 'exit "${CURL_EXIT:-0}"',
+        "sleep": "exit 0",
+        "flock": "exit 0",
+    }
     for name, body in fakes.items():
         (bin_dir / name).write_text("#!/usr/bin/env bash\n" + body + "\n")
         (bin_dir / name).chmod(0o755)

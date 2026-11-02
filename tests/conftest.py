@@ -60,6 +60,15 @@ def _no_assistant_key():
 
 
 @pytest.fixture(autouse=True)
+def _empty_home(tmp_path_factory, monkeypatch):
+    """An empty home folder instead of the real one. The desktop app looks
+    there for iCloud Drive, OneDrive and the like (core.auto_backups); on a
+    Mac with iCloud Drive the browser tests otherwise chose it, wrote their
+    backups into it and restored the newest one found there."""
+    monkeypatch.setenv("HOME", str(tmp_path_factory.mktemp("home")))
+
+
+@pytest.fixture(autouse=True)
 def _no_cloud_link():
     """The link to a cloud service and the recovery code are files in
     DATA_DIR too (core.cloud_backups): no test may upload for the next."""
