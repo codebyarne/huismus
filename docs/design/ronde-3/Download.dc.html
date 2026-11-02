@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Downloadpagina</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="hm.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#14539E}a:hover{color:#1B6AC9}
+</style>
+</helmet>
+<div style="width: 390px; height: 1560px; box-sizing: border-box; background: #FBF8F3; font-family: ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color: #2A2520; padding: 24px 16px; display: flex; flex-direction: column; gap: 20px">
+  <div class="row"><span aria-hidden="true" style="width: 40px; height: 40px; border-radius: 12px; background: #F4A259; display: inline-block"></span><strong style="font-size: 20px">Huismus</strong></div>
+  <div class="stack" style="gap: 8px">
+    <h1 style="font-size: 28px">Je facturen, op je eigen laptop</h1>
+    <p class="muted">Offertes, facturen en uitgaven voor zzp'ers met de KOR. Gratis en open source. Je administratie staat op je eigen computer.</p>
+  </div>
+  <div class="stack" style="gap: 10px">
+    <a class="btn btn-primary" href="#" style="min-height: 52px">Download voor Mac</a>
+    <a class="btn" href="#" style="min-height: 52px">Download voor Windows</a>
+    <p class="small muted" style="text-align: center">Versie 1.4.0 · macOS 12 of nieuwer · Windows 10 of 11</p>
+  </div>
+
+  <section class="card pad" style="display: flex; flex-direction: column; gap: 14px">
+    <h2>De eerste keer openen</h2>
+    <p class="small muted">Huismus is een hobbyproject zonder betaalde handtekening van Apple of Microsoft. Daarom vraagt je computer de eerste keer of je de app vertrouwt. Daarna niet meer.</p>
+    <h3>Op een Mac</h3>
+    <ol class="small" style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px">
+      <li>Open het gedownloade bestand en sleep Huismus naar Apps.</li>
+      <li>Open Huismus. Je Mac zegt dat hij het niet kan controleren: klik op <strong>Gereed</strong>.</li>
+      <li>Ga naar <strong>Systeeminstellingen › Privacy en beveiliging</strong> en klik onderaan op <strong>Open toch</strong>.</li>
+    </ol>
+    <div style="height: 150px; border-radius: 10px; background: #F4EFE7; border: 1px dashed #CEC3B3; display: flex; align-items: center; justify-content: center; text-align: center; padding: 12px" class="small muted">[SCREENSHOT: Privacy en beveiliging met de knop Open toch]</div>
+    <h3>Op Windows</h3>
+    <ol class="small" style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px">
+      <li>Open het gedownloade installatiebestand.</li>
+      <li>Windows toont "Windows heeft uw pc beschermd": klik op <strong>Meer informatie</strong>.</li>
+      <li>Klik op <strong>Toch uitvoeren</strong>.</li>
+    </ol>
+    <div style="height: 150px; border-radius: 10px; background: #F4EFE7; border: 1px dashed #CEC3B3; display: flex; align-items: center; justify-content: center; text-align: center; padding: 12px" class="small muted">[SCREENSHOT: SmartScreen met Meer informatie en Toch uitvoeren]</div>
+  </section>
+
+  <section class="card pad" style="display: flex; flex-direction: column; gap: 10px">
+    <h2>Daarna</h2>
+    <ul class="small" style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px">
+      <li>Kom je van Moneybird? Importeer je hele administratie in één keer.</li>
+      <li>Begin je nieuw? Vul in vier stappen je bedrijfsgegevens in.</li>
+      <li>Kies een map voor je back-ups, bijvoorbeeld in iCloud Drive of OneDrive.</li>
+    </ul>
+  </section>
+  <p class="small muted" style="text-align: center"><a href="#">Draai je liever op een Raspberry Pi?</a> · <a href="#">Broncode</a></p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1560}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

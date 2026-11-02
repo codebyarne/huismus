@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Wachtwoord</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="hm.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#14539E}a:hover{color:#1B6AC9}
+</style>
+</helmet>
+<div style="width: 390px; height: 980px; box-sizing: border-box; background: #FBF8F3; font-family: ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color: #2A2520; display: flex; flex-direction: column">
+  <div class="mtop"><a href="#" aria-label="Terug naar Instellingen" style="text-decoration: none">←</a><strong>Wachtwoord</strong></div>
+  <div style="padding: 16px; display: flex; flex-direction: column; gap: 16px">
+    <section class="card pad" style="display: flex; flex-direction: column; gap: 12px">
+      <h2>Huismus opent zonder wachtwoord</h2>
+      <p class="small muted">Wie je laptop kan gebruiken, kan ook Huismus openen. Zet je laptop op slot als je wegloopt, of stel hier een wachtwoord in.</p>
+      <div class="switch"><span class="track" aria-hidden="true"></span>Vraag een wachtwoord als Huismus opent</div>
+    </section>
+
+    <p class="small muted">Na aanzetten:</p>
+    <section class="card pad" style="display: flex; flex-direction: column; gap: 14px">
+      <div class="switch"><span class="track on" aria-hidden="true"></span>Vraag een wachtwoord als Huismus opent</div>
+      <div class="field"><label class="label" for="pw1">Nieuw wachtwoord</label><input id="pw1" class="input" type="password" value="••••••••••••"><span class="help">Minstens 8 tekens.</span></div>
+      <div class="field"><label class="label" for="pw2">Nog een keer</label><input id="pw2" class="input" type="password" value="••••••••••••"></div>
+      <div class="banner banner-warn small" style="font-weight: 550">Vergeet je dit wachtwoord, dan kan Huismus het niet voor je terughalen. Bewaar het in je wachtwoordbeheer.</div>
+      <button class="btn btn-primary" type="button">Wachtwoord instellen</button>
+    </section>
+
+    <p class="small muted">Als het wachtwoord aan staat:</p>
+    <section class="card pad" style="display: flex; flex-direction: column; gap: 12px">
+      <div class="row" style="justify-content: space-between"><h2>Wachtwoord staat aan</h2><span class="pill pill-ok">Aan</span></div>
+      <div class="field"><label class="label" for="pw0">Huidig wachtwoord</label><input id="pw0" class="input" type="password"><span class="help">Nodig om het te wijzigen of uit te zetten.</span></div>
+      <div class="row" style="flex-wrap: wrap"><button class="btn" type="button">Wachtwoord wijzigen</button><button class="btn btn-ghost" type="button">Uitzetten</button></div>
+    </section>
+
+    <p class="small muted">Met een wachtwoord, bij het openen:</p>
+    <section class="card pad" style="display: flex; flex-direction: column; gap: 12px; align-items: stretch">
+      <div class="row"><span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 9px; background: #F4A259; display: inline-block"></span><strong>Huismus</strong></div>
+      <div class="field"><label class="label" for="pw3">Wachtwoord</label><input id="pw3" class="input" type="password"></div>
+      <button class="btn btn-primary" type="button">Openen</button>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":980}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

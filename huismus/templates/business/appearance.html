@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load i18n forms %}
+
+{% block title %}{% translate "Weergave" %} — {% translate "Instellingen" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+{% comment %}hx-boost off: after saving the whole page reloads, so the new
+theme on <html> and the new language apply at once (core.appearance_views).{% endcomment %}
+<form id="weergave" method="post" hx-boost="false">
+    {% csrf_token %}
+    <div class="page-head">
+        <div class="titles">
+            <a class="small" href="{% url 'business:overview' %}">← {% translate "Instellingen" %}</a>
+            <h1>{% translate "Weergave" %}</h1>
+            <p class="lede">{% translate "Taal en thema van Huismus. Je facturen veranderen niet." %}</p>
+        </div>
+    </div>
+
+    {% form_errors form %}
+
+    <section class="card settings-section">
+        <div class="card-pad stack" style="gap:var(--s-5)">
+            <fieldset id="{{ form.language.auto_id }}" style="border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--s-2)" aria-describedby="taal-help">
+                <legend class="label" style="padding:0">{{ form.language.label }}</legend>
+                <div class="seg" style="align-self:flex-start">{% for choice in form.language %}<label><input type="radio" name="{{ form.language.html_name }}" value="{{ choice.data.value }}"{% if choice.data.selected %} checked{% endif %}>{{ choice.choice_label }}</label>{% endfor %}</div>
+                <span class="help" id="taal-help">{% translate "De taal van nieuwe facturen kies je bij Facturen en nummering." %}</span>
+            </fieldset>
+            <fieldset id="{{ form.theme.auto_id }}" style="border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--s-2)" aria-describedby="thema-help">
+                <legend class="label" style="padding:0">{{ form.theme.label }}</legend>
+                <div class="seg" style="align-self:flex-start">{% for choice in form.theme %}<label><input type="radio" name="{{ form.theme.html_name }}" value="{{ choice.data.value }}"{% if choice.data.selected %} checked{% endif %}>{{ choice.choice_label }}</label>{% endfor %}</div>
+                <span class="help" id="thema-help">{% translate "Systeem volgt de instelling van je telefoon of computer." %}</span>
+            </fieldset>
+        </div>
+    </section>
+</form>
+{% endblock %}
+
+{% block actionbar %}
+<div class="actionbar">
+    <span class="status"></span>
+    <button class="btn btn-ghost" type="reset" form="weergave">{% translate "Herstellen" %}</button>
+    <button class="btn btn-primary" type="submit" form="weergave">{% translate "Opslaan" %}<span class="spinner"></span></button>
+</div>
+{% endblock %}

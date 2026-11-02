@@ -1,0 +1,6 @@
+{% load i18n %}
+<ol class="steps" style="margin-bottom:var(--s-6)">
+    <li class="step {% if step == 1 %}is-current{% else %}is-done{% endif %}"{% if step == 1 %} aria-current="step"{% endif %}><span class="dot">{% if step > 1 %}<svg class="i" aria-hidden="true"><use href="#check"></use></svg>{% else %}1{% endif %}</span>{% translate "Bestanden" %}</li>
+    <li class="step {% if step == 2 %}is-current{% elif step > 2 %}is-done{% endif %}"{% if step == 2 %} aria-current="step"{% endif %}><span class="dot">{% if step > 2 %}<svg class="i" aria-hidden="true"><use href="#check"></use></svg>{% else %}2{% endif %}</span>{% translate "Proefdraai" %}</li>
+    <li class="step {% if step == 3 %}is-ok{% endif %}"><span class="dot">{% if step == 3 %}<svg class="i" aria-hidden="true"><use href="#check"></use></svg>{% else %}3{% endif %}</span>{% translate "Importeren" %}</li>
+</ol>

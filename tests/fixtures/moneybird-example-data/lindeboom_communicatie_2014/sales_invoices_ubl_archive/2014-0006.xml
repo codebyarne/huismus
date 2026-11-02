@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 UBL-Invoice-2.1.xsd" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
+  <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+  
+  
+  <cbc:ID>2014-0006</cbc:ID>
+  <cbc:IssueDate>2014-05-28</cbc:IssueDate>
+  <cbc:DueDate>2014-06-11</cbc:DueDate>
+  <cbc:InvoiceTypeCode listID="UNCL1001" listAgencyID="6">380</cbc:InvoiceTypeCode>
+  <cbc:DocumentCurrencyCode listID="ISO4217" listAgencyID="6">EUR</cbc:DocumentCurrencyCode>
+  <cbc:BuyerReference>Ruime Vuurtoren Diensten</cbc:BuyerReference>
+  <cac:AdditionalDocumentReference>
+    <cbc:ID>2014-0006.pdf</cbc:ID>
+    <cbc:DocumentType>PrimaryImage</cbc:DocumentType>
+    <cac:Attachment>
+      <cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf" filename="2014-0006.pdf">JVBERi0xLjMKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgKG9wZW5zb3Vy
+Y2UpCjEgMCBvYmoKPDwKL0YxIDIgMCBSIC9GMiAzIDAgUiAvRjMgNCAwIFIKPj4KZW5kb2JqCjIg
+MCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EgL0VuY29kaW5nIC9XaW5BbnNpRW5jb2Rpbmcg
+L05hbWUgL0YxIC9TdWJ0eXBlIC9UeXBlMSAvVHlwZSAvRm9udAo+PgplbmRvYmoKMyAwIG9iago8
+PAovQmFzZUZvbnQgL0hlbHZldGljYS1Cb2xkIC9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nIC9O
+YW1lIC9GMiAvU3VidHlwZSAvVHlwZTEgL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjQgMCBvYmoKPDwK
+L0Jhc2VGb250IC9IZWx2ZXRpY2EtT2JsaXF1ZSAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAv
+TmFtZSAvRjMgL1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iago1IDAgb2JqCjw8
+Ci9Db250ZW50cyA5IDAgUiAvTWVkaWFCb3ggWyAwIDAgNTk1LjI3NTYgODQxLjg4OTggXSAvUGFy
+ZW50IDggMCBSIC9SZXNvdXJjZXMgPDwKL0ZvbnQgMSAwIFIgL1Byb2NTZXQgWyAvUERGIC9UZXh0
+IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJIF0KPj4gL1JvdGF0ZSAwIC9UcmFucyA8PAoKPj4gCiAg
+L1R5cGUgL1BhZ2UKPj4KZW5kb2JqCjYgMCBvYmoKPDwKL1BhZ2VNb2RlIC9Vc2VOb25lIC9QYWdl
+cyA4IDAgUiAvVHlwZSAvQ2F0YWxvZwo+PgplbmRvYmoKNyAwIG9iago8PAovQXV0aG9yIChIdWlz
+bXVzIGZpeHR1cmVzKSAvQ3JlYXRpb25EYXRlIChEOjIwMjYxMTAxMjEzODQwKzAxJzAwJykgL0Ny
+ZWF0b3IgKGFub255bW91cykgL0tleXdvcmRzICgpIC9Nb2REYXRlIChEOjIwMjYxMTAxMjEzODQw
+KzAxJzAwJykgL1Byb2R1Y2VyIChSZXBvcnRMYWIgUERGIExpYnJhcnkgLSBcKG9wZW5zb3VyY2Vc
+KSkgCiAgL1N1YmplY3QgKHVuc3BlY2lmaWVkKSAvVGl0bGUgKEZhY3R1dXIgMjAxNC0wMDA2KSAv
+VHJhcHBlZCAvRmFsc2UKPj4KZW5kb2JqCjggMCBvYmoKPDwKL0NvdW50IDEgL0tpZHMgWyA1IDAg
+UiBdIC9UeXBlIC9QYWdlcwo+PgplbmRvYmoKOSAwIG9iago8PAovTGVuZ3RoIDIyODAKPj4Kc3Ry
+ZWFtCjEgMCAwIDEgMCAwIGNtICBCVCAvRjEgMTIgVGYgMTQuNCBUTCBFVApCVCAvRjIgMTQgVGYg
+MTYuOCBUTCBFVApCVCAxIDAgMCAxIDU2LjY5MjkxIDc3MS4wMjM2IFRtIChMaW5kZWJvb20gQ29t
+bXVuaWNhdGllKSBUaiBUKiBFVApCVCAvRjEgOSBUZiAxMC44IFRMIEVUCkJUIDEgMCAwIDEgNTYu
+NjkyOTEgNzU0LjAxNTcgVG0gKE0uIHZhbiBEb29ybikgVGogVCogRVQKQlQgL0YyIDE2IFRmIDE5
+LjIgVEwgRVQKQlQgMSAwIDAgMSA1Ni42OTI5MSA3MjAgVG0gKEZhY3R1dXIpIFRqIFQqIEVUCkJU
+IC9GMSAxMCBUZiAxMiBUTCBFVApCVCAxIDAgMCAxIDU2LjY5MjkxIDY5Ny4zMjI4IFRtIChOdW1t
+ZXI6IDIwMTQtMDAwNikgVGogVCogRVQKQlQgMSAwIDAgMSA1Ni42OTI5MSA2ODMuMTQ5NiBUbSAo
+RGF0dW06IDI4LTA1LTIwMTQpIFRqIFQqIEVUCkJUIDEgMCAwIDEgNTYuNjkyOTEgNjY4Ljk3NjQg
+VG0gKFZlcnZhbGRhdHVtOiAxMS0wNi0yMDE0KSBUaiBUKiBFVApCVCAvRjEgOCBUZiA5LjYgVEwg
+RVQKQlQgMSAwIDAgMSA1Ni42OTI5MSA2NDAuNjI5OSBUbSAoRmFjdHV1ciBhYW4pIFRqIFQqIEVU
+CkJUIC9GMiAxMCBUZiAxMiBUTCBFVApCVCAxIDAgMCAxIDU2LjY5MjkxIDYyNi40NTY3IFRtIChS
+dWltZSBWdXVydG9yZW4gRGllbnN0ZW4pIFRqIFQqIEVUCkJUIC9GMSAxMCBUZiAxMiBUTCBFVApC
+VCAxIDAgMCAxIDU2LjY5MjkxIDYxMi4yODM1IFRtIChWbGllcndlZyAzMikgVGogVCogRVQKQlQg
+MSAwIDAgMSA1Ni42OTI5MSA1OTguMTEwMiBUbSAoODA1OCBKSyBQdXJtZXJlbmQpIFRqIFQqIEVU
+CkJUIC9GMiA5IFRmIDEwLjggVEwgRVQKQlQgMSAwIDAgMSA1Ni42OTI5MSA1NjQuMDk0NSBUbSAo
+T21zY2hyaWp2aW5nKSBUaiBUKiBFVApCVCAxIDAgMCAxIDUwNy41Nzc3IDU2NC4wOTQ1IFRtIChC
+ZWRyYWcpIFRqIFQqIEVUCm4gNTYuNjkyOTEgNTUyLjc1NTkgbSA1MzguNTgyNyA1NTIuNzU1OSBs
+IFMKQlQgL0YxIDkgVGYgMTAuOCBUTCBFVApCVCAxIDAgMCAxIDU2LjY5MjkxIDUzOC41ODI3IFRt
+IChMb2dvLSBlbiBodWlzc3RpamxvbnR3ZXJwKSBUaiBUKiBFVApCVCAxIDAgMCAxIDQ4OS41NTk3
+IDUzOC41ODI3IFRtIChFVVIgMjg0LDgwKSBUaiBUKiBFVApCVCAxIDAgMCAxIDU2LjY5MjkxIDUy
+NC40MDk0IFRtIChXZWJzaXRlb250d2VycCBlbiAtb250d2lra2VsaW5nKSBUaiBUKiBFVApCVCAx
+IDAgMCAxIDQ4OS41NTk3IDUyNC40MDk0IFRtIChFVVIgNjEwLDI4KSBUaiBUKiBFVApCVCAxIDAg
+MCAxIDU2LjY5MjkxIDUxMC4yMzYyIFRtIChEb21laW5uYWFtcmVnaXN0cmF0aWUgZW4gd2ViaG9z
+dGluZyBcKGVlcnN0ZSBqYWFyXCkpIFRqIFQqIEVUCkJUIDEgMCAwIDEgNDk0LjU2MzcgNTEwLjIz
+NjIgVG0gKEVVUiA2NSwxMCkgVGogVCogRVQKQlQgMSAwIDAgMSA1Ni42OTI5MSA0OTYuMDYzIFRt
+IChPbnR3ZXJwIHByb21vdGlla2FhcnRqZXMpIFRqIFQqIEVUCkJUIDEgMCAwIDEgNDg5LjU1OTcg
+NDk2LjA2MyBUbSAoRVVSIDEyMiwwNikgVGogVCogRVQKQlQgMSAwIDAgMSA1Ni42OTI5MSA0ODEu
+ODg5OCBUbSAoRHJ1a2tvc3RlbiA1MDAgeCBwcm9tb3RpZWthYXJ0amVzIFwoaW5jbHVzaWVmIFwy
+MDAxMCwtIGtvcnRpbmcgZG9vciB2ZXJ0cmFnaW5nIHZhbiB2ZXJ6ZW5kaW5nXCkpIFRqIFQqIEVU
+CkJUIDEgMCAwIDEgNDk0LjU2MzcgNDgxLjg4OTggVG0gKEVVUiAyMywwMykgVGogVCogRVQKbiA1
+Ni42OTI5MSA0NTYuMzc4IG0gNTM4LjU4MjcgNDU2LjM3OCBsIFMKQlQgL0YxIDEwIFRmIDEyIFRM
+IEVUCkJUIDEgMCAwIDEgNTYuNjkyOTEgNDM5LjM3MDEgVG0gKFRvdGFhbCBleGNsLiBidHcpIFRq
+IFQqIEVUCkJUIDEgMCAwIDEgNDc4LjU1MjcgNDM5LjM3MDEgVG0gKEVVUiAxMTA1LDI3KSBUaiBU
+KiBFVApCVCAxIDAgMCAxIDU2LjY5MjkxIDQyNS4xOTY5IFRtIChCdHcpIFRqIFQqIEVUCkJUIDEg
+MCAwIDEgNDg0LjExMjcgNDI1LjE5NjkgVG0gKEVVUiAyMzIsMTEpIFRqIFQqIEVUCkJUIC9GMiAx
+MCBUZiAxMiBUTCBFVApCVCAxIDAgMCAxIDU2LjY5MjkxIDQxMS4wMjM2IFRtIChUb3RhYWwgaW5j
+bC4gYnR3KSBUaiBUKiBFVApCVCAxIDAgMCAxIDQ3OC41NTI3IDQxMS4wMjM2IFRtIChFVVIgMTMz
+NywzOCkgVGogVCogRVQKQlQgL0YzIDggVGYgOS42IFRMIEVUCkJUIDEgMCAwIDEgNTYuNjkyOTEg
+MzY4LjUwMzkgVG0gKERpdCBpcyBlZW4gZmljdGllZiB2b29yYmVlbGRkb2N1bWVudCwgdWl0c2x1
+aXRlbmQgYmVkb2VsZCB2b29yIG9udHdpa2tlbC0gZW4gdGVzdGRvZWxlaW5kZW4uKSBUaiBUKiBF
+VAogCmVuZHN0cmVhbQplbmRvYmoKeHJlZgowIDEwCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAw
+MDA2MSAwMDAwMCBuIAowMDAwMDAwMTEyIDAwMDAwIG4gCjAwMDAwMDAyMTkgMDAwMDAgbiAKMDAw
+MDAwMDMzMSAwMDAwMCBuIAowMDAwMDAwNDQ2IDAwMDAwIG4gCjAwMDAwMDA2NDkgMDAwMDAgbiAK
+MDAwMDAwMDcxNyAwMDAwMCBuIAowMDAwMDAwOTk0IDAwMDAwIG4gCjAwMDAwMDEwNTMgMDAwMDAg
+biAKdHJhaWxlcgo8PAovSUQgCls8NmViNjA0ODRjZThhNTI4MDhhZDEwM2RjZjE0NjMyMjI+PDZl
+YjYwNDg0Y2U4YTUyODA4YWQxMDNkY2YxNDYzMjIyPl0KJSBSZXBvcnRMYWIgZ2VuZXJhdGVkIFBE
+RiBkb2N1bWVudCAtLSBkaWdlc3QgKG9wZW5zb3VyY2UpCgovSW5mbyA3IDAgUgovUm9vdCA2IDAg
+UgovU2l6ZSAxMAo+PgpzdGFydHhyZWYKMzM4NAolJUVPRgo=</cbc:EmbeddedDocumentBinaryObject>
+    </cac:Attachment>
+  </cac:AdditionalDocumentReference>
+  <cac:AdditionalDocumentReference>
+    <cbc:ID>Algemene_Voorwaarden.pdf</cbc:ID>
+    <cbc:DocumentType>Attachment</cbc:DocumentType>
+    <cac:Attachment>
+      <cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf" filename="Algemene_Voorwaarden.pdf">JVBERi0xLjMKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgKG9wZW5zb3Vy
+Y2UpCjEgMCBvYmoKPDwKL0YxIDIgMCBSIC9GMiAzIDAgUgo+PgplbmRvYmoKMiAwIG9iago8PAov
+QmFzZUZvbnQgL0hlbHZldGljYSAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAvTmFtZSAvRjEg
+L1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iagozIDAgb2JqCjw8Ci9CYXNlRm9u
+dCAvSGVsdmV0aWNhLUJvbGQgL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcgL05hbWUgL0YyIC9T
+dWJ0eXBlIC9UeXBlMSAvVHlwZSAvRm9udAo+PgplbmRvYmoKNCAwIG9iago8PAovQ29udGVudHMg
+OCAwIFIgL01lZGlhQm94IFsgMCAwIDU5NS4yNzU2IDg0MS44ODk4IF0gL1BhcmVudCA3IDAgUiAv
+UmVzb3VyY2VzIDw8Ci9Gb250IDEgMCBSIC9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9J
+bWFnZUMgL0ltYWdlSSBdCj4+IC9Sb3RhdGUgMCAvVHJhbnMgPDwKCj4+IAogIC9UeXBlIC9QYWdl
+Cj4+CmVuZG9iago1IDAgb2JqCjw8Ci9QYWdlTW9kZSAvVXNlTm9uZSAvUGFnZXMgNyAwIFIgL1R5
+cGUgL0NhdGFsb2cKPj4KZW5kb2JqCjYgMCBvYmoKPDwKL0F1dGhvciAoSHVpc211cyBmaXh0dXJl
+cykgL0NyZWF0aW9uRGF0ZSAoRDoyMDI2MTEwMTIxMzg0MCswMScwMCcpIC9DcmVhdG9yIChhbm9u
+eW1vdXMpIC9LZXl3b3JkcyAoKSAvTW9kRGF0ZSAoRDoyMDI2MTEwMTIxMzg0MCswMScwMCcpIC9Q
+cm9kdWNlciAoUmVwb3J0TGFiIFBERiBMaWJyYXJ5IC0gXChvcGVuc291cmNlXCkpIAogIC9TdWJq
+ZWN0ICh1bnNwZWNpZmllZCkgL1RpdGxlIChBbGdlbWVuZSBWb29yd2FhcmRlbikgL1RyYXBwZWQg
+L0ZhbHNlCj4+CmVuZG9iago3IDAgb2JqCjw8Ci9Db3VudCAxIC9LaWRzIFsgNCAwIFIgXSAvVHlw
+ZSAvUGFnZXMKPj4KZW5kb2JqCjggMCBvYmoKPDwKL0xlbmd0aCA0MTEKPj4Kc3RyZWFtCjEgMCAw
+IDEgMCAwIGNtICBCVCAvRjEgMTIgVGYgMTQuNCBUTCBFVApCVCAvRjIgMTQgVGYgMTYuOCBUTCBF
+VApCVCAxIDAgMCAxIDU2LjY5MjkxIDc3MS4wMjM2IFRtIChBbGdlbWVuZSBWb29yd2FhcmRlbikg
+VGogVCogRVQKQlQgL0YxIDkgVGYgMTAuOCBUTCBFVApCVCAxIDAgMCAxIDU2LjY5MjkxIDc0Mi42
+NzcyIFRtIChEaXQgaXMgZWVuIGZpY3RpZWYgdm9vcmJlZWxkZG9jdW1lbnQgdm9vciBMaW5kZWJv
+b20gQ29tbXVuaWNhdGllLCB1aXRzbHVpdGVuZCBiZWRvZWxkIHZvb3IpIFRqIFQqIEVUCkJUIDEg
+MCAwIDEgNTYuNjkyOTEgNzI4LjUwMzkgVG0gKG9udHdpa2tlbC0gZW4gdGVzdGRvZWxlaW5kZW4u
+IEVyIHppam4gZ2VlbiBlY2h0ZSBhbGdlbWVuZSB2b29yd2FhcmRlbiBvcGdlbm9tZW4uKSBUaiBU
+KiBFVAogCmVuZHN0cmVhbQplbmRvYmoKeHJlZgowIDkKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAw
+MDAwMDYxIDAwMDAwIG4gCjAwMDAwMDAxMDIgMDAwMDAgbiAKMDAwMDAwMDIwOSAwMDAwMCBuIAow
+MDAwMDAwMzIxIDAwMDAwIG4gCjAwMDAwMDA1MjQgMDAwMDAgbiAKMDAwMDAwMDU5MiAwMDAwMCBu
+IAowMDAwMDAwODcyIDAwMDAwIG4gCjAwMDAwMDA5MzEgMDAwMDAgbiAKdHJhaWxlcgo8PAovSUQg
+Cls8MjE4ZjEwOWFiMDZmZTFmYzEwZjE5MDA1NWZmMzdkYTA+PDIxOGYxMDlhYjA2ZmUxZmMxMGYx
+OTAwNTVmZjM3ZGEwPl0KJSBSZXBvcnRMYWIgZ2VuZXJhdGVkIFBERiBkb2N1bWVudCAtLSBkaWdl
+c3QgKG9wZW5zb3VyY2UpCgovSW5mbyA2IDAgUgovUm9vdCA1IDAgUgovU2l6ZSA5Cj4+CnN0YXJ0
+eHJlZgoxMzkyCiUlRU9GCg==</cbc:EmbeddedDocumentBinaryObject>
+    </cac:Attachment>
+  </cac:AdditionalDocumentReference>
+  <cac:AccountingSupplierParty>
+    <cac:Party>
+      <cbc:EndpointID schemeID="0106">96197574</cbc:EndpointID>
+      <cac:PartyName>
+        <cbc:Name>Lindeboom Communicatie</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>Heidepad 97</cbc:StreetName>
+        <cbc:CityName>Middelburg</cbc:CityName>
+        <cbc:PostalZone>7668 YD</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode listID="ISO3166-1:Alpha2" listAgencyID="6">NL</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>Lindeboom Communicatie</cbc:RegistrationName>
+        <cbc:CompanyID schemeID="0106">96197574</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:ElectronicMail>info@lindeboomcommunicatie.nl</cbc:ElectronicMail>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingSupplierParty>
+  <cac:AccountingCustomerParty>
+    <cac:Party>
+      <cac:PartyName>
+        <cbc:Name>Ruime Vuurtoren Diensten</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>Vlierweg 32</cbc:StreetName>
+        <cbc:CityName>Purmerend</cbc:CityName>
+        <cbc:PostalZone>8058 JK</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode listID="ISO3166-1:Alpha2" listAgencyID="6">NL</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>Ruime Vuurtoren Diensten</cbc:RegistrationName>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:Name>Sanne Kuipers</cbc:Name>
+        <cbc:ElectronicMail>info@vrijebrugprojecten.com</cbc:ElectronicMail>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingCustomerParty>
+  <cac:PaymentMeans>
+    <cbc:PaymentMeansCode listID="UNCL4461" listAgencyID="6">30</cbc:PaymentMeansCode>
+    <cbc:PaymentDueDate>2014-06-11</cbc:PaymentDueDate>
+    <cac:PayeeFinancialAccount>
+      <cbc:ID schemeID="IBAN">NL11TEST5562646077</cbc:ID>
+      <cac:FinancialInstitutionBranch>
+        <cac:FinancialInstitution>
+          <cbc:ID schemeID="BIC">TESTNL2A</cbc:ID>
+        </cac:FinancialInstitution>
+      </cac:FinancialInstitutionBranch>
+    </cac:PayeeFinancialAccount>
+  </cac:PaymentMeans>
+  <cac:PaymentTerms>
+    <cbc:Note>We verzoeken je vriendelijk het bovenstaande bedrag van € 1.337,38 voor 11-06-2014 te voldoen op bankrekeningnummer 562646077 t.n.v. M. van Doorn onder vermelding van factuurnummer 2014-0006. Voor vragen over deze factuur kun je natuurlijk altijd even contact opnemen.</cbc:Note>
+  </cac:PaymentTerms>
+  <cac:TaxTotal>
+    <cbc:TaxAmount currencyID="EUR">232.11</cbc:TaxAmount>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="EUR">1105.27</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="EUR">232.11</cbc:TaxAmount>
+      <cac:TaxCategory>
+        <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+        <cbc:Percent>21.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID schemeID="UN/ECE 5153">VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+  </cac:TaxTotal>
+  <cac:LegalMonetaryTotal>
+    <cbc:LineExtensionAmount currencyID="EUR">1105.27</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="EUR">1105.27</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="EUR">1337.38</cbc:TaxInclusiveAmount>
+    <cbc:AllowanceTotalAmount currencyID="EUR">0</cbc:AllowanceTotalAmount>
+    <cbc:PayableAmount currencyID="EUR">1337.38</cbc:PayableAmount>
+  </cac:LegalMonetaryTotal>
+  <cac:InvoiceLine>
+    <cbc:ID>1</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="ZZ" unitCodeListID="UNECERec20">1.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">284.8</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>Logo- en huisstijlontwerp</cbc:Description>
+      <cbc:Name>Logo- en huisstijlontwerp</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+        <cbc:Percent>21.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID schemeID="UN/ECE 5153">VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">284.8</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>2</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="ZZ" unitCodeListID="UNECERec20">1.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">610.28</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>Websiteontwerp en -ontwikkeling</cbc:Description>
+      <cbc:Name>Websiteontwerp en -ontwikkeling</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+        <cbc:Percent>21.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID schemeID="UN/ECE 5153">VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">610.28</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>3</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="ZZ" unitCodeListID="UNECERec20">1.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">65.1</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>Domeinnaamregistratie en webhosting (eerste jaar)</cbc:Description>
+      <cbc:Name>Domeinnaamregistratie en webhosting (eerste jaar)</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+        <cbc:Percent>21.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID schemeID="UN/ECE 5153">VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">65.1</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>4</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="ZZ" unitCodeListID="UNECERec20">1.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">122.06</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>Ontwerp promotiekaartjes</cbc:Description>
+      <cbc:Name>Ontwerp promotiekaartjes</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+        <cbc:Percent>21.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID schemeID="UN/ECE 5153">VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">122.06</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>5</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="ZZ" unitCodeListID="UNECERec20">1.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">23.03</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>Drukkosten 500 x promotiekaartjes (inclusief €10,- korting door vertraging van verzending)</cbc:Description>
+      <cbc:Name>Drukkosten 500 x promotiekaartjes (inclusief €10,- korting door vertraging van verzending)</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+        <cbc:Percent>21.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID schemeID="UN/ECE 5153">VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">23.03</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+</Invoice>

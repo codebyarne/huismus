@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Instellingen, overzicht (telefoon) en een onderwerp</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="hm.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#14539E}a:hover{color:#1B6AC9}
+</style>
+</helmet>
+<div style="width: 390px; height: 1180px; box-sizing: border-box; background: #FBF8F3; font-family: ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color: #2A2520; display: flex; flex-direction: column">
+  <div class="mtop"><span style="width: 24px; height: 24px; border-radius: 7px; background: #F4A259; display: inline-block"></span><strong>Instellingen</strong></div>
+  <div style="padding: 16px; display: flex; flex-direction: column; gap: 16px">
+    <p class="small muted">Wijzigingen gelden alleen voor nieuwe documenten.</p>
+    <ul class="list card">
+      <li><a href="#" style="display: flex; flex: 1; align-items: center; gap: 12px; text-decoration: none; color: inherit; min-height: 44px"><span style="flex: 1"><strong>Bedrijf</strong><br><span class="small muted">Atelier Zonnig · Utrecht</span></span><span class="pill pill-ok">Compleet</span></a></li>
+      <li><a href="#" style="display: flex; flex: 1; align-items: center; gap: 12px; text-decoration: none; color: inherit; min-height: 44px"><span style="flex: 1"><strong>KOR</strong><br><span class="small muted">Grens € 20.000 · waarschuwen vanaf 80%</span></span><span class="pill pill-ok">Aan</span></a></li>
+      <li><a href="#" style="display: flex; flex: 1; align-items: center; gap: 12px; text-decoration: none; color: inherit; min-height: 44px"><span style="flex: 1"><strong>Facturen en nummering</strong><br><span class="small muted">Volgende factuur 2026-0014</span></span></a></li>
+      <li><a href="#" style="display: flex; flex: 1; align-items: center; gap: 12px; text-decoration: none; color: inherit; min-height: 44px"><span style="flex: 1"><strong>Huisstijl</strong><br><span class="small muted">Logo en voettekst</span></span></a></li>
+      <li><a href="#" style="display: flex; flex: 1; align-items: center; gap: 12px; text-decoration: none; color: inherit; min-height: 44px"><span style="flex: 1"><strong>Mailen</strong><br><span class="small muted">Gmail · standaardteksten</span></span><span class="pill pill-ok">Aan</span></a></li>
+      <li><a href="#" style="display: flex; flex: 1; align-items: center; gap: 12px; text-decoration: none; color: inherit; min-height: 44px"><span style="flex: 1"><strong>Back-ups</strong><br><span class="small muted">iCloud Drive › Huismus</span></span><span class="pill pill-ok">Vandaag</span></a></li>
+      <li><a href="#" style="display: flex; flex: 1; align-items: center; gap: 12px; text-decoration: none; color: inherit; min-height: 44px"><span style="flex: 1"><strong>Updates</strong><br><span class="small muted">1.4.0 staat klaar</span></span><span class="pill pill-info">Nieuw</span></a></li>
+      <li><a href="#" style="display: flex; flex: 1; align-items: center; gap: 12px; text-decoration: none; color: inherit; min-height: 44px"><span style="flex: 1"><strong>AI-assistenten</strong><br><span class="small muted">Geen gekoppeld</span></span><span class="pill pill-off">Uit</span></a></li>
+      <li><a href="#" style="display: flex; flex: 1; align-items: center; gap: 12px; text-decoration: none; color: inherit; min-height: 44px"><span style="flex: 1"><strong>Wachtwoord</strong><br><span class="small muted">Standaard uit</span></span><span class="pill pill-off">Uit</span></a></li>
+    </ul>
+
+    <div style="height: 1px; background: #E6DED2; margin: 8px 0"></div>
+    <p class="small muted">Zo ziet één onderwerp eruit (KOR):</p>
+    <div class="card pad" style="display: flex; flex-direction: column; gap: 16px">
+      <a href="#" class="small">← Instellingen</a>
+      <h2>KOR</h2>
+      <div class="switch"><span class="track on" aria-hidden="true"></span>Ik gebruik de KOR</div>
+      <div class="field"><label class="label" for="kortekst">KOR-tekst</label><textarea id="kortekst" class="input" style="min-height: 88px; padding: 10px 12px">Vrijgesteld van btw op grond van de kleineondernemersregeling (KOR).</textarea><span class="help">Komt onder elke nieuwe factuur.</span></div>
+      <div class="row" style="gap: 12px"><div class="field" style="flex: 1"><label class="label" for="grens">KOR-grens</label><input id="grens" class="input" value="€ 20.000,00"></div><div class="field" style="width: 120px"><label class="label" for="pct">Waarschuw vanaf</label><input id="pct" class="input" value="80 %"></div></div>
+      <button class="btn btn-primary" type="button">Opslaan</button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1180}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

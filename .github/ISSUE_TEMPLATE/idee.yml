@@ -1,0 +1,50 @@
+name: "Idee of iets wat je mist / Idea or something you miss"
+description: "Vertel wat je met Huismus wilt doen / Tell us what you want to do with Huismus"
+title: "[idee] "
+labels: ["idee"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **NL:** Stuur geen echte klantgegevens, IBAN's of bedragen mee, ook niet in een schermafdruk. Huismus telt en verstuurt zelf niets, dus wat je hier vertelt is alles wat we weten.
+
+        **EN:** Don't share real customer data, IBANs or amounts, not even in a screenshot. Huismus counts and sends nothing itself, so what you tell us here is all we know.
+  - type: dropdown
+    id: organisatie
+    attributes:
+      label: "Wat voor organisatie heb je? / What kind of organisation do you have?"
+      options:
+        - "Eenmanszaak of vof met KOR / Sole trader or partnership using the KOR"
+        - "Eenmanszaak of vof met btw / Sole trader or partnership charging VAT"
+        - "Bv of holding / Private limited company or holding"
+        - "Stichting / Foundation"
+        - "Vereniging / Association"
+        - "Anders / Other"
+    validations:
+      required: true
+  - type: dropdown
+    id: gebruik
+    attributes:
+      label: "Hoe gebruik je Huismus? / How do you use Huismus?"
+      options:
+        - "Desktop-app op een Mac / Desktop app on a Mac"
+        - "Desktop-app op Windows / Desktop app on Windows"
+        - "Docker, op een server of NAS / Docker, on a server or NAS"
+        - "Ik probeer het nog uit / I'm still trying it out"
+        - "Nog niet / Not yet"
+    validations:
+      required: true
+  - type: textarea
+    id: wens
+    attributes:
+      label: "Wat mis je of wat wil je doen? / What are you missing, or what do you want to do?"
+      description: "Vertel wat je wilt bereiken, niet hoe het moet werken. / Tell us what you want to achieve, not how it should work."
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: "Privacy"
+      options:
+        - label: "Ik stuur geen echte klantgegevens, IBAN's of bedragen mee, ook niet in een schermafdruk / I'm not sharing real customer data, IBANs or amounts, not even in a screenshot"
+          required: true

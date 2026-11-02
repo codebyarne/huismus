@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 UBL-Invoice-2.1.xsd" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
+  <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+  
+  
+  <cbc:ID>540055</cbc:ID>
+  <cbc:IssueDate>2021-01-01</cbc:IssueDate>
+  <cbc:DueDate>2021-06-14</cbc:DueDate>
+  <cbc:InvoiceTypeCode listID="UNCL1001" listAgencyID="6">380</cbc:InvoiceTypeCode>
+  <cbc:DocumentCurrencyCode listID="ISO4217" listAgencyID="6">EUR</cbc:DocumentCurrencyCode>
+  <cbc:BuyerReference>Gouden Bron Concepten</cbc:BuyerReference>
+  <cac:AdditionalDocumentReference>
+    <cbc:ID>540055.pdf</cbc:ID>
+    <cbc:DocumentType>PrimaryImage</cbc:DocumentType>
+    <cac:Attachment>
+      <cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf" filename="540055.pdf">JVBERi0xLjMKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgKG9wZW5zb3VyY2UpCjEgMCBvYmoKPDwKL0YxIDIgMCBSIC9GMiAzIDAgUiAvRjMgNCAwIFIKPj4KZW5kb2JqCjIgMCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EgL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcgL05hbWUgL0YxIC9TdWJ0eXBlIC9UeXBlMSAvVHlwZSAvRm9udAo+PgplbmRvYmoKMyAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYS1Cb2xkIC9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nIC9OYW1lIC9GMiAvU3VidHlwZSAvVHlwZTEgL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjQgMCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EtT2JsaXF1ZSAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAvTmFtZSAvRjMgL1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iago1IDAgb2JqCjw8Ci9Db250ZW50cyA5IDAgUiAvTWVkaWFCb3ggWyAwIDAgNTk1LjI3NTYgODQxLjg4OTggXSAvUGFyZW50IDggMCBSIC9SZXNvdXJjZXMgPDwKL0ZvbnQgMSAwIFIgL1Byb2NTZXQgWyAvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJIF0KPj4gL1JvdGF0ZSAwIC9UcmFucyA8PAoKPj4gCiAgL1R5cGUgL1BhZ2UKPj4KZW5kb2JqCjYgMCBvYmoKPDwKL1BhZ2VNb2RlIC9Vc2VOb25lIC9QYWdlcyA4IDAgUiAvVHlwZSAvQ2F0YWxvZwo+PgplbmRvYmoKNyAwIG9iago8PAovQXV0aG9yIChhbm9ueW1vdXMpIC9DcmVhdGlvbkRhdGUgKEQ6MjAyNjA5MjUxNTMxNTcrMDInMDAnKSAvQ3JlYXRvciAoYW5vbnltb3VzKSAvS2V5d29yZHMgKCkgL01vZERhdGUgKEQ6MjAyNjA5MjUxNTMxNTcrMDInMDAnKSAvUHJvZHVjZXIgKFJlcG9ydExhYiBQREYgTGlicmFyeSAtIFwob3BlbnNvdXJjZVwpKSAKICAvU3ViamVjdCAodW5zcGVjaWZpZWQpIC9UaXRsZSAodW50aXRsZWQpIC9UcmFwcGVkIC9GYWxzZQo+PgplbmRvYmoKOCAwIG9iago8PAovQ291bnQgMSAvS2lkcyBbIDUgMCBSIF0gL1R5cGUgL1BhZ2VzCj4+CmVuZG9iago5IDAgb2JqCjw8Ci9GaWx0ZXIgWyAvQVNDSUk4NURlY29kZSAvRmxhdGVEZWNvZGUgXSAvTGVuZ3RoIDc1Nwo+PgpzdHJlYW0KR2F0JWA5bG5jOyY7S1pPTUVNJGlEWTdHWztLKTFQXXAoOFNMJydCVGhBIUIrZThhaS5UOSQoPDJCZzxNJzlDMj9jTVF0cl01KUNvbl0wK2xDJm9wbzMxRm1GIWZAbGIkbzk7TGlPWDkjaVpeaWk+YmNTKG80TmEpVzMqOURuc2dwPDtGQWpLcWNpNiFSWUsyK0FTQmk3XTtrMzxJPVU7WE1OOUUkJVE4bWtJXiR0VkVLcXBAQjdyXzxpQDlOK3MsMmVobEdVIldwQC84WVcoQy5iX3BFNjpgRUFyJUBxX0AsJ1opLUJoOWBVW1NWLCclO2VoTipYWV5aOUFsZ2xyUTJUKCQiNjY8TCZrcWReQFZzS1MzX1NIU2UxSmg/PzZPUTpiNEhYL2pOOCk1QS41bE0yTSNlYDptNlptMCkuQ2k/ZFZlSj5AbnNpUEwsW0dyQi5bPE9DKzBPI3UjZkg7KGJaXldLTChsYWwpPWI0dUZvTEBDczlhUTpVKkFMIUViYkh0aGNvWUtmOV5TQTBRYyY4QzExLyFiJjsvdVwzXEZiTzBxVEpgVSUoNmdZU042I0A5JT1KJkZORThfW1kxLjIpR0UuRChfMzFbOmYrWnFtQWZUKi1HdSNnJyd1VVE5MStJZy8wIzVyaG45LjBlWW8mPm4tTiFaOj00JEtMUTBjOks/PFM3SWxzdUJpVmhTZyJdNGBQOFQ/PTxwRmlBLGM8KTpeJkVDVjAxX2A2ImonMC1nUCJBNiM8PlY7MCNiXGlnRjJ0Z19LOzRBVWs0Xy5gblhAOz9yWjJzZi0yJGhaW1xdX1BtM0tHJzBWOShfSjs0QFs1QVZRczdldVU2QHJsQmNZZzBHVEItNStQVFtSSW01RGVXKTJOM0NNSWY3VE9wTlJNb0o0SUtpZExhVkpQVzJdKVolNSVEVCI6IUsoUnM2L2JfaidFdD9gKFMobkdVY3U1I1FHX2NGXiEiNUpFcmBia0pWSipQRDdPQzwpK1p+PmVuZHN0cmVhbQplbmRvYmoKeHJlZgowIDEwCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDA2MSAwMDAwMCBuIAowMDAwMDAwMTEyIDAwMDAwIG4gCjAwMDAwMDAyMTkgMDAwMDAgbiAKMDAwMDAwMDMzMSAwMDAwMCBuIAowMDAwMDAwNDQ2IDAwMDAwIG4gCjAwMDAwMDA2NDkgMDAwMDAgbiAKMDAwMDAwMDcxNyAwMDAwMCBuIAowMDAwMDAwOTc4IDAwMDAwIG4gCjAwMDAwMDEwMzcgMDAwMDAgbiAKdHJhaWxlcgo8PAovSUQgCls8OTZiN2Q5MzM5NDlkZjI4YmM1MjFlNjQxMDNlMTgxNDc+PDk2YjdkOTMzOTQ5ZGYyOGJjNTIxZTY0MTAzZTE4MTQ3Pl0KJSBSZXBvcnRMYWIgZ2VuZXJhdGVkIFBERiBkb2N1bWVudCAtLSBkaWdlc3QgKG9wZW5zb3VyY2UpCgovSW5mbyA3IDAgUgovUm9vdCA2IDAgUgovU2l6ZSAxMAo+PgpzdGFydHhyZWYKMTg4NAolJUVPRgo=</cbc:EmbeddedDocumentBinaryObject>
+    </cac:Attachment>
+  </cac:AdditionalDocumentReference>
+  <cac:AdditionalDocumentReference>
+    <cbc:ID>Algemene_Voorwaarden.pdf</cbc:ID>
+    <cbc:DocumentType>Attachment</cbc:DocumentType>
+    <cac:Attachment>
+      <cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf" filename="Algemene_Voorwaarden.pdf">JVBERi0xLjMKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgKG9wZW5zb3VyY2UpCjEgMCBvYmoKPDwKL0YxIDIgMCBSIC9GMiAzIDAgUgo+PgplbmRvYmoKMiAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYSAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAvTmFtZSAvRjEgL1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iagozIDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhLUJvbGQgL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcgL05hbWUgL0YyIC9TdWJ0eXBlIC9UeXBlMSAvVHlwZSAvRm9udAo+PgplbmRvYmoKNCAwIG9iago8PAovQ29udGVudHMgOCAwIFIgL01lZGlhQm94IFsgMCAwIDU5NS4yNzU2IDg0MS44ODk4IF0gL1BhcmVudCA3IDAgUiAvUmVzb3VyY2VzIDw8Ci9Gb250IDEgMCBSIC9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+IC9Sb3RhdGUgMCAvVHJhbnMgPDwKCj4+IAogIC9UeXBlIC9QYWdlCj4+CmVuZG9iago1IDAgb2JqCjw8Ci9QYWdlTW9kZSAvVXNlTm9uZSAvUGFnZXMgNyAwIFIgL1R5cGUgL0NhdGFsb2cKPj4KZW5kb2JqCjYgMCBvYmoKPDwKL0F1dGhvciAoYW5vbnltb3VzKSAvQ3JlYXRpb25EYXRlIChEOjIwMjYwOTI1MTUzMTU3KzAyJzAwJykgL0NyZWF0b3IgKGFub255bW91cykgL0tleXdvcmRzICgpIC9Nb2REYXRlIChEOjIwMjYwOTI1MTUzMTU3KzAyJzAwJykgL1Byb2R1Y2VyIChSZXBvcnRMYWIgUERGIExpYnJhcnkgLSBcKG9wZW5zb3VyY2VcKSkgCiAgL1N1YmplY3QgKHVuc3BlY2lmaWVkKSAvVGl0bGUgKHVudGl0bGVkKSAvVHJhcHBlZCAvRmFsc2UKPj4KZW5kb2JqCjcgMCBvYmoKPDwKL0NvdW50IDEgL0tpZHMgWyA0IDAgUiBdIC9UeXBlIC9QYWdlcwo+PgplbmRvYmoKOCAwIG9iago8PAovRmlsdGVyIFsgL0FTQ0lJODVEZWNvZGUgL0ZsYXRlRGVjb2RlIF0gL0xlbmd0aCAzMDkKPj4Kc3RyZWFtCkdhczJEYj4sci8mNFE/bE1TI1lpZ3Q1PmxCJCRnTF0hVSo7bktgNXJnRi4mRk02RnQpSjpgbEVWLStkYGNGay1WLzNdWTtAdEAuKGVJKVR1OmI/cTtFaTstRUM2PyNeLF1Vcjc9M2EjRilwKVY+OHJmWSgvLyllKkFUQD1nR0BcZi0/Ry5GNTxBZUgxOTtqKWJtQy9GVzlcU2lfRChfMiwkQl9eQS1HWVFfRWJKL1wlKC8oOEo9PEZnZyxEcmglI0pBMVM+UCJlTV5OSDFqQGlMa21ydC1tKSNIOzZDIi9yLD5ZR08/YlBjOSRbVlYvMGJMRkRARSYiNyhwJU84MiFmXlheZCUnOzpGcCRVR2RAbSU2O0tFK3NsS11BT2xTW1ZYM2NbRG5wKjFONyVoZmgnIm9+PmVuZHN0cmVhbQplbmRvYmoKeHJlZgowIDkKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDYxIDAwMDAwIG4gCjAwMDAwMDAxMDIgMDAwMDAgbiAKMDAwMDAwMDIwOSAwMDAwMCBuIAowMDAwMDAwMzIxIDAwMDAwIG4gCjAwMDAwMDA1MjQgMDAwMDAgbiAKMDAwMDAwMDU5MiAwMDAwMCBuIAowMDAwMDAwODUzIDAwMDAwIG4gCjAwMDAwMDA5MTIgMDAwMDAgbiAKdHJhaWxlcgo8PAovSUQgCls8OTIwN2M4MGMzNGY0YzZiZGJmNjI2MTNjNTIwOWE1OTM+PDkyMDdjODBjMzRmNGM2YmRiZjYyNjEzYzUyMDlhNTkzPl0KJSBSZXBvcnRMYWIgZ2VuZXJhdGVkIFBERiBkb2N1bWVudCAtLSBkaWdlc3QgKG9wZW5zb3VyY2UpCgovSW5mbyA2IDAgUgovUm9vdCA1IDAgUgovU2l6ZSA5Cj4+CnN0YXJ0eHJlZgoxMzExCiUlRU9GCg==</cbc:EmbeddedDocumentBinaryObject>
+    </cac:Attachment>
+  </cac:AdditionalDocumentReference>
+  <cac:AccountingSupplierParty>
+    <cac:Party>
+      <cbc:EndpointID schemeID="0106">35536519</cbc:EndpointID>
+      <cac:PartyName>
+        <cbc:Name>Lindeboom Communicatie</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>Celebesstraat 40 bis</cbc:StreetName>
+        <cbc:CityName>Zeist</cbc:CityName>
+        <cbc:PostalZone>3531 KD</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode listID="ISO3166-1:Alpha2" listAgencyID="6">NL</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>Lindeboom Communicatie</cbc:RegistrationName>
+        <cbc:CompanyID schemeID="0106">35536519</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:ElectronicMail>info@lindeboomcommunicatie.nl</cbc:ElectronicMail>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingSupplierParty>
+  <cac:AccountingCustomerParty>
+    <cac:Party>
+      <cac:PartyName>
+        <cbc:Name>Gouden Bron Concepten</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>Molenweide 87</cbc:StreetName>
+        <cbc:CityName>Almelo</cbc:CityName>
+        <cbc:PostalZone>5630 ZF</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode listID="ISO3166-1:Alpha2" listAgencyID="6">NL</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>Gouden Bron Concepten</cbc:RegistrationName>
+        <cbc:CompanyID schemeID="0106">70600493</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:Name>Gijs van der Heijden</cbc:Name>
+        <cbc:ElectronicMail>info@goudenbronconcepten.com</cbc:ElectronicMail>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingCustomerParty>
+  <cac:PaymentMeans>
+    <cbc:PaymentMeansCode listID="UNCL4461" listAgencyID="6">30</cbc:PaymentMeansCode>
+    <cbc:PaymentDueDate>2021-06-14</cbc:PaymentDueDate>
+    <cbc:PaymentID>RF760000000000000PNER6VNQ</cbc:PaymentID>
+    <cac:PayeeFinancialAccount>
+      <cbc:ID schemeID="IBAN">NL87TEST7728849485</cbc:ID>
+      <cac:FinancialInstitutionBranch>
+        <cac:FinancialInstitution>
+          <cbc:ID schemeID="BIC">TESTNL2A</cbc:ID>
+        </cac:FinancialInstitution>
+      </cac:FinancialInstitutionBranch>
+    </cac:PayeeFinancialAccount>
+  </cac:PaymentMeans>
+  <cac:PaymentTerms>
+    <cbc:Note>We verzoeken je vriendelijk het bovenstaande bedrag van € 693,68 voor 14-06-2021 te voldoen op IBAN-nummer NL87 TEST 7728 8494 85 (let op: rekeningnummer gewijzigd) t.n.v. M. van Doorn onder vermelding van factuurnummer 540055. Voor vragen over deze factuur kun je natuurlijk altijd even contact opnemen. Let op: vanwege kleinschaligheid van de onderneming beschikt Lindeboom Communicatie over ontheffing van administratieve verplichtingen. Dat betekent dat er geen BTW in rekening wordt gebracht op facturen en offertes.</cbc:Note>
+  </cac:PaymentTerms>
+  <cac:TaxTotal>
+    <cbc:TaxAmount currencyID="EUR">0.0</cbc:TaxAmount>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="EUR">693.68</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="EUR">0.0</cbc:TaxAmount>
+      <cac:TaxCategory>
+        <cbc:ID schemeID="UNCL5305">Z</cbc:ID>
+        <cbc:Percent>0.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID schemeID="UN/ECE 5153">VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+  </cac:TaxTotal>
+  <cac:LegalMonetaryTotal>
+    <cbc:LineExtensionAmount currencyID="EUR">693.68</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="EUR">693.68</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="EUR">693.68</cbc:TaxInclusiveAmount>
+    <cbc:AllowanceTotalAmount currencyID="EUR">0.0</cbc:AllowanceTotalAmount>
+    <cbc:PayableAmount currencyID="EUR">693.68</cbc:PayableAmount>
+  </cac:LegalMonetaryTotal>
+  <cac:InvoiceLine>
+    <cbc:ID>1</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="ZZ" unitCodeListID="UNECERec20">1.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">671.3</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>Nieuwe website Golden Cage, 15 uur a 55 euro p/u</cbc:Description>
+      <cbc:Name>Nieuwe website Golden Cage, 15 uur a 55 euro p/u</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">Z</cbc:ID>
+        <cbc:Percent>0.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID schemeID="UN/ECE 5153">VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">671.3</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>2</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="ZZ" unitCodeListID="UNECERec20">1.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">22.38</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>0,5 uur telefonisch sparren en feedback</cbc:Description>
+      <cbc:Name>0,5 uur telefonisch sparren en feedback</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">Z</cbc:ID>
+        <cbc:Percent>0.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID schemeID="UN/ECE 5153">VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">22.38</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+</Invoice>

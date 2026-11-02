@@ -1,0 +1,24 @@
+{% load i18n money %}
+{% comment %}The history of an issued invoice or credit note, or a sent quote (documents.detail.timeline_events).{% endcomment %}
+{% if timeline %}
+<section class="card card-pad">
+    <h2 style="margin-bottom:var(--s-4)">{% translate "Tijdlijn" %}</h2>
+    <ol class="timeline">
+        {% for event in timeline %}
+        <li>
+            {% if event.kind == "created" %}<span class="t-dot"><svg class="i" aria-hidden="true"><use href="#edit"></use></svg></span><div class="t-body small">{% translate "Concept aangemaakt" %}</div>
+            {% elif event.kind == "issued" %}<span class="t-dot is-primary"><svg class="i" aria-hidden="true"><use href="#lock"></use></svg></span><div class="t-body small">{% blocktranslate with number=document.number %}Uitgegeven als {{ number }}{% endblocktranslate %}</div>
+            {% elif event.kind == "sent" %}<span class="t-dot is-primary"><svg class="i" aria-hidden="true"><use href="#send"></use></svg></span><div class="t-body small">{% blocktranslate with number=document.number %}Verzonden als {{ number }}{% endblocktranslate %}</div>
+            {% elif event.kind == "accepted" %}<span class="t-dot is-ok"><svg class="i" aria-hidden="true"><use href="#check"></use></svg></span><div class="t-body small">{% translate "Geaccepteerd" %}</div>
+            {% elif event.kind == "declined" %}<span class="t-dot"><svg class="i" aria-hidden="true"><use href="#x"></use></svg></span><div class="t-body small">{% translate "Afgewezen" %}</div>
+            {% elif event.kind == "reopened" %}<span class="t-dot"><svg class="i" aria-hidden="true"><use href="#edit"></use></svg></span><div class="t-body small">{% translate "Heropend om te bewerken" %}</div>
+            {% elif event.kind == "payment" %}<span class="t-dot is-ok"><svg class="i" aria-hidden="true"><use href="#euro"></use></svg></span><div class="t-body small">{% blocktranslate with amount=event.payment.amount_cents|money %}Betaling {{ amount }}{% endblocktranslate %}</div>
+            {% elif event.kind == "email" and event.email.succeeded %}<span class="t-dot"><svg class="i" aria-hidden="true"><use href="#mail"></use></svg></span><div class="t-body small">{% blocktranslate with to=event.email.to %}Gemaild naar {{ to }}{% endblocktranslate %}</div>
+            {% elif event.kind == "email" %}<span class="t-dot is-bad"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg></span><div class="t-body small">{% blocktranslate with to=event.email.to %}Mailen mislukt naar {{ to }}{% endblocktranslate %}<br>{{ event.email.plain_error }}<br><span class="muted">{{ event.email.error }}</span></div>
+            {% elif event.kind == "credit_note" %}<span class="t-dot"><svg class="i" aria-hidden="true"><use href="#undo"></use></svg></span><div class="t-body small"><a href="{% url 'documents:edit' event.document.pk %}">{% blocktranslate with number=event.document.number %}Creditnota {{ number }}{% endblocktranslate %}</a></div>{% endif %}
+            <span class="t-date">{% if event.show_year %}{{ event.date|date:"j b Y" }}{% else %}{{ event.date|date:"j b" }}{% endif %}</span>
+        </li>
+        {% endfor %}
+    </ol>
+</section>
+{% endif %}

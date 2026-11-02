@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Koppelen met Dropbox" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <a class="small" href="{% url 'business:backups' %}">← {% translate "Back-ups" %}</a>
+        <h1>{% translate "Koppelen met Dropbox" %}</h1>
+        <p class="lede">{% translate "Huismus krijgt alleen toegang tot zijn eigen map in je Dropbox: Apps › Huismus." %}</p>
+    </div>
+</div>
+
+<form method="post" class="card settings-section" id="dropbox-koppelen">
+    {% csrf_token %}
+    <div class="card-pad stack" style="gap:var(--s-4)">
+        <ol class="how-to">
+            <li><div class="stack" style="gap:var(--s-2)">
+                <strong>{% translate "Geef Huismus toegang" %}</strong>
+                <span class="muted">{% translate "Log in bij Dropbox en kies Toestaan. Daarna toont Dropbox een code." %}</span>
+                <span><a class="btn btn-secondary" id="dropbox-openen" href="{{ authorize_url }}" target="_blank" rel="noopener">{% translate "Dropbox openen" %} ↗</a></span>
+            </div></li>
+            <li><div class="field">
+                <label class="label" for="code">{% translate "Plak de code van Dropbox" %}</label>
+                <input class="input" id="code" name="code" value="{{ typed }}" autocomplete="off" spellcheck="false"{% if error %} aria-invalid="true" aria-describedby="code-fout"{% endif %}>
+                {% if error %}<p class="error" id="code-fout"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>{{ error }}</p>{% endif %}
+            </div></li>
+        </ol>
+        <div class="row"><a class="btn btn-ghost" href="{% url 'business:backups' %}">{% translate "Annuleren" %}</a><span class="spacer"></span><button type="submit" class="btn btn-primary"><span class="spinner" aria-hidden="true"></span>{% translate "Koppelen" %}</button></div>
+    </div>
+</form>
+{% endblock %}

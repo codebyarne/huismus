@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load i18n forms money documents_tags %}
+
+{% block title %}{% if contact %}{{ contact.display_name }}{% else %}{% translate "Nieuwe klant" %}{% endif %} — Huismus{% endblock %}
+{% block content_class %}content-wide{% endblock %}
+
+{% block content %}
+<form method="post" id="contact-form"{% if back_to %} action="?terug={{ back_to|urlencode }}"{% endif %}>
+    {% csrf_token %}
+    <div class="page-head">
+        <div class="titles">
+            <a class="back" href="{% url 'contacts:list' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Klanten" %}</a>
+            <h1>{% if contact %}{{ contact.display_name }}{% else %}{% translate "Nieuwe klant" %}{% endif %}</h1>
+            {% if contact %}
+            <span class="small muted">{% if contact.customer_number %}{% translate "Klantnummer" %} {{ contact.customer_number }} · {% endif %}{% blocktranslate with since=contact.created_at|date:"F Y" %}sinds {{ since }}{% endblocktranslate %}{% if contact.archived %} · {% translate "gearchiveerd" %}{% endif %}</span>
+            {% endif %}
+        </div>
+        <div class="actions">
+            {% if contact %}
+            <button class="btn btn-ghost" type="submit" formaction="{% url 'contacts:archive_toggle' contact.pk %}">
+                {% if contact.archived %}<svg class="i" aria-hidden="true"><use href="#undo"></use></svg>{% translate "Dearchiveren" %}
+                {% else %}<svg class="i" aria-hidden="true"><use href="#archive"></use></svg>{% translate "Archiveren" %}{% endif %}
+            </button>
+            {% endif %}
+            <button class="btn btn-primary" type="submit">{% if back_to %}{% translate "Opslaan en terug naar factuur" %}{% else %}{% translate "Opslaan" %}{% endif %}<span class="spinner"></span></button>
+        </div>
+    </div>
+
+    {% form_errors form formset %}
+    {% if back_to %}
+    <div class="flash flash-info" style="margin-bottom:var(--s-5)"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><div class="flash-body small">{% translate "Na opslaan ga je terug naar je factuur, met deze klant al gekozen." %}</div></div>
+    {% endif %}
+
+    <div class="{% if contact %}split-rev{% else %}stack{% endif %}">
+        <div class="stack" style="gap:var(--s-5)">
+            <section class="card card-pad stack">
+                <h2>{% translate "Gegevens" %}</h2>
+                <div class="fieldset">
+                    {% field form.customer_number span=2 extra_class="num" %}
+                    {% field form.company_name span=4 %}
+                    {% field form.first_name span=3 %}
+                    {% field form.last_name span=3 %}
+                    {% field form.email span=3 %}
+                    {% field form.phone span=3 %}
+                    {% field form.quote_email span=3 optional=True %}
+                    {% field form.delivery_method span=3 optional=True %}
+                </div>
+            </section>
+            <section class="card card-pad stack">
+                <h2>{% translate "Adres" %}</h2>
+                <div class="fieldset">
+                    {% field form.attention optional=True %}
+                    {% field form.address_line1 %}
+                    {% field form.address_line2 optional=True %}
+                    {% field form.postal_code span=2 %}
+                    {% field form.city span=2 %}
+                    {% field form.country span=2 %}
+                </div>
+            </section>
+            <section class="card card-pad stack">
+                <h2>{% translate "Zakelijk en betaling" %}</h2>
+                <div class="fieldset">
+                    {% field form.kvk_number span=3 extra_class="num" %}
+                    {% field form.vat_number span=3 optional=True %}
+                    {% field form.iban span=4 extra_class="num" %}
+                    {% blocktranslate asvar terms_help count days=default_terms %}Laat leeg voor de standaard ({{ days }} dag).{% plural %}Laat leeg voor de standaard ({{ days }} dagen).{% endblocktranslate %}
+                    {% translate "dagen" as days_unit %}
+                    {% translate "Betalingstermijn" as terms_label %}
+                    {% field form.payment_terms_days span=2 extra_class="num" suffix=days_unit help=terms_help label=terms_label %}
+                </div>
+            </section>
+            {% if formset %}
+            <section class="card card-pad stack">
+                <div class="row">
+                    <h2>{% translate "Contactpersonen" %}</h2>
+                    <span class="spacer"></span>
+                    <button type="button" class="btn btn-secondary btn-sm" data-formset-add="persons"><svg class="i i-sm" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Contactpersoon" %}</button>
+                </div>
+                {{ formset.management_form }}
+                <div class="stack" style="gap:var(--s-3)" data-formset-forms="persons">
+                    {% for pform in formset %}{% include "contacts/_person_form.html" %}{% endfor %}
+                </div>
+                <template data-formset-empty="persons">{% include "contacts/_person_form.html" with pform=formset.empty_form %}</template>
+            </section>
+            {% endif %}
+            <section class="card card-pad stack">
+                <h2>{% translate "Notities" %}</h2>
+                {% field form.notes %}
+            </section>
+        </div>
+
+        {% if contact %}
+        <aside class="card" style="position:sticky;top:var(--s-6)">
+            <div class="card-head"><h2>{% translate "Documenten" %}</h2></div>
+            {% if documents %}
+            <ul class="list">
+                {% for d in documents %}
+                <li>
+                    <div class="grow">
+                        <a class="title" href="{% if d.kind == 'quote' %}{% url 'quotes:edit' d.pk %}{% else %}{% url 'documents:edit' d.pk %}{% endif %}">{{ d.get_kind_display|capfirst }} {{ d.number|default:_("(concept)") }}</a>
+                        <div class="small muted">{{ d.issue_date|date:"j b Y"|default:"" }}</div>
+                    </div>
+                    <span class="stack" style="gap:4px;align-items:flex-end">
+                        <span class="amount small">{% if d.kind == "credit_note" %}&minus;&nbsp;{% endif %}{{ d.total_cents|money }}</span>
+                        {% if d.status == "draft" %}<span class="pill pill-concept">{% translate "Concept" %}</span>
+                        {% elif d.kind == "quote" %}<span class="pill pill-{{ d.status|quote_pill }}">{{ d.get_status_display|capfirst }}</span>
+                        {% elif d.kind == "credit_note" %}<span class="pill pill-credit">{% translate "Creditnota" %}</span>
+                        {% elif d.is_overdue %}{% include "documents/_pill_overdue.html" %}
+                        {% else %}<span class="pill pill-{{ d.payment_state }}">{{ d.payment_state|payment_state_label|capfirst }}</span>{% endif %}
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+            <div class="card-foot row"><span class="muted">{% translate "Totaal gefactureerd" %}</span><span class="spacer"></span><strong class="num">{{ invoiced_cents|money }}</strong></div>
+            {% else %}
+            <div class="card-pad"><p class="muted small">{% translate "Nog geen facturen of offertes voor deze klant." %}</p></div>
+            {% endif %}
+        </aside>
+        {% endif %}
+    </div>
+</form>
+{% endblock %}

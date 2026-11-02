@@ -1,0 +1,205 @@
+name: Release
+
+# On a version tag (v*): builds and publishes the Docker image, and builds the
+# desktop apps, Huismus-<version>-macos.dmg and Huismus-<version>-windows.exe,
+# which the publish job puts on the GitHub release once both are checked: the
+# files the desktop app's updates look for (huismus/core/updates.py, docs/desktop.md).
+# By hand (workflow_dispatch): a trial build of the Windows app only, which
+# publishes nothing (huismus-intern/besluiten.md, "Windows-app: bouwkeuzes"). CLAUDE.md's
+# own commands section already documents this split: `docker build` locally
+# is native-arch only; CI/release is what builds and pushes both arm64 and
+# amd64 (a Raspberry Pi is arm64; most developer/CI machines are amd64 —
+# neither can natively build the other without emulation, which is what
+# setup-qemu-action below is for).
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-push:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU (for cross-building the arm64 image on an amd64 runner)
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Derive image tags from the pushed git tag
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=latest
+
+      - name: Build and push (arm64 + amd64)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  macos-app:
+    # Apple Silicon. Pango comes from Homebrew, whose packages here are built
+    # for macOS 14, hence LSMinimumSystemVersion 14.0 in desktop/huismus.spec
+    # (huismus-intern/besluiten.md, 2026-10-29).
+    if: github.event_name == 'push'
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: The tag must be the version inside the app
+        # Otherwise the updated app reads an older version from pyproject.toml
+        # and offers the same update again.
+        run: |
+          version=$(sed -n 's/^version = "\(.*\)"$/\1/p' pyproject.toml | head -n 1)
+          if [ "$GITHUB_REF_NAME" != "v${version}" ]; then
+              echo "::error::Tag $GITHUB_REF_NAME does not match version $version in pyproject.toml"
+              exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_ENV"
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Install Pango (goes inside the app) and gettext
+        # compilemessages needs msgfmt, which Homebrew may leave off the PATH.
+        run: |
+          brew install pango gettext
+          echo "$(brew --prefix gettext)/bin" >> "$GITHUB_PATH"
+
+      - name: Build Huismus.app and the .dmg
+        run: ./scripts/build-mac.sh
+
+      - name: Check the app on an empty administration
+        # Never release an app that does not start: it would reach every
+        # user as an update.
+        run: HUISMUS_DATA_DIR="$RUNNER_TEMP/huismus-check" dist/Huismus.app/Contents/MacOS/Huismus --check
+
+      - name: Keep the .dmg for the publish job
+        run: mv dist/Huismus.dmg "dist/Huismus-${version}-macos.dmg"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-app
+          path: dist/Huismus-${{ env.version }}-macos.dmg
+          retention-days: 3
+          if-no-files-found: error
+
+  windows-app:
+    # x64, Windows 10 and later; Pango from MSYS2 (UCRT64) and the installer
+    # from Inno Setup (desktop/huismus.iss). Windows minutes count twice.
+    runs-on: windows-2022
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: The tag must be the version inside the app
+        # Otherwise the updated app reads an older version from pyproject.toml
+        # and offers the same update again. A trial build has no tag.
+        run: |
+          version=$(sed -n 's/^version = "\(.*\)"$/\1/p' pyproject.toml | head -n 1)
+          if [ "$GITHUB_EVENT_NAME" = push ] && [ "$GITHUB_REF_NAME" != "v${version}" ]; then
+              echo "::error::Tag $GITHUB_REF_NAME does not match version $version in pyproject.toml"
+              exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_ENV"
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Install Pango (goes inside the app) and gettext
+        id: msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: false
+          install: mingw-w64-ucrt-x86_64-pango mingw-w64-ucrt-x86_64-gettext-tools
+
+      - name: Install Inno Setup
+        run: |
+          if [ ! -x "/c/Program Files (x86)/Inno Setup 6/ISCC.exe" ]; then
+              choco install innosetup --no-progress -y
+          fi
+
+      - name: Build Huismus.exe and the installer
+        env:
+          PANGO_BIN: ${{ steps.msys2.outputs.msys2-location }}\ucrt64\bin
+        run: ./scripts/build-windows.sh
+
+      - name: Install it and check the installed app on an empty administration
+        # As a user would: the installer, without any window, then the app
+        # it put in place. Never release an app that does not start: it would
+        # reach every user as an update. Git Bash waits for both and passes on
+        # their exit codes; $LOCALAPPDATA is the folder Inno calls
+        # {localappdata}. Were either not so, the check fails, never passes.
+        run: |
+          "dist/Huismus-${version}-windows.exe" //VERYSILENT //SUPPRESSMSGBOXES //NORESTART
+          installed="$LOCALAPPDATA/Programs/Huismus/Huismus.exe"
+          if ! HUISMUS_DATA_DIR="$RUNNER_TEMP/huismus-check" "$installed" --check; then
+              cat "$LOCALAPPDATA/Huismus/huismus.log"
+              exit 1
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-app
+          path: dist/Huismus-${{ env.version }}-windows.exe
+          retention-days: 3
+          if-no-files-found: error
+
+  publish:
+    # Only once both apps are built and checked: never half a release.
+    if: github.event_name == 'push'
+    needs: [macos-app, windows-app]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Put both apps on the release
+        # A new release stays a draft until both files are on it; core.updates
+        # skips drafts, so the app never sees a release without its file.
+        # Publishing comes after either branch, so a re-run after a failure
+        # also publishes the draft the first run left behind.
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          files=("dist/Huismus-${version}-macos.dmg" "dist/Huismus-${version}-windows.exe")
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+              gh release upload "$GITHUB_REF_NAME" "${files[@]}" --clobber
+          else
+              gh release create "$GITHUB_REF_NAME" --draft --verify-tag --generate-notes --title "Huismus ${version}" "${files[@]}"
+          fi
+          gh release edit "$GITHUB_REF_NAME" --draft=false

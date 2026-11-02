@@ -1,0 +1,16 @@
+{% load i18n money documents_tags %}
+<div id="uitgeven-samenvatting" class="stack" style="gap:var(--s-3)"{% if oob %} hx-swap-oob="true"{% endif %}>
+    <ul class="checks">
+        <li><svg class="i" aria-hidden="true"><use href="#check"></use></svg><span>{% if next_number %}{% blocktranslate with number=next_number %}Het document krijgt het nummer <strong class="num">{{ number }}</strong>.{% endblocktranslate %}{% else %}{% translate "Het document krijgt het volgende nummer." %}{% endif %}</span></li>
+        <li><svg class="i" aria-hidden="true"><use href="#check"></use></svg><span>{% if document.reopened_at %}{% translate "Je bedrijfsgegevens en die van de klant blijven zoals ze op het document stonden." %}{% elif contact %}{% blocktranslate with name=contact.display_name %}Huismus legt je bedrijfsgegevens en die van {{ name }} vast zoals ze nu zijn.{% endblocktranslate %}{% else %}{% translate "Huismus legt je bedrijfsgegevens en die van de klant vast zoals ze nu zijn." %}{% endif %}</span></li>
+        {% if is_quote %}
+        <li><svg class="i" aria-hidden="true"><use href="#check"></use></svg><span>{% translate "Daarna kun je hem mailen of de PDF downloaden. De offerte kun je daarna nog aanpassen." %}</span></li>
+        {% else %}
+        <li><svg class="i" aria-hidden="true"><use href="#check"></use></svg><span>{% translate "Daarna ligt het document vast en kun je het niet meer verwijderen. Corrigeren doe je met een creditnota." %}</span></li>
+        {% endif %}
+        {% if kor_crossed %}
+        <li class="is-warn"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% if kor_crossed.level == "over" %}{% blocktranslate with revenue=kor_crossed.revenue_cents|money limit=kor_crossed.limit_cents|money %}Met deze factuur kom je op {{ revenue }}, boven je KOR-grens van {{ limit }}.{% endblocktranslate %}{% else %}{% blocktranslate with revenue=kor_crossed.revenue_cents|money percent=kor_crossed.percent limit=kor_crossed.limit_cents|money %}Met deze factuur kom je op {{ revenue }}: {{ percent }}% van je KOR-grens van {{ limit }}.{% endblocktranslate %}{% endif %}</span></li>
+        {% endif %}
+    </ul>
+    <div class="row" style="justify-content:space-between;padding:12px 14px;border-radius:var(--r-md);background:var(--surface-2)"><span>{{ contact.display_name|default:"—" }}</span><strong class="num">{{ totals.total_cents|money_for:document }}</strong></div>
+</div>

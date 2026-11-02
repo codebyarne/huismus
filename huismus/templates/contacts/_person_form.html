@@ -1,0 +1,13 @@
+{% load i18n forms %}
+<div class="fieldset person-form">
+    {{ pform.id }}
+    {% field pform.name span=3 %}
+    {% field pform.department span=3 %}
+    {% field pform.email span=3 %}
+    {% field pform.phone span=3 %}
+    {% if pform.instance.pk %}
+    <div class="field">
+        <label class="check small">{{ pform.DELETE }}{% translate "Deze contactpersoon verwijderen bij opslaan" %}</label>
+    </div>
+    {% endif %}
+</div>

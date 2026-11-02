@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n backups %}
+
+{% block title %}{% translate "Back-up terugzetten" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+{% comment %}A page rather than a dialog: the same for an archive from the list and an uploaded file (huismus-intern/besluiten.md, 2026-10-29).{% endcomment %}
+<form method="post" class="card" id="bevestigen" style="overflow-wrap:anywhere">
+    {% csrf_token %}
+    <input type="hidden" name="step" value="confirm">
+    <input type="hidden" name="archive" value="{{ source }}">
+    <div class="dialog-body">
+        <span class="dialog-icon"><svg class="i i-lg" aria-hidden="true"><use href="#alert"></use></svg></span>
+        <h1 style="font-size:var(--fs-xl)">{% blocktranslate with moment=created|moment %}Terugzetten naar {{ moment }}?{% endblocktranslate %}</h1>
+        {% if sample_data_in_use %}
+        <p class="muted">{% translate "De nepdata is daarna weg." %}</p>
+        {% else %}
+        <p class="muted">{% blocktranslate with folder=before_folder %}Huismus bewaart eerst hoe het nu is, in {{ folder }}. Daar kun je later naar terug.{% endblocktranslate %}</p>
+        {% endif %}
+        <p class="muted">{% blocktranslate with moment=created|moment %}Wat je na {{ moment }} hebt gedaan, is daarna weg.{% endblocktranslate %}</p>
+        <p class="muted">{% translate "Heb je daarna facturen of creditnota's uitgegeven, dan verdwijnen die en krijgen nieuwe dezelfde nummers." %}</p>
+        <p class="muted">{% translate "Tijdens het terugzetten kun je Huismus even niet gebruiken." %}</p>
+    </div>
+    <div class="dialog-foot"><a class="btn btn-secondary" href="{% url 'business:backups_restore' %}">{% translate "Annuleren" %}</a><button type="submit" class="btn btn-danger"><span class="spinner" aria-hidden="true"></span>{% translate "Terugzetten" %}</button></div>
+</form>
+{% endblock %}

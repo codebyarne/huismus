@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Review van gebouwde schermen</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="hm.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#14539E}a:hover{color:#1B6AC9}
+</style>
+</helmet>
+<div style="width: 1280px; height: 1100px; box-sizing: border-box; padding: 48px; background: #FBF8F3; font-family: ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color: #2A2520; display: flex; flex-direction: column; gap: 24px">
+  <div class="stack" style="gap: 6px">
+    <h1>Gebouwd zonder design: nagelopen</h1>
+    <p class="muted">Vergeleken met de stijl "Zomerochtend" en de domeinregels uit de design-handoff. Groen: klopt. Oranje: kleine aanpassing voorgesteld.</p>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px">
+    <section class="card pad" style="display: flex; flex-direction: column; gap: 12px">
+      <div class="row" style="justify-content: space-between"><h2>D7 · Mailformulier en Mailen-instellingen</h2><span class="pill pill-ok">Klopt</span></div>
+      <ul class="small" style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px">
+        <li>Zelfde paginakop, kaart, velden en vaste actiebalk als de editor. Werkt zonder JS.</li>
+        <li>Niet ingesteld: blauwe melding met link naar Instellingen, en "Versturen" staat uit. Mislukt: rode melding met de fout.</li>
+        <li>De bijlage staat onder het formulier, met de naam die de klant krijgt.</li>
+      </ul>
+      <div class="banner banner-warn small">Aanpassen met D0: de link "Instellingen" gaat straks naar de pagina Mailen, niet naar #mailen op de lange pagina.</div>
+    </section>
+    <section class="card pad" style="display: flex; flex-direction: column; gap: 12px">
+      <div class="row" style="justify-content: space-between"><h2>D8 · Tijdlijn met mails</h2><span class="pill pill-warn">Klein punt</span></div>
+      <ul class="small" style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px">
+        <li>Bestaande .timeline met gekleurde stippen: uitgegeven blauw, betaling groen, mislukte mail rood met icoon. Kleur nooit als enige teken.</li>
+        <li>Ook creditnota's en offertes hebben nu een tijdlijn, in dezelfde vorm.</li>
+      </ul>
+      <div class="banner banner-warn small">Een datum toont alleen dag en maand ("3 mrt"). Bij een factuur uit een ander jaar is dat verwarrend: toon het jaar als het niet dit jaar is ("3 mrt 2024").</div>
+      <div class="banner banner-warn small">Mislukt mailen toont de technische fout van de mailserver. Zet er een gewone zin boven ("De mailserver weigerde het wachtwoord"), de technische tekst klein eronder.</div>
+    </section>
+    <section class="card pad" style="display: flex; flex-direction: column; gap: 12px">
+      <div class="row" style="justify-content: space-between"><h2>D9 · "Toch bewerken" en "Annuleren"</h2><span class="pill pill-ok">Klopt</span></div>
+      <ul class="small" style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px">
+        <li>Dialoog met waarschuwingsicoon en een rode knop: past bij "uitgegeven is definitief". Legt eerst uit dat een creditnota de gewone weg is.</li>
+        <li>Zegt wat al gebeurde (gemaild op datum, naar wie) en wat dat betekent voor de klant.</li>
+        <li>Na heropenen: dezelfde editor met "Annuleren" om terug te gaan naar hoe hij was.</li>
+      </ul>
+    </section>
+    <section class="card pad" style="display: flex; flex-direction: column; gap: 12px">
+      <div class="row" style="justify-content: space-between"><h2>D10 · Offline-pagina en app-iconen</h2><span class="pill pill-ok">Klopt</span></div>
+      <ul class="small" style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px">
+        <li>Eén bestand zonder stylesheet, met de mus en de tokens voor licht en donker. Knop "Opnieuw proberen".</li>
+        <li>Het icoon (de mus) wordt ook het icoon van de desktop-app (D3).</li>
+      </ul>
+      <div class="banner banner-info small">In de desktop-app is er geen offline-pagina nodig: daar draait Huismus op de laptop zelf. Het scherm "Huismus kon niet starten" (D3) neemt die rol over.</div>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1100}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

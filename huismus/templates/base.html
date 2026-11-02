@@ -1,0 +1,120 @@
+{% load i18n static %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}"{% if theme %} data-theme="{{ theme }}"{% endif %}>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Huismus{% endblock %}</title>
+    <link rel="icon" href="{% static 'core/favicon.svg' %}" type="image/svg+xml">
+    <!-- Installing as an app (huismus/core/pwa.py). The theme colours are --surface
+         in huismus.css, light and dark. -->
+    <link rel="manifest" href="{% url 'pwa_manifest' %}">
+    <link rel="apple-touch-icon" href="{% static 'core/icons/apple-touch-icon.png' %}">
+    {% if theme == "light" %}<meta name="theme-color" content="#FFFFFF">
+    {% elif theme == "dark" %}<meta name="theme-color" content="#231F1B">
+    {% else %}<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#231F1B" media="(prefers-color-scheme: dark)">
+    {% endif %}    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Huismus">
+    <link rel="stylesheet" href="{% static 'core/huismus.css' %}">
+    <!-- htmx runs no code from the page itself: no hx-on, js: values or
+         <script> in swapped-in HTML. Huismus uses none of them. -->
+    <meta name="htmx-config" content='{"allowEval": false, "allowScriptTags": false}'>
+    <!-- Vendored, not a CDN: this app has no external services (SPEC.md
+         principle 6) and must work on a LAN with no internet access. -->
+    <script src="{% static 'core/vendor/htmx.min.js' %}" defer></script>
+    <script src="{% static 'core/app.js' %}" type="module"></script>
+</head>
+{% block body %}
+<body hx-boost="true" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+{% include "icons.svg" %}
+<div class="app">
+    <aside class="sidebar" aria-label="{% translate 'Navigatie' %}">
+        <a class="brand" href="{% url 'home' %}"><svg class="mark" width="34" height="34" aria-hidden="true"><use href="#mus"></use></svg>Huismus</a>
+        <button class="btn btn-primary btn-new btn-block" type="button" popovertarget="nieuw-menu"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuw" %}</button>
+        <div id="nieuw-menu" class="menu" popover="auto">
+            <a href="{% url 'documents:create' %}"><svg class="i" aria-hidden="true"><use href="#file"></use></svg>{% translate "Factuur" %}</a>
+            <a href="{% url 'quotes:create' %}"><svg class="i" aria-hidden="true"><use href="#clipboard"></use></svg>{% translate "Offerte" %}</a>
+            <a href="{% url 'contacts:create' %}"><svg class="i" aria-hidden="true"><use href="#users"></use></svg>{% translate "Klant" %}</a>
+            <a href="{% url 'expenses:create' %}"><svg class="i" aria-hidden="true"><use href="#receipt"></use></svg>{% translate "Uitgave" %}</a>
+        </div>
+        <nav class="nav" aria-label="{% translate 'Hoofdmenu' %}">
+            <a href="{% url 'home' %}"{% if nav_section == "home" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#home"></use></svg>{% translate "Overzicht" %}</a>
+            <a href="{% url 'documents:list' %}"{% if nav_section == "documents" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#file"></use></svg>{% translate "Facturen" %}</a>
+            <a href="{% url 'quotes:list' %}"{% if nav_section == "quotes" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#clipboard"></use></svg>{% translate "Offertes" %}</a>
+            <a href="{% url 'contacts:list' %}"{% if nav_section == "contacts" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#users"></use></svg>{% translate "Klanten" %}</a>
+            <a href="{% url 'expenses:list' %}"{% if nav_section == "expenses" and not nav_subsection %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#receipt"></use></svg>{% translate "Uitgaven" %}</a>
+            {% if nav_section == "expenses" %}
+            <div class="sub">
+                <a href="{% url 'expenses:year_overview' %}"{% if nav_subsection == "year_overview" %} aria-current="page"{% endif %}>{% translate "Jaaroverzicht" %}</a>
+                <a href="{% url 'expenses:category_list' %}"{% if nav_subsection == "categories" %} aria-current="page"{% endif %}>{% translate "Categorieën" %}</a>
+            </div>
+            {% endif %}
+            <a href="{% url 'imports:upload' %}"{% if nav_section == "imports" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#upload"></use></svg>{% translate "Importeren" %}</a>
+            <a href="{% url 'business:overview' %}"{% if nav_section == "business" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#settings"></use></svg>{% translate "Instellingen" %}</a>
+        </nav>
+        <div class="sidebar-foot">
+            <div class="nav"><a href="{% url 'help:index' %}"{% if nav_section == "help" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#help"></use></svg>{% translate "Hulp" %}</a></div>
+            {% if not desktop_without_password %}
+            <form class="nav" method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="nav-button"><svg class="i" aria-hidden="true"><use href="#log-out"></use></svg>{% translate "Uitloggen" %}</button>
+            </form>
+            {% endif %}
+        </div>
+    </aside>
+
+    <header class="mtop">
+        <a class="brand" href="{% url 'home' %}"><svg class="mark" width="28" height="28" aria-hidden="true"><use href="#mus"></use></svg>Huismus</a>
+    </header>
+    {# The tab bar has no sub-items: every expenses page marks "Uitgaven". #}
+    <nav class="tabbar" aria-label="{% translate 'Hoofdmenu' %}">
+        <a href="{% url 'home' %}"{% if nav_section == "home" %} aria-current="page"{% endif %}><svg class="i i-lg" aria-hidden="true"><use href="#home"></use></svg>{% translate "Overzicht" %}</a>
+        <a href="{% url 'documents:list' %}"{% if nav_section == "documents" %} aria-current="page"{% endif %}><svg class="i i-lg" aria-hidden="true"><use href="#file"></use></svg>{% translate "Facturen" %}</a>
+        <a class="fab" href="{% url 'documents:create' %}" aria-label="{% translate 'Nieuwe factuur' %}"><svg class="i i-lg" aria-hidden="true"><use href="#plus"></use></svg></a>
+        <a href="{% url 'expenses:list' %}"{% if nav_section == "expenses" %} aria-current="page"{% endif %}><svg class="i i-lg" aria-hidden="true"><use href="#receipt"></use></svg>{% translate "Uitgaven" %}</a>
+        <button type="button" popovertarget="meer-menu"{% if nav_section == "quotes" or nav_section == "contacts" or nav_section == "imports" or nav_section == "business" or nav_section == "help" %} aria-current="page"{% endif %}><svg class="i i-lg" aria-hidden="true"><use href="#menu"></use></svg>{% translate "Meer" %}</button>
+    </nav>
+    <div id="meer-menu" class="menu" popover="auto">
+        <a href="{% url 'quotes:list' %}"><svg class="i" aria-hidden="true"><use href="#clipboard"></use></svg>{% translate "Offertes" %}</a>
+        <a href="{% url 'contacts:list' %}"><svg class="i" aria-hidden="true"><use href="#users"></use></svg>{% translate "Klanten" %}</a>
+        <a href="{% url 'expenses:year_overview' %}"><svg class="i" aria-hidden="true"><use href="#table"></use></svg>{% translate "Jaaroverzicht" %}</a>
+        <a href="{% url 'expenses:category_list' %}"><svg class="i" aria-hidden="true"><use href="#archive"></use></svg>{% translate "Categorieën" %}</a>
+        <a href="{% url 'imports:upload' %}"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg>{% translate "Importeren" %}</a>
+        <a href="{% url 'business:overview' %}"><svg class="i" aria-hidden="true"><use href="#settings"></use></svg>{% translate "Instellingen" %}</a>
+        <a href="{% url 'help:index' %}"><svg class="i" aria-hidden="true"><use href="#help"></use></svg>{% translate "Hulp" %}</a>
+        {# The rest of the sidebar's "Nieuw" menu; the tab bar's + is a new invoice. #}
+        <hr>
+        <a href="{% url 'quotes:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuwe offerte" %}</a>
+        <a href="{% url 'contacts:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuwe klant" %}</a>
+        <a href="{% url 'expenses:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuwe uitgave" %}</a>
+        {% if not desktop_without_password %}
+        <hr>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit"><svg class="i" aria-hidden="true"><use href="#log-out"></use></svg>{% translate "Uitloggen" %}</button>
+        </form>
+        {% endif %}
+    </div>
+
+    <div class="main">
+        <main class="content main-content {% block content_class %}{% endblock %}"{% block main_attrs %}{% endblock %}>
+            {% if sample_data_in_use and user.is_authenticated and request.resolver_match.url_name != 'sample_data_clear' %}
+            {% comment %}On every page while the sample data is in use, except the one it leads to (huismus/core/sample_data.py).{% endcomment %}
+            <a class="hint-banner is-info" id="nepdata-melding" href="{% url 'sample_data_clear' %}" style="margin-bottom:var(--s-4)">
+                <svg class="i" aria-hidden="true"><use href="#info"></use></svg>
+                <span>{% translate "Dit is een voorbeeld met verzonnen gegevens. Wat je hier maakt, verdwijnt bij leegmaken." %}</span>
+                <span class="spacer"></span>
+                <span>{% translate "Weer leegmaken" %} →</span>
+            </a>
+            {% endif %}
+            {% block content %}{% endblock %}
+        </main>
+        {% block actionbar %}{% endblock %}
+        <footer class="app-footer"><span>{% translate "Zelf-gehoste boekhouding voor Nederlandse zzp'ers onder de KOR" %}</span><span class="spacer"></span><span class="shortcut-hint">{% translate "Sneltoetsen:" %} <span class="kbd">N</span> {% translate "nieuw" %}{% block shortcut_search %}{% endblock %}</span></footer>
+    </div>
+</div>
+{% include "core/_toasts.html" %}
+</body>
+{% endblock %}
+</html>

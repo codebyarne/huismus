@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 UBL-Invoice-2.0.xsd" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
+  <cbc:UBLVersionID>2.0</cbc:UBLVersionID>
+  <cbc:CustomizationID>1.0</cbc:CustomizationID>
+  <cbc:ProfileID>NL</cbc:ProfileID>
+  <cbc:ID>2014-372476</cbc:ID>
+  <cbc:CopyIndicator>false</cbc:CopyIndicator>
+  <cbc:IssueDate>2014-02-01</cbc:IssueDate>
+  <cbc:InvoiceTypeCode>1</cbc:InvoiceTypeCode>
+  <cac:AdditionalDocumentReference>
+    <cbc:ID>2014-372476.pdf</cbc:ID>
+    <cbc:DocumentType>PrimaryImage</cbc:DocumentType>
+<cac:Attachment>
+<cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf">JVBERi0xLjMKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgKG9wZW5zb3Vy
+Y2UpCjEgMCBvYmoKPDwKL0YxIDIgMCBSIC9GMiAzIDAgUiAvRjMgNCAwIFIKPj4KZW5kb2JqCjIg
+MCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EgL0VuY29kaW5nIC9XaW5BbnNpRW5jb2Rpbmcg
+L05hbWUgL0YxIC9TdWJ0eXBlIC9UeXBlMSAvVHlwZSAvRm9udAo+PgplbmRvYmoKMyAwIG9iago8
+PAovQmFzZUZvbnQgL0hlbHZldGljYS1Cb2xkIC9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nIC9O
+YW1lIC9GMiAvU3VidHlwZSAvVHlwZTEgL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjQgMCBvYmoKPDwK
+L0Jhc2VGb250IC9IZWx2ZXRpY2EtT2JsaXF1ZSAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAv
+TmFtZSAvRjMgL1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iago1IDAgb2JqCjw8
+Ci9Db250ZW50cyA5IDAgUiAvTWVkaWFCb3ggWyAwIDAgNTk1LjI3NTYgODQxLjg4OTggXSAvUGFy
+ZW50IDggMCBSIC9SZXNvdXJjZXMgPDwKL0ZvbnQgMSAwIFIgL1Byb2NTZXQgWyAvUERGIC9UZXh0
+IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJIF0KPj4gL1JvdGF0ZSAwIC9UcmFucyA8PAoKPj4gCiAg
+L1R5cGUgL1BhZ2UKPj4KZW5kb2JqCjYgMCBvYmoKPDwKL1BhZ2VNb2RlIC9Vc2VOb25lIC9QYWdl
+cyA4IDAgUiAvVHlwZSAvQ2F0YWxvZwo+PgplbmRvYmoKNyAwIG9iago8PAovQXV0aG9yIChIdWlz
+bXVzIGZpeHR1cmVzKSAvQ3JlYXRpb25EYXRlIChEOjIwMjYxMTAxMjEzODQwKzAxJzAwJykgL0Ny
+ZWF0b3IgKGFub255bW91cykgL0tleXdvcmRzICgpIC9Nb2REYXRlIChEOjIwMjYxMTAxMjEzODQw
+KzAxJzAwJykgL1Byb2R1Y2VyIChSZXBvcnRMYWIgUERGIExpYnJhcnkgLSBcKG9wZW5zb3VyY2Vc
+KSkgCiAgL1N1YmplY3QgKHVuc3BlY2lmaWVkKSAvVGl0bGUgKElua29vcGZhY3R1dXIgMjAxNC0z
+NzI0NzYpIC9UcmFwcGVkIC9GYWxzZQo+PgplbmRvYmoKOCAwIG9iago8PAovQ291bnQgMSAvS2lk
+cyBbIDUgMCBSIF0gL1R5cGUgL1BhZ2VzCj4+CmVuZG9iago5IDAgb2JqCjw8Ci9MZW5ndGggMTU4
+MAo+PgpzdHJlYW0KMSAwIDAgMSAwIDAgY20gIEJUIC9GMSAxMiBUZiAxNC40IFRMIEVUCkJUIC9G
+MiAxNCBUZiAxNi44IFRMIEVUCkJUIDEgMCAwIDEgNTYuNjkyOTEgNzcxLjAyMzYgVG0gKFNsaW1t
+ZSBWb25rIEFkdmllcykgVGogVCogRVQKQlQgL0YxIDkgVGYgMTAuOCBUTCBFVApCVCAvRjIgMTYg
+VGYgMTkuMiBUTCBFVApCVCAxIDAgMCAxIDU2LjY5MjkxIDczNy4wMDc5IFRtIChJbmtvb3BmYWN0
+dXVyKSBUaiBUKiBFVApCVCAvRjEgMTAgVGYgMTIgVEwgRVQKQlQgMSAwIDAgMSA1Ni42OTI5MSA3
+MTQuMzMwNyBUbSAoTnVtbWVyOiAyMDE0LTM3MjQ3NikgVGogVCogRVQKQlQgMSAwIDAgMSA1Ni42
+OTI5MSA3MDAuMTU3NSBUbSAoRGF0dW06IDAxLTAyLTIwMTQpIFRqIFQqIEVUCkJUIDEgMCAwIDEg
+NTYuNjkyOTEgNjg1Ljk4NDMgVG0gKFZlcnZhbGRhdHVtOiAxMC0wMi0yMDE0KSBUaiBUKiBFVApC
+VCAvRjEgOCBUZiA5LjYgVEwgRVQKQlQgMSAwIDAgMSA1Ni42OTI5MSA2NTcuNjM3OCBUbSAoRmFj
+dHV1ciBhYW4pIFRqIFQqIEVUCkJUIC9GMiAxMCBUZiAxMiBUTCBFVApCVCAxIDAgMCAxIDU2LjY5
+MjkxIDY0My40NjQ2IFRtIChMaW5kZWJvb20gQ29tbXVuaWNhdGllKSBUaiBUKiBFVApCVCAvRjEg
+MTAgVGYgMTIgVEwgRVQKQlQgL0YyIDkgVGYgMTAuOCBUTCBFVApCVCAxIDAgMCAxIDU2LjY5Mjkx
+IDYwOS40NDg4IFRtIChPbXNjaHJpanZpbmcpIFRqIFQqIEVUCkJUIDEgMCAwIDEgNTA3LjU3Nzcg
+NjA5LjQ0ODggVG0gKEJlZHJhZykgVGogVCogRVQKbiA1Ni42OTI5MSA1OTguMTEwMiBtIDUzOC41
+ODI3IDU5OC4xMTAyIGwgUwpCVCAvRjEgOSBUZiAxMC44IFRMIEVUCkJUIDEgMCAwIDEgNTYuNjky
+OTEgNTgzLjkzNyBUbSAoU2xpbW1lIFZvbmsgQWR2aWVzIE9uYmVwZXJrdCBhY2NvdW50IGZlYnJ1
+YXJpICBsaW5kZWJvb20tY29tbXVuaWNhdGllLnNsaW1tZXZvbmthZHZpZXMubmwpIFRqIFQqIEVU
+CkJUIDEgMCAwIDEgNDk5LjU2NzcgNTgzLjkzNyBUbSAoRVVSIDgsMTQpIFRqIFQqIEVUCm4gNTYu
+NjkyOTEgNTU4LjQyNTIgbSA1MzguNTgyNyA1NTguNDI1MiBsIFMKQlQgL0YxIDEwIFRmIDEyIFRM
+IEVUCkJUIDEgMCAwIDEgNTYuNjkyOTEgNTQxLjQxNzMgVG0gKFRvdGFhbCBleGNsLiBidHcpIFRq
+IFQqIEVUCkJUIDEgMCAwIDEgNDk1LjIzMjcgNTQxLjQxNzMgVG0gKEVVUiA4LDE0KSBUaiBUKiBF
+VApCVCAxIDAgMCAxIDU2LjY5MjkxIDUyNy4yNDQxIFRtIChCdHcpIFRqIFQqIEVUCkJUIDEgMCAw
+IDEgNDk1LjIzMjcgNTI3LjI0NDEgVG0gKEVVUiAxLDcxKSBUaiBUKiBFVApCVCAvRjIgMTAgVGYg
+MTIgVEwgRVQKQlQgMSAwIDAgMSA1Ni42OTI5MSA1MTMuMDcwOSBUbSAoVG90YWFsIGluY2wuIGJ0
+dykgVGogVCogRVQKQlQgMSAwIDAgMSA0OTUuMjMyNyA1MTMuMDcwOSBUbSAoRVVSIDksODUpIFRq
+IFQqIEVUCkJUIC9GMyA4IFRmIDkuNiBUTCBFVApCVCAxIDAgMCAxIDU2LjY5MjkxIDQ3MC41NTEy
+IFRtIChEaXQgaXMgZWVuIGZpY3RpZWYgdm9vcmJlZWxkZG9jdW1lbnQsIHVpdHNsdWl0ZW5kIGJl
+ZG9lbGQgdm9vciBvbnR3aWtrZWwtIGVuIHRlc3Rkb2VsZWluZGVuLikgVGogVCogRVQKIAplbmRz
+dHJlYW0KZW5kb2JqCnhyZWYKMCAxMAowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwNjEgMDAw
+MDAgbiAKMDAwMDAwMDExMiAwMDAwMCBuIAowMDAwMDAwMjE5IDAwMDAwIG4gCjAwMDAwMDAzMzEg
+MDAwMDAgbiAKMDAwMDAwMDQ0NiAwMDAwMCBuIAowMDAwMDAwNjQ5IDAwMDAwIG4gCjAwMDAwMDA3
+MTcgMDAwMDAgbiAKMDAwMDAwMTAwMiAwMDAwMCBuIAowMDAwMDAxMDYxIDAwMDAwIG4gCnRyYWls
+ZXIKPDwKL0lEIApbPDM1MTQ5YjIyNTVjMmFjNzNkYzNjMTc4OGNiOTg4ZWZkPjwzNTE0OWIyMjU1
+YzJhYzczZGMzYzE3ODhjYjk4OGVmZD5dCiUgUmVwb3J0TGFiIGdlbmVyYXRlZCBQREYgZG9jdW1l
+bnQgLS0gZGlnZXN0IChvcGVuc291cmNlKQoKL0luZm8gNyAwIFIKL1Jvb3QgNiAwIFIKL1NpemUg
+MTAKPj4Kc3RhcnR4cmVmCjI2OTIKJSVFT0YK</cbc:EmbeddedDocumentBinaryObject>
+    </cac:Attachment>
+  </cac:AdditionalDocumentReference>
+  <cac:AccountingSupplierParty>
+    <cac:Party>
+      <cac:PartyName>
+        <cbc:Name>Slimme Vonk Advies B.V.</cbc:Name>
+      </cac:PartyName>
+      <cac:PhysicalLocation>
+        <cac:Address>
+          <cbc:StreetName>Vlierweg</cbc:StreetName>
+          <cbc:BuildingNumber>15</cbc:BuildingNumber>
+          <cbc:CityName>Emmen</cbc:CityName>
+          <cbc:PostalZone>2177NN</cbc:PostalZone>
+          <cac:Country>
+            <cbc:IdentificationCode>NL</cbc:IdentificationCode>
+          </cac:Country>
+        </cac:Address>
+      </cac:PhysicalLocation>
+      <cac:PartyTaxScheme>
+        <cbc:CompanyID>NL641701073B91</cbc:CompanyID>
+        <cac:TaxScheme>
+          <cbc:ID>BTW</cbc:ID>
+          <cbc:TaxTypeCode>BTW</cbc:TaxTypeCode>
+        </cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:CompanyID>85180483</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:ElectronicMail>info@slimmevonkadvies.com</cbc:ElectronicMail>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingSupplierParty>
+  <cac:AccountingCustomerParty>
+    <cbc:SupplierAssignedAccountID>7777</cbc:SupplierAssignedAccountID>
+    <cac:Party>
+      <cac:PartyName>
+        <cbc:Name>Lindeboom Communicatie</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>Heidepad 97</cbc:StreetName>
+        <cbc:AdditionalStreetName/>
+        <cbc:CityName>Middelburg</cbc:CityName>
+        <cbc:PostalZone>7668 YD</cbc:PostalZone>
+        <cbc:CountrySubentity>Nederland</cbc:CountrySubentity>
+      </cac:PostalAddress>
+      <cac:Contact>
+        <cbc:Name></cbc:Name>
+        <cbc:ElectronicMail>info@lindeboomcommunicatie.nu</cbc:ElectronicMail>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingCustomerParty>
+  <cac:PaymentMeans>
+    <cbc:PaymentMeansCode>20</cbc:PaymentMeansCode>
+    <cac:PayeeFinancialAccount>
+      <cbc:ID></cbc:ID>
+    </cac:PayeeFinancialAccount>
+  </cac:PaymentMeans>
+  <cac:PaymentTerms>
+    <cbc:Note>Het openstaande bedrag van €9,85 wordt binnen enkele werkdagen van je bankrekening of creditcard afgeschreven. 
+*Voor vragen over deze factuur kun je altijd per e-mail contact opnemen met: info@slimmevonkadvies.com*</cbc:Note>
+    <cac:SettlementPeriod>
+      <cbc:DurationMeasure unitCode="DAY">9</cbc:DurationMeasure>
+      <cbc:Description>Het openstaande bedrag van €9,85 wordt binnen enkele werkdagen van je bankrekening of creditcard afgeschreven. 
+*Voor vragen over deze factuur kun je altijd per e-mail contact opnemen met: info@slimmevonkadvies.com*</cbc:Description>
+    </cac:SettlementPeriod>
+    <cac:PenaltyPeriod>
+      <cbc:EndDate>2014-02-10</cbc:EndDate>
+    </cac:PenaltyPeriod>
+  </cac:PaymentTerms>
+  <cac:TaxTotal>
+    <cbc:TaxAmount currencyID="EUR">1.71</cbc:TaxAmount>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="EUR">8.14</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="EUR">1.71</cbc:TaxAmount>
+      <cbc:Percent>0.0021</cbc:Percent>
+      <cac:TaxCategory>
+        <cbc:ID>1</cbc:ID>
+        <cac:TaxScheme>
+          <cbc:ID>BTW</cbc:ID>
+          <cbc:TaxTypeCode>BTW</cbc:TaxTypeCode>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+  </cac:TaxTotal>
+  <cac:LegalMonetaryTotal>
+    <cbc:PayableAmount currencyID="EUR">9.85</cbc:PayableAmount>
+  </cac:LegalMonetaryTotal>
+  <cac:InvoiceLine>
+    <cbc:ID>1</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="C62">1.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">8.14</cbc:LineExtensionAmount>
+    <cac:AllowanceCharge>
+      <cbc:ID>A-1BC</cbc:ID>
+      <cbc:ChargeIndicator>true</cbc:ChargeIndicator>
+      <cbc:MultiplierFactorNumeric>0.0</cbc:MultiplierFactorNumeric>
+      <cbc:Amount currencyID="EUR">0</cbc:Amount>
+      <cbc:BaseAmount currencyID="EUR">8.14</cbc:BaseAmount>
+    </cac:AllowanceCharge>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="EUR">1.71</cbc:TaxAmount>
+      <cac:TaxSubtotal>
+        <cbc:TaxableAmount currencyID="EUR">8.14</cbc:TaxableAmount>
+        <cbc:TaxAmount currencyID="EUR">1.71</cbc:TaxAmount>
+        <cbc:Percent>21.0</cbc:Percent>
+        <cac:TaxCategory>
+          <cac:TaxScheme>
+            <cbc:ID>VAT</cbc:ID>
+          </cac:TaxScheme>
+        </cac:TaxCategory>
+      </cac:TaxSubtotal>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Description>Slimme Vonk Advies Onbeperkt account februari
+ lindeboom-communicatie.slimmevonkadvies.nl</cbc:Description>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">8.14</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+</Invoice>

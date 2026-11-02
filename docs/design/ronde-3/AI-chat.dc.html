@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Uitgeven via een assistent</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="hm.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#14539E}a:hover{color:#1B6AC9}
+</style>
+</helmet>
+<div style="width: 390px; height: 1100px; box-sizing: border-box; background: #F4EFE7; font-family: ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color: #2A2520; padding: 16px; display: flex; flex-direction: column; gap: 14px">
+  <p class="small muted" style="text-align: center">In de chat (schets, geen echte app)</p>
+  <div style="align-self: flex-end; max-width: 80%; background: #1B6AC9; color: #fff; padding: 10px 14px; border-radius: 16px 16px 4px 16px">Maak een factuur voor Bakkerij De Korrel: 6 uur fotografie à € 85, en geef hem uit.</div>
+  <div style="align-self: flex-start; max-width: 88%; background: #fff; padding: 12px 14px; border-radius: 16px 16px 16px 4px; display: flex; flex-direction: column; gap: 10px">
+    <span>Ik heb een concept gemaakt in Huismus. Dit gaat er gebeuren als ik hem uitgeef:</span>
+    <div style="border: 1px solid #E6DED2; border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 6px; background: #FBF8F3">
+      <strong>Factuur uitgeven</strong>
+      <span class="small">Klant: Bakkerij De Korrel, Utrecht</span>
+      <span class="small">6 × Fotografie à € 85,00</span>
+      <span class="small"><strong>Totaal € 510,00</strong> · nummer wordt 2026-0014</span>
+      <span class="small muted">Daarna ligt de factuur vast. Corrigeren kan alleen met een creditnota.</span>
+    </div>
+  </div>
+
+  <div role="dialog" aria-labelledby="perm" style="align-self: stretch; background: #fff; border: 2px solid #1B6AC9; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px">
+    <span class="small muted">Gevraagd door de Claude-app, niet door de assistent</span>
+    <strong id="perm">Huismus: factuur uitgeven?</strong>
+    <span class="small">Bakkerij De Korrel · € 510,00</span>
+    <div class="row" style="flex-wrap: wrap"><button class="btn btn-primary btn-sm" type="button">Eenmalig toestaan</button><button class="btn btn-sm" type="button">Weigeren</button></div>
+    <span class="small muted">"Altijd toestaan" kan ook, maar dan vraagt de app het daarna niet meer.</span>
+  </div>
+
+  <div style="align-self: flex-start; max-width: 88%; background: #fff; padding: 12px 14px; border-radius: 16px 16px 16px 4px; display: flex; flex-direction: column; gap: 8px">
+    <span>Factuur <strong>2026-0014</strong> is uitgegeven, € 510,00. Je ziet hem in Huismus onder Facturen.</span>
+    <span class="small muted">Mailen naar de klant? Daar vraagt de app je ook eerst toestemming voor.</span>
+  </div>
+  <div style="margin-top: auto; border-top: 1px solid #E6DED2; padding-top: 12px" class="small muted">De knop komt van de app. De assistent kan hem niet voor je indrukken. Hoe de vraag er precies uitziet, bepaalt de app (Claude of ChatGPT), niet Huismus.</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1100}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

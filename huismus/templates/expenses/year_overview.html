@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load i18n money %}
+
+{% block title %}{% translate "Jaaroverzicht" %} {{ year }} — Huismus{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles"><span class="small muted">{% translate "Uitgaven" %}</span><h1>{% translate "Jaaroverzicht" %} {{ year }}</h1></div>
+    <div class="actions">
+        <nav class="year-nav" aria-label="{% translate 'Jaar' %}">
+            <a href="?jaar={{ year|add:'-1' }}" aria-label="{% translate 'Vorig jaar' %}"><svg class="i i-sm" aria-hidden="true"><use href="#chevron-left"></use></svg></a>
+            <a href="?jaar={{ year|add:'-1' }}">{{ year|add:"-1" }}</a>
+            <a href="?jaar={{ year }}" aria-current="page">{{ year }}</a>
+            {% if year < this_year %}<a href="?jaar={{ year|add:'1' }}">{{ year|add:"1" }}</a>{% endif %}
+            <a href="?jaar={{ year|add:'1' }}" aria-label="{% translate 'Volgend jaar' %}"><svg class="i i-sm" aria-hidden="true"><use href="#chevron-right"></use></svg></a>
+        </nav>
+        <a class="btn btn-secondary" href="{% url 'expenses:year_overview_csv' %}?jaar={{ year }}" hx-boost="false" data-file><svg class="i" aria-hidden="true"><use href="#download"></use></svg>{% translate "CSV downloaden" %}</a>
+        <a class="btn btn-ghost" href="{% url 'business:export' %}?jaar={{ year }}">{% translate "Exporteren" %} →</a>
+    </div>
+</div>
+
+<div class="grid-3" style="margin-bottom:var(--s-5)">
+    <div class="card kpi"><span class="kpi-label"><i class="legend-dot"></i>{% translate "Omzet" %}</span><span class="kpi-value">{{ overview.revenue_cents|money }}</span><span class="kpi-sub">{% blocktranslate count count=invoice_count %}{{ count }} factuur{% plural %}{{ count }} facturen{% endblocktranslate %}{% if credit_note_count %}, {% blocktranslate count count=credit_note_count %}{{ count }} creditnota{% plural %}{{ count }} creditnota's{% endblocktranslate %}{% endif %}</span></div>
+    <div class="card kpi"><span class="kpi-label"><i class="legend-dot is-cost"></i>{% translate "Kosten" %}</span><span class="kpi-value">{{ overview.expenses_cents|money }}</span><span class="kpi-sub">{% blocktranslate count count=expense_count %}{{ count }} uitgave{% plural %}{{ count }} uitgaven{% endblocktranslate %}</span></div>
+    <div class="card kpi kpi-hero"><span class="kpi-label">{% translate "Winst" %}</span><span class="kpi-value">{{ overview.profit_cents|money }}</span><span class="kpi-sub">{% translate "omzet min kosten" %}</span></div>
+</div>
+
+{% if kor_limit %}
+<section class="card card-pad" id="kor-grens" style="margin-bottom:var(--s-5)">
+    <h2 style="margin-bottom:var(--s-4)">{% translate "KOR-grens" %}</h2>
+    <div class="progress{% if kor_limit.level == 'near' %} is-warn{% elif kor_limit.level == 'over' %} is-bad{% endif %}" aria-hidden="true"><span style="width:{{ kor_limit.bar_percent }}%"></span></div>
+    <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:var(--s-2);margin-top:var(--s-3)">
+        <span>{% blocktranslate with percent=kor_limit.percent %}{{ percent }}% van je KOR-grens{% endblocktranslate %}</span>
+        <span class="amount">{% blocktranslate with revenue=kor_limit.revenue_cents|money limit=kor_limit.limit_cents|money %}{{ revenue }} van {{ limit }}{% endblocktranslate %}</span>
+    </div>
+    {% if year != this_year %}<p class="muted small" style="margin-top:var(--s-2)">{% blocktranslate with limit=kor_limit.limit_cents|money %}Gemeten met je huidige KOR-grens van {{ limit }}.{% endblocktranslate %}</p>{% endif %}
+</section>
+{% endif %}
+
+<section class="card card-pad" style="margin-bottom:var(--s-5)">
+    <div class="row" style="margin-bottom:var(--s-5)"><h2>{% translate "Per kwartaal" %}</h2><span class="spacer"></span><div class="legend"><span><i></i>{% translate "Omzet" %}</span><span><i class="is-cost"></i>{% translate "Kosten" %}</span></div></div>
+    <div class="chart" role="img" aria-label="{% translate 'Staafgrafiek omzet en kosten per kwartaal' %}">
+        <div class="chart-axis">{% for tick in ticks %}<span>{{ tick|whole_euros }}</span>{% endfor %}</div>
+        {% for bar in bars %}
+        <div class="chart-col">
+            <div class="chart-bars">
+                <span class="chart-bar{% if not bar.revenue_percent %} is-empty{% endif %}" style="--v:{{ bar.revenue_percent }}" title="{% blocktranslate with q=bar.quarter.quarter amount=bar.quarter.revenue_cents|money %}Omzet Q{{ q }}: {{ amount }}{% endblocktranslate %}"></span>
+                <span class="chart-bar is-cost{% if not bar.expenses_percent %} is-empty{% endif %}" style="--v:{{ bar.expenses_percent }}" title="{% blocktranslate with q=bar.quarter.quarter amount=bar.quarter.expenses_cents|money %}Kosten Q{{ q }}: {{ amount }}{% endblocktranslate %}"></span>
+            </div>
+            <span class="chart-label">Q{{ bar.quarter.quarter }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="table-wrap" style="margin-top:var(--s-6)">
+        <table class="table">
+            <thead><tr><th>{% translate "Kwartaal" %}</th><th class="r">{% translate "Omzet" %}</th><th class="r">{% translate "Kosten" %}</th><th class="r">{% translate "Winst" %}</th></tr></thead>
+            <tbody>
+                {% for quarter in overview.quarters %}
+                <tr>
+                    <td>Q{{ quarter.quarter }} <span class="muted small">{% if quarter.quarter == 1 %}{% translate "jan–mrt" %}{% elif quarter.quarter == 2 %}{% translate "apr–jun" %}{% elif quarter.quarter == 3 %}{% translate "jul–sep" %}{% else %}{% translate "okt–dec" %}{% endif %}</span></td>
+                    <td class="r amount">{{ quarter.revenue_cents|money }}</td>
+                    <td class="r amount">{{ quarter.expenses_cents|money }}</td>
+                    <td class="r amount">{{ quarter.profit_cents|money }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot><tr><td>{% translate "Totaal" %}</td><td class="r amount">{{ overview.revenue_cents|money }}</td><td class="r amount">{{ overview.expenses_cents|money }}</td><td class="r amount">{{ overview.profit_cents|money }}</td></tr></tfoot>
+        </table>
+    </div>
+</section>
+
+<section class="card card-pad" style="margin-bottom:var(--s-5)">
+    <h2 style="margin-bottom:var(--s-5)">{% translate "Kosten per categorie" %}</h2>
+    {% if categories %}
+    <div class="hbars">
+        {% for row in categories %}
+        <div class="hbar"><span>{{ row.category.name }}</span><div class="hbar-track"><div class="hbar-fill" style="--v:{{ row.percent }}"></div></div><span class="amount">{{ row.category.amount_cents|money }}</span></div>
+        {% endfor %}
+    </div>
+    <div class="row" style="justify-content:space-between;margin-top:var(--s-5);padding-top:var(--s-4);border-top:1px solid var(--border)"><strong>{% translate "Totaal" %}</strong><strong class="amount">{{ overview.expenses_cents|money }}</strong></div>
+    {% else %}
+    <p class="muted small">{% translate "Je hebt dit jaar geen uitgaven." %}</p>
+    {% endif %}
+</section>
+
+<div class="stack" style="gap:var(--s-2)">
+    <p class="disclaimer"><svg class="i i-sm" aria-hidden="true"><use href="#info"></use></svg>{% translate "Huismus telt omzet zonder btw, op de factuurdatum, niet op de dag dat er betaald is. Kosten zijn bruto: wat je echt betaald hebt." %}</p>
+</div>
+{% endblock %}

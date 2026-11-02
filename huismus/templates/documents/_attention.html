@@ -1,0 +1,13 @@
+{% load i18n %}{% comment %}The "T.a.v." line (Document.attention): the contact's own or one of
+its contact persons. Swapped by the live editor when the customer changes;
+attention_contact says for which customer it was chosen (DocumentForm).{% endcomment %}
+<div class="field" id="aan-tav"{% if oob %} hx-swap-oob="true"{% endif %}>
+    <input type="hidden" name="{{ form.attention_contact.html_name }}" value="{{ attention.contact.pk|default:'' }}">
+    {% if attention.options %}
+    <label class="label" for="{{ form.attention.id_for_label }}">{% translate "T.a.v." %}</label>
+    <select name="{{ form.attention.html_name }}" id="{{ form.attention.id_for_label }}" class="select">
+        <option value="">{% translate "Niemand" %}</option>
+        {% for name in attention.options %}<option value="{{ name }}"{% if name == attention.attention %} selected{% endif %}>{{ name }}</option>{% endfor %}
+    </select>
+    {% endif %}
+</div>

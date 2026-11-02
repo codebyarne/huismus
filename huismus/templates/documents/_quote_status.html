@@ -1,0 +1,37 @@
+{% load i18n %}
+{% comment %}A quote's lifecycle (docs/design/archief/2026-09-claude-design/html/offerte.html): where it is,
+and the actions for that status. The status buttons post to their own
+endpoints (quotes:accept, ...); unsaved edits in the editor don't go along.{% endcomment %}
+<section class="card card-pad" style="max-width:860px;margin:0 auto var(--s-5)">
+    <ol class="steps" aria-label="{% translate 'Stappen van de offerte' %}">
+        <li class="step {% if document.status == 'draft' %}is-current{% else %}is-done{% endif %}"{% if document.status == "draft" %} aria-current="step"{% endif %}><span class="dot">{% if document.status == "draft" %}1{% else %}<svg class="i" aria-hidden="true"><use href="#check"></use></svg>{% endif %}</span>{% translate "Concept" %}</li>
+        <li class="step {% if document.status == 'sent' %}is-current{% elif document.status == 'draft' %}is-muted{% else %}is-done{% endif %}"{% if document.status == "sent" %} aria-current="step"{% endif %}><span class="dot">{% if document.status == "draft" or document.status == "sent" %}2{% else %}<svg class="i" aria-hidden="true"><use href="#check"></use></svg>{% endif %}</span>{% translate "Verzonden" %}</li>
+        <li class="step {% if document.status == 'accepted' or document.status == 'declined' or document.status == 'expired' %}{% if converted_invoice %}is-done{% else %}is-current{% endif %}{% else %}is-muted{% endif %}"><span class="dot">{% if converted_invoice %}<svg class="i" aria-hidden="true"><use href="#check"></use></svg>{% else %}3{% endif %}</span>{% if document.status == "accepted" %}{% translate "Geaccepteerd" %}{% elif document.status == "declined" %}{% translate "Afgewezen" %}{% elif document.status == "expired" %}{% translate "Verlopen" %}{% else %}{% translate "Geaccepteerd, afgewezen of verlopen" %}{% endif %}</li>
+        <li class="step {% if converted_invoice %}is-current{% else %}is-muted{% endif %}"><span class="dot">4</span>{% translate "Factuur" %}</li>
+    </ol>
+    <hr class="divider" style="margin:var(--s-4) 0">
+    <div class="row" style="align-items:flex-start;gap:var(--s-4)">
+        <div class="stack" style="gap:4px;flex:1;min-width:240px">
+            {% if document.status == "draft" %}
+            <strong>{% translate "Nog een concept" %}</strong>
+            <span class="small muted">{% translate "Verzend de offerte om hem een nummer te geven. Daarna kun je hem mailen of de PDF downloaden." %}</span>
+            {% elif document.status == "sent" %}
+            <strong>{% translate "Wacht op antwoord van de klant" %}</strong>
+            <span class="small muted">{% translate "Heb je antwoord? Leg het hier vast." %}{% if document.expiry_date %} {% blocktranslate with date=document.expiry_date|date:"j b Y" %}Geldig tot {{ date }}.{% endblocktranslate %}{% endif %}</span>
+            {% elif document.status == "accepted" %}
+            <strong>{% translate "Geaccepteerd door de klant" %}</strong>
+            <span class="small muted">{% if converted_invoice %}{% translate "Er is al een factuur van gemaakt." %} <a href="{% url 'documents:edit' converted_invoice.pk %}">{% translate "Naar de factuur" %}</a>{% else %}{% translate "Zet de offerte om naar een factuur." %}{% endif %}</span>
+            {% else %}
+            <strong>{% if document.status == "declined" %}{% translate "Afgewezen door de klant" %}{% else %}{% translate "Verlopen" %}{% endif %}</strong>
+            <span class="small muted">{% translate "Je kunt hem toch nog omzetten naar een factuur." %}</span>
+            {% endif %}
+        </div>
+        {% if document.status == "sent" %}
+        <div class="row" style="gap:var(--s-2)">
+            <button class="btn btn-secondary" type="submit" formaction="{% url 'quotes:accept' document.pk %}"><svg class="i" aria-hidden="true" style="color:var(--ok)"><use href="#check-circle"></use></svg>{% translate "Accepteren" %}</button>
+            <button class="btn btn-secondary" type="submit" formaction="{% url 'quotes:decline' document.pk %}"><svg class="i" aria-hidden="true" style="color:var(--bad)"><use href="#x-circle"></use></svg>{% translate "Afwijzen" %}</button>
+            <button class="btn btn-ghost" type="submit" formaction="{% url 'quotes:expire' document.pk %}"><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% translate "Markeer als verlopen" %}</button>
+        </div>
+        {% endif %}
+    </div>
+</section>

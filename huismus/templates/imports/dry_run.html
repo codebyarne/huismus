@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load i18n forms %}
+
+{% block title %}{% translate "Proefdraai" %} — Huismus{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <a class="back" href="{% url 'imports:upload' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Andere bestanden kiezen" %}</a>
+        <h1>{% translate "Importeren uit Moneybird" %}</h1>
+    </div>
+</div>
+{% include "imports/_steps.html" with step=2 %}
+
+<div class="mode-banner" style="margin-bottom:var(--s-6)">
+    <span class="mb-icon"><svg class="i i-lg" aria-hidden="true"><use href="#info"></use></svg></span>
+    <div class="stack" style="gap:4px">
+        <h2>{% translate "Proefdraai: er is nog niets opgeslagen" %}</h2>
+        <p class="muted">{% blocktranslate count count=uploads|length %}Huismus las {{ count }} bestand. Hieronder zie je wat de import zou doen.{% plural %}Huismus las {{ count }} bestanden. Hieronder zie je wat de import zou doen.{% endblocktranslate %}</p>
+    </div>
+</div>
+
+<section class="card card-pad stack" style="gap:var(--s-3);margin-bottom:var(--s-5)">
+    <div class="row"><h2>{% translate "Herkende bestanden" %}</h2><span class="spacer"></span><span class="small muted">{% translate "Huismus kijkt naar tabbladen en kolommen, niet naar de bestandsnaam." %}</span></div>
+    <ul class="file-list">
+        {% for upload in uploads %}
+        <li class="file-item{% if not upload.recognized %} is-unknown{% endif %}">
+            <span class="f-icon"><svg class="i" aria-hidden="true"><use href="#{% if upload.is_zip %}zip{% elif upload.recognized %}table{% else %}file{% endif %}"></use></svg></span>
+            <span class="f-body"><span class="f-text"><span class="f-name">{{ upload.name }}</span><span class="f-meta">{{ upload.size|filesizeformat }}{% if upload.pdf_count %} · {% blocktranslate count count=upload.pdf_count %}{{ count }} PDF{% plural %}{{ count }} PDF's{% endblocktranslate %}{% endif %}{% if not upload.recognized %} · {% translate "wordt overgeslagen" %}{% endif %}</span></span>
+            <span class="f-arrow">{% if upload.recognized %}<svg class="i i-sm" aria-hidden="true"><use href="#check"></use></svg>{{ upload.labels|join:", "|default:_("Factuur-PDF's") }}{% else %}<svg class="i i-sm" aria-hidden="true"><use href="#alert"></use></svg>{% translate "Niet herkend" %}{% endif %}</span></span>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+
+<div class="stack" style="gap:var(--s-3)">
+    {% if contacts %}
+    <details class="report{% if contacts.discrepancies %} is-warn{% endif %}">
+        <summary>
+            <span class="r-icon"><svg class="i" aria-hidden="true"><use href="#check"></use></svg></span>
+            <span class="r-title"><strong>{% translate "Klanten" %}</strong><span>{% blocktranslate with new=contacts.new updated=contacts.updated %}{{ new }} nieuw, {{ updated }} bijgewerkt{% endblocktranslate %}</span></span>
+            <svg class="i chev" aria-hidden="true"><use href="#chevron-down"></use></svg>
+        </summary>
+        <div class="r-body"><div class="stat-chips">{% if contacts.in_export is not None %}<span class="stat-chip"><b>{{ contacts.in_export }}</b>{% translate "in de export" %}</span>{% endif %}<span class="stat-chip"><b>{{ contacts.new }}</b>{% translate "nieuw" %}</span><span class="stat-chip"><b>{{ contacts.updated }}</b>{% translate "bijgewerkt" %}</span><span class="stat-chip"><b>{{ contacts.unchanged }}</b>{% translate "ongewijzigd" %}</span></div></div>
+    </details>
+    {% endif %}
+    {% if invoices %}{% translate "Facturen" as invoices_title %}{% translate "Regels zonder factuur" as invoice_orphans_title %}{% translate "Deze regels horen bij geen enkele factuur in de export. Huismus neemt ze niet over, maar bewaart ze wel." as invoice_orphans_text %}{% include "imports/_report_section.html" with r=invoices title=invoices_title orphans_title=invoice_orphans_title orphans_text=invoice_orphans_text %}{% endif %}
+    {% if quotes %}{% translate "Offertes" as quotes_title %}{% translate "Regels zonder offerte" as quote_orphans_title %}{% translate "Deze regels horen bij geen enkele offerte in de export. Huismus neemt ze niet over, maar bewaart ze wel." as quote_orphans_text %}{% include "imports/_report_section.html" with r=quotes title=quotes_title orphans_title=quote_orphans_title orphans_text=quote_orphans_text %}{% endif %}
+    {% if expenses %}{% translate "Uitgaven" as expenses_title %}{% translate "Regels zonder uitgave" as expense_orphans_title %}{% translate "Deze regels horen bij geen enkele uitgave in de export. Huismus neemt ze niet over, maar bewaart ze wel." as expense_orphans_text %}{% include "imports/_report_section.html" with r=expenses title=expenses_title orphans_title=expense_orphans_title orphans_text=expense_orphans_text %}{% endif %}
+    {% if notes %}
+    <details class="report" open>
+        <summary><span class="r-icon is-info"><svg class="i" aria-hidden="true"><use href="#info"></use></svg></span><span class="r-title"><strong>{% translate "Let op" %}</strong><span>{% blocktranslate count count=notes|length %}{{ count }} algemene opmerking{% plural %}{{ count }} algemene opmerkingen{% endblocktranslate %}</span></span><svg class="i chev" aria-hidden="true"><use href="#chevron-down"></use></svg></summary>
+        <div class="r-body">{% for note in notes %}<p class="small">{{ note }}</p>{% endfor %}</div>
+    </details>
+    {% endif %}
+</div>
+
+<form id="doorvoeren" method="post" action="{% url 'imports:commit' %}">
+    {% csrf_token %}
+    <input type="hidden" name="token" value="{{ token }}">
+    <section class="card settings-section" id="bedrijfsgegevens" style="margin-top:var(--s-6)">
+        <div class="card-head"><h2>{% translate "Je bedrijfsgegevens" %}</h2></div>
+        <div class="card-pad stack" style="gap:var(--s-4)">
+            <p class="small muted">{% if settings_source_date %}{% blocktranslate with date=settings_source_date|date:"j F Y" %}Ingevuld uit je nieuwste factuur, van {{ date }}. Kijk ze na: bij het importeren slaat Huismus ze op in Instellingen.{% endblocktranslate %}{% else %}{% translate "Kijk ze na: bij het importeren slaat Huismus ze op in Instellingen." %}{% endif %}</p>
+            <div class="fieldset">
+                {% for bound_field, current in settings_fields %}
+                {% if bound_field.name == "number_reset_yearly" %}
+                <div class="field span-6">
+                    <label class="switch"><input type="checkbox" name="{{ bound_field.html_name }}" role="switch"{% if bound_field.value %} checked{% endif %}>{% translate "Nummering elk jaar opnieuw beginnen" %}</label>
+                    {% for error in bound_field.errors %}<p class="error"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>{{ error }}</p>{% endfor %}
+                </div>
+                {% else %}
+                {% if current %}{% blocktranslate asvar now with value=current %}Nu in Instellingen: {{ value }}{% endblocktranslate %}{% else %}{% firstof "" as now %}{% endif %}
+                {% field bound_field span=3 help=now %}
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</form>
+
+<section class="card card-pad row" style="margin-top:var(--s-6);align-items:center;gap:var(--s-4)">
+    <div class="stack" style="gap:2px;flex:1;min-width:240px">
+        <strong>{% translate "Ziet het er goed uit?" %}</strong>
+        <span class="small muted">{% translate "Importeer nu met precies deze bestanden. Importeer je ze later nog eens, dan verandert er niets: wat er al is, slaat Huismus over." %}</span>
+    </div>
+    <div class="row">
+        <form method="post" action="{% url 'imports:cancel' %}">
+            {% csrf_token %}
+            <input type="hidden" name="token" value="{{ token }}">
+            <button class="btn btn-ghost btn-lg" type="submit">{% translate "Annuleren" %}</button>
+        </form>
+        <button class="btn btn-primary btn-lg" type="submit" form="doorvoeren">{% translate "Nu echt importeren" %}<span class="spinner"></span></button>
+    </div>
+</section>
+{% endblock %}

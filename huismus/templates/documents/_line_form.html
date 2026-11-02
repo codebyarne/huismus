@@ -1,0 +1,26 @@
+{% load i18n documents_tags forms %}
+{% comment %}One line in the editor. `line_form` is a form of the line formset
+(or its empty_form, with __prefix__), `cents` its live line total or None.{% endcomment %}
+<div class="line{% if line_form.errors %} has-error{% endif %}" id="{{ line_form.prefix }}">
+    {{ line_form.id }}
+    <span class="grip" aria-hidden="true"><svg class="i"><use href="#grip"></use></svg></span>
+    {% with n=line_form.prefix %}
+    {% comment %}A growing textarea, not a one-line input: long descriptions stay readable
+    (app.js sizes it to its text; Enter makes a new line, which the PDF keeps).{% endcomment %}
+    <textarea class="input input-sm line-desc{% if not line_form.description.errors %} input-quiet{% endif %}" name="{{ line_form.description.html_name }}" rows="1" aria-label="{% translate 'Omschrijving' %}" placeholder="{% translate 'Omschrijving' %}"{% if line_form.description.errors %} aria-invalid="true" aria-describedby="{{ n }}-fout"{% endif %}>{{ line_form.description.value|default:'' }}</textarea>
+    <input class="input input-sm line-qty{% if not line_form.quantity.errors %} input-quiet{% endif %} r num" name="{{ line_form.quantity.html_name }}" value="{{ line_form.quantity.value|default_if_none:'' }}" inputmode="decimal" aria-label="{% translate 'Aantal' %}"{% if line_form.quantity.errors %} aria-invalid="true" aria-describedby="{{ n }}-fout"{% endif %}>
+    <input class="input input-sm line-unit input-quiet" name="{{ line_form.unit.html_name }}" value="{{ line_form.unit.value|default:'' }}" aria-label="{% translate 'Eenheid' %}">
+    <div class="money line-price"><input class="input input-sm{% if not line_form.unit_price_cents.errors %} input-quiet{% endif %}" name="{{ line_form.unit_price_cents.html_name }}" value="{{ line_form.unit_price_cents.value|default_if_none:'' }}" type="text" inputmode="decimal" aria-label="{% translate 'Prijs per eenheid' %}"{% if line_form.unit_price_cents.errors %} aria-invalid="true" aria-describedby="{{ n }}-fout"{% endif %}></div>
+    {{ line_form.tax_rate_bp }}
+    <span class="line-total{% if cents is None %} muted{% endif %}" id="{{ n }}-totaal">{% if cents is None %}·{% else %}{{ cents|money_for:document }}{% endif %}</span>
+    {% comment %}The trash icon is the label of the formset's DELETE checkbox:
+    no JS needed, and CSS strikes the line through while it's checked.{% endcomment %}
+    <label class="btn btn-ghost btn-sm btn-icon line-delete" title="{% translate 'Regel verwijderen' %}">
+        <input type="checkbox" name="{{ line_form.DELETE.html_name }}" class="sr-only"{% if line_form.DELETE.value %} checked{% endif %}>
+        <svg class="i" aria-hidden="true"><use href="#trash"></use></svg><span class="sr-only">{% translate "Regel verwijderen" %}</span>
+    </label>
+    {% if line_form.errors %}
+    <p class="error line-error" id="{{ n }}-fout"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>{% for field in line_form %}{% for error in field.errors %}{{ field.label|capfirst }}: {{ error|after_colon }} {% endfor %}{% endfor %}</p>
+    {% endif %}
+    {% endwith %}
+</div>

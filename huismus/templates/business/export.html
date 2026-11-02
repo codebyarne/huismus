@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Exporteren" %} — {% translate "Instellingen" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <a class="small" href="{% url 'business:overview' %}">← {% translate "Instellingen" %}</a>
+        <h1>{% translate "Exporteren" %}</h1>
+        <p class="lede">{% translate "Download je facturen, offertes, klanten en uitgaven als CSV, met de pdf's en bonnetjes erbij. Werkt ook zonder Huismus." %} <a href="{{ help_url }}">{% translate "Wat zit erin" %} →</a></p>
+    </div>
+</div>
+
+{% comment %}A plain GET (SPEC.md M19), without hx-boost: the answer is a file, not a page. data-download: the button spins until the file is there (app.js; the hidden field carries the token core.export_views sends back as a cookie).{% endcomment %}
+<section class="card settings-section">
+    <form class="card-pad stack" style="gap:var(--s-5)" method="get" action="{% url 'business:export_zip' %}" hx-boost="false" data-download>
+        <input type="hidden" name="klaar" value="">
+        <div class="field">
+            <label class="label" for="export-jaar">{% translate "Wat wil je exporteren?" %}</label>
+            <select class="select" id="export-jaar" name="jaar" aria-describedby="export-jaar-help">
+                <option value=""{% if not chosen %} selected{% endif %}>{% translate "Alles" %}</option>
+                {% for year in years %}<option value="{{ year }}"{% if year == chosen %} selected{% endif %}>{{ year }}</option>
+                {% endfor %}
+            </select>
+            <span class="help" id="export-jaar-help">{% translate "Een jaar telt op factuurdatum, zoals het jaaroverzicht. Klanten gaan altijd allemaal mee." %}</span>
+        </div>
+        <div><button class="btn btn-primary" type="submit"><svg class="i" aria-hidden="true"><use href="#download"></use></svg>{% translate "ZIP downloaden" %}<span class="spinner" aria-hidden="true"></span></button></div>
+    </form>
+</section>
+{% endblock %}

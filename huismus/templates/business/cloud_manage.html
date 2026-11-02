@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load i18n backups %}
+
+{% block title %}{{ cloud.service_label }} — {% translate "Back-ups" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+{% comment %}"Beheren" on the Back-ups overview: the linked cloud service (huismus-intern/besluiten.md, 2026-11-01; huismus/core/cloud_views.py).{% endcomment %}
+<div class="page-head">
+    <div class="titles">
+        <a class="small" href="{% url 'business:backups' %}">← {% translate "Back-ups" %}</a>
+        <h1>{% blocktranslate with service=cloud.service_label %}Back-ups in {{ service }}{% endblocktranslate %}</h1>
+        {% comment %}A WebDAV address can be longer than a phone is wide.{% endcomment %}
+        <p class="lede" style="overflow-wrap:anywhere">{% blocktranslate with place=cloud_place %}Gekoppeld: {{ place }}{% endblocktranslate %}</p>
+    </div>
+</div>
+
+{% if cloud_failure is not None %}
+<p class="hint-banner is-bad" id="cloud-mislukt" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% blocktranslate with moment=cloud.last_failure_at|moment service=cloud.service_label %}De back-up van {{ moment }} kon niet naar {{ service }}.{% endblocktranslate %} {{ cloud_failure }}</span></p>
+{% endif %}
+
+<section class="card settings-section" id="cloud">
+    <div class="card-pad stack" style="gap:var(--s-3)">
+        {% if not cloud_ready %}
+        <p id="cloud-niet-actief">{% translate "Nog niet actief: bewaar eerst je herstelcode." %} <a href="{% url 'business:backups_code' %}">{% translate "Herstelcode bewaren" %} →</a></p>
+        {% else %}
+        <p>{% if uploading %}<span id="cloud-bezig">{% translate "Bezig met een back-up…" %}</span>{% elif cloud.last_success %}{% blocktranslate with moment=cloud.last_success_at|moment service=cloud.service_label size=cloud.last_size|filesizeformat %}Laatste back-up in {{ service }}: {{ moment }} · {{ size }}, versleuteld.{% endblocktranslate %}{% else %}{% blocktranslate with service=cloud.service_label %}Nog geen back-up in {{ service }}.{% endblocktranslate %}{% endif %}</p>
+        <p class="small muted">{% translate "Huismus bewaart er de laatste 30 dagen en daarna één per maand." %}</p>
+        <details id="herstelcode-bekijken">
+            <summary>{% translate "Herstelcode bekijken" %}</summary>
+            <p class="small muted">{% translate "Met deze code zet je een back-up uit de cloud terug op een andere computer." %}</p>
+            {% include "business/_recovery_code.html" with code=cloud_code size="var(--fs-lg)" %}
+        </details>
+        {% endif %}
+        {% comment %}?opnieuw: the service's own page shows its form again instead of this page (cloud_views._wants_manage).{% endcomment %}
+        <div class="row" style="gap:var(--s-2)">
+            <a class="btn btn-secondary btn-sm" href="{% if cloud.service == 'webdav' %}{% url 'business:backups_webdav' %}{% else %}{% url 'business:backups_dropbox' %}{% endif %}?opnieuw">{% translate "Opnieuw instellen" %}</a>
+            <span class="spacer"></span>
+            <form method="post" action="{% url 'business:backups_unlink' %}">{% csrf_token %}<button type="submit" class="btn btn-danger-quiet btn-sm">{% translate "Ontkoppelen" %}</button></form>
+        </div>
+    </div>
+</section>
+{% endblock %}

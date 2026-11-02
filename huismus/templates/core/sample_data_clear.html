@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Nepdata leegmaken" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+{% comment %}A page rather than a dialog, like restoring a backup (huismus/core/sample_data.py, huismus-intern/besluiten.md 2026-10-30).{% endcomment %}
+<form method="post" class="card" id="bevestigen">
+    {% csrf_token %}
+    <div class="dialog-body">
+        <span class="dialog-icon"><svg class="i i-lg" aria-hidden="true"><use href="#alert"></use></svg></span>
+        <h1 style="font-size:var(--fs-xl)">{% translate "Nepdata leegmaken?" %}</h1>
+        <p class="muted">{% translate "Huismus gaat terug naar hoe het was voordat je de nepdata opende. Wat je sindsdien hebt gemaakt of ingesteld, is daarna weg." %}</p>
+    </div>
+    <div class="dialog-foot"><a class="btn btn-secondary" href="{% url 'home' %}">{% translate "Annuleren" %}</a><button type="submit" class="btn btn-danger"><span class="spinner" aria-hidden="true"></span>{% translate "Leegmaken" %}</button></div>
+</form>
+{% endblock %}

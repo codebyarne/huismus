@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Updates" %} — {% translate "Instellingen" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <a class="small" href="{% url 'business:overview' %}">← {% translate "Instellingen" %}</a>
+        <h1>{% translate "Updates" %}</h1>
+        <p class="lede">{% blocktranslate %}Je gebruikt Huismus {{ version }}.{% endblocktranslate %}</p>
+    </div>
+</div>
+
+{% if problem %}
+<p class="hint-banner is-bad" id="bijwerken-mislukt" role="alert" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{{ problem }}{% if download_by_hand and release %} <a href="{{ release.page_url }}" target="_blank" rel="noopener">{% translate "Nieuwe versie downloaden" %}</a>{% endif %}</span></p>
+{% endif %}
+
+{% if release %}
+<section class="card settings-section" id="nieuwe-versie">
+    <div class="card-pad stack" style="gap:var(--s-3)">
+        <h2>{% blocktranslate with version=release.version %}Huismus {{ version }} is er{% endblocktranslate %}</h2>
+        <p><a href="{{ release.page_url }}" target="_blank" rel="noopener">{% blocktranslate with version=release.version %}Wat is er nieuw in {{ version }}?{% endblocktranslate %}</a></p>
+        <div class="row"><span class="spacer"></span><a class="btn btn-primary" href="{% url 'business:updates_install' %}">{% blocktranslate with version=release.version %}Bijwerken naar {{ version }}{% endblocktranslate %}</a></div>
+    </div>
+</section>
+{% endif %}
+
+<form method="post" class="card settings-section" id="zoeken">
+    {% csrf_token %}
+    <div class="card-pad stack" style="gap:var(--s-3)">
+        <label class="switch"><input type="checkbox" name="enabled" role="switch"{% if enabled %} checked{% endif %}>{% translate "Zoek naar nieuwe versies" %}</label>
+        <p class="small muted">{% translate "Huismus kijkt bij het openen en daarna eens per dag op GitHub of er een nieuwe versie is. Er gaat niets van je administratie mee." %}</p>
+        <div class="row"><span class="spacer"></span><button type="submit" class="btn btn-primary">{% translate "Opslaan" %}</button></div>
+    </div>
+</form>
+{% endblock %}

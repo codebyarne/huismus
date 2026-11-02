@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+{% load i18n money documents_tags forms %}
+
+{% block title %}{{ document.get_kind_display|capfirst }} {{ document.number }} — Huismus{% endblock %}
+{% block content_class %}content-wide{% endblock %}
+
+{% block content %}
+{% comment %}An issued invoice or credit note, read-only. Everything on the
+"sheet" comes from the snapshots taken at issue (invariant 5), never from
+the live settings or contact.{% endcomment %}
+{% with business=document.business_snapshot customer=document.contact_snapshot %}
+<div class="page-head">
+    <div class="titles">
+        <a class="back" href="{% url 'documents:list' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Facturen" %}</a>
+        <div class="row">
+            <h1>{{ document.get_kind_display|capfirst }} {{ document.number }}</h1>
+            <span class="pill pill-final"><svg class="i" aria-hidden="true"><use href="#lock"></use></svg>{% translate "Definitief" %}</span>
+            {% if document.source == "moneybird" %}<span class="pill pill-import">{% translate "Geïmporteerd uit Moneybird" %}</span>{% elif document.source %}<span class="pill pill-import">{% translate "Geïmporteerd" %}</span>{% endif %}
+        </div>
+        <span class="small muted">{{ customer.display_name }} · {% blocktranslate with date=document.issue_date|date:"j b Y" %}uitgegeven op {{ date }}{% endblocktranslate %}</span>
+    </div>
+    <div class="actions">
+        {% if document.kind == "invoice" and credited_cents < document.total_cents %}
+        <button class="btn btn-secondary" type="button" command="show-modal" commandfor="creditnota"><svg class="i" aria-hidden="true"><use href="#undo"></use></svg>{% translate "Creditnota maken…" %}</button>
+        {% endif %}
+        <button class="btn btn-ghost" type="button" command="show-modal" commandfor="heropenen"><svg class="i" aria-hidden="true"><use href="#edit"></use></svg>{% translate "Toch bewerken…" %}</button>
+        {% if document.kind == "invoice" %}
+        <form method="post" action="{% url 'documents:copy' document.pk %}">{% csrf_token %}<button class="btn btn-secondary" type="submit"><svg class="i" aria-hidden="true"><use href="#copy"></use></svg>{% translate "Kopiëren" %}<span class="spinner"></span></button></form>
+        {% endif %}
+        <a class="btn btn-secondary" href="{% url 'documents:mail' document.pk %}"><svg class="i" aria-hidden="true"><use href="#mail"></use></svg>{% translate "Mailen" %}</a>
+        <a class="btn btn-secondary" href="{% url 'documents:pdf_page' document.pk %}"><svg class="i" aria-hidden="true"><use href="#file"></use></svg>PDF</a>
+    </div>
+</div>
+
+{% if customer_has_old_version %}
+<div class="flash flash-warning" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><div class="flash-body small">{% blocktranslate with date=last_mail.sent_at|date:"j b Y" %}Je klant heeft nog de versie van vóór het bewerken (gemaild op {{ date }}).{% endblocktranslate %} <a href="{% url 'documents:mail' document.pk %}">{% translate "Mail de nieuwe versie" %}</a></div></div>
+{% endif %}
+<div class="split-rev">
+    <article class="paper paper-final" aria-label="{% blocktranslate with kind=document.get_kind_display number=document.number %}{{ kind }} {{ number }}, alleen-lezen{% endblocktranslate %}">
+        <span class="paper-stamp"><svg class="i i-sm" aria-hidden="true"><use href="#lock"></use></svg>{% translate "Definitief" %}</span>
+        <div class="row small muted" style="justify-content:space-between;margin-bottom:var(--s-8);padding-right:120px">
+            {% if business.logo_base64 %}<img src="data:{{ business.logo_content_type }};base64,{{ business.logo_base64 }}" alt="" style="max-width:240px;max-height:80px">{% else %}<span></span>{% endif %}
+            <span style="text-align:right">{{ business.business_name }}<br>{{ business.address_line1 }} · {{ business.postal_code }} {{ business.city }}</span>
+        </div>
+        <div class="doc-head">
+            <div class="stack" style="gap:var(--s-3)">
+                <span class="doc-kind">{{ document.get_kind_display|capfirst }}</span>
+                {% if is_credit and document.related_document %}
+                <a class="doc-ref" href="{% url 'documents:edit' document.related_document.pk %}"><svg class="i i-sm" aria-hidden="true"><use href="#undo"></use></svg>{% blocktranslate with number=document.related_document.number %}Crediteert factuur {{ number }}{% endblocktranslate %}</a>
+                {% endif %}
+                <div class="doc-address">
+                    <span class="who">{{ customer.display_name }}</span><br>
+                    {% if customer.address_line1 %}{{ customer.address_line1 }}<br>{% endif %}
+                    {% if customer.address_line2 %}{{ customer.address_line2 }}<br>{% endif %}
+                    {{ customer.postal_code }} {{ customer.city }}
+                </div>
+                {% if contact_changed %}<span class="snapshot-hint"><svg class="i i-sm" aria-hidden="true"><use href="#clock"></use></svg>{% translate "Klantgegevens zoals ze op de factuurdatum waren. Ze zijn sindsdien veranderd." %}</span>{% endif %}
+            </div>
+            <dl class="doc-meta">
+                <dt>{% translate "Nummer" %}</dt><dd><strong>{{ document.number }}</strong></dd>
+                <dt>{% translate "Factuurdatum" %}</dt><dd>{{ document.issue_date|date:"j b Y" }}</dd>
+                {% if document.delivery_date %}<dt>{% translate "Leverdatum" %}</dt><dd>{{ document.delivery_date|date:"j b Y" }}</dd>{% endif %}
+                {% if document.due_date and not is_credit %}<dt>{% translate "Vervaldatum" %}</dt><dd>{{ document.due_date|date:"j b Y" }}</dd>{% endif %}
+            </dl>
+        </div>
+        {% if document.intro_text %}<p style="margin-bottom:var(--s-5)">{{ document.intro_text|linebreaksbr }}</p>{% endif %}
+        <table class="doc-table">
+            <thead><tr><th>{% translate "Omschrijving" %}</th><th class="r">{% translate "Aantal" %}</th><th class="r">{% translate "Prijs" %}</th><th class="r">{% translate "Btw" %}</th><th class="r">{% translate "Totaal" %}</th></tr></thead>
+            <tbody>
+                {% for line in document.lines.all %}
+                <tr>
+                    <td>{{ line.description|linebreaksbr }}</td>
+                    <td class="r">{% if line.quantity is not None %}{{ line.quantity|plain_quantity }}{% if line.unit %} {{ line.unit }}{% endif %}{% endif %}</td>
+                    <td class="r">{{ line.unit_price_cents|money }}</td>
+                    <td class="r">{{ line|line_vat }}</td>
+                    <td class="r">{{ line.line_total_cents|money_for:document }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="doc-foot" style="margin-top:var(--s-6)">
+            <p class="small muted">
+                {% if document.kor_text_snapshot %}{{ document.kor_text_snapshot }}<br>{% endif %}
+                {% if not is_credit and business.iban %}{% blocktranslate with iban=business.iban number=document.number %}Graag overmaken naar {{ iban }} o.v.v. {{ number }}.{% endblocktranslate %}{% endif %}
+                {% if document.footer_text %}<br>{{ document.footer_text|linebreaksbr }}{% endif %}
+            </p>
+            <dl class="totals">
+                <dt>{% translate "Subtotaal" %}</dt><dd>{{ document.subtotal_cents|money_for:document }}</dd>
+                {% include "documents/_tax_rows.html" %}
+                <dt class="grand">{% translate "Totaal" %}</dt><dd class="grand">{{ document.total_cents|money_for:document }}</dd>
+            </dl>
+        </div>
+    </article>
+
+    <aside class="stack aside-first">
+        {% if is_credit %}
+        {% if invoice %}
+        <section class="card card-pad stack" style="gap:var(--s-3)">
+            <h2>{% blocktranslate with number=invoice.number %}Effect op factuur {{ number }}{% endblocktranslate %}</h2>
+            {% include "documents/_credit_room.html" %}
+            <p class="small muted">{% translate "Een creditnota heeft zelf geen betaalstatus. Hij verlaagt wat er op de factuur openstaat." %}</p>
+            <a class="btn btn-secondary btn-block" href="{% url 'documents:edit' invoice.pk %}">{% blocktranslate with number=invoice.number %}Naar factuur {{ number }}{% endblocktranslate %}</a>
+        </section>
+        {% endif %}
+        {% else %}
+        <section class="card card-pad stack" style="gap:var(--s-3)">
+            <div class="row">
+                <h2>{% translate "Betaalstatus" %}</h2><span class="spacer"></span>
+                {% if document.is_overdue %}{% include "documents/_pill_overdue.html" %}
+                {% else %}<span class="pill pill-{{ document.payment_state }}">{{ document.payment_state|payment_state_label|capfirst }}</span>{% endif %}
+            </div>
+            <div class="progress{% if document.payment_state == 'partial' %} is-warn{% endif %}" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ settled_percent }}" aria-label="{% translate 'Afgehandeld' %}"><span style="width:{{ settled_percent }}%"></span></div>
+            {% with invoice=document %}{% include "documents/_credit_room.html" %}{% endwith %}
+            {% if outstanding_cents > 0 %}
+            <button class="btn btn-primary btn-block" type="button" command="show-modal" commandfor="betaling"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Betaling registreren" %}</button>
+            {% endif %}
+        </section>
+
+        {% if credit_notes %}
+        <section class="card">
+            <div class="card-head"><h2>{% translate "Creditnota's" %}</h2><span class="small muted">{{ credit_notes|length }}</span></div>
+            <ul class="list">
+                {% for credit in credit_notes %}
+                <li>
+                    <span class="list-icon"><svg class="i i-sm" aria-hidden="true"><use href="#undo"></use></svg></span>
+                    <div class="grow"><a class="title" href="{% url 'documents:edit' credit.pk %}">{% translate "Creditnota" %} {{ credit.number|default:_("(concept)") }}</a><div class="small muted">{% if credit.issue_date %}{{ credit.issue_date|date:"j b Y" }}{% else %}{% translate "nog niet uitgegeven" %}{% endif %}</div></div>
+                    <span class="amount">{{ credit.total_cents|money_for:credit }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+            <div class="card-foot row"><span class="muted">{% translate "Nog te crediteren" %}</span><span class="spacer"></span><strong class="num">{{ document.total_cents|subtract:credited_cents|money }}</strong></div>
+        </section>
+        {% endif %}
+
+        <section class="card">
+            <div class="card-head"><h2>{% translate "Betalingen" %}</h2><span class="small muted">{{ payments|length }}</span></div>
+            {% if payments %}
+            <ul class="list">
+                {% for payment in payments %}
+                <li>
+                    <span class="list-icon is-ok"><svg class="i i-sm" aria-hidden="true"><use href="#check"></use></svg></span>
+                    <div class="grow"><strong class="num">{{ payment.amount_cents|money }}</strong><div class="small muted">{{ payment.paid_on|date:"j b Y" }}{% if payment.method %} · {{ payment.method }}{% endif %}{% if payment.note %} · {{ payment.note }}{% endif %}</div></div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <div class="card-pad small muted">{% translate "Nog geen betalingen geregistreerd." %}</div>
+            {% endif %}
+        </section>
+        {% endif %}
+
+        <section class="card card-pad stack" style="gap:var(--s-3)">
+            <h2>{% translate "Documenten" %}</h2>
+            {% if original_pdf %}
+            <a class="file-item file-link" href="{% url 'documents:pdf_page' document.pk %}?versie=origineel"><span class="f-icon is-accent"><svg class="i" aria-hidden="true"><use href="#file"></use></svg></span><span><span class="f-name">{% translate "Origineel uit Moneybird" %}</span><span class="f-meta">{% if document.reopened_at %}{% translate "Van vóór het bewerken in Huismus" %}{% else %}{% translate "Het origineel, zoals je het destijds verstuurde" %}{% endif %}</span></span><svg class="i" aria-hidden="true"><use href="#chevron-right"></use></svg></a>
+            <a class="file-item file-link" href="{% url 'documents:pdf_page' document.pk %}?versie=opnieuw"><span class="f-icon"><svg class="i" aria-hidden="true"><use href="#refresh"></use></svg></span><span><span class="f-name">{% translate "Opnieuw gegenereerd" %}</span><span class="f-meta">{% if document.reopened_at %}{% translate "Zoals hij nu is, na het bewerken" %}{% else %}{% translate "Ter controle, door Huismus gemaakt" %}{% endif %}</span></span><svg class="i" aria-hidden="true"><use href="#chevron-right"></use></svg></a>
+            {% else %}
+            <a class="file-item file-link" href="{% url 'documents:pdf_page' document.pk %}"><span class="f-icon"><svg class="i" aria-hidden="true"><use href="#file"></use></svg></span><span><span class="f-name">{{ document.get_kind_display }}-{{ document.number }}.pdf</span><span class="f-meta">A4 · {{ document.get_language_display }}</span></span><svg class="i" aria-hidden="true"><use href="#chevron-right"></use></svg></a>
+            {% endif %}
+        </section>
+
+        {% include "documents/_timeline.html" %}
+    </aside>
+</div>
+
+<dialog id="heropenen" class="dialog" aria-labelledby="heropenen-titel">
+    <form method="post" action="{% url 'documents:reopen' document.pk %}">
+        {% csrf_token %}
+        <div class="dialog-body">
+            <span class="dialog-icon"><svg class="i i-lg" aria-hidden="true"><use href="#alert"></use></svg></span>
+            <h2 id="heropenen-titel">{% if is_credit %}{% translate "Creditnota toch bewerken?" %}{% else %}{% translate "Factuur toch bewerken?" %}{% endif %}</h2>
+            {% if can_reopen %}
+            {% if is_credit %}
+            <p class="muted">{% blocktranslate with number=document.number %}{{ number }} is uitgegeven. Een uitgegeven creditnota corrigeer je meestal met een nieuw document: dan blijft wat je klant kreeg zoals het was, en staat de correctie er apart naast.{% endblocktranslate %}</p>
+            {% else %}
+            <p class="muted">{% blocktranslate with number=document.number %}{{ number }} is uitgegeven. Een uitgegeven factuur corrigeer je meestal met een creditnota: dan blijft wat je klant kreeg zoals het was, en staat de correctie er apart naast.{% endblocktranslate %}</p>
+            {% endif %}
+            {% if last_mail %}
+            <p class="muted">{% blocktranslate with date=last_mail.sent_at|date:"j b Y" to=last_mail.to %}Je hebt hem op {{ date }} gemaild naar {{ to }}. Pas je hem aan, dan heeft je klant een andere versie dan jij, onder hetzelfde nummer. Mail hem opnieuw zodra je hem weer hebt uitgegeven.{% endblocktranslate %}</p>
+            {% else %}
+            <p class="muted">{% blocktranslate with number=document.number %}Hij wordt weer een concept, met nummer {{ number }} en dezelfde datum. Pas aan wat nodig is en geef hem daarna opnieuw uit.{% endblocktranslate %}</p>
+            {% endif %}
+            {% if paid_cents %}<p class="muted">{% blocktranslate with amount=paid_cents|money %}Er is al {{ amount }} betaald. Die betaling blijft staan.{% endblocktranslate %}</p>{% endif %}
+            <p class="small muted">{% translate "Bedenk je je, dan zet Annuleren in de editor hem terug zoals je hem uitgaf." %}</p>
+            {% if original_pdf %}<p class="small muted">{% translate "De originele PDF uit Moneybird blijft bewaard, maar klopt na het bewerken niet meer met de factuur." %}</p>{% endif %}
+            {% else %}
+            <p class="muted">{% translate "Er is al een creditnota voor deze factuur uitgegeven. Corrigeer de factuur met een nieuwe creditnota." %}</p>
+            {% endif %}
+        </div>
+        <div class="dialog-foot"><button type="button" class="btn btn-secondary" command="close" commandfor="heropenen">{% if can_reopen %}{% translate "Annuleren" %}{% else %}{% translate "Sluiten" %}{% endif %}</button>{% if can_reopen %}<button type="submit" class="btn btn-danger">{% translate "Toch bewerken" %}</button>{% endif %}</div>
+    </form>
+</dialog>
+
+{% if document.kind == "invoice" %}
+<dialog id="betaling" class="sheet" aria-labelledby="betaling-titel">
+    <form method="post" action="{% url 'documents:payment_create' document.pk %}" style="display:contents">
+        {% csrf_token %}
+        <div class="sheet-head"><h2 id="betaling-titel">{% translate "Betaling registreren" %}</h2><button type="button" class="btn btn-ghost btn-icon" command="close" commandfor="betaling" aria-label="{% translate 'Sluiten' %}"><svg class="i" aria-hidden="true"><use href="#x"></use></svg></button></div>
+        <div class="sheet-body">
+            <p class="small muted">{% blocktranslate with number=document.number name=customer.display_name %}Voor factuur {{ number }} aan {{ name }}.{% endblocktranslate %} {% translate "Nog open" %}: <strong class="num" style="color:var(--text)">{{ outstanding_cents|money }}</strong></p>
+            {% field payment_form.paid_on %}
+            {% translate "Vooraf ingevuld met het openstaande bedrag." as prefill_help %}
+            {% field payment_form.amount_cents money=True help=prefill_help %}
+            {% field payment_form.method %}
+            {% field payment_form.note optional=True %}
+        </div>
+        <div class="sheet-foot"><button type="button" class="btn btn-secondary" command="close" commandfor="betaling">{% translate "Annuleren" %}</button><button type="submit" class="btn btn-primary">{% translate "Betaling opslaan" %}<span class="spinner"></span></button></div>
+    </form>
+</dialog>
+
+{% if credited_cents < document.total_cents %}
+<dialog id="creditnota" class="dialog" aria-labelledby="credit-titel">
+    <form method="post" action="{% url 'documents:credit_note_create' document.pk %}">
+        {% csrf_token %}
+        <div class="dialog-body">
+            <span class="dialog-icon"><svg class="i i-lg" aria-hidden="true"><use href="#undo"></use></svg></span>
+            <h2 id="credit-titel">{% translate "Creditnota maken?" %}</h2>
+            {% if credited_cents %}
+            <p class="muted">{% blocktranslate with amount=document.total_cents|subtract:credited_cents|money %}Huismus maakt een lege concept-creditnota. Je kunt nog {{ amount }} crediteren.{% endblocktranslate %}</p>
+            {% else %}
+            <p class="muted">{% blocktranslate with number=document.number %}Huismus maakt een concept-creditnota met dezelfde regels als factuur {{ number }}. Pas hem aan waar nodig en geef hem daarna uit.{% endblocktranslate %}</p>
+            {% endif %}
+            <p class="small muted">{% blocktranslate with number=document.number %}Factuur {{ number }} zelf blijft ongewijzigd.{% endblocktranslate %}</p>
+        </div>
+        <div class="dialog-foot"><button type="button" class="btn btn-secondary" command="close" commandfor="creditnota">{% translate "Annuleren" %}</button><button type="submit" class="btn btn-primary">{% translate "Creditnota maken" %}</button></div>
+    </form>
+</dialog>
+{% endif %}
+{% endif %}
+{% endwith %}
+{% endblock %}

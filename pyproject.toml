@@ -1,0 +1,51 @@
+[project]
+name = "huismus"
+version = "0.1.0"
+description = "Self-hosted invoicing for Dutch freelancers using the KOR."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "AGPL-3.0-or-later" }
+dependencies = [
+    "django>=5.2,<5.3",
+    "gunicorn>=23.0",
+    "whitenoise>=6.7",
+    "pillow>=11.0",        # validates uploaded logo images by decoding them, not by trusting the extension
+    "defusedxml>=0.7",     # parses uploaded SVG logos without XXE/entity-expansion risk
+    "weasyprint>=62.0",    # renders invoice/quote/credit-note PDFs (SPEC.md section 8)
+    "openpyxl>=3.1",       # reads Moneybird's .xlsx exports (SPEC.md section 7/M5)
+    "lxml>=5.3",           # parses Moneybird's UBL XML export (SPEC.md section 7/M5)
+    "markdown>=3.7",       # renders the help pages from docs/hulp/*.md (huismus/core/help.py)
+    "pyrage>=1.4",         # encrypts backups before they go to a cloud service, in the open age format (huismus/core/cloud_backups.py)
+]
+
+[dependency-groups]
+desktop = [
+    "certifi>=2024.2.2",  # root certificates for HTTPS in the packaged app (update check, feedback form); Docker uses the system's
+    "pyinstaller>=6.11",
+    "pywebview>=5.3",
+]
+dev = [
+    "ruff>=0.8",
+    "pytest>=8.3",
+    "pytest-django>=4.9",
+    "hypothesis>=6.115",
+    "pypdf>=5.0",  # extracts text from a rendered PDF for the smoke test only
+    "pytest-playwright>=0.9.0",  # browser tests (tests/e2e): HTMX, JS and language switching
+    "pytest-xdist>=3.6",  # the gate runs the tests on every core: ~10 min to under 2 in a cloud session
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "DJ"]
+
+[tool.ruff.lint.per-file-ignores]
+# Django-generated, not hand-formatted; line length isn't meaningful here.
+"*/migrations/*.py" = ["E501"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "huismus.config.settings_test"
+python_files = ["test_*.py"]
+addopts = "--reuse-db"

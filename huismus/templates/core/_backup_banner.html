@@ -1,0 +1,13 @@
+{% load i18n backups %}
+{% comment %}SPEC.md M11, M15: it can't be dismissed. Without a folder it says what this installation needs first: choose one in the app, link one on Docker (huismus-intern/besluiten.md, 2026-10-31). A failed backup (red) goes first on the overview, the others below the KOR banner (huismus-intern/besluiten.md, 2026-10-29).{% endcomment %}
+<a class="hint-banner is-{{ backup_warning.level }}" id="back-upmelding" href="{% url 'business:backups' %}" style="margin-bottom:var(--s-4)">
+    <svg class="i" aria-hidden="true"><use href="#alert"></use></svg>
+    <span>{% if backup_warning.kind == "failed" %}{% blocktranslate with moment=backup_warning.at|moment %}De back-up van {{ moment }} is mislukt{% endblocktranslate %}{% if backup_warning.reason == "unreachable" %}: {% blocktranslate with folder=backup_warning.folder %}de map {{ folder }} is niet bereikbaar.{% endblocktranslate %}{% elif backup_warning.reason == "full" %}: {% blocktranslate with folder=backup_warning.folder %}de map {{ folder }} is vol.{% endblocktranslate %}{% else %}.{% endif %}{% elif backup_warning.kind == "cloud_failed" %}{% blocktranslate with moment=backup_warning.at|moment service=backup_warning.service %}De back-up van {{ moment }} kon niet naar {{ service }}.{% endblocktranslate %} {{ backup_warning.sentence }}{% elif backup_warning.kind == "none" %}
+        {% if backup_warning.step == "link" %}{% translate "Je hebt nog geen back-up. Huismus in Docker ziet alleen mappen die je eraan koppelt. Koppel eerst een map, bijvoorbeeld van je NAS of een USB-schijf." %}
+        {% elif backup_warning.step == "choose_linked" %}{% translate "Je hebt nog geen back-up. Kies de gekoppelde map, dan gaat het vanzelf." %}
+        {% elif backup_warning.step == "choose" %}{% translate "Je hebt nog geen back-up. Kies een map, dan gaat het vanzelf." %}
+        {% endif %}
+    {% else %}{% blocktranslate with moment=backup_warning.at|moment %}Je laatste back-up is van {{ moment }}.{% endblocktranslate %}{% endif %}</span>
+    <span class="spacer"></span>
+    <span>{% if backup_warning.kind == "none" %}{% translate "Back-ups instellen" %}{% else %}{% translate "Naar Back-ups" %}{% endif %} →</span>
+</a>

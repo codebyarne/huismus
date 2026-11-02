@@ -1,0 +1,15 @@
+{% load i18n money %}
+{% comment %}Credit note editor: how much the invoice can still be credited,
+live (documents.views._editor_context). Red (.is-over) above that.{% endcomment %}
+<div id="creditruimte" class="stack" style="gap:var(--s-2)"{% if oob %} hx-swap-oob="true"{% endif %}>
+    {% if credit_over %}
+    <div class="flash flash-error" role="alert"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><div class="flash-body"><strong>{% translate "Deze creditnota is hoger dan wat er nog te crediteren is." %}</strong><span class="small">{% blocktranslate with remaining=credit_remaining_cents|money total=totals.total_cents|money %}Je kunt nog maximaal {{ remaining }} crediteren. Deze creditnota komt uit op {{ total }}. Verlaag een van de regels.{% endblocktranslate %}</span></div></div>
+    {% endif %}
+    <dl class="credit-room{% if credit_over %} is-over{% endif %}">
+        <dt>{% blocktranslate with number=credited_invoice.number %}Factuur {{ number }}{% endblocktranslate %}</dt><dd>{{ credited_invoice.total_cents|money }}</dd>
+        <dt>{% translate "Al gecrediteerd" %}</dt><dd>{{ credited_invoice.credited_cents|money }}</dd>
+        <dt class="is-strong">{% translate "Nog te crediteren" %}</dt><dd class="is-strong">{{ credit_remaining_cents|money }}</dd>
+        {% if credit_over %}<dt class="is-strong">{% translate "Deze creditnota" %}</dt><dd class="is-strong">{{ totals.total_cents|money }}</dd>{% endif %}
+    </dl>
+    <p class="small muted">{% translate "Alle creditnota's op één factuur samen kunnen nooit hoger zijn dan het factuurbedrag." %}</p>
+</div>

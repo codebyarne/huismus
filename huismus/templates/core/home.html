@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% load i18n money documents_tags backups %}
+
+{% block title %}{% translate "Overzicht" %} — Huismus{% endblock %}
+{% block content_class %}{% if first_time %}content-narrow{% endif %}{% endblock %}
+
+{% block content %}
+{% if first_time %}
+<section class="card" style="margin-bottom:var(--s-5)">
+    <div class="empty" style="padding-bottom:var(--s-8)">
+        <div class="empty-art"><svg class="mark" width="72" height="72" aria-hidden="true"><use href="#mus"></use></svg></div>
+        <h1 style="font-size:var(--fs-2xl)">{% translate "Welkom bij Huismus" %}</h1>
+        <p>{% translate "Kom je van Moneybird? Neem dan in één keer al je klanten, facturen en offertes mee." %} {% translate "Huismus doet eerst een proefdraai en slaat pas iets op als jij dat kiest." %} {% translate "Begin je nieuw? Dan vul je in vier stappen in wat Huismus nodig heeft voor je eerste factuur." %}</p>
+        <div class="row" style="justify-content:center;gap:var(--s-3);flex-wrap:wrap">
+            <a class="btn btn-primary btn-lg" style="flex:1 1 240px;justify-content:center" href="{% url 'imports:upload' %}"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg>{% translate "Importeren uit Moneybird" %}</a>
+            <a class="btn btn-primary btn-lg" style="flex:1 1 240px;justify-content:center" href="{% url 'onboarding_start' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Stap voor stap beginnen" %}</a>
+        </div>
+        {% comment %}Smaller than the two ways to start for real (huismus/core/sample_data.py, huismus-intern/besluiten.md 2026-10-30).{% endcomment %}
+        <form method="post" action="{% url 'sample_data_fill' %}" id="nepdata" style="justify-self:stretch;margin-top:var(--s-6);padding-top:var(--s-5);border-top:1px solid var(--border)">
+            {% csrf_token %}
+            <p class="small muted" style="margin:0 auto var(--s-3)">{% translate "Eerst rondkijken? Vul Huismus met een verzonnen administratie van negen jaar. Met één knop maak je alles weer leeg." %}</p>
+            <button type="submit" class="btn btn-secondary">{% translate "Probeer met nepdata" %}</button>
+        </form>
+    </div>
+</section>
+<section class="card card-pad">
+    <div class="row" style="margin-bottom:var(--s-2)"><h2>{% translate "Klaar om te factureren" %}</h2><span class="spacer"></span><span class="small muted">{% blocktranslate with done=steps_done total=steps|length %}{{ done }} van {{ total }} klaar{% endblocktranslate %}</span></div>
+    <ul class="checklist">
+        {% for step in steps %}
+        <li{% if step.done %} class="is-done"{% endif %}>
+            <span class="tick"><svg class="i" aria-hidden="true"><use href="#check"></use></svg></span>
+            <div class="grow"><span class="c-title" style="font-weight:600">{{ step.title }}</span><span class="small muted">{{ step.help }}</span></div>
+            {% if not step.done %}<a class="btn {% if forloop.first %}btn-secondary{% else %}btn-ghost{% endif %} btn-sm" href="{{ step.url }}">{% translate "Doen" %}</a>{% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+
+{% else %}
+<div class="page-head">
+    <div class="titles">
+        <span class="small muted">{{ today|date:"l j F Y"|capfirst }}</span>
+        <h1>{{ greeting }}{% if user.first_name %}, {{ user.first_name }}{% endif %}</h1>
+    </div>
+    <div class="actions">
+        <a class="btn btn-secondary" href="{% url 'expenses:create' %}"><svg class="i" aria-hidden="true"><use href="#receipt"></use></svg>{% translate "Uitgave" %}</a>
+        <a class="btn btn-primary" href="{% url 'documents:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuwe factuur" %}</a>
+    </div>
+</div>
+
+<div class="grid-3" style="margin-bottom:var(--s-4)">
+    <a class="card kpi kpi-hero" href="{% url 'documents:list' %}?tab=openstaand&amp;jaar=alle" style="text-decoration:none">
+        <span class="kpi-label">{% translate "Openstaand" %}</span>
+        <span class="kpi-value">{{ outstanding.total_cents|money }}</span>
+        <span class="kpi-sub">{% blocktranslate count count=outstanding.count %}{{ count }} factuur{% plural %}{{ count }} facturen{% endblocktranslate %}{% if outstanding.overdue_count %}, {% blocktranslate count count=outstanding.overdue_count %}waarvan {{ count }} vervallen{% plural %}waarvan {{ count }} vervallen{% endblocktranslate %}{% endif %} →</span>
+    </a>
+    <div class="card kpi">
+        <span class="kpi-label">{% blocktranslate %}Omzet {{ year }}{% endblocktranslate %}</span>
+        <span class="kpi-value">{{ overview.revenue_cents|money }}</span>
+        <span class="kpi-sub">{% blocktranslate with costs=overview.expenses_cents|money %}Kosten {{ costs }}{% endblocktranslate %}</span>
+        {% if kor_limit %}
+        <span class="progress{% if kor_limit.level == 'near' %} is-warn{% elif kor_limit.level == 'over' %} is-bad{% endif %}" style="margin-top:var(--s-2)" aria-hidden="true"><span style="width:{{ kor_limit.bar_percent }}%"></span></span>
+        <span class="kpi-sub">{% blocktranslate with percent=kor_limit.percent %}{{ percent }}% van je KOR-grens{% endblocktranslate %}</span>
+        {% endif %}
+    </div>
+    <a class="card kpi" href="{% url 'expenses:year_overview' %}" style="text-decoration:none;color:inherit">
+        <span class="kpi-label">{% blocktranslate %}Winst {{ year }}{% endblocktranslate %}</span>
+        <span class="kpi-value">{{ overview.profit_cents|money }}</span>
+        <span class="kpi-sub">{% translate "Naar het jaaroverzicht" %} →</span>
+    </a>
+</div>
+
+{% if backup_warning.level == "bad" %}{% include "core/_backup_banner.html" %}{% endif %}
+{% if kor_limit and kor_limit.level != "ok" %}
+<a class="hint-banner {% if kor_limit.level == 'over' %}is-bad{% else %}is-warn{% endif %}" id="kor-melding" href="{% url 'expenses:year_overview' %}?jaar={{ year }}" style="margin-bottom:var(--s-4)">
+    <svg class="i" aria-hidden="true"><use href="#alert"></use></svg>
+    <span>{% if kor_limit.level == "over" %}{% blocktranslate with revenue=kor_limit.revenue_cents|money limit=kor_limit.limit_cents|money %}Je omzet in {{ year }} ({{ revenue }}) is hoger dan je KOR-grens van {{ limit }}.{% endblocktranslate %}{% else %}{% blocktranslate with revenue=kor_limit.revenue_cents|money percent=kor_limit.percent limit=kor_limit.limit_cents|money %}Je omzet in {{ year }} is {{ revenue }}: {{ percent }}% van je KOR-grens van {{ limit }}.{% endblocktranslate %}{% endif %}</span>
+    <span class="spacer"></span>
+    <span>{% translate "Naar het jaaroverzicht" %} →</span>
+</a>
+{% endif %}
+{% if backup_warning and backup_warning.level != "bad" %}{% include "core/_backup_banner.html" %}{% endif %}
+{% if new_release %}
+{% comment %}The desktop app only (SPEC.md M11): below red and amber, not dismissable.{% endcomment %}
+<a class="hint-banner is-info" id="nieuwe-versie" href="{% url 'business:updates' %}" style="margin-bottom:var(--s-4)">
+    <svg class="i" aria-hidden="true"><use href="#download"></use></svg>
+    <span>{% blocktranslate with version=new_release.version %}Er is een nieuwe versie: Huismus {{ version }}.{% endblocktranslate %}</span>
+    <span class="spacer"></span>
+    <span>{% translate "Bekijken" %} →</span>
+</a>
+{% endif %}
+{% if drafts %}
+{% with first=drafts.0 %}
+<a class="hint-banner" href="{% url 'documents:edit' first.pk %}" style="margin-bottom:var(--s-6)">
+    <svg class="i" aria-hidden="true"><use href="#edit"></use></svg>
+    <span>{% blocktranslate count count=drafts|length %}Je hebt nog {{ count }} concept:{% plural %}Je hebt nog {{ count }} concepten, waaronder:{% endblocktranslate %} <strong>{{ first|contact_name|default:_("zonder klant") }}, {{ first.total_cents|money }}</strong></span>
+    <span class="spacer"></span>
+    <span>{% translate "Verder werken" %} →</span>
+</a>
+{% endwith %}
+{% endif %}
+
+<div class="split">
+    <section class="card">
+        <div class="card-head"><h2>{% translate "Laatste facturen" %}</h2><a class="small" href="{% url 'documents:list' %}">{% translate "Alle facturen" %}</a></div>
+        {% if latest_invoices %}
+        <div class="table-wrap">
+            <table class="table stackable">
+                <thead><tr><th>{% translate "Nummer" %}</th><th>{% translate "Klant" %}</th><th class="r">{% translate "Totaal" %}</th><th class="r">{% translate "Betaalstatus" %}</th></tr></thead>
+                <tbody>
+                    {% for invoice in latest_invoices %}
+                    <tr class="is-link">
+                        <td data-cell="secondary" class="num">{{ invoice.number }}</td>
+                        <td data-cell="primary"><a class="row-link" href="{% url 'documents:edit' invoice.pk %}">{{ invoice|contact_name }}</a></td>
+                        <td data-cell="amount" class="r amount">{{ invoice.total_cents|money }}</td>
+                        <td data-cell="status" class="r">{% if invoice.is_overdue %}{% include "documents/_pill_overdue.html" %}{% else %}<span class="pill pill-{{ invoice.payment_state }}">{{ invoice.payment_state|payment_state_label|capfirst }}</span>{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="card-pad small muted">{% translate "Je hebt nog geen facturen uitgegeven." %}</div>
+        {% endif %}
+    </section>
+    <section class="card">
+        <div class="card-head"><h2>{% translate "Wachten op antwoord" %}</h2><a class="small" href="{% url 'quotes:list' %}">{% translate "Offertes" %}</a></div>
+        {% if waiting_quotes %}
+        <ul class="list">
+            {% for quote, hint in waiting_quotes %}
+            <li>
+                <div class="grow">
+                    <a class="title" href="{% url 'quotes:edit' quote.pk %}">{{ quote|contact_name }}</a>
+                    <div class="small muted">{{ quote.number }}{% if hint.0 == "soon" %} · <span class="due-hint"><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% if hint.1 == 0 %}{% translate "verloopt vandaag" %}{% else %}{% blocktranslate count days=hint.1 %}verloopt over {{ days }} dag{% plural %}verloopt over {{ days }} dagen{% endblocktranslate %}{% endif %}</span>{% elif hint.0 == "past" %} · <span class="due-hint is-past"><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% translate "geldigheid voorbij" %}</span>{% elif quote.expiry_date %} · {% blocktranslate with date=quote.expiry_date|date:"j b Y" %}geldig tot {{ date }}{% endblocktranslate %}{% endif %}</div>
+                </div>
+                <span class="amount">{{ quote.total_cents|money }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+        <div class="card-foot muted">{% translate "Verzonden offertes zonder antwoord. Na de geldigheidsdatum kun je ze als verlopen markeren." %}</div>
+        {% else %}
+        <div class="card-pad small muted">{% translate "Geen offertes die op antwoord wachten." %}</div>
+        {% endif %}
+    </section>
+</div>
+{% if last_backup %}
+<p class="small muted" id="laatste-back-up" style="margin-top:var(--s-4)">{% blocktranslate with moment=last_backup|moment %}Laatste back-up: {{ moment }}{% endblocktranslate %}</p>
+{% endif %}
+{% endif %}
+{% endblock %}

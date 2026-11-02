@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Inloggen" %} — Huismus{% endblock %}
+
+{% block body %}
+<body>
+{% include "icons.svg" %}
+<main class="login">
+    <form class="card login-card" method="post">
+        {% csrf_token %}
+        <div class="login-brand">
+            <svg class="mark" width="64" height="64" aria-hidden="true"><use href="#mus"></use></svg>
+            <h1>Huismus</h1>
+            <p class="muted">{% if desktop %}{% translate "Vul je wachtwoord in om Huismus te openen." %}{% else %}{% translate "Log in om je administratie te openen." %}{% endif %}</p>
+        </div>
+        {% if form.errors %}
+        <div class="flash flash-error" role="alert" id="login-error">
+            <svg class="i" aria-hidden="true"><use href="#alert"></use></svg>
+            <div class="flash-body small">{% if locked %}{% translate "Je hebt te vaak een verkeerd wachtwoord ingevuld. Over een kwartier kun je het weer proberen." %}{% elif desktop %}{% translate "Dit wachtwoord klopt niet. Probeer het opnieuw." %}{% else %}{% translate "Gebruikersnaam of wachtwoord klopt niet. Probeer het opnieuw." %}{% endif %}</div>
+        </div>
+        {% endif %}
+        {% if desktop %}
+        {% comment %}One user (SPEC.md M11, design D6): only the password.{% endcomment %}
+        <input type="hidden" name="username" value="{{ desktop_username }}">
+        {% else %}
+        <div class="field">
+            <label class="label" for="{{ form.username.id_for_label }}">{% translate "Gebruikersnaam" %}</label>
+            <input id="{{ form.username.id_for_label }}" class="input" name="username" autocomplete="username" autocapitalize="none"
+                   value="{{ form.username.value|default:'' }}" required autofocus
+                   {% if form.errors %}aria-invalid="true" aria-describedby="login-error"{% endif %}>
+        </div>
+        {% endif %}
+        <div class="field">
+            <label class="label" for="{{ form.password.id_for_label }}">{% translate "Wachtwoord" %}</label>
+            <input id="{{ form.password.id_for_label }}" class="input" type="password" name="password" autocomplete="current-password" required{% if desktop %} autofocus{% endif %}
+                   {% if form.errors %}aria-invalid="true" aria-describedby="login-error"{% endif %}>
+        </div>
+        {% if not desktop %}<label class="check small"><input type="checkbox" name="remember" checked>{% translate "Ingelogd blijven op dit apparaat" %}</label>{% endif %}
+        {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+        <button class="btn btn-primary btn-lg btn-block" type="submit">{% if desktop %}{% translate "Openen" %}{% else %}{% translate "Inloggen" %}{% endif %}</button>
+        {% if not desktop %}<p class="small muted" style="text-align:center">{% translate "Draait op je eigen netwerk" %}</p>{% endif %}
+    </form>
+    {% comment %}Outside the login form: a nested <form> is dropped by the HTML
+    parser, so NL/EN would submit the login form instead.{% endcomment %}
+    <div class="login-lang">{% include "core/_language_switch.html" %}</div>
+</main>
+{% include "core/_toasts.html" %}
+</body>
+{% endblock %}

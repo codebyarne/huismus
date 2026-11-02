@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load i18n money documents_tags %}
+
+{% block title %}{% translate "Facturen" %} — Huismus{% endblock %}
+
+{% block main_attrs %} data-shortcut-new="{% url 'documents:create' %}"{% endblock %}
+{% block shortcut_search %}{% include "core/_shortcut_search.html" %}{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <h1>{% translate "Facturen" %}</h1>
+        <p class="lede">{% translate "Facturen en creditnota's. Een uitgegeven factuur staat vast. Corrigeren doe je met een creditnota." %}</p>
+    </div>
+    <div class="actions">
+        <a class="btn btn-primary" href="{% url 'documents:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuwe factuur" %}</a>
+    </div>
+</div>
+
+{% if not has_any %}
+<div class="card">
+    <div class="empty">
+        <div class="empty-art"><svg class="mark" width="56" height="56" aria-hidden="true"><use href="#mus"></use></svg></div>
+        <h2>{% translate "Nog geen facturen" %}</h2>
+        <p>{% translate "Maak je eerste factuur. Hij blijft een concept tot je hem uitgeeft." %}</p>
+        <div class="row">
+            <a class="btn btn-primary" href="{% url 'documents:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Maak je eerste factuur" %}</a>
+            <a class="btn" href="{% url 'imports:upload' %}"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg>{% translate "Importeren uit Moneybird" %}</a>
+        </div>
+    </div>
+</div>
+{% else %}
+<section class="card">
+    <nav class="tabs" id="facturen-tabs" aria-label="{% translate 'Filter' %}" style="padding:0 var(--s-3)">
+        {% for t in tabs %}
+        <a class="tab" href="{{ t.url }}"{% if t.slug == tab %} aria-current="page"{% endif %}>{{ t.label }} <span class="count">{{ t.count }}</span></a>
+        {% endfor %}
+    </nav>
+    {% comment %}Without JS this is a plain GET form (Enter submits). With HTMX it
+    refreshes the results while typing; hx-select-oob keeps the tab counts
+    in sync without replacing the search field the user is typing in.{% endcomment %}
+    <form class="toolbar" role="search" method="get"
+          hx-get="{% url 'documents:list' %}" hx-trigger="input changed delay:300ms from:input[name=q], change from:select"
+          hx-target="#facturen-resultaat" hx-select="#facturen-resultaat" hx-select-oob="#facturen-tabs"
+          hx-swap="outerHTML" hx-push-url="true">
+        <input type="hidden" name="tab" value="{{ tab }}">
+        <label class="input-affix">
+            <span class="sr-only">{% translate "Zoeken in facturen" %}</span>
+            <svg class="i" aria-hidden="true"><use href="#search"></use></svg>
+            <input class="input input-sm" type="search" name="q" value="{{ query }}" placeholder="{% translate 'Zoek op nummer of klant' %}" autocomplete="off">
+        </label>
+        <select class="select input-sm" name="jaar" style="width:auto" aria-label="{% translate 'Jaar' %}">
+            {% for y in years %}<option value="{{ y }}"{% if y == year %} selected{% endif %}>{{ y }}</option>{% endfor %}
+            <option value="alle"{% if year is None %} selected{% endif %}>{% translate "Alle jaren" %}</option>
+        </select>
+        <noscript><button type="submit" class="btn btn-sm">{% translate "Zoeken" %}</button></noscript>
+    </form>
+    <div id="facturen-resultaat">
+        {% if documents %}
+        <div class="table-wrap">
+            <table class="table stackable">
+                <thead>
+                    <tr>
+                        <th>{% translate "Nummer" %}</th>
+                        <th>{% translate "Soort" %}</th>
+                        <th>{% translate "Klant" %}</th>
+                        <th>{% translate "Status" %}</th>
+                        <th class="r">{% translate "Totaal" %}</th>
+                        <th class="r">{% translate "Betaalstatus" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for document in documents %}
+                    <tr class="is-link">
+                        <td data-cell="secondary" class="num">{% if document.number %}{{ document.number }}{% else %}<span class="draft-no">{% translate "Concept" %}</span>{% endif %}</td>
+                        <td data-cell="hide">{% if document.kind == "credit_note" %}<span class="pill pill-credit">{% translate "Creditnota" %}</span>{% else %}{% translate "Factuur" %}{% endif %}</td>
+                        <td data-cell="primary">
+                            <a class="row-link" href="{% url 'documents:edit' document.pk %}">{{ document|contact_name|default:_("Nog geen klant") }}</a>
+                            {% if document.source %}<span class="pill pill-import" style="margin-left:6px">{% translate "Geïmporteerd" %}</span>{% endif %}
+                        </td>
+                        <td data-cell="{% if document.status == 'draft' %}status{% else %}hide{% endif %}">
+                            {% if document.status == "draft" %}<span class="pill pill-concept">{% translate "Concept" %}</span>
+                            {% else %}<span class="pill pill-final"><svg class="i" aria-hidden="true"><use href="#lock"></use></svg>{% translate "Definitief" %}</span>{% endif %}
+                        </td>
+                        <td data-cell="amount" class="r amount">{% if document.kind == "credit_note" %}&minus;&nbsp;{% endif %}{{ document.total_cents|money }}</td>
+                        <td data-cell="{% if document.status == 'draft' %}hide{% else %}status{% endif %}" class="r">
+                            {% if document.kind == "credit_note" %}<span class="pill pill-credit">{% translate "Creditnota" %}</span>
+                            {% elif document.is_overdue %}{% include "documents/_pill_overdue.html" %}
+                            {% elif document.payment_state %}<span class="pill pill-{{ document.payment_state }}">{{ document.payment_state|payment_state_label|capfirst }}</span>
+                            {% else %}<span class="muted">·</span>{% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-foot row">
+            <span class="muted">{% blocktranslate count total=total with shown=documents|length %}{{ shown }} van {{ total }} factuur{% plural %}{{ shown }} van {{ total }} facturen{% endblocktranslate %}</span>
+            <span class="spacer"></span>
+            {% if more_url %}
+            <a class="btn btn-ghost btn-sm" href="{{ more_url }}"
+               hx-get="{{ more_url }}" hx-target="#facturen-resultaat" hx-select="#facturen-resultaat"
+               hx-swap="outerHTML show:none" hx-push-url="true">{% translate "Meer laden" %}<span class="spinner"></span></a>
+            {% endif %}
+        </div>
+        {% else %}
+        <div class="empty">
+            <h2>{% translate "Niets gevonden" %}</h2>
+            <p>{% translate "Geen facturen die bij deze zoekopdracht, dit tabblad en dit jaar passen." %}</p>
+            <div class="row"><a class="btn" href="?">{% translate "Filters wissen" %}</a></div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+<p class="small muted" style="margin-top:var(--s-3)"><span class="pill pill-overdue" style="height:20px;font-size:11px">{% translate "Vervallen" %}</span> {% translate "betekent: vervaldatum voorbij en nog niet volledig betaald." %}</p>
+{% endif %}
+{% endblock %}

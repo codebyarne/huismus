@@ -1,0 +1,40 @@
+Jaarexport 2014 van Lindeboom Communicatie
+
+Deze export bevat:
+- Export bezittingen
+- Export balans
+- Export kasstroomoverzicht
+- Export crediteuren
+- Export crediteurenkaart
+- Export debiteuren
+- Export debiteurenkaart
+- Export kosten per contact
+- Export kosten per project
+- Export kolommenbalans
+- Export resultatenrekening
+- Export omzet per contact
+- Export omzet per project
+- Export btw-overzicht
+- Export debiteuren ouderdomsanalyse
+- Export crediteuren ouderdomsanalyse
+- Documenten export
+- Documentregels export
+- Documenten archief
+- Offertes export
+- Offerteregels export
+- Offertes archief
+- Verkoopfacturen export
+- Verkoopfactuurregels export
+- Verkoopfacturen archief
+- Verkoopfacturen UBL-archief
+- Externe verkoopfacturen export
+- Externe verkoopfactuurregels export
+- Externe verkoopfacturen archief
+- Transacties export
+- Grootboekkaarten export
+- Uren export
+- Contacten export
+- Producten export
+- Ritten export
+- Periodieke facturen export
+- Periodieke factuurregels export

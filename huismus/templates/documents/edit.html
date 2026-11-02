@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% load i18n forms documents_tags %}
+
+{% block title %}{% if is_quote %}{% if document.number %}{% translate "Offerte" %} {{ document.number }}{% else %}{% translate "Nieuwe offerte" %}{% endif %}{% elif document.kind == "credit_note" %}{% translate "Creditnota (concept)" %}{% elif document.pk %}{% translate "Conceptfactuur" %}{% else %}{% translate "Nieuwe factuur" %}{% endif %} — Huismus{% endblock %}
+{% block content_class %}content-wide{% endblock %}
+
+{% block content %}
+<form id="factuur" method="post" action="{{ form_action }}">
+    {% csrf_token %}
+    <div class="page-head" style="margin-bottom:var(--s-4)">
+        <div class="titles">
+            <a class="back" href="{{ list_url }}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% if is_quote %}{% translate "Offertes" %}{% else %}{% translate "Facturen" %}{% endif %}</a>
+            <div class="row">
+                <h1>{% if is_quote %}{% if document.number %}{% translate "Offerte" %} {{ document.number }}{% elif contact %}{% blocktranslate with name=contact.display_name %}Offerte voor {{ name }}{% endblocktranslate %}{% else %}{% translate "Nieuwe offerte" %}{% endif %}{% elif document.number %}{{ document.get_kind_display|capfirst }} {{ document.number }}{% elif document.kind == "credit_note" %}{% translate "Creditnota" %}{% elif contact %}{% blocktranslate with name=contact.display_name %}Factuur voor {{ name }}{% endblocktranslate %}{% else %}{% translate "Nieuwe factuur" %}{% endif %}</h1>
+                {% if is_quote %}<span class="pill pill-{{ document.status|quote_pill }}">{{ document.get_status_display|capfirst }}</span>{% else %}<span class="pill pill-concept">{% translate "Concept" %}</span>{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div style="max-width:860px;margin:0 auto">{% form_errors form formset %}</div>
+    {% if is_quote and document.pk %}{% include "documents/_quote_status.html" %}{% endif %}
+    {% if not is_quote and document.reopened_at %}
+    <div class="flash flash-warning" style="max-width:860px;margin:0 auto var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><div class="flash-body small">{% blocktranslate with number=document.number %}Je gaf deze al uit als {{ number }}. Nu is hij weer een concept en bij opnieuw uitgeven houdt hij dit nummer. Had je klant hem al, stuur dan de nieuwe PDF en laat weten wat er veranderd is.{% endblocktranslate %}{% if document.before_reopening %} {% translate "Annuleren zet hem terug zoals je hem uitgaf." %}{% endif %}</div></div>
+    {% elif not is_quote and document.number %}
+    <div class="flash flash-info" style="max-width:860px;margin:0 auto var(--s-4)"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><div class="flash-body small">{% blocktranslate with number=document.number %}Dit concept heeft al nummer {{ number }} uit Moneybird. Bij uitgeven houdt hij dat nummer.{% endblocktranslate %}</div></div>
+    {% endif %}
+    {% if is_quote and document.number %}
+    <div class="flash flash-info" style="max-width:860px;margin:0 auto var(--s-4)"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><div class="flash-body small">{% blocktranslate with number=document.number %}Offerte {{ number }} is al verzonden. Pas je iets aan, download dan de nieuwe PDF en stuur die opnieuw naar de klant. De klant kun je niet meer wijzigen.{% endblocktranslate %}</div></div>
+    {% endif %}
+
+    {% comment %}Live totals: any change in the form posts it (unsaved) to the
+    preview endpoint, which answers with out-of-band swaps for the line
+    totals, totals, address and issue summary. The wrapper, not the form,
+    carries hx-post, so the form's own submit still saves normally.
+    No "changed" modifier in hx-trigger: it compares the value of the
+    element carrying the trigger — this div, which has none — and would
+    let only the change events after leaving a field through.{% endcomment %}
+    <div class="doc-stage"
+         hx-post="{{ preview_url }}"
+         hx-trigger="input delay:400ms, change"
+         hx-include="#factuur" hx-swap="none transition:false" hx-indicator="#totalen" hx-sync="this:queue last">
+        <article class="paper" aria-label="{% if is_quote %}{% translate 'Offerte' %}{% elif document.kind == 'credit_note' %}{% translate 'Creditnota (concept)' %}{% else %}{% translate 'Factuur (concept)' %}{% endif %}">
+            <div class="row small muted" style="justify-content:space-between;margin-bottom:var(--s-8)">
+                {% if settings.logo %}<img src="{{ settings.logo.url }}" alt="" style="max-width:240px;max-height:80px">{% else %}<span></span>{% endif %}
+                <span style="text-align:right">{{ settings.business_name }}<br>{{ settings.address_line1 }} · {{ settings.postal_code }} {{ settings.city }}</span>
+            </div>
+            <div class="doc-head">
+                <div class="stack" style="gap:var(--s-3)">
+                    <span class="doc-kind">{% if is_quote %}{% translate "Offerte" %}{% elif document.kind == "credit_note" %}{% translate "Creditnota" %}{% else %}{% translate "Factuur" %}{% endif %}</span>
+                    {% if document.kind == "credit_note" and document.related_document %}
+                    <a class="doc-ref" href="{% url 'documents:edit' document.related_document.pk %}"><svg class="i i-sm" aria-hidden="true"><use href="#undo"></use></svg>{% blocktranslate with number=document.related_document.number %}Crediteert factuur {{ number }}{% endblocktranslate %}</a>
+                    {% endif %}
+                    <div class="field">
+                        <label class="label" for="{{ form.contact.id_for_label }}">{% translate "Aan" %}</label>
+                        {% if has_contacts or form.contact.value %}
+                        <select name="{{ form.contact.html_name }}" id="{{ form.contact.id_for_label }}" class="select" data-combobox="{% translate 'Zoek of kies een klant' %}"{% if form.contact.errors %} aria-invalid="true"{% endif %}{% if form.contact.field.disabled %} disabled{% endif %}>
+                            <option value="">{% translate "Kies een klant" %}</option>
+                            {% for value, label in form.contact.field.choices %}{% if value %}<option value="{{ value }}"{% if value|stringformat:"s" == form.contact.value|stringformat:"s" %} selected{% endif %}>{{ label }}</option>{% endif %}{% endfor %}
+                        </select>
+                        {% else %}
+                        <div class="kor-note"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{% translate "Je hebt nog geen klanten." %} <a href="{% url 'contacts:create' %}?terug={% if document.pk %}{{ document.pk }}{% elif is_quote %}offerte{% else %}factuur{% endif %}" hx-boost="false" style="color:inherit;font-weight:600">{% translate "Nieuwe klant" %}</a></span></div>
+                        {% endif %}
+                        {% if has_contacts and document.kind != "credit_note" %}<a class="small" href="{% url 'contacts:create' %}?terug={% if document.pk %}{{ document.pk }}{% elif is_quote %}offerte{% else %}factuur{% endif %}" hx-boost="false">{% translate "+ Nieuwe klant" %}</a>{% endif %}
+                        {% include "documents/_address.html" %}
+                        {% include "documents/_attention.html" %}
+                    </div>
+                </div>
+                <dl class="doc-meta">
+                    {% if is_quote %}
+                    <dt>{% translate "Offertenummer" %}</dt>{% if document.number %}<dd><strong>{{ document.number }}</strong></dd>{% else %}<dd class="muted" style="font-style:italic">{% translate "bij verzenden" %}</dd>{% endif %}
+                    <dt><label for="{{ form.issue_date.id_for_label }}">{% translate "Datum" %}</label></dt><dd>{{ form.issue_date|attr_class:"input input-sm" }}</dd>
+                    <dt><label for="{{ form.expiry_date.id_for_label }}">{% translate "Geldig tot" %}</label></dt><dd>{{ form.expiry_date|attr_class:"input input-sm" }}</dd>
+                    {% else %}
+                    <dt>{% if document.kind == "credit_note" %}{% translate "Nummer" %}{% else %}{% translate "Factuurnummer" %}{% endif %}</dt><dd class="muted" style="font-style:italic">{% translate "bij uitgeven" %}</dd>
+                    <dt><label for="{{ form.issue_date.id_for_label }}">{% translate "Factuurdatum" %}</label></dt><dd>{{ form.issue_date|attr_class:"input input-sm" }}</dd>
+                    {% endif %}
+                    {% if document.kind == "invoice" %}
+                    <dt><label for="{{ form.due_date.id_for_label }}">{% translate "Vervaldatum" %}</label></dt><dd>{{ form.due_date|attr_class:"input input-sm" }}</dd>
+                    <dt></dt><dd class="small muted">{% blocktranslate count days=settings.default_payment_terms_days %}leeg: termijn van de klant, anders {{ days }} dag{% plural %}leeg: termijn van de klant, anders {{ days }} dagen{% endblocktranslate %}</dd>
+                    {% endif %}
+                    <dt><label for="{{ form.delivery_date.id_for_label }}">{% translate "Leverdatum" %}</label></dt><dd>{{ form.delivery_date|attr_class:"input input-sm" }}</dd>
+                    <dt><label for="{{ form.reference.id_for_label }}">{% translate "Kenmerk" %}</label></dt><dd>{{ form.reference|attr_class:"input input-sm" }}</dd>
+                    <dt><label for="{{ form.language.id_for_label }}">{% translate "Taal" %}</label></dt><dd>{{ form.language|attr_class:"select input-sm" }}</dd>
+                    <dt><label for="{{ form.currency.id_for_label }}">{% translate "Valuta" %}</label></dt><dd>{{ form.currency|attr_class:"input input-sm" }}</dd>
+                </dl>
+            </div>
+
+            <label class="sr-only" for="{{ form.intro_text.id_for_label }}">{% translate "Introductietekst" %}</label>
+            <textarea id="{{ form.intro_text.id_for_label }}" name="{{ form.intro_text.html_name }}" class="textarea input-quiet" rows="2" style="min-height:0;margin:0 -12px;width:calc(100% + 24px)" placeholder="{% translate 'Introductietekst (optioneel)' %}">{{ form.intro_text.value|default:'' }}</textarea>
+
+            <div class="doc-lines">
+                <div class="line-head"><span></span><span>{% translate "Omschrijving" %}</span><span class="r">{% translate "Aantal" %}</span><span>{% translate "Eenheid" %}</span><span class="r">{% translate "Prijs" %}</span><span>{% translate "Btw" %}</span><span class="r">{% translate "Totaal" %}</span><span></span></div>
+                {{ formset.management_form }}
+                <div data-formset-forms="lines">
+                    {% for line_form in formset.forms %}{% with cents=line_totals|get:line_form.prefix %}{% include "documents/_line_form.html" %}{% endwith %}{% endfor %}
+                </div>
+                <template data-formset-empty="lines">{% include "documents/_line_form.html" with line_form=formset.empty_form cents=None %}</template>
+                <div class="row">
+                    <button type="button" class="add-line" data-formset-add="lines"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Regel toevoegen" %}</button>
+                </div>
+            </div>
+
+            <div class="doc-foot">
+                <div class="stack" style="gap:var(--s-3)">
+                    {% if credited_invoice %}{% include "documents/_credit_room_editor.html" %}{% endif %}
+                    {% if settings.kor_enabled %}
+                    <div class="kor-note"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{{ settings.kor_text|linebreaksbr }} <a href="{% url 'business:topic' 'kor' %}" style="color:inherit">{% translate "Tekst aanpassen" %}</a></span></div>
+                    {% endif %}
+                    <label class="sr-only" for="{{ form.footer_text.id_for_label }}">{% translate "Voettekst" %}</label>
+                    <textarea id="{{ form.footer_text.id_for_label }}" name="{{ form.footer_text.html_name }}" class="textarea input-quiet small" rows="2" style="min-height:0;margin:0 -12px;width:calc(100% + 24px)" placeholder="{% translate 'Voettekst (optioneel)' %}">{{ form.footer_text.value|default:'' }}</textarea>
+                </div>
+                {% include "documents/_totals.html" %}
+            </div>
+        </article>
+
+        <div class="card card-pad" style="max-width:860px;margin:var(--s-5) auto 0">
+            <div class="field">
+                <label class="label" for="{{ form.notes.id_for_label }}">{% translate "Notities" %} <span class="opt">{% translate "(alleen voor jou, niet op het document)" %}</span></label>
+                <textarea id="{{ form.notes.id_for_label }}" name="{{ form.notes.html_name }}" class="textarea" rows="2">{{ form.notes.value|default:'' }}</textarea>
+            </div>
+        </div>
+        {% if timeline %}<div style="max-width:860px;margin:var(--s-5) auto 0">{% include "documents/_timeline.html" %}</div>{% endif %}
+    </div>
+</form>
+
+{% if document.pk and document.kind != "credit_note" %}
+{% comment %}Its own form, outside the editor's: copying takes the saved document, not what is typed.{% endcomment %}
+<form id="kopieren" method="post" action="{% if is_quote %}{% url 'quotes:copy' document.pk %}{% else %}{% url 'documents:copy' document.pk %}{% endif %}" hidden>{% csrf_token %}</form>
+{% endif %}
+{% if document.before_reopening %}
+{% comment %}"Annuleren" after "Toch bewerken": back to exactly how it was issued (documents.reopening.undo_reopen). Reopened before there was a copy (migration 0011): Annuleren is just the way back to the list.{% endcomment %}
+<form id="heropenen-ongedaan" method="post" action="{% url 'documents:reopen_undo' document.pk %}" hidden>{% csrf_token %}</form>
+{% endif %}
+{% include "documents/_editor_dialogs.html" %}
+{% endblock %}
+
+{% block actionbar %}
+<div class="actionbar">
+    <span class="status"></span>
+    {% comment %}The extra actions: in the bar on a wide screen, behind "Meer" on a phone (see .actionbar-more in huismus.css).{% endcomment %}
+    <button class="btn btn-secondary actionbar-more-toggle" type="button" popovertarget="actiebalk-meer" aria-label="{% translate 'Meer' %}"><svg class="i" aria-hidden="true"><use href="#more"></use></svg></button>
+    <div id="actiebalk-meer" class="actionbar-more" popover="auto">
+        {% if document.pk and document.is_deletable %}<button class="btn btn-ghost" type="button" command="show-modal" commandfor="verwijderen"><svg class="i" aria-hidden="true"><use href="#trash"></use></svg>{% translate "Verwijderen" %}</button>{% endif %}
+        {% if document.before_reopening %}<button class="btn btn-ghost" type="submit" form="heropenen-ongedaan">{% translate "Annuleren" %}</button>{% else %}<a class="btn btn-ghost" href="{{ list_url }}">{% translate "Annuleren" %}</a>{% endif %}
+        {% if document.pk and document.kind != "credit_note" %}<button class="btn btn-ghost" type="submit" form="kopieren"><svg class="i" aria-hidden="true"><use href="#copy"></use></svg>{% translate "Kopiëren" %}</button>{% endif %}
+        {% if is_quote and document.number %}<a class="btn btn-ghost" href="{% url 'quotes:mail' document.pk %}"><svg class="i" aria-hidden="true"><use href="#mail"></use></svg>{% translate "Mailen" %}</a>{% endif %}
+        {% if is_quote and document.number %}<a class="btn btn-ghost" href="{% url 'quotes:pdf_page' document.pk %}"><svg class="i" aria-hidden="true"><use href="#file"></use></svg>PDF</a>{% endif %}
+        {% comment %}Posts the unsaved form to the PDF preview in a new tab; nothing is saved. In the installed app app.js sends it to the frame in #voorbeeld-pdf instead.{% endcomment %}
+        {% if document.status == "draft" %}<button class="btn btn-ghost" type="submit" form="factuur" formaction="{{ pdf_preview_url }}" formtarget="_blank" data-preview-pdf="voorbeeld-pdf"><svg class="i" aria-hidden="true"><use href="#file"></use></svg>{% translate "Voorbeeld-pdf" %}</button>{% endif %}
+    </div>
+    <button class="btn btn-secondary" type="submit" form="factuur" name="actie" value="opslaan">{% if is_quote %}{% translate "Opslaan" %}{% else %}{% translate "Concept opslaan" %}{% endif %}<span class="spinner"></span></button>
+    {% if is_quote and document.pk %}
+    <button class="btn {% if document.status == 'draft' %}btn-secondary{% else %}btn-primary{% endif %}" type="button" command="show-modal" commandfor="omzetten"><svg class="i" aria-hidden="true"><use href="#swap"></use></svg>{% translate "Omzetten naar factuur" %}</button>
+    {% endif %}
+    {% if not is_quote or document.status == "draft" %}{% include "documents/_issue_button.html" %}{% endif %}
+</div>
+{% endblock %}

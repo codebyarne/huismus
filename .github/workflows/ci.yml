@@ -1,0 +1,103 @@
+name: CI
+
+# Fewer minutes (Arne, 2026-10-29): a change to documentation only (every
+# .md file, docs/) runs no CI. The app doesn't read these files, so there
+# is nothing to test, and on main nothing to deploy. A change that touches
+# any other file runs CI as always, for all its files.
+on:
+  push:
+    branches: [main]
+    paths-ignore: ["**.md", "docs/**"]
+  pull_request:
+    paths-ignore: ["**.md", "docs/**"]
+
+# A newer push to a pull request makes its running CI pointless: stop it.
+# Never on main, where each run decides a deploy.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  # Which browser engines this run needs. Fewer minutes (Arne, 2026-10-29
+  # and 2026-10-30): a pull request runs Chromium only, like the local gate.
+  # A push to main runs all three only when it touches something a browser
+  # engine renders differently: templates, CSS, JS, translations, the
+  # browser tests themselves, or the dependencies and this workflow. A
+  # change to Python code only runs Chromium, which still runs every test.
+  # When in doubt (a new branch, a force push, a diff that can't be read)
+  # it runs all three.
+  browsers:
+    runs-on: ubuntu-latest
+    outputs:
+      list: ${{ steps.pick.outputs.list }}
+    steps:
+      - uses: actions/checkout@v4
+        if: github.event_name == 'push'
+        with:
+          fetch-depth: 1
+      - id: pick
+        env:
+          EVENT: ${{ github.event_name }}
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+        run: |
+          all='["chromium", "webkit", "firefox"]'
+          if [ "$EVENT" != push ]; then
+            echo 'list=["chromium"]' >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          if ! git fetch -q --depth=1 origin "$BEFORE" \
+             || ! changed=$(git diff --name-only "$BEFORE" "$AFTER"); then
+            echo "Diff niet te lezen: alle drie."
+            echo "list=$all" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          echo "$changed"
+          if echo "$changed" | grep -qE '(^|/)templates/|(^|/)static/|\.(html|css|js|po)$|^tests/e2e/|^pyproject\.toml$|^uv\.lock$|^\.github/workflows/'; then
+            echo "list=$all" >> "$GITHUB_OUTPUT"
+          else
+            echo "Alleen code zonder weergave: Chromium."
+            echo 'list=["chromium"]' >> "$GITHUB_OUTPUT"
+          fi
+
+  verify:
+    # One job per browser engine, side by side: each runs the whole gate
+    # with its own engine (the list comes from the browsers job above). The
+    # workflow on main is only green when every engine in it is, and only
+    # then does the Pi deploy (docs/deploy.md), so a WebKit- or Firefox-only
+    # bug stops the deploy instead of reaching the Pi.
+    needs: browsers
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: ${{ fromJSON(needs.browsers.outputs.list) }}
+    name: verify (${{ matrix.browser }})
+    runs-on: ubuntu-latest
+    # A hung browser test shouldn't burn minutes: a normal run takes ~8.
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "0.12.18"
+          enable-cache: true
+
+      - name: Install Python
+        run: uv python install
+
+      - name: Install dependencies
+        run: uv sync --locked
+
+      # Browser tests (tests/e2e): this job's engine, and gettext for the
+      # compiled English catalog the language test uses.
+      - name: Install browser and gettext
+        run: |
+          sudo apt-get update && sudo apt-get install -y gettext
+          uv run playwright install --with-deps ${{ matrix.browser }}
+
+      - name: Run the gate
+        env:
+          # Locally the gate uses Chromium only; CI also covers Safari's and
+          # Firefox's engines, one per job.
+          PYTEST_ADDOPTS: "--browser ${{ matrix.browser }}"
+        run: ./scripts/verify.sh

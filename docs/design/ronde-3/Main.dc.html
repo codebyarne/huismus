@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Instellingen, overzicht (desktop)</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="hm.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#14539E}a:hover{color:#1B6AC9}
+</style>
+</helmet>
+<div style="width: 1280px; height: 900px; box-sizing: border-box; display: flex; background: #FBF8F3; font-family: ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color: #2A2520">
+  <nav aria-label="Hoofdmenu" style="width: 248px; flex: none; background: #FFFFFF; border-right: 1px solid #E6DED2; padding: 20px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 4px">
+    <div class="row" style="padding: 4px 8px 20px"><span style="width: 28px; height: 28px; border-radius: 8px; background: #F4A259; display: inline-block"></span><strong style="font-size: 17px">Huismus</strong></div>
+    <a class="btn btn-ghost" href="#" style="justify-content: flex-start; color: #2A2520">Overzicht</a>
+    <a class="btn btn-ghost" href="#" style="justify-content: flex-start; color: #2A2520">Facturen</a>
+    <a class="btn btn-ghost" href="#" style="justify-content: flex-start; color: #2A2520">Offertes</a>
+    <a class="btn btn-ghost" href="#" style="justify-content: flex-start; color: #2A2520">Contacten</a>
+    <a class="btn btn-ghost" href="#" style="justify-content: flex-start; color: #2A2520">Uitgaven</a>
+    <a class="btn" href="#" aria-current="page" style="justify-content: flex-start; background: #E3EEFB; border-color: transparent; color: #14539E">Instellingen</a>
+  </nav>
+  <main style="flex: 1; padding: 40px 48px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px; min-width: 0">
+    <div class="stack" style="gap: 6px">
+      <h1>Instellingen</h1>
+      <p class="muted">Wijzigingen gelden alleen voor nieuwe documenten. Uitgegeven facturen veranderen nooit.</p>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+      <a class="card pad" href="#" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px">
+        <div class="row" style="justify-content: space-between"><h2>Bedrijf</h2><span class="pill pill-ok">Compleet</span></div>
+        <p class="small muted">Staat op elke factuur: naam, adres, KvK, btw-nummer, bank en e-mail.</p>
+        <p class="small">Atelier Zonnig · Utrecht</p>
+      </a>
+      <a class="card pad" href="#" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px">
+        <div class="row" style="justify-content: space-between"><h2>KOR</h2><span class="pill pill-ok">Aan</span></div>
+        <p class="small muted">De KOR-tekst onder je facturen, en wanneer je hoort dat je omzet de grens nadert.</p>
+        <p class="small">Grens € 20.000 · waarschuwen vanaf 80%</p>
+      </a>
+      <a class="card pad" href="#" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px">
+        <div class="row" style="justify-content: space-between"><h2>Facturen en nummering</h2></div>
+        <p class="small muted">Betalingstermijn, nummerformaten en standaardtaal.</p>
+        <p class="small">Volgende factuur: <span class="mono">2026-0014</span></p>
+      </a>
+      <a class="card pad" href="#" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px">
+        <div class="row" style="justify-content: space-between"><h2>Huisstijl</h2><span class="pill pill-ok">Logo</span></div>
+        <p class="small muted">Je logo bovenaan en de voettekst onderaan je facturen.</p>
+        <p class="small">logo.svg</p>
+      </a>
+      <a class="card pad" href="#" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px">
+        <div class="row" style="justify-content: space-between"><h2>Mailen</h2><span class="pill pill-ok">Gmail</span></div>
+        <p class="small muted">Waarmee Huismus je facturen en offertes mailt, en met welke tekst.</p>
+        <p class="small">via hallo@ateliervoorbeeld.nl</p>
+      </a>
+      <a class="card pad" href="#" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px">
+        <div class="row" style="justify-content: space-between"><h2>Back-ups</h2><span class="pill pill-ok">Vandaag 09:12</span></div>
+        <p class="small muted">Een dagelijkse kopie in een map die je kiest, bijvoorbeeld in iCloud Drive.</p>
+        <p class="small">iCloud Drive › Huismus</p>
+      </a>
+      <a class="card pad" href="#" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px">
+        <div class="row" style="justify-content: space-between"><h2>Updates</h2><span class="pill pill-info">Nieuwe versie</span></div>
+        <p class="small muted">Of Huismus zelf zoekt naar een nieuwe versie.</p>
+        <p class="small">Je hebt 1.3.0 · 1.4.0 staat klaar</p>
+      </a>
+      <a class="card pad" href="#" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px">
+        <div class="row" style="justify-content: space-between"><h2>AI-assistenten</h2><span class="pill pill-off">Uit</span></div>
+        <p class="small muted">Claude, ChatGPT of Gemini je administratie laten lezen en concepten laten maken.</p>
+        <p class="small">Geen assistent gekoppeld</p>
+      </a>
+      <a class="card pad" href="#" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px">
+        <div class="row" style="justify-content: space-between"><h2>Wachtwoord</h2><span class="pill pill-off">Uit</span></div>
+        <p class="small muted">Een wachtwoord vragen als Huismus opent. Standaard uit.</p>
+        <p class="small">Huismus opent zonder wachtwoord</p>
+      </a>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":900}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

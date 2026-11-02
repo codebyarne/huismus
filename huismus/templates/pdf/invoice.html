@@ -1,0 +1,90 @@
+{% load i18n money documents_tags %}<!DOCTYPE html>
+{% comment %}One template for invoices, credit notes and sent quotes (see
+huismus/documents/pdf.py). Rendered only from the document and its snapshots
+(invariant 5), in the document's own language. The layout follows a
+Moneybird invoice, so imported and new invoices look alike.{% endcomment %}
+{% with business=document.business_snapshot customer=document.contact_snapshot %}
+<html lang="{{ document.language }}">
+<head>
+<meta charset="utf-8">
+<title>{{ document.get_kind_display|capfirst }} {{ document.number }}</title>
+<style>{% include "pdf/invoice.css" %}</style>
+</head>
+<body class="pdf">
+{% if preview %}<div class="preview-mark">{% translate "VOORBEELD" %}</div>{% endif %}
+
+{% comment %}At the bottom of every page (invoice.css: @page): how to pay,
+the document's own footer text and the KOR text, as one paragraph.{% endcomment %}
+{% if document.kind != "quote" or document.footer_text or document.kor_text_snapshot or document.reverse_charge_text_snapshot %}<div class="page-footer">
+    {% if document.kind == "invoice" %}{% if document.due_date %}{% blocktranslate with amount=document.total_cents|money date=document.due_date|date:"d-m-Y" iban=business.iban|iban name=business.business_name number=document.number %}We verzoeken je vriendelijk het bovenstaande bedrag van {{ amount }} vóór {{ date }} te voldoen op IBAN-nummer {{ iban }} t.n.v. {{ name }} onder vermelding van factuurnummer {{ number }}.{% endblocktranslate %}{% else %}{% blocktranslate with amount=document.total_cents|money iban=business.iban|iban name=business.business_name number=document.number %}We verzoeken je vriendelijk het bovenstaande bedrag van {{ amount }} te voldoen op IBAN-nummer {{ iban }} t.n.v. {{ name }} onder vermelding van factuurnummer {{ number }}.{% endblocktranslate %}{% endif %}{% if business.bic %} ({% translate "BIC" %} {{ business.bic }}){% endif %}
+    {% elif document.kind == "credit_note" %}{% blocktranslate with number=document.related_document.number %}Dit bedrag wordt verrekend met factuur {{ number }}. Je hoeft niets over te maken.{% endblocktranslate %}
+    {% endif %}{% if document.footer_text %}{{ document.footer_text|linebreaksbr }}{% endif %}
+    {% if document.kor_text_snapshot %}{{ document.kor_text_snapshot }}{% endif %}
+    {% if document.reverse_charge_text_snapshot %}{{ document.reverse_charge_text_snapshot }}{% endif %}
+</div>{% endif %}
+
+<table class="top"><tr>
+    <td>{% if logo.logo_base64 %}<img class="logo" src="data:{{ logo.logo_content_type }};base64,{{ logo.logo_base64 }}" alt="">{% endif %}</td>
+    <td class="sender">
+        <p><strong>{{ business.business_name }}</strong><br>
+        {{ business.address_line1 }}<br>
+        {% if business.address_line2 %}{{ business.address_line2 }}<br>{% endif %}
+        {{ business.postal_code }} {{ business.city }}</p>
+        {% if business.email or business.phone or business.website %}<p>{% if business.email %}{{ business.email }}<br>{% endif %}{% if business.phone %}{{ business.phone }}<br>{% endif %}{% if business.website %}{{ business.website }}{% endif %}</p>{% endif %}
+        <p>{% if business.kvk_number %}{% translate "KvK" %}: {{ business.kvk_number }}<br>{% endif %}{% if business.vat_number %}{% translate "Btw-nummer" %}: {{ business.vat_number }}<br>{% endif %}{% if business.iban %}{% translate "Bank" %}: {{ business.iban|iban }}{% endif %}</p>
+    </td>
+</tr></table>
+
+{% comment %}Address block positioned for a window envelope.{% endcomment %}
+<div class="window">
+    {{ customer.display_name }}<br>
+    {% if document.attention %}{% translate "T.a.v." %} {{ document.attention }}<br>{% endif %}
+    {% if customer.address_line1 %}{{ customer.address_line1 }}<br>{% endif %}
+    {% if customer.address_line2 %}{{ customer.address_line2 }}<br>{% endif %}
+    {{ customer.postal_code }} {{ customer.city }}
+    {% comment %}Not on a KOR document, so a KOR invoice looks the same when downloaded again (M18).{% endcomment %}
+    {% if customer.vat_number and not document.kor_text_snapshot %}<br>{% blocktranslate with vat_number=customer.vat_number %}Btw-nummer: {{ vat_number }}{% endblocktranslate %}{% endif %}
+</div>
+
+<table class="heading"><tr>
+    <td><h1>{% if document.kind == "credit_note" %}{% translate "Creditnota" %}{% elif document.kind == "quote" %}{% translate "Offerte" %}{% else %}{% translate "Factuur" %}{% endif %} {{ document.number }}</h1>
+        {% if document.reference %}<table class="reference"><tr><td>{% translate "Kenmerk" %}:</td><td>{{ document.reference }}</td></tr></table>{% endif %}</td>
+    <td class="dates"><table class="meta">
+        <tr><td>{% if document.kind == "quote" %}{% translate "Offertedatum" %}{% elif document.kind == "credit_note" %}{% translate "Datum" %}{% else %}{% translate "Factuurdatum" %}{% endif %}:</td><td class="r">{{ document.issue_date|date:"d-m-Y" }}</td></tr>
+        {% if document.delivery_date %}<tr><td>{% translate "Leverdatum" %}:</td><td class="r">{{ document.delivery_date|date:"d-m-Y" }}</td></tr>{% endif %}
+        {% if document.kind == "invoice" and document.due_date %}<tr><td>{% translate "Vervaldatum" %}:</td><td class="r">{{ document.due_date|date:"d-m-Y" }}</td></tr>{% endif %}
+        {% if document.kind == "quote" and document.expiry_date %}<tr><td>{% translate "Geldig tot" %}:</td><td class="r">{{ document.expiry_date|date:"d-m-Y" }}</td></tr>{% endif %}
+        {% if document.kind == "credit_note" and document.related_document %}<tr><td>{% translate "Crediteert factuur" %}:</td><td class="r">{{ document.related_document.number }}</td></tr>{% endif %}
+    </table></td>
+</tr></table>
+
+{% if document.intro_text %}<p class="intro">{{ document.intro_text|linebreaksbr }}</p>{% endif %}
+
+{% comment %}The first column is the quantity ("2,5 uur"), without a
+heading, as in Moneybird; empty for a line that counts once.{% endcomment %}
+<table class="lines{% if lines|has_quantities %} with-quantities{% endif %}">
+    <colgroup><col class="qty"><col><col class="price"><col class="total"><col class="tax"></colgroup>
+    <thead><tr><th class="qty"></th><th class="desc">{% translate "Omschrijving" %}</th><th class="r price">{% translate "Bedrag" %}</th><th class="r total">{% translate "Totaal" %}</th><th class="r tax">{% translate "Btw" %}</th></tr></thead>
+    <tbody class="items">
+        {% for line in lines %}
+        <tr>
+            <td class="qty">{{ line|line_quantity }}</td>
+            <td class="desc">{{ line.description|linebreaksbr }}</td>
+            <td class="r price">{{ line.unit_price_cents|money }}</td>
+            <td class="r total">{{ line.line_total_cents|money_for:document }}</td>
+            <td class="r tax">{{ line|line_vat }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    {% comment %}Not a tfoot: WeasyPrint repeats that on every page.{% endcomment %}
+    <tbody class="totals">
+        <tr class="subtotal"><td colspan="2"></td><td class="r price"><strong>{% translate "Subtotaal" %}</strong></td><td class="r total">{{ document.subtotal_cents|money_for:document }}</td><td></td></tr>
+        {% for rate_bp, cents in tax_per_rate %}
+        <tr><td colspan="2"></td><td class="r price">{% if rate_bp is None %}{% translate "Btw" %}{% else %}{% blocktranslate with rate=rate_bp|tax_percent %}{{ rate }} btw{% endblocktranslate %}{% endif %}</td><td class="r total">{{ cents|money_for:document }}</td><td></td></tr>
+        {% endfor %}
+        <tr class="grand"><td colspan="2"></td><td class="r price">{% translate "Totaal" %}</td><td class="r total">{{ document.total_cents|money_for:document }}</td><td></td></tr>
+    </tbody>
+</table>
+</body>
+</html>
+{% endwith %}

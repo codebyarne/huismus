@@ -1,0 +1,12 @@
+{% load documents_tags %}
+{% comment %}Response of documents:preview. Only out-of-band swaps: the live
+parts of the editor, recomputed on the server for the unsaved form.{% endcomment %}
+{% include "documents/_totals.html" with oob=True %}
+{% include "documents/_address.html" with oob=True %}
+{% include "documents/_attention.html" with oob=True %}
+{% include "documents/_issue_summary.html" with oob=True %}
+{% include "documents/_issue_button.html" with oob=True %}
+{% if credited_invoice %}{% include "documents/_credit_room_editor.html" with oob=True %}{% endif %}
+{% for line_form in formset.forms %}{% with cents=line_totals|get:line_form.prefix %}
+<span class="line-total{% if cents is None %} muted{% endif %}" id="{{ line_form.prefix }}-totaal" hx-swap-oob="true">{% if cents is None %}·{% else %}{{ cents|money_for:document }}{% endif %}</span>
+{% endwith %}{% endfor %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Geïmporteerd" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+{% include "imports/_steps.html" with step=3 %}
+<section class="card" style="margin-bottom:var(--s-5)">
+    <div class="celebrate">
+        <div class="empty-art" style="position:relative;width:140px;height:96px;display:grid;place-items:end center"><span style="position:absolute;left:0;right:0;bottom:6px;height:4px;border-radius:2px;background:var(--border-strong)"></span><svg class="mark hop" width="84" height="84" style="position:relative;bottom:8px" aria-hidden="true"><use href="#mus"></use></svg></div>
+        <h1>{% translate "Je administratie is verhuisd" %}</h1>
+        <p class="muted" style="max-width:46ch">{% blocktranslate %}{{ customers_text }}, {{ invoices_text }}, {{ quotes_text }} en {{ expenses_text }} staan nu in Huismus.{% endblocktranslate %}</p>
+        <p class="small muted">{% translate "Je originele export staat bewaard in Huismus, ook in je back-ups." %}</p>
+    </div>
+    <div class="mode-banner is-done" style="border-radius:0 0 var(--r-lg) var(--r-lg);padding:var(--s-4) var(--s-6)">
+        <span class="mb-icon" style="width:36px;height:36px"><svg class="i" aria-hidden="true"><use href="#check"></use></svg></span>
+        <div><strong>{% translate "Geïmporteerd" %}</strong> <span class="muted small">{{ run.started_at|date:"j b Y, H:i" }}</span></div>
+    </div>
+</section>
+<section class="card">
+    <div class="card-head"><h2>{% translate "Wat nu?" %}</h2></div>
+    <ul class="list">
+        {% if invoices.payment_issues %}
+        <li><span class="list-icon is-warn"><svg class="i" aria-hidden="true"><use href="#euro"></use></svg></span><div class="grow"><a class="title" href="{% url 'documents:list' %}?jaar=alle">{% blocktranslate count count=invoices.payment_issues|length %}{{ count }} betaling controleren{% plural %}{{ count }} betalingen controleren{% endblocktranslate %}</a><div class="small muted">{{ invoices.payment_issues|join:" · "|truncatechars:120 }}</div></div></li>
+        {% endif %}
+        {% if invoices.skipped_count %}
+        <li><span class="list-icon is-warn"><svg class="i" aria-hidden="true"><use href="#file"></use></svg></span><div class="grow"><a class="title" href="{% url 'documents:create' %}">{% blocktranslate count count=invoices.skipped_count %}{{ count }} overgeslagen factuur zelf toevoegen{% plural %}{{ count }} overgeslagen facturen zelf toevoegen{% endblocktranslate %}</a><div class="small muted">{{ invoices.skipped_missing_contact|join:", " }} {{ invoices.skipped_no_lines|join:", " }}</div></div></li>
+        {% endif %}
+        <li><span class="list-icon"><svg class="i" aria-hidden="true"><use href="#settings"></use></svg></span><div class="grow"><a class="title" href="{% url 'business:overview' %}">{% translate "Instellingen nalopen" %}</a><div class="small muted">{% translate "Bedrijfsgegevens, KOR-tekst en nummerformaat" %}</div></div></li>
+        <li><span class="list-icon"><svg class="i" aria-hidden="true"><use href="#home"></use></svg></span><div class="grow"><a class="title" href="{% url 'home' %}">{% translate "Naar je overzicht" %}</a><div class="small muted">{% translate "Openstaande facturen en de laatste documenten" %}</div></div></li>
+    </ul>
+</section>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% load i18n %}
+{% comment %}One section of an import report (sales invoices, quotes or expenses).
+`r` is the report dict with counts (imports.views._with_counts), `title` its heading,
+`orphans_title` and `orphans_text` the heading and sentence for lines without a document.{% endcomment %}
+{% with issues=r.issue_count %}
+<details class="report{% if issues or r.missing_pdfs or r.missing_receipts %} is-warn{% endif %}"{% if issues %} open{% endif %}>
+    <summary>
+        <span class="r-icon"><svg class="i" aria-hidden="true"><use href="#{% if issues or r.missing_pdfs or r.missing_receipts %}alert{% else %}check{% endif %}"></use></svg></span>
+        <span class="r-title"><strong>{{ title }}</strong><span>{% if issues %}{% blocktranslate count count=issues %}{{ count }} punt om na te lopen{% plural %}{{ count }} punten om na te lopen{% endblocktranslate %}{% else %}{% translate "Alle totalen kloppen tot op de cent" %}{% endif %}</span></span>
+        <svg class="i chev" aria-hidden="true"><use href="#chevron-down"></use></svg>
+    </summary>
+    <div class="r-body">
+        <div class="stat-chips">
+            {% if r.in_export is not None %}<span class="stat-chip"><b>{{ r.in_export }}</b>{% translate "in de export" %}</span>{% endif %}
+            <span class="stat-chip"><b>{{ r.new }}</b>{% translate "nieuw" %}</span>
+            <span class="stat-chip"><b>{{ r.unchanged }}</b>{% translate "al aanwezig" %}</span>
+            {% if r.skipped_count %}<span class="stat-chip is-warn"><b>{{ r.skipped_count }}</b>{% translate "overgeslagen" %}</span>{% endif %}
+            {% if r.discrepancies %}<span class="stat-chip is-warn"><b>{{ r.discrepancies|length }}</b>{% blocktranslate count count=r.discrepancies|length %}afwijking{% plural %}afwijkingen{% endblocktranslate %}</span>{% endif %}
+        </div>
+        {% if r.skipped_missing_contact or r.skipped_no_lines %}
+        <div class="stack" style="gap:8px"><h3>{% translate "Overgeslagen" %}</h3>
+            <ul class="issue-list">
+                {% for number in r.skipped_missing_contact %}<li><span class="ref">{{ number }}</span><span>{% translate "De klant staat niet in het klantenbestand." %}</span><span class="pill pill-unpaid no-dot">{% translate "overgeslagen" %}</span></li>{% endfor %}
+                {% for number in r.skipped_no_lines %}<li><span class="ref">{{ number }}</span><span>{% translate "Er staan geen regels voor in het regelbestand." %}</span><span class="pill pill-unpaid no-dot">{% translate "overgeslagen" %}</span></li>{% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        {% if r.orphan_lines %}
+        <div class="stack" style="gap:8px"><h3>{{ orphans_title }}</h3>
+            <ul class="issue-list">
+                {% for line in r.orphan_lines %}<li><span class="ref">{% blocktranslate with row=line.row %}Rij {{ row }}{% endblocktranslate %}</span><span>{{ line.export }}</span><span class="pill pill-unpaid no-dot">{% translate "overgeslagen" %}</span></li>{% endfor %}
+            </ul>
+            <p class="small muted">{{ orphans_text }}</p>
+        </div>
+        {% endif %}
+        {% if r.discounts %}
+        <div class="stack" style="gap:8px"><h3>{% translate "Korting" %}</h3>
+            <ul class="issue-list">{% for d in r.discounts %}<li><span>{{ d }}</span></li>{% endfor %}</ul>
+            <p class="small muted">{% translate "In Moneybird staat hier korting op. Huismus neemt het totaal van Moneybird over, maar zet de korting niet in de regels." %}</p>
+        </div>
+        {% endif %}
+        {% if r.discrepancies %}
+        <div class="stack" style="gap:8px"><h3>{% translate "Afwijking van Moneybirds eigen totaal" %}</h3>
+            <ul class="issue-list">{% for d in r.discrepancies %}<li><span>{{ d }}</span></li>{% endfor %}</ul>
+            <p class="small muted">{% translate "Vergelijk ze met Moneybird zelf." %}</p>
+        </div>
+        {% endif %}
+        {% if r.moneybird_reports %}
+        <div class="stack" style="gap:8px"><h3>{% translate "Moneybirds eigen rapporten" %}</h3>
+            {% if r.moneybird_reports.differences %}
+            <ul class="issue-list">{% for d in r.moneybird_reports.differences %}<li><span>{{ d }}</span></li>{% endfor %}</ul>
+            <p class="small muted">{% translate "Hier wijken Moneybirds eigen rapporten meer dan een cent per factuurregel af van je facturen. Huismus importeert je facturen gewoon. Kijk na of er een factuur ontbreekt." %}</p>
+            {% else %}
+            <p class="small muted">{% translate "Je facturen kloppen met de omzet en btw in Moneybirds eigen rapporten. Een cent verschil per factuurregel telt Huismus niet: zo rondt Moneybird af." %}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+        {% if r.ubl %}
+        <div class="stack" style="gap:8px"><h3>{% translate "UBL-bestanden" %}</h3>
+            <p class="small muted">{% translate "Moneybird bewaart van elke verstuurde factuur ook een digitale versie: de UBL. Huismus legt die naast je facturen." %}</p>
+            {% if r.ubl.messages %}<ul class="issue-list">{% for m in r.ubl.messages %}<li><span>{{ m }}</span></li>{% endfor %}</ul>{% endif %}
+            {% if r.ubl.vat_included_text %}<p class="small">{{ r.ubl.vat_included_text }}</p>{% endif %}
+            {% if r.ubl.all_match %}<p class="small muted">{% translate "De UBL-bestanden kloppen met je facturen." %}</p>{% endif %}
+        </div>
+        {% endif %}
+        {% if r.missing_pdfs %}
+        <div class="stack" style="gap:8px"><h3>{% translate "Geen PDF gevonden" %}</h3>
+            <p class="small">{{ r.missing_pdfs|join:", " }}</p>
+            <p class="small muted">{% translate "Huismus importeert ze wel, zonder origineel, en maakt de PDF zelf." %}</p>
+        </div>
+        {% endif %}
+        {% if r.missing_receipts %}
+        <div class="stack" style="gap:8px"><h3>{% translate "Geen bonnetje gevonden" %}</h3>
+            <p class="small">{{ r.missing_receipts|join:", " }}</p>
+            <p class="small muted">{% translate "Huismus importeert ze wel, zonder bonnetje." %}</p>
+        </div>
+        {% endif %}
+        {% if r.new_categories %}
+        <div class="stack" style="gap:8px"><h3>{% translate "Nieuwe categorieën" %}</h3>
+            <p class="small">{{ r.new_categories|join:", " }}</p>
+            <p class="small muted">{% translate "Deze categorieën uit Moneybird staan nog niet in Huismus. Huismus maakt ze aan, onderaan je lijst." %}</p>
+        </div>
+        {% endif %}
+        {% if r.payment_issues %}
+        <div class="stack" style="gap:8px"><h3>{% translate "Betalingen om te controleren" %}</h3>
+            <ul class="issue-list">{% for p in r.payment_issues %}<li><span>{{ p }}</span></li>{% endfor %}</ul>
+        </div>
+        {% endif %}
+        {% if r.drafts %}
+        <div class="stack" style="gap:8px"><h3>{% translate "Nog niet verstuurd in Moneybird" %}</h3>
+            <p class="small">{{ r.drafts|join:", " }}</p>
+            <p class="small muted">{% translate "Deze stonden in Moneybird als concept of ingepland. Ze komen binnen als concept en houden hun nummer. Je geeft ze uit als je ze verstuurt." %}</p>
+        </div>
+        {% endif %}
+        {% if r.numbering_note %}
+        <div class="flash flash-info"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><div class="flash-body"><strong>{% translate "Nummering" %}</strong><span class="small">{{ r.numbering_note }}</span></div></div>
+        {% endif %}
+    </div>
+</details>
+{% endwith %}

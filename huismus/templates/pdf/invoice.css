@@ -1,0 +1,69 @@
+/* PDF-template (WeasyPrint). De maten volgen een factuur uit Moneybird,
+   zodat geïmporteerde en nieuwe facturen op elkaar lijken: marges van
+   13 mm, afzender rechtsboven, adres voor een vensterenvelop, voettekst
+   onderaan elke pagina. Geen JS, tabellen voor layout, zwart-wit
+   printbaar. Het merk is dat van de gebruiker (logo), niet dat van Huismus. */
+@page {
+  size: A4; margin: 14mm 13mm 42mm 13mm;
+  @bottom-left { content: element(page-footer); vertical-align: top; width: 100%; }
+}
+.pdf { --ink: #000; --rule: #B3B3B3; margin: 0;
+  font: 10pt/1.5 Helvetica, Arial, "Liberation Sans", sans-serif; color: var(--ink); }
+.pdf table { border-collapse: collapse; width: 100%; }
+.pdf td, .pdf th { padding: 0; vertical-align: top; }
+.pdf p { margin: 0; }
+.pdf .r { text-align: right; white-space: nowrap; }
+
+/* Bovenaan: logo links, afzender rechts op 144 mm van de linkerrand. */
+.pdf .top td.sender { width: 53mm; }
+.pdf .sender p + p { margin-top: 1.5em; }
+.pdf .logo { height: 16mm; max-width: 90mm; object-fit: contain; object-position: left top; }
+
+/* Adresblok voor een vensterenvelop: 26 mm van links, 62 mm van boven. */
+.pdf .window { position: absolute; top: 49mm; left: 13.5mm; width: 85mm; }
+
+/* Titel met nummer links, datums rechts onder de afzender. */
+.pdf .heading { margin-top: 52mm; }
+.pdf h1 { font-size: 21pt; font-weight: normal; line-height: 1.1; margin: 0; }
+.pdf .heading td.dates { width: 53mm; padding-top: 5.5mm; }
+/* "Kenmerk:" onder de titel, de waarde op 29 mm, zoals Moneybird. */
+.pdf .reference { width: auto; margin-top: 1.5mm; }
+.pdf .reference td:first-child { width: 29mm; }
+.pdf .meta td.r { padding-left: 4mm; }
+.pdf .intro { margin-top: 8mm; }
+
+/* Regels: kop vet met een zwarte lijn eronder, grijze lijnen tussen de
+   regels, zwart onder de laatste. Vaste kolommen; de omschrijving krijgt
+   de ruimte die over is, de aantallen alleen ruimte als er een is. */
+.pdf .lines { margin-top: 11.5mm; table-layout: fixed; }
+.pdf .lines th { font-weight: bold; text-align: left; padding-bottom: 1.8mm; border-bottom: 0.75pt solid var(--ink); }
+.pdf .lines th.r { text-align: right; }
+.pdf .lines .items td { padding-top: 1.4mm; padding-bottom: 1.5mm; border-bottom: 0.5pt solid var(--rule); }
+.pdf .lines .items tr:last-child td { border-bottom-color: var(--ink); }
+.pdf .lines tr { page-break-inside: avoid; }
+.pdf .lines col.qty { width: 5.3mm; }
+.pdf .lines.with-quantities col.qty { width: 20mm; }
+.pdf .lines col.price { width: 24.7mm; }
+.pdf .lines col.total { width: 25mm; }
+.pdf .lines col.tax { width: 12.7mm; }
+.pdf .lines .qty { padding-right: 3mm; }
+.pdf .lines .desc { padding-right: 4mm; }
+.pdf .lines .total { padding-right: 1.6mm; }
+.pdf .lines .tax { padding-right: 1.4mm; }
+/* "verlegd" / "reverse charge" (M18) may wrap within the narrow VAT column. */
+.pdf .lines td.tax { white-space: normal; }
+
+/* Totalen onder Bedrag en Totaal; een lijn boven het eindtotaal. */
+.pdf .totals td { padding-top: 1mm; padding-bottom: 1mm; }
+.pdf .totals .subtotal td { padding-top: 2mm; }
+.pdf .totals .grand td { font-weight: bold; padding-top: 1.6mm; }
+.pdf .totals .grand .price, .pdf .totals .grand .total { border-top: 0.75pt solid var(--ink); }
+
+/* Voettekst: een zwarte lijn over de hele breedte, daaronder de tekst. */
+.pdf .page-footer { position: running(page-footer); border-top: 0.75pt solid var(--ink);
+  padding-top: 2.5mm; font: 10pt/1.5 Helvetica, Arial, "Liberation Sans", sans-serif; }
+
+/* Voorbeeld van een concept: diagonaal over elke pagina, licht genoeg om te lezen. */
+.pdf .preview-mark { position: fixed; top: 105mm; left: 0; width: 100%; text-align: center;
+  font-size: 62pt; font-weight: 700; letter-spacing: 0.06em; color: rgba(27, 106, 201, 0.12);
+  transform: rotate(-30deg); z-index: 10; }

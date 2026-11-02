@@ -1,0 +1,18 @@
+{% load i18n %}
+{% comment %}Rendered by {% form_errors form formset %} (huismus/core/templatetags/forms.py).
+Design: contact.html.{% endcomment %}
+{% if errored_fields or non_field_errors %}
+<div class="flash flash-error" role="alert" style="margin-bottom:var(--s-5)">
+    <svg class="i" aria-hidden="true"><use href="#alert"></use></svg>
+    <div class="flash-body">
+        <strong>{% translate "Nog niet opgeslagen" %}</strong>
+        {% if errored_fields %}
+        <span class="small">
+            {% blocktranslate count counter=errored_fields|length %}Eén veld heeft aandacht nodig:{% plural %}{{ counter }} velden hebben aandacht nodig:{% endblocktranslate %}
+            {% for f in errored_fields %}<a href="#{{ f.id_for_label }}">{{ f.label|capfirst }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}.
+        </span>
+        {% endif %}
+        {% for error in non_field_errors %}<span class="small">{{ error }}</span>{% endfor %}
+    </div>
+</div>
+{% endif %}

@@ -1,0 +1,1 @@
+{% load i18n %}{% if not key %}<span class="pill pill-expired">{% translate "Niet gekoppeld" %}</span>{% elif used %}<span class="pill pill-accepted">{% translate "Gekoppeld" %}</span>{% else %}<span class="pill pill-sent">{% translate "Wacht op verbinding" %}</span>{% endif %}

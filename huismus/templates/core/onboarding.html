@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load i18n forms %}
+
+{% block title %}{{ step.title }} — {% translate "Stap voor stap beginnen" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <span class="small muted">{% blocktranslate with number=step_number total=steps|length %}Stap {{ number }} van {{ total }}{% endblocktranslate %}</span>
+        <h1>{{ step.title }}</h1>
+        <p class="lede">{{ step.intro }}</p>
+    </div>
+</div>
+<ol class="steps" style="margin-bottom:var(--s-6)">
+    {% for item in steps %}
+    <li class="step {% if forloop.counter == step_number %}is-current{% elif forloop.counter < step_number %}is-done{% endif %}"{% if forloop.counter == step_number %} aria-current="step"{% endif %}><span class="dot">{% if forloop.counter < step_number %}<svg class="i" aria-hidden="true"><use href="#check"></use></svg>{% else %}{{ forloop.counter }}{% endif %}</span>{{ item.title }}</li>
+    {% endfor %}
+</ol>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% form_errors form %}
+    <section class="card card-pad">
+        {% if step.slug == "bedrijf" %}
+        <div class="fieldset">
+            {% field form.business_name span=4 %}
+            {% field form.legal_form span=2 optional=True %}
+            {% field form.address_line1 %}
+            {% field form.postal_code span=2 %}
+            {% field form.city span=2 %}
+            {% field form.country span=2 %}
+            {% field form.kvk_number span=3 extra_class="num" %}
+            {% field form.vat_number span=3 optional=True %}
+            {% field form.iban span=4 extra_class="mono" %}
+            {% field form.email span=3 %}
+            {% field form.phone span=3 optional=True %}
+            {% field form.website optional=True %}
+        </div>
+        {% elif step.slug == "kor" %}
+        <label class="switch"><input type="checkbox" name="kor_enabled" role="switch" aria-describedby="kor-uit-help"{% if form.kor_enabled.value %} checked{% endif %}>{% translate "Ik gebruik de KOR" %}</label>
+        <p class="help" id="kor-uit-help" style="margin-top:var(--s-2)">{% translate "Staat de KOR uit, dan kies je per regel 0, 9 of 21% btw." %}</p>
+        {% translate "KOR-tekst" as kor_label %}
+        {% translate "Verplicht zolang de KOR aan staat. Deze tekst komt onder elke nieuwe factuur." as kor_help %}
+        {% field form.kor_text label=kor_label help=kor_help %}
+        <div class="fieldset">
+            {% translate "Het overzicht laat zien hoe je omzet dit jaar zich verhoudt tot dit bedrag." as kor_limit_help %}
+            {% field form.kor_limit_cents span=3 money=True help=kor_limit_help %}
+            {% translate "Vanaf dit deel van je KOR-grens krijg je een melding op het overzicht." as kor_warning_help %}
+            {% field form.kor_warning_percent span=3 extra_class="num" suffix="%" help=kor_warning_help %}
+        </div>
+        {% elif step.slug == "facturen" %}
+        <div class="fieldset">
+            {% translate "dagen" as days_unit %}
+            {% translate "Standaard betalingstermijn" as terms_label %}
+            {% field form.default_payment_terms_days span=2 extra_class="num" suffix=days_unit label=terms_label %}
+            {% if next_numbers.invoice %}{% blocktranslate asvar invoice_next with number=next_numbers.invoice %}Volgende als je vandaag uitgeeft: {{ number }}{% endblocktranslate %}{% endif %}
+            {% field form.invoice_number_format span=2 extra_class="mono" help=invoice_next %}
+            {% if next_numbers.quote %}{% blocktranslate asvar quote_next with number=next_numbers.quote %}Volgende als je vandaag uitgeeft: {{ number }}{% endblocktranslate %}{% endif %}
+            {% field form.quote_number_format span=2 extra_class="mono" help=quote_next %}
+            <p class="help" style="grid-column:1 / -1">{% translate "In een nummerformaat staat {year} voor het jaar, {seq:04d} voor het volgnummer met vier cijfers en {customer} voor het klantnummer." %}</p>
+        </div>
+        {% elif step.slug == "logo" %}
+        <div class="field">
+            <span class="label">{% translate "Logo" %}</span>
+            <div class="row" style="gap:var(--s-4);align-items:stretch">
+                <div class="logo-slot{% if settings.logo %} has-logo{% endif %}" style="width:160px;height:auto;min-height:88px;font-size:var(--fs-sm);padding:var(--s-2)">
+                    {% if settings.logo %}<img src="{{ settings.logo.url }}" alt="{% translate 'Huidig logo' %}" style="max-width:100%;max-height:72px">{% else %}{% translate "Nog geen logo" %}{% endif %}
+                </div>
+                <label class="dropzone" style="flex:1;padding:var(--s-4)" data-dropzone>
+                    <input type="file" name="logo" accept="image/png,image/jpeg,image/svg+xml"{% if form.logo.errors %} aria-invalid="true"{% endif %}>
+                    <strong class="small">{% if settings.logo %}{% translate "Sleep een nieuw logo hierheen" %}{% else %}{% translate "Sleep je logo hierheen" %}{% endif %}</strong>
+                    <span class="small">{% translate "PNG, JPG of SVG" %}</span>
+                </label>
+            </div>
+            {% for error in form.logo.errors %}<p class="error"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>{{ error }}</p>{% endfor %}
+        </div>
+        {% endif %}
+    </section>
+
+    <div class="row" style="margin-top:var(--s-5);gap:var(--s-3);flex-wrap:wrap">
+        {% if previous %}<a class="btn btn-ghost" href="{% url 'onboarding' previous.slug %}">← {% translate "Terug" %}</a>{% endif %}
+        <span class="spacer"></span>
+        {% if is_last %}<a class="btn btn-ghost" href="{% url 'onboarding_done' %}">{% translate "Overslaan" %}</a>{% endif %}
+        <button class="btn btn-primary" type="submit">{% if is_last %}{% translate "Opslaan en afronden" %}{% else %}{% translate "Opslaan en verder" %}{% endif %} →</button>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Instellingen" %} — Huismus{% endblock %}
+{% block content_class %}content-wide{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <h1>{% translate "Instellingen" %}</h1>
+        <p class="lede">{% translate "Wijzigingen gelden voor concepten en nieuwe documenten. Een uitgegeven factuur houdt de gegevens van toen." %}</p>
+    </div>
+</div>
+
+{% comment %}A card per topic (business.topics); on a phone a compact list, without the intro.{% endcomment %}
+<ul class="settings-topics">
+    {% for card in cards %}
+    <li>
+        {% comment %}Named after the topic, described by its pill and line: the intro is hidden on a phone, the name stays the same.{% endcomment %}
+        <a class="card card-pad" href="{{ card.url }}" aria-label="{{ card.title }}" aria-describedby="{% if card.pill %}{{ card.slug }}-pill {% endif %}{% if card.line %}{{ card.slug }}-line{% endif %}">
+            <div class="row topic-head"><h2>{{ card.title }}</h2>{% if card.pill %}<span class="pill {{ card.pill.1 }}" id="{{ card.slug }}-pill">{{ card.pill.0 }}</span>{% endif %}</div>
+            <span class="small muted topic-intro">{{ card.intro }}</span>
+            {% if card.line %}<span class="small topic-line" id="{{ card.slug }}-line">{{ card.line }}</span>{% endif %}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

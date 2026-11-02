@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Hulp" %} — Huismus{% endblock %}
+{% block content_class %}content-wide{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <h1>{% translate "Hulp" %}</h1>
+        <p class="lede">{% translate "Uitleg bij de versie van Huismus die je nu gebruikt." %}</p>
+    </div>
+</div>
+
+{% comment %}The cards of the settings overview: a topic per card, on a phone a compact list without the intro, so named after the topic alone (huismus-intern/besluiten.md, 2026-10-31).{% endcomment %}
+<ul class="settings-topics">
+    {% for slug, title, summary in topics %}
+    <li>
+        <a class="card card-pad" href="{% url 'help:page' slug %}" aria-label="{{ title }}">
+            <h2>{{ title }}</h2>
+            <span class="small muted topic-intro">{{ summary }}</span>
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

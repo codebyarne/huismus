@@ -1,0 +1,3 @@
+{% load i18n documents_tags %}{% comment %}The VAT per rate, as on the PDF: one row per rate on the document. Amounts come from documents.totals (SPEC.md invariant 3); a row without a rate is the stored VAT of an imported document (tax_rows).{% endcomment %}{% for rate_bp, cents in tax_per_rate %}
+    <dt>{% if rate_bp is None %}{% translate "Btw" %}{% else %}{% blocktranslate with rate=rate_bp|tax_percent %}{{ rate }} btw{% endblocktranslate %}{% endif %}</dt><dd>{{ cents|money_for:document }}</dd>{% empty %}
+    <dt>{% translate "Btw" %}</dt><dd>{{ 0|money_for:document }}</dd>{% endfor %}

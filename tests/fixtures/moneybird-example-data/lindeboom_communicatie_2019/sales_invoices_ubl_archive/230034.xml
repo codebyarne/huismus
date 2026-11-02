@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 UBL-Invoice-2.1.xsd" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
+  <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+  
+  
+  <cbc:ID>230034</cbc:ID>
+  <cbc:IssueDate>2019-03-06</cbc:IssueDate>
+  <cbc:DueDate>2019-03-20</cbc:DueDate>
+  <cbc:InvoiceTypeCode listID="UNCL1001" listAgencyID="6">380</cbc:InvoiceTypeCode>
+  <cbc:DocumentCurrencyCode listID="ISO4217" listAgencyID="6">EUR</cbc:DocumentCurrencyCode>
+  <cbc:BuyerReference>Frisse Kompas Producties</cbc:BuyerReference>
+  <cac:AdditionalDocumentReference>
+    <cbc:ID>230034.pdf</cbc:ID>
+    <cbc:DocumentType>PrimaryImage</cbc:DocumentType>
+    <cac:Attachment>
+      <cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf" filename="230034.pdf">JVBERi0xLjMKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgKG9wZW5zb3VyY2UpCjEgMCBvYmoKPDwKL0YxIDIgMCBSIC9GMiAzIDAgUiAvRjMgNCAwIFIKPj4KZW5kb2JqCjIgMCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EgL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcgL05hbWUgL0YxIC9TdWJ0eXBlIC9UeXBlMSAvVHlwZSAvRm9udAo+PgplbmRvYmoKMyAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYS1Cb2xkIC9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nIC9OYW1lIC9GMiAvU3VidHlwZSAvVHlwZTEgL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjQgMCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EtT2JsaXF1ZSAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAvTmFtZSAvRjMgL1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iago1IDAgb2JqCjw8Ci9Db250ZW50cyA5IDAgUiAvTWVkaWFCb3ggWyAwIDAgNTk1LjI3NTYgODQxLjg4OTggXSAvUGFyZW50IDggMCBSIC9SZXNvdXJjZXMgPDwKL0ZvbnQgMSAwIFIgL1Byb2NTZXQgWyAvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJIF0KPj4gL1JvdGF0ZSAwIC9UcmFucyA8PAoKPj4gCiAgL1R5cGUgL1BhZ2UKPj4KZW5kb2JqCjYgMCBvYmoKPDwKL1BhZ2VNb2RlIC9Vc2VOb25lIC9QYWdlcyA4IDAgUiAvVHlwZSAvQ2F0YWxvZwo+PgplbmRvYmoKNyAwIG9iago8PAovQXV0aG9yIChhbm9ueW1vdXMpIC9DcmVhdGlvbkRhdGUgKEQ6MjAyNjA5MTkyMDQ4NDYrMDInMDAnKSAvQ3JlYXRvciAoYW5vbnltb3VzKSAvS2V5d29yZHMgKCkgL01vZERhdGUgKEQ6MjAyNjA5MTkyMDQ4NDYrMDInMDAnKSAvUHJvZHVjZXIgKFJlcG9ydExhYiBQREYgTGlicmFyeSAtIFwob3BlbnNvdXJjZVwpKSAKICAvU3ViamVjdCAodW5zcGVjaWZpZWQpIC9UaXRsZSAodW50aXRsZWQpIC9UcmFwcGVkIC9GYWxzZQo+PgplbmRvYmoKOCAwIG9iago8PAovQ291bnQgMSAvS2lkcyBbIDUgMCBSIF0gL1R5cGUgL1BhZ2VzCj4+CmVuZG9iago5IDAgb2JqCjw8Ci9GaWx0ZXIgWyAvQVNDSUk4NURlY29kZSAvRmxhdGVEZWNvZGUgXSAvTGVuZ3RoIDkwMQo+PgpzdHJlYW0KR2F0PSk5bG5jOydZTyNmaEBVVSFsSiM/WC9UIS1Ua1dnUCQnakdEJmcyXVprJzhCa1QvL1FuXUJjTk1hR1ZaU15ePURaI00/IixOJnRgOzVFJ0ImQC5mdENASGpQSE4lZUZKR1NBMHNJMXAiVzxNOjFSMG5jVSpdUCk6Xmo4Tzx1YzlaIkdxZkBTVThBbDJQU11XXUpgRlouXi4yL2NuJSE7IVolMScmLEBuUjVoQSZMSl1ZXmBPL2lbPWFDO28nVUcrNVpDMzhMJDBbQk1CZ1c5Y0MyMzddOyxebS4jMExQOGVAYVNOQmosaVo4RE9wLilWR0JEN25dSVBUZG5EMEBQVm1nQD5yXlM3Kz1OUiZIdW5SM0luZSpmRnJyP2dBcCkrWGwxWCZRTGkjNTkobj5RME8obltdVSdlVzYxQy5pUG5yRVJnJlFPcyY0ZUlgLmRSNjQzTV9YRmVPRz9LSSdRZCxvImFrTS0ubCViMkM7bFMtPE1PTidDcDc3JDhgRFBGZm5aWkhobU9JOTlddFwiPG4oQEdWMU1nTkRbK3BOZyonN0xjLl1uUDlJQ1YrQEM9SCFXI1psYjxrQSYvNkVXb1Mqb0AsTFA3RWZNcWpUXjk6UzxfIzlVPiY+VF5dbTpjJXFPIjY2REFCP2FkamdRbS47b0ksayNEUU4rNzVQbFEzLEA2LSk3XDBwXXVNZzRtdVQ1RmxDOCt1QEwwI2BlN2ZjZVZyImplJ3JFZ2prbE0jckAyYERTJiZEUWg+c08yZF09KiEjTUo3Qzk2OiRdRF0yUE1sIkUsV3AjbVEta1VITGgqbjtII00kWkY5JlE9ZilbbTRHdHVbJUJjKmopbG4+LVJDLTJLSCo5W1pNblpTKEloUl1pSHNcWClmUCFbPF5oQEo+biwlZiU7J0heZUJPSUU+O3EhaU8qPCIzZDVzZyc3XT85XGNcI2FwS0hNK2tyaWU7PnJfWlAyIltkbUpeP3JSSkZLajxuYlIrSzJCKE0xTioiZ1csKjdvQHUpJ1JKKGBnSy5FXy47P0tcZyc6c0NMP0BPRWxCMGcyUWktKFlrJyNYaW1oRVVZVmhlZWBnPSxsaF4sQUFWNy8uVWFSXmxzNCJLMlNDUl9tQCYqKjUiJ18zYGROMVdEdFJaMmBDMXJUayk2PV07WEhZTCcsZnFCIT5Ha0UkLWhzYGl+PmVuZHN0cmVhbQplbmRvYmoKeHJlZgowIDEwCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDA2MSAwMDAwMCBuIAowMDAwMDAwMTEyIDAwMDAwIG4gCjAwMDAwMDAyMTkgMDAwMDAgbiAKMDAwMDAwMDMzMSAwMDAwMCBuIAowMDAwMDAwNDQ2IDAwMDAwIG4gCjAwMDAwMDA2NDkgMDAwMDAgbiAKMDAwMDAwMDcxNyAwMDAwMCBuIAowMDAwMDAwOTc4IDAwMDAwIG4gCjAwMDAwMDEwMzcgMDAwMDAgbiAKdHJhaWxlcgo8PAovSUQgCls8ODllODAxYmVjNDA2YTEyMzJiMjgxNzBhODUwZGNmMjE+PDg5ZTgwMWJlYzQwNmExMjMyYjI4MTcwYTg1MGRjZjIxPl0KJSBSZXBvcnRMYWIgZ2VuZXJhdGVkIFBERiBkb2N1bWVudCAtLSBkaWdlc3QgKG9wZW5zb3VyY2UpCgovSW5mbyA3IDAgUgovUm9vdCA2IDAgUgovU2l6ZSAxMAo+PgpzdGFydHhyZWYKMjAyOAolJUVPRgo=</cbc:EmbeddedDocumentBinaryObject>
+    </cac:Attachment>
+  </cac:AdditionalDocumentReference>
+  <cac:AdditionalDocumentReference>
+    <cbc:ID>Algemene_Voorwaarden.pdf</cbc:ID>
+    <cbc:DocumentType>Attachment</cbc:DocumentType>
+    <cac:Attachment>
+      <cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf" filename="Algemene_Voorwaarden.pdf">JVBERi0xLjMKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgKG9wZW5zb3VyY2UpCjEgMCBvYmoKPDwKL0YxIDIgMCBSIC9GMiAzIDAgUgo+PgplbmRvYmoKMiAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYSAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAvTmFtZSAvRjEgL1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iagozIDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhLUJvbGQgL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcgL05hbWUgL0YyIC9TdWJ0eXBlIC9UeXBlMSAvVHlwZSAvRm9udAo+PgplbmRvYmoKNCAwIG9iago8PAovQ29udGVudHMgOCAwIFIgL01lZGlhQm94IFsgMCAwIDU5NS4yNzU2IDg0MS44ODk4IF0gL1BhcmVudCA3IDAgUiAvUmVzb3VyY2VzIDw8Ci9Gb250IDEgMCBSIC9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+IC9Sb3RhdGUgMCAvVHJhbnMgPDwKCj4+IAogIC9UeXBlIC9QYWdlCj4+CmVuZG9iago1IDAgb2JqCjw8Ci9QYWdlTW9kZSAvVXNlTm9uZSAvUGFnZXMgNyAwIFIgL1R5cGUgL0NhdGFsb2cKPj4KZW5kb2JqCjYgMCBvYmoKPDwKL0F1dGhvciAoYW5vbnltb3VzKSAvQ3JlYXRpb25EYXRlIChEOjIwMjYwOTE5MjA0ODQ2KzAyJzAwJykgL0NyZWF0b3IgKGFub255bW91cykgL0tleXdvcmRzICgpIC9Nb2REYXRlIChEOjIwMjYwOTE5MjA0ODQ2KzAyJzAwJykgL1Byb2R1Y2VyIChSZXBvcnRMYWIgUERGIExpYnJhcnkgLSBcKG9wZW5zb3VyY2VcKSkgCiAgL1N1YmplY3QgKHVuc3BlY2lmaWVkKSAvVGl0bGUgKHVudGl0bGVkKSAvVHJhcHBlZCAvRmFsc2UKPj4KZW5kb2JqCjcgMCBvYmoKPDwKL0NvdW50IDEgL0tpZHMgWyA0IDAgUiBdIC9UeXBlIC9QYWdlcwo+PgplbmRvYmoKOCAwIG9iago8PAovRmlsdGVyIFsgL0FTQ0lJODVEZWNvZGUgL0ZsYXRlRGVjb2RlIF0gL0xlbmd0aCAzMDkKPj4Kc3RyZWFtCkdhczJEYj4sci8mNFE/bE1TI1lpZ3Q1PmxCJCRnTF0hVSo7bktgNXJnRi4mRk02RnQpSjpgbEVWLStkYGNGay1WLzNdWTtAdEAuKGVJKVR1OmI/cTtFaTstRUM2PyNeLF1Vcjc9M2EjRilwKVY+OHJmWSgvLyllKkFUQD1nR0BcZi0/Ry5GNTxBZUgxOTtqKWJtQy9GVzlcU2lfRChfMiwkQl9eQS1HWVFfRWJKL1wlKC8oOEo9PEZnZyxEcmglI0pBMVM+UCJlTV5OSDFqQGlMa21ydC1tKSNIOzZDIi9yLD5ZR08/YlBjOSRbVlYvMGJMRkRARSYiNyhwJU84MiFmXlheZCUnOzpGcCRVR2RAbSU2O0tFK3NsS11BT2xTW1ZYM2NbRG5wKjFONyVoZmgnIm9+PmVuZHN0cmVhbQplbmRvYmoKeHJlZgowIDkKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDYxIDAwMDAwIG4gCjAwMDAwMDAxMDIgMDAwMDAgbiAKMDAwMDAwMDIwOSAwMDAwMCBuIAowMDAwMDAwMzIxIDAwMDAwIG4gCjAwMDAwMDA1MjQgMDAwMDAgbiAKMDAwMDAwMDU5MiAwMDAwMCBuIAowMDAwMDAwODUzIDAwMDAwIG4gCjAwMDAwMDA5MTIgMDAwMDAgbiAKdHJhaWxlcgo8PAovSUQgCls8NmUxZjZlMTA0ZjQwNDBjMDNlYWQxNDZkNDJiODY2OGQ+PDZlMWY2ZTEwNGY0MDQwYzAzZWFkMTQ2ZDQyYjg2NjhkPl0KJSBSZXBvcnRMYWIgZ2VuZXJhdGVkIFBERiBkb2N1bWVudCAtLSBkaWdlc3QgKG9wZW5zb3VyY2UpCgovSW5mbyA2IDAgUgovUm9vdCA1IDAgUgovU2l6ZSA5Cj4+CnN0YXJ0eHJlZgoxMzExCiUlRU9GCg==</cbc:EmbeddedDocumentBinaryObject>
+    </cac:Attachment>
+  </cac:AdditionalDocumentReference>
+  <cac:AccountingSupplierParty>
+    <cac:Party>
+      <cbc:EndpointID schemeID="0106">96197574</cbc:EndpointID>
+      <cac:PartyName>
+        <cbc:Name>Lindeboom Communicatie</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>Meidoornhof 57</cbc:StreetName>
+        <cbc:CityName>Leeuwarden</cbc:CityName>
+        <cbc:PostalZone>8234 BH</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode listID="ISO3166-1:Alpha2" listAgencyID="6">NL</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>Lindeboom Communicatie</cbc:RegistrationName>
+        <cbc:CompanyID schemeID="0106">96197574</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:ElectronicMail>info@lindeboomcommunicatie.nl</cbc:ElectronicMail>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingSupplierParty>
+  <cac:AccountingCustomerParty>
+    <cac:Party>
+      <cac:PartyName>
+        <cbc:Name>Frisse Kompas Producties</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>Acacialaan 137</cbc:StreetName>
+        <cbc:CityName>Assen</cbc:CityName>
+        <cbc:PostalZone>3383 XV</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode listID="ISO3166-1:Alpha2" listAgencyID="6">NL</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>Frisse Kompas Producties</cbc:RegistrationName>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:Name>Loes van Beek</cbc:Name>
+        <cbc:ElectronicMail>info@frissekompasproducties.nl</cbc:ElectronicMail>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingCustomerParty>
+  <cac:PaymentMeans>
+    <cbc:PaymentMeansCode listID="UNCL4461" listAgencyID="6">30</cbc:PaymentMeansCode>
+    <cbc:PaymentDueDate>2019-03-20</cbc:PaymentDueDate>
+    <cbc:PaymentID>RF170000000000000WD2KXBSI</cbc:PaymentID>
+    <cac:PayeeFinancialAccount>
+      <cbc:ID schemeID="IBAN">NL96TEST8830978067</cbc:ID>
+      <cac:FinancialInstitutionBranch>
+        <cac:FinancialInstitution>
+          <cbc:ID schemeID="BIC">TESTNL2U</cbc:ID>
+        </cac:FinancialInstitution>
+      </cac:FinancialInstitutionBranch>
+    </cac:PayeeFinancialAccount>
+  </cac:PaymentMeans>
+  <cac:PaymentTerms>
+    <cbc:Note>We verzoeken je vriendelijk het bovenstaande bedrag van € 311,24 voor 20-03-2019 te voldoen op IBAN-nummer NL96 TEST 8830 9780 67 (let op: rekeningnummer gewijzigd) t.n.v. M. van Doorn onder vermelding van factuurnummer 230034. Voor vragen over deze factuur kun je natuurlijk altijd even contact opnemen. Let op: vanwege kleinschaligheid van de onderneming beschikt Lindeboom Communicatie over ontheffing van administratieve verplichtingen. Dat betekent dat er geen BTW in rekening wordt gebracht op facturen en offertes.</cbc:Note>
+  </cac:PaymentTerms>
+  <cac:TaxTotal>
+    <cbc:TaxAmount currencyID="EUR">0.0</cbc:TaxAmount>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="EUR">311.24</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="EUR">0.0</cbc:TaxAmount>
+      <cac:TaxCategory>
+        <cbc:ID schemeID="UNCL5305">Z</cbc:ID>
+        <cbc:Percent>0.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID schemeID="UN/ECE 5153">VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+  </cac:TaxTotal>
+  <cac:LegalMonetaryTotal>
+    <cbc:LineExtensionAmount currencyID="EUR">311.24</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="EUR">311.24</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="EUR">311.24</cbc:TaxInclusiveAmount>
+    <cbc:AllowanceTotalAmount currencyID="EUR">0.0</cbc:AllowanceTotalAmount>
+    <cbc:PayableAmount currencyID="EUR">311.24</cbc:PayableAmount>
+  </cac:LegalMonetaryTotal>
+  <cac:InvoiceLine>
+    <cbc:ID>1</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="ZZ" unitCodeListID="UNECERec20">1.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">28.48</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>14-1-2019: workshopprijzen aanpassen</cbc:Description>
+      <cbc:Name>14-1-2019: workshopprijzen aanpassen</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">Z</cbc:ID>
+        <cbc:Percent>0.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID schemeID="UN/ECE 5153">VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">28.48</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>2</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="ZZ" unitCodeListID="UNECERec20">0.5</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">14.24</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>27-1-2019: nieuwe workshops</cbc:Description>
+      <cbc:Name>27-1-2019: nieuwe workshops</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">Z</cbc:ID>
+        <cbc:Percent>0.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID schemeID="UN/ECE 5153">VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">28.48</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>3</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="ZZ" unitCodeListID="UNECERec20">6.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">170.88</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>23-2-2019: implementatie  betaling iDeal individuele workshops</cbc:Description>
+      <cbc:Name>23-2-2019: implementatie  betaling iDeal individuele workshops</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">Z</cbc:ID>
+        <cbc:Percent>0.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID schemeID="UN/ECE 5153">VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">28.48</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>4</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="ZZ" unitCodeListID="UNECERec20">2.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">56.96</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>24-2-2019: nieuwsbrief februari 2019</cbc:Description>
+      <cbc:Name>24-2-2019: nieuwsbrief februari 2019</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">Z</cbc:ID>
+        <cbc:Percent>0.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID schemeID="UN/ECE 5153">VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">28.48</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>5</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="ZZ" unitCodeListID="UNECERec20">1.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">40.69</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>Aanschaf WordPress plugins tbv evenementregistratie</cbc:Description>
+      <cbc:Name>Aanschaf WordPress plugins tbv evenementregistratie</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">Z</cbc:ID>
+        <cbc:Percent>0.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID schemeID="UN/ECE 5153">VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">40.69</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+</Invoice>

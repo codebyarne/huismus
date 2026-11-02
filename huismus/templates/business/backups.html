@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load i18n backups %}
+
+{% block title %}{% translate "Back-ups" %} — {% translate "Instellingen" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+{% comment %}The three places for backups as equal rows (huismus-intern/besluiten.md, 2026-11-01; design docs/design/ronde-5/). Each row opens the place's own page: business:backups_folder, _dropbox, _webdav.{% endcomment %}
+<div class="page-head">
+    <div class="titles">
+        <a class="small" href="{% url 'business:overview' %}">← {% translate "Instellingen" %}</a>
+        <h1>{% translate "Back-ups" %}</h1>
+        <p class="lede">{% if last_success %}{% blocktranslate with moment=last_success|moment %}Laatste back-up: {{ moment }}{% endblocktranslate %}{% else %}{% translate "Nog geen back-up." %}{% endif %}</p>
+    </div>
+</div>
+
+{% comment %}While the first upload runs in its own thread (core.cloud_backups.upload_in_background), the card fetches itself again every few seconds; once it is done the new card has no hx-trigger and the asking stops. Without JS: reload the page.{% endcomment %}
+<section class="card settings-section" id="bestemmingen"{% if uploading %} hx-get="{% url 'business:backups' %}" hx-select="#bestemmingen" hx-target="this" hx-swap="outerHTML" hx-trigger="every 3s"{% endif %}>
+    <div class="card-head">
+        <h2>{% translate "Waar komen de back-ups?" %}</h2>
+        {% if status.folder or cloud_ready %}<form method="post">{% csrf_token %}<input type="hidden" name="action" value="now"><button type="submit" class="btn btn-secondary btn-sm"><span class="spinner" aria-hidden="true"></span>{% translate "Nu back-up maken" %}</button></form>{% endif %}
+    </div>
+    <div class="card-pad stack" style="gap:var(--s-3)">
+        <p class="small muted">{% translate "Huismus maakt elke dag een back-up op elke plek die aan staat. Naar de cloud gaat hij versleuteld." %}</p>
+        <div class="stack folder-choices" style="gap:var(--s-2)">
+            {# Map #}
+            <div class="file-item" id="plek-map">
+                <span class="f-icon"><svg class="i" aria-hidden="true"><use href="#archive"></use></svg></span>
+                <span>
+                    <span class="f-name">{% translate "Map" %} {% if folder_failure %}<span class="pill pill-overdue">{% translate "Mislukt" %}</span>{% elif status.folder %}<span class="pill pill-final">{% translate "Aan" context "back-upplek staat aan" %}</span>{% endif %}</span>
+                    <span class="f-meta" style="display:block;overflow-wrap:anywhere">{% if folder_failure %}{{ folder_failure }}{% elif folder_missing %}{% blocktranslate with folder=folder_label %}De map {{ folder }} is nu niet bereikbaar. Is de schijf aangesloten?{% endblocktranslate %}{% elif status.folder %}{{ folder_label }}{% if status.last_success_at %} · {% blocktranslate with moment=status.last_success_at|moment %}laatste back-up {{ moment }}{% endblocktranslate %}{% endif %}{% elif first_step == "link" %}{% translate "Huismus in Docker ziet alleen mappen die je eraan koppelt. Koppel eerst een map, bijvoorbeeld van je NAS of een USB-schijf." %} <a href="{{ how_to_link_url }}">{% translate "Zo werkt het" %} →</a>{% elif first_step == "choose_linked" %}{% translate "Kies de gekoppelde map, dan gaat het vanzelf." %}{% else %}{% translate "Kies een map, dan gaat het vanzelf." %}{% endif %}</span>
+                </span>
+                <a class="btn btn-secondary btn-sm" href="{% url 'business:backups_folder' %}">{% if status.folder %}{% translate "Wijzigen" %}{% else %}{% translate "Instellen" %}{% endif %}</a>
+            </div>
+            {% include "business/_cloud_row.html" with service="dropbox" name="Dropbox" icon="upload" url_name="business:backups_dropbox" %}
+            {% include "business/_cloud_row.html" with service="webdav" name="WebDAV" icon="globe" url_name="business:backups_webdav" %}
+        </div>
+    </div>
+</section>
+
+<p style="margin-top:var(--s-5)"><a href="{% url 'business:backups_restore' %}">{% translate "Een back-up terugzetten…" %}</a></p>
+{% endblock %}

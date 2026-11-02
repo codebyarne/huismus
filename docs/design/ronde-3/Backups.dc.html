@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Back-ups</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="hm.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#14539E}a:hover{color:#1B6AC9}
+</style>
+</helmet>
+<div style="width: 390px; height: 1300px; box-sizing: border-box; background: #FBF8F3; font-family: ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color: #2A2520; display: flex; flex-direction: column">
+  <div class="mtop"><a href="#" aria-label="Terug naar Instellingen" style="text-decoration: none">←</a><strong>Back-ups</strong></div>
+  <div style="padding: 16px; display: flex; flex-direction: column; gap: 16px">
+    <div class="banner banner-ok" style="align-items: center"><span style="flex: 1">Laatste back-up: vandaag om 09:12</span></div>
+    <section class="card pad" style="display: flex; flex-direction: column; gap: 12px">
+      <h2>Waar komen de back-ups?</h2>
+      <p class="small muted">Elke dag dat je Huismus opent, komt er een kopie van je administratie in deze map. Kies je een map in iCloud Drive, Google Drive, OneDrive of Dropbox, dan staat de kopie ook in de cloud.</p>
+      <fieldset style="border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px">
+        <legend class="label" style="margin-bottom: 8px">Gevonden op deze computer</legend>
+        <label class="card" style="display: flex; gap: 12px; align-items: center; padding: 12px; border-color: #1B6AC9; box-shadow: 0 0 0 3px rgb(27 106 201/.32)"><input type="radio" name="map" checked><span style="flex: 1"><strong>iCloud Drive</strong><br><span class="small muted">iCloud Drive › Huismus</span></span></label>
+        <label class="card" style="display: flex; gap: 12px; align-items: center; padding: 12px"><input type="radio" name="map"><span style="flex: 1"><strong>Google Drive</strong><br><span class="small muted">Mijn Drive › Huismus</span></span></label>
+        <label class="card" style="display: flex; gap: 12px; align-items: center; padding: 12px"><input type="radio" name="map"><span style="flex: 1"><strong>Andere map…</strong><br><span class="small muted">Bijvoorbeeld een USB-stick</span></span></label>
+        <div class="field"><label class="label" for="pad">Pad naar de map</label><div class="row"><input id="pad" class="input mono" placeholder="/Volumes/USB/Huismus"><button class="btn btn-sm" type="button">Kiezen…</button></div></div>
+      </fieldset>
+      <button class="btn btn-primary" type="button">Opslaan</button>
+    </section>
+    <section class="card pad" style="display: flex; flex-direction: column; gap: 12px">
+      <div class="row" style="justify-content: space-between"><h2>Back-ups in deze map</h2><button class="btn btn-sm" type="button">Nu back-up maken</button></div>
+      <ul class="list">
+        <li><span style="flex: 1">Vandaag 09:12</span><span class="small muted">4,2 MB</span></li>
+        <li><span style="flex: 1">Gisteren 09:05</span><span class="small muted">4,2 MB</span></li>
+        <li><span style="flex: 1">Maandag 27 okt 08:58</span><span class="small muted">4,1 MB</span></li>
+      </ul>
+      <p class="small muted">Huismus bewaart de laatste 30 dagen en daarna één per maand.</p>
+      <a class="btn" href="#">Een back-up terugzetten…</a>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1300}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

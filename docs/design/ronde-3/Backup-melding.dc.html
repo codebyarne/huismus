@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Back-upmelding op het overzicht</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="hm.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#14539E}a:hover{color:#1B6AC9}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #FBF8F3; font-family: ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color: #2A2520; display: flex; flex-direction: column">
+  <div class="mtop"><span style="width: 24px; height: 24px; border-radius: 7px; background: #F4A259; display: inline-block"></span><strong>Overzicht</strong></div>
+  <div style="padding: 16px; display: flex; flex-direction: column; gap: 12px">
+    <p class="small muted">Twee varianten, de ergste gaat voor:</p>
+    <a class="banner banner-bad" href="#" style="text-decoration: none">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
+      <span style="flex: 1">De back-up van vandaag is mislukt: de map iCloud Drive › Huismus is niet bereikbaar.<br><span style="font-weight: 400">Naar Back-ups →</span></span>
+    </a>
+    <a class="banner banner-warn" href="#" style="text-decoration: none">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+      <span style="flex: 1">Je hebt nog geen back-up. Kies een map, dan gaat het vanzelf.<br><span style="font-weight: 400">Back-ups instellen →</span></span>
+    </a>
+    <div style="height: 1px; background: #E6DED2; margin: 8px 0"></div>
+    <h1 style="font-size: 22px">Goedemiddag</h1>
+    <div class="card pad stack" style="gap: 4px"><span class="small muted">Openstaand</span><strong style="font-size: 28px">€ 3.420,00</strong><span class="small muted">3 facturen →</span></div>
+    <div class="card pad stack" style="gap: 4px"><span class="small muted">Omzet 2026</span><strong style="font-size: 22px">€ 14.880,00</strong><span class="small muted">74% van je KOR-grens</span></div>
+    <p class="small muted" style="text-align: center">Laatste back-up: vandaag 09:12</p>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

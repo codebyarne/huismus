@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% load i18n forms %}
+
+{% block title %}{{ topic.title }} — {% translate "Instellingen" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+<form id="instellingen" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="page-head">
+        <div class="titles">
+            <a class="small" href="{% url 'business:overview' %}">← {% translate "Instellingen" %}</a>
+            <h1>{{ topic.title }}</h1>
+            <p class="lede">{{ topic.intro }}</p>
+        </div>
+    </div>
+
+    {% form_errors form %}
+
+    <div>
+        {% if topic.slug == "bedrijf" %}
+        <section class="card settings-section">
+            <div class="card-pad"><div class="fieldset">
+                {% field form.business_name span=4 %}
+                {% field form.legal_form span=2 optional=True %}
+                {% field form.address_line1 %}
+                {% field form.address_line2 optional=True %}
+                {% field form.postal_code span=2 %}
+                {% field form.city span=2 %}
+                {% field form.country span=2 %}
+                {% field form.email span=2 %}
+                {% field form.phone span=2 optional=True %}
+                {% field form.website span=2 optional=True %}
+            </div></div>
+        </section>
+        <section class="card settings-section">
+            <div class="card-head"><h2>{% translate "Registratie" %}</h2></div>
+            <div class="card-pad"><div class="fieldset">
+                {% field form.kvk_number span=3 extra_class="num" %}
+                {% field form.vat_number span=3 optional=True %}
+            </div></div>
+        </section>
+        <section class="card settings-section">
+            <div class="card-head"><h2>{% translate "Bank" %}</h2></div>
+            <div class="card-pad"><div class="fieldset">
+                {% if settings.iban and not form.iban.errors %}{% translate "Controlegetal klopt" as iban_ok %}{% endif %}
+                {% field form.iban span=4 extra_class="num" help=iban_ok %}
+                {% field form.bic span=2 optional=True %}
+            </div></div>
+        </section>
+        {% elif topic.slug == "kor" %}
+        <section class="card settings-section">
+            <div class="card-pad">
+                <label class="switch"><input type="checkbox" name="kor_enabled" role="switch" aria-describedby="kor-uit-help"{% if form.kor_enabled.value %} checked{% endif %}>{% translate "Ik gebruik de KOR" %}</label>
+                <p class="help" id="kor-uit-help" style="margin-top:var(--s-2)">{% translate "Staat de KOR uit, dan kies je per regel 0, 9 of 21% btw." %}</p>
+                {% translate "KOR-tekst" as kor_label %}
+                {% translate "Verplicht zolang de KOR aan staat. Deze tekst komt onder elke nieuwe factuur." as kor_help %}
+                {% field form.kor_text label=kor_label help=kor_help %}
+                <div class="fieldset">
+                    {% translate "Het overzicht laat zien hoe je omzet dit jaar zich verhoudt tot dit bedrag." as kor_limit_help %}
+                    {% field form.kor_limit_cents span=3 money=True help=kor_limit_help %}
+                    {% translate "Vanaf dit deel van je KOR-grens krijg je een melding op het overzicht." as kor_warning_help %}
+                    {% field form.kor_warning_percent span=3 extra_class="num" suffix="%" help=kor_warning_help %}
+                </div>
+                {% translate "Tekst bij btw verlegd" as reverse_label %}
+                {% translate "Komt onder elke factuur, offerte en creditnota met een regel “verlegd”." as reverse_help %}
+                {% field form.reverse_charge_text label=reverse_label help=reverse_help optional=True %}
+            </div>
+        </section>
+        {% elif topic.slug == "facturen" %}
+        <section class="card settings-section">
+            <div class="card-pad"><div class="fieldset">
+                {% translate "dagen" as days_unit %}
+                {% translate "Standaard betalingstermijn" as terms_label %}
+                {% field form.default_payment_terms_days span=2 extra_class="num" suffix=days_unit label=terms_label %}
+                {% if next_invoice_number %}{% blocktranslate asvar invoice_next with number=next_invoice_number %}Volgende als je vandaag uitgeeft: {{ number }}{% endblocktranslate %}{% endif %}
+                {% field form.invoice_number_format span=2 extra_class="mono" help=invoice_next %}
+                {% if next_quote_number %}{% blocktranslate asvar quote_next with number=next_quote_number %}Volgende als je vandaag uitgeeft: {{ number }}{% endblocktranslate %}{% endif %}
+                {% field form.quote_number_format span=2 extra_class="mono" help=quote_next %}
+                <p class="help" style="grid-column:1 / -1">{% translate "In een nummerformaat staat {year} voor het jaar, {seq:04d} voor het volgnummer met vier cijfers en {customer} voor het klantnummer." %}</p>
+                <div class="field">
+                    <label class="switch"><input type="checkbox" name="number_reset_yearly" role="switch"{% if form.number_reset_yearly.value %} checked{% endif %}>{% translate "Nummering elk jaar opnieuw beginnen" %}</label>
+                    {% for error in form.number_reset_yearly.errors %}<p class="error"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>{{ error }}</p>{% endfor %}
+                </div>
+            </div></div>
+        </section>
+        <section class="card settings-section">
+            <div class="card-head"><h2>{% translate "Algemeen" %}</h2></div>
+            <div class="card-pad"><div class="fieldset">
+                {% translate "Standaardtaal voor documenten" as language_label %}
+                {% field form.default_language span=3 label=language_label %}
+                {% field form.currency span=3 %}
+            </div></div>
+        </section>
+        {% elif topic.slug == "huisstijl" %}
+        <section class="card settings-section">
+            <div class="card-pad">
+                <div class="field">
+                    <span class="label">{% translate "Logo" %}</span>
+                    <div class="row" style="gap:var(--s-4);align-items:stretch">
+                        <div class="logo-slot{% if settings.logo %} has-logo{% endif %}" style="width:160px;height:auto;min-height:88px;font-size:var(--fs-sm);padding:var(--s-2)">
+                            {% if settings.logo %}<img src="{{ settings.logo.url }}" alt="{% translate 'Huidig logo' %}" style="max-width:100%;max-height:72px">
+                            {% comment %}The trash icon is the label of the form's "logo-clear" checkbox: no JS, and
+                            CSS dims the logo while it's ticked. The file goes when the form is saved.{% endcomment %}
+                            <label class="logo-remove btn btn-ghost btn-sm btn-icon" title="{% translate 'Logo verwijderen' %}">
+                                <input type="checkbox" name="logo-clear" class="sr-only">
+                                <svg class="i" aria-hidden="true"><use href="#trash"></use></svg><span class="sr-only">{% translate "Logo verwijderen" %}</span>
+                            </label>{% else %}{% translate "Nog geen logo" %}{% endif %}
+                        </div>
+                        <label class="dropzone" style="flex:1;padding:var(--s-4)" data-dropzone>
+                            <input type="file" name="logo" accept="image/png,image/jpeg,image/svg+xml"{% if form.logo.errors %} aria-invalid="true"{% endif %}>
+                            <strong class="small">{% if settings.logo %}{% translate "Sleep een nieuw logo hierheen" %}{% else %}{% translate "Sleep je logo hierheen" %}{% endif %}</strong>
+                            <span class="small">{% translate "PNG, JPG of SVG. Huismus bewaart hem als je opslaat." %}</span>
+                        </label>
+                    </div>
+                    {% for error in form.logo.errors %}<p class="error"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>{{ error }}</p>{% endfor %}
+                </div>
+                {% field form.default_footer_text optional=True %}
+            </div>
+        </section>
+        {% elif topic.slug == "mailen" %}
+        <section class="card settings-section">
+            <div class="card-pad">
+                <p class="small muted" style="margin-bottom:var(--s-4)">{% translate "Bij Gmail vul je je Gmail-adres en een app-wachtwoord in. Bij Anders vul je de gegevens van je eigen mailserver in." %} <a href="{{ help_url }}">{% translate "Zo werkt het" %} →</a></p>
+                <div class="fieldset">
+                    {% field form.smtp_provider span=3 %}
+                    <div class="field-group" data-group="smtp">
+                        {% field form.smtp_username span=3 %}
+                        {% if smtp_password_set %}{% translate "Laat leeg om het opgeslagen wachtwoord te houden." as password_help %}{% else %}{% translate "Bij Gmail: een app-wachtwoord, niet je gewone wachtwoord." as password_help %}{% endif %}
+                        {% field form.smtp_password span=3 help=password_help %}
+                        {% field form.smtp_from_email span=3 %}
+                        {% translate "Bij Gmail vult Huismus dit zelf in." as gmail_fills %}
+                        {% field form.smtp_host span=2 help=gmail_fills %}
+                        {% field form.smtp_port span=2 extra_class="num" %}
+                        {% field form.smtp_security span=2 %}
+                    </div>
+                </div>
+                {% comment %}The saved password is never shown, only whether there is one (SPEC.md M10).{% endcomment %}
+                <p class="small" style="margin-top:var(--s-4)" data-group="smtp">
+                    {% if smtp_password_set %}<svg class="i i-sm" aria-hidden="true"><use href="#lock"></use></svg> <span>{% translate "Wachtwoord ingesteld" %}</span> <span class="muted">{% translate "(niet in de back-up; kies “Niet ingesteld” om het te wissen)" %}</span>
+                    {% else %}<svg class="i i-sm" aria-hidden="true"><use href="#alert"></use></svg> {% translate "Geen wachtwoord ingesteld." %}{% endif %}
+                </p>
+                {% if smtp_configured %}
+                <p style="margin-top:var(--s-4)" data-group="smtp"><button class="btn btn-secondary" type="submit" form="testmail"><svg class="i" aria-hidden="true"><use href="#send"></use></svg>{% translate "Testmail sturen" %}<span class="spinner"></span></button> <span class="small muted">{% blocktranslate with address=smtp_sender %}Met de opgeslagen instellingen, naar {{ address }}.{% endblocktranslate %}</span></p>
+                {% endif %}
+                <div data-group="smtp" style="margin-top:var(--s-6)">
+                    <p class="label">{% translate "Standaardteksten" %}</p>
+                    <p class="small muted" style="margin:var(--s-1) 0 var(--s-4)">{% translate "Hiermee begint elke mail. Per mail kun je hem nog aanpassen. Maak je een veld leeg, dan gebruikt Huismus zijn eigen tekst. Invulplekken: {nummer}, {bedrag}, {naam} en {bedrijf}; bij een factuur ook {vervaldatum}, bij een offerte {geldig_tot}." %}</p>
+                    <div class="stack" style="gap:var(--s-3)">
+                        {% for block in mail_text_blocks %}
+                        <details class="report"{% if block.has_errors %} open{% endif %}>
+                            <summary>
+                                <span class="r-title"><strong>{{ block.title }}</strong></span>
+                                <svg class="i chev" aria-hidden="true"><use href="#chevron-down"></use></svg>
+                            </summary>
+                            <div class="r-body"><div class="fieldset">
+                                {% for bound_field, label in block.fields %}{% field bound_field label=label %}{% endfor %}
+                            </div></div>
+                        </details>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+    </div>
+</form>
+        {% if topic.slug == "mailen" %}
+{% comment %}Its own form, outside the settings form: a test mail uses the saved settings, not what is typed.{% endcomment %}
+<form id="testmail" method="post" action="{% url 'business:test_mail' %}" hidden>{% csrf_token %}</form>
+{% endif %}
+{% endblock %}
+
+{% block actionbar %}
+<div class="actionbar">
+    <span class="status">{% if form.errors %}{% blocktranslate count counter=form.errors|length %}{{ counter }} veld heeft aandacht nodig{% plural %}{{ counter }} velden hebben aandacht nodig{% endblocktranslate %}{% endif %}</span>
+    <button class="btn btn-ghost" type="reset" form="instellingen">{% translate "Herstellen" %}</button>
+    <button class="btn btn-primary" type="submit" form="instellingen">{% translate "Opslaan" %}<span class="spinner"></span></button>
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ page.title }} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <a class="small" href="{% url 'help:index' %}">← {% translate "Hulp" %}</a>
+        <h1>{{ page.title }}</h1>
+    </div>
+</div>
+
+{% comment %}Markdown from docs/hulp/, in the repository: trusted, rendered by core.help.{% endcomment %}
+<article class="card card-pad help-text">
+    {{ page.html|safe }}
+</article>
+{% if show_feedback_card %}{% include "core/_feedback.html" with place="hulp" %}{% endif %}
+{% endblock %}

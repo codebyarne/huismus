@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Een back-up terugzetten</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="hm.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#14539E}a:hover{color:#1B6AC9}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #FBF8F3; font-family: ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color: #2A2520; display: flex; flex-direction: column; position: relative">
+  <div class="mtop"><a href="#" aria-label="Terug naar Back-ups" style="text-decoration: none">←</a><strong>Back-up terugzetten</strong></div>
+  <div style="padding: 16px; display: flex; flex-direction: column; gap: 12px">
+    <p class="small muted">Kies welke back-up je wilt terugzetten. Alles wat je daarna hebt gedaan, gaat verloren.</p>
+    <fieldset style="border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px">
+      <legend class="sr-only" style="position: absolute; width: 1px; height: 1px; overflow: hidden">Back-ups</legend>
+      <label class="card" style="display: flex; gap: 12px; align-items: center; padding: 12px"><input type="radio" name="bu"><span style="flex: 1">Vandaag 09:12</span><span class="small muted">4,2 MB</span></label>
+      <label class="card" style="display: flex; gap: 12px; align-items: center; padding: 12px; border-color: #1B6AC9; box-shadow: 0 0 0 3px rgb(27 106 201/.32)"><input type="radio" name="bu" checked><span style="flex: 1">Gisteren 09:05</span><span class="small muted">4,2 MB</span></label>
+      <label class="card" style="display: flex; gap: 12px; align-items: center; padding: 12px"><input type="radio" name="bu"><span style="flex: 1">Ander bestand kiezen…</span></label>
+    </fieldset>
+  </div>
+  <div class="overlay" style="position: absolute; inset: 0; display: flex; align-items: flex-end">
+    <div class="dialog" role="dialog" aria-labelledby="rt" style="width: 100%; box-sizing: border-box; border-radius: 20px 20px 0 0; display: flex; flex-direction: column; gap: 14px">
+      <h2 id="rt" style="font-size: 20px">Terugzetten naar gisteren 09:05?</h2>
+      <ul class="small" style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px">
+        <li>Huismus bewaart eerst hoe het nu is. Daar kun je later naar terug.</li>
+        <li>Wat je na gisteren 09:05 hebt gedaan, is daarna weg.</li>
+        <li>Tijdens het terugzetten kun je Huismus even niet gebruiken.</li>
+      </ul>
+      <div class="row" style="justify-content: flex-end; flex-wrap: wrap"><button class="btn btn-ghost" type="button">Annuleren</button><button class="btn btn-danger" type="button">Terugzetten</button></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

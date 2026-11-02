@@ -1,0 +1,8 @@
+{% load i18n %}
+{% get_current_language as current %}
+<form class="lang" method="post" action="{% url 'set_language' %}">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+    <button name="language" value="nl" aria-pressed="{% if current == 'nl' %}true{% else %}false{% endif %}">NL</button>
+    <button name="language" value="en" aria-pressed="{% if current == 'en' %}true{% else %}false{% endif %}">EN</button>
+</form>

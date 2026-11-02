@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "WebDAV instellen" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <a class="small" href="{% url 'business:backups' %}">← {% translate "Back-ups" %}</a>
+        <h1>{% translate "WebDAV instellen" %}</h1>
+        <p class="lede">{% translate "Voor Nextcloud, kDrive, Koofr, Hetzner Storage Box, pCloud en andere opslag met WebDAV. Huismus zet de back-ups in een map Huismus op dit adres." %}</p>
+    </div>
+</div>
+
+<form method="post" class="card settings-section" id="webdav">
+    {% csrf_token %}
+    <div class="card-pad stack" style="gap:var(--s-3)">
+        <div class="field">
+            <label class="label" for="url">{% translate "Adres" %}</label>
+            <input class="input" id="url" name="url" value="{{ url }}" spellcheck="false" autocomplete="off" inputmode="url" aria-describedby="url-uitleg{% if errors.url %} url-fout{% endif %}"{% if errors.url %} aria-invalid="true"{% endif %}>
+            {% if errors.url %}<p class="error" id="url-fout"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>{{ errors.url }}</p>{% endif %}
+            <span class="help" id="url-uitleg">{% translate "Begint met https://. Je vindt het in de instellingen van je opslagdienst, vaak onder WebDAV." %}</span>
+        </div>
+        <div class="field">
+            <label class="label" for="username">{% translate "Gebruikersnaam" %}</label>
+            <input class="input" id="username" name="username" value="{{ username }}" autocomplete="off" spellcheck="false"{% if errors.username %} aria-invalid="true" aria-describedby="username-fout"{% endif %}>
+            {% if errors.username %}<p class="error" id="username-fout"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>{{ errors.username }}</p>{% endif %}
+        </div>
+        <div class="field">
+            <label class="label" for="password">{% translate "App-wachtwoord" %}</label>
+            <input class="input" id="password" name="password" type="password" autocomplete="new-password" aria-describedby="password-uitleg{% if errors.password %} password-fout{% endif %}"{% if errors.password %} aria-invalid="true"{% endif %}>
+            {% if errors.password %}<p class="error" id="password-fout"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>{{ errors.password }}</p>{% endif %}
+            <span class="help" id="password-uitleg">{% translate "Maak bij je opslagdienst een apart wachtwoord voor Huismus." %}</span>
+        </div>
+        <div class="row"><a class="btn btn-ghost" href="{% url 'business:backups' %}">{% translate "Annuleren" %}</a><span class="spacer"></span><button type="submit" class="btn btn-primary"><span class="spinner" aria-hidden="true"></span>{% translate "Opslaan" %}</button></div>
+    </div>
+</form>
+{% endblock %}

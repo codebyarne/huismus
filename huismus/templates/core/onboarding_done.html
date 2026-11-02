@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Je kunt factureren" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+<section class="card">
+    <div class="empty" style="padding-bottom:var(--s-8)">
+        <div class="empty-art"><svg class="mark" width="72" height="72" aria-hidden="true"><use href="#mus"></use></svg></div>
+        <h1 style="font-size:var(--fs-2xl)">{% translate "Je kunt factureren" %}</h1>
+        <p>{% translate "Je bedrijfsgegevens staan klaar. Voeg nu je eerste klant toe, daarna maak je je eerste factuur. Wat je net invulde, kun je later aanpassen in Instellingen." %}</p>
+        <div class="row" style="justify-content:center;gap:var(--s-3);flex-wrap:wrap">
+            <a class="btn btn-primary btn-lg" href="{% url 'contacts:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Eerste klant toevoegen" %}</a>
+            <a class="btn btn-secondary btn-lg" href="{% url 'home' %}">{% translate "Naar het overzicht" %}</a>
+        </div>
+        {% if desktop %}<p class="small" id="wachtwoord-aanbod">{% url 'business:password' as password_url %}{% blocktranslate %}Wil je dat Huismus om een wachtwoord vraagt? Stel het in bij <a href="{{ password_url }}">Wachtwoord</a>.{% endblocktranslate %}</p>{% endif %}
+    </div>
+</section>
+{% if not feedback_skipped and not feedback_sent or feedback_just_sent %}{% include "core/_feedback.html" with place="welkom" %}{% endif %}
+{% endblock %}

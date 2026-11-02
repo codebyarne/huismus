@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load i18n backups %}
+
+{% block title %}{% translate "Back-up terugzetten" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <a class="small" href="{% url 'business:backups' %}">← {% translate "Back-ups" %}</a>
+        <h1>{% translate "Back-up terugzetten" %}</h1>
+        <p class="lede">{% translate "Kies welke back-up je wilt terugzetten. Alles wat je daarna hebt gedaan, gaat verloren." %}</p>
+    </div>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="card settings-section" id="terugzetten">
+    {% csrf_token %}
+    <input type="hidden" name="step" value="check">
+    <div class="card-pad stack" style="gap:var(--s-3)">
+        {% if error %}<p class="error" id="terugzet-fout" role="alert"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>{{ error }}</p>{% endif %}
+        {% if choices or cloud_error %}
+        <h2>{% translate "Back-ups" %}</h2>
+        <div class="stack folder-choices" style="gap:var(--s-2)">
+            {% for choice in choices %}
+            <label class="file-item"><span class="f-icon"><input type="radio" name="archive" value="{{ choice.value }}"{% if selected == choice.value %} checked{% endif %}></span><span><span class="f-name">{{ choice.created_at|moment|capfirst }}</span><span class="f-meta">{{ choice.size|filesizeformat }} · {{ choice.place }}</span></span></label>
+            {% endfor %}
+            {% if cloud_error %}<p class="small muted" id="cloud-niet-bereikbaar">{{ cloud_error }}</p>{% endif %}
+        </div>
+        {% endif %}
+        <div class="field">
+            <label class="label" for="bestand">{% translate "Ander bestand kiezen…" %}</label>
+            <input class="input" type="file" id="bestand" name="file" accept=".gz,.tar.gz,application/gzip">
+            <span class="help">{% if desktop %}{% translate "Bijvoorbeeld een back-up van Huismus op je Raspberry Pi." %}{% else %}{% translate "Bijvoorbeeld een back-up van Huismus op je computer." %}{% endif %}</span>
+        </div>
+        <div class="row"><span class="spacer"></span><button type="submit" class="btn btn-primary">{% translate "Verder" %}</button></div>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% load i18n %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}
+{% comment %}
+Shown by the service worker (huismus/core/pwa.py) when the server can't be reached.
+It is stored on the device and shown without the server, so it is one file:
+the styles inline, the mark as inline SVG, no stylesheet, script or image.
+{% endcomment %}
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% translate "Huismus is niet bereikbaar" %}</title>
+    <style>
+        :root { color-scheme: light dark; }
+        body {
+            margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; box-sizing: border-box;
+            font: 16px/1.5 system-ui, sans-serif; text-align: center;
+            background: light-dark(#FBF8F3, #191613); color: light-dark(#2A2520, #F2ECE4);
+        }
+        main { max-width: 26rem; }
+        h1 { font-size: 1.375rem; margin: 16px 0 8px; }
+        p { margin: 0 0 24px; opacity: .8; }
+        a {
+            display: inline-block; padding: 10px 18px; border-radius: 10px; text-decoration: none; font-weight: 600;
+            background: light-dark(#1B6AC9, #74B4FF); color: light-dark(#FFFFFF, #0F1B2B);
+        }
+    </style>
+</head>
+<body>
+<main>
+    <svg viewBox="0 0 24 24" width="64" height="64" aria-hidden="true"><path d="M4 17C4 11.5 8.5 9.3 13.6 10c4.6.7 6.4 5.2 3 8.4-3 2.7-9.6 2.8-12.6-1.4Z" fill="#1B6AC9"/><path d="M4.2 17 1 21.4l6-1.8Z" fill="#1B6AC9"/><circle cx="15.4" cy="8.6" r="4.4" fill="#1B6AC9"/><path d="M19.4 7.6 22.6 8.8l-3.2 1.1Z" fill="#F4A259"/><path d="M7.6 14.6c2.2-2.3 5.6-2.4 7.8-.2-2.3 2.1-5.5 2.2-7.8.2Z" fill="#F4A259"/><circle cx="16.6" cy="7.9" r="1" fill="#FFFFFF"/></svg>
+    <h1>{% translate "Huismus is niet bereikbaar" %}</h1>
+    <p>{% translate "Dit apparaat krijgt geen verbinding met Huismus. Controleer je wifi of VPN en probeer het opnieuw." %}</p>
+    <a href="{% url 'home' %}">{% translate "Opnieuw proberen" %}</a>
+</main>
+</body>
+</html>

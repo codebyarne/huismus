@@ -1,0 +1,7 @@
+{% load i18n documents_tags %}
+<dl class="totals" id="totalen" aria-live="polite"{% if oob %} hx-swap-oob="true"{% endif %}>
+    <dt>{% translate "Subtotaal" %}</dt><dd>{{ totals.subtotal_cents|money_for:document }}</dd>
+    {% include "documents/_tax_rows.html" with tax_per_rate=totals.tax_per_rate %}
+    <dt class="grand">{% translate "Totaal" %}</dt><dd class="grand">{{ totals.total_cents|money_for:document }}</dd>
+    <span class="totals-status"><span class="spinner htmx-indicator" aria-hidden="true"></span><svg class="i i-sm" aria-hidden="true"><use href="#check"></use></svg>{% translate "Berekend door Huismus" %}</span>
+</dl>

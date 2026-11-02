@@ -1,0 +1,35 @@
+/* Factuur-PDF (WeasyPrint). Geen JS, tabellen voor layout, zwart-wit printbaar.
+   Het merk is dat van de gebruiker (logo), niet dat van Huismus. */
+@page {
+  size: A4; margin: 18mm 20mm 22mm 20mm;
+  @bottom-left { content: "Lotte Veld Fotografie · KvK 76543210 · NL12 INGB 0001 2345 67"; font: 7.5pt/1.4 "Helvetica Neue", Arial, sans-serif; color: #6B6258; }
+  @bottom-right { content: "Pagina " counter(page) " van " counter(pages); font: 7.5pt/1.4 "Helvetica Neue", Arial, sans-serif; color: #6B6258; }
+}
+.pdf { --ink: #1F1B17; --muted: #5E574F; --rule: #D9D1C5; --accent: #1B6AC9;
+  font: 9.5pt/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--ink); font-variant-numeric: tabular-nums; }
+.pdf table { border-collapse: collapse; width: 100%; }
+.pdf .top td { vertical-align: top; padding: 0; }
+.pdf .logo { height: 16mm; }
+.pdf .sender { text-align: right; color: var(--muted); font-size: 8.5pt; line-height: 1.45; }
+/* Adresblok voor vensterenvelop (links, ± 45 mm van de bovenrand) */
+.pdf .window { position: relative; height: 40mm; margin-top: 12mm; }
+.pdf .window .return { font-size: 7pt; color: var(--muted); border-bottom: 0.5pt solid var(--rule); padding-bottom: 1.5mm; margin-bottom: 2.5mm; width: 85mm; }
+.pdf .window .addr { width: 85mm; font-size: 10pt; line-height: 1.45; }
+.pdf h1 { font-size: 22pt; line-height: 1; letter-spacing: -0.02em; margin: 6mm 0 5mm; font-weight: 700; }
+.pdf .meta td { padding: 0 8mm 1.5mm 0; vertical-align: top; }
+.pdf .meta .k { color: var(--muted); font-size: 8pt; text-transform: uppercase; letter-spacing: .06em; display: block; }
+.pdf .meta .v { font-weight: 600; font-size: 10pt; }
+.pdf .intro { margin: 7mm 0 5mm; }
+.pdf .lines th { text-align: left; font-size: 7.5pt; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; padding: 0 0 2mm; border-bottom: 1pt solid var(--ink); }
+.pdf .lines td { padding: 2.6mm 0; border-bottom: 0.5pt solid var(--rule); vertical-align: top; }
+.pdf .lines th + th, .pdf .lines td + td { padding-left: 4mm; }
+.pdf .r, .pdf .lines th.r { text-align: right; white-space: nowrap; }
+.pdf .lines tr { page-break-inside: avoid; }
+.pdf .sum { width: 72mm; margin: 5mm 0 0 auto; }
+.pdf .sum td { padding: 1.2mm 0; }
+.pdf .sum .k { color: var(--muted); }
+.pdf .sum .grand td { border-top: 1.2pt solid var(--ink); padding-top: 2.4mm; font-size: 12pt; font-weight: 700; }
+.pdf .pay { margin-top: 10mm; padding: 4mm 5mm; border: 0.75pt solid var(--rule); border-radius: 2mm; page-break-inside: avoid; }
+.pdf .pay strong { display: block; margin-bottom: 1mm; }
+.pdf .kor { margin-top: 5mm; font-size: 8.5pt; color: var(--muted); }
+.pdf .foot { margin-top: 3mm; font-size: 8.5pt; color: var(--muted); }

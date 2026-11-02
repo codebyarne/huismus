@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load i18n forms %}
+
+{% block title %}{% blocktranslate asvar heading with kind=document.get_kind_display number=document.number %}{{ kind }} {{ number }} mailen{% endblocktranslate %}{{ heading|capfirst }} — Huismus{% endblock %}
+
+{% block content %}
+{% comment %}Mailing a document (SPEC.md M10): a plain POST form, works without JS. Nothing here changes the document.{% endcomment %}
+<div class="page-head">
+    <div class="titles">
+        <a class="back" href="{{ back_url }}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{{ document.get_kind_display|capfirst }} {{ document.number }}</a>
+        <h1>{% blocktranslate asvar heading with kind=document.get_kind_display number=document.number %}{{ kind }} {{ number }} mailen{% endblocktranslate %}{{ heading|capfirst }}</h1>
+    </div>
+</div>
+
+<div class="stack" style="gap:var(--s-5);max-width:720px">
+    {% if not mail_configured %}
+    <div class="flash flash-info">
+        <svg class="i" aria-hidden="true"><use href="#info"></use></svg>
+        <div class="flash-body"><strong>{% translate "Mailen is nog niet ingesteld." %}</strong>
+            <span>{% url 'business:topic' 'mailen' as settings_url %}{% blocktranslate %}Stel bij <a href="{{ settings_url }}">Instellingen</a> in hoe Huismus mailt.{% endblocktranslate %}</span>
+        </div>
+    </div>
+    {% endif %}
+    {% if document.contact.delivery_method == "post" %}
+    <div class="flash flash-info">
+        <svg class="i" aria-hidden="true"><use href="#info"></use></svg>
+        <div class="flash-body">{% blocktranslate with name=document.contact.display_name %}{{ name }} wil documenten per post krijgen.{% endblocktranslate %}</div>
+    </div>
+    {% endif %}
+    {% if failed %}
+    <div class="flash flash-error" role="alert">
+        <svg class="i" aria-hidden="true"><use href="#alert"></use></svg>
+        <div class="flash-body"><strong>{{ failed.plain_error }}</strong><span class="small">{{ failed.error }}</span></div>
+    </div>
+    {% endif %}
+
+    {% form_errors form %}
+    <form id="mailen" method="post" class="card card-pad">
+        {% csrf_token %}
+        <div class="fieldset">
+            {% field form.to %}
+            {% field form.subject %}
+            {% field form.body %}
+            {% field form.bcc_self %}
+        </div>
+        <p class="small muted" style="margin-top:var(--s-4)"><svg class="i i-sm" aria-hidden="true"><use href="#file"></use></svg> {% blocktranslate with name=attachment_name %}Bijlage: {{ name }}{% endblocktranslate %}</p>
+    </form>
+</div>
+{% endblock %}
+
+{% block actionbar %}
+<div class="actionbar">
+    <span class="status"></span>
+    <a class="btn btn-ghost" href="{{ back_url }}">{% translate "Annuleren" %}</a>
+    <button class="btn btn-primary" type="submit" form="mailen"{% if not mail_configured %} disabled{% endif %}><svg class="i" aria-hidden="true"><use href="#send"></use></svg>{% translate "Versturen" %}<span class="spinner"></span></button>
+</div>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Klanten" %} — Huismus{% endblock %}
+
+{% block main_attrs %} data-shortcut-new="{% url 'contacts:create' %}"{% endblock %}
+{% block shortcut_search %}{% include "core/_shortcut_search.html" %}{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <h1>{% translate "Klanten" %}</h1>
+        <p class="lede">{% translate "Een klant die je niet meer nodig hebt, archiveer je. De facturen en offertes blijven bewaard." %}</p>
+    </div>
+    <div class="actions">
+        <a class="btn btn-primary" href="{% url 'contacts:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuwe klant" %}</a>
+    </div>
+</div>
+
+{% if not has_any %}
+<div class="card">
+    <div class="empty">
+        <div class="empty-art"><svg class="mark" width="56" height="56" aria-hidden="true"><use href="#mus"></use></svg></div>
+        <h2>{% translate "Nog geen klanten" %}</h2>
+        <p>{% translate "Voeg je eerste klant toe, of haal al je klanten in één keer uit Moneybird." %}</p>
+        <div class="row">
+            <a class="btn btn-primary" href="{% url 'contacts:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuwe klant" %}</a>
+            <a class="btn" href="{% url 'imports:upload' %}"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg>{% translate "Importeren uit Moneybird" %}</a>
+        </div>
+    </div>
+</div>
+{% else %}
+<section class="card">
+    <nav class="tabs" aria-label="{% translate 'Filter' %}" style="padding:0 var(--s-3)">
+        <a class="tab" href="{% url 'contacts:list' %}"{% if not show_archived %} aria-current="page"{% endif %}>{% translate "Actief" %} <span class="count">{{ active_count }}</span></a>
+        <a class="tab" href="{% url 'contacts:list' %}?archived=1"{% if show_archived %} aria-current="page"{% endif %}>{% translate "Gearchiveerd" %} <span class="count">{{ archived_count }}</span></a>
+    </nav>
+    <form class="toolbar" role="search" method="get">
+        {% if show_archived %}<input type="hidden" name="archived" value="1">{% endif %}
+        <label class="input-affix">
+            <span class="sr-only">{% translate "Zoek klanten" %}</span>
+            <svg class="i" aria-hidden="true"><use href="#search"></use></svg>
+            <input class="input input-sm" type="search" name="q" value="{{ query }}" autocomplete="off"
+                   placeholder="{% translate 'Zoek op naam, klantnummer of plaats' %}"
+                   hx-get="{% url 'contacts:list' %}" hx-include="closest form" hx-trigger="input changed delay:300ms, search"
+                   hx-target="#contacten-tabel" hx-select="#contacten-tabel" hx-swap="outerHTML"
+                   hx-push-url="true">
+        </label>
+        <noscript><button type="submit" class="btn btn-sm">{% translate "Zoeken" %}</button></noscript>
+    </form>
+    <div class="table-wrap" id="contacten-tabel">
+        {% if contacts %}
+        <table class="table stackable">
+            <thead>
+                <tr>
+                    <th>{% translate "Naam" %}</th>
+                    <th>{% translate "Klantnummer" %}</th>
+                    <th>{% translate "Plaats" %}</th>
+                    <th class="r"><span class="sr-only">{% translate "Actie" %}</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contact in contacts %}
+                <tr class="is-link">
+                    <td data-cell="primary"><a class="row-link" href="{% url 'contacts:edit' contact.pk %}">{{ contact.display_name }}</a></td>
+                    <td data-cell="secondary" class="num muted">{{ contact.customer_number }}</td>
+                    <td data-cell="hide">{{ contact.city }}</td>
+                    <td data-cell="action" class="r w-min">
+                        <form method="post" action="{% url 'contacts:archive_toggle' contact.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-ghost btn-sm">
+                                {% if contact.archived %}<svg class="i i-sm" aria-hidden="true"><use href="#undo"></use></svg>{% translate "Dearchiveren" %}
+                                {% else %}<svg class="i i-sm" aria-hidden="true"><use href="#archive"></use></svg>{% translate "Archiveren" %}{% endif %}
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty">
+            <h2>{% translate "Geen klanten gevonden" %}</h2>
+            <p>{% if query %}{% translate "Geen klant past bij je zoekopdracht." %}{% elif show_archived %}{% translate "Je hebt geen gearchiveerde klanten." %}{% else %}{% translate "Al je klanten zijn gearchiveerd." %}{% endif %}</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}

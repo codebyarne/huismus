@@ -1,0 +1,65 @@
+{% load i18n %}
+{% comment %}The editor's confirm dialogs. The confirm buttons submit the
+editor form itself (form="factuur"), so the edits are saved first and then
+issued or sent (documents.views._after_save).{% endcomment %}
+<dialog id="uitgeven" class="dialog" aria-labelledby="uitgeven-titel">
+    <div class="dialog-body">
+        <span class="dialog-icon"><svg class="i i-lg" aria-hidden="true"><use href="#{% if is_quote %}send{% else %}lock{% endif %}"></use></svg></span>
+        <h2 id="uitgeven-titel">{% if is_quote %}{% translate "Offerte verzenden?" %}{% elif document.kind == "credit_note" %}{% translate "Creditnota definitief uitgeven?" %}{% else %}{% translate "Factuur definitief uitgeven?" %}{% endif %}</h2>
+        {% if not is_quote and document.reopened_at %}<p class="muted">{% translate "Controleer het document goed. Daarna ligt het weer vast, met dezelfde datum en hetzelfde nummer." %}</p>
+        {% elif not is_quote %}<p class="muted">{% translate "Controleer het document goed." %}</p>{% endif %}
+        {% include "documents/_issue_summary.html" %}
+    </div>
+    <div class="dialog-foot">
+        <button type="button" class="btn btn-secondary" command="close" commandfor="uitgeven">{% translate "Nog niet" %}</button>
+        {% if is_quote %}
+        <button type="submit" class="btn btn-primary" form="factuur" name="actie" value="verzenden">{% translate "Verzenden" %}<span class="spinner"></span></button>
+        {% else %}
+        <button type="submit" class="btn btn-primary" form="factuur" name="actie" value="uitgeven">{% translate "Definitief uitgeven" %}<span class="spinner"></span></button>
+        {% endif %}
+    </div>
+</dialog>
+
+{% if is_quote and document.pk %}
+<dialog id="omzetten" class="dialog" aria-labelledby="omzetten-titel">
+    <form method="post" action="{% url 'quotes:convert' document.pk %}">
+        {% csrf_token %}
+        <div class="dialog-body">
+            <span class="dialog-icon"><svg class="i i-lg" aria-hidden="true"><use href="#swap"></use></svg></span>
+            <h2 id="omzetten-titel">{% translate "Omzetten naar factuur?" %}</h2>
+            <p class="muted">{% translate "De regels van deze offerte gaan naar een nieuwe conceptfactuur. De factuur blijft aan deze offerte gekoppeld. De offerte zelf verandert niet." %}</p>
+            <p class="small muted">{% translate "Wat je nog niet hebt opgeslagen, gaat niet mee. Sla eerst op." %}</p>
+        </div>
+        <div class="dialog-foot"><button type="button" class="btn btn-secondary" command="close" commandfor="omzetten">{% translate "Annuleren" %}</button><button type="submit" class="btn btn-primary">{% translate "Conceptfactuur maken" %}</button></div>
+    </form>
+</dialog>
+{% endif %}
+
+{% if document.pk and document.is_deletable %}
+<dialog id="verwijderen" class="dialog" aria-labelledby="verwijderen-titel">
+    <form method="post" action="{% if is_quote %}{% url 'quotes:delete' document.pk %}{% else %}{% url 'documents:delete' document.pk %}{% endif %}">
+        {% csrf_token %}
+        <div class="dialog-body">
+            <span class="dialog-icon"><svg class="i i-lg" aria-hidden="true"><use href="#trash"></use></svg></span>
+            <h2 id="verwijderen-titel">{% if is_quote %}{% translate "Concept-offerte verwijderen?" %}{% elif document.kind == "credit_note" %}{% translate "Concept-creditnota verwijderen?" %}{% else %}{% translate "Conceptfactuur verwijderen?" %}{% endif %}</h2>
+            <p class="muted">{% translate "Huismus verwijdert het concept met al zijn regels. Dat kun je niet ongedaan maken. Het had nog geen nummer, dus je nummering krijgt geen gat." %}</p>
+        </div>
+        <div class="dialog-foot"><button type="button" class="btn btn-secondary" command="close" commandfor="verwijderen">{% translate "Nog niet" %}</button><button type="submit" class="btn btn-danger">{% translate "Verwijderen" %}</button></div>
+    </form>
+</dialog>
+{% endif %}
+
+{% if document.status == "draft" %}
+{% comment %}"Voorbeeld-pdf" in the installed app (app.js, data-preview-pdf):
+there a new tab takes over the screen with no way back, and what was typed
+would be gone. So the button posts to this frame and the PDF opens over
+the editor. Elsewhere, and without JS, the dialog stays unused.{% endcomment %}
+<dialog id="voorbeeld-pdf" class="dialog is-pdf" aria-labelledby="voorbeeld-pdf-titel">
+    <div class="dialog-body">
+        <h2 id="voorbeeld-pdf-titel">{% translate "Voorbeeld-pdf" %}</h2>
+        {% comment %}In a <template>: app.js puts the frame in only while the dialog is open, so the editor itself has no frame (in WebKit an empty one kept the page from going quiet).{% endcomment %}
+        <template><iframe class="pdf-frame" name="voorbeeld-pdf-frame" title="{% translate 'Voorbeeld-pdf van je concept' %}"></iframe></template>
+    </div>
+    <div class="dialog-foot"><button type="button" class="btn btn-secondary" command="close" commandfor="voorbeeld-pdf" autofocus>{% translate "Sluiten" %}</button></div>
+</dialog>
+{% endif %}

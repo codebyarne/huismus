@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>AI-assistenten</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="hm.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#14539E}a:hover{color:#1B6AC9}
+</style>
+</helmet>
+<div style="width: 390px; height: 1100px; box-sizing: border-box; background: #FBF8F3; font-family: ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color: #2A2520; display: flex; flex-direction: column">
+  <div class="mtop"><a href="#" aria-label="Terug naar Instellingen" style="text-decoration: none">←</a><strong>AI-assistenten</strong></div>
+  <div style="padding: 16px; display: flex; flex-direction: column; gap: 16px">
+    <p class="small muted">Hier koppel je een AI-assistent aan Huismus. Daarna werk je in de app van de assistent zelf. <a href="#">Hoe dat werkt</a></p>
+
+    <section class="card pad" style="display: flex; flex-direction: column; gap: 12px">
+      <div class="row" style="justify-content: space-between"><h2>Claude</h2><span class="pill pill-ok">Gekoppeld</span></div>
+      <p class="small muted">Via de Claude-app op deze computer.</p>
+      <button class="btn btn-sm" type="button" style="align-self: flex-start">Ontkoppelen</button>
+    </section>
+
+    <section class="card pad" style="display: flex; flex-direction: column; gap: 12px">
+      <div class="row" style="justify-content: space-between"><h2>ChatGPT</h2><span class="pill pill-off">Niet gekoppeld</span></div>
+      <p class="small muted">Voor technische gebruikers, via een tunnel van OpenAI. Plak dit adres en deze sleutel in de koppeling.</p>
+      <div class="field"><label class="label" for="adres">Adres</label><div class="row"><input id="adres" class="input mono" value="http://127.0.0.1:8765/mcp" readonly><button class="btn btn-sm" type="button">Kopiëren</button></div></div>
+      <div class="field"><label class="label" for="sleutel">Sleutel</label><div class="row"><input id="sleutel" class="input mono" value="hm_••••••••••••••••" readonly><button class="btn btn-sm" type="button">Kopiëren</button></div></div>
+      <div class="row" style="flex-wrap: wrap"><button class="btn btn-sm" type="button">Nieuwe sleutel</button><a class="btn btn-ghost btn-sm" href="#">Stappenplan</a></div>
+    </section>
+
+    <section class="card pad" style="display: flex; flex-direction: column; gap: 8px">
+      <div class="row" style="justify-content: space-between"><h2>Gemini</h2><span class="pill pill-off">Niet beschikbaar</span></div>
+      <p class="small muted">De Gemini-app kan dit in Nederland nog niet. Gemini CLI wel, met het adres en de sleutel hierboven.</p>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1100}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

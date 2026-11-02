@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Importeren uit Moneybird" %} — Huismus{% endblock %}
+{% block content_class %}content-wide{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <h1>{% translate "Importeren uit Moneybird" %}</h1>
+        <p class="lede">{% translate "Neem je klanten, facturen, offertes en uitgaven één op één mee." %} {% translate "Huismus doet eerst een proefdraai en slaat pas iets op als jij dat kiest." %}</p>
+    </div>
+</div>
+{% include "imports/_steps.html" with step=1 %}
+<div class="split-rev">
+    <form class="stack" method="post" enctype="multipart/form-data" action="{% url 'imports:upload' %}" style="gap:var(--s-5)">
+        {% csrf_token %}
+        <label class="dropzone dropzone-lg" data-dropzone>
+            <input type="file" name="files" multiple accept=".xlsx,.xls,.csv,.zip,.pdf,.xml" required data-file-summary="gekozen-bestanden">
+            <span class="dz-icon"><svg class="i i-lg" aria-hidden="true"><use href="#upload"></use></svg></span>
+            <strong>{% translate "Sleep je Moneybird-exports hierheen" %}</strong>
+            <span class="small">{% translate "Alle jaren tegelijk, zoals Moneybird ze geeft." %}</span>
+            <span class="btn btn-secondary btn-sm" style="margin-top:var(--s-2)">{% translate "Bestanden kiezen" %}</span>
+        </label>
+        <p class="small muted" id="gekozen-bestanden" aria-live="polite"></p>
+        <section class="card card-pad row" style="align-items:center;gap:var(--s-4)">
+            <p class="small muted" style="flex:1;min-width:240px">{% translate "De proefdraai laat per bestand zien wat Huismus herkent en wat de import zou doen. Daarna importeer je met één klik, zonder de bestanden opnieuw te kiezen." %}</p>
+            <button class="btn btn-primary btn-lg" type="submit">{% translate "Proefdraai starten" %}<span class="spinner"></span></button>
+        </section>
+    </form>
+    <aside class="card card-pad stack" style="gap:var(--s-4);position:sticky;top:var(--s-6)">
+        <h2>{% translate "Zo haal je je gegevens uit Moneybird" %}</h2>
+        <ol class="how-to">
+            <li><span>{% translate "Log in bij Moneybird en open de administratie die je wilt verhuizen." %}</span></li>
+            <li><span>{% blocktranslate %}Ga naar <strong>Instellingen › Boekhouding › Boekhouding exporteren</strong> en kies <strong>Download jaarexport</strong>.{% endblocktranslate %}</span></li>
+            <li><span>{% translate "Kies een boekjaar en klik op Exporteren. Doe dat voor elk jaar dat je wilt meenemen." %}</span></li>
+            <li><span>{% translate "Download de zips via het belletje rechtsboven in Moneybird." %}</span></li>
+            <li><span>{% translate "Kies alle zips tegelijk, of sleep ze naar het vak. Uitpakken is niet nodig." %}</span></li>
+        </ol>
+        <p class="small muted">{% blocktranslate %}Geen abonnement meer? Dan kies je in Moneybird rechtsboven <strong>Exporteren › Alle gegevens</strong>. Je krijgt dan ook een zip per jaar.{% endblocktranslate %}</p>
+        <p class="small muted">{% translate "Huismus bewaart de PDF's uit Moneybird bij je facturen, als origineel naast zijn eigen versie." %} {% translate "De bonnetjes komen bij je uitgaven." %}</p>
+    </aside>
+</div>
+{% endblock %}

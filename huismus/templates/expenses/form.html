@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load i18n forms money %}
+
+{% block title %}{% if expense %}{{ expense.description|default:expense.supplier|default:_("Uitgave")|truncatechars:60 }}{% else %}{% translate "Nieuwe uitgave" %}{% endif %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <a class="back" href="{% url 'expenses:list' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Uitgaven" %}</a>
+        <h1>{% if expense %}{{ expense.description|default:expense.supplier|default:_("Uitgave")|truncatechars:60 }}{% else %}{% translate "Nieuwe uitgave" %}{% endif %}</h1>
+        {% if expense %}<span class="small muted">{% if expense.supplier %}{{ expense.supplier }} · {% endif %}{{ expense.date|date:"j b Y" }}</span>{% endif %}
+    </div>
+</div>
+
+{% form_errors form formset %}
+
+<form class="card card-pad stack" method="post" style="gap:var(--s-5)">
+    {% csrf_token %}
+    <div class="fieldset">
+        {% field form.date span=2 %}
+        {% field form.supplier span=4 %}
+        {% field form.description optional=True %}
+    </div>
+    {% comment %}The lines, each with its own category, as in Moneybird
+    (huismus-intern/besluiten.md, 2026-11-02). The amount of the expense is
+    their sum, computed when saving (huismus/expenses/lines.py).{% endcomment %}
+    <div class="stack" style="gap:var(--s-4)">
+        <h2>{% translate "Regels" %}</h2>
+        {{ formset.management_form }}
+        <div class="stack" style="gap:var(--s-4)" data-formset-forms="lines">
+            {% for line_form in formset.forms %}{% include "expenses/_line_form.html" %}{% endfor %}
+        </div>
+        <template data-formset-empty="lines">{% include "expenses/_line_form.html" with line_form=formset.empty_form %}</template>
+        <div class="row">
+            <button type="submit" name="regel_toevoegen" value="1" class="btn btn-ghost btn-sm" data-formset-add="lines"><svg class="i i-sm" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Regel toevoegen" %}</button>
+            {% if expense %}<span class="spacer"></span><span>{% translate "Totaal" %} <strong class="amount">{{ expense.amount_cents|money }}</strong></span>{% endif %}
+        </div>
+    </div>
+    <div class="kor-note"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{% translate "Vul het bruto bedrag in: wat je echt betaald hebt. Het btw-bedrag is alleen ter informatie en telt nergens mee." %}</span></div>
+    <div class="row" style="justify-content:flex-end"><button class="btn btn-primary" type="submit">{% translate "Opslaan" %}<span class="spinner"></span></button></div>
+</form>
+
+{% comment %}Receipts and delete need a saved expense: the URLs below take
+expense.pk.{% endcomment %}
+{% if expense %}
+<section class="card card-pad stack" style="margin-top:var(--s-5)">
+    <div class="row">
+        <h2>{% translate "Bonnetjes" %}</h2>
+        {% with count=expense.attachments.count %}<span class="small muted">{% blocktranslate count count=count %}{{ count }} bestand{% plural %}{{ count }} bestanden{% endblocktranslate %}</span>{% endwith %}
+    </div>
+    <div class="receipts">
+        {% for attachment in expense.attachments.all %}
+        <div class="receipt">
+            <a class="thumb" href="{{ attachment.file.url }}" hx-boost="false" target="_blank" rel="noopener">
+                {% if attachment.is_pdf %}<svg class="i i-lg" aria-hidden="true"><use href="#file"></use></svg>
+                {% else %}<img src="{{ attachment.file.url }}" alt="" style="width:100%;height:100%;object-fit:cover">{% endif %}
+            </a>
+            <div class="r-row">
+                <span class="r-name" title="{{ attachment.filename }}">{{ attachment.filename }}</span>
+                <button type="button" class="btn btn-ghost btn-sm btn-icon" aria-label="{% translate 'Bonnetje verwijderen' %}" command="show-modal" commandfor="verwijder-bon-{{ attachment.pk }}"><svg class="i i-sm" aria-hidden="true"><use href="#trash"></use></svg></button>
+            </div>
+            <span class="muted">{% if attachment.is_pdf %}PDF{% else %}{% translate "Foto" %}{% endif %}</span>
+        </div>
+        <dialog class="dialog" id="verwijder-bon-{{ attachment.pk }}" aria-labelledby="verwijder-bon-{{ attachment.pk }}-titel">
+            <form method="post" action="{% url 'expenses:receipt_delete' expense.pk attachment.pk %}">
+                {% csrf_token %}
+                <div class="dialog-body">
+                    <div class="dialog-icon is-danger"><svg class="i" aria-hidden="true"><use href="#trash"></use></svg></div>
+                    <h2 id="verwijder-bon-{{ attachment.pk }}-titel">{% translate "Dit bonnetje verwijderen?" %}</h2>
+                    <p class="muted">{% translate "Huismus verwijdert het bestand. Dat kun je niet ongedaan maken." %}</p>
+                </div>
+                <div class="dialog-foot">
+                    <button type="button" class="btn" command="close" commandfor="verwijder-bon-{{ attachment.pk }}">{% translate "Annuleren" %}</button>
+                    <button type="submit" class="btn btn-danger">{% translate "Verwijderen" %}</button>
+                </div>
+            </form>
+        </dialog>
+        {% endfor %}
+        <form method="post" action="{% url 'expenses:receipt_upload' expense.pk %}" enctype="multipart/form-data" class="dropzone" style="aspect-ratio:3/4;padding:var(--s-4)" data-dropzone>
+            {% csrf_token %}
+            <input type="file" name="file" accept="image/png,image/jpeg,application/pdf" aria-label="{% translate 'Bonnetje toevoegen' %}" data-autosubmit required>
+            <span class="dz-icon"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg></span>
+            <strong class="small">{% translate "Sleep een bonnetje hierheen" %}</strong>
+            <span class="small">{% translate "of kies een bestand · JPG, PNG, PDF" %}</span>
+            <noscript><button type="submit" class="btn btn-sm" style="position:relative;z-index:1">{% translate "Bonnetje toevoegen" %}</button></noscript>
+        </form>
+    </div>
+</section>
+
+<section class="card card-pad row" style="margin-top:var(--s-5);justify-content:space-between">
+    <div class="stack" style="gap:2px"><strong>{% translate "Uitgave verwijderen" %}</strong><span class="small muted">{% translate "Ook de bonnetjes gaan weg." %}</span></div>
+    <button class="btn btn-danger-quiet" type="button" command="show-modal" commandfor="verwijder-uitgave"><svg class="i" aria-hidden="true"><use href="#trash"></use></svg>{% translate "Verwijderen…" %}</button>
+</section>
+<dialog class="dialog" id="verwijder-uitgave" aria-labelledby="verwijder-uitgave-titel">
+    <form method="post" action="{% url 'expenses:delete' expense.pk %}">
+        {% csrf_token %}
+        <div class="dialog-body">
+            <div class="dialog-icon is-danger"><svg class="i" aria-hidden="true"><use href="#trash"></use></svg></div>
+            <h2 id="verwijder-uitgave-titel">{% translate "Deze uitgave verwijderen?" %}</h2>
+            <p class="muted">{% translate "Huismus verwijdert de uitgave met de bonnetjes. Dat kun je niet ongedaan maken." %}</p>
+        </div>
+        <div class="dialog-foot">
+            <button type="button" class="btn" command="close" commandfor="verwijder-uitgave">{% translate "Annuleren" %}</button>
+            <button type="submit" class="btn btn-danger">{% translate "Verwijderen" %}</button>
+        </div>
+    </form>
+</dialog>
+{% endif %}
+{% endblock %}

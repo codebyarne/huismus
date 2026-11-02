@@ -1,0 +1,46 @@
+# ---------------------------------------------------------------
+# Echte administratie — mag NOOIT in git.
+# Deze repo is bedoeld voor publicatie onder AGPL.
+# Fixtures en demodata zijn fictief of volledig geanonimiseerd.
+# ---------------------------------------------------------------
+data-import/
+data/
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+htmlcov/
+.coverage
+
+# Django
+/staticfiles/
+/media/
+huismus/locale/*/LC_MESSAGES/*.mo
+
+# Systeem
+.DS_Store
+
+# Worktrees van parallelle sessies (CLAUDE.md, "Parallelle sessies"): elk een
+# eigen checkout met een eigen branch, geen bestanden van deze werkboom.
+.claude/worktrees/
+
+# Playwright-screenshots en -snapshots (kunnen echte gegevens tonen)
+.playwright-mcp/
+
+# The desktop app (scripts/build-mac.sh)
+/build/
+/dist/

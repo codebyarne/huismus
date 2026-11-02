@@ -1,0 +1,54 @@
+{% load i18n %}
+{% comment %}One address and key for every assistant (Arne, 2026-10-30); per assistant only how it uses them.{% endcomment %}
+<section class="card settings-section" id="adres-en-sleutel">
+    <div class="card-pad stack" style="gap:var(--s-3)">
+        <div class="row" style="justify-content:space-between"><h2>{% translate "Adres en sleutel" %}</h2>{% if not desktop %}{% include "business/_assistant_status.html" %}{% endif %}</div>
+        <p class="small muted">{% translate "Elke AI-assistent die met een adres en een sleutel werkt, gebruikt deze twee." %}</p>
+        {% if key %}
+        <div class="field">
+            <label class="label" for="adres">{% translate "Adres" %}</label>
+            <div class="row" style="gap:var(--s-2);flex-wrap:nowrap"><input class="input mono" id="adres" value="{{ address }}" readonly spellcheck="false"><button type="button" class="btn btn-secondary btn-sm" data-copy="adres" data-copied="{% translate 'Gekopieerd' %}" hidden>{% translate "Kopiëren" %}</button></div>
+        </div>
+        <div class="field">
+            <label class="label" for="sleutel">{% translate "Sleutel" %}</label>
+            <div class="row" style="gap:var(--s-2);flex-wrap:nowrap"><input type="password" class="input mono" id="sleutel" value="{{ key }}" readonly spellcheck="false" autocomplete="off"><button type="button" class="btn btn-sm" data-reveal="sleutel" data-hide="{% translate 'Verberg' %}" hidden>{% translate "Toon" %}</button><button type="button" class="btn btn-secondary btn-sm" data-copy="sleutel" data-copied="{% translate 'Gekopieerd' %}" hidden>{% translate "Kopiëren" %}</button></div>
+            {% comment %}Hidden until "Toon" (Arne, 2026-11-02), so it is not in plain sight; without JS this block shows it.{% endcomment %}
+            <noscript><details><summary class="small">{% translate "Toon" %}</summary><input class="input mono" value="{{ key }}" readonly spellcheck="false" autocomplete="off" aria-label="{% translate 'Sleutel' %}"></details></noscript>
+        </div>
+        <div class="row" style="flex-wrap:wrap;gap:var(--s-2)">
+            <button type="button" class="btn btn-sm" command="show-modal" commandfor="nieuwe-sleutel">{% translate "Nieuwe sleutel" %}</button>
+            <button type="button" class="btn btn-sm" command="show-modal" commandfor="ontkoppelen">{% translate "Ontkoppelen" %}</button>
+            <a class="btn btn-ghost btn-sm" href="{{ steps_url }}">{% translate "Stappenplan" %}</a>
+        </div>
+        {% else %}
+        <form method="post" class="row" style="flex-wrap:wrap;gap:var(--s-2)">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="connect">
+            <button type="submit" class="btn btn-primary btn-sm">{% translate "Koppelen" %}</button>
+            <a class="btn btn-ghost btn-sm" href="{{ steps_url }}">{% translate "Stappenplan" %}</a>
+        </form>
+        {% endif %}
+    </div>
+</section>
+
+<section class="card settings-section" id="{{ claude_card }}">
+    <div class="card-pad stack" style="gap:var(--s-2)">
+        <h2>{% if desktop %}Claude Code{% else %}Claude{% endif %}</h2>
+        <p class="small muted">{% translate "Claude Code gebruikt het adres en de sleutel hierboven." %}</p>
+    </div>
+</section>
+
+<section class="card settings-section" id="chatgpt">
+    <div class="card-pad stack" style="gap:var(--s-2)">
+        <h2>ChatGPT</h2>
+        <p class="small muted">{% translate "Voor technische gebruikers, via een tunnel van OpenAI, met het adres en de sleutel hierboven." %}</p>
+    </div>
+</section>
+
+<section class="card settings-section" id="gemini">
+    <div class="card-pad stack" style="gap:var(--s-2)">
+        <div class="row" style="justify-content:space-between"><h2>Gemini</h2><span class="pill pill-expired">{% translate "Niet beschikbaar" %}</span></div>
+        <p class="small muted">{% translate "De Gemini-app kan dit in Nederland nog niet. Gemini CLI wel, met het adres en de sleutel hierboven." %}</p>
+    </div>
+</section>
+

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "AI-assistenten" %} — {% translate "Instellingen" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+{% comment %}Only connecting (huismus-intern/besluiten.md, 2026-10-29): what an assistant may do, and how, is in the steps.{% endcomment %}
+<div class="page-head">
+    <div class="titles">
+        <a class="small" href="{% url 'business:overview' %}">← {% translate "Instellingen" %}</a>
+        <h1>{% translate "AI-assistenten" %}</h1>
+        <p class="lede">{% translate "Hier koppel je een AI-assistent aan Huismus. Daarna werk je in de app van de assistent zelf." %} <a href="{{ help_url }}">{% translate "Zo werkt het" %} →</a></p>
+    </div>
+</div>
+
+{% if desktop %}
+{% comment %}The desktop app: Claude first, with one button; the rest folded away for technical users (Arne and huismus-intern/besluiten.md, 2026-11-02).{% endcomment %}
+<section class="card settings-section" id="claude">
+    <div class="card-pad stack" style="gap:var(--s-3)">
+        <div class="row" style="justify-content:space-between"><h2>Claude</h2>{% include "business/_assistant_status.html" %}</div>
+        <p class="small muted">{% translate "Werk met Claude aan je administratie, in de Claude-app op deze computer." %}</p>
+        {% if claude_missing %}
+        <p class="hint-banner is-warn" id="claude-ontbreekt"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% blocktranslate with link='<a href="'|add:claude_download_url|add:'">claude.ai/download</a>'|safe %}De Claude-app staat niet op deze computer. Download hem op {{ link }} en kies daarna opnieuw Koppel met Claude.{% endblocktranslate %}</span></p>
+        {% endif %}
+        <form method="post" class="row" style="flex-wrap:wrap;gap:var(--s-2)">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="claude">
+            <button type="submit" class="btn btn-primary">{% translate "Koppel met Claude" %}</button>
+        </form>
+    </div>
+</section>
+
+<details class="settings-section" id="andere-assistenten">
+    <summary>{% translate "Andere assistenten (voor technische gebruikers)" %}</summary>
+    <div class="stack" style="gap:var(--s-4);margin-top:var(--s-3)">
+{% include "business/_assistants_technical.html" with claude_card="claude-code" %}
+    </div>
+</details>
+{% else %}
+{% include "business/_assistants_technical.html" with claude_card="claude" %}
+{% endif %}
+
+{% if key %}
+{% for id, action, title, button in confirmations %}
+<dialog class="dialog" id="{{ id }}" aria-labelledby="{{ id }}-titel">
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="{{ action }}">
+        <div class="dialog-body">
+            <div class="dialog-icon"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg></div>
+            <h2 id="{{ id }}-titel">{{ title }}</h2>
+            <p class="muted">{% translate "Programma's die de huidige sleutel gebruiken, kunnen dan niet meer bij Huismus." %}</p>
+        </div>
+        <div class="dialog-foot">
+            <button type="button" class="btn" command="close" commandfor="{{ id }}">{% translate "Annuleren" %}</button>
+            <button type="submit" class="btn btn-danger">{{ button }}</button>
+        </div>
+    </form>
+</dialog>
+{% endfor %}
+{% endif %}
+{% endblock %}

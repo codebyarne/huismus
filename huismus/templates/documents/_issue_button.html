@@ -1,0 +1,5 @@
+{% load i18n %}
+{% comment %}Disabled until there is a customer and at least one valid line
+(and, for a credit note, it stays within what can be credited); issue() and
+send_quote() check the same things on the server.{% endcomment %}
+<button class="btn btn-primary" type="button" id="uitgeven-knop" command="show-modal" commandfor="uitgeven"{% if not can_issue %} disabled title="{% translate 'Kies een klant en vul minstens één regel in' %}"{% endif %}{% if oob %} hx-swap-oob="true"{% endif %}>{% if is_quote %}<svg class="i" aria-hidden="true"><use href="#send"></use></svg>{% translate "Verzenden…" %}{% else %}<svg class="i" aria-hidden="true"><use href="#lock"></use></svg>{% translate "Uitgeven…" %}{% endif %}</button>

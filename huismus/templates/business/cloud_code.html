@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Je herstelcode" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <a class="small" href="{% url 'business:backups' %}">← {% translate "Back-ups" %}</a>
+        <h1>{% translate "Je herstelcode" %}</h1>
+        <p class="lede">{% blocktranslate %}Huismus versleutelt elke back-up voordat hij naar {{ service }} gaat.{% endblocktranslate %}</p>
+    </div>
+</div>
+
+<form method="post" class="card settings-section" id="herstelcode">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="saved">
+    <input type="hidden" name="shown" value="{{ code }}">
+    <div class="card-pad stack" style="gap:var(--s-3)">
+        {% include "business/_recovery_code.html" with code=code size="var(--fs-xl)" %}
+        <p>{% translate "Bewaar deze code in je wachtwoordmanager of print hem. Zonder deze code kun je een back-up uit de cloud niet terugzetten op een andere computer." %}</p>
+        <p class="small muted">{% translate "Je kunt hem later weer bekijken bij Back-ups." %}</p>
+        <div class="row"><span class="spacer"></span><button type="submit" class="btn btn-primary"><span class="spinner" aria-hidden="true"></span>{% translate "Ik heb de code bewaard" %}</button></div>
+    </div>
+</form>
+
+<details class="card settings-section" id="eerdere-code"{% if error %} open{% endif %}>
+    <summary class="card-pad">{% translate "Heb je al een herstelcode van een eerdere installatie?" %}</summary>
+    <form method="post" class="card-pad stack" style="gap:var(--s-3);padding-top:0">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="existing">
+        <p class="small muted">{% translate "Vul hem in, dan kun je de back-ups die al in de cloud staan terugzetten." %}</p>
+        <div class="field">
+            <label class="label" for="code">{% translate "Herstelcode" %}</label>
+            <input class="input" id="code" name="code" value="{{ typed }}" autocomplete="off" spellcheck="false" placeholder="XXXX XXXX XXXX XXXX XXXX XXXX"{% if error %} aria-invalid="true" aria-describedby="code-fout"{% endif %}>
+            {% if error %}<p class="error" id="code-fout"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>{{ error }}</p>{% endif %}
+        </div>
+        <div class="row"><span class="spacer"></span><button type="submit" class="btn btn-secondary"><span class="spinner" aria-hidden="true"></span>{% translate "Deze code gebruiken" %}</button></div>
+    </form>
+</details>
+{% endblock %}

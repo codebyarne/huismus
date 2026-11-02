@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load i18n money %}
+
+{% block title %}{% translate "Uitgaven" %} — Huismus{% endblock %}
+
+{% block main_attrs %} data-shortcut-new="{% url 'expenses:create' %}"{% endblock %}
+{% block shortcut_search %}{% include "core/_shortcut_search.html" %}{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <h1>{% translate "Uitgaven" %}</h1>
+        <p class="lede">{% translate "Bedragen zijn bruto: wat je echt betaald hebt, inclusief eventuele btw." %}</p>
+    </div>
+    <div class="actions">
+        <a class="btn btn-ghost" href="{% url 'expenses:category_list' %}">{% translate "Categorieën" %}</a>
+        <a class="btn btn-ghost" href="{% url 'expenses:year_overview' %}"><svg class="i" aria-hidden="true"><use href="#table"></use></svg>{% translate "Jaaroverzicht" %}</a>
+        <a class="btn btn-primary" href="{% url 'expenses:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuwe uitgave" %}</a>
+    </div>
+</div>
+
+{% if not has_any %}
+<div class="card">
+    <div class="empty">
+        <div class="empty-art"><svg class="mark" width="56" height="56" aria-hidden="true"><use href="#mus"></use></svg></div>
+        <h2>{% translate "Nog geen uitgaven" %}</h2>
+        <p>{% translate "Leg een uitgave vast met het bonnetje erbij, of haal ze uit je Moneybird-export." %}</p>
+        <div class="row">
+            <a class="btn btn-primary" href="{% url 'expenses:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuwe uitgave" %}</a>
+            <a class="btn" href="{% url 'imports:upload' %}"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg>{% translate "Importeren" %}</a>
+        </div>
+    </div>
+</div>
+{% else %}
+<section class="card">
+    {% comment %}Plain GET form; with HTMX the results refresh while typing or
+    choosing, and only #uitgaven-resultaat is swapped so the search field
+    keeps its focus.{% endcomment %}
+    <form class="toolbar" role="search" method="get"
+          hx-get="{% url 'expenses:list' %}" hx-trigger="input changed delay:300ms from:input[name=q], change from:select"
+          hx-target="#uitgaven-resultaat" hx-select="#uitgaven-resultaat"
+          hx-swap="outerHTML" hx-push-url="true">
+        <label class="input-affix">
+            <span class="sr-only">{% translate "Zoek in uitgaven" %}</span>
+            <svg class="i" aria-hidden="true"><use href="#search"></use></svg>
+            <input class="input input-sm" type="search" name="q" value="{{ query }}" autocomplete="off" placeholder="{% translate 'Zoek op leverancier of omschrijving' %}">
+        </label>
+        <select class="select input-sm" style="width:auto" aria-label="{% translate 'Jaar' %}" name="jaar">
+            {% for y in years %}<option value="{{ y }}"{% if y == year %} selected{% endif %}>{{ y }}</option>{% endfor %}
+            <option value="alle"{% if year is None %} selected{% endif %}>{% translate "Alle jaren" %}</option>
+        </select>
+        <select class="select input-sm" style="width:auto" aria-label="{% translate 'Categorie' %}" name="categorie">
+            <option value="">{% translate "Alle categorieën" %}</option>
+            {% for category in categories %}<option value="{{ category.pk }}"{% if category.pk == category_pk %} selected{% endif %}>{{ category.name }}</option>{% endfor %}
+        </select>
+        <noscript><button type="submit" class="btn btn-sm">{% translate "Zoeken" %}</button></noscript>
+    </form>
+    <div id="uitgaven-resultaat">
+        {% if expenses %}
+        <div class="table-wrap">
+            <table class="table stackable">
+                <thead>
+                    <tr>
+                        <th>{% translate "Datum" %}</th>
+                        <th>{% translate "Leverancier" %}</th>
+                        <th>{% translate "Categorie" %}</th>
+                        <th class="r">{% translate "Bedrag" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for expense in expenses %}
+                    <tr class="is-link">
+                        <td data-cell="secondary" class="num">{{ expense.date|date:"j b Y" }}</td>
+                        <td data-cell="primary">
+                            <a class="row-link" href="{% url 'expenses:edit' expense.pk %}">{{ expense.supplier|default:expense.description|default:_("Uitgave") }}</a>
+                            {% if expense.has_receipt %}<svg class="i i-sm muted" role="img" aria-label="{% translate 'Met bonnetje' %}"><use href="#paperclip"></use></svg>{% endif %}
+                        </td>
+                        <td data-cell="hide">{{ expense.category_names }}</td>
+                        <td data-cell="amount" class="r amount">{{ expense.shown_cents|money }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="sum-row">
+            {% if more_url %}
+            <a class="btn btn-ghost btn-sm" href="{{ more_url }}"
+               hx-get="{{ more_url }}" hx-target="#uitgaven-resultaat" hx-select="#uitgaven-resultaat"
+               hx-swap="outerHTML show:none" hx-push-url="true">{% translate "Meer laden" %}<span class="spinner"></span></a>
+            {% endif %}
+            <span class="muted">
+                {% if year %}{% blocktranslate count total=total %}Totaal van {{ total }} uitgave in {{ year }}{% plural %}Totaal van alle {{ total }} uitgaven in {{ year }}{% endblocktranslate %}
+                {% else %}{% blocktranslate count total=total %}Totaal van {{ total }} uitgave{% plural %}Totaal van alle {{ total }} uitgaven{% endblocktranslate %}{% endif %}
+            </span>
+            <span class="amount">{{ total_cents|money }}</span>
+        </div>
+        {% else %}
+        <div class="empty">
+            <h2>{% translate "Niets gevonden" %}</h2>
+            <p>{% translate "Geen uitgave past bij je zoekopdracht en filters." %}</p>
+            <div class="row"><a class="btn" href="?">{% translate "Filters wissen" %}</a></div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+<p class="small muted" style="margin-top:var(--s-3);display:flex;gap:6px;align-items:center"><svg class="i i-sm" aria-hidden="true"><use href="#paperclip"></use></svg>{% translate "betekent dat er een bonnetje bij de uitgave zit." %}</p>
+{% endif %}
+{% endblock %}

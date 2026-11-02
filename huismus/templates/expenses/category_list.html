@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Categorieën" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <a class="back" href="{% url 'expenses:list' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Uitgaven" %}</a>
+        <h1>{% translate "Categorieën" %}</h1>
+        <p class="lede">{% translate "De volgorde bepaalt hoe categorieën in keuzelijsten en in het jaaroverzicht staan." %}</p>
+    </div>
+</div>
+
+<section class="card">
+    {% if categories %}
+    <div class="table-wrap">
+        <table class="table stackable">
+            <thead>
+                <tr>
+                    <th>{% translate "Naam" %}</th>
+                    <th class="r">{% translate "Volgorde" %}</th>
+                    <th class="r">{% translate "Uitgaven" %}</th>
+                    <th class="r"><span class="sr-only">{% translate "Acties" %}</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                {% if category.pk == editing_pk %}
+                {% comment %}Inline edit row: the inputs sit in table cells and reach
+                their form through the form= attribute.{% endcomment %}
+                <tr class="is-editing">
+                    <td data-cell="primary">
+                        <form id="cat-{{ category.pk }}" method="post" action="{% url 'expenses:category_edit' category.pk %}">{% csrf_token %}</form>
+                        <label class="sr-only" for="cat-{{ category.pk }}-name">{% translate "Naam" %}</label>
+                        <input id="cat-{{ category.pk }}-name" form="cat-{{ category.pk }}" class="input input-sm" name="name" value="{{ edit_form.name.value|default:'' }}" required autofocus{% if edit_form.name.errors %} aria-invalid="true"{% endif %}>
+                        {% for error in edit_form.name.errors %}<p class="error"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>{{ error }}</p>{% endfor %}
+                    </td>
+                    <td data-cell="order" class="r">
+                        <label class="sr-only" for="cat-{{ category.pk }}-order">{% translate "Volgorde" %}</label>
+                        <input id="cat-{{ category.pk }}-order" form="cat-{{ category.pk }}" class="input input-sm order num" name="sort_order" inputmode="numeric" value="{{ edit_form.sort_order.value|default_if_none:'' }}">
+                    </td>
+                    <td data-cell="secondary" class="r num muted">{% blocktranslate count count=category.expense_count %}{{ count }} uitgave{% plural %}{{ count }} uitgaven{% endblocktranslate %}</td>
+                    <td data-cell="action" class="r w-min">
+                        <div class="row" style="gap:4px;flex-wrap:nowrap">
+                            <a class="btn btn-ghost btn-sm" href="{% url 'expenses:category_list' %}">{% translate "Annuleren" %}</a>
+                            <button class="btn btn-primary btn-sm" type="submit" form="cat-{{ category.pk }}">{% translate "Opslaan" %}</button>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td data-cell="primary">{{ category.name }}</td>
+                    <td data-cell="hide" class="r num">{{ category.sort_order }}</td>
+                    <td data-cell="secondary" class="r num muted">{% if category.expense_count %}{% blocktranslate count count=category.expense_count %}{{ count }} uitgave{% plural %}{{ count }} uitgaven{% endblocktranslate %}{% else %}{% translate "geen uitgaven" %}{% endif %}</td>
+                    <td data-cell="action" class="r w-min">
+                        <div class="row" style="gap:4px;flex-wrap:nowrap">
+                            <a class="btn btn-ghost btn-sm" href="?bewerk={{ category.pk }}"><svg class="i i-sm" aria-hidden="true"><use href="#edit"></use></svg>{% translate "Bewerken" %}</a>
+                            {% if category.expense_count %}
+                            <button type="button" class="btn btn-ghost btn-sm btn-icon" style="opacity:.55" command="show-modal" commandfor="niet-verwijderen"
+                                    aria-label="{% blocktranslate with name=category.name %}{{ name }} verwijderen: niet mogelijk, er horen uitgaven bij{% endblocktranslate %}"
+                                    title="{% translate 'Er horen uitgaven bij, dus verwijderen kan niet' %}"><svg class="i i-sm" aria-hidden="true"><use href="#trash"></use></svg></button>
+                            {% else %}
+                            <button type="button" class="btn btn-danger-quiet btn-sm btn-icon" command="show-modal" commandfor="verwijder-{{ category.pk }}"
+                                    aria-label="{% blocktranslate with name=category.name %}{{ name }} verwijderen{% endblocktranslate %}"><svg class="i i-sm" aria-hidden="true"><use href="#trash"></use></svg></button>
+                            <dialog class="dialog" id="verwijder-{{ category.pk }}" aria-labelledby="verwijder-{{ category.pk }}-titel" style="text-align:left">
+                                <form method="post" action="{% url 'expenses:category_delete' category.pk %}">
+                                    {% csrf_token %}
+                                    <div class="dialog-body">
+                                        <div class="dialog-icon is-danger"><svg class="i" aria-hidden="true"><use href="#trash"></use></svg></div>
+                                        <h2 id="verwijder-{{ category.pk }}-titel">{% blocktranslate with name=category.name %}Categorie „{{ name }}” verwijderen?{% endblocktranslate %}</h2>
+                                        <p class="muted">{% translate "Er horen geen uitgaven bij deze categorie." %}</p>
+                                    </div>
+                                    <div class="dialog-foot">
+                                        <button type="button" class="btn" command="close" commandfor="verwijder-{{ category.pk }}">{% translate "Annuleren" %}</button>
+                                        <button type="submit" class="btn btn-danger">{% translate "Verwijderen" %}</button>
+                                    </div>
+                                </form>
+                            </dialog>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty"><h2>{% translate "Nog geen categorieën" %}</h2><p>{% translate "Voeg hieronder je eerste categorie toe, bijvoorbeeld Software of Reiskosten." %}</p></div>
+    {% endif %}
+    <form class="card-foot row" method="post" action="{% url 'expenses:category_list' %}" style="gap:var(--s-2);padding:var(--s-3) var(--s-4)">
+        {% csrf_token %}
+        <label class="sr-only" for="cat-nieuw">{% translate "Nieuwe categorie" %}</label>
+        <input id="cat-nieuw" class="input input-sm" name="name" required placeholder="{% translate 'Nieuwe categorie, bijvoorbeeld Verzekeringen' %}" style="flex:1;min-width:200px"{% if form.name.errors %} aria-invalid="true" aria-describedby="cat-nieuw-err"{% endif %}>
+        <button class="btn btn-secondary btn-sm" type="submit"><svg class="i i-sm" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Toevoegen" %}</button>
+        {% for error in form.name.errors %}<p class="error" id="cat-nieuw-err" style="flex-basis:100%"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>{{ error }}</p>{% endfor %}
+    </form>
+</section>
+
+<div class="flash flash-info" style="margin-top:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><div class="flash-body small">{% translate "Geef die uitgaven eerst een andere categorie, of geef deze categorie een andere naam. Zo raakt geen uitgave zijn categorie kwijt." %}</div></div>
+
+<dialog class="dialog" id="niet-verwijderen" aria-labelledby="niet-verwijderen-titel">
+    <div class="dialog-body">
+        <div class="dialog-icon"><svg class="i" aria-hidden="true"><use href="#info"></use></svg></div>
+        <h2 id="niet-verwijderen-titel">{% translate "Deze categorie heeft uitgaven" %}</h2>
+        <p class="muted">{% translate "Geef die uitgaven eerst een andere categorie, of geef deze categorie een andere naam. Zo raakt geen uitgave zijn categorie kwijt." %}</p>
+    </div>
+    <div class="dialog-foot"><button type="button" class="btn btn-primary" command="close" commandfor="niet-verwijderen">{% translate "Begrepen" %}</button></div>
+</dialog>
+{% endblock %}

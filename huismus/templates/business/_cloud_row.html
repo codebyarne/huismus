@@ -1,0 +1,23 @@
+{% load i18n backups %}
+{% comment %}One cloud service on the Back-ups overview (backups.html): service, name, icon, url_name. One service at a time (huismus-intern/besluiten.md, 2026-10-31); the other row then says so, without a button.{% endcomment %}
+{% with mine=cloud.service %}
+<div class="file-item" id="plek-{{ service }}">
+    <span class="f-icon"><svg class="i" aria-hidden="true"><use href="#{{ icon }}"></use></svg></span>
+    <span>
+        <span class="f-name">{{ name }}{% if mine == service %} {% if cloud_failure is not None %}<span class="pill pill-overdue">{% translate "Mislukt" %}</span>{% elif cloud_ready %}<span class="pill pill-final">{% translate "Aan" context "back-upplek staat aan" %}</span>{% endif %}{% endif %}</span>
+        <span class="f-meta" style="display:block">
+        {% if mine == service %}
+            {% if not cloud_ready %}<span id="cloud-niet-actief">{% translate "Nog niet actief: bewaar eerst je herstelcode." %} <a href="{% url 'business:backups_code' %}">{% translate "Herstelcode bewaren" %} →</a></span>
+            {% elif uploading %}<span id="cloud-bezig"><span class="spinner" aria-hidden="true"></span>{% translate "Bezig met een back-up…" %}</span>
+            {% elif cloud_failure is not None %}{% blocktranslate with service=name %}De laatste back-up kon niet naar {{ service }}.{% endblocktranslate %} {{ cloud_failure }}
+            {% elif cloud.last_success %}{% blocktranslate with moment=cloud.last_success_at|moment size=cloud.last_size|filesizeformat %}Laatste back-up {{ moment }} · {{ size }}, versleuteld{% endblocktranslate %}
+            {% else %}{% translate "Nog geen back-up." %}{% endif %}
+        {% elif mine %}{% blocktranslate with other=cloud.service_label this=name %}Ontkoppel eerst {{ other }} om {{ this }} te gebruiken.{% endblocktranslate %}
+        {% elif service == "dropbox" %}{% translate "Alleen in de map Apps › Huismus" %}
+        {% else %}Nextcloud, kDrive, Koofr, Hetzner Storage Box, pCloud …{% endif %}
+        </span>
+    </span>
+    {% if mine == service %}<a class="btn btn-secondary btn-sm" href="{% url url_name %}">{% translate "Beheren" %}</a>
+    {% elif not mine %}<a class="btn btn-secondary btn-sm" href="{% url url_name %}">{% if service == "dropbox" %}{% translate "Koppelen" %}{% else %}{% translate "Instellen" %}{% endif %}</a>{% endif %}
+</div>
+{% endwith %}

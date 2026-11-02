@@ -1,0 +1,12 @@
+{% load i18n forms %}
+{% comment %}One line of an expense: a form of ExpenseLineFormSet, or its
+empty_form (with __prefix__) for "Regel toevoegen".{% endcomment %}
+<fieldset class="fieldset expense-line" style="padding-top:var(--s-4);border-top:1px solid var(--border)">
+    <legend class="sr-only">{% translate "Regel" %}</legend>
+    {{ line_form.id }}
+    {% field line_form.description span=4 optional=True %}
+    {% field line_form.category span=2 %}
+    {% field line_form.amount_cents span=2 money=True %}
+    {% field line_form.vat_info_cents span=2 money=True optional=True %}
+    {% if line_form.instance.pk %}{% translate "Regel verwijderen" as delete_label %}{% field line_form.DELETE span=2 label=delete_label %}{% endif %}
+</fieldset>

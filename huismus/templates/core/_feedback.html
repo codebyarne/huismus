@@ -1,0 +1,39 @@
+{% load i18n forms %}
+{% comment %}Hoe gebruik je Huismus? (huismus/core/feedback_views.py). place: "welkom" (the done page of the step-by-step start) or "hulp" (the help page Feedback geven). On the done page the question goes once it is sent or skipped; on Hulp it stays, to send again. "Eerste klant toevoegen" stays the only primary button on the done page (huismus-intern/besluiten.md, 2026-11-02).{% endcomment %}
+<section class="card card-pad" id="vertel" style="margin-top:var(--s-6)">
+    <h2 style="margin-bottom:var(--s-2)">{% translate "Hoe gebruik je Huismus?" %}</h2>
+    {% if feedback_just_sent %}
+    <p class="help" id="vertel-verstuurd" role="status">{% translate "Verstuurd. Dank je wel!" %}</p>
+    {% elif feedback_preview %}
+    <p class="help" style="margin-bottom:var(--s-4)">{% translate "Dit gaat naar de appbouwer:" %}</p>
+    <dl class="doc-meta" id="vertel-wat-er-gaat" style="margin-bottom:var(--s-4)">
+        {% for label, value in feedback_outgoing %}<dt>{{ label }}</dt><dd style="white-space:pre-line;overflow-wrap:anywhere">{{ value|default:"—" }}</dd>{% endfor %}
+    </dl>
+    {% if feedback_failed %}<p class="error" id="vertel-mislukt" role="alert" style="margin-bottom:var(--s-4)">{% translate "Versturen lukte niet. Kijk of je internet hebt en probeer het nog eens." %}</p>{% endif %}
+    <form method="post" action="{% url 'feedback' %}">
+        {% csrf_token %}
+        <input type="hidden" name="plek" value="{{ place }}">
+        {% for field in feedback_form %}<input type="hidden" name="{{ field.html_name }}" value="{{ field.value|default:'' }}">{% endfor %}
+        <div class="row" style="gap:var(--s-3);flex-wrap:wrap">
+            <button class="btn btn-secondary" type="submit" name="versturen">{% translate "Versturen" %}</button>
+            <button class="btn btn-ghost" type="submit" name="aanpassen">{% translate "Aanpassen" %}</button>
+        </div>
+    </form>
+    <p class="small muted" style="margin-top:var(--s-3)">{% translate "Pas als je op Versturen drukt, stuurt Huismus dit naar een formulier op arnekrijnsen.com." %}</p>
+    {% else %}
+    {% if place == "welkom" %}<p class="help" style="margin-bottom:var(--s-4)">{% translate "Huismus houdt niet bij wie het gebruikt. Vertel het de appbouwer als je wilt. Alleen de eerste vraag is nodig." %}</p>{% endif %}
+    <form method="post" action="{% url 'feedback' %}">
+        {% csrf_token %}
+        <input type="hidden" name="plek" value="{{ place }}">
+        <div class="fieldset">
+            {% field feedback_form.organisation span=6 %}
+            {% field feedback_form.wish span=6 optional=True %}
+            {% field feedback_form.email span=6 optional=True %}
+        </div>
+        <div class="row" style="gap:var(--s-3);flex-wrap:wrap;margin-top:var(--s-4)">
+            <button class="btn btn-secondary" type="submit">{% translate "Controleer gegevens" %}</button>
+            {% if place == "welkom" %}<button class="btn btn-ghost" type="submit" name="overslaan" formnovalidate>{% translate "Overslaan" %}</button>{% endif %}
+        </div>
+    </form>
+    {% endif %}
+</section>
