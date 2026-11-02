@@ -1,0 +1,13 @@
+{% extends "site/base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Pagina niet gevonden" %} — Huismus{% endblock %}
+{% block main_class %}site-narrow{% endblock %}
+
+{% block content %}
+<section class="hero stack">
+    <h1>{% translate "Pagina niet gevonden" %}</h1>
+    <p class="lede">{% translate "Deze pagina bestaat niet (meer)." %}</p>
+    <p><a href="{{ home_url }}">{% translate "Naar de downloadpagina" %}</a> · <a href="{{ help_index_url }}">{% translate "Hulp" %}</a> · <a href="/en/">English</a></p>
+</section>
+{% endblock %}

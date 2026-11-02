@@ -44,3 +44,4 @@ huismus/locale/*/LC_MESSAGES/*.mo
 # The desktop app (scripts/build-mac.sh)
 /build/
 /dist/
+_site/

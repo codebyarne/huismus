@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-02 15:31+0100\n"
+"POT-Creation-Date: 2026-11-02 16:00+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -4610,4 +4610,125 @@ msgid "Openen"
 msgstr ""
 
 msgid "Draait op je eigen netwerk"
+msgstr ""
+
+msgid "Pagina niet gevonden"
+msgstr ""
+
+msgid "Deze pagina bestaat niet (meer)."
+msgstr ""
+
+msgid "Naar de downloadpagina"
+msgstr ""
+
+msgid ""
+"Offertes, facturen en uitgaven voor zzp’ers met de KOR. Gratis en open "
+"source."
+msgstr ""
+
+msgid "Download"
+msgstr ""
+
+msgid "Broncode"
+msgstr ""
+
+#, python-format
+msgid ""
+"Huismus is gratis en open source, onder de <a "
+"href=\"%(repository)s/blob/main/LICENSE\">AGPL-3.0</a>."
+msgstr ""
+
+msgid "Draai je liever op een Raspberry Pi?"
+msgstr ""
+
+msgid "Alle versies"
+msgstr ""
+
+#, python-format
+msgid ""
+"Uitleg bij Huismus %(version)s. In de app vind je dezelfde uitleg onder "
+"<strong>Hulp</strong>."
+msgstr ""
+
+msgid "Huismus: je facturen, op je eigen laptop"
+msgstr ""
+
+msgid "Je facturen, op je eigen laptop"
+msgstr ""
+
+msgid ""
+"Offertes, facturen en uitgaven voor zzp’ers met de KOR. Gratis en open "
+"source. Je administratie staat op je eigen computer."
+msgstr ""
+
+msgid "Download voor Mac"
+msgstr ""
+
+msgid "Download voor Windows"
+msgstr ""
+
+#, python-format
+msgid ""
+"Versie %(version)s · macOS 14 of nieuwer met een Apple-chip · Windows 10 of "
+"nieuwer"
+msgstr ""
+
+msgid "De eerste keer openen"
+msgstr ""
+
+msgid ""
+"Huismus is een hobbyproject zonder betaalde handtekening van Apple of "
+"Microsoft. Daarom vraagt je computer de eerste keer of je de app vertrouwt. "
+"Daarna niet meer."
+msgstr ""
+
+msgid "Op een Mac"
+msgstr ""
+
+msgid "Open het gedownloade bestand en sleep Huismus naar Apps."
+msgstr ""
+
+msgid ""
+"Open Huismus. Je Mac zegt dat hij het niet kan controleren: klik op "
+"<strong>Gereed</strong>."
+msgstr ""
+
+msgid ""
+"Ga naar <strong>Systeeminstellingen › Privacy en beveiliging</strong> en klik"
+" onderaan op <strong>Toch openen</strong>."
+msgstr ""
+
+msgid "Op Windows"
+msgstr ""
+
+msgid "Open het gedownloade installatiebestand."
+msgstr ""
+
+msgid ""
+"Windows toont \"Windows heeft uw pc beschermd\": klik op <strong>Meer "
+"informatie</strong>."
+msgstr ""
+
+msgid "Klik op <strong>Toch uitvoeren</strong>."
+msgstr ""
+
+msgid "Meer over de desktop-app"
+msgstr ""
+
+msgid "Daarna"
+msgstr ""
+
+msgid "Kom je van Moneybird? Importeer je hele administratie in één keer."
+msgstr ""
+
+msgid "Begin je nieuw? Vul in vier stappen je bedrijfsgegevens in."
+msgstr ""
+
+msgid ""
+"Eerst rondkijken? Kies <strong>Probeer met nepdata</strong>: Huismus vult "
+"zich met verzonnen facturen, die je er met één knop weer uithaalt."
+msgstr ""
+
+msgid ""
+"Kies een map voor je back-ups, bijvoorbeeld in iCloud Drive of OneDrive."
 msgstr ""

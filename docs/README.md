@@ -11,6 +11,17 @@ Geen verwijzingen naar SPEC.md, broncode of GitHub, en geen tekst over wet of
 belasting (`CLAUDE.md`); een link naar een ander onderwerp schrijf je als
 `back-ups.nl.md#kopje`. `tests/core/test_help.py` controleert dat.
 
+Dezelfde bestanden staan ook op de Huismus-site (`huismus.arnekrijnsen.com`),
+met de downloadpagina erbij. Zelf bekijken:
+
+```
+SECRET_KEY=dev DEBUG=true uv run python manage.py build_site _site
+python3 -m http.server 8797 -d _site
+```
+
+Bij elke release zet `.github/workflows/pages.yml` hem online (pas als de repo
+openbaar is). Hoe hij gemaakt wordt: `huismus/core/site.py`.
+
 ## Voor beheerders
 
 - [`deploy.md`](deploy.md): Huismus op de Raspberry Pi uitrollen.

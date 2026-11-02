@@ -1,0 +1,19 @@
+{% extends "site/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ page.title }} — Huismus{% endblock %}
+{% block main_class %}site-narrow{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <a class="small" href="{{ help_index_url }}">← {% translate "Hulp" %}</a>
+        <h1>{{ page.title }}</h1>
+    </div>
+</div>
+
+{% comment %}Markdown from docs/hulp/, in the repository: trusted, rendered by core.help.{% endcomment %}
+<article class="card card-pad help-text">
+    {{ page.html|safe }}
+</article>
+{% endblock %}

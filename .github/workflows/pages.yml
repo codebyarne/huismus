@@ -1,0 +1,72 @@
+name: Site
+
+# The Huismus site (huismus.arnekrijnsen.com) on GitHub Pages: the download
+# page and the help, built from the files of the release (huismus/core/site.py,
+# huismus-intern/besluiten.md, 2026-10-30). After every release that put both
+# apps online, so the download buttons point at files that exist. Not on
+# `release: published`: release.yml publishes with the workflow's own token,
+# and GitHub starts no workflow for that. By hand (workflow_dispatch) it builds
+# the site from main, for a fix to the help without a new release.
+#
+# GitHub Pages needs a public repository on a free account, so until the
+# repository is public this workflow only builds the site and publishes
+# nothing (huismus-intern/openbaar-maken.md).
+on:
+  workflow_run:
+    workflows: [Release]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    # A release by tag that worked; the release's trial build by hand publishes nothing.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - uses: astral-sh/setup-uv@v3
+        with:
+          version: "0.12.18"
+
+      - name: Install Python, dependencies and gettext
+        run: |
+          uv python install
+          uv sync --locked --no-dev
+          sudo apt-get update && sudo apt-get install -y gettext
+
+      - name: Build the site
+        env:
+          SECRET_KEY: site-build-only
+        run: |
+          uv run python manage.py compilemessages --ignore=.venv
+          uv run python manage.py build_site _site
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    if: ${{ !github.event.repository.private }}
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
