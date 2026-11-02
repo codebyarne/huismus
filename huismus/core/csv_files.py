@@ -37,6 +37,16 @@ def _decimal(value: Decimal) -> str:
     return text.replace(".", ",")
 
 
+# A cell starting with one of these is a formula to Excel and Numbers.
+# Supplier names and descriptions can come from an import, so text that
+# starts like this gets a ' in front: the spreadsheet shows it as text.
+_FORMULA_START = ("=", "+", "-", "@", "\t", "\r")
+
+
+def _text(value: str) -> str:
+    return "'" + value if value.startswith(_FORMULA_START) else value
+
+
 def _cell(value) -> str:
     if value is None:
         return ""
@@ -46,6 +56,8 @@ def _cell(value) -> str:
         return _decimal(value)
     if isinstance(value, date):
         return value.isoformat()
+    if isinstance(value, str):
+        return _text(value)
     return str(value)
 
 

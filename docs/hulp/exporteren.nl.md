@@ -51,6 +51,9 @@ bedragen ("1234,56"), zonder punt voor de duizendtallen. Datums staan als
 Engelse spreadsheet vraagt soms welk scheidingsteken je wilt: kies dan de
 puntkomma.
 
+Begint een tekst met `=`, `+`, `-` of `@`, dan zet Huismus er een `'` voor.
+Anders ziet een spreadsheet het als formule en voert die uit.
+
 Een export is geen back-up. Een back-up zet je terug in Huismus; een export
 is om je gegevens ergens anders te gebruiken. Hoe back-ups werken, lees je
 bij [Back-ups](back-ups.nl.md).

