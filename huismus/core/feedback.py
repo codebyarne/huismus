@@ -33,8 +33,11 @@ logger = logging.getLogger("huismus.feedback")
 # The form "Huismus: vertel wie je bent" on the maker's site: Contact Form 7,
 # form 2943 on the page /huismus-vertel/ (2939). Its REST endpoint wants the
 # form's unit tag on that page. A new form on the site means new numbers here.
-# The site lets this form skip reCAPTCHA for a User-Agent "Huismus/…" (plugin
-# Huismus-formulier, huismus-intern/wordpress/).
+# The site lets this form skip reCAPTCHA for a User-Agent "Huismus/<version>"
+# (plugin Huismus-formulier, huismus-intern/wordpress/), but only when the
+# request looks exactly like this one (the same version in "versie", a known
+# "taal" and "gebruik") and only a few times an hour: the User-Agent is public,
+# so anyone could copy it. Change those fields here, change the plugin too.
 FORM_ID = 2943
 PAGE_ID = 2939
 SEND_URL = (
