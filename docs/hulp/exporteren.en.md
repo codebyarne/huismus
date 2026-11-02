@@ -51,6 +51,9 @@ The CSVs use a semicolon between columns and a comma in amounts
 Excel and Numbers in Dutch open them right away. A spreadsheet in English
 may ask which separator to use: choose the semicolon.
 
+If a text starts with `=`, `+`, `-` or `@`, Huismus puts a `'` in front.
+Otherwise a spreadsheet takes it for a formula and runs it.
+
 An export isn't a backup. You restore a backup into Huismus; an export is
 for using your data somewhere else. How backups work is explained in
 [Backups](back-ups.en.md).
