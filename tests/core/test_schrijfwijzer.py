@@ -48,8 +48,8 @@ FORBIDDEN = {
     ],
 }
 
-# Text a help page quotes from another program, word for word. It's not ours
-# to rewrite, so it doesn't count.
+# Text a help page or the site's download page quotes from another program,
+# word for word. It's not ours to rewrite, so it doesn't count.
 QUOTED_FROM_ELSEWHERE = ['"Windows heeft uw pc beschermd"']
 
 # One line of a .po entry: a keyword with a string, e.g. msgid "Opslaan" or
@@ -101,6 +101,8 @@ def _offences(language: str, texts: list[str]) -> list[str]:
 def test_ui_texts_follow_the_writing_guide(language):
     texts = _po_texts(language)
     assert ("Opslaan" if language == "nl" else "Save") in texts, "the .po file was not read"
+    for quote in QUOTED_FROM_ELSEWHERE:
+        texts = [text.replace(quote, "") for text in texts]
     assert _offences(language, texts) == []
 
 

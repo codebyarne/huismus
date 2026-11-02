@@ -1,0 +1,46 @@
+{% extends "site/base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Huismus: je facturen, op je eigen laptop" %}{% endblock %}
+{% block main_class %}site-narrow{% endblock %}
+
+{% block content %}
+{% comment %}Design D3, docs/design/ronde-3/Download.dc.html (huismus-intern/besluiten.md, 2026-10-28).{% endcomment %}
+<section class="hero stack">
+    <h1>{% translate "Je facturen, op je eigen laptop" %}</h1>
+    <p class="lede">{% translate "Offertes, facturen en uitgaven voor zzp’ers met de KOR. Gratis en open source. Je administratie staat op je eigen computer." %}</p>
+    <div class="downloads">
+        <a class="btn btn-primary btn-lg" href="{{ mac_url }}">{% translate "Download voor Mac" %}</a>
+        <a class="btn btn-lg" href="{{ windows_url }}">{% translate "Download voor Windows" %}</a>
+    </div>
+    <p class="small muted">{% blocktranslate %}Versie {{ version }} · macOS 14 of nieuwer met een Apple-chip · Windows 10 of nieuwer{% endblocktranslate %}</p>
+</section>
+
+<section class="card card-pad help-text">
+    <h2 id="eerste-keer">{% translate "De eerste keer openen" %}</h2>
+    <p class="muted">{% translate "Huismus is een hobbyproject zonder betaalde handtekening van Apple of Microsoft. Daarom vraagt je computer de eerste keer of je de app vertrouwt. Daarna niet meer." %}</p>
+    <h3>{% translate "Op een Mac" %}</h3>
+    <ol>
+        <li>{% translate "Open het gedownloade bestand en sleep Huismus naar Apps." %}</li>
+        <li>{% blocktranslate %}Open Huismus. Je Mac zegt dat hij het niet kan controleren: klik op <strong>Gereed</strong>.{% endblocktranslate %}</li>
+        <li>{% blocktranslate %}Ga naar <strong>Systeeminstellingen › Privacy en beveiliging</strong> en klik onderaan op <strong>Toch openen</strong>.{% endblocktranslate %}</li>
+    </ol>
+    <h3>{% translate "Op Windows" %}</h3>
+    <ol>
+        <li>{% translate "Open het gedownloade installatiebestand." %}</li>
+        <li>{% blocktranslate %}Windows toont "Windows heeft uw pc beschermd": klik op <strong>Meer informatie</strong>.{% endblocktranslate %}</li>
+        <li>{% blocktranslate %}Klik op <strong>Toch uitvoeren</strong>.{% endblocktranslate %}</li>
+    </ol>
+    <p class="small"><a href="{{ desktop_help_url }}">{% translate "Meer over de desktop-app" %} →</a></p>
+</section>
+
+<section class="card card-pad help-text">
+    <h2>{% translate "Daarna" %}</h2>
+    <ul>
+        <li>{% translate "Kom je van Moneybird? Importeer je hele administratie in één keer." %}</li>
+        <li>{% translate "Begin je nieuw? Vul in vier stappen je bedrijfsgegevens in." %}</li>
+        <li>{% blocktranslate %}Eerst rondkijken? Kies <strong>Probeer met nepdata</strong>: Huismus vult zich met verzonnen facturen, die je er met één knop weer uithaalt.{% endblocktranslate %}</li>
+        <li>{% translate "Kies een map voor je back-ups, bijvoorbeeld in iCloud Drive of OneDrive." %}</li>
+    </ul>
+</section>
+{% endblock %}

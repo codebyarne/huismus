@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-02 15:31+0100\n"
+"POT-Creation-Date: 2026-11-02 16:00+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -5002,6 +5002,148 @@ msgstr "Open"
 msgid "Draait op je eigen netwerk"
 msgstr "Runs on your own network"
 
+msgid "Pagina niet gevonden"
+msgstr "Page not found"
+
+msgid "Deze pagina bestaat niet (meer)."
+msgstr "This page doesn't exist (anymore)."
+
+msgid "Naar de downloadpagina"
+msgstr "To the download page"
+
+msgid ""
+"Offertes, facturen en uitgaven voor zzp’ers met de KOR. Gratis en open "
+"source."
+msgstr ""
+"Quotes, invoices and expenses for Dutch freelancers using the KOR. Free and "
+"open source."
+
+msgid "Download"
+msgstr "Download"
+
+msgid "Broncode"
+msgstr "Source code"
+
+#, python-format
+msgid ""
+"Huismus is gratis en open source, onder de <a "
+"href=\"%(repository)s/blob/main/LICENSE\">AGPL-3.0</a>."
+msgstr ""
+"Huismus is free and open source, under the <a "
+"href=\"%(repository)s/blob/main/LICENSE\">AGPL-3.0</a>."
+
+msgid "Draai je liever op een Raspberry Pi?"
+msgstr "Rather run it on a Raspberry Pi?"
+
+msgid "Alle versies"
+msgstr "All versions"
+
+#, python-format
+msgid ""
+"Uitleg bij Huismus %(version)s. In de app vind je dezelfde uitleg onder "
+"<strong>Hulp</strong>."
+msgstr ""
+"Help for Huismus %(version)s. The app has the same help under "
+"<strong>Help</strong>."
+
+msgid "Huismus: je facturen, op je eigen laptop"
+msgstr "Huismus: your invoices, on your own laptop"
+
+msgid "Je facturen, op je eigen laptop"
+msgstr "Your invoices, on your own laptop"
+
+msgid ""
+"Offertes, facturen en uitgaven voor zzp’ers met de KOR. Gratis en open "
+"source. Je administratie staat op je eigen computer."
+msgstr ""
+"Quotes, invoices and expenses for Dutch freelancers using the KOR. Free and "
+"open source. Your records live on your own computer."
+
+msgid "Download voor Mac"
+msgstr "Download for Mac"
+
+msgid "Download voor Windows"
+msgstr "Download for Windows"
+
+#, python-format
+msgid ""
+"Versie %(version)s · macOS 14 of nieuwer met een Apple-chip · Windows 10 of "
+"nieuwer"
+msgstr ""
+"Version %(version)s · macOS 14 or newer with an Apple chip · Windows 10 or "
+"newer"
+
+msgid "De eerste keer openen"
+msgstr "Opening it the first time"
+
+msgid ""
+"Huismus is een hobbyproject zonder betaalde handtekening van Apple of "
+"Microsoft. Daarom vraagt je computer de eerste keer of je de app vertrouwt. "
+"Daarna niet meer."
+msgstr ""
+"Huismus is a hobby project without a paid signature from Apple or Microsoft. "
+"That's why your computer asks the first time whether you trust the app. After"
+" that, it won't."
+
+msgid "Op een Mac"
+msgstr "On a Mac"
+
+msgid "Open het gedownloade bestand en sleep Huismus naar Apps."
+msgstr "Open the downloaded file and drag Huismus to Applications."
+
+msgid ""
+"Open Huismus. Je Mac zegt dat hij het niet kan controleren: klik op "
+"<strong>Gereed</strong>."
+msgstr ""
+"Open Huismus. Your Mac says it can't check it: click <strong>Done</strong>."
+
+msgid ""
+"Ga naar <strong>Systeeminstellingen › Privacy en beveiliging</strong> en klik"
+" onderaan op <strong>Toch openen</strong>."
+msgstr ""
+"Go to <strong>System Settings › Privacy & Security</strong> and click "
+"<strong>Open Anyway</strong> at the bottom."
+
+msgid "Op Windows"
+msgstr "On Windows"
+
+msgid "Open het gedownloade installatiebestand."
+msgstr "Open the downloaded installer."
+
+msgid ""
+"Windows toont \"Windows heeft uw pc beschermd\": klik op <strong>Meer "
+"informatie</strong>."
+msgstr ""
+"Windows shows \"Windows protected your PC\": click <strong>More "
+"info</strong>."
+
+msgid "Klik op <strong>Toch uitvoeren</strong>."
+msgstr "Click <strong>Run anyway</strong>."
+
+msgid "Meer over de desktop-app"
+msgstr "More about the desktop app"
+
+msgid "Daarna"
+msgstr "Then"
+
+msgid "Kom je van Moneybird? Importeer je hele administratie in één keer."
+msgstr "Coming from Moneybird? Import all your records in one go."
+
+msgid "Begin je nieuw? Vul in vier stappen je bedrijfsgegevens in."
+msgstr "Starting fresh? Fill in your business details in four steps."
+
+msgid ""
+"Eerst rondkijken? Kies <strong>Probeer met nepdata</strong>: Huismus vult "
+"zich met verzonnen facturen, die je er met één knop weer uithaalt."
+msgstr ""
+"Want to look around first? Choose <strong>Try with sample data</strong>: "
+"Huismus fills itself with made-up invoices, which one button takes out again."
+
+msgid ""
+"Kies een map voor je back-ups, bijvoorbeeld in iCloud Drive of OneDrive."
+msgstr ""
+"Choose a folder for your backups, for example in iCloud Drive or OneDrive."
+
 #~ msgctxt "export file"
 #~ msgid "contacten"
 #~ msgstr "customers"
@@ -5200,9 +5342,6 @@ msgstr "Runs on your own network"
 
 #~ msgid "Download de <strong>PDF's</strong> van je facturen als zip."
 #~ msgstr "Download the <strong>PDFs</strong> of your invoices as a zip."
-
-#~ msgid "Exporteer je <strong>offertes</strong>."
-#~ msgstr "Export your <strong>quotes</strong>."
 
 #~ msgid "Ontkoppeld."
 #~ msgstr "Disconnected."

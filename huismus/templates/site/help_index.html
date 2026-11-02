@@ -1,0 +1,25 @@
+{% extends "site/base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Hulp" %} — Huismus{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <h1>{% translate "Hulp" %}</h1>
+        <p class="lede">{% blocktranslate %}Uitleg bij Huismus {{ version }}. In de app vind je dezelfde uitleg onder <strong>Hulp</strong>.{% endblocktranslate %}</p>
+    </div>
+</div>
+
+{% comment %}The cards of /hulp/ in the app (core/help_index.html).{% endcomment %}
+<ul class="settings-topics">
+    {% for url, title, summary in topics %}
+    <li>
+        <a class="card card-pad" href="{{ url }}" aria-label="{{ title }}">
+            <h2>{{ title }}</h2>
+            <span class="small muted topic-intro">{{ summary }}</span>
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
