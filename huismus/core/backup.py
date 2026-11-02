@@ -97,41 +97,49 @@ def _write_archive(archive_path: Path, output_dir: Path, data_dir: Path, db_name
             # written right now.
             if item.resolve() == output_dir.resolve() or item.name == FALLBACK_DIR_NAME:
                 continue
-            # A restore cut off halfway leaves its unpacked archive behind.
-            if item.name.startswith(RESTORING_PREFIX):
-                continue
-            # Uploads waiting between an import's dry run and its commit
-            # (imports.staging): temporary, and removed within a day.
-            if item.name == "import-staging":
-                continue
-            # The mail password (business.smtp): a backup is copied to
-            # other places and should not carry it. After a restore on a
-            # new machine it is typed in again.
-            if item.name.startswith(smtp.password_path().name):
-                continue
-            # Likewise the generated SECRET_KEY (config.secret_key), and a
-            # temporary file of it left by a start that was cut off.
-            if item.name.startswith(secret_key.FILE_NAME):
-                continue
-            # And the AI connection's key (assistants.key): a restored
-            # backup should not let an old key in.
-            if item.name.startswith(assistant_key.FILE_NAME):
-                continue
-            # The link to a cloud service and the recovery code
-            # (core.cloud_backups): secrets of this installation, and a
-            # backup encrypted with a code must never carry that code.
-            if item.name.startswith(CLOUD_FILE_PREFIX):
-                continue
-            # The desktop app's backup folder and status, and its update
-            # setting, belong to this computer, not to the administration
-            # (core.auto_backups, core.updates).
-            if item.name.startswith((STATUS_FILE_NAME, UPDATE_STATUS_FILE_NAME)):
-                continue
-            # The way back from the sample data is not part of any
-            # administration (core.sample_data).
-            if item.name == BEFORE_SAMPLE_DATA_FILE_NAME:
+            if _belongs_to_this_installation(item.name):
                 continue
             tar.add(item, arcname=item.name)
+
+
+def _belongs_to_this_installation(name: str) -> bool:
+    """Files in DATA_DIR that are this installation's own, not the
+    administration's: a backup leaves them out, and a restore never takes
+    them from an archive either. Otherwise a crafted "backup" could bring
+    its own cloud link or SECRET_KEY along."""
+    # A restore cut off halfway leaves its unpacked archive behind.
+    if name.startswith(RESTORING_PREFIX):
+        return True
+    # Uploads waiting between an import's dry run and its commit
+    # (imports.staging): temporary, and removed within a day.
+    if name == "import-staging":
+        return True
+    # The mail password (business.smtp): a backup is copied to other places
+    # and should not carry it. After a restore on a new machine it is typed
+    # in again.
+    if name.startswith(smtp.password_path().name):
+        return True
+    # Likewise the generated SECRET_KEY (config.secret_key), and a temporary
+    # file of it left by a start that was cut off.
+    if name.startswith(secret_key.FILE_NAME):
+        return True
+    # And the AI connection's key (assistants.key): a restored backup should
+    # not let an old key in.
+    if name.startswith(assistant_key.FILE_NAME):
+        return True
+    # The link to a cloud service and the recovery code (core.cloud_backups):
+    # secrets of this installation, and a backup encrypted with a code must
+    # never carry that code.
+    if name.startswith(CLOUD_FILE_PREFIX):
+        return True
+    # The desktop app's backup folder and status, and its update setting,
+    # belong to this computer, not to the administration (core.auto_backups,
+    # core.updates).
+    if name.startswith((STATUS_FILE_NAME, UPDATE_STATUS_FILE_NAME)):
+        return True
+    # The way back from the sample data is not part of any administration
+    # (core.sample_data).
+    return name == BEFORE_SAMPLE_DATA_FILE_NAME
 
 
 def restore_backup(archive_path: Path) -> None:
@@ -176,6 +184,8 @@ def restore_backup(archive_path: Path) -> None:
                 # docs/backups.md said to back up into it) must not wipe
                 # it: it holds the backup made just before this restore.
                 if item.name == FALLBACK_DIR_NAME:
+                    continue
+                if _belongs_to_this_installation(item.name):
                     continue
                 # DB_NAME_IN_ARCHIVE only ever differs from db_name under
                 # the pytest test runner, which points DATABASES at

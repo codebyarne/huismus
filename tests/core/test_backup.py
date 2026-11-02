@@ -281,3 +281,39 @@ def test_restoring_unpacks_inside_the_data_dir(settings, tmp_path):
 
     assert unpacked_in == [data]
     assert not [p for p in data.iterdir() if p.name.startswith(".huismus-restoring-")]
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        "secret-key",
+        "smtp-password",
+        "mcp-key",
+        "cloud-backup.json",
+        "cloud-backup-code",
+        "backup-status.json",
+        "update-status.json",
+        "voor-nepdata.tar.gz",
+        "import-staging",
+    ],
+)
+def test_a_restore_never_takes_what_a_backup_leaves_out(settings, tmp_path, name):
+    # A crafted archive ("here's your backup") with its own cloud link or
+    # SECRET_KEY must not set up this installation: those files belong to
+    # the computer, not to the administration, and a backup never has them.
+    data = tmp_path / "data"
+    data.mkdir()
+    settings.DATA_DIR = data
+    (data / name).write_text("van deze installatie")
+    honest = create_backup(tmp_path / "out")
+    crafted = tmp_path / "nagemaakt.tar.gz"
+    planted = tmp_path / "planted"
+    planted.write_text("van een ander")
+    with tarfile.open(honest) as source, tarfile.open(crafted, "w:gz") as tar:
+        for member in source.getmembers():
+            tar.addfile(member, source.extractfile(member))
+        tar.add(planted, arcname=name)
+
+    restore_backup(crafted)
+
+    assert (data / name).read_text() == "van deze installatie"
