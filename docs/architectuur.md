@@ -44,6 +44,9 @@ flowchart TB
     subgraph assistants
         MCP["geen modellen<br/>(MCP op /mcp)"]
     end
+    subgraph reports
+        YearOverview["geen modellen<br/>(jaaroverzicht, alleen lezen)"]
+    end
     User(["Django User"])
 
     Document --> |contact| Contact
@@ -98,7 +101,8 @@ uit het diagram haalt:
 | `business` | Instellingen: bedrijfsgegevens, de KOR-instellingen van de gebruiker (aan/uit, de tekst op de factuur), nummerformaten, logo, mailserver. | `models.py` (`Settings`), `topics.py`, `kor_limit.py`, `smtp.py`, `svg_sanitize.py` |
 | `contacts` | Klanten en hun contactpersonen. | `models.py`, `numbering.py` (klantnummers) |
 | `documents` | Offertes, facturen en creditnota's: bewerken, uitgeven, pdf, betalingen, mailen. Het hart van Huismus. | `totals.py`, `issuing.py`, `numbering.py`, `reopening.py`, `snapshots.py`, `quoting.py`, `drafts.py`, `pdf.py`, `mailing.py` |
-| `expenses` | Uitgaven met regels (elk een eigen categorie, zoals in Moneybird), categorieën, bonnetjes, het jaaroverzicht. | `models.py`, `lines.py` (de regels en het totaal van een uitgave), `year_overview.py`, `receipts.py` |
+| `expenses` | Uitgaven met regels (elk een eigen categorie, zoals in Moneybird), categorieën, bonnetjes. | `models.py`, `lines.py` (de regels en het totaal van een uitgave), `receipts.py` |
+| `reports` | Rapporten, nu alleen het jaaroverzicht: omzet, kosten en winst per kwartaal en per categorie, de KOR-grens, CSV. Alleen lezen. | `year_overview.py`, `views.py` |
 | `imports` | De Moneybird-import: herkennen, inlezen, proefdraai, doorvoeren, en bewaren wat er in de export stond. | `pipeline.py`, `detect.py`, `columns.py` (waar elke kolom heen gaat), `archive.py` (ruwe rijen en de originele export), `contacts.py`, `invoices.py`, `quotes.py`, `expenses.py` (inkomende documenten → uitgaven met bonnetjes), `commit.py`, `staging.py` |
 | `assistants` | De koppeling met AI-assistenten via MCP op `/mcp`, en de pagina Instellingen → AI-assistenten. | `protocol.py`, `tools.py`, `key.py`, `views.py` |
 
@@ -109,11 +113,12 @@ tests):
 | --- | --- |
 | `contacts` | `core`, `business`, `documents` |
 | `documents` | `core`, `business`, `contacts` |
-| `expenses` | `core`, `business`, `documents`, `imports` |
+| `expenses` | `core`, `documents` |
+| `reports` | `core`, `business`, `documents`, `expenses` |
 | `imports` | `core`, `business`, `contacts`, `documents` |
-| `assistants` | `core`, `business`, `contacts`, `documents`, `expenses` |
-| `business` | `core`, `documents`, `expenses`, `assistants` |
-| `core` | `business`, `contacts`, `documents`, `expenses`, `assistants` (overzicht, back-ups, export, nepdata) |
+| `assistants` | `core`, `business`, `contacts`, `documents`, `expenses`, `reports` |
+| `business` | `core`, `documents`, `reports`, `assistants` |
+| `core` | `business`, `contacts`, `documents`, `expenses`, `reports`, `assistants` (overzicht, back-ups, export, nepdata) |
 
 Imports binnen een functie tellen mee. Er is dus geen strikte gelaagdheid,
 en er zijn kringen: `business` haalt de MCP-sleutel en de pagina

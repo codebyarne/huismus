@@ -25,8 +25,7 @@ from django.db.models.functions import ExtractQuarter
 from django.utils.translation import gettext_lazy as _
 
 from huismus.documents.models import Document
-
-from .models import Expense, ExpenseLine
+from huismus.expenses.models import Expense, ExpenseLine
 
 
 @dataclass

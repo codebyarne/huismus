@@ -66,7 +66,7 @@ from huismus.documents.vat import default_rate, editor_value
 from huismus.expenses.forms import ExpenseForm, ExpenseLineFormSet
 from huismus.expenses.lines import save_lines
 from huismus.expenses.models import Expense, ExpenseCategory
-from huismus.expenses.year_overview import compute_year_overview
+from huismus.reports.year_overview import compute_year_overview
 
 
 class ToolError(Exception):

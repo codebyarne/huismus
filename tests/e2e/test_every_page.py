@@ -68,7 +68,7 @@ def _pages():
         "/uitgaven/",
         "/uitgaven/nieuw/",
         f"/uitgaven/{_first(Expense.objects, 'expense').pk}/",
-        "/uitgaven/jaaroverzicht/",
+        "/rapporten/jaaroverzicht/",
         "/uitgaven/categorieen/",
         f"/uitgaven/categorieen/?bewerk={_first(ExpenseCategory.objects, 'category').pk}",
         f"/uitgaven/categorieen/{_first(ExpenseCategory.objects, 'category').pk}/",

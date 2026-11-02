@@ -11,10 +11,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from huismus.business.kor_limit import kor_limit_status
-from huismus.core.csv_files import Amount, csv_response
 from huismus.core.models import Attachment
-from huismus.documents.models import Document
 
 from .forms import (
     ExpenseCategoryForm,
@@ -26,7 +23,6 @@ from .forms import (
 from .lines import save_lines
 from .models import Expense, ExpenseCategory, ExpenseLine
 from .receipts import sha256_of
-from .year_overview import CHART_STEPS, chart_step, compute_year_overview
 
 # How many expenses the list shows at first, and how many more each "Meer
 # laden" adds.
@@ -281,90 +277,3 @@ def category_delete(request, pk):
                 ),
             )
     return redirect("expenses:category_list")
-
-
-def _requested_year(request) -> int:
-    try:
-        return int(request.GET.get("jaar", timezone.localdate().year))
-    except ValueError:
-        return timezone.localdate().year
-
-
-@login_required
-def year_overview(request):
-    year = _requested_year(request)
-    overview = compute_year_overview(year)
-
-    # Per-quarter bar chart: bar heights as whole percentages of the axis
-    # (a negative quarter, more credited than invoiced, draws as empty).
-    highest = max(
-        [q.revenue_cents for q in overview.quarters] + [q.expenses_cents for q in overview.quarters]
-    )
-    step = chart_step(highest)
-    axis_cents = step * CHART_STEPS
-
-    def percent(cents):
-        return max(0, cents) * 100 // axis_cents
-
-    bars = [
-        {
-            "quarter": q,
-            "revenue_percent": percent(q.revenue_cents),
-            "expenses_percent": percent(q.expenses_cents),
-        }
-        for q in overview.quarters
-    ]
-    ticks = [step * n for n in range(CHART_STEPS, -1, -1)]
-
-    # Horizontal bars per category, relative to the largest category.
-    largest = max((c.amount_cents for c in overview.by_category), default=0)
-    categories = [
-        {"category": c, "percent": c.amount_cents * 100 // largest if largest else 0}
-        for c in overview.by_category
-    ]
-
-    invoices = Document.objects.filter(status="issued", issue_date__year=year)
-    return render(
-        request,
-        "expenses/year_overview.html",
-        {
-            "overview": overview,
-            "year": year,
-            "this_year": timezone.localdate().year,
-            # None while the KOR is off: then there is no card. The limit set
-            # now, also for earlier years (no history is kept).
-            "kor_limit": kor_limit_status(year),
-            "bars": bars,
-            "ticks": ticks,
-            "categories": categories,
-            "invoice_count": invoices.filter(kind="invoice").count(),
-            "credit_note_count": invoices.filter(kind="credit_note").count(),
-            "expense_count": Expense.objects.filter(date__year=year).count(),
-        },
-    )
-
-
-@login_required
-def year_overview_csv(request):
-    year = _requested_year(request)
-    overview = compute_year_overview(year)
-    rows = [
-        [
-            f"Q{quarter.quarter}",
-            Amount(quarter.revenue_cents),
-            Amount(quarter.expenses_cents),
-            Amount(quarter.profit_cents),
-        ]
-        for quarter in overview.quarters
-    ]
-    rows.append(
-        [
-            _("totaal"),
-            Amount(overview.revenue_cents),
-            Amount(overview.expenses_cents),
-            Amount(overview.profit_cents),
-        ]
-    )
-    return csv_response(
-        f"jaaroverzicht-{year}.csv", [_("kwartaal"), _("omzet"), _("kosten"), _("winst")], rows
-    )

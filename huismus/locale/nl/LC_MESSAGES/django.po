@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-02 16:00+0100\n"
+"POT-Creation-Date: 2026-11-02 16:51+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1890,24 +1890,6 @@ msgid ""
 "categorie, dan kun je hem verwijderen."
 msgstr ""
 
-msgid "totaal"
-msgstr ""
-
-msgid "kwartaal"
-msgstr ""
-
-msgid "omzet"
-msgstr ""
-
-msgid "kosten"
-msgstr ""
-
-msgid "winst"
-msgstr ""
-
-msgid "Zonder categorie"
-msgstr ""
-
 msgid "de klanten"
 msgstr ""
 
@@ -1950,6 +1932,9 @@ msgid ""
 msgstr ""
 
 msgid "subtotaal"
+msgstr ""
+
+msgid "totaal"
 msgstr ""
 
 #, python-format
@@ -2286,6 +2271,21 @@ msgstr[1] ""
 msgid "Import geannuleerd. Er is niets opgeslagen."
 msgstr ""
 
+msgid "kwartaal"
+msgstr ""
+
+msgid "omzet"
+msgstr ""
+
+msgid "kosten"
+msgstr ""
+
+msgid "winst"
+msgstr ""
+
+msgid "Zonder categorie"
+msgstr ""
+
 msgid "Navigatie"
 msgstr ""
 
@@ -2298,10 +2298,10 @@ msgstr ""
 msgid "Overzicht"
 msgstr ""
 
-msgid "Jaaroverzicht"
+msgid "Categorieën"
 msgstr ""
 
-msgid "Categorieën"
+msgid "Rapporten"
 msgstr ""
 
 msgid "Importeren"
@@ -4158,81 +4158,6 @@ msgstr ""
 msgid "betekent dat er een bonnetje bij de uitgave zit."
 msgstr ""
 
-msgid "Vorig jaar"
-msgstr ""
-
-msgid "Volgend jaar"
-msgstr ""
-
-msgid "CSV downloaden"
-msgstr ""
-
-msgid "Omzet"
-msgstr ""
-
-#, python-format
-msgid "%(count)s creditnota"
-msgid_plural "%(count)s creditnota's"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Kosten"
-msgstr ""
-
-msgid "Winst"
-msgstr ""
-
-msgid "omzet min kosten"
-msgstr ""
-
-#, python-format
-msgid "%(revenue)s van %(limit)s"
-msgstr ""
-
-#, python-format
-msgid "Gemeten met je huidige KOR-grens van %(limit)s."
-msgstr ""
-
-msgid "Per kwartaal"
-msgstr ""
-
-msgid "Staafgrafiek omzet en kosten per kwartaal"
-msgstr ""
-
-#, python-format
-msgid "Omzet Q%(q)s: %(amount)s"
-msgstr ""
-
-#, python-format
-msgid "Kosten Q%(q)s: %(amount)s"
-msgstr ""
-
-msgid "Kwartaal"
-msgstr ""
-
-msgid "jan–mrt"
-msgstr ""
-
-msgid "apr–jun"
-msgstr ""
-
-msgid "jul–sep"
-msgstr ""
-
-msgid "okt–dec"
-msgstr ""
-
-msgid "Kosten per categorie"
-msgstr ""
-
-msgid "Je hebt dit jaar geen uitgaven."
-msgstr ""
-
-msgid ""
-"Huismus telt omzet zonder btw, op de factuurdatum, niet op de dag dat er "
-"betaald is. Kosten zijn bruto: wat je echt betaald hebt."
-msgstr ""
-
 #, python-format
 msgid "%(count)s punt om na te lopen"
 msgid_plural "%(count)s punten om na te lopen"
@@ -4612,6 +4537,84 @@ msgstr ""
 msgid "Draait op je eigen netwerk"
 msgstr ""
 
+msgid "Jaaroverzicht"
+msgstr ""
+
+msgid "Vorig jaar"
+msgstr ""
+
+msgid "Volgend jaar"
+msgstr ""
+
+msgid "CSV downloaden"
+msgstr ""
+
+msgid "Omzet"
+msgstr ""
+
+#, python-format
+msgid "%(count)s creditnota"
+msgid_plural "%(count)s creditnota's"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Kosten"
+msgstr ""
+
+msgid "Winst"
+msgstr ""
+
+msgid "omzet min kosten"
+msgstr ""
+
+#, python-format
+msgid "%(revenue)s van %(limit)s"
+msgstr ""
+
+#, python-format
+msgid "Gemeten met je huidige KOR-grens van %(limit)s."
+msgstr ""
+
+msgid "Per kwartaal"
+msgstr ""
+
+msgid "Staafgrafiek omzet en kosten per kwartaal"
+msgstr ""
+
+#, python-format
+msgid "Omzet Q%(q)s: %(amount)s"
+msgstr ""
+
+#, python-format
+msgid "Kosten Q%(q)s: %(amount)s"
+msgstr ""
+
+msgid "Kwartaal"
+msgstr ""
+
+msgid "jan–mrt"
+msgstr ""
+
+msgid "apr–jun"
+msgstr ""
+
+msgid "jul–sep"
+msgstr ""
+
+msgid "okt–dec"
+msgstr ""
+
+msgid "Kosten per categorie"
+msgstr ""
+
+msgid "Je hebt dit jaar geen uitgaven."
+msgstr ""
+
+msgid ""
+"Huismus telt omzet zonder btw, op de factuurdatum, niet op de dag dat er "
+"betaald is. Kosten zijn bruto: wat je echt betaald hebt."
+msgstr ""
+
 msgid "Pagina niet gevonden"
 msgstr ""
 
@@ -4634,8 +4637,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Huismus is gratis en open source, onder de <a "
-"href=\"%(repository)s/blob/main/LICENSE\">AGPL-3.0</a>."
+"Huismus is gratis en open source, onder de <a href=\"%(repository)s/blob/"
+"main/LICENSE\">AGPL-3.0</a>."
 msgstr ""
 
 msgid "Draai je liever op een Raspberry Pi?"
@@ -4694,8 +4697,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Ga naar <strong>Systeeminstellingen › Privacy en beveiliging</strong> en klik"
-" onderaan op <strong>Toch openen</strong>."
+"Ga naar <strong>Systeeminstellingen › Privacy en beveiliging</strong> en "
+"klik onderaan op <strong>Toch openen</strong>."
 msgstr ""
 
 msgid "Op Windows"

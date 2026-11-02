@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-02 16:00+0100\n"
+"POT-Creation-Date: 2026-11-02 16:51+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1999,24 +1999,6 @@ msgstr ""
 "This category still has expenses. Give them another category first, then you "
 "can delete it."
 
-msgid "totaal"
-msgstr "total"
-
-msgid "kwartaal"
-msgstr "quarter"
-
-msgid "omzet"
-msgstr "revenue"
-
-msgid "kosten"
-msgstr "costs"
-
-msgid "winst"
-msgstr "profit"
-
-msgid "Zonder categorie"
-msgstr "No category"
-
 #
 msgid "de klanten"
 msgstr "the customers"
@@ -2066,6 +2048,9 @@ msgstr ""
 
 msgid "subtotaal"
 msgstr "subtotal"
+
+msgid "totaal"
+msgstr "total"
 
 #, python-format
 msgid "Factuur %(number)s"
@@ -2460,6 +2445,21 @@ msgstr[1] "%(count)s expenses"
 msgid "Import geannuleerd. Er is niets opgeslagen."
 msgstr "Import cancelled. Nothing was saved."
 
+msgid "kwartaal"
+msgstr "quarter"
+
+msgid "omzet"
+msgstr "revenue"
+
+msgid "kosten"
+msgstr "costs"
+
+msgid "winst"
+msgstr "profit"
+
+msgid "Zonder categorie"
+msgstr "No category"
+
 msgid "Navigatie"
 msgstr "Navigation"
 
@@ -2472,11 +2472,11 @@ msgstr "Main menu"
 msgid "Overzicht"
 msgstr "Overview"
 
-msgid "Jaaroverzicht"
-msgstr "Year overview"
-
 msgid "Categorieën"
 msgstr "Categories"
+
+msgid "Rapporten"
+msgstr "Reports"
 
 msgid "Importeren"
 msgstr "Import"
@@ -4499,85 +4499,6 @@ msgstr "No expense matches your search and filters."
 msgid "betekent dat er een bonnetje bij de uitgave zit."
 msgstr "means the expense has a receipt."
 
-msgid "Vorig jaar"
-msgstr "Previous year"
-
-msgid "Volgend jaar"
-msgstr "Next year"
-
-msgid "CSV downloaden"
-msgstr "Download CSV"
-
-msgid "Omzet"
-msgstr "Revenue"
-
-#, python-format
-msgid "%(count)s creditnota"
-msgid_plural "%(count)s creditnota's"
-msgstr[0] "%(count)s credit note"
-msgstr[1] "%(count)s credit notes"
-
-msgid "Kosten"
-msgstr "Costs"
-
-msgid "Winst"
-msgstr "Profit"
-
-msgid "omzet min kosten"
-msgstr "revenue minus costs"
-
-#, python-format
-msgid "%(revenue)s van %(limit)s"
-msgstr "%(revenue)s of %(limit)s"
-
-#, python-format
-msgid "Gemeten met je huidige KOR-grens van %(limit)s."
-msgstr "Measured against your current KOR limit of %(limit)s."
-
-msgid "Per kwartaal"
-msgstr "Per quarter"
-
-msgid "Staafgrafiek omzet en kosten per kwartaal"
-msgstr "Bar chart of revenue and costs per quarter"
-
-#, python-format
-msgid "Omzet Q%(q)s: %(amount)s"
-msgstr "Revenue Q%(q)s: %(amount)s"
-
-#, python-format
-msgid "Kosten Q%(q)s: %(amount)s"
-msgstr "Costs Q%(q)s: %(amount)s"
-
-msgid "Kwartaal"
-msgstr "Quarter"
-
-msgid "jan–mrt"
-msgstr "Jan–Mar"
-
-msgid "apr–jun"
-msgstr "Apr–Jun"
-
-msgid "jul–sep"
-msgstr "Jul–Sep"
-
-msgid "okt–dec"
-msgstr "Oct–Dec"
-
-msgid "Kosten per categorie"
-msgstr "Costs per category"
-
-#
-msgid "Je hebt dit jaar geen uitgaven."
-msgstr "You have no expenses this year."
-
-#
-msgid ""
-"Huismus telt omzet zonder btw, op de factuurdatum, niet op de dag dat er "
-"betaald is. Kosten zijn bruto: wat je echt betaald hebt."
-msgstr ""
-"Huismus counts revenue without VAT, on the invoice date, not the day it was "
-"paid. Costs are gross: what you actually paid."
-
 #, python-format
 msgid "%(count)s punt om na te lopen"
 msgid_plural "%(count)s punten om na te lopen"
@@ -5002,6 +4923,88 @@ msgstr "Open"
 msgid "Draait op je eigen netwerk"
 msgstr "Runs on your own network"
 
+msgid "Jaaroverzicht"
+msgstr "Year overview"
+
+msgid "Vorig jaar"
+msgstr "Previous year"
+
+msgid "Volgend jaar"
+msgstr "Next year"
+
+msgid "CSV downloaden"
+msgstr "Download CSV"
+
+msgid "Omzet"
+msgstr "Revenue"
+
+#, python-format
+msgid "%(count)s creditnota"
+msgid_plural "%(count)s creditnota's"
+msgstr[0] "%(count)s credit note"
+msgstr[1] "%(count)s credit notes"
+
+msgid "Kosten"
+msgstr "Costs"
+
+msgid "Winst"
+msgstr "Profit"
+
+msgid "omzet min kosten"
+msgstr "revenue minus costs"
+
+#, python-format
+msgid "%(revenue)s van %(limit)s"
+msgstr "%(revenue)s of %(limit)s"
+
+#, python-format
+msgid "Gemeten met je huidige KOR-grens van %(limit)s."
+msgstr "Measured against your current KOR limit of %(limit)s."
+
+msgid "Per kwartaal"
+msgstr "Per quarter"
+
+msgid "Staafgrafiek omzet en kosten per kwartaal"
+msgstr "Bar chart of revenue and costs per quarter"
+
+#, python-format
+msgid "Omzet Q%(q)s: %(amount)s"
+msgstr "Revenue Q%(q)s: %(amount)s"
+
+#, python-format
+msgid "Kosten Q%(q)s: %(amount)s"
+msgstr "Costs Q%(q)s: %(amount)s"
+
+msgid "Kwartaal"
+msgstr "Quarter"
+
+msgid "jan–mrt"
+msgstr "Jan–Mar"
+
+msgid "apr–jun"
+msgstr "Apr–Jun"
+
+msgid "jul–sep"
+msgstr "Jul–Sep"
+
+msgid "okt–dec"
+msgstr "Oct–Dec"
+
+msgid "Kosten per categorie"
+msgstr "Costs per category"
+
+#
+msgid "Je hebt dit jaar geen uitgaven."
+msgstr "You have no expenses this year."
+
+#
+msgid ""
+"Huismus telt omzet zonder btw, op de factuurdatum, niet op de dag dat er "
+"betaald is. Kosten zijn bruto: wat je echt betaald hebt."
+msgstr ""
+"Huismus counts revenue without VAT, on the invoice date, not the day it was "
+"paid. Costs are gross: what you actually paid."
+
 msgid "Pagina niet gevonden"
 msgstr "Page not found"
 
@@ -5026,11 +5029,11 @@ msgstr "Source code"
 
 #, python-format
 msgid ""
-"Huismus is gratis en open source, onder de <a "
-"href=\"%(repository)s/blob/main/LICENSE\">AGPL-3.0</a>."
+"Huismus is gratis en open source, onder de <a href=\"%(repository)s/blob/"
+"main/LICENSE\">AGPL-3.0</a>."
 msgstr ""
-"Huismus is free and open source, under the <a "
-"href=\"%(repository)s/blob/main/LICENSE\">AGPL-3.0</a>."
+"Huismus is free and open source, under the <a href=\"%(repository)s/blob/"
+"main/LICENSE\">AGPL-3.0</a>."
 
 msgid "Draai je liever op een Raspberry Pi?"
 msgstr "Rather run it on a Raspberry Pi?"
@@ -5043,8 +5046,8 @@ msgid ""
 "Uitleg bij Huismus %(version)s. In de app vind je dezelfde uitleg onder "
 "<strong>Hulp</strong>."
 msgstr ""
-"Help for Huismus %(version)s. The app has the same help under "
-"<strong>Help</strong>."
+"Help for Huismus %(version)s. The app has the same help under <strong>Help</"
+"strong>."
 
 msgid "Huismus: je facturen, op je eigen laptop"
 msgstr "Huismus: your invoices, on your own laptop"
@@ -5082,8 +5085,8 @@ msgid ""
 "Daarna niet meer."
 msgstr ""
 "Huismus is a hobby project without a paid signature from Apple or Microsoft. "
-"That's why your computer asks the first time whether you trust the app. After"
-" that, it won't."
+"That's why your computer asks the first time whether you trust the app. "
+"After that, it won't."
 
 msgid "Op een Mac"
 msgstr "On a Mac"
@@ -5098,8 +5101,8 @@ msgstr ""
 "Open Huismus. Your Mac says it can't check it: click <strong>Done</strong>."
 
 msgid ""
-"Ga naar <strong>Systeeminstellingen › Privacy en beveiliging</strong> en klik"
-" onderaan op <strong>Toch openen</strong>."
+"Ga naar <strong>Systeeminstellingen › Privacy en beveiliging</strong> en "
+"klik onderaan op <strong>Toch openen</strong>."
 msgstr ""
 "Go to <strong>System Settings › Privacy & Security</strong> and click "
 "<strong>Open Anyway</strong> at the bottom."
@@ -5114,8 +5117,8 @@ msgid ""
 "Windows toont \"Windows heeft uw pc beschermd\": klik op <strong>Meer "
 "informatie</strong>."
 msgstr ""
-"Windows shows \"Windows protected your PC\": click <strong>More "
-"info</strong>."
+"Windows shows \"Windows protected your PC\": click <strong>More info</"
+"strong>."
 
 msgid "Klik op <strong>Toch uitvoeren</strong>."
 msgstr "Click <strong>Run anyway</strong>."

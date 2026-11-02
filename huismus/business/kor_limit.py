@@ -10,7 +10,7 @@ isn't the business's own money. Everything is whole cents; no floats.
 
 from dataclasses import dataclass, replace
 
-from huismus.expenses.year_overview import compute_year_overview
+from huismus.reports.year_overview import compute_year_overview
 
 from .models import Settings
 

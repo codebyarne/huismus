@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """What the Overzicht page shows (SPEC.md M8). Only reads existing data:
 payment state and outstanding amounts come from Document's own
-with_payment_totals(), revenue and costs from huismus.expenses.year_overview."""
+with_payment_totals(), revenue and costs from huismus.reports.year_overview."""
 
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
