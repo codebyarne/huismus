@@ -63,7 +63,7 @@
         <span class="kpi-sub">{% blocktranslate with percent=kor_limit.percent %}{{ percent }}% van je KOR-grens{% endblocktranslate %}</span>
         {% endif %}
     </div>
-    <a class="card kpi" href="{% url 'expenses:year_overview' %}" style="text-decoration:none;color:inherit">
+    <a class="card kpi" href="{% url 'reports:year_overview' %}" style="text-decoration:none;color:inherit">
         <span class="kpi-label">{% blocktranslate %}Winst {{ year }}{% endblocktranslate %}</span>
         <span class="kpi-value">{{ overview.profit_cents|money }}</span>
         <span class="kpi-sub">{% translate "Naar het jaaroverzicht" %} →</span>
@@ -72,7 +72,7 @@
 
 {% if backup_warning.level == "bad" %}{% include "core/_backup_banner.html" %}{% endif %}
 {% if kor_limit and kor_limit.level != "ok" %}
-<a class="hint-banner {% if kor_limit.level == 'over' %}is-bad{% else %}is-warn{% endif %}" id="kor-melding" href="{% url 'expenses:year_overview' %}?jaar={{ year }}" style="margin-bottom:var(--s-4)">
+<a class="hint-banner {% if kor_limit.level == 'over' %}is-bad{% else %}is-warn{% endif %}" id="kor-melding" href="{% url 'reports:year_overview' %}?jaar={{ year }}" style="margin-bottom:var(--s-4)">
     <svg class="i" aria-hidden="true"><use href="#alert"></use></svg>
     <span>{% if kor_limit.level == "over" %}{% blocktranslate with revenue=kor_limit.revenue_cents|money limit=kor_limit.limit_cents|money %}Je omzet in {{ year }} ({{ revenue }}) is hoger dan je KOR-grens van {{ limit }}.{% endblocktranslate %}{% else %}{% blocktranslate with revenue=kor_limit.revenue_cents|money percent=kor_limit.percent limit=kor_limit.limit_cents|money %}Je omzet in {{ year }} is {{ revenue }}: {{ percent }}% van je KOR-grens van {{ limit }}.{% endblocktranslate %}{% endif %}</span>
     <span class="spacer"></span>

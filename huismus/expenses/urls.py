@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
 from django.urls import path
+from django.views.generic import RedirectView
 
 from . import views
 
@@ -9,8 +10,19 @@ app_name = "expenses"
 urlpatterns = [
     path("", views.expense_list, name="list"),
     path("nieuw/", views.expense_create, name="create"),
-    path("jaaroverzicht/", views.year_overview, name="year_overview"),
-    path("jaaroverzicht/csv/", views.year_overview_csv, name="year_overview_csv"),
+    # The year overview moved to "Rapporten"; old bookmarks still arrive.
+    path(
+        "jaaroverzicht/",
+        RedirectView.as_view(
+            pattern_name="reports:year_overview", query_string=True, permanent=True
+        ),
+    ),
+    path(
+        "jaaroverzicht/csv/",
+        RedirectView.as_view(
+            pattern_name="reports:year_overview_csv", query_string=True, permanent=True
+        ),
+    ),
     path("<int:pk>/", views.expense_edit, name="edit"),
     path("<int:pk>/verwijderen/", views.expense_delete, name="delete"),
     path("<int:pk>/bonnetje/", views.receipt_upload, name="receipt_upload"),

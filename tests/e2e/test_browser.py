@@ -532,6 +532,22 @@ def test_mobile_tab_bar_and_more_menu(app):
     assert width <= 360
 
 
+def test_rapporten_opens_the_year_overview_on_desktop_and_phone(app):
+    app.goto(app.base + "/")
+    app.locator(".sidebar a", has_text="Rapporten").click()
+    expect(app).to_have_url(app.base + "/rapporten/jaaroverzicht/")
+    expect(app.locator(".sidebar a[aria-current=page]")).to_have_text("Rapporten")
+
+    app.set_viewport_size({"width": 360, "height": 740})
+    app.goto(app.base + "/")
+    app.click(".tabbar button[popovertarget=meer-menu]")
+    app.locator("#meer-menu a", has_text="Rapporten").click()
+    expect(app).to_have_url(app.base + "/rapporten/jaaroverzicht/")
+    expect(app.locator(".tabbar button[popovertarget=meer-menu]")).to_have_attribute(
+        "aria-current", "page"
+    )
+
+
 def test_on_a_phone_the_language_is_set_under_instellingen(app):
     app.set_viewport_size({"width": 360, "height": 740})
     app.goto(app.base + "/facturen/")
@@ -1271,7 +1287,7 @@ def test_the_kor_limit_shows_in_the_issue_dialog_and_on_the_overview(app, contac
     banner = app.locator("#kor-melding")
     expect(banner).to_contain_text("85% van je KOR-grens")
     banner.click()
-    expect(app).to_have_url(re.compile(r"/uitgaven/jaaroverzicht/\?jaar=\d{4}$"))
+    expect(app).to_have_url(re.compile(r"/rapporten/jaaroverzicht/\?jaar=\d{4}$"))
 
     # The year overview shows the same share of the limit as a bar.
     card = app.locator("#kor-grens")

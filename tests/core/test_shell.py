@@ -25,11 +25,19 @@ def test_current_section_is_marked_in_the_navigation(logged_in):
 
 
 def test_expenses_subnavigation_only_shows_inside_expenses(logged_in):
-    year_overview = reverse("expenses:year_overview")
+    categories = reverse("expenses:category_list")
     assert '<div class="sub">' not in logged_in.get(reverse("contacts:list")).content.decode()
-    html = logged_in.get(year_overview).content.decode()
+    html = logged_in.get(categories).content.decode()
     assert '<div class="sub">' in html
-    assert f'href="{year_overview}" aria-current="page"' in html
+    assert f'href="{categories}" aria-current="page"' in html
+
+
+def test_the_year_overview_is_under_rapporten_not_under_uitgaven(logged_in):
+    html = logged_in.get(reverse("reports:year_overview")).content.decode()
+    sidebar = html.split('class="sidebar"', 1)[1].split("</aside>", 1)[0]
+    assert f'href="{reverse("reports:index")}" aria-current="page"' in sidebar
+    assert '<div class="sub">' not in sidebar
+    assert reverse("reports:year_overview") not in sidebar
 
 
 def test_logout_is_a_post_form(logged_in):
@@ -84,9 +92,9 @@ def test_login_language_switch_is_not_nested_in_the_login_form(client):
 def test_file_downloads_are_not_boosted(logged_in):
     # hx-boost would swap a CSV or PDF response into the page instead of
     # downloading it.
-    html = logged_in.get(reverse("expenses:year_overview")).content.decode()
-    assert f"{reverse('expenses:year_overview_csv')}?jaar=" in html
-    csv_link = html.split(reverse("expenses:year_overview_csv"), 1)[1].split(">", 1)[0]
+    html = logged_in.get(reverse("reports:year_overview")).content.decode()
+    assert f"{reverse('reports:year_overview_csv')}?jaar=" in html
+    csv_link = html.split(reverse("reports:year_overview_csv"), 1)[1].split(">", 1)[0]
     assert 'hx-boost="false"' in csv_link
 
 
@@ -97,7 +105,7 @@ def test_file_downloads_are_not_boosted(logged_in):
         ("documents:list", {}, "documents", None),
         ("expenses:list", {}, "expenses", None),
         ("expenses:receipt_upload", {"pk": 1}, "expenses", None),
-        ("expenses:year_overview_csv", {}, "expenses", "year_overview"),
+        ("reports:year_overview_csv", {}, "reports", None),
         ("expenses:category_delete", {"pk": 1}, "expenses", "categories"),
     ],
 )

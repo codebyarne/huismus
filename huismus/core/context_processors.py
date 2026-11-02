@@ -13,8 +13,6 @@ from huismus.core.desktop import has_no_password
 # Every other expenses route (list, form, receipts, delete) belongs to the
 # "Uitgaven" item itself.
 EXPENSES_SUBSECTIONS = {
-    "year_overview": "year_overview",
-    "year_overview_csv": "year_overview",
     "category_list": "categories",
     "category_edit": "categories",
     "category_delete": "categories",

@@ -9,10 +9,7 @@ from django.urls import reverse
 from django.utils import timezone
 from PIL import Image
 
-from huismus.business.models import Settings
-from huismus.contacts.models import Contact
 from huismus.core.models import Attachment
-from huismus.documents.models import Document
 from huismus.expenses.lines import ExpenseLineInput, create_expense
 from huismus.expenses.models import Expense, ExpenseCategory
 
@@ -333,53 +330,6 @@ def test_category_delete_when_in_use_shows_an_error_and_keeps_it(client):
     assert any("Er horen nog uitgaven bij deze categorie." in str(m) for m in messages)
 
 
-def test_year_overview_requires_login(client):
-    response = client.get(reverse("expenses:year_overview"))
-    assert response.status_code == 302
-
-
-def test_year_overview_defaults_to_the_current_year(client):
-    _login(client)
-    response = client.get(reverse("expenses:year_overview"))
-    assert response.status_code == 200
-    assert str(timezone.localdate().year) in response.content.decode()
-
-
-def test_year_overview_accepts_a_year_query_param(client):
-    _login(client)
-    Expense.objects.create(date="2020-01-15", amount_cents=1000)
-
-    response = client.get(reverse("expenses:year_overview"), {"jaar": "2020"})
-
-    assert response.status_code == 200
-    assert response.context["year"] == 2020
-    assert response.context["overview"].expenses_cents == 1000
-    assert "10,00" in response.content.decode()
-
-
-def test_year_overview_ignores_a_garbage_year_param(client):
-    _login(client)
-    response = client.get(reverse("expenses:year_overview"), {"jaar": "not-a-year"})
-    assert response.status_code == 200
-
-
-def test_year_overview_csv_download(client):
-    _login(client)
-    Expense.objects.create(date="2026-01-15", amount_cents=1000)
-
-    response = client.get(reverse("expenses:year_overview_csv"), {"jaar": "2026"})
-
-    assert response.status_code == 200
-    assert response["Content-Type"] == "text/csv; charset=utf-8"
-    # The CSV form of every CSV in Huismus (SPEC.md M19): a BOM, semicolons
-    # and a decimal comma, so Dutch Excel opens it.
-    assert response.content.startswith("\ufeff".encode())
-    lines = response.content.decode("utf-8-sig").splitlines()
-    assert lines[0] == "kwartaal;omzet;kosten;winst"
-    assert lines[1] == "Q1;0,00;10,00;-10,00"
-    assert lines[-1] == "totaal;0,00;10,00;-10,00"
-
-
 def test_new_category_with_only_a_name_goes_to_the_bottom(client):
     _login(client)
     ExpenseCategory.objects.create(name="Software", sort_order=4)
@@ -423,96 +373,3 @@ def test_category_edit_with_an_empty_name_keeps_the_row_open_with_the_error(clie
     assert response.status_code == 200
     assert response.context["editing_pk"] == category.pk
     assert 'aria-invalid="true"' in response.content.decode()
-
-
-def _kor_on(*, limit_cents=1_000_000, warning_percent=80):
-    settings = Settings.load()
-    settings.kor_enabled = True
-    settings.kor_text = "Vrijgesteld van btw (KOR)."
-    settings.kor_limit_cents = limit_cents
-    settings.kor_warning_percent = warning_percent
-    settings.save()
-
-
-def _issued_invoice(issue_date, total_cents):
-    Document.objects.create(
-        kind="invoice",
-        status="issued",
-        number=f"F-{issue_date}",
-        contact=Contact.objects.create(company_name="Klant BV"),
-        issue_date=issue_date,
-        subtotal_cents=total_cents,  # 0% VAT: under the KOR
-        total_cents=total_cents,
-    )
-
-
-def test_year_overview_without_the_kor_says_nothing_about_a_limit(client):
-    _login(client)
-    response = client.get(reverse("expenses:year_overview"))
-    assert response.context["kor_limit"] is None
-    assert "KOR-grens" not in response.content.decode()
-
-
-def test_year_overview_shows_that_years_revenue_against_the_kor_limit(client):
-    _login(client)
-    _kor_on()
-    _issued_invoice("2021-03-01", 850_000)
-    _issued_invoice("2022-03-01", 999_999)  # another year: doesn't count
-
-    response = client.get(reverse("expenses:year_overview"), {"jaar": "2021"})
-
-    kor_limit = response.context["kor_limit"]
-    assert kor_limit.revenue_cents == 850_000
-    assert kor_limit.level == "near"
-    page = response.content.decode()
-    assert 'id="kor-grens"' in page
-    assert "85% van je KOR-grens" in page
-    assert "€ 8.500,00 van € 10.000,00" in page
-    assert "progress is-warn" in page
-
-
-def test_an_earlier_year_says_it_is_measured_with_the_current_limit(client):
-    _login(client)
-    _kor_on()
-    last_year = timezone.localdate().year - 1
-
-    earlier = client.get(reverse("expenses:year_overview"), {"jaar": last_year})
-    this_year = client.get(reverse("expenses:year_overview"))
-
-    note = "Gemeten met je huidige KOR-grens van € 10.000,00."
-    assert note in earlier.content.decode()
-    assert note not in this_year.content.decode()
-
-
-def test_a_year_without_revenue_shows_an_empty_bar(client):
-    _login(client)
-    _kor_on()
-    response = client.get(reverse("expenses:year_overview"), {"jaar": "2019"})
-    assert response.context["kor_limit"].percent == 0
-    assert "0% van je KOR-grens" in response.content.decode()
-
-
-def test_a_year_over_the_limit_shows_a_red_bar(client):
-    _login(client)
-    _kor_on()
-    _issued_invoice("2020-05-01", 1_000_001)
-    response = client.get(reverse("expenses:year_overview"), {"jaar": "2020"})
-    assert response.context["kor_limit"].level == "over"
-    assert "progress is-bad" in response.content.decode()
-
-
-def test_the_csv_counts_revenue_without_vat(client):
-    _login(client)
-    Document.objects.create(
-        kind="invoice",
-        status="issued",
-        number="F-btw",
-        contact=Contact.objects.create(company_name="Klant BV"),
-        issue_date="2026-02-01",
-        subtotal_cents=100000,
-        tax_cents=21000,
-        total_cents=121000,
-    )
-    content = client.get(reverse("expenses:year_overview_csv"), {"jaar": "2026"}).content.decode()
-    assert "1000,00" in content
-    assert "1210,00" not in content

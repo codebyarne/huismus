@@ -34,6 +34,7 @@ urlpatterns = [
     path("offertes/", include((quote_patterns, quote_app_name), namespace="quotes")),
     path("importeren/", include("huismus.imports.urls")),
     path("uitgaven/", include("huismus.expenses.urls")),
+    path("rapporten/", include("huismus.reports.urls")),
     path("hulp/", include("huismus.core.help_urls")),
     path("", include("huismus.core.urls")),
 ]

@@ -6,7 +6,7 @@ from huismus.contacts.models import Contact
 from huismus.documents.models import Document
 from huismus.expenses.lines import ExpenseLineInput, create_expense
 from huismus.expenses.models import Expense, ExpenseCategory
-from huismus.expenses.year_overview import compute_year_overview
+from huismus.reports.year_overview import compute_year_overview
 
 pytestmark = pytest.mark.django_db
 
@@ -147,7 +147,7 @@ def test_category_breakdown_groups_uncategorised_expenses_together():
     ],
 )
 def test_chart_step(max_cents, step_cents):
-    from huismus.expenses.year_overview import chart_step
+    from huismus.reports.year_overview import chart_step
 
     assert chart_step(max_cents) == step_cents
 

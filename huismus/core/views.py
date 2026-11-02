@@ -20,7 +20,7 @@ from huismus.business.models import Settings
 from huismus.documents.listing import expiry_hint
 from huismus.documents.models import Document
 from huismus.documents.numbering import next_numbers_if_issued_today
-from huismus.expenses.year_overview import compute_year_overview
+from huismus.reports.year_overview import compute_year_overview
 
 from . import (
     auto_backups,

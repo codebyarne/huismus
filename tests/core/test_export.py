@@ -26,7 +26,7 @@ from huismus.documents.quoting import accept_quote, convert_to_invoice, send_quo
 from huismus.documents.reopening import reopen
 from huismus.expenses.lines import ExpenseLineInput, create_expense
 from huismus.expenses.models import ExpenseCategory
-from huismus.expenses.year_overview import compute_year_overview
+from huismus.reports.year_overview import compute_year_overview
 
 pytestmark = pytest.mark.django_db
 
@@ -428,7 +428,7 @@ def test_the_settings_overview_has_an_export_card_after_backups(logged_in):
 
 
 def test_the_year_overview_links_to_the_export_of_that_year(logged_in):
-    html = logged_in.get(reverse("expenses:year_overview"), {"jaar": "2024"}).content.decode()
+    html = logged_in.get(reverse("reports:year_overview"), {"jaar": "2024"}).content.decode()
     assert f"{reverse('business:export')}?jaar=2024" in html
 
 
