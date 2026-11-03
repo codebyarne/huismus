@@ -119,7 +119,7 @@
 @keyframes mus-flap { from { transform: rotate(-6deg); } to { transform: scaleY(-.75) rotate(10deg); } }
 
 /* Bovenaan: een rondje van 18 seconden. */
-.mus-hero { top: -68px; right: 112px; animation: mus-hero-route 18s ease-in-out infinite; }
+.mus-hero { top: -68px; right: calc(50% - 23px); animation: mus-hero-route 18s ease-in-out infinite; }
 .mus-hero .mus-body { animation: mus-hero-pose 18s ease-in-out infinite; }
 .mus-hero .mus-wing-up { animation: mus-flap .16s ease-in-out infinite alternate, mus-hero-flying 18s step-end infinite; }
 .mus-hero .mus-wing { animation: mus-hero-sitting 18s step-end infinite; }
