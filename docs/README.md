@@ -41,8 +41,8 @@ Actions → Variables) met de code van het account, het deel vóór
 `/download/windows/`; een bezoek daar is een download. Het aantal downloads
 per bestand staat ook bij elke release op GitHub.
 
-Bij elke release zet `.github/workflows/pages.yml` hem online (pas als de repo
-openbaar is). Hoe hij gemaakt wordt: `huismus/core/site.py`.
+Bij elke release zet `.github/workflows/pages.yml` hem online, en met de hand
+(workflow_dispatch) vanaf `main`. Hoe hij gemaakt wordt: `huismus/core/site.py`.
 
 ## Voor beheerders
 
