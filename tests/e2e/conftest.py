@@ -133,9 +133,17 @@ def app(live_server, page, transactional_db, settings, browser_name):
     # The first page of a fresh browser context: with every core running
     # tests (pytest -n auto), Firefox sometimes needs longer than 5 s just
     # to get going. This load gets more time than the test's own steps.
-    # Even 30 s was sometimes not enough on CI, green on a rerun; the error
-    # then says what the server was doing (tests/e2e/server_report.py).
-    # The listeners stay for the rest of the test; only a timeout here reads
+    #
+    # It waits for the page to say it has loaded, not for Playwright's load
+    # event. In Firefox on CI that event sometimes never arrived for this
+    # first page (about 1 in 700), while the page itself said "complete",
+    # loaded in 0.3 s, with every request finished and the server idle:
+    # goto then waited 30 s for nothing (BUGS-BY-HAND.md, 2026-11-03). Same
+    # condition, read in the page instead of from the lost event.
+    #
+    # If it still times out, the error says what the server, the browser's
+    # requests and the page were doing (tests/e2e/server_report.py). The
+    # listeners stay for the rest of the test; only a timeout here reads
     # them. A request is unfinished until its body is in (or it failed).
     answered = []
     unfinished = {}
@@ -144,7 +152,8 @@ def app(live_server, page, transactional_db, settings, browser_name):
     page.on("requestfinished", lambda request: unfinished.pop(request, None))
     page.on("requestfailed", lambda request: unfinished.pop(request, None))
     try:
-        page.goto(f"{live_server.url}/login/", timeout=30000)
+        page.goto(f"{live_server.url}/login/", wait_until="commit", timeout=30000)
+        page.wait_for_function("() => document.readyState === 'complete'", timeout=30000)
     except PlaywrightTimeoutError as error:
         report = describe_server(answered, list(unfinished.values())) + "\n" + describe_page(page)
         raise PlaywrightTimeoutError(f"{error.message}\n{report}") from error
