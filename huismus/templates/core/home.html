@@ -10,10 +10,10 @@
     <div class="empty" style="padding-bottom:var(--s-8)">
         <div class="empty-art"><svg class="mark" width="72" height="72" aria-hidden="true"><use href="#mus"></use></svg></div>
         <h1 style="font-size:var(--fs-2xl)">{% translate "Welkom bij Huismus" %}</h1>
-        <p>{% translate "Kom je van Moneybird? Neem dan in één keer al je klanten, facturen en offertes mee." %} {% translate "Huismus doet eerst een proefdraai en slaat pas iets op als jij dat kiest." %} {% translate "Begin je nieuw? Dan vul je in vier stappen in wat Huismus nodig heeft voor je eerste factuur." %}</p>
+        <p>{% translate "Begin je nieuw? Dan vul je in vier stappen in wat Huismus nodig heeft voor je eerste factuur." %} {% translate "Kom je van Moneybird? Neem dan in één keer al je klanten, facturen en offertes mee." %} {% translate "Huismus doet eerst een proefdraai en slaat pas iets op als jij dat kiest." %}</p>
         <div class="row" style="justify-content:center;gap:var(--s-3);flex-wrap:wrap">
-            <a class="btn btn-primary btn-lg" style="flex:1 1 240px;justify-content:center" href="{% url 'imports:upload' %}"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg>{% translate "Importeren uit Moneybird" %}</a>
             <a class="btn btn-primary btn-lg" style="flex:1 1 240px;justify-content:center" href="{% url 'onboarding_start' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Stap voor stap beginnen" %}</a>
+            <a class="btn btn-secondary btn-lg" style="flex:1 1 240px;justify-content:center" href="{% url 'imports:upload' %}"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg>{% translate "Importeren uit Moneybird" %}</a>
         </div>
         {% comment %}Smaller than the two ways to start for real (huismus/core/sample_data.py, huismus-intern/besluiten.md 2026-10-30).{% endcomment %}
         <form method="post" action="{% url 'sample_data_fill' %}" id="nepdata" style="justify-self:stretch;margin-top:var(--s-6);padding-top:var(--s-5);border-top:1px solid var(--border)">
