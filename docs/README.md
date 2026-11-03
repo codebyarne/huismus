@@ -33,6 +33,14 @@ SECRET_KEY=dev DEBUG=true uv run python manage.py build_site _site
 python3 -m http.server 8797 -d _site
 ```
 
+Bezoeken tellen: de site telt met [GoatCounter](https://www.goatcounter.com),
+zonder cookies en zonder JS, maar alleen als de repo de variabele
+`HUISMUS_SITE_COUNTER` heeft (GitHub → Settings → Secrets and variables →
+Actions → Variables) met de code van het account, het deel vóór
+`.goatcounter.com`. De downloadknoppen gaan naar `/download/mac/` en
+`/download/windows/`; een bezoek daar is een download. Het aantal downloads
+per bestand staat ook bij elke release op GitHub.
+
 Bij elke release zet `.github/workflows/pages.yml` hem online (pas als de repo
 openbaar is). Hoe hij gemaakt wordt: `huismus/core/site.py`.
 

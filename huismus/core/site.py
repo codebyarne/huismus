@@ -21,8 +21,13 @@ Addresses: Dutch at the root, English under /en/.
     /hulp/              /en/help/
     /hulp/<onderwerp>/  /en/help/<topic>/
     /meebouwen/         /en/contribute/
+    /download/<mac|windows>/  /en/download/<mac|windows>/
+
+Visits are counted only when COUNTER_VARIABLE holds a GoatCounter code: a
+1×1 image per page, no cookies and no JS.
 """
 
+import os
 import shutil
 from pathlib import Path
 
@@ -41,6 +46,12 @@ TOPICS = tuple(slug for slug in help.TOPICS if slug != help.FEEDBACK)
 # The file the download buttons point at, the same name in every release
 # (release.yml uploads a copy under it), so "latest" always has it.
 LATEST_ASSETS = {"darwin": "Huismus-macos.dmg", "win32": "Huismus-windows.exe"}
+# The platforms of the download pages, by their address.
+PLATFORMS = {"mac": "darwin", "windows": "win32"}
+# GoatCounter, a visitor counter without cookies: the code of the account
+# (<code>.goatcounter.com), set by pages.yml from a repository variable.
+# Empty: the site counts nothing (Arne, 2026-11-03).
+COUNTER_VARIABLE = "HUISMUS_SITE_COUNTER"
 # The pictures in docs/site/, each as <name>.<nl|en>.<light|dark>.webp.
 MEDIA = (
     "overzicht",
@@ -76,6 +87,12 @@ def install_url(language: str) -> str:
 
 def contribute_url(language: str) -> str:
     return "/meebouwen/" if language == "nl" else "/en/contribute/"
+
+
+def download_page_url(language: str, platform: str) -> str:
+    """The page a button goes to: it starts the download and shows how to
+    open the app the first time. A visit to it is a download, for the counter."""
+    return ("/download/" if language == "nl" else "/en/download/") + f"{platform}/"
 
 
 def download_url(platform: str) -> str:
@@ -117,6 +134,19 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
                 "help": _help_links(language),
             },
         ),
+        **{
+            download_page_url(language, name): (
+                "site/download.html",
+                {
+                    "nav": "download",
+                    "switch_url": download_page_url(other, name),
+                    "platform": name,
+                    "file_url": download_url(platform),
+                    "help": _help_links(language),
+                },
+            )
+            for name, platform in PLATFORMS.items()
+        },
         contribute_url(language): (
             "site/contribute.html",
             {"nav": "contribute", "switch_url": contribute_url(other)},
@@ -157,8 +187,7 @@ def build(out: Path) -> list[str]:
         "repository": REPOSITORY,
         "version": version,
         "domain": DOMAIN,
-        "mac_url": download_url("darwin"),
-        "windows_url": download_url("win32"),
+        "counter": os.environ.get(COUNTER_VARIABLE, "").strip(),
     }
     addresses = []
     for language in help.LANGUAGES:
@@ -170,6 +199,9 @@ def build(out: Path) -> list[str]:
                     | context
                     | {
                         "language": language,
+                        "address": address,
+                        "mac_url": download_page_url(language, "mac"),
+                        "windows_url": download_page_url(language, "windows"),
                         "home_url": home_url(language),
                         "help_index_url": help_url(language),
                         "install_url": install_url(language),
@@ -187,6 +219,9 @@ def build(out: Path) -> list[str]:
                 shared
                 | {
                     "language": "nl",
+                    "address": "/404/",
+                    "mac_url": download_page_url("nl", "mac"),
+                    "windows_url": download_page_url("nl", "windows"),
                     "home_url": "/",
                     "help_index_url": "/hulp/",
                     "install_url": install_url("nl"),

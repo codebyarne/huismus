@@ -17,6 +17,7 @@
     <meta name="theme-color" content="#191613" media="(prefers-color-scheme: dark)">
     <link rel="stylesheet" href="/huismus.css">
     <link rel="stylesheet" href="/site.css">
+    {% block head %}{% endblock %}
 </head>
 <body class="site">
 {% include "icons.svg" %}
@@ -35,7 +36,10 @@
 </main>
 <footer class="site-foot small muted">
     <p>{% blocktranslate %}Huismus is gratis en open source, onder de <a href="{{ repository }}/blob/main/LICENSE">AGPL-3.0</a>. Een hobbyproject, gemaakt in Nederland.{% endblocktranslate %}</p>
+    {% if counter %}<p>{% translate "Deze site telt bezoeken met GoatCounter, zonder cookies." %}</p>{% endif %}
     <p><a href="{{ install_url }}">{% translate "Installeren" %}</a> · <a href="{{ help_index_url }}">{% translate "Hulp" %}</a> · <a href="{{ contribute_url }}">{% translate "Meebouwen" %}</a> · <a href="{{ repository }}">{% translate "Broncode" %}</a> · <a href="{{ repository }}/releases">{% translate "Alle versies" %}</a></p>
 </footer>
+{% comment %}GoatCounter's counter without JS (site.COUNTER_VARIABLE): one image per page, the address of the page and nothing else.{% endcomment %}
+{% if counter %}<img class="counter" src="https://{{ counter }}.goatcounter.com/count?p={{ address|urlencode:'' }}" alt="" width="1" height="1">{% endif %}
 </body>
 </html>
