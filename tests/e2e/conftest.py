@@ -134,12 +134,13 @@ def app(live_server, page, transactional_db, settings, browser_name):
     # tests (pytest -n auto), Firefox sometimes needs longer than 5 s just
     # to get going. This load gets more time than the test's own steps.
     #
-    # It waits for the page to say it has loaded, not for Playwright's load
-    # event. In Firefox on CI that event sometimes never arrived for this
-    # first page (about 1 in 700), while the page itself said "complete",
-    # loaded in 0.3 s, with every request finished and the server idle:
-    # goto then waited 30 s for nothing (BUGS-BY-HAND.md, 2026-11-03). Same
-    # condition, read in the page instead of from the lost event.
+    # It doesn't use goto, and waits for the page to say it has loaded. In
+    # Firefox on CI, goto sometimes never heard of this first navigation of
+    # a fresh page (about 1 in 700): not its load event, and in a later run
+    # not even its commit. The page itself said "complete" after 0.3 s, with
+    # every request finished and the server idle, while goto waited 30 s
+    # (BUGS-BY-HAND.md, 2026-11-03). So the page leaves about:blank by itself
+    # and the test asks the page where it is and whether it has loaded.
     #
     # If it still times out, the error says what the server, the browser's
     # requests and the page were doing (tests/e2e/server_report.py). The
@@ -152,8 +153,13 @@ def app(live_server, page, transactional_db, settings, browser_name):
     page.on("requestfinished", lambda request: unfinished.pop(request, None))
     page.on("requestfailed", lambda request: unfinished.pop(request, None))
     try:
-        page.goto(f"{live_server.url}/login/", wait_until="commit", timeout=30000)
-        page.wait_for_function("() => document.readyState === 'complete'", timeout=30000)
+        login = f"{live_server.url}/login/"
+        page.evaluate("url => { location.href = url }", login)
+        page.wait_for_function(
+            "url => location.href === url && document.readyState === 'complete'",
+            arg=login,
+            timeout=30000,
+        )
     except PlaywrightTimeoutError as error:
         report = describe_server(answered, list(unfinished.values())) + "\n" + describe_page(page)
         raise PlaywrightTimeoutError(f"{error.message}\n{report}") from error
