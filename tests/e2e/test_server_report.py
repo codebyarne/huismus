@@ -48,3 +48,45 @@ def test_an_answer_is_listed_and_a_thread_that_only_waits_is_not():
     assert "200 http://localhost:1234/login/" in report
     assert "Poort (core.maintenance):" in report
     assert "idle-thread" not in report
+
+
+def test_a_request_without_its_whole_body_is_named():
+    report = describe_server(
+        answered=["200 http://localhost:1234/login/"],
+        unfinished=["http://localhost:1234/static/core/app.js"],
+    )
+    assert "Nog niet helemaal binnen: http://localhost:1234/static/core/app.js" in report
+
+    assert "niets, alles is binnen" in describe_server(answered=[], unfinished=[])
+
+
+def test_a_thread_still_sending_an_answer_is_listed():
+    # Django's view has returned by then; wsgiref writes the body. Here the
+    # body waits on a queue, so while it waits no frame of the thread is in
+    # this project: only wsgiref's finish_response can make it count.
+    import queue
+    from wsgiref.handlers import BaseHandler
+
+    class Handler(BaseHandler):
+        def finish_content(self):
+            pass
+
+        def close(self):
+            pass
+
+    body = queue.Queue()
+    handler = Handler()
+    handler.result = iter(body.get, None)
+    thread = threading.Thread(target=handler.finish_response, name="sending-thread")
+    thread.start()
+    try:
+        for _ in range(500):
+            if "sending-thread" in describe_server(answered=[]):
+                break
+            threading.Event().wait(0.01)
+        report = describe_server(answered=[])
+    finally:
+        body.put(None)
+        thread.join()
+
+    assert "sending-thread" in report
