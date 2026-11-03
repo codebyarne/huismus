@@ -1,0 +1,81 @@
+{% extends "site/base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Meebouwen" %} — Huismus{% endblock %}
+{% block main_class %}site-narrow{% endblock %}
+
+{% block content %}
+{% comment %}For developers: what Huismus is built with, where help is welcome and how to start. The details stay in CONTRIBUTING.md and README.md, linked here.{% endcomment %}
+<div class="page-head">
+    <div class="titles">
+        <span class="pill pill-sent no-dot">{% translate "Voor ontwikkelaars" %}</span>
+        <h1>{% translate "Bouw mee aan Huismus" %}</h1>
+        <p class="lede">{% translate "Huismus is open source. Code, vertalingen, testen en goede ideeën zijn welkom. Je hoeft geen boekhouder te zijn: de regels voor geld en facturen staan in de code en in de tests." %}</p>
+    </div>
+</div>
+
+<div class="row">
+    <a class="btn btn-primary" href="{{ repository }}">{% translate "Naar de code op GitHub" %}</a>
+    <a class="btn btn-secondary" href="{{ repository }}/issues">{% translate "Bekijk de issues" %}</a>
+</div>
+
+<section class="card card-pad help-text">
+    <h2>{% translate "Waarmee het gemaakt is" %}</h2>
+    <ul>
+        <li>{% blocktranslate %}<strong>Django en SQLite:</strong> één proces en één databasebestand. Een back-up is een kopie van een map.{% endblocktranslate %}</li>
+        <li>{% blocktranslate %}<strong>HTMX en gewone CSS:</strong> schermen komen van de server. Geen JS-framework en geen build-stap; elk formulier werkt ook zonder JavaScript.{% endblocktranslate %}</li>
+        <li>{% blocktranslate %}<strong>WeasyPrint</strong> voor de pdf's.{% endblocktranslate %}</li>
+        <li>{% blocktranslate %}<strong>pywebview en PyInstaller</strong> voor de app op Mac en Windows, <strong>Docker</strong> voor een server of Raspberry Pi.{% endblocktranslate %}</li>
+        <li>{% blocktranslate %}<strong>pytest en Playwright:</strong> de browsertests draaien in Chromium, WebKit en Firefox.{% endblocktranslate %}</li>
+    </ul>
+</section>
+
+<section class="card card-pad help-text">
+    <h2>{% translate "Waar je mee kunt helpen" %}</h2>
+    <ul>
+        <li>{% blocktranslate %}<strong>Testen op Windows:</strong> Huismus wordt op een Mac gemaakt. Elke melding van iets wat op Windows raar doet, helpt.{% endblocktranslate %}</li>
+        <li>{% blocktranslate %}<strong>Vertalingen:</strong> Nederlands is de brontaal. Loop de Engelse teksten na, of voeg een taal toe.{% endblocktranslate %}</li>
+        <li>{% blocktranslate %}<strong>Bugs en wensen:</strong> open een issue. Kom je van Moneybird en gaat er iets mis bij het importeren, beschrijf het dan zonder echte gegevens.{% endblocktranslate %}</li>
+        <li>{% blocktranslate %}<strong>Code:</strong> kies een issue, of begin bij iets kleins. Voor iets groters bespreek je eerst de aanpak in een issue.{% endblocktranslate %}</li>
+    </ul>
+</section>
+
+<section class="card card-pad help-text">
+    <h2>{% translate "Zo begin je" %}</h2>
+    <p>{% blocktranslate %}Je hebt Python 3.12 of nieuwer nodig, <a href="https://docs.astral.sh/uv/">uv</a> en Pango voor de pdf's (op een Mac: <code>brew install pango</code>).{% endblocktranslate %}</p>
+<pre><code>git clone {{ repository }}.git
+cd huismus
+uv sync
+./scripts/demo-server.sh     # {% translate "Huismus met negen jaar nepdata" %}
+./scripts/verify.sh          # {% translate "alle checks in één commando" %}</code></pre>
+    <p>{% blocktranslate %}<code>./scripts/verify.sh</code> is de poort: een wijziging is klaar als die groen is. Hoe de code in elkaar zit, staat in <a href="{{ repository }}/blob/main/docs/architectuur.md">docs/architectuur.md</a>, het ontwerp in <a href="{{ repository }}/blob/main/SPEC.md">SPEC.md</a>.{% endblocktranslate %}</p>
+</section>
+
+<section class="card card-pad help-text">
+    <h2>{% translate "De regels van het huis" %}</h2>
+    <p>{% translate "Een paar regels zijn hard, omdat het om iemands administratie gaat. De tests en de database bewaken ze." %}</p>
+    <ul>
+        <li>{% blocktranslate %}<strong>Geld in centen:</strong> bedragen zijn hele getallen, nooit een float.{% endblocktranslate %}</li>
+        <li>{% blocktranslate %}<strong>Uitgegeven is vast:</strong> een uitgegeven factuur verandert niet meer. Corrigeren doe je met een creditnota.{% endblocktranslate %}</li>
+        <li>{% blocktranslate %}<strong>Nummers zonder gaten:</strong> een nummer krijgt een factuur pas bij het uitgeven.{% endblocktranslate %}</li>
+        <li>{% blocktranslate %}<strong>Eén functie voor totalen:</strong> het scherm, de pdf en de import rekenen op dezelfde manier.{% endblocktranslate %}</li>
+        <li>{% blocktranslate %}<strong>Geen echte gegevens:</strong> nooit een echte factuur, IBAN of export in de repo, een test of een issue.{% endblocktranslate %}</li>
+    </ul>
+</section>
+
+<section class="card card-pad help-text">
+    <h2>{% translate "Gebouwd met AI-agents" %}</h2>
+    <p>{% blocktranslate %}Huismus wordt gebouwd door Arne Krijnsen samen met Claude Code. De afspraken voor de agents staan in <a href="{{ repository }}/blob/main/CLAUDE.md">CLAUDE.md</a>, en dezelfde poort keurt elke wijziging, van een mens of van een agent. Werk je zelf ook zo? Dan vind je in de repo een werkend voorbeeld.{% endblocktranslate %}</p>
+</section>
+
+<section class="card card-pad help-text">
+    <h2>{% translate "Afspraken" %}</h2>
+    <ul>
+        <li>{% blocktranslate %}<strong>Eén onderwerp per commit</strong>, met een conventioneel commitbericht (<code>feat(...)</code>, <code>fix(...)</code>).{% endblocktranslate %}</li>
+        <li>{% blocktranslate %}<strong>Tests eerst</strong> voor alles wat met totalen, nummers of creditnota's te maken heeft.{% endblocktranslate %}</li>
+        <li>{% blocktranslate %}<strong>Teksten via gettext</strong>, in het Nederlands en het Engels.{% endblocktranslate %}</li>
+        <li>{% blocktranslate %}<strong>Een DCO in plaats van een CLA:</strong> onderteken je commits met <code>git commit -s</code>. De licentie is AGPL-3.0-or-later.{% endblocktranslate %}</li>
+    </ul>
+    <p><a href="{{ repository }}/blob/main/CONTRIBUTING.md">{% translate "Alles over bijdragen" %} →</a> · <a href="{{ repository }}/blob/main/CODE_OF_CONDUCT.md">{% translate "Gedragscode" %} →</a></p>
+</section>
+{% endblock %}

@@ -4,6 +4,7 @@ name: Release
 # desktop apps, Huismus-<version>-macos.dmg and Huismus-<version>-windows.exe,
 # which the publish job puts on the GitHub release once both are checked: the
 # files the desktop app's updates look for (huismus/core/updates.py, docs/desktop.md).
+# It also puts a copy of each without the version on it, for the site's buttons.
 # By hand (workflow_dispatch): a trial build of the Windows app only, which
 # publishes nothing (huismus-intern/besluiten.md, "Windows-app: bouwkeuzes"). CLAUDE.md's
 # own commands section already documents this split: `docker build` locally
@@ -196,7 +197,14 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run: |
           version="${GITHUB_REF_NAME#v}"
-          files=("dist/Huismus-${version}-macos.dmg" "dist/Huismus-${version}-windows.exe")
+          # A copy under a name without the version, so the site's buttons can
+          # point at releases/latest/download/<name> and always get the newest
+          # (huismus/core/site.py, LATEST_ASSETS). The app's updates use the
+          # names with the version.
+          cp "dist/Huismus-${version}-macos.dmg" dist/Huismus-macos.dmg
+          cp "dist/Huismus-${version}-windows.exe" dist/Huismus-windows.exe
+          files=("dist/Huismus-${version}-macos.dmg" "dist/Huismus-${version}-windows.exe"
+                 dist/Huismus-macos.dmg dist/Huismus-windows.exe)
           if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
               gh release upload "$GITHUB_REF_NAME" "${files[@]}" --clobber
           else

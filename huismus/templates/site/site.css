@@ -30,3 +30,59 @@
   .downloads { flex-direction: column; }
   .downloads .btn { width: 100%; }
 }
+
+/* De rondleiding op de home (site/index.html). Kaarten, pills, knoppen en
+   meldingen zijn die van de app; hier alleen de indeling. */
+.site-nav .btn { color: var(--on-primary); }
+.site-nav .btn:hover { color: var(--on-primary); }
+.site-main { gap: var(--s-12); }
+.site-main.site-narrow { gap: var(--s-6); }
+.section-head { display: flex; flex-direction: column; gap: var(--s-2); margin-bottom: var(--s-6); }
+.section-head h2, .final h2, .try h2 { font-size: var(--fs-2xl); }
+
+.hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s-10); align-items: center; padding-block: var(--s-6) 0; }
+.hero-text { gap: var(--s-4); align-items: flex-start; }
+.hero-text .lede { font-size: var(--fs-lg); }
+
+.shot { margin: 0; }
+.shot img { display: block; width: 100%; height: auto; border-radius: var(--r-lg); border: 1px solid var(--border); box-shadow: var(--sh-2, var(--sh-1)); background: var(--surface); }
+
+.promises { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4); }
+.promises .card { display: flex; flex-direction: column; gap: var(--s-2); }
+.promises .i-lg, .contribute-call > .i-lg { color: var(--primary); }
+.promises h2 { font-size: var(--fs-md); }
+
+.tour { display: flex; flex-direction: column; gap: var(--s-12); }
+.tour-row { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: var(--s-10); align-items: center; }
+.tour .tour-row:nth-of-type(even) { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); }
+.tour .tour-row:nth-of-type(even) .tour-text { order: 2; }
+.tour-text { display: flex; flex-direction: column; gap: var(--s-3); align-items: flex-start; }
+.tour-text h3 { font-size: var(--fs-xl); }
+.tour-text p { color: var(--text-muted); }
+
+.routes-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-4); }
+.route { align-items: flex-start; }
+.route.is-main { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary), var(--sh-1); }
+.checks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--s-2); }
+.checks li { display: flex; gap: var(--s-2); align-items: flex-start; }
+.checks .i { color: var(--ok); margin-top: 3px; flex: none; }
+
+.contribute-call { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--s-5); align-items: center; }
+.contribute-call h2 { font-size: var(--fs-lg); }
+
+.final { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--s-4); padding: var(--s-10) var(--s-6); border-radius: var(--r-lg); background: var(--primary-soft); }
+.final .downloads { justify-content: center; }
+
+.help-text pre { overflow-x: auto; padding: var(--s-4); border-radius: var(--r-md); background: var(--surface-2); font-size: var(--fs-sm); }
+
+@media (max-width: 900px) {
+  .hero, .tour-row, .tour .tour-row:nth-of-type(even) { grid-template-columns: minmax(0, 1fr); gap: var(--s-5); }
+  .tour .tour-row:nth-of-type(even) .tour-text { order: 0; }
+  .promises, .routes-grid { grid-template-columns: minmax(0, 1fr); }
+  .contribute-call { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+  .site-main { gap: var(--s-10); }
+  .site-nav .btn { display: none; }
+}
+.site-main .titles .pill { align-self: flex-start; }

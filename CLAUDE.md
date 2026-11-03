@@ -21,6 +21,7 @@ SECRET_KEY=dev DEBUG=true uv run python manage.py makemigrations --check
 uv run python manage.py makemessages -l nl -l en --no-location  # after adding UI strings
 uv run python manage.py compilemessages --ignore=.venv           # to see translations locally
 uv run python manage.py demo_data --yes --history  # lege database: 9 jaar nepdata (~80 facturen), voor handmatig kijken
+./scripts/site-beelden.sh                    # schermafbeeldingen voor de site opnieuw maken (docs/site/)
 ./scripts/demo-server.sh                     # app met 9 jaar nepdata in een tijdelijke map, los van data/ (:8790, demo / demo-wachtwoord-123)
 ./scripts/verify.sh                          # de poort: draait alle checks hierboven
 docker build -t huismus .                    # native arch only locally; CI/release builds arm64 + amd64

@@ -12,7 +12,21 @@ belasting (`CLAUDE.md`); een link naar een ander onderwerp schrijf je als
 `back-ups.nl.md#kopje`. `tests/core/test_help.py` controleert dat.
 
 Dezelfde bestanden staan ook op de Huismus-site (`huismus.arnekrijnsen.com`),
-met de downloadpagina erbij. Zelf bekijken:
+met een rondleiding door de app, de downloadknoppen, een pagina over
+installeren en een pagina voor wie wil meebouwen. De site is vooral voor
+mensen die geen techneut zijn: de app voor Mac en Windows komt eerst, zelf
+draaien op een server staat als tweede route lager op de pagina.
+
+[`site/`](site/): de schermafbeeldingen en animaties van de app op de site,
+per taal en voor licht en donker. Ze komen van een verzonnen administratie
+(`huismus/core/site_data.py`). Ziet een scherm op de site er anders uit dan in
+de app, maak ze dan opnieuw en commit ze:
+
+```
+./scripts/site-beelden.sh
+```
+
+Zelf bekijken:
 
 ```
 SECRET_KEY=dev DEBUG=true uv run python manage.py build_site _site

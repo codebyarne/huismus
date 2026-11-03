@@ -1,0 +1,60 @@
+{% extends "site/base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Installeren" %} — Huismus{% endblock %}
+{% block main_class %}site-narrow{% endblock %}
+
+{% block content %}
+{% comment %}How to open the app the first time (design D3, docs/design/ronde-3/Download.dc.html), on its own page so the home page starts with what Huismus does.{% endcomment %}
+<div class="page-head">
+    <div class="titles">
+        <h1>{% translate "Huismus installeren" %}</h1>
+        <p class="lede">{% translate "Download de app, en open hem de eerste keer zoals hieronder. Daarna start hij gewoon." %}</p>
+    </div>
+</div>
+
+{% include "site/_downloads.html" %}
+
+<div class="flash flash-info">
+    <svg class="i" aria-hidden="true"><use href="#info"></use></svg>
+    <div class="flash-body">
+        <strong>{% translate "Waarom vraagt je computer of je de app vertrouwt?" %}</strong>
+        <span class="small">{% translate "Huismus is een hobbyproject zonder betaalde handtekening van Apple of Microsoft. Daarom vraagt je computer de eerste keer of je de app vertrouwt. Daarna niet meer." %}</span>
+    </div>
+</div>
+
+<section class="card card-pad stack" id="eerste-keer">
+    <h2>{% translate "Op een Mac" %}</h2>
+    <ol class="how-to">
+        <li><span>{% translate "Open het gedownloade bestand en sleep Huismus naar Apps." %}</span></li>
+        <li><span>{% blocktranslate %}Open Huismus. Je Mac zegt dat hij het niet kan controleren: klik op <strong>Gereed</strong>.{% endblocktranslate %}</span></li>
+        <li><span>{% blocktranslate %}Ga naar <strong>Systeeminstellingen › Privacy en beveiliging</strong> en klik onderaan op <strong>Toch openen</strong>.{% endblocktranslate %}</span></li>
+    </ol>
+</section>
+
+<section class="card card-pad stack" id="windows">
+    <h2>{% translate "Op Windows" %}</h2>
+    <ol class="how-to">
+        <li><span>{% translate "Open het gedownloade installatiebestand." %}</span></li>
+        <li><span>{% blocktranslate %}Windows toont "Windows heeft uw pc beschermd": klik op <strong>Meer informatie</strong>.{% endblocktranslate %}</span></li>
+        <li><span>{% blocktranslate %}Klik op <strong>Toch uitvoeren</strong>.{% endblocktranslate %}</span></li>
+    </ol>
+</section>
+
+<section class="card card-pad help-text">
+    <h2>{% translate "Daarna" %}</h2>
+    <ul>
+        <li>{% translate "Begin je nieuw? Vul in vier stappen je bedrijfsgegevens in." %}</li>
+        <li>{% translate "Kom je van Moneybird? Importeer je hele administratie in één keer." %}</li>
+        <li>{% blocktranslate %}Eerst rondkijken? Kies <strong>Probeer met nepdata</strong>: Huismus vult zich met verzonnen facturen, die je er met één knop weer uithaalt.{% endblocktranslate %}</li>
+        <li>{% translate "Kies een map voor je back-ups, bijvoorbeeld in iCloud Drive of OneDrive." %}</li>
+    </ul>
+    <p class="small"><a href="{{ help.beginnen }}">{% translate "Aan de slag" %} →</a> · <a href="{{ help.desktop_app }}">{% translate "Meer over de desktop-app" %} →</a></p>
+</section>
+
+<section class="card card-pad stack">
+    <h2>{% translate "Liever zelf draaien op een server?" %}</h2>
+    <p class="muted">{% translate "Heb je een Raspberry Pi, een NAS of een eigen server, dan kun je Huismus ook in Docker draaien. Dat is voor wie daar handig mee is." %}</p>
+    <p><a href="{{ repository }}#met-docker">{% translate "Installeren met Docker" %} →</a></p>
+</section>
+{% endblock %}
