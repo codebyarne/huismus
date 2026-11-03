@@ -24,6 +24,26 @@ from django.conf import settings
 
 from huismus.core import maintenance
 
+# What the page itself says, through a query with a timeout of its own
+# (evaluate has none). "complete" with a load time while goto still waited:
+# the browser loaded the page, and the load event didn't reach Playwright.
+PAGE_STATE = """() => {
+  const n = performance.getEntriesByType("navigation")[0];
+  return JSON.stringify({
+    url: location.href,
+    readyState: document.readyState,
+    domContentLoaded: n ? Math.round(n.domContentLoadedEventEnd) : null,
+    load: n ? Math.round(n.loadEventEnd) : null,
+  });
+}"""
+
+
+def describe_page(page) -> str:
+    try:
+        return "Pagina zelf: " + page.wait_for_function(PAGE_STATE, timeout=5000).json_value()
+    except Exception as error:  # noqa: BLE001 - a report, never a second failure
+        return f"Pagina zelf: geen antwoord ({type(error).__name__})"
+
 
 def describe_server(answered: list[str], unfinished: list[str] | None = None) -> str:
     lines = ["Antwoorden aan de browser: " + (", ".join(answered) or "geen antwoord van de server")]

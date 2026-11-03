@@ -22,7 +22,7 @@ from huismus.core.backup import (
     STATUS_FILE_NAME,
     UPDATE_STATUS_FILE_NAME,
 )
-from tests.e2e.server_report import describe_server
+from tests.e2e.server_report import describe_page, describe_server
 from tests.support import clean_up_issued_documents_for_flush
 
 # Playwright's sync API runs an event loop in this thread; Django refuses
@@ -146,7 +146,7 @@ def app(live_server, page, transactional_db, settings, browser_name):
     try:
         page.goto(f"{live_server.url}/login/", timeout=30000)
     except PlaywrightTimeoutError as error:
-        report = describe_server(answered, list(unfinished.values()))
+        report = describe_server(answered, list(unfinished.values())) + "\n" + describe_page(page)
         raise PlaywrightTimeoutError(f"{error.message}\n{report}") from error
     page.fill("#id_username", "freelancer")
     page.fill("#id_password", PASSWORD)
