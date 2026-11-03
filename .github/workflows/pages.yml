@@ -8,9 +8,8 @@ name: Site
 # and GitHub starts no workflow for that. By hand (workflow_dispatch) it builds
 # the site from main, for a fix to the help without a new release.
 #
-# GitHub Pages needs a public repository on a free account, so until the
-# repository is public this workflow only builds the site and publishes
-# nothing (huismus-intern/openbaar-maken.md).
+# GitHub Pages needs a public repository on a free account; the deploy job
+# checks that, so a private fork only builds the site.
 on:
   workflow_run:
     workflows: [Release]

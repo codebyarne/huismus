@@ -13,7 +13,11 @@
         {% include "site/_downloads.html" %}
     </div>
     {% translate "Het overzicht van Huismus: wat openstaat, de omzet van dit jaar tegenover de KOR-grens, de laatste facturen en een offerte die op antwoord wacht." as alt %}
-    {% include "site/_beeld.html" with name="overzicht" alt=alt eager=True %}
+    <div class="hero-shot">
+        {% comment %}The sparrow of the logo, perched on the screenshot: now and then it pecks or hops (site.css, .mus-perched).{% endcomment %}
+        <span class="mus-perched" aria-hidden="true"><svg class="mark"><use href="#mus"></use></svg></span>
+        {% include "site/_beeld.html" with name="overzicht" alt=alt eager=True %}
+    </div>
 </section>
 
 <section class="promises" aria-label="{% translate 'Waarom Huismus' %}">
@@ -176,6 +180,8 @@
 </section>
 
 <section class="final" id="download">
+    {% comment %}The sparrow flies in while you scroll here and lands on the gutter, where it keeps hopping (site.css, .mus-gutter).{% endcomment %}
+    <div class="mus-gutter" aria-hidden="true"><span class="mus-flight"><span class="mus-perched"><svg class="mark"><use href="#mus"></use></svg></span></span></div>
     <h2>{% translate "Probeer Huismus" %}</h2>
     <p class="lede">{% translate "Gratis, zonder account. Je computer vraagt de eerste keer of je de app vertrouwt; daarna niet meer." %}</p>
     {% include "site/_downloads.html" %}

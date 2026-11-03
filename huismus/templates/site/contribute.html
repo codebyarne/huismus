@@ -49,6 +49,7 @@ uv sync
 ./scripts/demo-server.sh     # {% translate "Huismus met negen jaar nepdata" %}
 ./scripts/verify.sh          # {% translate "alle checks in één commando" %}</code></pre>
     <p>{% blocktranslate %}<code>./scripts/verify.sh</code> is de poort: een wijziging is klaar als die groen is. Hoe de code in elkaar zit, staat in <a href="{{ repository }}/blob/main/docs/architectuur.md">docs/architectuur.md</a>, het ontwerp in <a href="{{ repository }}/blob/main/SPEC.md">SPEC.md</a>.{% endblocktranslate %}</p>
+    <p>{% blocktranslate %}Werk je met een AI-assistent, zoals Claude Code? De afspraken voor het project staan in <a href="{{ repository }}/blob/main/CLAUDE.md">CLAUDE.md</a>, en ook dan keurt <code>./scripts/verify.sh</code> elke wijziging.{% endblocktranslate %}</p>
 </section>
 
 <section class="card card-pad help-text">
@@ -61,11 +62,6 @@ uv sync
         <li>{% blocktranslate %}<strong>Eén functie voor totalen:</strong> het scherm, de pdf en de import rekenen op dezelfde manier.{% endblocktranslate %}</li>
         <li>{% blocktranslate %}<strong>Geen echte gegevens:</strong> nooit een echte factuur, IBAN of export in de repo, een test of een issue.{% endblocktranslate %}</li>
     </ul>
-</section>
-
-<section class="card card-pad help-text">
-    <h2>{% translate "Gebouwd met AI-agents" %}</h2>
-    <p>{% blocktranslate %}Huismus wordt gebouwd door Arne Krijnsen samen met Claude Code. De afspraken voor de agents staan in <a href="{{ repository }}/blob/main/CLAUDE.md">CLAUDE.md</a>, en dezelfde poort keurt elke wijziging, van een mens of van een agent. Werk je zelf ook zo? Dan vind je in de repo een werkend voorbeeld.{% endblocktranslate %}</p>
 </section>
 
 <section class="card card-pad help-text">

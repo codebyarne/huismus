@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-03 11:21+0100\n"
+"POT-Creation-Date: 2026-11-03 12:11+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -4799,6 +4799,13 @@ msgid ""
 "href=\"%(repository)s/blob/main/SPEC.md\">SPEC.md</a>."
 msgstr ""
 
+#, python-format
+msgid ""
+"Werk je met een AI-assistent, zoals Claude Code? De afspraken voor het "
+"project staan in <a href=\"%(repository)s/blob/main/CLAUDE.md\">CLAUDE.md</"
+"a>, en ook dan keurt <code>./scripts/verify.sh</code> elke wijziging."
+msgstr ""
+
 msgid "De regels van het huis"
 msgstr ""
 
@@ -4830,18 +4837,6 @@ msgstr ""
 msgid ""
 "<strong>Geen echte gegevens:</strong> nooit een echte factuur, IBAN of "
 "export in de repo, een test of een issue."
-msgstr ""
-
-msgid "Gebouwd met AI-agents"
-msgstr ""
-
-#, python-format
-msgid ""
-"Huismus wordt gebouwd door Arne Krijnsen samen met Claude Code. De afspraken "
-"voor de agents staan in <a href=\"%(repository)s/blob/main/"
-"CLAUDE.md\">CLAUDE.md</a>, en dezelfde poort keurt elke wijziging, van een "
-"mens of van een agent. Werk je zelf ook zo? Dan vind je in de repo een "
-"werkend voorbeeld."
 msgstr ""
 
 msgid "Afspraken"
