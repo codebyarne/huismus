@@ -37,7 +37,15 @@ def pi(tmp_path):
     shutil.copy(REPO / "deploy" / "notify.sh", tmp_path / "deploy" / "notify.sh")
     subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
     subprocess.run(
-        ["git", "-C", str(tmp_path), "remote", "add", "origin", "git@github.com:arne/huismus.git"],
+        [
+            "git",
+            "-C",
+            str(tmp_path),
+            "remote",
+            "add",
+            "origin",
+            "git@github.com:voorbeeld/huismus.git",
+        ],
         check=True,
     )
     bin_dir = tmp_path / "bin"
@@ -75,7 +83,7 @@ def test_success_sets_the_commit_status_and_notifies_the_phone(pi):
 
     assert result.returncode == 0
     github, phone = calls
-    assert f"ARG https://api.github.com/repos/arne/huismus/statuses/{SHA}" in github
+    assert f"ARG https://api.github.com/repos/voorbeeld/huismus/statuses/{SHA}" in github
     assert '"state":"success"' in github
     assert '"context":"deploy/pi"' in github
     # The token goes in a header file, never on the command line where any
@@ -125,11 +133,11 @@ def test_an_https_remote_works_too(pi, tmp_path):
             "remote",
             "set-url",
             "origin",
-            "https://github.com/arne/huismus.git",
+            "https://github.com/voorbeeld/huismus.git",
         ],
         check=True,
     )
 
     _, calls = pi(SHA, "pending", "bezig", settings=SETTINGS)
 
-    assert f"ARG https://api.github.com/repos/arne/huismus/statuses/{SHA}" in calls[0]
+    assert f"ARG https://api.github.com/repos/voorbeeld/huismus/statuses/{SHA}" in calls[0]

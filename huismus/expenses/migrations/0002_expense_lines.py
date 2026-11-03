@@ -7,7 +7,7 @@ from django.db import migrations, models
 def one_line_per_expense(apps, schema_editor):
     """Every existing expense gets one line with its own amount, VAT and
     category, so the totals per year and per category stay the same
-    (huismus-intern/besluiten.md, 2026-11-02: approved by Arne). The
+    (huismus-intern/besluiten.md, 2026-11-02: approved by the owner). The
     description stays on the expense; the line's is empty."""
     Expense = apps.get_model("expenses", "Expense")
     ExpenseLine = apps.get_model("expenses", "ExpenseLine")

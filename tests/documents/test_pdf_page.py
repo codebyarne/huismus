@@ -28,7 +28,7 @@ TEMPLATES = Path(__file__).resolve().parents[2] / "huismus" / "templates"
 
 @pytest.fixture
 def logged_in(client):
-    user = get_user_model().objects.create_user(username="arne", password="x")
+    user = get_user_model().objects.create_user(username="eigenaar", password="x")
     client.force_login(user)
     settings = Settings.load()
     settings.business_name = "Voorbeeld BV"

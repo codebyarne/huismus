@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """The texts of Instellingen and the mail texts Huismus suggests, in nl and en
 (docs/schrijfwijzer.md; huismus-intern/besluiten.md, 2026-11-01, "Teksten in
-Arnes stem, deel 5")."""
+de Huismus-stem, deel 5")."""
 
 import pytest
 from django.contrib.auth import get_user_model

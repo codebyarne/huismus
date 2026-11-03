@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """Two columns Huismus doesn't take over, but that change what a document
-means: `valuta` and `totale korting` (besluit Arne 2026-11-02, "Moneybird-
+means: `valuta` and `totale korting` (besluit 2026-11-02, "Moneybird-
 import verliest nooit stil gegevens"; PO-besluit Q1 and Q2). A document
 in another currency stops the import; a discount is named in the report."""
 

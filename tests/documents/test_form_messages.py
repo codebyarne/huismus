@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """The field messages on the payment and mail forms say what to do, instead of
 Django's "Dit veld is verplicht." (huismus-intern/besluiten.md, 2026-11-01,
-"Teksten in Arnes stem, deel 2")."""
+"Teksten in de Huismus-stem, deel 2")."""
 
 import pytest
 from django.utils import translation

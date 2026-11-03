@@ -3,7 +3,7 @@
 """An export Huismus doesn't understand (an unknown VAT rate or status, no
 `status` column) stops the whole import with a message on the import page,
 or a CommandError on the command line, and saves nothing (CLAUDE.md, rule 6:
-fail clearly). Besluit "Teksten in Arnes stem, deel 4", Q3."""
+fail clearly). Besluit "Teksten in de Huismus-stem, deel 4", Q3."""
 
 from io import BytesIO
 from pathlib import Path

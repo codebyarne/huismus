@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """Every column of every sheet the import reads has a destination
 (huismus/imports/columns.py): read, deliberately left out, or unknown and
-then named in the report. Besluit Arne 2026-11-02, "Moneybird-import
+then named in the report. Besluit 2026-11-02, "Moneybird-import
 verliest nooit stil gegevens"."""
 
 import re

@@ -63,7 +63,7 @@ def test_a_link_to_another_help_file_becomes_its_page():
 
 
 def test_the_index_lists_every_topic_in_the_users_language(client, django_user_model):
-    client.force_login(django_user_model.objects.create_user("arne", password="x" * 12))
+    client.force_login(django_user_model.objects.create_user("eigenaar", password="x" * 12))
 
     page = client.get(reverse("help:index")).content.decode()
     for slug in help.TOPICS:
@@ -76,7 +76,7 @@ def test_the_index_lists_every_topic_in_the_users_language(client, django_user_m
 
 
 def test_a_page_shows_the_markdown_with_ids_on_its_headings(client, django_user_model):
-    client.force_login(django_user_model.objects.create_user("arne", password="x" * 12))
+    client.force_login(django_user_model.objects.create_user("eigenaar", password="x" * 12))
 
     page = client.get(reverse("help:page", args=["back-ups"])).content.decode()
     assert '<h2 id="een-map-koppelen">Een map koppelen</h2>' in page
@@ -88,7 +88,7 @@ def test_a_page_shows_the_markdown_with_ids_on_its_headings(client, django_user_
 
 
 def test_an_unknown_topic_is_a_404(client, django_user_model):
-    client.force_login(django_user_model.objects.create_user("arne", password="x" * 12))
+    client.force_login(django_user_model.objects.create_user("eigenaar", password="x" * 12))
     assert client.get("/hulp/bestaat-niet/").status_code == 404
 
 

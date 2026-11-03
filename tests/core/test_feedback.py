@@ -219,7 +219,7 @@ def test_the_done_page_asks_how_you_use_huismus(logged_in):
     assert "Hoe gebruik je Huismus?" in page
     assert 'name="organisation"' in page
     assert 'name="overslaan"' in page
-    assert "Arne" not in page
+    assert "Krijnsen" not in page
 
 
 def test_the_card_says_what_you_miss_goes_on_github_and_your_email_not(logged_in):

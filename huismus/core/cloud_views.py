@@ -25,7 +25,7 @@ logger = logging.getLogger("huismus.backups")
 
 # The Dropbox code that linked Huismus last, by its hash, with when. Dropbox
 # takes a code once; the same code sent again (a page that seemed to hang,
-# reloaded or sent again with "back") goes on as the first did (Arne,
+# reloaded or sent again with "back") goes on as the first did (besluit
 # 2026-11-01). One link at a time, so one code; it lives in this process,
 # which is enough: Huismus runs one (gunicorn.conf.py, the desktop app). The
 # lock makes a second request wait for the first's answer.

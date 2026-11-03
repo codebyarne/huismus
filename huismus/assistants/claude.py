@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """Koppel met Claude: Huismus as an extension of the Claude app, in the
-desktop app only (SPEC.md M16; Arne, 2026-11-02).
+desktop app only (SPEC.md M16; besluit 2026-11-02).
 
 The Claude app installs an extension from one file, Huismus.mcpb: a zip
 with manifest.json and a program it runs with its own Node

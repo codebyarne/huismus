@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """Every form says what to fill in, instead of Django's "Dit veld is
 verplicht." (huismus/core/form_messages.py; huismus-intern/besluiten.md,
-2026-11-01, "Teksten in Arnes stem, deel 3"). Forms from several apps and
+2026-11-01, "Teksten in de Huismus-stem, deel 3"). Forms from several apps and
 one of Django's own, so a form module imported before the messages were
 set would show up here."""
 

@@ -1,6 +1,6 @@
 ---
 name: review-uitlegbaarheid
-description: Toetst gewijzigde code aan één vraag - kan Arne dit regel voor regel uitleggen aan een ervaren developer? Gebruik voor een commit.
+description: Toetst gewijzigde code aan één vraag - kan de eigenaar dit regel voor regel uitleggen aan een ervaren developer? Gebruik voor een commit.
 tools: Read, Grep, Glob, Bash
 model: sonnet
 ---

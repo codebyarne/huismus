@@ -4,7 +4,7 @@
 
 Moneybird actually delivers a .zip per export section (SPEC.md section 7:
 "the administration cannot be exported in one go; parts are downloaded
-separately"), and Arne was explicit that this import must accept that zip
+separately"), and the owner was explicit that this import must accept that zip
 directly — not require the user to unzip first (SPEC.md section 7's
 "Accept the raw, unmodified Moneybird files" applies to the archive
 itself, not just what's inside it). A user might also hand this a

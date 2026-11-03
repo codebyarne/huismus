@@ -5,7 +5,7 @@
 The Dutch source texts (the msgids) and docs/hulp/*.nl.md say "je", never
 "u"; the English translations and docs/hulp/*.en.md follow the same rules.
 The lists stay short on purpose: a check that rejects good text gets ignored
-(huismus-intern/besluiten.md, 2026-11-01, "Teksten in Arnes stem").
+(huismus-intern/besluiten.md, 2026-11-01, "Teksten in de Huismus-stem").
 """
 
 import ast
@@ -22,7 +22,7 @@ HELP = ROOT / "docs" / "hulp"
 # The README and docs/*.md hold Dutch and English side by side, so both
 # lists apply. Two are left out on purpose: the writing guide quotes the
 # words it forbids, and the invoice requirements quote the Belastingdienst
-# (text about law or tax is a question for Arne, CLAUDE.md).
+# (text about law or tax is a question for the owner, CLAUDE.md).
 DOCS_NOT_CHECKED = {"schrijfwijzer.md", "invoice-requirements.md"}
 
 # A sentence joined with an em dash; the writing guide wants a full stop,

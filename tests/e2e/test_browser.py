@@ -470,7 +470,7 @@ def test_the_dry_run_file_rows_stay_readable_with_many_tabs(app):
 
 
 def test_moneybird_import_counts_names_a_discount_and_keeps_the_export(app):
-    # Besluit Arne 2026-11-02, "Moneybird-import verliest nooit stil gegevens".
+    # Besluit 2026-11-02, "Moneybird-import verliest nooit stil gegevens".
     from huismus.imports.models import ImportedRow
 
     app.goto(app.base + "/importeren/")
@@ -564,7 +564,7 @@ def test_on_a_phone_the_language_is_set_under_instellingen(app):
 
 
 def test_on_a_phone_the_language_works_by_touch_and_survives_a_restart(app, browser, browser_name):
-    # Arne, 2026-10-31: on his phone the language didn't stick. A phone
+    # Found by hand, 2026-10-31: on a phone the language didn't stick. A phone
     # 390 px wide with touch, like an iPhone: tap English, tap Opslaan.
     # Firefox has no mobile mode in Playwright; touch it does have.
     phone_args = {
@@ -1020,7 +1020,7 @@ def _issued_invoice(contact):
 def test_on_a_phone_the_pdf_has_a_way_back_to_the_invoice(app, contact):
     # In the app on an iPhone's home screen there is no back button of the
     # browser: a bare PDF filled the screen and there was no way back (found
-    # by Arne, twice). Now the PDF sits on a page of Huismus.
+    # by hand, twice). Now the PDF sits on a page of Huismus.
     invoice = _issued_invoice(contact)
     app.set_viewport_size({"width": 390, "height": 800})
     app.goto(app.base + f"/facturen/{invoice.pk}/")
@@ -1365,7 +1365,7 @@ def test_connecting_an_ai_assistant_and_copying_the_key(app, browser_name):
 
     expect(app.locator("#adres-en-sleutel .pill")).to_have_text("Wacht op verbinding")
     secret = key.current()
-    # Hidden until "Toon" (Arne, 2026-11-02); Kopiëren works without it.
+    # Hidden until "Toon" (besluit 2026-11-02); Kopiëren works without it.
     field = app.get_by_label("Sleutel", exact=True)
     expect(field).to_have_value(secret)
     expect(field).to_have_attribute("type", "password")

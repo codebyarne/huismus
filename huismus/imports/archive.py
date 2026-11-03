@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """What a real Moneybird import keeps, so nothing in an export is lost
-(besluit Arne 2026-11-02, "Moneybird-import verliest nooit stil
+(besluit 2026-11-02, "Moneybird-import verliest nooit stil
 gegevens"; PO-besluit Q6 and Q7):
 
 - every row of the sheets the import reads, their line sheets and sheets

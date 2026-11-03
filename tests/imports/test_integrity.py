@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""Nothing in a Moneybird export gets lost without a word (besluit Arne
+"""Nothing in a Moneybird export gets lost without a word (besluit
 2026-11-02, "Moneybird-import verliest nooit stil gegevens"; PO-besluit
 Q5-Q7): every document is counted, lines without a document are named,
 and a real import keeps every row it read and the original export."""

@@ -34,8 +34,8 @@ def data_dir(settings, tmp_path):
 
 @pytest.fixture
 def signed_in(client, data_dir):
-    get_user_model().objects.create_user(username="arne", password="s3cret-pass")
-    client.login(username="arne", password="s3cret-pass")
+    get_user_model().objects.create_user(username="eigenaar", password="s3cret-pass")
+    client.login(username="eigenaar", password="s3cret-pass")
     return client
 
 

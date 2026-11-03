@@ -5,7 +5,7 @@
 Django says "Dit veld is verplicht." and "Zorg ervoor dat deze waarde
 hoogstens 8 karakters bevat (het zijn er nu 9)."; Huismus says what to do,
 short (docs/schrijfwijzer.md; huismus-intern/besluiten.md, 2026-11-01,
-"Teksten in Arnes stem, deel 3"). A form that sets its own message for a
+"Teksten in de Huismus-stem, deel 3"). A form that sets its own message for a
 field (the amount, the quantity of a line) still wins. On purpose this
 also reaches Django's own forms (the password form, the admin).
 

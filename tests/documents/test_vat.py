@@ -188,7 +188,7 @@ def _client():
     from django.test import Client
 
     client = Client()
-    client.force_login(get_user_model().objects.create_user("arne", password="x"))
+    client.force_login(get_user_model().objects.create_user("eigenaar", password="x"))
     return client
 
 

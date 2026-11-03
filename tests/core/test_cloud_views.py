@@ -158,7 +158,7 @@ def test_dropbox_link_with_the_code_dropbox_shows(signed_in, dropbox, settings):
 
 
 def test_the_page_comes_back_before_the_first_upload_is_done(signed_in, dav, monkeypatch):
-    # Arne, 2026-11-01: "Ik heb de code bewaard" hung while Huismus made,
+    # Besluit 2026-11-01: "Ik heb de code bewaard" hung while Huismus made,
     # encrypted and uploaded the first backup in the request itself.
     waiting = []
     monkeypatch.setattr(cloud_backups, "_start", waiting.append)
@@ -177,7 +177,7 @@ def test_the_page_comes_back_before_the_first_upload_is_done(signed_in, dav, mon
 
 
 def test_the_same_dropbox_code_twice_goes_on_to_the_next_step(signed_in, dropbox, settings):
-    # Arne, 2026-11-01: a page that hung, sent again (reload, back), sent
+    # Besluit 2026-11-01: a page that hung, sent again (reload, back), sent
     # the code a second time. Dropbox takes a code once, so the second
     # answer was "Dropbox accepteert deze code niet" while the link had worked.
     settings.DROPBOX_APP_KEY = "app-key"
@@ -324,7 +324,7 @@ def test_backup_now_also_sends_one_to_the_cloud(signed_in, dav, monkeypatch):
 
 
 def test_no_page_waits_for_an_upload():
-    # The kind of bug Arne found on 2026-11-01: a request that makes,
+    # The kind of bug found by hand on 2026-11-01: a request that makes,
     # encrypts and uploads a backup itself hangs for minutes. Only the
     # background (the thread of upload_in_background, and the hourly one in
     # core.auto_backups) may call upload_backup.

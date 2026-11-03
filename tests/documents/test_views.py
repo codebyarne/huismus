@@ -702,7 +702,7 @@ def test_the_issue_dialog_says_nothing_about_the_kor_limit_far_below_it(client):
 )
 def test_a_line_with_errors_says_what_to_fill_in(client, language, fill_in, number):
     """Not Django's "Dit veld is verplicht." (huismus-intern/besluiten.md, 2026-11-01, "Teksten
-    in Arnes stem, deel 2"): each line error says what to do, in both languages,
+    in de Huismus-stem, deel 2"): each line error says what to do, in both languages,
     with a small letter after the colon (deel 3)."""
     _login(client)
     document = _draft_invoice_with_contact()

@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""Where every column of a Moneybird sheet goes (besluit Arne 2026-11-02,
+"""Where every column of a Moneybird sheet goes (besluit 2026-11-02,
 "Moneybird-import verliest nooit stil gegevens"; CLAUDE.md rule 6).
 
 Each column of a sheet the import reads is one of three things:
@@ -47,7 +47,7 @@ _LINE_TOTALS = (
     "a line total: Huismus computes it with the one totals function "
     "(CLAUDE.md rule 4); the document's totals are checked to the cent"
 )
-_PROJECT = "projects are not in scope (besluit Arne 2026-11-01)"
+_PROJECT = "projects are not in scope (besluit 2026-11-01)"
 _CATEGORY = "a revenue category (ledger account): Huismus has none for sales"
 _EUR_COPY = "the amount in euros; the same as the column without (EUR) for a euro document"
 
@@ -262,7 +262,7 @@ COLUMNS: dict[FileKind, SheetColumns] = {
         },
     ),
     FileKind.EXPENSE_LINES: SheetColumns(
-        # "categorie": each line's own category (besluit Arne 2026-11-02,
+        # "categorie": each line's own category (besluit 2026-11-02,
         # "Uitgaven krijgen regels, net als Moneybird").
         read=frozenset(EXPENSE_LINES_REQUIRED) | {"categorie"},
         required=frozenset(EXPENSE_LINES_REQUIRED),
