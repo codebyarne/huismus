@@ -31,9 +31,14 @@
         <a class="btn btn-primary btn-sm" href="{{ home_url }}#download"><svg class="i" aria-hidden="true"><use href="#download"></use></svg>{% translate "Download" %}</a>
     </nav>
     {% if switch_url %}
-    {% comment %}The language switch, top right: only the flag of the other language, a link to this page in that language.{% endcomment %}
-    {% if language == "nl" %}<a class="lang-flag" href="{{ switch_url }}" hreflang="en" lang="en" title="English" aria-label="English"><svg class="flag" aria-hidden="true"><use href="#flag-gb"></use></svg></a>
-    {% else %}<a class="lang-flag" href="{{ switch_url }}" hreflang="nl" lang="nl" title="Nederlands" aria-label="Nederlands"><svg class="flag" aria-hidden="true"><use href="#flag-nl"></use></svg></a>{% endif %}
+    {% comment %}The language switch, top right: the round flag and code of this page's language; it opens a small menu (popover, no JS) with this page in the other language.{% endcomment %}
+    <button class="lang-switch" type="button" popovertarget="taal-menu" aria-label="{% translate 'Taal' %}: {% if language == 'nl' %}Nederlands{% else %}English{% endif %}">
+        <svg class="flag" aria-hidden="true"><use href="#flag-{% if language == 'nl' %}nl{% else %}gb{% endif %}"></use></svg>{{ language|upper }}<svg class="i" aria-hidden="true"><use href="#chevron-down"></use></svg>
+    </button>
+    <div id="taal-menu" class="menu lang-menu" popover="auto">
+        {% if language == "nl" %}<a href="{{ switch_url }}" hreflang="en" lang="en"><svg class="flag" aria-hidden="true"><use href="#flag-gb"></use></svg>EN<span class="muted">English</span></a>
+        {% else %}<a href="{{ switch_url }}" hreflang="nl" lang="nl"><svg class="flag" aria-hidden="true"><use href="#flag-nl"></use></svg>NL<span class="muted">Nederlands</span></a>{% endif %}
+    </div>
     {% endif %}
 </header>
 <main class="site-main {% block main_class %}{% endblock %}">
