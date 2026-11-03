@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-03 09:38+0100\n"
+"POT-Creation-Date: 2026-11-03 11:21+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -4639,6 +4639,36 @@ msgstr ""
 msgid "Zo open je hem de eerste keer"
 msgstr ""
 
+msgid "Op een Mac"
+msgstr ""
+
+msgid "Open het gedownloade bestand en sleep Huismus naar Apps."
+msgstr ""
+
+msgid ""
+"Open Huismus. Je Mac zegt dat hij het niet kan controleren: klik op "
+"<strong>Gereed</strong>."
+msgstr ""
+
+msgid ""
+"Ga naar <strong>Systeeminstellingen › Privacy en beveiliging</strong> en "
+"klik onderaan op <strong>Toch openen</strong>."
+msgstr ""
+
+msgid "Op Windows"
+msgstr ""
+
+msgid "Open het gedownloade installatiebestand."
+msgstr ""
+
+msgid ""
+"Windows toont \"Windows heeft uw pc beschermd\": klik op <strong>Meer "
+"informatie</strong>."
+msgstr ""
+
+msgid "Klik op <strong>Toch uitvoeren</strong>."
+msgstr ""
+
 msgid ""
 "Offertes, facturen en uitgaven voor zzp’ers, met of zonder KOR. Een gratis "
 "app voor Mac en Windows, en je administratie blijft op je eigen computer."
@@ -4665,6 +4695,9 @@ msgstr ""
 msgid ""
 "Huismus is gratis en open source, onder de <a href=\"%(repository)s/blob/"
 "main/LICENSE\">AGPL-3.0</a>. Een hobbyproject, gemaakt in Nederland."
+msgstr ""
+
+msgid "Deze site telt bezoeken met GoatCounter, zonder cookies."
 msgstr ""
 
 msgid "Installeren"
@@ -4836,6 +4869,34 @@ msgid "Alles over bijdragen"
 msgstr ""
 
 msgid "Gedragscode"
+msgstr ""
+
+msgid "Je download begint"
+msgstr ""
+
+#, python-format
+msgid ""
+"Begint hij niet vanzelf? <a href=\"%(file_url)s\">Download hem dan hier</a>."
+msgstr ""
+
+msgid "Waarom vraagt je computer of je de app vertrouwt?"
+msgstr ""
+
+msgid ""
+"Huismus is een hobbyproject zonder betaalde handtekening van Apple of "
+"Microsoft. Daarom vraagt je computer de eerste keer of je de app vertrouwt. "
+"Daarna niet meer."
+msgstr ""
+
+msgid "Daarna"
+msgstr ""
+
+msgid ""
+"Begin je nieuw? Vul in vier stappen je bedrijfsgegevens in. Kom je van "
+"Moneybird? Importeer je hele administratie in één keer."
+msgstr ""
+
+msgid "Aan de slag"
 msgstr ""
 
 #, python-format
@@ -5040,9 +5101,6 @@ msgid ""
 "bedrijfsgegevens in."
 msgstr ""
 
-msgid "Aan de slag"
-msgstr ""
-
 msgid ""
 "Het welkomstscherm van Huismus, met de knoppen Stap voor stap beginnen, "
 "Importeren uit Moneybird en Probeer met nepdata."
@@ -5109,48 +5167,6 @@ msgstr ""
 msgid ""
 "Download de app, en open hem de eerste keer zoals hieronder. Daarna start "
 "hij gewoon."
-msgstr ""
-
-msgid "Waarom vraagt je computer of je de app vertrouwt?"
-msgstr ""
-
-msgid ""
-"Huismus is een hobbyproject zonder betaalde handtekening van Apple of "
-"Microsoft. Daarom vraagt je computer de eerste keer of je de app vertrouwt. "
-"Daarna niet meer."
-msgstr ""
-
-msgid "Op een Mac"
-msgstr ""
-
-msgid "Open het gedownloade bestand en sleep Huismus naar Apps."
-msgstr ""
-
-msgid ""
-"Open Huismus. Je Mac zegt dat hij het niet kan controleren: klik op "
-"<strong>Gereed</strong>."
-msgstr ""
-
-msgid ""
-"Ga naar <strong>Systeeminstellingen › Privacy en beveiliging</strong> en "
-"klik onderaan op <strong>Toch openen</strong>."
-msgstr ""
-
-msgid "Op Windows"
-msgstr ""
-
-msgid "Open het gedownloade installatiebestand."
-msgstr ""
-
-msgid ""
-"Windows toont \"Windows heeft uw pc beschermd\": klik op <strong>Meer "
-"informatie</strong>."
-msgstr ""
-
-msgid "Klik op <strong>Toch uitvoeren</strong>."
-msgstr ""
-
-msgid "Daarna"
 msgstr ""
 
 msgid "Begin je nieuw? Vul in vier stappen je bedrijfsgegevens in."

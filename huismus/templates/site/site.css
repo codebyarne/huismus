@@ -86,3 +86,4 @@
   .site-nav .btn { display: none; }
 }
 .site-main .titles .pill { align-self: flex-start; }
+.counter { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }

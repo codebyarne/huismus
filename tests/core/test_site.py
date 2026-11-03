@@ -52,6 +52,9 @@ def test_every_link_inside_the_site_lands_on_a_page_and_heading(out):
     addresses = [site.home_url(lang) for lang in help.LANGUAGES]
     addresses += [site.install_url(lang) for lang in help.LANGUAGES]
     addresses += [site.contribute_url(lang) for lang in help.LANGUAGES]
+    addresses += [
+        site.download_page_url(lang, n) for lang in help.LANGUAGES for n in site.PLATFORMS
+    ]
     addresses += [site.help_url(lang) for lang in help.LANGUAGES]
     addresses += [site.help_url(lang, slug) for lang in help.LANGUAGES for slug in site.TOPICS]
     for address in addresses:
@@ -75,11 +78,18 @@ def test_every_link_inside_the_site_lands_on_a_page_and_heading(out):
 
 @pytest.mark.parametrize("language", help.LANGUAGES)
 def test_the_download_buttons_always_get_the_newest_release(out, language):
-    """No version in the address: a button never points at an old release."""
+    """A button goes to a download page, which starts the newest file: no
+    version in the address, so it never points at an old release."""
     for address in (site.home_url(language), site.install_url(language)):
         links = _read(out, address).links
-        for name in site.LATEST_ASSETS.values():
-            assert f"{site.REPOSITORY}/releases/latest/download/{name}" in links
+        for name in site.PLATFORMS:
+            assert site.download_page_url(language, name) in links
+    for name, platform in site.PLATFORMS.items():
+        page = out / site.download_page_url(language, name).strip("/") / "index.html"
+        html = page.read_text(encoding="utf-8")
+        latest = f"{site.REPOSITORY}/releases/latest/download/{site.LATEST_ASSETS[platform]}"
+        assert f'<meta http-equiv="refresh" content="0; url={latest}">' in html
+        assert f'href="{latest}"' in html
 
 
 def test_every_release_carries_the_files_the_buttons_point_at():
@@ -112,6 +122,19 @@ def test_the_english_pages_are_in_english(out):
     assert "Download voor Mac" not in html
     help_page = (out / "en" / "help" / "back-ups" / "index.html").read_text(encoding="utf-8")
     assert "<h1>Backups</h1>" in help_page
+
+
+def test_without_a_counter_code_the_site_counts_nothing(out):
+    for page in out.rglob("*.html"):
+        assert "goatcounter" not in page.read_text(encoding="utf-8"), page
+
+
+def test_with_a_counter_code_every_page_counts_its_own_address(tmp_path, monkeypatch):
+    monkeypatch.setenv(site.COUNTER_VARIABLE, "huismus")
+    call_command("build_site", str(tmp_path))
+    page = (tmp_path / "en" / "download" / "mac" / "index.html").read_text(encoding="utf-8")
+    assert 'src="https://huismus.goatcounter.com/count?p=%2Fen%2Fdownload%2Fmac%2F"' in page
+    assert "GoatCounter, without cookies" in page
 
 
 def test_it_looks_like_the_app_and_has_its_own_domain(out):

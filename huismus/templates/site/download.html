@@ -1,0 +1,32 @@
+{% extends "site/base.html" %}
+{% load i18n %}
+
+{% block title %}{% if platform == "mac" %}{% translate "Download voor Mac" %}{% else %}{% translate "Download voor Windows" %}{% endif %} — Huismus{% endblock %}
+{% block main_class %}site-narrow{% endblock %}
+{% comment %}A button's landing page (site.download_page_url): the browser starts the download from the newest release, and meanwhile the page shows how to open the app the first time.{% endcomment %}
+{% block head %}<meta http-equiv="refresh" content="0; url={{ file_url }}">{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <h1>{% translate "Je download begint" %}</h1>
+        <p class="lede">{% blocktranslate %}Begint hij niet vanzelf? <a href="{{ file_url }}">Download hem dan hier</a>.{% endblocktranslate %}</p>
+    </div>
+</div>
+
+<div class="flash flash-info">
+    <svg class="i" aria-hidden="true"><use href="#info"></use></svg>
+    <div class="flash-body">
+        <strong>{% translate "Waarom vraagt je computer of je de app vertrouwt?" %}</strong>
+        <span class="small">{% translate "Huismus is een hobbyproject zonder betaalde handtekening van Apple of Microsoft. Daarom vraagt je computer de eerste keer of je de app vertrouwt. Daarna niet meer." %}</span>
+    </div>
+</div>
+
+{% if platform == "mac" %}{% include "site/_first_open_mac.html" %}{% else %}{% include "site/_first_open_windows.html" %}{% endif %}
+
+<section class="card card-pad help-text">
+    <h2>{% translate "Daarna" %}</h2>
+    <p>{% translate "Begin je nieuw? Vul in vier stappen je bedrijfsgegevens in. Kom je van Moneybird? Importeer je hele administratie in één keer." %}</p>
+    <p class="small"><a href="{{ help.beginnen }}">{% translate "Aan de slag" %} →</a></p>
+</section>
+{% endblock %}

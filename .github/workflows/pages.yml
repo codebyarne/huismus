@@ -49,6 +49,9 @@ jobs:
       - name: Build the site
         env:
           SECRET_KEY: site-build-only
+          # The GoatCounter code (Settings → Secrets and variables → Actions →
+          # Variables); without it the site counts nothing (huismus/core/site.py).
+          HUISMUS_SITE_COUNTER: ${{ vars.HUISMUS_SITE_COUNTER }}
         run: |
           uv run python manage.py compilemessages --ignore=.venv
           uv run python manage.py build_site _site

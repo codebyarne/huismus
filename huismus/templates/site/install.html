@@ -23,23 +23,9 @@
     </div>
 </div>
 
-<section class="card card-pad stack" id="eerste-keer">
-    <h2>{% translate "Op een Mac" %}</h2>
-    <ol class="how-to">
-        <li><span>{% translate "Open het gedownloade bestand en sleep Huismus naar Apps." %}</span></li>
-        <li><span>{% blocktranslate %}Open Huismus. Je Mac zegt dat hij het niet kan controleren: klik op <strong>Gereed</strong>.{% endblocktranslate %}</span></li>
-        <li><span>{% blocktranslate %}Ga naar <strong>Systeeminstellingen › Privacy en beveiliging</strong> en klik onderaan op <strong>Toch openen</strong>.{% endblocktranslate %}</span></li>
-    </ol>
-</section>
+{% include "site/_first_open_mac.html" %}
 
-<section class="card card-pad stack" id="windows">
-    <h2>{% translate "Op Windows" %}</h2>
-    <ol class="how-to">
-        <li><span>{% translate "Open het gedownloade installatiebestand." %}</span></li>
-        <li><span>{% blocktranslate %}Windows toont "Windows heeft uw pc beschermd": klik op <strong>Meer informatie</strong>.{% endblocktranslate %}</span></li>
-        <li><span>{% blocktranslate %}Klik op <strong>Toch uitvoeren</strong>.{% endblocktranslate %}</span></li>
-    </ol>
-</section>
+{% include "site/_first_open_windows.html" %}
 
 <section class="card card-pad help-text">
     <h2>{% translate "Daarna" %}</h2>
