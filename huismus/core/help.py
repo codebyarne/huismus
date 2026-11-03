@@ -28,7 +28,21 @@ LANGUAGES = ("nl", "en")
 # The order of the list on /hulp/.
 # "Feedback geven" also shows the card Hoe gebruik je Huismus? (core.feedback_views).
 FEEDBACK = "feedback"
-TOPICS = ("back-ups", "exporteren", "mailen", "ai-assistenten", "desktop-app", "telefoon", FEEDBACK)
+TOPICS = (
+    "beginnen",
+    "facturen",
+    "offertes",
+    "uitgaven",
+    "kor-en-btw",
+    "moneybird",
+    "back-ups",
+    "exporteren",
+    "mailen",
+    "ai-assistenten",
+    "desktop-app",
+    "telefoon",
+    FEEDBACK,
+)
 
 _HELP_LINK = re.compile(r"^(?P<slug>[a-z0-9-]+)\.(?:nl|en)\.md(?P<anchor>#.*)?$")
 
