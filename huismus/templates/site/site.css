@@ -175,3 +175,7 @@
   .mus-hero { top: -58px; right: calc(50% - 22px); width: 44px; height: 44px; }
   .hero-shot { margin-top: var(--s-12); }
 }
+
+/* Het logo bovenaan: groter dan in de zijbalk van de app. */
+.site-head .brand { gap: 10px; font-size: var(--fs-xl); }
+.site-head .brand .mark { width: 40px; height: 40px; }
