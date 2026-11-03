@@ -207,7 +207,7 @@ def validate_credit_note_amount(document, new_total_cents):
 
 def kor_text_for(document, settings) -> str:
     """The KOR text a document gets when it is issued or sent. A credit
-    note follows the invoice it credits (decided by Arne, 2026-11-02): an
+    note follows the invoice it credits (decided 2026-11-02): an
     invoice with VAT, or with a "verlegd" line, had no KOR, so neither does
     its credit note. Looked at the invoice's VAT, not its KOR text: an
     imported invoice got the KOR text of the settings at import."""

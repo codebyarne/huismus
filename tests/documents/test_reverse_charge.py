@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""Btw, deel 2 (SPEC.md M18; decided by Arne 2026-11-02): "verlegd" as a
+"""Btw, deel 2 (SPEC.md M18; decided 2026-11-02): "verlegd" as a
 choice per line with a text the user sets, the customer's VAT number on the
 PDF, and a credit note that follows the invoice it credits."""
 
@@ -249,7 +249,7 @@ def test_under_the_kor_a_credit_note_keeps_verlegd_lines():
 
 def _client():
     client = Client()
-    client.force_login(get_user_model().objects.create_user("arne", password="x"))
+    client.force_login(get_user_model().objects.create_user("eigenaar", password="x"))
     return client
 
 

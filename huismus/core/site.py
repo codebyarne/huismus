@@ -50,7 +50,7 @@ LATEST_ASSETS = {"darwin": "Huismus-macos.dmg", "win32": "Huismus-windows.exe"}
 PLATFORMS = {"mac": "darwin", "windows": "win32"}
 # GoatCounter, a visitor counter without cookies: the code of the account
 # (<code>.goatcounter.com), set by pages.yml from a repository variable.
-# Empty: the site counts nothing (Arne, 2026-11-03).
+# Empty: the site counts nothing (besluit 2026-11-03).
 COUNTER_VARIABLE = "HUISMUS_SITE_COUNTER"
 # The pictures in docs/site/, each as <name>.<nl|en>.<light|dark>.webp.
 MEDIA = (

@@ -207,7 +207,7 @@ def test_after_restoring_an_inactive_user_is_not_signed_in(docker, data_dir, tmp
 
 
 def test_the_overview_shows_the_three_places_as_equals(desktop, drive):
-    # Arne, 2026-11-01: the folder had "heel veel prio" over the cloud.
+    # Besluit 2026-11-01: the folder had "heel veel prio" over the cloud.
     page = desktop.get(reverse("business:backups")).content.decode()
     rows = [page.index(f'id="plek-{place}"') for place in ("map", "dropbox", "webdav")]
     assert rows == sorted(rows)

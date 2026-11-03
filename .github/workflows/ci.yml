@@ -1,6 +1,6 @@
 name: CI
 
-# Fewer minutes (Arne, 2026-10-29): a change to documentation only (every
+# Fewer minutes (besluit 2026-10-29): a change to documentation only (every
 # .md file, docs/) runs no CI. The app doesn't read these files, so there
 # is nothing to test, and on main nothing to deploy. A change that touches
 # any other file runs CI as always, for all its files.
@@ -23,7 +23,7 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  # Which browser engines this run needs. Fewer minutes (Arne, 2026-10-29
+  # Which browser engines this run needs. Fewer minutes (besluit 2026-10-29
   # and 2026-10-30): a pull request runs Chromium only, like the local gate.
   # A push to main runs all three only when it touches something a browser
   # engine renders differently: templates, CSS, JS, translations, the

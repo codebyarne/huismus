@@ -33,7 +33,7 @@ class ImportRun(TimestampedModel):
 
 class ImportedRow(models.Model):
     """One row of a Moneybird sheet exactly as the export had it, kept by a
-    real import (besluit Arne 2026-11-02, "Moneybird-import verliest nooit
+    real import (besluit 2026-11-02, "Moneybird-import verliest nooit
     stil gegevens"): every column, also the ones Huismus doesn't take over
     or doesn't know (imports.columns). So nothing in an export is lost, and
     a later Huismus can still read what this one left out.

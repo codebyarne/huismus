@@ -228,7 +228,7 @@ def test_the_dry_run_page_writes_no_settings_row(client):
 
 
 # Singular and plural on the done page and in the report (besluit "Teksten in
-# Arnes stem, deel 4": "1 facturen" and "2 afwijking" were wrong).
+# de Huismus-stem, deel 4": "1 facturen" and "2 afwijking" were wrong).
 @pytest.mark.parametrize(
     ("language", "count", "expected"),
     [

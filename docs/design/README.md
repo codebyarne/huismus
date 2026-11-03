@@ -11,8 +11,8 @@
    gelijk met de CSS: een klasse die niet meer bestaat, of een nieuwe knop-,
    label-, meldingsvariant, kleur of icoon die op de pagina ontbreekt, maakt de
    poort rood.
-2. **Het Design System in Claude**: https://claude.ai/artifact/D77oj1KK1b2gauXXfH8mNi
-   (privé, in Arnes account; niet openbaar delen). Een kopie van 1, gemaakt met
+2. **Het Design System in Claude**:
+   privé; de link staat in `huismus-intern/werkwijze.md`. Een kopie van 1, gemaakt met
    `scripts/design_system_export.py`, om in Claude nieuwe designs mee te maken.
    Het noemt zelf uit welke commit het gebouwd is (README daar, en
    `lastChange`). Laatst bijgewerkt: 2026-10-30, uit commit `e81ea8d`.
@@ -44,7 +44,7 @@ ronde 3 (met een eigen schets-CSS, `hm.css`). Beide zijn naslag, geen bron.
    van Claude Code: `url` de link, `root` de map). Nieuwe iconen eerst als asset
    uploaden (`upload/Icons/<naam>.svg`) en in de index (`project/design-system.json`)
    opnemen. Pas de datum hierboven aan.
-3. Lukt stap 2 niet in je sessie, zeg dat dan in de melding aan Arne.
+3. Lukt stap 2 niet in je sessie, zeg dat dan in de melding aan de eigenaar.
 
 ## Domeinregels in de UI
 

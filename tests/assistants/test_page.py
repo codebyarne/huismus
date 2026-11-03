@@ -22,7 +22,7 @@ def test_not_connected_shows_koppelen_and_no_key(admin_client):
     assert "Niet gekoppeld" in page
     assert 'value="connect"' in page
     assert 'id="sleutel"' not in page
-    # The address and key first, for every assistant (Arne, 2026-10-30), so
+    # The address and key first, for every assistant (besluit 2026-10-30), so
     # each assistant's "hierboven" is right.
     cards = ["adres-en-sleutel", "claude", "chatgpt", "gemini"]
     places = [page.index(f'id="{card}"') for card in cards]
@@ -35,7 +35,7 @@ def test_koppelen_makes_a_key_hidden_until_shown_with_the_address(admin_client):
     secret = key.current()
     assert secret
     page = admin_client.get(URL).content.decode()
-    # Hidden by default (Arne, 2026-11-02): dots until "Toon", so it is not
+    # Hidden by default (besluit 2026-11-02): dots until "Toon", so it is not
     # in plain sight on screen or in a screenshot. Without JS a folded block
     # shows it.
     assert re.search(rf'<input type="password"[^>]* id="sleutel" value="{secret}"', page)

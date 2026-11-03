@@ -95,7 +95,7 @@ def test_a_second_start_creates_no_second_user(client, desktop):
 
 
 def test_a_user_with_a_password_gets_the_login_page(client, desktop):
-    get_user_model().objects.create_superuser("arne", password="een-echt-wachtwoord")
+    get_user_model().objects.create_superuser("eigenaar", password="een-echt-wachtwoord")
 
     _start(client)
     response = client.get("/")
@@ -108,7 +108,7 @@ def test_a_user_with_a_password_gets_the_login_page(client, desktop):
 def test_one_password_among_several_users_keeps_the_login(client, desktop):
     users = get_user_model().objects
     users.create_superuser("zonder", password=None)
-    users.create_superuser("arne", password="een-echt-wachtwoord")
+    users.create_superuser("eigenaar", password="een-echt-wachtwoord")
 
     _start(client)
     response = client.get("/")
@@ -124,7 +124,7 @@ def test_without_a_password_there_is_no_logout_button(client, desktop):
 
 
 def test_with_a_password_the_logout_button_stays(client, desktop):
-    user = get_user_model().objects.create_superuser("arne", password="een-echt-wachtwoord")
+    user = get_user_model().objects.create_superuser("eigenaar", password="een-echt-wachtwoord")
     _start(client)
     client.force_login(user)
 

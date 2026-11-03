@@ -5754,20 +5754,6 @@ msgstr ""
 #~ msgid "Gebouwd met AI-agents"
 #~ msgstr "Built with AI agents"
 
-#, python-format
-#~ msgid ""
-#~ "Huismus wordt gebouwd door Arne Krijnsen samen met Claude Code. De "
-#~ "afspraken voor de agents staan in <a href=\"%(repository)s/blob/main/"
-#~ "CLAUDE.md\">CLAUDE.md</a>, en dezelfde poort keurt elke wijziging, van "
-#~ "een mens of van een agent. Werk je zelf ook zo? Dan vind je in de repo "
-#~ "een werkend voorbeeld."
-#~ msgstr ""
-#~ "Huismus is built by Arne Krijnsen together with Claude Code. The "
-#~ "agreements for the agents are in <a href=\"%(repository)s/blob/main/"
-#~ "CLAUDE.md\">CLAUDE.md</a>, and the same gate checks every change, from a "
-#~ "person or an agent. Do you work like this too? The repo is a working "
-#~ "example."
-
 #~ msgid "Draai je liever op een Raspberry Pi?"
 #~ msgstr "Rather run it on a Raspberry Pi?"
 

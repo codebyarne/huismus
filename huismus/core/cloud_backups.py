@@ -610,7 +610,7 @@ def _start(work) -> None:
 
 def upload_in_background() -> bool:
     """upload_backup, without making the page wait for it: after linking,
-    a backup with receipts can take minutes to encrypt and send (Arne,
+    a backup with receipts can take minutes to encrypt and send (besluit
     2026-11-01: "Ik heb de code bewaard" seemed to hang). True when an
     upload is now running, this one or one that already was; uploading()
     says when it is done, and load() how it went.

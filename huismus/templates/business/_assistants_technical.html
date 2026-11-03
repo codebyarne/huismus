@@ -1,5 +1,5 @@
 {% load i18n %}
-{% comment %}One address and key for every assistant (Arne, 2026-10-30); per assistant only how it uses them.{% endcomment %}
+{% comment %}One address and key for every assistant (besluit 2026-10-30); per assistant only how it uses them.{% endcomment %}
 <section class="card settings-section" id="adres-en-sleutel">
     <div class="card-pad stack" style="gap:var(--s-3)">
         <div class="row" style="justify-content:space-between"><h2>{% translate "Adres en sleutel" %}</h2>{% if not desktop %}{% include "business/_assistant_status.html" %}{% endif %}</div>
@@ -12,7 +12,7 @@
         <div class="field">
             <label class="label" for="sleutel">{% translate "Sleutel" %}</label>
             <div class="row" style="gap:var(--s-2);flex-wrap:nowrap"><input type="password" class="input mono" id="sleutel" value="{{ key }}" readonly spellcheck="false" autocomplete="off"><button type="button" class="btn btn-sm" data-reveal="sleutel" data-hide="{% translate 'Verberg' %}" hidden>{% translate "Toon" %}</button><button type="button" class="btn btn-secondary btn-sm" data-copy="sleutel" data-copied="{% translate 'Gekopieerd' %}" hidden>{% translate "Kopiëren" %}</button></div>
-            {% comment %}Hidden until "Toon" (Arne, 2026-11-02), so it is not in plain sight; without JS this block shows it.{% endcomment %}
+            {% comment %}Hidden until "Toon" (besluit 2026-11-02), so it is not in plain sight; without JS this block shows it.{% endcomment %}
             <noscript><details><summary class="small">{% translate "Toon" %}</summary><input class="input mono" value="{{ key }}" readonly spellcheck="false" autocomplete="off" aria-label="{% translate 'Sleutel' %}"></details></noscript>
         </div>
         <div class="row" style="flex-wrap:wrap;gap:var(--s-2)">

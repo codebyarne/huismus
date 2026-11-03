@@ -2,13 +2,13 @@
 
 Hoe Huismus praat: in de app (knoppen, meldingen, foutmeldingen, uitleg,
 onboarding), in de hulppagina's (`docs/hulp/`) en in de documentatie. De toon
-is die van Arne: vriendelijk, direct en eerlijk, zonder opsmuk. Een nieuwe
+is die van de maker: vriendelijk, direct en eerlijk, zonder opsmuk. Een nieuwe
 tekst voldoet hier meteen aan; een oude tekst gaat mee zodra je hem aanraakt.
-Besluit: `huismus-intern/besluiten.md`, 2026-11-01, "Teksten in Arnes stem".
+Besluit: `huismus-intern/besluiten.md`, 2026-11-01, "Teksten in de Huismus-stem".
 
 Teksten over wet of belasting (de KOR-tekst, wat er op een factuur moet
 staan, de teksten in de pdf) herschrijf je niet zelf: dat is een vraag aan
-Arne (`CLAUDE.md`, escalatielijst).
+de eigenaar (`CLAUDE.md`, escalatielijst).
 
 ## De toon
 
@@ -20,7 +20,7 @@ Arne (`CLAUDE.md`, escalatielijst).
   Huismus open staat" in plaats van "regelmatig".
 - **Eerlijk.** Kan iets niet, of heeft het een nadeel, zeg het gewoon: "Een
   back-up op dezelfde schijf helpt niet als die schijf kapotgaat."
-- **Geen ik.** Huismus is geen persoon en Arne schrijft hier niet als
+- **Geen ik.** Huismus is geen persoon en de maker schrijft hier niet als
   blogger. "Huismus doet …" of de lezer aanspreken.
 - **Geen grapjes in de app**, ook niet in lege schermen of foutmeldingen. In
   een hulppagina mag het iets losser, zolang het helpt.

@@ -81,7 +81,7 @@ def _classify(sheet_name: str, headers: set[str]) -> FileKind:
 
 
 # Sheets of the parts of a year export that Huismus knows and deliberately
-# doesn't import (SPEC.md section 7, "Not in scope now"; besluit Arne
+# doesn't import (SPEC.md section 7, "Not in scope now"; besluit
 # 2026-11-01): products, bank transactions and the bookkeeping reports,
 # which are derived from the records Huismus does import. Names from the
 # sample exports. Any other sheet is unknown and named in the report

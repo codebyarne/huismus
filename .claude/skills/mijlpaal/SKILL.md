@@ -1,13 +1,13 @@
 ---
 name: mijlpaal
-description: Bouwt één mijlpaal of feature van Huismus van begin tot live, zonder Arne tussendoor te vragen, behalve voor de escalatielijst in CLAUDE.md. Gebruik als Arne zegt "bouw <feature>" of /mijlpaal <onderwerp>.
+description: Bouwt één mijlpaal of feature van Huismus van begin tot live, zonder de eigenaar tussendoor te vragen, behalve voor de escalatielijst in CLAUDE.md. Gebruik als de eigenaar zegt "bouw <feature>" of /mijlpaal <onderwerp>.
 ---
 
 # /mijlpaal <onderwerp>
 
 Eén onderwerp, van plan tot live op de Pi. Je werkt door tot het af is of tot
 iets op de **escalatielijst** (`CLAUDE.md`, "Autonoom werken") staat. Een
-productvraag of een design gaat naar de `product-owner`-agent, niet naar Arne.
+productvraag of een design gaat naar de `product-owner`-agent, niet naar de eigenaar.
 
 ## 1. Begin
 
@@ -24,7 +24,7 @@ productvraag of een design gaat naar de `product-owner`-agent, niet naar Arne.
 
 - Schrijf een kort plan: wat de gebruiker merkt, welke schermen, welke
   modellen, welke tests. Lijst open vragen.
-- Elke open vraag naar `product-owner`. `ESCALEREN` → vraag Arne (zie 9) en
+- Elke open vraag naar `product-owner`. `ESCALEREN` → vraag de eigenaar (zie 9) en
   bouw intussen alleen wat er niet van afhangt.
 - Werk `SPEC.md` bij (mijlpaalnummer pas nu kiezen, na `git fetch`). Dit gaat
   mee in dezelfde PR als de code.
@@ -47,7 +47,7 @@ productvraag of een design gaat naar de `product-owner`-agent, niet naar Arne.
 - Wijzig je `huismus.css`: werk `docs/design/componenten.html` bij (de test
   bewaakt het) en daarna het Design System in Claude, zoals
   `docs/design/README.md` beschrijft. Lukt dat laatste niet, zeg het in de
-  melding aan Arne.
+  melding aan de eigenaar.
 - Elke tekst die een gebruiker leest, schrijf je volgens
   `docs/schrijfwijzer.md`.
 - Nieuwe teksten in nl en en (`makemessages`, vertalingen invullen,
@@ -70,15 +70,15 @@ Alles moet slagen voordat je verder gaat:
   Push de branch, open de PR. Beschrijving in producttaal: wat de gebruiker
   merkt, de PO-besluiten, wat niet getest kon worden.
 - Raakt de PR iets van de escalatielijst (zoals een migratie die data
-  wijzigt, of `deploy/`): niet mergen, Arne vragen (zie 9).
+  wijzigt, of `deploy/`): niet mergen, de eigenaar vragen (zie 9).
 
 ## 7. Mergen en live
 
 - CI groen (op een PR alleen `verify (chromium)`), geen conflict, geen open vraag van
-  Arne → zelf mergen met rebase (`CLAUDE.md`, "Mergen").
+  de eigenaar → zelf mergen met rebase (`CLAUDE.md`, "Mergen").
 - Wacht tot de Pi de nieuwe versie draait: vergelijk
   `docker inspect huismus --format '{{.Config.Image}}'` via
-  `ssh arne@mijnpi` met `origin/main`, en lees het deploylog
+  de Pi (`huismus-intern/werkwijze.md`) met `origin/main`, en lees het deploylog
   (`~/.pm2/logs/huismus-webhook-out.log`) tot "Huismus <sha> draait."
 - Alleen documentatie gewijzigd (`.md`, `docs/`): geen CI en geen deploy
   (`CLAUDE.md`, "Mergen"). De Pi draait dan de vorige code-commit; niets te
@@ -92,7 +92,7 @@ Alles moet slagen voordat je verder gaat:
 - Workflow gewijzigd (`CLAUDE.md`, `.claude/`, `scripts/verify.sh`, CI, `deploy/`)?
   Werk ook `codebyarne/agentic-playbook` bij en zet `Playbook: …` in een commit
   (`CLAUDE.md`, "Playbook bijhouden").
-- Pushmelding aan Arne: wat er live ging, in één of twee zinnen producttaal,
+- Pushmelding aan de eigenaar: wat er live ging, in één of twee zinnen producttaal,
   plus de PO-besluiten van deze mijlpaal. Stuur de belangrijkste screenshots
   mee met SendUserFile.
 
@@ -100,7 +100,7 @@ Alles moet slagen voordat je verder gaat:
 
 Eén vraag tegelijk, in producttaal, met jouw advies als eerste optie
 (AskUserQuestion of de vraag in de wrap-up). Nooit "kijk de PR door" of een
-git-commando: Arne leest geen code. Ga intussen door met wat er niet van
+git-commando: de eigenaar leest geen code. Ga intussen door met wat er niet van
 afhangt.
 
 ## 10. Volgende sessie
@@ -116,15 +116,15 @@ sessie, maar geef het door aan een nieuwe:
    `source_url` `https://github.com/codebyarne/huismus`, titel
    `Mijlpaal: <onderwerp>`, en als `prompt` alleen `/mijlpaal <onderwerp>`.
    Omgeving, model en rechten erft hij van deze sessie.
-3. Zet in je laatste bericht aan Arne welk onderwerp de nieuwe sessie
+3. Zet in je laatste bericht aan de eigenaar welk onderwerp de nieuwe sessie
    oppakt, en stop. Een sessie start hoogstens één opvolger, ook als ze
    later nog een keer wakker wordt.
 
 Zonder `create_session` (een lokale sessie): noem het volgende onderwerp in
 je melding en start niets.
 
-Wacht je onderwerp op Arne (stap 9) en hangt het volgende er niet van af, dan
-mag je de opvolger al starten: zet eerst `(wacht: Arne)` achter je onderwerp
+Wacht je onderwerp op de eigenaar (stap 9) en hangt het volgende er niet van af, dan
+mag je de opvolger al starten: zet eerst `(wacht: eigenaar)` achter je onderwerp
 in `huismus-intern/backlog.md` (commit en push in `huismus-intern`), zodat de opvolger
 het overslaat. Na zijn antwoord bouw je je eigen onderwerp af (en haal je
 die markering weg), maar je start geen tweede opvolger.

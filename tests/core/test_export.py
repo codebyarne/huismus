@@ -371,7 +371,7 @@ def test_years_to_choose_are_the_years_with_something_in_them_newest_first():
 
 @pytest.fixture
 def logged_in(client):
-    user = get_user_model().objects.create_user(username="arne", password="x")
+    user = get_user_model().objects.create_user(username="eigenaar", password="x")
     client.force_login(user)
     return client
 

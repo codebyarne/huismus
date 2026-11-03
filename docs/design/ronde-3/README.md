@@ -3,8 +3,8 @@
 > **Referentie, niet de bron**, net als `docs/design/`. De geldende CSS staat in
 > `huismus/core/static/core/huismus.css`. Alle voorbeelddata is fictief.
 
-Designs voor wat nog gebouwd wordt, gemaakt als canvas in Claude:
-https://claude.ai/artifact/L7guJvpmW2oQqsNaghXTkG. Dit is een kopie van de
+Designs voor wat nog gebouwd wordt, gemaakt als canvas in Claude (privé; de link
+staat in `huismus-intern/werkwijze.md`). Dit is een kopie van de
 bestanden (`*.dc.html`, één per scherm; `hm.css` zijn de tokens in licht).
 
 | Bestand | Wat | Voor |
@@ -28,4 +28,4 @@ Bouwnoten van de PO-agent:
 - De pagina Updates heeft geen apart design: één schakelaar "Zoek naar nieuwe
   versies" plus de huidige versie.
 - Downloadpagina: knopnamen van macOS/Windows en de systeemeisen pas vastzetten
-  na Arnes schermafdrukken en de Intel-beslissing (SPEC.md §13).
+  na schermafdrukken van de eigenaar en de Intel-beslissing (SPEC.md §13).

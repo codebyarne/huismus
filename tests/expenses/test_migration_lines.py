@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """Every existing expense gets one line with its amount, VAT and category
-(huismus-intern/besluiten.md, 2026-11-02: approved by Arne, escalation
+(huismus-intern/besluiten.md, 2026-11-02: approved by the owner, escalation
 point 3). Totals per year and per category stay the same."""
 
 from datetime import date

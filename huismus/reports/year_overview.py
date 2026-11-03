@@ -14,7 +14,7 @@ Revenue counts on `Document.issue_date` (accrual), not a payment date
 authoritative for a document (numbering, snapshots, PDF dates), not a
 tax position on which basis is "correct" for any particular purpose.
 huismus-intern/STATUS.md's M6 plan flags this explicitly as a computation choice, not
-an assertion, for Arne to weigh in on if his own bookkeeping expects a
+an assertion, for the owner to weigh in on if their own bookkeeping expects a
 cash-basis view instead.
 """
 

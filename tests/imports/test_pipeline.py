@@ -100,7 +100,7 @@ def test_a_year_with_no_quote_files_imports_fine_with_no_quotes_section():
 
 
 def test_works_from_a_raw_zip_directly():
-    # Arne's explicit requirement: the import must accept the export the
+    # The owner's explicit requirement: the import must accept the export the
     # way it actually arrives from Moneybird, not a pre-extracted folder.
     run_moneybird_import(FIXTURES / "lindeboom_communicatie_2019.zip", commit=True)
 
@@ -305,7 +305,7 @@ def test_without_settings_values_settings_stay_as_they_are():
 
 def test_without_a_contacts_file_the_note_points_to_the_year_export(tmp_path):
     # Only the invoices part of a year export: the note says what to choose
-    # instead (besluit Arne 2026-11-01, "Moneybird-import neemt alles over").
+    # instead (besluit 2026-11-01, "Moneybird-import neemt alles over").
     shutil.copytree(FIXTURES / "lindeboom_communicatie_2019" / "sales_invoices", tmp_path / "a")
     shutil.copytree(
         FIXTURES / "lindeboom_communicatie_2019" / "sales_invoices_details", tmp_path / "b"

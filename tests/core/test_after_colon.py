@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """After a colon the app writes a small letter ("Omschrijving: vul dit in."),
 except for a word that keeps its capitals (huismus-intern/besluiten.md,
-2026-11-01, "Teksten in Arnes stem, deel 3")."""
+2026-11-01, "Teksten in de Huismus-stem, deel 3")."""
 
 import pytest
 

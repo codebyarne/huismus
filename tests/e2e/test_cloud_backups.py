@@ -65,7 +65,7 @@ def test_set_up_webdav_save_the_code_and_restore_from_it(app, dav):
 
 
 def test_the_row_says_busy_until_the_upload_is_done_then_stops_asking(app, dav):
-    # The first upload runs in its own thread (Arne, 2026-11-01: "Ik heb de
+    # The first upload runs in its own thread (besluit 2026-11-01: "Ik heb de
     # code bewaard" seemed to hang). The card asks again every 3 s while it
     # runs, and stops once it's done.
     Contact.objects.create(company_name="Bakkerij De Korrel")

@@ -101,7 +101,7 @@ def after_colon(message):
     letter, like every other colon in the app ("Omschrijving: vul dit in.").
     Only when the rest of the first word is small, so "IBAN …", "NL91…" and
     "KvK-nummer" keep theirs (huismus-intern/besluiten.md, 2026-11-01,
-    "Teksten in Arnes stem, deel 3"). A rule of thumb for Huismus' own
+    "Teksten in de Huismus-stem, deel 3"). A rule of thumb for Huismus' own
     messages, which start with a verb or a plain word; a name with one
     capital ("Huismus") would get a small letter too."""
     text = str(message)
