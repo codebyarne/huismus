@@ -62,7 +62,7 @@ above is therefore optional.
 - Add a dependency only with a stated reason; prefer the standard library and Django built-ins.
 - Every schema change gets a migration; never edit an applied migration.
 - Domain terms stay Dutch in the UI (factuur, offerte, creditnota, klant), English in code (`Invoice`, `Quote`, `CreditNote`, `Contact`).
-- Every text a user reads (UI, messages, errors, help pages, docs) follows `docs/schrijfwijzer.md`: je/jij, short, concrete, in Arne's voice; `tests/core/test_schrijfwijzer.py` checks the measurable part.
+- Every text a user reads (UI, messages, errors, help pages, docs) follows `docs/schrijfwijzer.md`: je/jij, short, concrete, in the voice described there; `tests/core/test_schrijfwijzer.py` checks the measurable part.
 
 ## Privacy and safety
 
@@ -90,30 +90,29 @@ Works in the running container, has tests, has Dutch and English strings, is doc
 
 ## Deploy
 
-Draait op Arnes Raspberry Pi (`ssh arne@mijnpi`, in het tailnet). Een push naar
-`main` op GitHub (`codebyarne/huismus`) → CI → alleen bij
-groen: webhook (`deploy/webhook.py`, PM2 `huismus-webhook`, `127.0.0.1:9002`, via
-Tailscale Funnel-pad `/deploy-huismus`) → `deploy/deploy.sh <commit>`: build, backup,
-container `huismus` vervangen, check. Huismus zelf alleen in het tailnet op `:9443`,
-nooit via Funnel. Alles over setup en beheer: `docs/deploy.md`.
+Draait op een Raspberry Pi van de eigenaar, alleen bereikbaar in diens privénetwerk.
+Een push naar `main` op GitHub (`codebyarne/huismus`) → CI → alleen bij groen:
+webhook (`deploy/webhook.py`) → `deploy/deploy.sh <commit>`: build, backup,
+container `huismus` vervangen, check. Huismus zelf is nooit vanaf internet
+bereikbaar. Setup en beheer: `docs/deploy.md`; adressen en poorten van de Pi:
+`huismus-intern/werkwijze.md`.
 
 Omdat `main` meteen live gaat: werk als agent altijd op een eigen branch en lever
 via een pull request. Push nooit rechtstreeks naar `main` (`.claude/settings.json`
 weigert het ook).
 
-### Parallelle sessies (afgesproken met Arne, 2026-10-22)
+### Parallelle sessies
 
-Arne werkt vaak in meerdere sessies tegelijk. Op 2026-10-21 leverde dat botsingen
-op: twee sessies in één map (de half-af wijzigingen van de een maakten de poort van
-de ander rood), mailen dat in twee sessies tegelijk gebouwd werd, twee keer "M9" en
-twee keer migratie `0008`, en 19 lokale commits die naast GitHub waren gegroeid.
+Er draaien vaak meerdere sessies tegelijk. Zonder afspraken botsen die: half-af
+werk van de een maakt de poort van de ander rood, en mijlpaal- of migratienummers
+worden twee keer uitgedeeld.
 
 - **Elke sessie werkt in een eigen worktree** (`.claude/worktrees/`, eigen branch
   vanaf de nieuwste `origin/main`). Nooit in de hoofdmap van de repo werken als een
   andere sessie daar bezig is, en nooit op de lokale `main` committen.
 - **Eén onderwerp per sessie.** Merk je dat een andere sessie hetzelfde onderwerp of
   hetzelfde scherm (template, view) aanpakt, stop dan en stem af: stuur die sessie
-  een bericht of vraag het Arne. Twee sessies op hetzelfde scherm werken na elkaar,
+  een bericht of vraag het de eigenaar. Twee sessies op hetzelfde scherm werken na elkaar,
   niet tegelijk.
 - **Gedeelde nummers pas vlak voor gebruik.** Een mijlpaalnummer in `SPEC.md` of een
   migratienummer kies je pas na `git fetch origin` en met de nieuwste `origin/main`
@@ -126,27 +125,27 @@ twee keer migratie `0008`, en 19 lokale commits die naast GitHub waren gegroeid.
   Neem dan de versie van `main`, draai `makemessages` opnieuw en vul je eigen
   vertalingen weer in; voeg niet beide kanten blind samen.
 
-### Mergen (afgesproken met Arne, 2026-10-20)
+### Mergen
 
 Claude mergt een eigen PR zelf naar `main`, zonder te vragen, zodra:
 CI op de laatste commit groen is (op een PR draait alleen `verify (chromium)`;
 WebKit en Firefox draaien na de merge op `main`, als de wijziging templates,
 CSS, JS, vertalingen of de browsertests raakt, en houden bij rood de deploy
 tegen), er geen
-merge-conflict is, en er geen open review-opmerking of vraag van Arne ligt.
+merge-conflict is, en er geen open review-opmerking of vraag van de eigenaar ligt.
 Merge-methode: rebase (`main` heeft een rechte historie, geen
 merge-commits). Merge = uitrollen naar de Pi; meld daarna in één regel wat
 er live gaat.
 
 Een PR die alleen documentatie wijzigt (`.md`-bestanden, `docs/`) krijgt geen
-CI (afgesproken met Arne, 2026-10-29, om Actions-minuten te sparen): die mag
+CI (om Actions-minuten te sparen): die mag
 gemerged worden zonder CI, als `./scripts/verify.sh` lokaal groen is. Op `main`
 draait dan ook geen CI, dus er gaat niets live en de Pi blijft op de vorige
 code-commit staan.
 
 Eerst vragen blijft nodig bij: een migratie die bestaande gegevens wijzigt
-of verwijdert, wijzigingen in `deploy/` of `scripts/verify.sh`, en als Arne
-bij de PR zegt dat hij zelf wil kijken.
+of verwijdert, wijzigingen in `deploy/` of `scripts/verify.sh`, en als de eigenaar
+bij de PR zegt zelf te willen kijken.
 
 ## Klaar is groen
 
@@ -170,12 +169,12 @@ ruff (lint + format), pytest, en `makemigrations --check`. De regel blijft: als
 een invariant belangrijk genoeg is om in dit document te staan, hoort hij op
 termijn in de poort.
 
-## Privé: huismus-intern (afgesproken met Arne, 2026-11-01)
+## Privé: huismus-intern
 
-De repo is openbaar. Wat van Arne is, staat in de privé-repo
+De repo is openbaar. Wat privé is, staat in de privé-repo
 `codebyarne/huismus-intern`: `besluiten.md` (productbesluiten), `backlog.md`
 (de wachtrij voor `/mijlpaal`), `STATUS.md` (logboek per mijlpaal) en
-`cloud-registratie.md`. Code en docs verwijzen ernaar als
+`cloud-registratie.md` en `werkwijze.md` (de Pi en de eigenaar). Code en docs verwijzen ernaar als
 `huismus-intern/<bestand>`.
 
 - **Waar:** in een cloudsessie koppel je hem met `add_repo`
@@ -185,8 +184,8 @@ De repo is openbaar. Wat van Arne is, staat in de privé-repo
 - **Schrijven:** `git -C <map> pull --rebase` vlak voor je schrijft, één besluit of
   regel per commit, en direct naar zijn `main` pushen met `git -C <map> push`.
   Dat mag: hij heeft geen CI en geen deploy. Geen PR nodig.
-- **Wat er niet in deze repo hoort:** namen van testers of klanten, de backlog,
-  Arnes notities, adressen van zijn apparaten. Twijfel je, zet het in
+- **Wat er niet in deze repo hoort:** namen van mensen (testers, klanten, de
+  eigenaar), de backlog, persoonlijke notities, adressen van apparaten. Twijfel je, zet het in
   `huismus-intern`.
 
 ## Reviewers
@@ -202,24 +201,24 @@ Vijf subagents in `.claude/agents/`, elk met precies één opdracht:
 - `verify-e2e` — gebruikt de app via Playwright zoals een gebruiker, op
   `scripts/demo-server.sh`, en levert screenshots. Groene tests zijn niet
   genoeg voor iets wat een gebruiker ziet: draai deze voordat je "klaar" zegt.
-- `product-owner` — neemt productbeslissingen en keurt designs namens Arne,
+- `product-owner` — neemt productbeslissingen en keurt designs namens de eigenaar,
   binnen `SPEC.md` en eerdere besluiten, en legt elk besluit vast in
   `huismus-intern/besluiten.md`. Zie "Autonoom werken".
 
-## Autonoom werken (afgesproken met Arne, 2026-10-28)
+## Autonoom werken
 
-Arne is product owner en leest geen code. Een mijlpaal of feature bouw je met
-`/mijlpaal <onderwerp>` (`.claude/skills/mijlpaal/`) van plan tot live, zonder
-hem tussendoor te vragen. Een productvraag of een design gaat naar de
+De eigenaar is product owner en leest geen code. Een mijlpaal of feature bouw
+je met `/mijlpaal <onderwerp>` (`.claude/skills/mijlpaal/`) van plan tot live,
+zonder tussendoor te vragen. Een productvraag of een design gaat naar de
 `product-owner`-agent; die beslist of keurt, en schrijft het in
-`huismus-intern/besluiten.md`, waar Arne het achteraf kan terugdraaien.
+`huismus-intern/besluiten.md`, waar de eigenaar het achteraf kan terugdraaien.
 
 **Eén onderwerp per sessie, daarna een verse sessie.** Een volle context maakt
 een sessie traag. Na het melden start `/mijlpaal` zelf een nieuwe cloudsessie
 voor het bovenste open onderwerp in `huismus-intern/backlog.md` (stap 10 van de skill).
 `PAUZE` in dat bestand of een lege lijst stopt de keten.
 
-**Escalatielijst.** Alleen dit vraag je aan Arne zelf, in producttaal en met
+**Escalatielijst.** Alleen dit vraag je aan de eigenaar zelf, in producttaal en met
 een advies:
 
 1. tekst over wet of belasting (in de UI, de PDF of de docs);
@@ -230,23 +229,23 @@ een advies:
 6. iets wat een van de zeven harde regels raakt of afzwakt;
 7. Huismus of de laptop bereikbaar maken vanaf internet (een tunnel, een
    open poort);
-8. iets wat `SPEC.md` of een eerder besluit van Arne tegenspreekt.
+8. iets wat `SPEC.md` of een eerder besluit van de eigenaar tegenspreekt.
 
 Ga intussen door met werk dat er niet van afhangt. Na elke mijlpaal krijgt
-Arne een melding: wat er live ging, de besluiten van de PO-agent, en
+de eigenaar een melding: wat er live ging, de besluiten van de PO-agent, en
 screenshots.
 
-## Playbook bijhouden (afgesproken met Arne, 2026-10-31)
+## Playbook bijhouden
 
 De werkwijze van Huismus is de bron van `codebyarne/agentic-playbook` (generiek,
 Engels, voor Cursor en Claude Code). Elke keer dat we hier de workflow bijschaven,
 werkt dezelfde sessie ook de playbook bij: het generieke deel, zonder namen van
-Huismus, Arne of anderen (de poort daar weigert ze), op een eigen branch met een PR,
+Huismus, de eigenaar of anderen (de poort daar weigert ze), op een eigen branch met een PR,
 met `./scripts/verify.sh` daar groen.
 
 - Workflow is: `CLAUDE.md`, alles in `.claude/` (agents, skills, hooks, settings),
   `scripts/verify.sh`, `.github/workflows/` en `deploy/`. Ook een nieuwe afspraak met
-  Arne over hoe we werken, of een les uit `BUGS-BY-HAND.md` die een hele soort vangt.
+  de eigenaar over hoe we werken, of een les uit `BUGS-BY-HAND.md` die een hele soort vangt.
 - In een cloudsessie: koppel de playbook met `add_repo` (`codebyarne/agentic-playbook`).
 - Zet in een commit van de Huismus-PR de regel `Playbook: <url van de PR of commit>`,
   of `Playbook: n.v.t. — <waarom>` als het alleen voor Huismus geldt.
