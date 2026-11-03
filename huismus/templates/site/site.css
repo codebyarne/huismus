@@ -172,6 +172,6 @@
   .mus, .mus .mus-body, .mus .mus-wing-up, .mus .mus-wing { animation: none !important; }
 }
 @media (max-width: 900px) {
-  .mus-hero { top: -50px; right: 64px; width: 36px; height: 36px; }
-  .hero-shot { margin-top: var(--s-10); }
+  .mus-hero { top: -58px; right: calc(50% - 22px); width: 44px; height: 44px; }
+  .hero-shot { margin-top: var(--s-12); }
 }
