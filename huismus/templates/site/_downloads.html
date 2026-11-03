@@ -1,0 +1,6 @@
+{% load i18n %}{% comment %}The two download buttons: always the newest release (site.download_url).{% endcomment %}
+<div class="downloads">
+    <a class="btn btn-primary btn-lg" href="{{ mac_url }}"><svg class="i" aria-hidden="true"><use href="#download"></use></svg>{% translate "Download voor Mac" %}</a>
+    <a class="btn btn-secondary btn-lg" href="{{ windows_url }}"><svg class="i" aria-hidden="true"><use href="#download"></use></svg>{% translate "Download voor Windows" %}</a>
+</div>
+<p class="small muted">{% translate "macOS 14 of nieuwer met een Apple-chip · Windows 10 of nieuwer" %} · <a href="{{ install_url }}">{% translate "Zo open je hem de eerste keer" %}</a></p>

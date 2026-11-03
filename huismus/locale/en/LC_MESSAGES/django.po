@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-02 16:51+0100\n"
+"POT-Creation-Date: 2026-11-03 09:38+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2516,6 +2516,10 @@ msgstr ""
 msgid "Weer leegmaken"
 msgstr "Clear sample data"
 
+#
+msgid "Facturen en uitgaven voor zzp'ers, met of zonder KOR"
+msgstr "Invoices and expenses for Dutch freelancers, with or without the KOR"
+
 msgid "Sneltoetsen:"
 msgstr "Shortcuts:"
 
@@ -3386,6 +3390,13 @@ msgid "Welkom bij Huismus"
 msgstr "Welcome to Huismus"
 
 msgid ""
+"Begin je nieuw? Dan vul je in vier stappen in wat Huismus nodig heeft voor "
+"je eerste factuur."
+msgstr ""
+"Starting fresh? Fill in what Huismus needs for your first invoice, in four "
+"steps."
+
+msgid ""
 "Kom je van Moneybird? Neem dan in één keer al je klanten, facturen en "
 "offertes mee."
 msgstr ""
@@ -3396,13 +3407,6 @@ msgid ""
 "Huismus doet eerst een proefdraai en slaat pas iets op als jij dat kiest."
 msgstr ""
 "Huismus does a trial run first and only saves anything when you say so."
-
-msgid ""
-"Begin je nieuw? Dan vul je in vier stappen in wat Huismus nodig heeft voor "
-"je eerste factuur."
-msgstr ""
-"Starting fresh? Fill in what Huismus needs for your first invoice, in four "
-"steps."
 
 msgid "Stap voor stap beginnen"
 msgstr "Start step by step"
@@ -5014,32 +5018,225 @@ msgstr "This page doesn't exist (anymore)."
 msgid "Naar de downloadpagina"
 msgstr "To the download page"
 
+msgid "Download voor Mac"
+msgstr "Download for Mac"
+
+msgid "Download voor Windows"
+msgstr "Download for Windows"
+
+#
+msgid "macOS 14 of nieuwer met een Apple-chip · Windows 10 of nieuwer"
+msgstr "macOS 14 or newer with an Apple chip · Windows 10 or newer"
+
+msgid "Zo open je hem de eerste keer"
+msgstr "How to open it the first time"
+
+#
 msgid ""
-"Offertes, facturen en uitgaven voor zzp’ers met de KOR. Gratis en open "
-"source."
-msgstr ""
-"Quotes, invoices and expenses for Dutch freelancers using the KOR. Free and "
+"Offertes, facturen en uitgaven voor zzp’ers, met of zonder KOR. Een gratis "
+"app voor Mac en Windows, en je administratie blijft op je eigen computer."
+msgstr "Quotes, invoices and expenses for Dutch freelancers, with or without the KOR. A free app for Mac and Windows, and your records stay on your own computer."
+
+#
+msgid "Huismus: je facturen, op je eigen computer"
+msgstr "Huismus: your invoices, on your own computer"
+
+#
+msgid ""
+"Offertes, facturen en uitgaven voor zzp’ers, met of zonder KOR. Gratis en "
 "open source."
+msgstr "Quotes, invoices and expenses for Dutch freelancers, with or without the KOR. Free and open source."
+
+msgid "Rondleiding"
+msgstr "Tour"
+
+msgid "Meebouwen"
+msgstr "Contribute"
 
 msgid "Download"
 msgstr "Download"
 
-msgid "Broncode"
-msgstr "Source code"
-
 #, python-format
 msgid ""
 "Huismus is gratis en open source, onder de <a href=\"%(repository)s/blob/"
-"main/LICENSE\">AGPL-3.0</a>."
-msgstr ""
-"Huismus is free and open source, under the <a href=\"%(repository)s/blob/"
-"main/LICENSE\">AGPL-3.0</a>."
+"main/LICENSE\">AGPL-3.0</a>. Een hobbyproject, gemaakt in Nederland."
+msgstr "Huismus is free and open source, under the <a href=\"%(repository)s/blob/main/LICENSE\">AGPL-3.0</a>. A hobby project, made in the Netherlands."
 
-msgid "Draai je liever op een Raspberry Pi?"
-msgstr "Rather run it on a Raspberry Pi?"
+#
+msgid "Installeren"
+msgstr "Install"
+
+msgid "Broncode"
+msgstr "Source code"
 
 msgid "Alle versies"
 msgstr "All versions"
+
+msgid "Voor ontwikkelaars"
+msgstr "For developers"
+
+#
+msgid "Bouw mee aan Huismus"
+msgstr "Help build Huismus"
+
+msgid ""
+"Huismus is open source. Code, vertalingen, testen en goede ideeën zijn "
+"welkom. Je hoeft geen boekhouder te zijn: de regels voor geld en facturen "
+"staan in de code en in de tests."
+msgstr "Huismus is open source. Code, translations, testing and good ideas are welcome. You don't need to be an accountant: the rules for money and invoices are in the code and the tests."
+
+msgid "Naar de code op GitHub"
+msgstr "See the code on GitHub"
+
+msgid "Bekijk de issues"
+msgstr "Browse the issues"
+
+msgid "Waarmee het gemaakt is"
+msgstr "What it's built with"
+
+msgid ""
+"<strong>Django en SQLite:</strong> één proces en één databasebestand. Een "
+"back-up is een kopie van een map."
+msgstr "<strong>Django and SQLite:</strong> one process and one database file. A backup is a copy of a folder."
+
+msgid ""
+"<strong>HTMX en gewone CSS:</strong> schermen komen van de server. Geen JS-"
+"framework en geen build-stap; elk formulier werkt ook zonder JavaScript."
+msgstr "<strong>HTMX and plain CSS:</strong> screens come from the server. No JS framework and no build step; every form also works without JavaScript."
+
+msgid "<strong>WeasyPrint</strong> voor de pdf's."
+msgstr "<strong>WeasyPrint</strong> for the PDFs."
+
+msgid ""
+"<strong>pywebview en PyInstaller</strong> voor de app op Mac en Windows, "
+"<strong>Docker</strong> voor een server of Raspberry Pi."
+msgstr "<strong>pywebview and PyInstaller</strong> for the app on Mac and Windows, <strong>Docker</strong> for a server or Raspberry Pi."
+
+msgid ""
+"<strong>pytest en Playwright:</strong> de browsertests draaien in Chromium, "
+"WebKit en Firefox."
+msgstr "<strong>pytest and Playwright:</strong> the browser tests run in Chromium, WebKit and Firefox."
+
+msgid "Waar je mee kunt helpen"
+msgstr "Where you can help"
+
+msgid ""
+"<strong>Testen op Windows:</strong> Huismus wordt op een Mac gemaakt. Elke "
+"melding van iets wat op Windows raar doet, helpt."
+msgstr "<strong>Testing on Windows:</strong> Huismus is made on a Mac. Every report of something that acts strange on Windows helps."
+
+msgid ""
+"<strong>Vertalingen:</strong> Nederlands is de brontaal. Loop de Engelse "
+"teksten na, of voeg een taal toe."
+msgstr "<strong>Translations:</strong> Dutch is the source language. Check the English texts, or add a language."
+
+msgid ""
+"<strong>Bugs en wensen:</strong> open een issue. Kom je van Moneybird en "
+"gaat er iets mis bij het importeren, beschrijf het dan zonder echte gegevens."
+msgstr "<strong>Bugs and wishes:</strong> open an issue. Coming from Moneybird and the import goes wrong? Describe it without real data."
+
+msgid ""
+"<strong>Code:</strong> kies een issue, of begin bij iets kleins. Voor iets "
+"groters bespreek je eerst de aanpak in een issue."
+msgstr "<strong>Code:</strong> pick an issue, or start with something small. For anything bigger, discuss the approach in an issue first."
+
+msgid "Zo begin je"
+msgstr "Getting started"
+
+msgid ""
+"Je hebt Python 3.12 of nieuwer nodig, <a href=\"https://docs.astral.sh/uv/"
+"\">uv</a> en Pango voor de pdf's (op een Mac: <code>brew install pango</"
+"code>)."
+msgstr "You need Python 3.12 or newer, <a href=\"https://docs.astral.sh/uv/\">uv</a> and Pango for the PDFs (on a Mac: <code>brew install pango</code>)."
+
+msgid "Huismus met negen jaar nepdata"
+msgstr "Huismus with nine years of sample data"
+
+msgid "alle checks in één commando"
+msgstr "every check in one command"
+
+#, python-format
+msgid ""
+"<code>./scripts/verify.sh</code> is de poort: een wijziging is klaar als die "
+"groen is. Hoe de code in elkaar zit, staat in <a href=\"%(repository)s/blob/"
+"main/docs/architectuur.md\">docs/architectuur.md</a>, het ontwerp in <a "
+"href=\"%(repository)s/blob/main/SPEC.md\">SPEC.md</a>."
+msgstr "<code>./scripts/verify.sh</code> is the gate: a change is done when it's green. How the code fits together is in <a href=\"%(repository)s/blob/main/docs/architectuur.md\">docs/architectuur.md</a> (Dutch), the design in <a href=\"%(repository)s/blob/main/SPEC.md\">SPEC.md</a>."
+
+msgid "De regels van het huis"
+msgstr "House rules"
+
+msgid ""
+"Een paar regels zijn hard, omdat het om iemands administratie gaat. De tests "
+"en de database bewaken ze."
+msgstr "A few rules are strict, because this is someone's bookkeeping. The tests and the database guard them."
+
+msgid ""
+"<strong>Geld in centen:</strong> bedragen zijn hele getallen, nooit een "
+"float."
+msgstr "<strong>Money in cents:</strong> amounts are integers, never a float."
+
+#
+msgid ""
+"<strong>Uitgegeven is vast:</strong> een uitgegeven factuur verandert niet "
+"meer. Corrigeren doe je met een creditnota."
+msgstr "<strong>Issued is fixed:</strong> an issued invoice doesn't change anymore. You correct with a credit note."
+
+msgid ""
+"<strong>Nummers zonder gaten:</strong> een nummer krijgt een factuur pas bij "
+"het uitgeven."
+msgstr "<strong>Numbers without gaps:</strong> an invoice only gets its number when it's issued."
+
+msgid ""
+"<strong>Eén functie voor totalen:</strong> het scherm, de pdf en de import "
+"rekenen op dezelfde manier."
+msgstr "<strong>One function for totals:</strong> the screen, the PDF and the import all calculate the same way."
+
+msgid ""
+"<strong>Geen echte gegevens:</strong> nooit een echte factuur, IBAN of "
+"export in de repo, een test of een issue."
+msgstr "<strong>No real data:</strong> never a real invoice, IBAN or export in the repo, a test or an issue."
+
+msgid "Gebouwd met AI-agents"
+msgstr "Built with AI agents"
+
+#, python-format
+msgid ""
+"Huismus wordt gebouwd door Arne Krijnsen samen met Claude Code. De afspraken "
+"voor de agents staan in <a href=\"%(repository)s/blob/main/"
+"CLAUDE.md\">CLAUDE.md</a>, en dezelfde poort keurt elke wijziging, van een "
+"mens of van een agent. Werk je zelf ook zo? Dan vind je in de repo een "
+"werkend voorbeeld."
+msgstr "Huismus is built by Arne Krijnsen together with Claude Code. The agreements for the agents are in <a href=\"%(repository)s/blob/main/CLAUDE.md\">CLAUDE.md</a>, and the same gate checks every change, from a person or an agent. Do you work like this too? The repo is a working example."
+
+msgid "Afspraken"
+msgstr "Agreements"
+
+msgid ""
+"<strong>Eén onderwerp per commit</strong>, met een conventioneel "
+"commitbericht (<code>feat(...)</code>, <code>fix(...)</code>)."
+msgstr "<strong>One concern per commit</strong>, with a conventional commit message (<code>feat(...)</code>, <code>fix(...)</code>)."
+
+msgid ""
+"<strong>Tests eerst</strong> voor alles wat met totalen, nummers of "
+"creditnota's te maken heeft."
+msgstr "<strong>Tests first</strong> for anything to do with totals, numbers or credit notes."
+
+msgid "<strong>Teksten via gettext</strong>, in het Nederlands en het Engels."
+msgstr "<strong>Texts through gettext</strong>, in Dutch and English."
+
+msgid ""
+"<strong>Een DCO in plaats van een CLA:</strong> onderteken je commits met "
+"<code>git commit -s</code>. De licentie is AGPL-3.0-or-later."
+msgstr "<strong>A DCO instead of a CLA:</strong> sign off your commits with <code>git commit -s</code>. The license is AGPL-3.0-or-later."
+
+#
+msgid "Alles over bijdragen"
+msgstr "All about contributing"
+
+#
+msgid "Gedragscode"
+msgstr "Code of conduct"
 
 #, python-format
 msgid ""
@@ -5049,35 +5246,303 @@ msgstr ""
 "Help for Huismus %(version)s. The app has the same help under <strong>Help</"
 "strong>."
 
-msgid "Huismus: je facturen, op je eigen laptop"
-msgstr "Huismus: your invoices, on your own laptop"
+msgid "Voor zzp’ers, met of zonder KOR"
+msgstr "For Dutch freelancers, with or without the KOR"
 
-msgid "Je facturen, op je eigen laptop"
-msgstr "Your invoices, on your own laptop"
+#
+msgid "Je facturen, op je eigen computer"
+msgstr "Your invoices, on your own computer"
 
 msgid ""
-"Offertes, facturen en uitgaven voor zzp’ers met de KOR. Gratis en open "
-"source. Je administratie staat op je eigen computer."
-msgstr ""
-"Quotes, invoices and expenses for Dutch freelancers using the KOR. Free and "
-"open source. Your records live on your own computer."
+"Huismus is een gratis app voor offertes, facturen en uitgaven. Geen "
+"abonnement en geen account: je administratie staat gewoon op je Mac of pc."
+msgstr "Huismus is a free app for quotes, invoices and expenses. No subscription and no account: your records simply live on your Mac or PC."
 
-msgid "Download voor Mac"
-msgstr "Download for Mac"
+msgid ""
+"Het overzicht van Huismus: wat openstaat, de omzet van dit jaar tegenover de "
+"KOR-grens, de laatste facturen en een offerte die op antwoord wacht."
+msgstr "The Huismus overview: what's outstanding, this year's revenue against the KOR limit, the latest invoices and a quote awaiting a reply."
 
-msgid "Download voor Windows"
-msgstr "Download for Windows"
+#
+msgid "Waarom Huismus"
+msgstr "Why Huismus"
+
+msgid "Gratis en open source"
+msgstr "Free and open source"
+
+msgid ""
+"Geen abonnement en geen proefperiode. De broncode staat openbaar, dus "
+"iedereen kan zien hoe Huismus werkt."
+msgstr "No subscription and no trial period. The source code is public, so anyone can see how Huismus works."
+
+#
+msgid "Op je eigen computer"
+msgstr "On your own computer"
+
+msgid ""
+"Er is geen Huismus-server. Je administratie gaat nergens heen, behalve naar "
+"je eigen back-upmap. Huismus kijkt alleen of er een nieuwe versie is, en dat "
+"kun je uitzetten."
+msgstr "There is no Huismus server. Your records go nowhere, except to your own backup folder. Huismus only checks whether there's a new version, and you can turn that off."
+
+msgid "Met of zonder KOR"
+msgstr "With or without the KOR"
 
 #, python-format
 msgid ""
-"Versie %(version)s · macOS 14 of nieuwer met een Apple-chip · Windows 10 of "
-"nieuwer"
-msgstr ""
-"Version %(version)s · macOS 14 or newer with an Apple chip · Windows 10 or "
-"newer"
+"Gebruik je de KOR, dan zet Huismus jouw KOR-tekst op elke factuur. Reken je "
+"btw, dan kies je per regel 0, 9 of 21%%."
+msgstr "If you use the KOR, Huismus puts your KOR text on every invoice. If you charge VAT, you choose 0, 9 or 21%% per line."
 
-msgid "De eerste keer openen"
-msgstr "Opening it the first time"
+#
+msgid "Zo werkt Huismus"
+msgstr "How Huismus works"
+
+msgid "Een rondje door de app. De klanten en bedragen zijn verzonnen."
+msgstr "A walk through the app. The customers and amounts are made up."
+
+msgid "Een factuur in een paar klikken"
+msgstr "An invoice in a few clicks"
+
+msgid ""
+"Kies een klant, typ wat je deed en Huismus rekent het totaal uit. Met "
+"<strong>Uitgeven</strong> krijgt de factuur een vast nummer, zonder gaten in "
+"de reeks. Betaald? Dat zet je erbij met één klik."
+msgstr "Choose a customer, type what you did and Huismus works out the total. <strong>Issue</strong> gives the invoice a fixed number, with no gaps in the series. Paid? You record it with one click."
+
+#
+msgid "Zo maak je een factuur"
+msgstr "How to make an invoice"
+
+msgid ""
+"Animatie: een regel toevoegen aan een conceptfactuur, de factuur uitgeven en "
+"een betaling registreren."
+msgstr "Animation: adding a line to a draft invoice, issuing the invoice and recording a payment."
+
+msgid "Je ziet meteen wat openstaat"
+msgstr "See at once what's outstanding"
+
+msgid ""
+"Per factuur zie je of hij betaald is, nog open staat of te laat is. Je zoekt "
+"op nummer of klant, en filtert op jaar."
+msgstr "For every invoice you see whether it's paid, still open or late. Search by number or customer, and filter by year."
+
+msgid ""
+"De lijst met facturen, met per factuur het nummer, de klant, het totaal en "
+"of hij betaald is."
+msgstr "The list of invoices, with each invoice's number, customer, total and whether it's paid."
+
+#
+msgid "Van offerte naar factuur"
+msgstr "From quote to invoice"
+
+#
+msgid ""
+"Stuur een offerte, leg vast of de klant ja zegt, en zet hem met één klik om "
+"naar een factuur. De klant en de regels gaan mee."
+msgstr "Send a quote, record whether the customer says yes, and turn it into an invoice with one click. The customer and the lines come along."
+
+#
+msgid "Meer over offertes"
+msgstr "More about quotes"
+
+#
+msgid "Animatie: een verzonden offerte wordt omgezet naar een conceptfactuur."
+msgstr "Animation: a sent quote is converted into a draft invoice."
+
+#
+msgid "Bonnetjes bij je uitgaven"
+msgstr "Receipts with your expenses"
+
+msgid ""
+"Leg je kosten vast met het bonnetje erbij, als foto of pdf. Je vult in wat "
+"je echt betaald hebt, en kiest een categorie."
+msgstr "Record your costs with the receipt attached, as a photo or PDF. You fill in what you actually paid, and choose a category."
+
+#
+msgid "Meer over uitgaven"
+msgstr "More about expenses"
+
+msgid "De lijst met uitgaven, met datum, leverancier, categorie en bedrag."
+msgstr "The list of expenses, with date, supplier, category and amount."
+
+msgid "Je jaar op één scherm"
+msgstr "Your year on one screen"
+
+msgid ""
+"Omzet, kosten en winst, ook per kwartaal. Voor je boekhouder download je "
+"alles als CSV, met de pdf's en bonnetjes erbij."
+msgstr "Revenue, costs and profit, also per quarter. For your accountant you download everything as CSV, with the PDFs and receipts."
+
+#
+msgid "Meer over exporteren"
+msgstr "More about exporting"
+
+msgid ""
+"Het jaaroverzicht met omzet, kosten, winst en de KOR-grens, en een grafiek "
+"per kwartaal."
+msgstr "The year overview with revenue, costs, profit and the KOR limit, and a chart per quarter."
+
+#
+msgid "AI-assistent"
+msgstr "AI assistant"
+
+#
+msgid "Werk samen met Claude"
+msgstr "Work together with Claude"
+
+msgid ""
+"Koppel Huismus met één knop aan de Claude-app. Vraag wat er openstaat, of "
+"laat Claude een concept maken. Uitgeven en mailen gebeurt pas als jij op de "
+"knop drukt."
+msgstr "Connect Huismus to the Claude app with one button. Ask what's outstanding, or have Claude make a draft. Issuing and mailing only happen when you press the button."
+
+msgid ""
+"Andere assistenten, zoals ChatGPT, kunnen ook. Dat vraagt nu nog wat "
+"technische kennis."
+msgstr "Other assistants, such as ChatGPT, work too. For now that takes some technical know-how."
+
+#
+msgid "Meer over AI-assistenten"
+msgstr "More about AI assistants"
+
+msgid ""
+"De pagina AI-assistenten in de instellingen, met de knop om Claude te "
+"koppelen."
+msgstr "The AI assistants page in the settings, with the button to connect Claude."
+
+#
+msgid "Overstappen"
+msgstr "Switching"
+
+#
+msgid "Neem je administratie mee"
+msgstr "Bring your records along"
+
+msgid ""
+"Kom je van Moneybird? Huismus neemt je klanten, facturen, offertes en "
+"uitgaven één op één over, met de pdf's en bonnetjes. Eerst doet hij een "
+"proefdraai en vergelijkt hij elk totaal tot op de cent. Pas als jij het goed "
+"vindt, slaat hij iets op."
+msgstr "Coming from Moneybird? Huismus takes over your customers, invoices, quotes and expenses one to one, with the PDFs and receipts. First it does a trial run and compares every total to the cent. Only when you're happy does it save anything."
+
+msgid "Zo stap je over"
+msgstr "How to switch"
+
+msgid ""
+"Animatie: een Moneybird-export kiezen, de proefdraai bekijken en importeren."
+msgstr "Animation: choosing a Moneybird export, reviewing the trial run and importing."
+
+#
+msgid "Elke dag een back-up"
+msgstr "A backup every day"
+
+msgid ""
+"Kies een map, bijvoorbeeld in iCloud Drive of OneDrive, of koppel Dropbox. "
+"Huismus zet er elke dag een back-up in, zolang hij open staat."
+msgstr "Choose a folder, for example in iCloud Drive or OneDrive, or connect Dropbox. Huismus puts a backup there every day, as long as it's open."
+
+#
+msgid "Meer over back-ups"
+msgstr "More about backups"
+
+msgid ""
+"Het overzicht van de instellingen, met onder meer bedrijfsgegevens, KOR, "
+"back-ups en exporteren."
+msgstr "The settings overview, with business details, KOR, backups and exporting among others."
+
+#
+msgid "Eerst rondkijken?"
+msgstr "Look around first?"
+
+#
+msgid ""
+"Kies bij de eerste start <strong>Probeer met nepdata</strong>. Huismus vult "
+"zich dan met een verzonnen administratie van negen jaar, en met één knop is "
+"hij weer leeg. Klaar om te beginnen? Dan vul je in vier stappen je "
+"bedrijfsgegevens in."
+msgstr "At the first start, choose <strong>Try with sample data</strong>. Huismus then fills itself with nine years of made-up records, and one button empties it again. Ready to begin? Then you fill in your business details in four steps."
+
+msgid "Aan de slag"
+msgstr "Getting started"
+
+msgid ""
+"Het welkomstscherm van Huismus, met de knoppen Stap voor stap beginnen, "
+"Importeren uit Moneybird en Probeer met nepdata."
+msgstr "The Huismus welcome screen, with the buttons Start step by step, Import from Moneybird and Try with sample data."
+
+#
+msgid "Twee manieren om Huismus te gebruiken"
+msgstr "Two ways to use Huismus"
+
+msgid "Voor de meeste mensen"
+msgstr "For most people"
+
+#
+msgid "De app voor Mac en Windows"
+msgstr "The app for Mac and Windows"
+
+msgid "Downloaden, installeren, beginnen."
+msgstr "Download, install, start."
+
+msgid "Je administratie staat op je eigen computer."
+msgstr "Your records live on your own computer."
+
+msgid "Een nieuwe versie installeer je met één klik."
+msgstr "A new version installs with one click."
+
+#
+msgid "Naar de download"
+msgstr "Go to the download"
+
+msgid "Voor techneuten"
+msgstr "For technical people"
+
+msgid "Zelf draaien op een server"
+msgstr "Run it yourself on a server"
+
+msgid ""
+"Heb je een Raspberry Pi, een NAS of een eigen server? Draai Huismus dan in "
+"Docker. Je opent hem in de browser, ook op je telefoon, binnen je eigen "
+"netwerk."
+msgstr "Got a Raspberry Pi, a NAS or a server of your own? Run Huismus in Docker. You open it in the browser, on your phone too, within your own network."
+
+msgid "Installeren met Docker"
+msgstr "Install with Docker"
+
+#
+msgid "Op je telefoon"
+msgstr "On your phone"
+
+msgid ""
+"Huismus is open source, gemaakt met Django, SQLite en HTMX. Hulp is welkom: "
+"code, vertalingen, testen op Windows, of gewoon een goed idee."
+msgstr "Huismus is open source, made with Django, SQLite and HTMX. Help is welcome: code, translations, testing on Windows, or just a good idea."
+
+msgid "Zo bouw je mee"
+msgstr "How to contribute"
+
+#
+msgid "Probeer Huismus"
+msgstr "Try Huismus"
+
+#
+msgid ""
+"Gratis, zonder account. Je computer vraagt de eerste keer of je de app "
+"vertrouwt; daarna niet meer."
+msgstr "Free, no account. Your computer asks the first time whether you trust the app; after that it doesn't."
+
+#
+msgid "Huismus installeren"
+msgstr "Installing Huismus"
+
+msgid ""
+"Download de app, en open hem de eerste keer zoals hieronder. Daarna start "
+"hij gewoon."
+msgstr "Download the app, and open it the first time as below. After that it simply starts."
+
+msgid "Waarom vraagt je computer of je de app vertrouwt?"
+msgstr "Why does your computer ask whether you trust the app?"
 
 msgid ""
 "Huismus is een hobbyproject zonder betaalde handtekening van Apple of "
@@ -5123,17 +5588,14 @@ msgstr ""
 msgid "Klik op <strong>Toch uitvoeren</strong>."
 msgstr "Click <strong>Run anyway</strong>."
 
-msgid "Meer over de desktop-app"
-msgstr "More about the desktop app"
-
 msgid "Daarna"
 msgstr "Then"
 
-msgid "Kom je van Moneybird? Importeer je hele administratie in één keer."
-msgstr "Coming from Moneybird? Import all your records in one go."
-
 msgid "Begin je nieuw? Vul in vier stappen je bedrijfsgegevens in."
 msgstr "Starting fresh? Fill in your business details in four steps."
+
+msgid "Kom je van Moneybird? Importeer je hele administratie in één keer."
+msgstr "Coming from Moneybird? Import all your records in one go."
 
 msgid ""
 "Eerst rondkijken? Kies <strong>Probeer met nepdata</strong>: Huismus vult "
@@ -5146,6 +5608,23 @@ msgid ""
 "Kies een map voor je back-ups, bijvoorbeeld in iCloud Drive of OneDrive."
 msgstr ""
 "Choose a folder for your backups, for example in iCloud Drive or OneDrive."
+
+msgid "Meer over de desktop-app"
+msgstr "More about the desktop app"
+
+msgid "Liever zelf draaien op een server?"
+msgstr "Rather run it yourself on a server?"
+
+msgid ""
+"Heb je een Raspberry Pi, een NAS of een eigen server, dan kun je Huismus ook "
+"in Docker draaien. Dat is voor wie daar handig mee is."
+msgstr "If you have a Raspberry Pi, a NAS or a server of your own, you can also run Huismus in Docker. That's for people who are handy with that."
+
+#~ msgid "Draai je liever op een Raspberry Pi?"
+#~ msgstr "Rather run it on a Raspberry Pi?"
+
+#~ msgid "De eerste keer openen"
+#~ msgstr "Opening it the first time"
 
 #~ msgctxt "export file"
 #~ msgid "contacten"
@@ -5237,12 +5716,6 @@ msgstr ""
 #~ "Staan er verschillende soorten uitgaven in je bestand, importeer ze dan "
 #~ "in delen."
 #~ msgstr "If your file has different kinds of expenses, import them in parts."
-
-#, python-format
-#~ msgid "Eerste rij"
-#~ msgid_plural "Eerste %(count)s rijen"
-#~ msgstr[0] "First row"
-#~ msgstr[1] "First %(count)s rows"
 
 #, python-format
 #~ msgid "%(count)s rij uit %(name)s gelezen."
@@ -5586,9 +6059,6 @@ msgstr ""
 
 #~ msgid "Alleen verzonden offertes kunnen als verlopen worden gemarkeerd."
 #~ msgstr "Only sent quotes can be marked as expired."
-
-#~ msgid "Alleen offertes kunnen worden omgezet naar een factuur."
-#~ msgstr "Only quotes can be converted to an invoice."
 
 #~ msgid "Alleen uitgegeven facturen en creditnota's kunnen worden heropend."
 #~ msgstr "Only issued invoices and credit notes can be reopened."

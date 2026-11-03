@@ -1,0 +1,7 @@
+{% comment %}A picture of the app from docs/site/ (scripts/site-beelden.sh), light or dark as the visitor's system is. name, alt; eager for the first one on a page.{% endcomment %}
+<figure class="shot">
+    <picture>
+        <source srcset="/beelden/{{ name }}.{{ language }}.dark.webp" media="(prefers-color-scheme: dark)">
+        <img src="/beelden/{{ name }}.{{ language }}.light.webp" width="1280" height="800" alt="{{ alt }}"{% if not eager %} loading="lazy"{% endif %} decoding="async">
+    </picture>
+</figure>

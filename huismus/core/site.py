@@ -3,17 +3,24 @@
 """The Huismus site (huismus.arnekrijnsen.com): static pages on GitHub Pages.
 
 Built at every release from the files of that release (huismus-intern/besluiten.md,
-2026-10-30), so the site always belongs to the version you download: the
-download page (design D3, docs/design/ronde-3/Download.dc.html) and the help
-from docs/hulp/, in Dutch and English. It uses the app's own stylesheet, so it
-looks like Huismus. `manage.py build_site <map>` writes it; .github/workflows/pages.yml
-publishes it.
+2026-10-30), so the site always belongs to the version you download: a tour of
+the app with the download buttons, how to open it the first time, the help from
+docs/hulp/ and a page for developers, in Dutch and English. It is written for
+people who are not technical: the desktop app comes first, running it yourself
+on a server is the second route. It uses the app's own stylesheet and
+components, so it looks like Huismus. `manage.py build_site <map>` writes it;
+.github/workflows/pages.yml publishes it.
+
+The pictures of the app come from docs/site/, made by scripts/site-beelden.sh
+on a made-up administration (core/site_data.py).
 
 Addresses: Dutch at the root, English under /en/.
 
-    /                 /en/
-    /hulp/            /en/help/
+    /                   /en/
+    /installeren/       /en/install/
+    /hulp/              /en/help/
     /hulp/<onderwerp>/  /en/help/<topic>/
+    /meebouwen/         /en/contribute/
 """
 
 import shutil
@@ -22,6 +29,7 @@ from pathlib import Path
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils import translation
+from PIL import Image
 
 from . import help, updates
 
@@ -29,6 +37,25 @@ DOMAIN = "huismus.arnekrijnsen.com"
 REPOSITORY = "https://github.com/codebyarne/huismus"
 # "Feedback geven" asks you to fill in the form below it, which only the app has.
 TOPICS = tuple(slug for slug in help.TOPICS if slug != help.FEEDBACK)
+
+# The file the download buttons point at, the same name in every release
+# (release.yml uploads a copy under it), so "latest" always has it.
+LATEST_ASSETS = {"darwin": "Huismus-macos.dmg", "win32": "Huismus-windows.exe"}
+# The pictures in docs/site/, each as <name>.<nl|en>.<light|dark>.webp.
+MEDIA = (
+    "overzicht",
+    "factuur-maken",
+    "offerte-omzetten",
+    "facturen",
+    "offertes",
+    "uitgaven",
+    "jaaroverzicht",
+    "ai",
+    "instellingen",
+    "importeren",
+    "welkom",
+)
+MEDIA_DIR = Path(settings.BASE_DIR) / "docs" / "site"
 
 _STATIC = Path(settings.BASE_DIR) / "huismus" / "core" / "static" / "core"
 _SITE_CSS = Path(settings.BASE_DIR) / "huismus" / "templates" / "site" / "site.css"
@@ -43,9 +70,31 @@ def help_url(language: str, slug: str = "", anchor: str = "") -> str:
     return base + (f"{slug}/" if slug else "") + anchor
 
 
-def download_url(version: str, platform: str) -> str:
-    asset = updates.ASSET_NAMES[platform].format(version=version)
-    return f"{REPOSITORY}/releases/download/v{version}/{asset}"
+def install_url(language: str) -> str:
+    return "/installeren/" if language == "nl" else "/en/install/"
+
+
+def contribute_url(language: str) -> str:
+    return "/meebouwen/" if language == "nl" else "/en/contribute/"
+
+
+def download_url(platform: str) -> str:
+    """Always the newest release, so a button never points at an old version."""
+    return f"{REPOSITORY}/releases/latest/download/{LATEST_ASSETS[platform]}"
+
+
+def media_files() -> list[Path]:
+    return [
+        MEDIA_DIR / f"{name}.{language}.{scheme}.webp"
+        for name in MEDIA
+        for language in help.LANGUAGES
+        for scheme in ("light", "dark")
+    ]
+
+
+def _help_links(language: str) -> dict[str, str]:
+    """{slug: address}, with _ for - so a template can read help.back_ups."""
+    return {slug.replace("-", "_"): help_url(language, slug) for slug in TOPICS}
 
 
 def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
@@ -55,12 +104,22 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
         home_url(language): (
             "site/index.html",
             {
-                "nav": "download",
+                "nav": "home",
                 "switch_url": home_url(other),
-                "mac_url": download_url(version, "darwin"),
-                "windows_url": download_url(version, "win32"),
-                "desktop_help_url": help_url(language, "desktop-app"),
+                "help": _help_links(language),
             },
+        ),
+        install_url(language): (
+            "site/install.html",
+            {
+                "nav": "install",
+                "switch_url": install_url(other),
+                "help": _help_links(language),
+            },
+        ),
+        contribute_url(language): (
+            "site/contribute.html",
+            {"nav": "contribute", "switch_url": contribute_url(other)},
         ),
         help_url(language): (
             "site/help_index.html",
@@ -94,7 +153,13 @@ def build(out: Path) -> list[str]:
         shutil.rmtree(out)
     out.mkdir(parents=True, exist_ok=True)
     version = updates.current_version()
-    shared = {"repository": REPOSITORY, "version": version}
+    shared = {
+        "repository": REPOSITORY,
+        "version": version,
+        "domain": DOMAIN,
+        "mac_url": download_url("darwin"),
+        "windows_url": download_url("win32"),
+    }
     addresses = []
     for language in help.LANGUAGES:
         with translation.override(language):
@@ -107,6 +172,8 @@ def build(out: Path) -> list[str]:
                         "language": language,
                         "home_url": home_url(language),
                         "help_index_url": help_url(language),
+                        "install_url": install_url(language),
+                        "contribute_url": contribute_url(language),
                     },
                 )
                 target = out / address.strip("/") / "index.html"
@@ -117,10 +184,22 @@ def build(out: Path) -> list[str]:
         (out / "404.html").write_text(
             render_to_string(
                 "site/404.html",
-                shared | {"language": "nl", "home_url": "/", "help_index_url": "/hulp/"},
+                shared
+                | {
+                    "language": "nl",
+                    "home_url": "/",
+                    "help_index_url": "/hulp/",
+                    "install_url": install_url("nl"),
+                    "contribute_url": contribute_url("nl"),
+                },
             ),
             encoding="utf-8",
         )
+    (out / "beelden").mkdir()
+    for path in media_files():
+        shutil.copy(path, out / "beelden" / path.name)
+    for language in help.LANGUAGES:
+        _social_image(language, out / f"delen.{language}.png")
     shutil.copy(_STATIC / "huismus.css", out / "huismus.css")
     shutil.copy(_SITE_CSS, out / "site.css")
     shutil.copy(_STATIC / "favicon.svg", out / "favicon.svg")
@@ -129,3 +208,12 @@ def build(out: Path) -> list[str]:
     (out / "CNAME").write_text(DOMAIN + "\n", encoding="utf-8")
     (out / ".nojekyll").write_text("", encoding="utf-8")
     return addresses
+
+
+def _social_image(language: str, target: Path) -> None:
+    """The picture a link to the site shows on LinkedIn and in chat apps:
+    the overview, 1200 × 630, PNG because not every app reads WebP."""
+    with Image.open(MEDIA_DIR / f"overzicht.{language}.light.webp") as shot:
+        width = shot.width
+        height = round(width * 630 / 1200)
+        shot.crop((0, 0, width, height)).resize((1200, 630), Image.LANCZOS).save(target)

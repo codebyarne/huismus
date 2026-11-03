@@ -1,11 +1,16 @@
 {% load i18n %}<!DOCTYPE html>
-{% comment %}The Huismus site (huismus/core/site.py): static pages, no JS, the app's own stylesheet.{% endcomment %}
+{% comment %}The Huismus site (huismus/core/site.py): static pages, no JS, the app's own stylesheet and components.{% endcomment %}
 <html lang="{{ language }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Huismus{% endblock %}</title>
-    <meta name="description" content="{% translate 'Offertes, facturen en uitgaven voor zzp’ers met de KOR. Gratis en open source.' %}">
+    <meta name="description" content="{% translate 'Offertes, facturen en uitgaven voor zzp’ers, met of zonder KOR. Een gratis app voor Mac en Windows, en je administratie blijft op je eigen computer.' %}">
+    <meta property="og:title" content="{% translate 'Huismus: je facturen, op je eigen computer' %}">
+    <meta property="og:description" content="{% translate 'Offertes, facturen en uitgaven voor zzp’ers, met of zonder KOR. Gratis en open source.' %}">
+    <meta property="og:image" content="https://{{ domain }}/delen.{{ language }}.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <meta name="theme-color" content="#FBF8F3" media="(prefers-color-scheme: light)">
@@ -14,21 +19,23 @@
     <link rel="stylesheet" href="/site.css">
 </head>
 <body class="site">
+{% include "icons.svg" %}
 <header class="site-head">
     <a class="brand" href="{{ home_url }}"><svg class="mark" width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17C4 11.5 8.5 9.3 13.6 10c4.6.7 6.4 5.2 3 8.4-3 2.7-9.6 2.8-12.6-1.4Z" fill="var(--primary)"/><path d="M4.2 17 1 21.4l6-1.8Z" fill="var(--primary)"/><circle cx="15.4" cy="8.6" r="4.4" fill="var(--primary)"/><path d="M19.4 7.6 22.6 8.8l-3.2 1.1Z" fill="var(--accent)"/></svg>Huismus</a>
     <nav class="site-nav" aria-label="{% translate 'Hoofdmenu' %}">
-        <a href="{{ home_url }}"{% if nav == "download" %} aria-current="page"{% endif %}>{% translate "Download" %}</a>
+        <a href="{{ home_url }}#rondleiding"{% if nav == "home" %} aria-current="page"{% endif %}>{% translate "Rondleiding" %}</a>
         <a href="{{ help_index_url }}"{% if nav == "help" %} aria-current="page"{% endif %}>{% translate "Hulp" %}</a>
-        <a href="{{ repository }}">{% translate "Broncode" %}</a>
+        <a href="{{ contribute_url }}"{% if nav == "contribute" %} aria-current="page"{% endif %}>{% translate "Meebouwen" %}</a>
         {% if switch_url %}<a class="lang" href="{{ switch_url }}" hreflang="{% if language == 'nl' %}en{% else %}nl{% endif %}" lang="{% if language == 'nl' %}en{% else %}nl{% endif %}">{% if language == "nl" %}English{% else %}Nederlands{% endif %}</a>{% endif %}
+        <a class="btn btn-primary btn-sm" href="{{ home_url }}#download"><svg class="i" aria-hidden="true"><use href="#download"></use></svg>{% translate "Download" %}</a>
     </nav>
 </header>
 <main class="site-main {% block main_class %}{% endblock %}">
 {% block content %}{% endblock %}
 </main>
 <footer class="site-foot small muted">
-    <p>{% blocktranslate %}Huismus is gratis en open source, onder de <a href="{{ repository }}/blob/main/LICENSE">AGPL-3.0</a>.{% endblocktranslate %}</p>
-    <p><a href="{{ repository }}#met-docker">{% translate "Draai je liever op een Raspberry Pi?" %}</a> · <a href="{{ repository }}">{% translate "Broncode" %}</a> · <a href="{{ repository }}/releases">{% translate "Alle versies" %}</a></p>
+    <p>{% blocktranslate %}Huismus is gratis en open source, onder de <a href="{{ repository }}/blob/main/LICENSE">AGPL-3.0</a>. Een hobbyproject, gemaakt in Nederland.{% endblocktranslate %}</p>
+    <p><a href="{{ install_url }}">{% translate "Installeren" %}</a> · <a href="{{ help_index_url }}">{% translate "Hulp" %}</a> · <a href="{{ contribute_url }}">{% translate "Meebouwen" %}</a> · <a href="{{ repository }}">{% translate "Broncode" %}</a> · <a href="{{ repository }}/releases">{% translate "Alle versies" %}</a></p>
 </footer>
 </body>
 </html>
