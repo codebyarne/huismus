@@ -944,10 +944,19 @@ def test_the_installed_app_shows_its_offline_page_without_a_connection(app):
     # control of this page.
     # Not wait_for_function: while it polls, Playwright evaluates its
     # predicate as a string, which the CSP (script-src 'self') refuses.
-    app.evaluate(
-        """() => navigator.serviceWorker.controller || new Promise((resolve) =>
-            navigator.serviceWorker.addEventListener("controllerchange", resolve))"""
+    # Never without a limit: a controllerchange missed under load hung the
+    # whole test run. After 10 s a reload hands the page to the worker that
+    # is active by then.
+    controlled = app.evaluate(
+        """() => navigator.serviceWorker.ready.then(() =>
+            navigator.serviceWorker.controller ? true : new Promise((resolve) => {
+                navigator.serviceWorker.addEventListener("controllerchange", () => resolve(true));
+                setTimeout(() => resolve(false), 10000);
+            }))"""
     )
+    if not controlled:
+        app.reload()
+        assert app.evaluate("() => Boolean(navigator.serviceWorker.controller)")
 
     # Offline on purpose: Chromium logs the failed request as a console error
     # (the version in Claude Code's cloud containers does, at least).
