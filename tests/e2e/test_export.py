@@ -67,22 +67,48 @@ def test_from_settings_everything_is_chosen_and_english_names_follow_the_screen(
 def test_the_button_spins_until_the_zip_is_there_and_the_page_stays(app, contact, monkeypatch):
     # "Alles" takes 17 s on the Pi; the page stays and says it is busy, and
     # is clickable again once the download has started.
+    #
+    # Playwright can't look while the browser waits for the ZIP: a GET form
+    # is a navigation, and every query (expect, evaluate) waits until it is
+    # over. Asking afterwards only worked within the half second before
+    # app.js's poll cleared the spinner, and on a busy machine Firefox missed
+    # it (BUGS-BY-HAND.md, 2026-11-03). So the page writes down every change
+    # of the button's class, with the time, and the test compares that with
+    # when the server made the ZIP: spinning before, clickable after.
     import time
 
     from huismus.core import export
 
     write_zip = export.write_zip
+    server = {}
 
-    def slow_write_zip(file, year):
-        time.sleep(1.5)
+    def write_zip_and_note_when(file, year):
+        # The pauses make the order plain even with a coarse browser clock.
+        time.sleep(0.2)
+        server["started"] = time.time() * 1000
         write_zip(file, year)
+        server["finished"] = time.time() * 1000
+        time.sleep(0.2)
 
-    monkeypatch.setattr(export, "write_zip", slow_write_zip)
+    monkeypatch.setattr(export, "write_zip", write_zip_and_note_when)
     app.goto(app.base + "/instellingen/exporteren/")
     button = app.get_by_role("button", name="ZIP downloaden")
+    button.evaluate(
+        """button => {
+            window.busy = [];
+            new MutationObserver(() => window.busy.push(
+                [button.classList.contains("is-loading"), Date.now()]
+            )).observe(button, {attributes: true, attributeFilter: ["class"]});
+        }"""
+    )
 
     with app.expect_download(timeout=60000):
         button.click()
-        expect(button).to_have_class(re.compile(r"\bis-loading\b"))
     expect(button).not_to_have_class(re.compile(r"\bis-loading\b"))
     expect(app).to_have_url(app.base + "/instellingen/exporteren/")
+
+    changes = app.evaluate("window.busy")
+    assert [loading for loading, _ in changes] == [True, False]
+    (_, spinning), (_, clickable) = changes
+    assert spinning < server["started"]
+    assert clickable > server["finished"]
