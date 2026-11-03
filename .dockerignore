@@ -11,3 +11,4 @@ data-import/
 .env.*
 tests/
 staticfiles/
+docs/site/

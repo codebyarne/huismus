@@ -7,6 +7,7 @@ from django.core.management.base import BaseCommand, CommandError
 from huismus.contacts.models import Contact
 from huismus.core.demo_data import create_demo_data
 from huismus.core.demo_history import create_history
+from huismus.core.site_data import create_site_data
 from huismus.documents.models import Document
 
 
@@ -18,6 +19,11 @@ class Command(BaseCommand):
             "--history",
             action="store_true",
             help="Een administratie van negen jaar (~80 facturen) in plaats van vijf documenten.",
+        )
+        parser.add_argument(
+            "--site",
+            action="store_true",
+            help="Een kleine, nette administratie voor de beelden op de site.",
         )
         parser.add_argument(
             "--yes",
@@ -46,5 +52,10 @@ class Command(BaseCommand):
                 "een lege database."
             )
 
-        (create_history if options["history"] else create_demo_data)()
+        if options["site"]:
+            create_site_data()
+        elif options["history"]:
+            create_history()
+        else:
+            create_demo_data()
         self.stdout.write(self.style.SUCCESS("Demogegevens aangemaakt."))
