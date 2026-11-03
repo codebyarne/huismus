@@ -135,13 +135,19 @@ def app(live_server, page, transactional_db, settings, browser_name):
     # to get going. This load gets more time than the test's own steps.
     # Even 30 s was sometimes not enough on CI, green on a rerun; the error
     # then says what the server was doing (tests/e2e/server_report.py).
-    # The listener stays for the rest of the test; only a timeout here reads it.
+    # The listeners stay for the rest of the test; only a timeout here reads
+    # them. A request is unfinished until its body is in (or it failed).
     answered = []
+    unfinished = {}
     page.on("response", lambda response: answered.append(f"{response.status} {response.url}"))
+    page.on("request", lambda request: unfinished.setdefault(request, request.url))
+    page.on("requestfinished", lambda request: unfinished.pop(request, None))
+    page.on("requestfailed", lambda request: unfinished.pop(request, None))
     try:
         page.goto(f"{live_server.url}/login/", timeout=30000)
     except PlaywrightTimeoutError as error:
-        raise PlaywrightTimeoutError(f"{error.message}\n{describe_server(answered)}") from error
+        report = describe_server(answered, list(unfinished.values()))
+        raise PlaywrightTimeoutError(f"{error.message}\n{report}") from error
     page.fill("#id_username", "freelancer")
     page.fill("#id_password", PASSWORD)
     page.click("button[type=submit]")
