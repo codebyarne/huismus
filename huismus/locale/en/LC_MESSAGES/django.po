@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-04 13:41+0100\n"
+"POT-Creation-Date: 2026-11-04 15:04+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2493,21 +2493,8 @@ msgstr "Help"
 msgid "Uitloggen"
 msgstr "Log out"
 
-msgid "Nieuwe factuur"
-msgstr "New invoice"
-
 msgid "Meer"
 msgstr "More"
-
-msgid "Nieuwe offerte"
-msgstr "New quote"
-
-#
-msgid "Nieuwe klant"
-msgstr "New customer"
-
-msgid "Nieuwe uitgave"
-msgstr "New expense"
 
 msgid ""
 "Dit is een voorbeeld met verzonnen gegevens. Wat je hier maakt, verdwijnt "
@@ -3215,6 +3202,10 @@ msgstr "Huismus %(version)s will start by itself in a moment."
 msgid "Deze contactpersoon verwijderen bij opslaan"
 msgstr "Remove this contact person when saving"
 
+#
+msgid "Nieuwe klant"
+msgstr "New customer"
+
 msgid "Klantnummer"
 msgstr "Customer number"
 
@@ -3474,6 +3465,9 @@ msgstr "%(done)s of %(total)s done"
 
 msgid "Doen"
 msgstr "Start"
+
+msgid "Nieuwe factuur"
+msgstr "New invoice"
 
 #, python-format
 msgid "waarvan %(count)s vervallen"
@@ -4131,6 +4125,9 @@ msgstr "Invoice %(number)s itself stays unchanged."
 msgid "Creditnota maken"
 msgstr "Create credit note"
 
+msgid "Nieuwe offerte"
+msgstr "New quote"
+
 msgid "Creditnota (concept)"
 msgstr "Credit note (draft)"
 
@@ -4445,6 +4442,9 @@ msgstr "This category has expenses"
 
 msgid "Begrepen"
 msgstr "Got it"
+
+msgid "Nieuwe uitgave"
+msgstr "New expense"
 
 msgid "Regels"
 msgstr "Lines"

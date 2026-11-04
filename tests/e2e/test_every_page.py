@@ -466,7 +466,7 @@ def test_the_desktop_app_s_pages_have_no_known_kind_of_ui_bug(
 # menu then shows it is test_browser.py's job (test_on_a_phone_...).
 ACTIONS_JS = """
 () => {
-  const nav = ".sidebar, .tabbar, .mtop, #meer-menu";
+  const nav = ".sidebar, .tabbar, .mtop, #plus-menu, #meer-menu";
   const visible = (el) => el.checkVisibility();
   const reachable = (el) => {
     if (visible(el)) return true;
@@ -503,7 +503,7 @@ def test_every_action_on_a_wide_screen_can_be_reached_on_a_narrow_one(app, histo
 
 # Everything in the sidebar (its links, the "Nieuw" menu, the language
 # switch, logging out), keyed by where it goes; and whether the same key is
-# reachable in the phone's navigation (top bar, tab bar, its "Meer" menu).
+# reachable in the phone's navigation (top bar, tab bar, its + and "Meer" menus).
 NAVIGATION_JS = """
 () => {
   const visible = (el) => el.checkVisibility();
@@ -524,7 +524,8 @@ NAVIGATION_JS = """
   const actions = (scope) => [...document.querySelectorAll(scope)].flatMap((root) =>
     [...root.querySelectorAll("a[href], button")].filter((el) => !el.hasAttribute("popovertarget"))
   );
-  const phone = new Set(actions(".mtop, .tabbar, #meer-menu").filter(reachable).map(key));
+  const phoneNav = ".mtop, .tabbar, #plus-menu, #meer-menu";
+  const phone = new Set(actions(phoneNav).filter(reachable).map(key));
   return actions(".sidebar")
     .filter((el) => !phone.has(key(el)))
     .map((el) => `${(el.innerText || "").trim()} ${key(el)}`);
@@ -533,8 +534,8 @@ NAVIGATION_JS = """
 
 
 def test_everything_in_the_sidebar_can_be_reached_on_a_phone(app, history):
-    """The phone has no sidebar: its top bar, tab bar and "Meer" menu must
-    offer everything the sidebar does."""
+    """The phone has no sidebar: its top bar, tab bar and its + and "Meer"
+    menus must offer everything the sidebar does."""
     app.set_viewport_size({"width": WIDTHS[0], "height": 800})
     found = []
     for path in _pages():
