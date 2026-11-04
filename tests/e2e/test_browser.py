@@ -1444,3 +1444,30 @@ def test_an_expense_gets_a_second_line_in_another_category(app):
     expense = Expense.objects.get()
     assert expense.amount_cents == 2010
     assert sorted(line.category.name for line in expense.lines.all()) == ["Reiskosten", "Software"]
+
+
+def test_a_new_expense_gets_its_receipt_in_one_go(app, tmp_path):
+    """The receipt is chosen in the form for a new expense, not only after
+    saving it: the page shows the file's name, and Opslaan saves both."""
+    from io import BytesIO
+
+    from PIL import Image
+
+    from huismus.expenses.models import Expense
+
+    buffer = BytesIO()
+    Image.new("RGB", (4, 4), color="red").save(buffer, format="PNG")
+    receipt = tmp_path / "bon-hosting.png"
+    receipt.write_bytes(buffer.getvalue())
+
+    app.goto(app.base + "/uitgaven/nieuw/")
+    app.get_by_label("Datum").fill("2026-03-01")
+    app.get_by_label("Leverancier").fill("Hosting BV")
+    app.locator("[name=lines-0-amount_cents]").fill("12,10")
+    app.set_input_files("input[name=receipt-file]", str(receipt))
+    expect(app.get_by_text("bon-hosting.png")).to_be_visible()
+    app.get_by_role("button", name="Opslaan").click()
+
+    expect(app.get_by_text("Uitgave opgeslagen.")).to_be_visible()
+    expect(app.locator(".receipt .r-name")).to_have_text("bon-hosting.png")
+    assert Expense.objects.get().attachments.count() == 1

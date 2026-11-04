@@ -13,9 +13,9 @@
     </div>
 </div>
 
-{% form_errors form formset %}
+{% form_errors form formset new_receipt_form %}
 
-<form class="card card-pad stack" method="post" style="gap:var(--s-5)">
+<form class="card card-pad stack" method="post"{% if new_receipt_form %} enctype="multipart/form-data"{% endif %} style="gap:var(--s-5)">
     {% csrf_token %}
     <div class="fieldset">
         {% field form.date span=2 %}
@@ -37,6 +37,22 @@
             {% if expense %}<span class="spacer"></span><span>{% translate "Totaal" %} <strong class="amount">{{ expense.amount_cents|money }}</strong></span>{% endif %}
         </div>
     </div>
+    {% comment %}A new expense takes its receipt along when it's saved; an
+    existing one has the Bonnetjes section below, with its own upload.{% endcomment %}
+    {% if new_receipt_form %}{% with field=new_receipt_form.file %}
+    <div class="stack" style="gap:var(--s-3)">
+        <h2>{% translate "Bonnetje" %} <span class="opt">({% translate "optioneel" %})</span></h2>
+        <label class="dropzone" style="padding:var(--s-5)" data-dropzone>
+            <input type="file" name="{{ field.html_name }}" id="{{ field.auto_id }}" accept="image/png,image/jpeg,application/pdf" aria-label="{% translate 'Bonnetje toevoegen' %}" data-file-summary="gekozen-bonnetje"{% if field.errors %} aria-invalid="true" aria-describedby="{{ field.auto_id }}-fout"{% endif %}>
+            <span class="dz-icon"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg></span>
+            <strong class="small">{% translate "Sleep een bonnetje hierheen" %}</strong>
+            <span class="small">{% translate "of kies een bestand · JPG, PNG, PDF" %}</span>
+            <span class="small" id="gekozen-bonnetje"></span>
+        </label>
+        {% for error in field.errors %}<p class="error" id="{{ field.auto_id }}-fout"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>{{ error }}</p>{% endfor %}
+        {% if choose_receipt_again %}<p class="small muted">{% translate "Kies het bonnetje opnieuw: je browser bewaart het niet als er nog iets ontbrak." %}</p>{% endif %}
+    </div>
+    {% endwith %}{% endif %}
     <div class="kor-note"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{% translate "Vul het bruto bedrag in: wat je echt betaald hebt. Het btw-bedrag is alleen ter informatie en telt nergens mee." %}</span></div>
     <div class="row" style="justify-content:flex-end"><button class="btn btn-primary" type="submit">{% translate "Opslaan" %}<span class="spinner"></span></button></div>
 </form>
