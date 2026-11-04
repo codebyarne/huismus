@@ -3,7 +3,9 @@
 # account on first run if its credentials were provided, then serve.
 set -eu
 
-python manage.py migrate --noinput
+# A new image's migrations run only after a backup of the administration;
+# without one the container stops here (SPEC.md M15).
+python manage.py migrate_with_backup
 
 # Single-user login "created via CLI at first run" (SPEC.md M0). Providing
 # DJANGO_SUPERUSER_* is optional: without it, create the account by hand
