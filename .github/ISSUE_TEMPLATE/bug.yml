@@ -1,0 +1,47 @@
+name: "Er gaat iets mis / Something goes wrong"
+description: "Iets werkt niet zoals je verwacht / Something doesn't work the way you expect"
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **NL:** Stuur geen echte klantgegevens, IBAN's of bedragen mee, ook niet in een schermafdruk. Gaat het om de Moneybird-import, kies dan het formulier daarvoor. Een beveiligingsprobleem meld je niet hier maar privé (zie `SECURITY.md`).
+
+        **EN:** Don't share real customer data, IBANs or amounts, not even in a screenshot. Is it about the Moneybird import, pick that form instead. Don't report a security problem here, report it privately (see `SECURITY.md`).
+  - type: textarea
+    id: wat
+    attributes:
+      label: "Wat deed je, en wat ging er mis? / What did you do, and what went wrong?"
+      description: "Stap voor stap, zodat iemand anders het kan nadoen. / Step by step, so someone else can do the same."
+    validations:
+      required: true
+  - type: textarea
+    id: verwacht
+    attributes:
+      label: "Wat verwachtte je? / What did you expect?"
+    validations:
+      required: true
+  - type: dropdown
+    id: gebruik
+    attributes:
+      label: "Hoe gebruik je Huismus? / How do you use Huismus?"
+      options:
+        - "Desktop-app op een Mac / Desktop app on a Mac"
+        - "Desktop-app op Windows / Desktop app on Windows"
+        - "Docker, op een server of NAS / Docker, on a server or NAS"
+    validations:
+      required: true
+  - type: input
+    id: versie
+    attributes:
+      label: "Versie / Version"
+      description: "Weet je het niet, laat dan leeg. / Don't know? Leave it empty."
+      placeholder: "0.1.2"
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: "Privacy"
+      options:
+        - label: "Ik stuur geen echte klantgegevens, IBAN's of bedragen mee, ook niet in een schermafdruk / I'm not sharing real customer data, IBANs or amounts, not even in a screenshot"
+          required: true
