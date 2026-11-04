@@ -243,7 +243,7 @@ def _updates_card(ok, off) -> dict:
     on, off_text = pgettext_lazy("setting", "Aan"), pgettext_lazy("setting", "Uit")
     return {
         "title": _("Updates"),
-        "intro": _("Huismus kijkt of er een nieuwe versie is."),
+        "intro": _("Huismus werkt zichzelf bij."),
         "slug": "updates",
         "url": reverse("business:updates"),
         "line": line,

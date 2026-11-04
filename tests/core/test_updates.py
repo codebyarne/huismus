@@ -243,3 +243,167 @@ def test_the_packaged_app_never_uses_a_test_list(monkeypatch):
 def test_a_damaged_status_file_means_no_looking(data_dir):
     (data_dir / UPDATE_STATUS_FILE_NAME).write_text("{kapot")
     assert updates.load_status().enabled is False
+
+
+# -- Automatically (huismus-intern/besluiten.md, 2026-11-04) ------------------
+
+
+@pytest.fixture
+def found(fake_list):
+    """1.4.0 found by the check, on 1.3.0."""
+    with patch("huismus.core.updates.current_version", return_value="1.3.0"):
+        updates.check()
+        yield
+
+
+def test_a_new_version_is_downloaded_and_checked_in_the_background(found):
+    updates.prepare()
+
+    waiting = updates.waiting()
+    assert waiting.version == "1.4.0"
+    assert Path(updates.load_status().downloaded["path"]).read_bytes() == PACKAGE
+
+
+def test_nothing_is_downloaded_while_it_is_off(found):
+    updates.update_status(enabled=False)
+    with patch("urllib.request.urlopen") as urlopen:
+        updates.prepare()
+    urlopen.assert_not_called()
+    assert updates.waiting() is None
+
+
+def test_a_failed_download_is_tried_again_after_a_day(found):
+    now = timezone.localtime()
+    with patch("huismus.core.updates.download", side_effect=updates.UpdateError("download")) as d:
+        updates.prepare(now)
+        updates.prepare(now + timedelta(hours=1))
+        updates.prepare(now + timedelta(hours=25))
+    assert d.call_count == 2
+    assert updates.waiting() is None
+
+
+def test_a_newer_release_replaces_the_waiting_one(found, tmp_path):
+    updates.prepare()
+    old = Path(updates.load_status().downloaded["path"])
+    updates.update_status(available=updates.load_status().available | {"version": "1.5.0"})
+
+    with patch("huismus.core.updates.download", return_value=tmp_path / "new.dmg") as download:
+        updates.prepare()
+
+    download.assert_called_once()
+    assert not old.exists()
+    assert updates.load_status().downloaded["version"] == "1.5.0"
+
+
+def test_turning_it_off_throws_the_waiting_version_away(found):
+    updates.prepare()
+    path = Path(updates.load_status().downloaded["path"])
+
+    updates.turn_off()
+
+    assert not path.exists()
+    status = updates.load_status()
+    assert status.enabled is False and status.downloaded == {}
+
+
+@pytest.mark.django_db(transaction=True)
+def test_at_start_the_waiting_version_is_installed(found, monkeypatch):
+    updates.prepare()
+    handed = []
+    monkeypatch.setattr(updates, "installer", lambda *args: handed.append(args))
+
+    with patch("urllib.request.urlopen") as urlopen:
+        assert updates.install_at_start() is True
+
+    urlopen.assert_not_called()  # the file that was waiting
+    package, sha256 = handed[0]
+    assert package.read_bytes() == PACKAGE and sha256 == PACKAGE_SHA256
+    pending = updates.load_status().pending
+    assert pending["to_version"] == "1.4.0" and Path(pending["backup"]).exists()
+
+
+def test_at_start_nothing_happens_without_a_waiting_version(found, monkeypatch):
+    handed = []
+    monkeypatch.setattr(updates, "installer", lambda *args: handed.append(args))
+    assert updates.install_at_start() is False
+    assert handed == []
+
+
+def test_at_start_nothing_happens_while_it_is_off(found, monkeypatch):
+    updates.prepare()
+    updates.update_status(enabled=False)
+    handed = []
+    monkeypatch.setattr(updates, "installer", lambda *args: handed.append(args))
+    assert updates.install_at_start() is False
+    assert handed == []
+
+
+def test_at_start_outside_the_app_nothing_happens(found, monkeypatch):
+    # The demo server and Docker have no installer: no failure to remember.
+    updates.prepare()
+    monkeypatch.setattr(updates, "installer", None)
+    assert updates.install_at_start() is False
+    assert updates.load_status().auto_failed == ""
+
+
+@pytest.mark.django_db(transaction=True)
+def test_a_failed_automatic_install_is_tried_only_once(found, monkeypatch):
+    updates.prepare()
+    calls = []
+
+    def not_writable(package, sha256):
+        calls.append(package)
+        raise updates.UpdateError("not-writable")
+
+    monkeypatch.setattr(updates, "installer", not_writable)
+
+    assert updates.install_at_start() is False
+    status = updates.load_status()
+    assert status.auto_failed == "1.4.0" and status.not_installed == "1.4.0"
+    assert status.pending == {}
+    # The next start doesn't try again; the button on Updates still does.
+    updates.prepare()
+    assert updates.install_at_start() is False
+    assert len(calls) == 1
+    assert updates.waiting() is None and updates.available().version == "1.4.0"
+
+
+@pytest.mark.django_db(transaction=True)
+def test_a_damaged_waiting_file_is_downloaded_again(found, monkeypatch):
+    updates.prepare()
+    Path(updates.load_status().downloaded["path"]).write_bytes(b"half")
+    handed = []
+    monkeypatch.setattr(updates, "installer", lambda *args: handed.append(args))
+
+    updates.install(updates.available())
+
+    assert handed[0][0].read_bytes() == PACKAGE
+
+
+@pytest.mark.django_db(transaction=True)
+def test_a_failed_backup_at_start_is_tried_again_at_the_next_start(found, monkeypatch):
+    updates.prepare()
+    handed = []
+    monkeypatch.setattr(updates, "installer", lambda *args: handed.append(args))
+    with patch("huismus.core.auto_backups.create_backup", side_effect=OSError(28, "No space")):
+        assert updates.install_at_start() is False
+    status = updates.load_status()
+    assert status.auto_failed == "" and status.not_installed == ""
+    assert updates.waiting() is not None  # the file stays for the next start
+
+    assert updates.install_at_start() is True
+    assert len(handed) == 1
+
+
+def test_an_app_that_cant_replace_itself_makes_no_backup(found, monkeypatch):
+    updates.prepare()
+
+    def cannot():
+        raise updates.UpdateError("not-writable")
+
+    monkeypatch.setattr(updates, "installer", lambda *args: None)
+    monkeypatch.setattr(updates, "precheck", cannot)
+    with patch("huismus.core.auto_backups.safety_backup") as backup:
+        assert updates.install_at_start() is False
+    backup.assert_not_called()
+    assert updates.load_status().not_installed == "1.4.0"

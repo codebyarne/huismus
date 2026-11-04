@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-03 13:28+0100\n"
+"POT-Creation-Date: 2026-11-04 12:09+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -555,7 +555,7 @@ msgstr ""
 msgid "Updates"
 msgstr ""
 
-msgid "Huismus kijkt of er een nieuwe versie is."
+msgid "Huismus werkt zichzelf bij."
 msgstr ""
 
 msgid "Een wachtwoord vragen als Huismus opent. Standaard uit."
@@ -2917,16 +2917,20 @@ msgstr ""
 msgid "Nieuwe versie downloaden"
 msgstr ""
 
+msgid "Hij wordt geïnstalleerd als je Huismus opnieuw opent."
+msgstr ""
+
 #, python-format
 msgid "Bijwerken naar %(version)s"
 msgstr ""
 
-msgid "Zoek naar nieuwe versies"
+msgid "Automatisch bijwerken"
 msgstr ""
 
 msgid ""
-"Huismus kijkt bij het openen en daarna eens per dag op GitHub of er een "
-"nieuwe versie is. Er gaat niets van je administratie mee."
+"Huismus kijkt bij het openen en daarna elke dag op GitHub of er een nieuwe "
+"versie is. Die installeert hij de volgende keer dat je Huismus opent, na een "
+"back-up. Er gaat niets van je administratie mee."
 msgstr ""
 
 #, python-format
@@ -3205,6 +3209,12 @@ msgstr ""
 msgid ""
 "Je omzet in %(year)s is %(revenue)s: %(percent)s%% van je KOR-grens van "
 "%(limit)s."
+msgstr ""
+
+#, python-format
+msgid ""
+"Huismus %(version)s staat klaar. Hij wordt geïnstalleerd als je Huismus "
+"opnieuw opent."
 msgstr ""
 
 #, python-format

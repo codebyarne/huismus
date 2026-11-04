@@ -103,7 +103,8 @@ Bij het openen en daarna eens per dag kijkt de app in de releaselijst van
 GitHub of er een nieuwere versie is (`huismus/core/updates.py`). Dat is het enige
 verzoek dat Huismus naar buiten doet: alleen de openbare lijst, met als
 User-Agent "Huismus" en verder niets. In Instellingen → Updates staat het
-uit te zetten; dan gaat er geen enkel verzoek meer de deur uit.
+uit te zetten ("Automatisch bijwerken"); dan gaat er geen enkel verzoek meer
+de deur uit en wordt een al gedownloade versie weggegooid.
 
 Een release telt als:
 
@@ -114,15 +115,24 @@ Een release telt als:
   Windows `Huismus-<versie>-windows.exe`, met de SHA-256 die GitHub bij elk
   bestand vermeldt (`digest`).
 
-Is er zo'n versie, dan staat er een blauwe melding op het overzicht en een
-blok op Instellingen → Updates. "Bijwerken naar 1.4.0" vraagt eerst
-bevestiging. Dan:
+Bijwerken gaat vanzelf (besluit 2026-11-04, `huismus-intern/besluiten.md`).
+Is er zo'n versie, dan downloadt de app hem meteen op de achtergrond naar
+`.huismus-update` naast de administratie en controleert de SHA-256
+(`updates.prepare`, in het uurritme van `desktop/app.py`; mislukt het, dan
+een dag later weer). Daarna zegt de blauwe melding op het overzicht
+"Huismus 1.4.0 staat klaar…". Bij het volgende openen, na het migreren en
+vóórdat het venster Huismus laat zien, installeert de app hem
+(`updates.install_at_start`): nooit midden in een sessie. "Bijwerken naar
+1.4.0" op Instellingen → Updates doet hetzelfde meteen, na bevestiging.
+Installeren gaat zo:
 
-1. downloadt Huismus het bestand naar `.huismus-update` naast de
-   administratie en controleert de SHA-256 (klopt die niet, of ontbreekt hij:
-   niets installeren);
-2. maakt hij een back-up, in de gekozen map of anders in `Huismus back-ups`;
-3. schrijft hij in `update-status.json` van welke naar welke versie en waar
+1. kan de app zichzelf hier niet vervangen (niet in een app, map niet
+   schrijfbaar), dan stopt hij vóór er iets gebeurt (`updates.precheck`);
+2. gebruikt Huismus het klaarstaande bestand (nog eens gecontroleerd), of
+   downloadt het naar `.huismus-update` en controleert de SHA-256 (klopt die
+   niet, of ontbreekt hij: niets installeren);
+3. maakt hij een back-up, in de gekozen map of anders in `Huismus back-ups`;
+4. schrijft hij in `update-status.json` van welke naar welke versie en waar
    de back-up staat, start hij een klein script (`desktop/updater.py`) en
    sluit hij. Het script wacht tot de app dicht is, zet `Huismus.app` uit het
    `.dmg` op de plaats van de oude (de oude blijft tot de kopie af is) en
@@ -135,6 +145,14 @@ overzicht "Bijgewerkt naar 1.4.0." Lukt het niet, dan toont het venster
 "Bijwerken is niet gelukt" met "Back-up terugzetten", "Logbestand bewaren" en
 een link naar de vorige versie. Na terugzetten start de server niet: deze
 versie zou dezelfde migratie weer proberen. Installeer dan de vorige versie.
+
+Automatisch wordt een versie één keer geprobeerd. Mislukt dat (de app kan
+zichzelf niet vervangen, of het script gaf het op en opende de oude versie
+weer), dan onthoudt `update-status.json` die versie (`auto_failed`): het
+overzicht zegt één keer dat het niet lukte, en daarna kan alleen de knop het
+nog. Een volgende versie probeert het weer vanzelf. Een mislukte back-up
+telt niet als poging: dan start de huidige versie gewoon en probeert het bij
+het volgende openen opnieuw.
 
 Testen zonder releases: zet `HUISMUS_RELEASES_URL` op een eigen lijst (ook
 een `file://`-adres), zoals `tests/fixtures/releases/releases.json`. Alleen

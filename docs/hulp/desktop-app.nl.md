@@ -62,13 +62,18 @@ met **Andere map…**. Meer lees je in [Back-ups](back-ups.nl.md).
 
 Bij het openen en daarna eens per dag kijkt Huismus of er een nieuwe versie
 is. Dat is het enige wat Huismus uit zichzelf op internet opvraagt: de
-openbare lijst met versies, verder niets. Wil je dat niet, zet het dan uit
-bij **Instellingen → Updates**.
+openbare lijst met versies, verder niets. Wil je dat niet, zet dan
+**Automatisch bijwerken** uit bij **Instellingen → Updates**.
 
-Is er een nieuwe versie, dan zie je een melding op het overzicht. Kies
-**Bijwerken naar …** en bevestig. Huismus downloadt de nieuwe versie,
-controleert hem, maakt een back-up, sluit af en opent vanzelf weer in de
-nieuwe versie. Op het overzicht staat daarna "Bijgewerkt naar …".
+Is er een nieuwe versie, dan downloadt Huismus hem op de achtergrond en
+controleert hem. Het overzicht zegt dan "Huismus … staat klaar". Je hoeft
+niets te doen: de volgende keer dat je Huismus opent, maakt hij eerst een
+back-up, installeert de nieuwe versie en opent vanzelf weer. Dat duurt
+ongeveer een minuut. Op het overzicht staat daarna "Bijgewerkt naar …".
+Terwijl je werkt, wordt Huismus nooit bijgewerkt.
+
+Wil je niet wachten? Kies dan bij **Instellingen → Updates** **Bijwerken
+naar …** en bevestig.
 
 Lukt het bijwerken niet, dan zegt het venster dat, met de knoppen **Back-up
 terugzetten** en **Logbestand bewaren**. Installeer daarna de vorige versie

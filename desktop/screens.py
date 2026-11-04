@@ -30,6 +30,7 @@ TEXTS = {
         "code": "Foutcode",
         "save_file": "Bewaar",
         "updating": "Huismus werkt zichzelf bij…",
+        "updating_to": "Versie $version wordt geïnstalleerd. Dit duurt ongeveer een minuut.",
         "update_failed": "Bijwerken is niet gelukt",
         "update_failed_text": (
             "Huismus $to kon je administratie niet overnemen. De back-up van vlak "
@@ -59,6 +60,7 @@ TEXTS = {
         "code": "Error code",
         "save_file": "Save",
         "updating": "Huismus is updating…",
+        "updating_to": "Installing version $version. This takes about a minute.",
         "update_failed": "Updating didn't work",
         "update_failed_text": (
             "Huismus $to could not take over your records. The backup from just "
@@ -135,12 +137,14 @@ def failed(lang: str, code: str) -> str:
     return _page(lang, body)
 
 
-def updating(lang: str) -> str:
-    t = TEXTS[lang]
+def updating(lang: str, version: str = "") -> str:
+    t = _texts(lang, version=version)
     body = (
         f'<span class="spinner" role="status" aria-label="{t["updating"]}"></span>'
         f"<h1>{t['updating']}</h1>"
     )
+    if version:
+        body += f"<p>{t['updating_to']}</p>"
     return _page(lang, body)
 
 

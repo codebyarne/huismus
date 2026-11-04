@@ -126,6 +126,11 @@ class App:
         claude.remove_saved()
 
         updates.installer = self.install_update
+        updates.precheck = self.check_replaceable
+        if updates.install_at_start():
+            # A version downloaded earlier: installed before anyone works
+            # (huismus-intern/besluiten.md, 2026-11-04). The window closes.
+            return
         from huismus.core.desktop import START_PATH
 
         if sys.platform == "win32":
@@ -141,6 +146,20 @@ class App:
         """core.updates.installer: hands package to desktop/updater.py and
         closes, so the script can replace the app."""
         from desktop import updater
+        from huismus.core import updates
+
+        app = self.check_replaceable()
+        updater.start(package, sha256, app)
+        version = updates.load_status().pending.get("to_version", "")
+        self.window.load_html(screens.updating(self.lang, version))
+        # A moment later, so the request that started it has its answer;
+        # the script waits for this process to end, however long it takes.
+        threading.Timer(1.0, self.window.destroy).start()
+
+    def check_replaceable(self):
+        """core.updates.precheck: the installed app, or UpdateError when
+        it can't be replaced where it is."""
+        from desktop import updater
         from huismus.core.updates import UpdateError
 
         app = updater.installed_app()
@@ -148,11 +167,7 @@ class App:
             raise UpdateError("not-an-app")
         if not os.access(app.parent, os.W_OK):
             raise UpdateError("not-writable")
-        updater.start(package, sha256, app)
-        self.window.load_html(screens.updating(self.lang))
-        # A moment later, so the request that started it has its answer;
-        # the script waits for this process to end, however long it takes.
-        threading.Timer(1.0, self.window.destroy).start()
+        return app
 
     def take_lock(self):
         """Never two copies on the same administration (SPEC.md M11). Once
@@ -303,7 +318,8 @@ class Api:
 def _every_hour():
     """When the app opens and, while it stays open, every hour: a backup if
     today has none yet (huismus/core/auto_backups.py), and a look for a new
-    version once a day if that's on (huismus/core/updates.py)."""
+    version once a day if that's on, downloaded ahead for the next start
+    (huismus/core/updates.py)."""
     from huismus.core import auto_backups, updates
 
     while True:
@@ -313,6 +329,7 @@ def _every_hour():
             logger.exception("Back-up mislukt")
         try:
             updates.check_if_due()
+            updates.prepare()
         except Exception:
             logger.exception("Zoeken naar een nieuwe versie mislukt")
         time.sleep(BACKUP_CHECK_SECONDS)
@@ -356,10 +373,17 @@ def _updated_if_pending():
         return
     # Not updated: the script couldn't replace the app and opened the old one
     # again (desktop/updater.py), or the previous version was reinstalled.
+    # Either way the downloaded file is gone (the script removes it).
     if pending["to_version"] == updates.current_version():
-        updates.update_status(pending={}, just_updated=pending["to_version"])
+        updates.update_status(pending={}, downloaded={}, just_updated=pending["to_version"])
     else:
-        updates.update_status(pending={}, not_installed=pending["to_version"])
+        updates.update_status(
+            pending={},
+            downloaded={},
+            not_installed=pending["to_version"],
+            # Not again automatically: the button on Updates still can.
+            auto_failed=pending["to_version"],
+        )
 
 
 def _code(error) -> str:

@@ -99,3 +99,12 @@ def test_the_updating_screen_says_what_the_app_says(lang):
 
     assert screens.TEXTS[lang]["updating"] == app
     assert app in screens.updating(lang)
+
+
+@pytest.mark.parametrize(
+    ("lang", "line"),
+    [("nl", "Versie 1.4.0 wordt geïnstalleerd."), ("en", "Installing version 1.4.0.")],
+)
+def test_the_updating_screen_says_which_version(lang, line):
+    assert line in screens.updating(lang, "1.4.0")
+    assert line not in screens.updating(lang)

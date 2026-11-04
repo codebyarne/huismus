@@ -4,7 +4,9 @@
 (SPEC.md M11, huismus/core/updates.py; design D3, docs/design/ronde-3/
 Desktop-bijwerken.dc.html; build choices in huismus-intern/besluiten.md,
 2026-10-29). Plain forms: the switch is saved with Opslaan, and updating
-is confirmed on a page of its own."""
+is confirmed on a page of its own. Since 2026-11-04 the app also updates
+by itself at the next start (core.updates.install_at_start); the button
+is for whoever doesn't want to wait."""
 
 import sys
 import threading
@@ -50,16 +52,24 @@ def _problem(code: str) -> str:
     return sentences.get(code, not_checked)
 
 
+def _check_and_prepare():
+    updates.check_if_due()
+    updates.prepare()
+
+
 @login_required
 def page(request):
     _desktop_only()
     if request.method == "POST":
         enabled = request.POST.get("enabled") == "on"
-        updates.update_status(enabled=enabled)
         if enabled:
+            updates.update_status(enabled=True)
             # Look right away, not only at the next start; in the background,
             # never during a page request (huismus-intern/besluiten.md, 2026-10-29).
-            threading.Thread(target=updates.check_if_due, daemon=True).start()
+            threading.Thread(target=_check_and_prepare, daemon=True).start()
+        else:
+            # No more requests, and a downloaded version goes.
+            updates.turn_off()
         messages.success(request, _("Instellingen opgeslagen."))
         return redirect("business:updates")
     status = updates.load_status()
@@ -71,6 +81,7 @@ def page(request):
             "enabled": status.enabled,
             "version": updates.current_version(),
             "release": updates.available(),
+            "waiting": updates.waiting() is not None,
             "problem": _problem(code) if code else "",
             # Then the download by hand, from the release's page.
             "download_by_hand": code == "not-writable",
