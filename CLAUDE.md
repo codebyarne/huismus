@@ -160,11 +160,6 @@ Merge-methode: rebase (`main` heeft een rechte historie, geen
 merge-commits). Een merge rolt niets uit; dat doet pas een release (zie
 Releases).
 
-Een PR die alleen documentatie wijzigt (`.md`-bestanden, `docs/`) krijgt geen
-CI: die mag
-gemerged worden zonder CI, als `./scripts/verify.sh` lokaal groen is. Op `main`
-draait dan ook geen CI.
-
 Eerst vragen blijft nodig bij: een migratie die bestaande gegevens wijzigt
 of verwijdert, wijzigingen in `scripts/verify.sh`, en als de eigenaar
 bij de PR zegt zelf te willen kijken.
