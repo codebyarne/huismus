@@ -49,6 +49,19 @@ def test_it_builds_on_apple_silicon_with_the_minimum_macos_of_the_app():
     assert '"LSMinimumSystemVersion": "14.0"' in recipe
 
 
+def test_the_mac_app_is_not_built_against_an_older_sdk_than_it_runs_on():
+    # PyInstaller copies the SDK of the Python library onto the app (12.1 on
+    # the runner), and WebKit then leaves out popovers: the menus Nieuw and
+    # Meer stood open over every page in v0.1.0 (BUGS-BY-HAND.md).
+    script = (ROOT / "scripts" / "build-mac.sh").read_text()
+    pyinstaller = script.index("uv run pyinstaller")
+    sdk_fix = script.index('vtool -set-build-version macos "$minos" "$(xcrun --show-sdk-version)"')
+    guard = script.index('if [ "${sdk%%.*}" -lt "${minimum%%.*}" ]; then')
+    signing = script.index("codesign --force --deep")
+    assert pyinstaller < sdk_fix < guard < signing
+    assert "./scripts/build-mac.sh" in MAC_JOB
+
+
 def test_only_the_publish_job_may_write_releases():
     assert "permissions:\n  contents: read\n" in WORKFLOW
     assert "contents: write" not in WORKFLOW.split("\n  publish:\n", 1)[0]
