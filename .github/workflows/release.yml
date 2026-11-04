@@ -183,8 +183,11 @@ jobs:
       contents: write
     steps:
       - uses: actions/download-artifact@v4
+        # Only the two apps: build-push-action also leaves a build record
+        # (*.dockerbuild) on the run, which this action fails to download.
         with:
           path: dist
+          pattern: "*-app"
           merge-multiple: true
 
       - name: Put both apps on the release

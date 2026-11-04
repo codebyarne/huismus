@@ -103,3 +103,10 @@ def test_the_installer_is_named_as_the_updates_expect():
     # Per user, so a silent update asks nothing.
     assert "PrivilegesRequired=lowest\n" in recipe
     assert "DefaultDirName={localappdata}\\Programs\\Huismus\n" in recipe
+
+
+def test_the_publish_job_downloads_only_the_two_apps():
+    # v0.1.1: the Docker build record on the same run made the download fail.
+    assert 'pattern: "*-app"' in PUBLISH_JOB
+    assert "name: macos-app\n" in MAC_JOB and "name: windows-app\n" in WINDOWS_JOB
+
