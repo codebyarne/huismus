@@ -3,6 +3,21 @@
 Elke woensdag komt er een nieuwe versie van Huismus. Hier lees je per versie
 wat je er nu mee kunt. De nieuwste staat bovenaan.
 
+## 0.1.3, 4 november 2026
+
+- **Kies het bonnetje meteen bij een nieuwe uitgave.** Je hoeft de uitgave niet
+  eerst op te slaan. Het bonnetje staat nu bovenaan het formulier, want de rest
+  typ je er meestal van over. Bij een bestaande uitgave staan de bonnetjes boven
+  het formulier.
+- **De + op je telefoon** opent nu een keuze: Factuur, Offerte, Klant of
+  Uitgave, net als **Nieuw** op de computer. Eerst maakte hij alleen een
+  factuur.
+- **Wat is er nieuw** staat onder **Hulp**: per versie wat je ermee kunt, zoals
+  deze pagina. De melding over een nieuwe versie linkt er ook naar.
+- **Geen back-up kwijt in de cloud.** Werden er twee back-ups in dezelfde seconde
+  naar Dropbox of WebDAV gestuurd, bijvoorbeeld als je de koppeling snel
+  opnieuw maakte, dan overschreef de tweede de eerste. Nu blijven ze allebei.
+
 ## 0.1.2, 4 november 2026
 
 - **De desktop-app werkt zichzelf bij.** Is er een nieuwe versie, dan haalt
