@@ -84,6 +84,12 @@ def help_url(language: str, slug: str = "", anchor: str = "") -> str:
     return base + (f"{slug}/" if slug else "") + anchor
 
 
+def whats_new_url(language: str) -> str:
+    """Wat is er nieuw on the site: rebuilt with every release, so it already
+    has the version an installed Huismus is about to get."""
+    return f"https://{DOMAIN}{help_url(language, 'nieuw')}"
+
+
 def install_url(language: str) -> str:
     return "/installeren/" if language == "nl" else "/en/install/"
 

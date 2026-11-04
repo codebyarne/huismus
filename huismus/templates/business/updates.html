@@ -22,7 +22,7 @@
     <div class="card-pad stack" style="gap:var(--s-3)">
         <h2>{% blocktranslate with version=release.version %}Huismus {{ version }} is er{% endblocktranslate %}</h2>
         {% if waiting %}<p id="staat-klaar">{% translate "Hij wordt geïnstalleerd als je Huismus opnieuw opent." %}</p>{% elif downloading %}<p id="staat-klaar">{% translate "Hij wordt nu gedownload. Daarna wordt hij geïnstalleerd als je Huismus opnieuw opent." %}</p>{% endif %}
-        <p><a href="{{ release.page_url }}" target="_blank" rel="noopener">{% blocktranslate with version=release.version %}Wat is er nieuw in {{ version }}?{% endblocktranslate %}</a></p>
+        <p><a href="{{ whats_new_url }}" target="_blank" rel="noopener">{% blocktranslate with version=release.version %}Wat is er nieuw in {{ version }}?{% endblocktranslate %}</a></p>
         {% if docker %}
         {% comment %}Docker: no button, Huismus says what to type (core.update_views._docker).{% endcomment %}
         {% if new_tag %}
