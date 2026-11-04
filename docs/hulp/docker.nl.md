@@ -71,8 +71,8 @@ dezelfde back-upmap meegeeft. Dat is precies wat er bij bijwerken gebeurt.
 
 ## Bijwerken
 
-Huismus in Docker kijkt niet zelf of er een nieuwe versie is. Bijwerken
-doe je zelf, wanneer jij wilt:
+Huismus kijkt elke dag of er een nieuwe versie is en zegt het dan op het
+overzicht. Bijwerken doe je zelf, wanneer jij wilt:
 
 ```
 docker compose pull
@@ -94,6 +94,9 @@ docker stop huismus
 docker rm huismus
 docker run -d --name huismus … ghcr.io/codebyarne/huismus:0.1
 ```
+
+Geen melding willen? Zet bij **Instellingen → Updates** het zoeken naar
+nieuwe versies uit. Huismus kijkt dan niet meer op GitHub.
 
 ### Wat Huismus doet bij een nieuwe versie
 

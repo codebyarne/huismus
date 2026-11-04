@@ -71,8 +71,8 @@ you update.
 
 ## Updating
 
-Huismus in Docker doesn't check for new versions by itself. You update
-when you want to:
+Huismus checks once a day for a new version and tells you on the
+overview. You update it yourself, whenever you like:
 
 ```
 docker compose pull
@@ -94,6 +94,9 @@ docker stop huismus
 docker rm huismus
 docker run -d --name huismus … ghcr.io/codebyarne/huismus:0.1
 ```
+
+Don't want the notice? Turn off looking for new versions in
+**Settings → Updates**. Huismus then stops checking GitHub.
 
 ### What Huismus does with a new version
 
