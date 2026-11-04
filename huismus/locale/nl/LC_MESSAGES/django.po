@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-04 13:41+0100\n"
+"POT-Creation-Date: 2026-11-04 15:04+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2319,19 +2319,7 @@ msgstr ""
 msgid "Uitloggen"
 msgstr ""
 
-msgid "Nieuwe factuur"
-msgstr ""
-
 msgid "Meer"
-msgstr ""
-
-msgid "Nieuwe offerte"
-msgstr ""
-
-msgid "Nieuwe klant"
-msgstr ""
-
-msgid "Nieuwe uitgave"
 msgstr ""
 
 msgid ""
@@ -2970,6 +2958,9 @@ msgstr ""
 msgid "Deze contactpersoon verwijderen bij opslaan"
 msgstr ""
 
+msgid "Nieuwe klant"
+msgstr ""
+
 msgid "Klantnummer"
 msgstr ""
 
@@ -3203,6 +3194,9 @@ msgid "%(done)s van %(total)s klaar"
 msgstr ""
 
 msgid "Doen"
+msgstr ""
+
+msgid "Nieuwe factuur"
 msgstr ""
 
 #, python-format
@@ -3811,6 +3805,9 @@ msgstr ""
 msgid "Creditnota maken"
 msgstr ""
 
+msgid "Nieuwe offerte"
+msgstr ""
+
 msgid "Creditnota (concept)"
 msgstr ""
 
@@ -4098,6 +4095,9 @@ msgid "Deze categorie heeft uitgaven"
 msgstr ""
 
 msgid "Begrepen"
+msgstr ""
+
+msgid "Nieuwe uitgave"
 msgstr ""
 
 msgid "Regels"

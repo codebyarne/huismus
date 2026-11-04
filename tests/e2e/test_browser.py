@@ -548,6 +548,20 @@ def test_rapporten_opens_the_year_overview_on_desktop_and_phone(app):
     )
 
 
+def test_on_a_phone_the_plus_offers_what_nieuw_does(app):
+    # Asked by hand, 2026-11-04: the + only made an invoice; a new expense
+    # hid under Meer.
+    app.set_viewport_size({"width": 360, "height": 740})
+    app.goto(app.base + "/facturen/")
+    app.click(".tabbar .fab")
+    menu = app.locator("#plus-menu")
+    expect(menu.locator("a")).to_have_text(["Factuur", "Offerte", "Klant", "Uitgave"])
+    menu.get_by_role("link", name="Uitgave").click()
+    expect(app).to_have_url(app.base + "/uitgaven/nieuw/")
+    app.click(".tabbar button[popovertarget=meer-menu]")
+    expect(app.locator("#meer-menu")).not_to_contain_text("Nieuwe")
+
+
 def test_on_a_phone_the_language_is_set_under_instellingen(app):
     app.set_viewport_size({"width": 360, "height": 740})
     app.goto(app.base + "/facturen/")

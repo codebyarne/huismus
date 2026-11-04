@@ -71,10 +71,17 @@
     <nav class="tabbar" aria-label="{% translate 'Hoofdmenu' %}">
         <a href="{% url 'home' %}"{% if nav_section == "home" %} aria-current="page"{% endif %}><svg class="i i-lg" aria-hidden="true"><use href="#home"></use></svg>{% translate "Overzicht" %}</a>
         <a href="{% url 'documents:list' %}"{% if nav_section == "documents" %} aria-current="page"{% endif %}><svg class="i i-lg" aria-hidden="true"><use href="#file"></use></svg>{% translate "Facturen" %}</a>
-        <a class="fab" href="{% url 'documents:create' %}" aria-label="{% translate 'Nieuwe factuur' %}"><svg class="i i-lg" aria-hidden="true"><use href="#plus"></use></svg></a>
+        <button class="fab" type="button" popovertarget="plus-menu" aria-label="{% translate 'Nieuw' %}"><svg class="i i-lg" aria-hidden="true"><use href="#plus"></use></svg></button>
         <a href="{% url 'expenses:list' %}"{% if nav_section == "expenses" %} aria-current="page"{% endif %}><svg class="i i-lg" aria-hidden="true"><use href="#receipt"></use></svg>{% translate "Uitgaven" %}</a>
         <button type="button" popovertarget="meer-menu"{% if nav_section == "quotes" or nav_section == "contacts" or nav_section == "reports" or nav_section == "imports" or nav_section == "business" or nav_section == "help" %} aria-current="page"{% endif %}><svg class="i i-lg" aria-hidden="true"><use href="#menu"></use></svg>{% translate "Meer" %}</button>
     </nav>
+    {# The sidebar's "Nieuw" menu, for the tab bar's +. #}
+    <div id="plus-menu" class="menu" popover="auto">
+        <a href="{% url 'documents:create' %}"><svg class="i" aria-hidden="true"><use href="#file"></use></svg>{% translate "Factuur" %}</a>
+        <a href="{% url 'quotes:create' %}"><svg class="i" aria-hidden="true"><use href="#clipboard"></use></svg>{% translate "Offerte" %}</a>
+        <a href="{% url 'contacts:create' %}"><svg class="i" aria-hidden="true"><use href="#users"></use></svg>{% translate "Klant" %}</a>
+        <a href="{% url 'expenses:create' %}"><svg class="i" aria-hidden="true"><use href="#receipt"></use></svg>{% translate "Uitgave" %}</a>
+    </div>
     <div id="meer-menu" class="menu" popover="auto">
         <a href="{% url 'quotes:list' %}"><svg class="i" aria-hidden="true"><use href="#clipboard"></use></svg>{% translate "Offertes" %}</a>
         <a href="{% url 'contacts:list' %}"><svg class="i" aria-hidden="true"><use href="#users"></use></svg>{% translate "Klanten" %}</a>
@@ -83,11 +90,6 @@
         <a href="{% url 'imports:upload' %}"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg>{% translate "Importeren" %}</a>
         <a href="{% url 'business:overview' %}"><svg class="i" aria-hidden="true"><use href="#settings"></use></svg>{% translate "Instellingen" %}</a>
         <a href="{% url 'help:index' %}"><svg class="i" aria-hidden="true"><use href="#help"></use></svg>{% translate "Hulp" %}</a>
-        {# The rest of the sidebar's "Nieuw" menu; the tab bar's + is a new invoice. #}
-        <hr>
-        <a href="{% url 'quotes:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuwe offerte" %}</a>
-        <a href="{% url 'contacts:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuwe klant" %}</a>
-        <a href="{% url 'expenses:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuwe uitgave" %}</a>
         {% if not desktop_without_password %}
         <hr>
         <form method="post" action="{% url 'logout' %}">
