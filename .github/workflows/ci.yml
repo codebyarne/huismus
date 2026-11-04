@@ -2,7 +2,7 @@ name: CI
 
 # Fewer minutes (besluit 2026-10-29): a change to documentation only (every
 # .md file, docs/) runs no CI. The app doesn't read these files, so there
-# is nothing to test, and on main nothing to deploy. A change that touches
+# is nothing to test. A change that touches
 # any other file runs CI as always, for all its files.
 on:
   push:
@@ -12,12 +12,11 @@ on:
     paths-ignore: ["**.md", "docs/**"]
   # By hand (Actions → CI → Run workflow), with all three engines: to see
   # whether a branch is green when no run started, as when GitHub lost the
-  # push of a merge (2026-11-03). It deploys nothing: deploy/webhook.py only
-  # deploys runs of a push to main.
+  # push of a merge (2026-11-03).
   workflow_dispatch:
 
 # A newer push to a pull request makes its running CI pointless: stop it.
-# Never on main, where each run decides a deploy.
+# Never on main, where each run says whether main is fit for a release.
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
@@ -69,9 +68,9 @@ jobs:
   verify:
     # One job per browser engine, side by side: each runs the whole gate
     # with its own engine (the list comes from the browsers job above). The
-    # workflow on main is only green when every engine in it is, and only
-    # then does the Pi deploy (docs/deploy.md), so a WebKit- or Firefox-only
-    # bug stops the deploy instead of reaching the Pi.
+    # workflow on main is only green when every engine in it is, and a
+    # release is only made from a green main (CLAUDE.md, "Releases"), so a
+    # WebKit- or Firefox-only bug stops the release instead of reaching users.
     needs: browsers
     strategy:
       fail-fast: false

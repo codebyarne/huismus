@@ -88,18 +88,25 @@ above is therefore optional.
 
 Works in the running container, has tests, has Dutch and English strings, is documented in the README or `docs/`, and leaves `SPEC.md` accurate. If the spec needs to change, propose the change and update it in the same PR.
 
-## Deploy
+## Releases
 
-Draait op een Raspberry Pi van de eigenaar, alleen bereikbaar in diens privénetwerk.
-Een push naar `main` op GitHub (`codebyarne/huismus`) → CI → alleen bij groen:
-webhook (`deploy/webhook.py`) → `deploy/deploy.sh <commit>`: build, backup,
-container `huismus` vervangen, check. Huismus zelf is nooit vanaf internet
-bereikbaar. Setup en beheer: `docs/deploy.md`; adressen en poorten van de Pi:
-`huismus-intern/werkwijze.md`.
+Een merge naar `main` rolt niets uit. Gebruikers krijgen een nieuwe versie pas bij
+een release: een tag `vX.Y.Z` bouwt in `.github/workflows/release.yml` de
+desktop-apps (die werken zichzelf bij) en het Docker-image
+`ghcr.io/codebyarne/huismus` (Docker-gebruikers werken zelf bij, en Huismus zegt het
+als er een nieuwe versie is). Hoe: `docs/desktop.md`, "Een release maken".
 
-Omdat `main` meteen live gaat: werk als agent altijd op een eigen branch en lever
-via een pull request. Push nooit rechtstreeks naar `main` (`.claude/settings.json`
-weigert het ook).
+De Raspberry Pi van de eigenaar is een gewone Docker-installatie (besluit
+2026-11-04): Compose met `:latest`, en de eigenaar werkt met de hand bij volgens
+`docs/hulp/docker.nl.md`. Huismus zelf is nooit vanaf internet bereikbaar.
+Adres van de Pi: `huismus-intern/werkwijze.md`.
+
+Claude maakt na elke gemergde mijlpaal of feature zelf een release (het laatste
+cijfer omhoog, 0.1.x) en meldt welke versie klaarstaat. Een PR die alleen
+documentatie wijzigt, krijgt geen release.
+
+Werk als agent altijd op een eigen branch en lever via een pull request. Push nooit
+rechtstreeks naar `main` (`.claude/settings.json` weigert het ook).
 
 ### Parallelle sessies
 
@@ -130,21 +137,20 @@ worden twee keer uitgedeeld.
 Claude mergt een eigen PR zelf naar `main`, zonder te vragen, zodra:
 CI op de laatste commit groen is (op een PR draait alleen `verify (chromium)`;
 WebKit en Firefox draaien na de merge op `main`, als de wijziging templates,
-CSS, JS, vertalingen of de browsertests raakt, en houden bij rood de deploy
-tegen), er geen
+CSS, JS, vertalingen of de browsertests raakt; maak geen release van een
+`main` die daar rood staat), er geen
 merge-conflict is, en er geen open review-opmerking of vraag van de eigenaar ligt.
 Merge-methode: rebase (`main` heeft een rechte historie, geen
-merge-commits). Merge = uitrollen naar de Pi; meld daarna in één regel wat
-er live gaat.
+merge-commits). Een merge rolt niets uit; dat doet pas een release (zie
+Releases).
 
 Een PR die alleen documentatie wijzigt (`.md`-bestanden, `docs/`) krijgt geen
 CI (om Actions-minuten te sparen): die mag
 gemerged worden zonder CI, als `./scripts/verify.sh` lokaal groen is. Op `main`
-draait dan ook geen CI, dus er gaat niets live en de Pi blijft op de vorige
-code-commit staan.
+draait dan ook geen CI.
 
 Eerst vragen blijft nodig bij: een migratie die bestaande gegevens wijzigt
-of verwijdert, wijzigingen in `deploy/` of `scripts/verify.sh`, en als de eigenaar
+of verwijdert, wijzigingen in `scripts/verify.sh`, en als de eigenaar
 bij de PR zegt zelf te willen kijken.
 
 ## Klaar is groen
@@ -183,7 +189,7 @@ De repo is openbaar. Wat privé is, staat in de privé-repo
   (`../huismus-intern`, vanuit een worktree drie mappen hoger).
 - **Schrijven:** `git -C <map> pull --rebase` vlak voor je schrijft, één besluit of
   regel per commit, en direct naar zijn `main` pushen met `git -C <map> push`.
-  Dat mag: hij heeft geen CI en geen deploy. Geen PR nodig.
+  Dat mag: hij heeft geen CI en geen release. Geen PR nodig.
 - **Wat er niet in deze repo hoort:** namen van mensen (testers, klanten, de
   eigenaar), de backlog, persoonlijke notities, adressen van apparaten. Twijfel je, zet het in
   `huismus-intern`.
@@ -208,7 +214,7 @@ Vijf subagents in `.claude/agents/`, elk met precies één opdracht:
 ## Autonoom werken
 
 De eigenaar is product owner en leest geen code. Een mijlpaal of feature bouw
-je met `/mijlpaal <onderwerp>` (`.claude/skills/mijlpaal/`) van plan tot live,
+je met `/mijlpaal <onderwerp>` (`.claude/skills/mijlpaal/`) van plan tot release,
 zonder tussendoor te vragen. Een productvraag of een design gaat naar de
 `product-owner`-agent; die beslist of keurt, en schrijft het in
 `huismus-intern/besluiten.md`, waar de eigenaar het achteraf kan terugdraaien.
@@ -224,7 +230,7 @@ een advies:
 1. tekst over wet of belasting (in de UI, de PDF of de docs);
 2. alles wat geld kost: betaalde diensten, abonnementen, certificaten;
 3. een migratie die bestaande gegevens wijzigt of verwijdert;
-4. wijzigingen in `deploy/` of `scripts/verify.sh`;
+4. wijzigingen in `scripts/verify.sh`;
 5. de repo of een release openbaar maken;
 6. iets wat een van de zeven harde regels raakt of afzwakt;
 7. Huismus of de laptop bereikbaar maken vanaf internet (een tunnel, een
@@ -232,8 +238,8 @@ een advies:
 8. iets wat `SPEC.md` of een eerder besluit van de eigenaar tegenspreekt.
 
 Ga intussen door met werk dat er niet van afhangt. Na elke mijlpaal krijgt
-de eigenaar een melding: wat er live ging, de besluiten van de PO-agent, en
-screenshots.
+de eigenaar een melding: welke versie klaarstaat en wat er nieuw is, de besluiten
+van de PO-agent, en screenshots.
 
 ## Playbook bijhouden
 
@@ -244,7 +250,7 @@ Huismus, de eigenaar of anderen (de poort daar weigert ze), op een eigen branch 
 met `./scripts/verify.sh` daar groen.
 
 - Workflow is: `CLAUDE.md`, alles in `.claude/` (agents, skills, hooks, settings),
-  `scripts/verify.sh`, `.github/workflows/` en `deploy/`. Ook een nieuwe afspraak met
+  `scripts/verify.sh` en `.github/workflows/`. Ook een nieuwe afspraak met
   de eigenaar over hoe we werken, of een les uit `BUGS-BY-HAND.md` die een hele soort vangt.
 - In een cloudsessie: koppel de playbook met `add_repo` (`codebyarne/agentic-playbook`).
 - Zet in een commit van de Huismus-PR de regel `Playbook: <url van de PR of commit>`,

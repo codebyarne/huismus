@@ -46,7 +46,6 @@ Bij elke release zet `.github/workflows/pages.yml` hem online, en met de hand
 
 ## Voor beheerders
 
-- [`deploy.md`](deploy.md): Huismus op de Raspberry Pi uitrollen.
 - [`tailscale.md`](tailscale.md): Huismus via HTTPS in je tailnet.
 - [`backups.md`](backups.md): back-ups met de hand maken en terugzetten.
 - [`email.md`](email.md): waar het mailwachtwoord staat, mailen in tests.
