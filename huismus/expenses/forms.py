@@ -109,3 +109,12 @@ class ReceiptUploadForm(forms.Form):
         if isinstance(uploaded, UploadedFile):
             validate_receipt(uploaded)
         return uploaded
+
+
+class NewExpenseReceiptForm(ReceiptUploadForm):
+    """The optional receipt in the form for a new expense, so it needn't
+    wait until the expense is saved (views._expense_form)."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, prefix="receipt", **kwargs)
+        self.fields["file"].required = False

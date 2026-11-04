@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-04 15:04+0100\n"
+"POT-Creation-Date: 2026-11-04 20:46+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -4103,6 +4103,23 @@ msgstr ""
 msgid "Regels"
 msgstr ""
 
+msgid "Bonnetje"
+msgstr ""
+
+msgid "Bonnetje toevoegen"
+msgstr ""
+
+msgid "Sleep een bonnetje hierheen"
+msgstr ""
+
+msgid "of kies een bestand · JPG, PNG, PDF"
+msgstr ""
+
+msgid ""
+"Kies het bonnetje opnieuw: je browser bewaart het niet als er nog iets "
+"ontbrak."
+msgstr ""
+
 msgid ""
 "Vul het bruto bedrag in: wat je echt betaald hebt. Het btw-bedrag is alleen "
 "ter informatie en telt nergens mee."
@@ -4127,15 +4144,6 @@ msgid "Dit bonnetje verwijderen?"
 msgstr ""
 
 msgid "Huismus verwijdert het bestand. Dat kun je niet ongedaan maken."
-msgstr ""
-
-msgid "Bonnetje toevoegen"
-msgstr ""
-
-msgid "Sleep een bonnetje hierheen"
-msgstr ""
-
-msgid "of kies een bestand · JPG, PNG, PDF"
 msgstr ""
 
 msgid "Uitgave verwijderen"
