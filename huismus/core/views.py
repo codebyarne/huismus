@@ -144,7 +144,11 @@ def _update_notices(request) -> dict:
         )
     if status.just_updated or status.not_installed:
         updates.update_status(just_updated="", not_installed="")
-    return {"new_release": updates.available(), "release_waiting": updates.waiting()}
+    return {
+        "new_release": updates.available(),
+        "release_waiting": updates.waiting(),
+        "release_downloading": updates.downloading(),
+    }
 
 
 def _backup_context(now) -> dict:

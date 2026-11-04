@@ -82,10 +82,13 @@
 {% if backup_warning and backup_warning.level != "bad" %}{% include "core/_backup_banner.html" %}{% endif %}
 {% if new_release %}
 {% comment %}The desktop app only (SPEC.md M11): below red and amber, not dismissable.{% endcomment %}
-<a class="hint-banner is-info" id="nieuwe-versie" href="{% url 'business:updates' %}" style="margin-bottom:var(--s-4)">
+{% comment %}While the version downloads in the background (core.updates.prepare), the banner fetches itself again every few seconds until it says "staat klaar". Without JS: reload the page.{% endcomment %}
+<a class="hint-banner is-info" id="nieuwe-versie" href="{% url 'business:updates' %}" style="margin-bottom:var(--s-4)"{% if release_downloading %} hx-get="{% url 'home' %}" hx-select="#nieuwe-versie" hx-target="this" hx-swap="outerHTML" hx-trigger="every 3s"{% endif %}>
     <svg class="i" aria-hidden="true"><use href="#download"></use></svg>
     {% if release_waiting %}
     <span>{% blocktranslate with version=new_release.version %}Huismus {{ version }} staat klaar. Hij wordt geïnstalleerd als je Huismus opnieuw opent.{% endblocktranslate %}</span>
+    {% elif release_downloading %}
+    <span>{% blocktranslate with version=new_release.version %}Huismus {{ version }} is gevonden en wordt gedownload.{% endblocktranslate %}</span>
     {% else %}
     <span>{% blocktranslate with version=new_release.version %}Er is een nieuwe versie: Huismus {{ version }}.{% endblocktranslate %}</span>
     {% endif %}

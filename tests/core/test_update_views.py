@@ -8,6 +8,7 @@ from unittest.mock import patch
 import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.utils import timezone
 
 from huismus.contacts.models import Contact
 from huismus.core import updates
@@ -79,6 +80,10 @@ def test_turning_it_off_hides_the_new_version(desktop):
 def test_the_banner_and_the_card_name_the_new_version(desktop):
     updates.update_status(available=RELEASE)
 
+    # Found, not downloaded yet (core.updates.prepare): that's what it says.
+    assert "Huismus 1.4.0 is gevonden en wordt gedownload." in _overview(desktop)
+    # Downloading failed (no internet): the plain notice.
+    updates.update_status(download_failed=timezone.localtime().isoformat())
     assert "Er is een nieuwe versie: Huismus 1.4.0." in _overview(desktop)
     assert "Huismus 1.4.0 is er" in desktop.get(reverse("business:overview")).content.decode()
     page = desktop.get(reverse("business:updates")).content.decode()

@@ -65,7 +65,8 @@ public list of versions, nothing else. If you don't want that, turn off
 **Update automatically** under **Settings → Updates**.
 
 When there's a new version, Huismus downloads it in the background and
-checks it. The overview then says "Huismus … is ready". You don't have to
+checks it. Meanwhile the overview says "Found Huismus …. It's being
+downloaded."; after that "Huismus … is ready". You don't have to
 do anything: the next time you open Huismus, it first makes a backup,
 installs the new version and opens again by itself. That takes about a
 minute. The overview then says "Updated to …". Huismus never updates while

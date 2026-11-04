@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-04 12:09+0100\n"
+"POT-Creation-Date: 2026-11-04 12:28+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3153,6 +3153,11 @@ msgstr "Download the new version"
 msgid "Hij wordt geïnstalleerd als je Huismus opnieuw opent."
 msgstr "It will be installed the next time you open Huismus."
 
+msgid ""
+"Hij wordt nu gedownload. Daarna wordt hij geïnstalleerd als je Huismus "
+"opnieuw opent."
+msgstr "It's being downloaded now. It will be installed the next time you open Huismus."
+
 #, python-format
 msgid "Bijwerken naar %(version)s"
 msgstr "Update to %(version)s"
@@ -3164,7 +3169,10 @@ msgid ""
 "Huismus kijkt bij het openen en daarna elke dag op GitHub of er een nieuwe "
 "versie is. Die installeert hij de volgende keer dat je Huismus opent, na een "
 "back-up. Er gaat niets van je administratie mee."
-msgstr "Huismus checks GitHub for a new version when it opens and then once a day. A new version is installed the next time you open Huismus, after a backup. Your records are never sent."
+msgstr ""
+"Huismus checks GitHub for a new version when it opens and then once a day. A "
+"new version is installed the next time you open Huismus, after a backup. "
+"Your records are never sent."
 
 #, python-format
 msgid "Huismus %(version)s start zo vanzelf."
@@ -3476,7 +3484,13 @@ msgstr ""
 msgid ""
 "Huismus %(version)s staat klaar. Hij wordt geïnstalleerd als je Huismus "
 "opnieuw opent."
-msgstr "Huismus %(version)s is ready. It will be installed the next time you open Huismus."
+msgstr ""
+"Huismus %(version)s is ready. It will be installed the next time you open "
+"Huismus."
+
+#, python-format
+msgid "Huismus %(version)s is gevonden en wordt gedownload."
+msgstr "Found Huismus %(version)s. It's being downloaded."
 
 #, python-format
 msgid "Er is een nieuwe versie: Huismus %(version)s."
@@ -5750,8 +5764,6 @@ msgid ""
 msgstr ""
 "If you have a Raspberry Pi, a NAS or a server of your own, you can also run "
 "Huismus in Docker. That's for people who are handy with that."
-
-
 
 #
 #~ msgid ""

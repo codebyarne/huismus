@@ -82,6 +82,7 @@ def page(request):
             "version": updates.current_version(),
             "release": updates.available(),
             "waiting": updates.waiting() is not None,
+            "downloading": updates.downloading() is not None,
             "problem": _problem(code) if code else "",
             # Then the download by hand, from the release's page.
             "download_by_hand": code == "not-writable",
