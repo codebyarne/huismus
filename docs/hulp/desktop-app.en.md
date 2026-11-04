@@ -61,13 +61,18 @@ folder…**. There's more in [Backups](back-ups.en.md).
 
 When it opens and then once a day, Huismus checks whether there's a new
 version. That's the only thing Huismus asks the internet for by itself: the
-public list of versions, nothing else. If you don't want that, turn it off
-under **Settings → Updates**.
+public list of versions, nothing else. If you don't want that, turn off
+**Update automatically** under **Settings → Updates**.
 
-When there's a new version, you see a notice on the overview. Choose
-**Update to …** and confirm. Huismus downloads the new version, checks it,
-makes a backup, closes and opens again by itself in the new version. The
-overview then says "Updated to …".
+When there's a new version, Huismus downloads it in the background and
+checks it. The overview then says "Huismus … is ready". You don't have to
+do anything: the next time you open Huismus, it first makes a backup,
+installs the new version and opens again by itself. That takes about a
+minute. The overview then says "Updated to …". Huismus never updates while
+you're working.
+
+Don't want to wait? Choose **Update to …** under **Settings → Updates** and
+confirm.
 
 If updating doesn't work, the window says so, with the buttons **Restore
 backup** and **Save log file**. Then install the previous version again.

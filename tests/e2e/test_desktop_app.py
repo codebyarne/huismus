@@ -163,6 +163,72 @@ def test_a_new_version_is_installed_after_one_click(desktop, tmp_path, monkeypat
     assert updates.load_status().pending["to_version"] == "1.4.0"
 
 
+def _fake_release(tmp_path, monkeypatch):
+    """1.4.0 with a .dmg in a fake release list (HUISMUS_RELEASES_URL), on 1.3.0."""
+    import hashlib
+    import json
+
+    from huismus.core import updates
+
+    package = tmp_path / "Huismus-1.4.0-macos.dmg"
+    package.write_bytes(b"nep")
+    listing = tmp_path / "releases.json"
+    listing.write_text(
+        json.dumps(
+            [
+                {
+                    "tag_name": "v1.4.0",
+                    "html_url": "https://github.com/codebyarne/huismus/releases/tag/v1.4.0",
+                    "assets": [
+                        {
+                            "name": "Huismus-1.4.0-macos.dmg",
+                            "browser_download_url": package.as_uri(),
+                            "digest": "sha256:" + hashlib.sha256(b"nep").hexdigest(),
+                        }
+                    ],
+                }
+            ]
+        )
+    )
+    monkeypatch.setenv("HUISMUS_RELEASES_URL", listing.as_uri())
+    monkeypatch.setattr(updates, "current_version", lambda: "1.3.0")
+
+
+def test_a_downloaded_version_waits_for_the_next_start(desktop, tmp_path, monkeypatch):
+    # Automatically (huismus-intern/besluiten.md, 2026-11-04): found and
+    # downloaded in the background, installed when Huismus opens again.
+    from pathlib import Path
+
+    from huismus.core import updates
+
+    app = desktop
+    _fake_release(tmp_path, monkeypatch)
+    updates.check()
+    updates.prepare()
+    downloaded = Path(updates.load_status().downloaded["path"])
+
+    app.goto(app.base + "/")
+    expect(app.locator("#nieuwe-versie")).to_contain_text(
+        "Huismus 1.4.0 staat klaar. Hij wordt geïnstalleerd als je Huismus opnieuw opent."
+    )
+    app.locator("#nieuwe-versie").click()
+    expect(app.locator("#staat-klaar")).to_have_text(
+        "Hij wordt geïnstalleerd als je Huismus opnieuw opent."
+    )
+    expect(app.get_by_role("link", name="Bijwerken naar 1.4.0")).to_be_visible()
+
+    # Off: no notice, and the downloaded version is thrown away.
+    switch = app.get_by_role("switch", name="Automatisch bijwerken")
+    expect(switch).to_be_checked()
+    switch.uncheck()
+    app.get_by_role("button", name="Opslaan").click()
+    expect(app.locator(".toast")).to_contain_text("Instellingen opgeslagen.")
+    expect(app.locator("#nieuwe-versie")).to_have_count(0)
+    assert not downloaded.exists()
+    app.goto(app.base + "/")
+    expect(app.locator("#nieuwe-versie")).to_have_count(0)
+
+
 def test_set_a_password_then_turn_it_off(desktop):
     # Wachtwoord (design D6): the fields show once the switch is on, with
     # CSS only; then the app asks it when it opens, until it is turned off.

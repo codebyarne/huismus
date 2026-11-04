@@ -18,6 +18,14 @@ from huismus.core.backup import create_backup
 pytestmark = pytest.mark.django_db
 
 
+@pytest.fixture(autouse=True)
+def _shell_hooks(monkeypatch):
+    # App.boot registers the shell's installer and precheck in core.updates;
+    # never left behind for other tests.
+    monkeypatch.setattr(updates, "installer", None)
+    monkeypatch.setattr(updates, "precheck", None)
+
+
 def test_the_install_script_is_valid_shell_and_quotes_its_paths(tmp_path):
     script = updater.script(
         Path("/Users/jan/Library/Application Support/.huismus-update/Huismus-1.4.0-macos.dmg"),
@@ -179,3 +187,56 @@ def test_the_windows_install_script_quotes_its_paths_and_checks_before_installin
 
 def test_a_typographic_quote_cannot_end_a_powershell_string():
     assert updater._powershell_quote("Jan\u2019s map") == "'Jan\u2019\u2019s map'"
+
+
+def test_a_failed_replacement_is_not_tried_again_automatically(data_dir):
+    # The script gave up: the next starts don't try 1.4.0 again on their own.
+    updates.update_status(
+        pending={"from_version": "1.3.0", "to_version": "1.4.0", "backup": ""},
+        downloaded={"version": "1.4.0", "path": "", "sha256": ""},
+    )
+    with patch("huismus.core.updates.current_version", return_value="1.3.0"):
+        app._updated_if_pending()
+    status = updates.load_status()
+    assert status.auto_failed == "1.4.0" and status.downloaded == {}
+
+
+def test_a_successful_update_forgets_the_downloaded_file(data_dir):
+    updates.update_status(
+        pending={"from_version": "1.3.0", "to_version": "1.4.0", "backup": ""},
+        downloaded={"version": "1.4.0", "path": "", "sha256": ""},
+    )
+    with patch("huismus.core.updates.current_version", return_value="1.4.0"):
+        app._updated_if_pending()
+    assert updates.load_status().downloaded == {}
+
+
+def _booted(data_dir, installs):
+    shell = app.App("nl", data_dir)
+    shell.window = MagicMock()
+    shell.take_lock = lambda: None
+    shell.server = MagicMock()
+    shell.server.start.return_value = "http://127.0.0.1:8765"
+    with (
+        patch("huismus.core.updates.install_at_start", return_value=installs) as at_start,
+        patch("huismus.assistants.claude.write_address"),
+        patch("huismus.assistants.claude.remove_saved"),
+        patch("desktop.app.threading.Thread") as thread,
+    ):
+        shell.boot()
+    return shell, at_start, thread
+
+
+def test_at_start_a_waiting_version_is_installed_before_the_window_opens(data_dir, monkeypatch):
+    monkeypatch.setenv("HUISMUS_WINDOW_TOKEN", "t")
+    shell, at_start, thread = _booted(data_dir, installs=True)
+
+    at_start.assert_called_once()
+    shell.window.load_url.assert_not_called()
+    thread.assert_not_called()  # no backup or check in a closing app
+
+
+def test_without_a_waiting_version_the_window_opens_as_always(data_dir, monkeypatch):
+    monkeypatch.setenv("HUISMUS_WINDOW_TOKEN", "t")
+    shell, _, _ = _booted(data_dir, installs=False)
+    shell.window.load_url.assert_called_once()

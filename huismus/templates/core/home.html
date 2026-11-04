@@ -84,7 +84,11 @@
 {% comment %}The desktop app only (SPEC.md M11): below red and amber, not dismissable.{% endcomment %}
 <a class="hint-banner is-info" id="nieuwe-versie" href="{% url 'business:updates' %}" style="margin-bottom:var(--s-4)">
     <svg class="i" aria-hidden="true"><use href="#download"></use></svg>
+    {% if release_waiting %}
+    <span>{% blocktranslate with version=new_release.version %}Huismus {{ version }} staat klaar. Hij wordt geïnstalleerd als je Huismus opnieuw opent.{% endblocktranslate %}</span>
+    {% else %}
     <span>{% blocktranslate with version=new_release.version %}Er is een nieuwe versie: Huismus {{ version }}.{% endblocktranslate %}</span>
+    {% endif %}
     <span class="spacer"></span>
     <span>{% translate "Bekijken" %} →</span>
 </a>

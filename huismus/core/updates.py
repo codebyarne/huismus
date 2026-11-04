@@ -5,11 +5,15 @@
 The app looks in GitHub Releases for a newer version: the one outgoing
 request Huismus makes (SPEC.md principle 6), and it can be turned off. It
 fetches only the public release list and sends nothing but a User-Agent.
-After one click it downloads the new version, checks it against the
-SHA-256 GitHub lists for the file, makes a backup and hands the file to
-the desktop shell, which replaces the app and starts it again
-(desktop/updater.py). The first start of the new version runs the
-migrations; if they fail, the shell offers to restore that backup.
+When it finds a newer version it downloads it in the background and
+checks it against the SHA-256 GitHub lists for the file (prepare). The
+next time the app opens, before the window shows Huismus, it makes a
+backup and hands the file to the desktop shell, which replaces the app
+and starts it again (install_at_start, desktop/updater.py); never in the
+middle of a session. "Bijwerken" on Instellingen → Updates does the same
+right away. The first start of the new version runs the migrations; if
+they fail, the shell offers to restore that backup
+(huismus-intern/besluiten.md, 2026-11-04).
 
 Whether to look and what was found belong to this computer, like the
 backup folder: a small file next to the database that no backup carries
@@ -78,6 +82,14 @@ class Status:
     # to, or the one that didn't get installed (desktop/app.py).
     just_updated: str = ""
     not_installed: str = ""
+    # The checked file that waits for the next start (prepare): version,
+    # path, sha256.
+    downloaded: dict = field(default_factory=dict)
+    # When downloading last failed (ISO timestamp): tried again a day later.
+    download_failed: str = ""
+    # The version that didn't get installed automatically once: the next
+    # starts leave it to the button on Updates (install_at_start).
+    auto_failed: str = ""
 
     @property
     def release(self) -> Release | None:
@@ -224,6 +236,72 @@ def available() -> Release | None:
     return release if is_newer(release.version, current_version()) else None
 
 
+# -- Downloading ahead ---------------------------------------------------------
+
+
+def _update_folder() -> Path:
+    folder = Path(settings.DATA_DIR).parent / ".huismus-update"
+    folder.mkdir(exist_ok=True)
+    return folder
+
+
+def _forget_download(status: Status) -> None:
+    if status.downloaded.get("path"):
+        Path(status.downloaded["path"]).unlink(missing_ok=True)
+    update_status(downloaded={})
+
+
+def prepare(now: datetime | None = None) -> None:
+    """After a check (desktop/app.py): downloads and checks a newer
+    version, so the next start can install it. Silent when that fails;
+    tried again a day later."""
+    release = available()
+    if release is None:
+        return
+    status = load_status()
+    if status.downloaded.get("version") == release.version and _waiting_file(status):
+        return
+    now = now or timezone.localtime()
+    if status.download_failed:
+        if now - datetime.fromisoformat(status.download_failed) < CHECK_EVERY:
+            return
+    if status.downloaded:
+        # An older new version: this one replaces it.
+        _forget_download(status)
+    try:
+        path = download(release, _update_folder())
+    except UpdateError as error:
+        logger.info("Downloaden van %s lukte niet: %s", release.version, error)
+        update_status(download_failed=now.isoformat())
+        return
+    update_status(
+        downloaded={"version": release.version, "path": str(path), "sha256": release.sha256},
+        download_failed="",
+    )
+
+
+def _waiting_file(status: Status) -> Path | None:
+    path = Path(status.downloaded.get("path", ""))
+    return path if status.downloaded and path.is_file() else None
+
+
+def waiting() -> Release | None:
+    """The new version that is downloaded and will be installed at the
+    next start: what the overview and Updates say "staat klaar" about."""
+    release = available()
+    status = load_status()
+    if release is None or status.auto_failed == release.version:
+        return None
+    if status.downloaded.get("version") != release.version or not _waiting_file(status):
+        return None
+    return release
+
+
+def turn_off() -> None:
+    """The switch off: no more requests, and a waiting version goes."""
+    _forget_download(update_status(enabled=False))
+
+
 # -- Installing ---------------------------------------------------------------
 
 # Set by the desktop shell once its server runs (desktop/app.py, App.boot):
@@ -232,6 +310,9 @@ def available() -> Release | None:
 # Docker, in tests, on the demo server): then install() says updating only
 # works in the app.
 installer = None
+# Also set by the desktop shell: raises UpdateError when the app can't
+# replace itself where it is, so no download or backup is spent on it.
+precheck = None
 
 
 def download(release: Release, folder: Path) -> Path:
@@ -271,6 +352,23 @@ def download(release: Release, folder: Path) -> Path:
     return target
 
 
+def _downloaded(release: Release) -> Path | None:
+    """The file prepare() downloaded for this release, if it still has the
+    right SHA-256."""
+    status = load_status()
+    path = _waiting_file(status)
+    if path is None or status.downloaded.get("version") != release.version:
+        return None
+    digest = hashlib.sha256()
+    with path.open("rb") as file:
+        while chunk := file.read(1 << 16):
+            digest.update(chunk)
+    if digest.hexdigest() != release.sha256.lower():
+        path.unlink(missing_ok=True)
+        return None
+    return path
+
+
 def release_page(version: str) -> str:
     """Where a version can be downloaded by hand (the previous one, after
     a failed update)."""
@@ -286,13 +384,15 @@ def install(release: Release) -> None:
 
     if installer is None:
         raise UpdateError("no-installer")
-    folder = Path(settings.DATA_DIR).parent / ".huismus-update"
-    folder.mkdir(exist_ok=True)
-    package = download(release, folder)
+    if precheck is not None:
+        precheck()
+    waiting_file = _downloaded(release)
+    package = waiting_file or download(release, _update_folder())
     try:
         backup = auto_backups.safety_backup()
     except auto_backups.SafetyBackupError as error:
-        package.unlink(missing_ok=True)
+        if waiting_file is None:
+            package.unlink(missing_ok=True)
         raise UpdateError("backup") from error
     update_status(
         pending={
@@ -311,3 +411,25 @@ def install(release: Release) -> None:
             raise
         logger.exception("De installer kon niet beginnen")
         raise UpdateError("install") from error
+
+
+def install_at_start() -> bool:
+    """At the start of the app, before the window shows Huismus
+    (desktop/app.py): installs the version that waits, if any. True when
+    the shell took over and closes. A version that fails here isn't tried
+    again at the next start; the overview says once that it didn't work.
+    A failed backup is the exception: nothing was tried, so the next start
+    tries again, and the overview's backup warning says what's wrong with
+    the folder (huismus-intern/besluiten.md, 2026-11-04)."""
+    release = waiting()
+    if release is None or installer is None:
+        return False
+    try:
+        install(release)
+    except UpdateError as error:
+        logger.warning("Automatisch bijwerken naar %s lukte niet: %s", release.version, error)
+        if str(error) == "backup":
+            return False
+        update_status(auto_failed=release.version, not_installed=release.version)
+        return False
+    return True
