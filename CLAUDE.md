@@ -105,6 +105,10 @@ Releases gaan **één keer per week, op woensdag** (besluit 2026-11-04): Claude
 maakt dan zelf een release van wat er die week op `main` kwam (het laatste cijfer
 omhoog, 0.1.x) en meldt welke versie klaarstaat en wat erin zit, in gewone taal.
 Eerst: `verify-e2e` op die `main`, en de WebKit- en Firefox-jobs op `main` groen.
+De release-PR (versie in `pyproject.toml`) zet bovenaan `docs/hulp/nieuw.nl.md` en
+`nieuw.en.md` wat de gebruiker er nu mee kan, volgens `docs/schrijfwijzer.md`:
+wat je ziet of doet, niet hoe het gebouwd is; interne wijzigingen (tests, CI) laat
+je weg. Die pagina staat onder Hulp in elke installatie.
 Kwam er die week alleen documentatie bij, dan is er geen release. Elke release
 kost ook 160 tot 210 Actions-minuten (`docs/desktop.md`), nog een reden om ze te
 bundelen.
