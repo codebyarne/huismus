@@ -63,7 +63,7 @@ REFUSED, UNREACHABLE, NOT_WEBDAV, FULL, OTHER = (
 
 # core.backup's archive name with ".age" after it. Huismus only ever
 # removes files with such a name from the cloud.
-CLOUD_ARCHIVE_NAME = re.compile(r"^huismus-backup-(\d{8}-\d{6})(?:-\d+)?\.tar\.gz\.age$")
+CLOUD_ARCHIVE_NAME = re.compile(r"^huismus-backup-(\d{8}-\d{6})(?:-(\d+))?\.tar\.gz\.age$")
 # WebDAV: the folder on the given address where the backups go.
 WEBDAV_FOLDER = "Huismus"
 TIMEOUT = 60  # seconds per network step; an upload sends in steps too
@@ -136,6 +136,13 @@ class RemoteFile:
     def created_at(self) -> datetime | None:
         match = CLOUD_ARCHIVE_NAME.match(self.name)
         return datetime.strptime(match[1], "%Y%m%d-%H%M%S") if match else None
+
+    @property
+    def order(self) -> tuple:
+        """created_at, then the number after it: of two in one second, the
+        one with -2 is the later. Only for Huismus's own archives."""
+        number = CLOUD_ARCHIVE_NAME.match(self.name)[2]
+        return self.created_at, int(number or 1)
 
 
 # -- What this installation knows ------------------------------------------
@@ -650,7 +657,7 @@ def _upload(config: Config, now: datetime) -> RemoteFile | None:
         with tempfile.TemporaryDirectory(prefix="huismus-cloud-") as scratch:
             archive = create_backup(Path(scratch))
             data = encrypt(archive.read_bytes(), code())
-        name = archive.name + ".age"
+        name = _free_name(service, archive.name)
         service.upload(name, data)
     except (CloudError, OSError, BackupError, sqlite3.Error, tarfile.TarError) as error:
         logger.warning("Back-up naar %s mislukt: %s", config.service_label, error)
@@ -666,12 +673,29 @@ def _upload(config: Config, now: datetime) -> RemoteFile | None:
     return RemoteFile(name, len(data))
 
 
+def _free_name(service, archive_name: str) -> str:
+    """archive_name with ".age" after it, or with -2, -3 like core.backup
+    when the cloud already has a backup from the same second: uploading
+    under the same name would replace that one. (core.backup's own -2
+    never comes up here: it makes the archive in an empty folder.)"""
+    taken = {file.name for file in service.list()}
+    stem = archive_name.removesuffix(".tar.gz")
+    name, count = f"{stem}.tar.gz.age", 1
+    while name in taken:
+        count += 1
+        name = f"{stem}-{count}.tar.gz.age"
+    return name
+
+
 def prune(service, now: datetime) -> list[str]:
     """The folder's rule in the cloud (core.auto_backups.to_remove): only
     Huismus's own encrypted archives."""
     from .auto_backups import to_remove
 
-    dated = [(file.created_at, file.name) for file in service.list() if file.created_at]
+    # Newest first already: to_remove sorts on the second alone and keeps
+    # this order within one, so of two in one second the later stays.
+    found = sorted(service.list(), key=lambda file: file.order, reverse=True)
+    dated = [(file.created_at, file.name) for file in found]
     removed = to_remove(dated, now)
     for name in removed:
         service.delete(name)
@@ -685,7 +709,7 @@ def archives() -> list[RemoteFile]:
     if service is None:
         return []
     found = service.list()
-    found.sort(key=lambda file: file.created_at, reverse=True)
+    found.sort(key=lambda file: file.order, reverse=True)
     return found
 
 
