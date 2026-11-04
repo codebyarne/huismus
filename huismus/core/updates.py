@@ -297,6 +297,18 @@ def waiting() -> Release | None:
     return release
 
 
+def downloading() -> Release | None:
+    """A newer version found and not downloaded yet: what the overview
+    says "wordt gedownload" about. Not after a failed download (no
+    internet; tried again a day later) or a failed automatic install: then
+    the plain notice."""
+    release = available()
+    status = load_status()
+    if release is None or status.auto_failed == release.version or status.download_failed:
+        return None
+    return None if waiting() is not None else release
+
+
 def turn_off() -> None:
     """The switch off: no more requests, and a waiting version goes."""
     _forget_download(update_status(enabled=False))

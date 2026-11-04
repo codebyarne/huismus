@@ -119,7 +119,9 @@ Bijwerken gaat vanzelf (besluit 2026-11-04, `huismus-intern/besluiten.md`).
 Is er zo'n versie, dan downloadt de app hem meteen op de achtergrond naar
 `.huismus-update` naast de administratie en controleert de SHA-256
 (`updates.prepare`, in het uurritme van `desktop/app.py`; mislukt het, dan
-een dag later weer). Daarna zegt de blauwe melding op het overzicht
+een dag later weer). Zolang het downloaden loopt, zegt de blauwe melding
+"Huismus 1.4.0 is gevonden en wordt gedownload." en haalt hij zichzelf elke
+paar seconden opnieuw op (htmx, zoals de back-uprij). Daarna zegt hij op het overzicht
 "Huismus 1.4.0 staat klaar…". Bij het volgende openen, na het migreren en
 vóórdat het venster Huismus laat zien, installeert de app hem
 (`updates.install_at_start`): nooit midden in een sessie. "Bijwerken naar

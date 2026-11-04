@@ -407,3 +407,20 @@ def test_an_app_that_cant_replace_itself_makes_no_backup(found, monkeypatch):
         assert updates.install_at_start() is False
     backup.assert_not_called()
     assert updates.load_status().not_installed == "1.4.0"
+
+
+def test_between_finding_and_downloading_it_says_it_is_being_downloaded(found):
+    assert updates.downloading().version == "1.4.0"
+    updates.prepare()
+    assert updates.downloading() is None and updates.waiting() is not None
+
+
+def test_after_a_failed_download_it_doesnt_say_downloading(found):
+    with patch("huismus.core.updates.download", side_effect=updates.UpdateError("download")):
+        updates.prepare()
+    assert updates.downloading() is None
+
+
+def test_after_a_failed_automatic_install_it_doesnt_say_downloading(found):
+    updates.update_status(auto_failed="1.4.0")
+    assert updates.downloading() is None

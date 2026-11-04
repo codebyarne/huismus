@@ -204,10 +204,15 @@ def test_a_downloaded_version_waits_for_the_next_start(desktop, tmp_path, monkey
     app = desktop
     _fake_release(tmp_path, monkeypatch)
     updates.check()
+
+    # Found, still downloading: the banner says so, and changes by itself
+    # once the download is done.
+    app.goto(app.base + "/")
+    expect(app.locator("#nieuwe-versie")).to_contain_text(
+        "Huismus 1.4.0 is gevonden en wordt gedownload."
+    )
     updates.prepare()
     downloaded = Path(updates.load_status().downloaded["path"])
-
-    app.goto(app.base + "/")
     expect(app.locator("#nieuwe-versie")).to_contain_text(
         "Huismus 1.4.0 staat klaar. Hij wordt geïnstalleerd als je Huismus opnieuw opent."
     )

@@ -66,7 +66,8 @@ openbare lijst met versies, verder niets. Wil je dat niet, zet dan
 **Automatisch bijwerken** uit bij **Instellingen → Updates**.
 
 Is er een nieuwe versie, dan downloadt Huismus hem op de achtergrond en
-controleert hem. Het overzicht zegt dan "Huismus … staat klaar". Je hoeft
+controleert hem. Zolang dat duurt, zegt het overzicht "Huismus … is gevonden
+en wordt gedownload"; daarna "Huismus … staat klaar". Je hoeft
 niets te doen: de volgende keer dat je Huismus opent, maakt hij eerst een
 back-up, installeert de nieuwe versie en opent vanzelf weer. Dat duurt
 ongeveer een minuut. Op het overzicht staat daarna "Bijgewerkt naar …".
