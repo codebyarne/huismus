@@ -1,15 +1,13 @@
 name: CI
 
-# Fewer minutes (besluit 2026-10-29): a change to documentation only (every
-# .md file, docs/) runs no CI. The app doesn't read these files, so there
-# is nothing to test. A change that touches
-# any other file runs CI as always, for all its files.
+# Every change runs CI, documentation too: main requires the `browsers` and
+# `verify (chromium)` checks, so a pull request without them can't merge. The
+# repo is public, so the runners cost nothing (until then, besluit 2026-10-29
+# skipped documentation-only changes to save minutes).
 on:
   push:
     branches: [main]
-    paths-ignore: ["**.md", "docs/**"]
   pull_request:
-    paths-ignore: ["**.md", "docs/**"]
   # By hand (Actions → CI → Run workflow), with all three engines: to see
   # whether a branch is green when no run started, as when GitHub lost the
   # push of a merge (2026-11-03).
