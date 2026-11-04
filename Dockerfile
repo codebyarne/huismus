@@ -6,7 +6,7 @@
 # Order matters for build time: Docker reuses a step's cached result only
 # while nothing above it changed, and every commit changes `COPY . .`. So
 # system packages and dependencies come first, the code last — otherwise
-# every deploy on the Pi downloads and installs the apt packages again.
+# every build downloads and installs the apt packages again.
 
 FROM python:3.12-slim AS builder
 COPY --from=ghcr.io/astral-sh/uv:0.12.18 /uv /uvx /bin/

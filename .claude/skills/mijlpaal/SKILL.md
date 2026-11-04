@@ -1,11 +1,11 @@
 ---
 name: mijlpaal
-description: Bouwt één mijlpaal of feature van Huismus van begin tot live, zonder de eigenaar tussendoor te vragen, behalve voor de escalatielijst in CLAUDE.md. Gebruik als de eigenaar zegt "bouw <feature>" of /mijlpaal <onderwerp>.
+description: Bouwt één mijlpaal of feature van Huismus van begin tot release, zonder de eigenaar tussendoor te vragen, behalve voor de escalatielijst in CLAUDE.md. Gebruik als de eigenaar zegt "bouw <feature>" of /mijlpaal <onderwerp>.
 ---
 
 # /mijlpaal <onderwerp>
 
-Eén onderwerp, van plan tot live op de Pi. Je werkt door tot het af is of tot
+Eén onderwerp, van plan tot release. Je werkt door tot het af is of tot
 iets op de **escalatielijst** (`CLAUDE.md`, "Autonoom werken") staat. Een
 productvraag of een design gaat naar de `product-owner`-agent, niet naar de eigenaar.
 
@@ -74,29 +74,33 @@ Alles moet slagen voordat je verder gaat:
   Push de branch, open de PR. Beschrijving in producttaal: wat de gebruiker
   merkt, de PO-besluiten, wat niet getest kon worden.
 - Raakt de PR iets van de escalatielijst (zoals een migratie die data
-  wijzigt, of `deploy/`): niet mergen, de eigenaar vragen (zie 9).
+  wijzigt, of `scripts/verify.sh`): niet mergen, de eigenaar vragen (zie 9).
 
-## 7. Mergen en live
+## 7. Mergen en release
 
 - CI groen (op een PR alleen `verify (chromium)`), geen conflict, geen open vraag van
   de eigenaar → zelf mergen met rebase (`CLAUDE.md`, "Mergen").
-- Wacht tot de Pi de nieuwe versie draait: vergelijk
-  `docker inspect huismus --format '{{.Config.Image}}'` via
-  de Pi (`huismus-intern/werkwijze.md`) met `origin/main`, en lees het deploylog
-  (`~/.pm2/logs/huismus-webhook-out.log`) tot "Huismus <sha> draait."
-- Alleen documentatie gewijzigd (`.md`, `docs/`): geen CI en geen deploy
-  (`CLAUDE.md`, "Mergen"). De Pi draait dan de vorige code-commit; niets te
-  controleren.
+- Een merge rolt niets uit (`CLAUDE.md`, "Releases"). Wacht tot CI op `main` groen is
+  (ook WebKit en Firefox, als die draaien), en maak dan een release volgens
+  `docs/desktop.md`, "Een release maken": een PR `chore(release): X.Y.Z` die alleen
+  de versie in `pyproject.toml` (en `uv.lock`) een patch ophoogt, mergen als CI groen
+  is, en daarna die commit taggen met `vX.Y.Z` en de tag pushen.
+- Wacht tot de workflow Release groen is en de release op GitHub staat. Mislukt hij:
+  oplossen, niet de tag verplaatsen; een nieuwe patch is goedkoper dan uitleg.
+- Alleen documentatie gewijzigd (`.md`, `docs/`): geen CI en geen release
+  (`CLAUDE.md`, "Mergen").
 
 ## 8. Melden
 
 - Een regel in `huismus-intern/STATUS.md` en je onderwerp afgevinkt in
   `huismus-intern/backlog.md` (naar "Klaar"): een commit in `huismus-intern`,
   gepusht vóór stap 10. Niets daarvan in de PR van Huismus.
-- Workflow gewijzigd (`CLAUDE.md`, `.claude/`, `scripts/verify.sh`, CI, `deploy/`)?
+- Workflow gewijzigd (`CLAUDE.md`, `.claude/`, `scripts/verify.sh`, CI)?
   Werk ook `codebyarne/agentic-playbook` bij en zet `Playbook: …` in een commit
   (`CLAUDE.md`, "Playbook bijhouden").
-- Pushmelding aan de eigenaar: wat er live ging, in één of twee zinnen producttaal,
+- Pushmelding aan de eigenaar: welke versie klaarstaat en wat er nieuw is, in één of
+  twee zinnen producttaal, met hoe de Pi bijwerkt (`docker compose pull &&
+  docker compose up -d`),
   plus de PO-besluiten van deze mijlpaal. Stuur de belangrijkste screenshots
   mee met SendUserFile.
 

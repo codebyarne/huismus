@@ -14,7 +14,7 @@
 MAX_KEER=2
 
 # Bestanden en mappen die de werkwijze vastleggen (geen productcode).
-WORKFLOW='^(CLAUDE\.md|\.claude/|scripts/verify\.sh|\.github/workflows/|deploy/)'
+WORKFLOW='^(CLAUDE\.md|\.claude/|scripts/verify\.sh|\.github/workflows/)'
 
 input=$(cat)
 sessie=$(printf '%s' "$input" | python3 -c '

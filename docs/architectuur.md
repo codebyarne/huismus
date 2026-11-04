@@ -170,10 +170,9 @@ achtergrond, in `SPEC.md` sectie 5. Hier alleen waar je ze in de code vindt:
 | `huismus/templates/` | Alle HTML-templates, in een map per onderwerp (meestal per app; de pagina AI-assistenten staat bij `huismus/business/`), plus `base.html`, `pdf/` (de pdf's), `registration/` (inloggen), `errors/` en `icons.svg`. |
 | `huismus/core/static/core/` | De ene stylesheet (`huismus.css`), het ene script (`app.js`, alleen voor gemak bovenop gewone formulieren), HTMX in `vendor/`, en de app-iconen. Hoe de schermen in elkaar zitten: `docs/frontend.md`. |
 | `huismus/locale/` | Vertalingen (`nl`, `en`), gemaakt met `makemessages`. |
-| `tests/` | Een map per app, plus `deploy/` en `desktop/`, `e2e/` (browsertests met Playwright) en `fixtures/` (fictieve Moneybird-exports). |
+| `tests/` | Een map per app, plus `desktop/`, `e2e/` (browsertests met Playwright) en `fixtures/` (fictieve Moneybird-exports). |
 | `desktop/` | De desktop-app voor macOS en Windows: een venster om dezelfde Django-app heen. Zie `docs/desktop.md`. |
 | `docker/` | `entrypoint.sh` voor de container; het `Dockerfile` staat in de hoofdmap. |
-| `deploy/` | Uitrollen naar de Raspberry Pi: webhook en `deploy.sh`. Zie `docs/deploy.md`. |
 | `scripts/` | `verify.sh` (de poort), `demo-server.sh`, en bouwscripts voor de desktop-app en het design system. |
 | `docs/` | Documentatie; `docs/README.md` zegt wat voor wie is. `docs/hulp/` is de uitleg die de app zelf toont. |
 | `.claude/`, `.github/` | De werkwijze met Claude Code (agents, skills, hooks) en CI. |

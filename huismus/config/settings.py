@@ -27,7 +27,7 @@ DEBUG = os.environ.get("DEBUG", "false").lower() == "true"
 
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-# From the environment when it has one (Docker's .env, docs/deploy.md);
+# From the environment when it has one (Docker's environment, docs/hulp/docker.nl.md);
 # otherwise Huismus creates one on first start, so a first start needs no
 # configuration (SPEC.md M11, huismus/config/secret_key.py).
 SECRET_KEY = os.environ.get("SECRET_KEY") or secret_key.load_or_create(DATA_DIR)
