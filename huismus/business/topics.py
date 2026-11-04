@@ -171,8 +171,8 @@ def cards(settings: Settings, theme: str = "") -> list[dict]:
     result.append(_backups_card(ok, off))
     result.append(_export_card())
     result.append(_assistants_card(ok, off))
+    result.append(_updates_card(ok, off))
     if django_settings.DESKTOP:
-        result.append(_updates_card(ok, off))
         result.append(_password_card(ok, off))
     result.append(_appearance_card(theme))
     return result
@@ -233,7 +233,7 @@ def _assistants_card(ok, off) -> dict:
 
 
 def _updates_card(ok, off) -> dict:
-    """Only in the desktop app (SPEC.md M11, core.update_views)."""
+    """SPEC.md M11, core.update_views. In Docker it only says so."""
     status = updates.load_status()
     release = updates.available()
     if release is not None:
@@ -243,7 +243,9 @@ def _updates_card(ok, off) -> dict:
     on, off_text = pgettext_lazy("setting", "Aan"), pgettext_lazy("setting", "Uit")
     return {
         "title": _("Updates"),
-        "intro": _("Huismus werkt zichzelf bij."),
+        "intro": _("Huismus werkt zichzelf bij.")
+        if django_settings.DESKTOP
+        else _("Huismus zegt het als er een nieuwe versie is."),
         "slug": "updates",
         "url": reverse("business:updates"),
         "line": line,

@@ -80,7 +80,7 @@ def _pages():
         "/instellingen/huisstijl/",
         "/instellingen/mailen/",
         # On Docker too (SPEC.md M15); with a linked folder and a backup:
-        # test_the_backup_pages_on_docker_have_no_known_kind_of_ui_bug.
+        # test_the_backup_and_update_pages_on_docker_have_no_known_kind_of_ui_bug.
         "/instellingen/back-ups/",
         "/instellingen/back-ups/map/",
         "/instellingen/back-ups/terugzetten/",
@@ -89,6 +89,8 @@ def _pages():
         "/instellingen/exporteren/",
         # Not connected here; connected, with the key: the desktop test below.
         "/instellingen/ai-assistenten/",
+        # Docker's, without a new version; with one: the Docker test below.
+        "/instellingen/updates/",
         "/instellingen/weergave/",
         "/welkom/bedrijf/",
         "/welkom/kor/",
@@ -309,10 +311,10 @@ def test_every_page_in_both_languages_has_no_known_kind_of_ui_bug(app, history, 
 
 
 @pytest.mark.parametrize("width", WIDTHS)
-def test_the_backup_pages_on_docker_have_no_known_kind_of_ui_bug(
+def test_the_backup_and_update_pages_on_docker_have_no_known_kind_of_ui_bug(
     app, history, width, settings, tmp_path, monkeypatch
 ):
-    from huismus.core import auto_backups
+    from huismus.core import auto_backups, updates
 
     # A folder linked in and a backup in it (SPEC.md M15), so all shows.
     settings.DESKTOP = False
@@ -322,6 +324,17 @@ def test_the_backup_pages_on_docker_have_no_known_kind_of_ui_bug(
     monkeypatch.setattr(auto_backups, "MOUNTINFO", tmp_path / "geen-proc")
     auto_backups.choose_folder(linked)
     auto_backups.make_backup()
+    # A newer version with another X.Y, so the notice and the longest
+    # instructions on Updates show (core.update_views._docker).
+    updates.update_status(
+        available={
+            "version": "99.0.0",
+            "page_url": "https://github.com/codebyarne/huismus/releases/tag/v99.0.0",
+            "asset_url": "",
+            "asset_name": "",
+            "sha256": "",
+        }
+    )
     app.set_viewport_size({"width": width, "height": 800})
     dutch = _dutch_ui_texts()
     data = sorted([*_data_texts(), str(tmp_path)], key=len, reverse=True)
@@ -334,6 +347,7 @@ def test_the_backup_pages_on_docker_have_no_known_kind_of_ui_bug(
             "/instellingen/back-ups/",
             "/instellingen/back-ups/map/",
             "/instellingen/back-ups/terugzetten/",
+            "/instellingen/updates/",
         ]:
             check = dutch if language == "en" else []
             for problem in _problems_on(app, path, language, check, data):

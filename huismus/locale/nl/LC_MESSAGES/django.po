@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-04 12:58+0100\n"
+"POT-Creation-Date: 2026-11-04 13:41+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -556,6 +556,9 @@ msgid "Updates"
 msgstr ""
 
 msgid "Huismus werkt zichzelf bij."
+msgstr ""
+
+msgid "Huismus zegt het als er een nieuwe versie is."
 msgstr ""
 
 msgid "Een wachtwoord vragen als Huismus opent. Standaard uit."
@@ -2926,7 +2929,29 @@ msgid ""
 msgstr ""
 
 #, python-format
+msgid ""
+"Voor %(new_tag)s pas je eerst je <code>compose.yaml</code> aan: zet de regel "
+"<code>image</code> op <code>ghcr.io/codebyarne/huismus:%(new_tag)s</code>. "
+"Typ daarna in dezelfde map:"
+msgstr ""
+
+msgid "Bijwerken doe je zelf. Typ in de map met je <code>compose.yaml</code>:"
+msgstr ""
+
+msgid "Meer over bijwerken in Docker"
+msgstr ""
+
+#, python-format
 msgid "Bijwerken naar %(version)s"
+msgstr ""
+
+msgid "Zoeken naar nieuwe versies"
+msgstr ""
+
+msgid ""
+"Huismus kijkt elke dag op GitHub of er een nieuwe versie is en zegt het dan "
+"op het overzicht. Er gaat niets van je administratie mee. Bijwerken doe je "
+"zelf."
 msgstr ""
 
 msgid "Automatisch bijwerken"
@@ -4669,6 +4694,7 @@ msgid ""
 "<strong>Gereed</strong>."
 msgstr ""
 
+#, python-format
 msgid ""
 "Ga naar <a href=\"%(url)s\"><strong>Systeeminstellingen › Privacy en "
 "beveiliging</strong></a> en scrol naar beneden. Klik bij Huismus op "

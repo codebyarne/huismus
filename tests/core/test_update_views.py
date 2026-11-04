@@ -1,7 +1,8 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """Instellingen → Updates, "Bijwerken" and the overview's banner in the
-desktop app (SPEC.md M11, huismus/core/update_views.py)."""
+desktop app (SPEC.md M11, huismus/core/update_views.py), and the notice
+Huismus in Docker gives instead."""
 
 from unittest.mock import patch
 
@@ -21,6 +22,14 @@ RELEASE = {
     "asset_url": "https://example.invalid/Huismus-1.4.0-macos.dmg",
     "asset_name": "Huismus-1.4.0-macos.dmg",
     "sha256": "ab" * 32,
+}
+# In Docker a release has no file (core.updates.newest_release).
+DOCKER_RELEASE = {
+    "version": "1.3.1",
+    "page_url": "https://github.com/codebyarne/huismus/releases/tag/v1.3.1",
+    "asset_url": "",
+    "asset_name": "",
+    "sha256": "",
 }
 
 
@@ -46,16 +55,74 @@ def _overview(client):
     return client.get("/").content.decode()
 
 
-def test_docker_has_no_update_pages_and_never_looks(client, settings, tmp_path):
+@pytest.fixture
+def docker(client, settings, tmp_path):
     settings.DATA_DIR = tmp_path
     get_user_model().objects.create_user(username="pi", password="s3cret-pass")
     client.login(username="pi", password="s3cret-pass")
+    return client
 
-    assert client.get(reverse("business:updates")).status_code == 404
-    assert client.get(reverse("business:updates_install")).status_code == 404
+
+def test_docker_never_looks_during_a_page(docker):
+    # Only gunicorn's hourly thread looks (core.updates.start_hourly_thread).
     with patch("huismus.core.updates._fetch") as fetch:
-        assert "Updates" not in client.get(reverse("business:overview")).content.decode()
+        _overview(docker)
+        docker.get(reverse("business:overview"))
+        docker.get(reverse("business:updates"))
     fetch.assert_not_called()
+
+
+def test_docker_has_no_bijwerken_button(docker):
+    updates.update_status(available=DOCKER_RELEASE)
+
+    page = docker.get(reverse("business:updates")).content.decode()
+    assert "Je gebruikt Huismus 1.3.0." in page
+    assert "Huismus 1.3.1 is er" in page and "Wat is er nieuw in 1.3.1?" in page
+    assert "Bijwerken naar" not in page
+    assert docker.get(reverse("business:updates_install")).status_code == 404
+
+
+def test_docker_says_what_to_type(docker):
+    updates.update_status(available=DOCKER_RELEASE)
+
+    page = docker.get(reverse("business:updates")).content.decode()
+    assert "Bijwerken doe je zelf." in page
+    assert "docker compose pull" in page and "docker compose up -d" in page
+    assert "compose.yaml</code> aan" not in page
+    assert "/hulp/docker/#bijwerken" in page
+
+
+def test_docker_a_new_x_y_needs_a_new_tag_first(docker):
+    updates.update_status(available={**DOCKER_RELEASE, "version": "1.4.0"})
+
+    page = docker.get(reverse("business:updates")).content.decode()
+    assert "Voor 1.4 pas je eerst je <code>compose.yaml</code> aan" in page
+    assert "ghcr.io/codebyarne/huismus:1.4" in page
+    assert "docker compose pull" in page
+
+
+def test_docker_shows_the_notice_and_the_card(docker):
+    page = docker.get(reverse("business:overview")).content.decode()
+    assert "Huismus zegt het als er een nieuwe versie is." in page
+    assert "Versie 1.3.0" in page
+    assert 'id="nieuwe-versie"' not in _overview(docker)
+
+    updates.update_status(available=DOCKER_RELEASE)
+
+    assert "Er is een nieuwe versie: Huismus 1.3.1." in _overview(docker)
+    assert "wordt gedownload" not in _overview(docker)
+    assert "Huismus 1.3.1 is er" in docker.get(reverse("business:overview")).content.decode()
+
+
+def test_docker_switch_turns_the_looking_off(docker):
+    updates.update_status(available=DOCKER_RELEASE)
+    page = docker.get(reverse("business:updates")).content.decode()
+    assert "Zoeken naar nieuwe versies" in page
+
+    docker.post(reverse("business:updates"), {})
+
+    assert updates.load_status().enabled is False
+    assert 'id="nieuwe-versie"' not in _overview(docker)
 
 
 def test_the_page_shows_the_version_and_the_switch(desktop):

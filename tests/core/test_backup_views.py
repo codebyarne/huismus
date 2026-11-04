@@ -135,8 +135,9 @@ def test_docker_refuses_a_folder_inside_the_container(docker, tmp_path):
 def test_docker_shows_the_card_and_the_banner(docker):
     settings_page = docker.get(reverse("business:overview")).content.decode()
     assert "Back-ups" in settings_page and "Nog geen map gekozen" in settings_page
-    # Updates and Wachtwoord stay the desktop app's.
-    assert reverse("business:updates") not in settings_page
+    # Wachtwoord stays the desktop app's; Updates is in Docker too, as a
+    # notice only (core.update_views).
+    assert reverse("business:password") not in settings_page
 
     assert 'id="back-upmelding"' in _overview(docker)
 
