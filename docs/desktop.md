@@ -289,8 +289,5 @@ De Pango-pakketten van Homebrew op die runner zijn gebouwd voor macOS 14
 `desktop/huismus.spec`); op een oudere macOS zegt macOS dat hij daar niet
 werkt. Elke Apple Silicon-Mac kan macOS 14 draaien.
 
-Een release kost op een privé-repo ongeveer 160 tot 210 minuten van het
-gratis Actions-tegoed: Mac-minuten tellen tien keer, Windows-minuten twee
-keer. Een proefbouw op Windows ongeveer 60. Zolang de repo privé is,
-kan de app de releaselijst niet zonder inloggen lezen; updates werken dus pas
-na de openbare release (SPEC.md sectie 11).
+De repo is openbaar: de runners van GitHub Actions kosten dan geen tegoed, en
+de app leest de releaselijst zonder inloggen.

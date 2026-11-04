@@ -109,9 +109,7 @@ De release-PR (versie in `pyproject.toml`) zet bovenaan `docs/hulp/nieuw.nl.md` 
 `nieuw.en.md` wat de gebruiker er nu mee kan, volgens `docs/schrijfwijzer.md`:
 wat je ziet of doet, niet hoe het gebouwd is; interne wijzigingen (tests, CI) laat
 je weg. Die pagina staat onder Hulp in elke installatie.
-Kwam er die week alleen documentatie bij, dan is er geen release. Elke release
-kost ook 160 tot 210 Actions-minuten (`docs/desktop.md`), nog een reden om ze te
-bundelen.
+Kwam er die week alleen documentatie bij, dan is er geen release.
 
 Tussendoor alleen een release voor een bug die facturen, nummers of gegevens
 raakt, of die de app onbruikbaar maakt; meld waarom die niet tot woensdag kon
@@ -163,7 +161,7 @@ merge-commits). Een merge rolt niets uit; dat doet pas een release (zie
 Releases).
 
 Een PR die alleen documentatie wijzigt (`.md`-bestanden, `docs/`) krijgt geen
-CI (om Actions-minuten te sparen): die mag
+CI: die mag
 gemerged worden zonder CI, als `./scripts/verify.sh` lokaal groen is. Op `main`
 draait dan ook geen CI.
 
