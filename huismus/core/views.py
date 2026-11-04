@@ -126,11 +126,9 @@ def home(request):
 
 
 def _update_notices(request) -> dict:
-    """The desktop app's new-version banner (M11, huismus/core/updates.py). Also,
-    once, the toast after an update's first start: shown now, so cleared
-    now (desktop/app.py sets it)."""
-    if not settings.DESKTOP:
-        return {}
+    """The new-version banner (M11, huismus/core/updates.py), also in Docker.
+    In the desktop app also, once, the toast after an update's first start:
+    shown now, so cleared now (desktop/app.py sets it)."""
     status = updates.load_status()
     if status.just_updated:
         messages.success(

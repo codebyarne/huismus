@@ -1,12 +1,13 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""Instellingen → Updates and "Bijwerken", in the desktop app only
-(SPEC.md M11, huismus/core/updates.py; design D3, docs/design/ronde-3/
+"""Instellingen → Updates and "Bijwerken" (SPEC.md M11, huismus/core/updates.py;
+design D3, docs/design/ronde-3/
 Desktop-bijwerken.dc.html; build choices in huismus-intern/besluiten.md,
 2026-10-29). Plain forms: the switch is saved with Opslaan, and updating
 is confirmed on a page of its own. Since 2026-11-04 the app also updates
 by itself at the next start (core.updates.install_at_start); the button
-is for whoever doesn't want to wait."""
+is for whoever doesn't want to wait. In Docker the page has no button: it
+says what to type (huismus-intern/besluiten.md, 2026-11-04)."""
 
 import sys
 import threading
@@ -16,9 +17,13 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import redirect, render
+from django.utils.translation import get_language
 from django.utils.translation import gettext as _
 
-from . import updates
+from . import help, updates
+
+# The heading "Bijwerken" / "Updating" on the help page "Huismus in Docker".
+DOCKER_UPDATING_ANCHOR = {"nl": "#bijwerken", "en": "#updating"}
 
 
 def _desktop_only():
@@ -59,7 +64,6 @@ def _check_and_prepare():
 
 @login_required
 def page(request):
-    _desktop_only()
     if request.method == "POST":
         enabled = request.POST.get("enabled") == "on"
         if enabled:
@@ -74,20 +78,34 @@ def page(request):
         return redirect("business:updates")
     status = updates.load_status()
     code = request.session.pop("update_problem", "")
+    release = updates.available()
     return render(
         request,
         "business/updates.html",
         {
             "enabled": status.enabled,
             "version": updates.current_version(),
-            "release": updates.available(),
+            "release": release,
             "waiting": updates.waiting() is not None,
             "downloading": updates.downloading() is not None,
             "problem": _problem(code) if code else "",
             # Then the download by hand, from the release's page.
             "download_by_hand": code == "not-writable",
+            **({} if settings.DESKTOP else _docker(release)),
         },
     )
+
+
+def _docker(release) -> dict:
+    """What to type in Docker. Huismus can't see the tag in compose.yaml,
+    only its own version: a new X.Y means changing the tag first."""
+    new_tag = ""
+    if release is not None:
+        new = release.version.rsplit(".", 1)[0]
+        if new != updates.current_version().rsplit(".", 1)[0]:
+            new_tag = new
+    anchor = DOCKER_UPDATING_ANCHOR.get(get_language(), DOCKER_UPDATING_ANCHOR["nl"])
+    return {"docker": True, "new_tag": new_tag, "help_url": help.url("docker", anchor)}
 
 
 @login_required

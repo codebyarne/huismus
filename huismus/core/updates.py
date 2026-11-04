@@ -17,7 +17,13 @@ they fail, the shell offers to restore that backup
 
 Whether to look and what was found belong to this computer, like the
 backup folder: a small file next to the database that no backup carries
-(UPDATE_STATUS_FILE_NAME). Only with HUISMUS_DESKTOP=true.
+(UPDATE_STATUS_FILE_NAME).
+
+Huismus in Docker looks too, from gunicorn's worker (start_hourly_thread),
+but only to say so: the overview and Instellingen → Updates name the new
+version and what to type. It never downloads or replaces anything; the
+user updates with `docker compose pull` (huismus-intern/besluiten.md,
+2026-11-04).
 """
 
 import hashlib
@@ -27,6 +33,7 @@ import os
 import re
 import sys
 import threading
+import time
 import tomllib
 import urllib.request
 from dataclasses import asdict, dataclass, field
@@ -174,7 +181,9 @@ def _fetch(url: str) -> bytes:
 
 def newest_release(releases: list, current: str) -> Release | None:
     """The newest release that isn't a draft or pre-release, is newer than
-    the current version, and has a file for this platform."""
+    the current version, and has a file for this platform. In Docker any
+    such release counts: its image is published with it, and it carries no
+    file to download."""
     best = None
     for entry in releases:
         if entry.get("draft") or entry.get("prerelease"):
@@ -185,7 +194,9 @@ def newest_release(releases: list, current: str) -> Release | None:
         version = tag.removeprefix("v")
         wanted = asset_name(version)
         asset = next((a for a in entry.get("assets", []) if a.get("name") == wanted), None)
-        if asset is None:
+        if not settings.DESKTOP:
+            asset, wanted = {}, ""
+        elif asset is None:
             continue
         digest = asset.get("digest") or ""
         release = Release(
@@ -215,7 +226,8 @@ def check(now: datetime | None = None) -> Release | None:
 
 
 def check_if_due(now: datetime | None = None) -> None:
-    """At start and once a day after (desktop/app.py), if it's on."""
+    """At start and once a day after (desktop/app.py, start_hourly_thread),
+    if it's on."""
     status = load_status()
     if not status.enabled:
         return
@@ -254,9 +266,9 @@ def _forget_download(status: Status) -> None:
 def prepare(now: datetime | None = None) -> None:
     """After a check (desktop/app.py): downloads and checks a newer
     version, so the next start can install it. Silent when that fails;
-    tried again a day later."""
+    tried again a day later. Never in Docker."""
     release = available()
-    if release is None:
+    if release is None or not settings.DESKTOP:
         return
     status = load_status()
     if status.downloaded.get("version") == release.version and _waiting_file(status):
@@ -306,7 +318,27 @@ def downloading() -> Release | None:
     status = load_status()
     if release is None or status.auto_failed == release.version or status.download_failed:
         return None
+    if not settings.DESKTOP:
+        return None
     return None if waiting() is not None else release
+
+
+def start_hourly_thread() -> threading.Thread:
+    """On Docker: a look for a new version when the server starts and then
+    once a day, if it's on. gunicorn calls this once in its one worker
+    (gunicorn.conf.py), next to the backups' thread."""
+    thread = threading.Thread(target=look_every_hour, name="huismus-updates", daemon=True)
+    thread.start()
+    return thread
+
+
+def look_every_hour() -> None:
+    while True:
+        try:
+            check_if_due()
+        except Exception:
+            logger.exception("Zoeken naar een nieuwe versie mislukt")
+        time.sleep(60 * 60)
 
 
 def turn_off() -> None:

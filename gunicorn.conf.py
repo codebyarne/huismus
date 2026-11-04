@@ -12,8 +12,9 @@ timeout = 300
 
 
 def post_worker_init(worker):
-    """The daily backup (SPEC.md M15), started once the worker has loaded
-    Django."""
-    from huismus.core import auto_backups
+    """The daily backup (SPEC.md M15) and the daily look for a new version
+    (SPEC.md M11), started once the worker has loaded Django."""
+    from huismus.core import auto_backups, updates
 
     auto_backups.start_hourly_thread()
+    updates.start_hourly_thread()

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-04 12:58+0100\n"
+"POT-Creation-Date: 2026-11-04 13:41+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -605,6 +605,9 @@ msgstr "Updates"
 
 msgid "Huismus werkt zichzelf bij."
 msgstr "Huismus updates itself."
+
+msgid "Huismus zegt het als er een nieuwe versie is."
+msgstr "Huismus tells you when there's a new version."
 
 msgid "Een wachtwoord vragen als Huismus opent. Standaard uit."
 msgstr "Ask for a password when Huismus opens. Off by default."
@@ -3161,8 +3164,37 @@ msgstr ""
 "Huismus."
 
 #, python-format
+msgid ""
+"Voor %(new_tag)s pas je eerst je <code>compose.yaml</code> aan: zet de regel "
+"<code>image</code> op <code>ghcr.io/codebyarne/huismus:%(new_tag)s</code>. "
+"Typ daarna in dezelfde map:"
+msgstr ""
+"For %(new_tag)s, first change your <code>compose.yaml</code>: set the "
+"<code>image</code> line to <code>ghcr.io/codebyarne/huismus:%(new_tag)s</"
+"code>. Then run, in the same folder:"
+
+msgid "Bijwerken doe je zelf. Typ in de map met je <code>compose.yaml</code>:"
+msgstr ""
+"You update it yourself. In the folder with your <code>compose.yaml</code>, "
+"run:"
+
+msgid "Meer over bijwerken in Docker"
+msgstr "More on updating in Docker"
+
+#, python-format
 msgid "Bijwerken naar %(version)s"
 msgstr "Update to %(version)s"
+
+msgid "Zoeken naar nieuwe versies"
+msgstr "Look for new versions"
+
+msgid ""
+"Huismus kijkt elke dag op GitHub of er een nieuwe versie is en zegt het dan "
+"op het overzicht. Er gaat niets van je administratie mee. Bijwerken doe je "
+"zelf."
+msgstr ""
+"Huismus checks GitHub once a day for a new version and tells you on the "
+"overview. Your records are never sent. You update it yourself."
 
 msgid "Automatisch bijwerken"
 msgstr "Update automatically"
@@ -5067,14 +5099,15 @@ msgid ""
 msgstr ""
 "Open Huismus. Your Mac says it can't check it: click <strong>Done</strong>."
 
+#, python-format
 msgid ""
 "Ga naar <a href=\"%(url)s\"><strong>Systeeminstellingen › Privacy en "
 "beveiliging</strong></a> en scrol naar beneden. Klik bij Huismus op "
 "<strong>Toch openen</strong>."
 msgstr ""
-"Go to <a href=\"%(url)s\"><strong>System Settings › Privacy & "
-"Security</strong></a> and scroll down. Click <strong>Open Anyway</strong> "
-"next to Huismus."
+"Go to <a href=\"%(url)s\"><strong>System Settings › Privacy & Security</"
+"strong></a> and scroll down. Click <strong>Open Anyway</strong> next to "
+"Huismus."
 
 msgid "Op Windows"
 msgstr "On Windows"

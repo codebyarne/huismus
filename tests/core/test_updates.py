@@ -5,6 +5,7 @@ fake release list: there are no releases yet."""
 
 import hashlib
 import json
+import runpy
 import tarfile
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -57,7 +58,7 @@ def test_versions_compare_as_numbers():
     assert not updates.is_newer("latest", "1.0.0")
 
 
-def test_the_newest_finished_release_with_a_file_for_this_platform():
+def test_the_newest_finished_release_with_a_file_for_this_platform(data_dir):
     release = updates.newest_release(_releases(digest="ab" * 32), "0.1.0")
 
     # Not the draft (9.0.0), the pre-release (8.0.0-beta.1) or the release
@@ -68,7 +69,7 @@ def test_the_newest_finished_release_with_a_file_for_this_platform():
     assert updates.newest_release(_releases(), "1.4.0") is None
 
 
-def test_on_windows_only_a_release_with_the_windows_installer_counts(monkeypatch):
+def test_on_windows_only_a_release_with_the_windows_installer_counts(data_dir, monkeypatch):
     monkeypatch.setattr("sys.platform", "win32")
 
     # 7.0.0 has only a Windows file, 1.4.0 only a macOS one.
@@ -424,3 +425,62 @@ def test_after_a_failed_download_it_doesnt_say_downloading(found):
 def test_after_a_failed_automatic_install_it_doesnt_say_downloading(found):
     updates.update_status(auto_failed="1.4.0")
     assert updates.downloading() is None
+
+
+# -- Docker: only a notice ------------------------------------------------------
+# Huismus in Docker looks for a new version too and says so on the overview,
+# but never downloads or replaces anything: updating is the user's own
+# `docker compose pull` (huismus-intern/besluiten.md, 2026-11-04).
+
+
+@pytest.fixture
+def docker(settings, data_dir):
+    settings.DESKTOP = False
+    return data_dir
+
+
+def test_in_docker_any_finished_release_counts_without_a_file(docker):
+    # The image is published with the release; it carries no file for Docker.
+    release = updates.newest_release(_releases(), "0.1.0")
+
+    assert release.version == "7.0.0"
+    assert release.page_url.endswith("/v7.0.0")
+    assert release.asset_url == ""
+
+
+def test_in_docker_a_found_version_is_never_downloaded(docker, monkeypatch, tmp_path):
+    listing = tmp_path / "releases.json"
+    listing.write_text(json.dumps(_releases()))
+    monkeypatch.setenv("HUISMUS_RELEASES_URL", listing.as_uri())
+    with patch("huismus.core.updates.current_version", return_value="1.3.0"):
+        assert updates.check().version == "7.0.0"
+        with patch("huismus.core.updates.download") as download:
+            updates.prepare()
+
+        download.assert_not_called()
+        assert updates.available().version == "7.0.0"
+        assert updates.downloading() is None
+        assert updates.waiting() is None
+
+
+def test_gunicorn_starts_the_daily_look_next_to_the_backups():
+    conf = runpy.run_path(str(Path(__file__).resolve().parents[2] / "gunicorn.conf.py"))
+    with (
+        patch("huismus.core.auto_backups.start_hourly_thread") as backups,
+        patch("huismus.core.updates.start_hourly_thread") as looking,
+    ):
+        conf["post_worker_init"](worker=None)
+
+    backups.assert_called_once_with()
+    looking.assert_called_once_with()
+
+
+def test_the_daily_look_checks_once_and_waits(docker):
+    with (
+        patch("huismus.core.updates.check_if_due") as check_if_due,
+        patch("huismus.core.updates.time.sleep", side_effect=StopIteration),
+        pytest.raises(StopIteration),
+    ):
+        updates.look_every_hour()
+
+    check_if_due.assert_called_once_with()
