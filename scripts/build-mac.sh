@@ -31,6 +31,25 @@ iconutil -c icns "$iconset" -o build/Huismus.icns
 DYLD_FALLBACK_LIBRARY_PATH="$(brew --prefix)/lib" \
     uv run pyinstaller desktop/huismus.spec --noconfirm --distpath dist --workpath build/pyinstaller
 
+# PyInstaller gives the app the macOS SDK version of its Python library: 12.1
+# for the python.org Python on the release runner. WebKit then treats the
+# window as an app from macOS 12 and leaves out newer web features, such as
+# popovers: the menus Nieuw and Meer stood open over every page (v0.1.0).
+# The app gets the SDK of the Xcode it is built with instead, and never an
+# SDK older than the oldest macOS it runs on (LSMinimumSystemVersion).
+app_exe=dist/Huismus.app/Contents/MacOS/Huismus
+minos=$(vtool -show-build "$app_exe" | awk '/minos/ {print $2; exit}')
+vtool -set-build-version macos "$minos" "$(xcrun --show-sdk-version)" -replace \
+    -output "$app_exe.sdk" "$app_exe" 2>/dev/null
+mv "$app_exe.sdk" "$app_exe"
+chmod +x "$app_exe"
+sdk=$(vtool -show-build "$app_exe" | awk '/sdk/ {print $2; exit}')
+minimum=$(/usr/libexec/PlistBuddy -c "Print :LSMinimumSystemVersion" dist/Huismus.app/Contents/Info.plist)
+if [ "${sdk%%.*}" -lt "${minimum%%.*}" ]; then
+    echo "Huismus.app is built against macOS SDK $sdk, older than macOS $minimum" >&2
+    exit 1
+fi
+
 # Ad hoc, without an Apple Developer ID (decided 2026-10-27): Apple Silicon
 # starts nothing unsigned. Without --options runtime: the hardened runtime
 # only loads libraries signed by the same team, and ad hoc has no team.
