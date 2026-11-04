@@ -147,7 +147,7 @@ docker run -d --name huismus \
   -v huismus-data:/app/data \
   -v /path/to/your/backup/folder:/backups \
   -p 127.0.0.1:8000:8000 \
-  huismus
+  ghcr.io/codebyarne/huismus:0.1
 ```
 
 With Docker Compose:
@@ -155,7 +155,7 @@ With Docker Compose:
 ```yaml
 services:
   huismus:
-    image: huismus
+    image: ghcr.io/codebyarne/huismus:0.1
     environment:
       ALLOWED_HOSTS: huismus.local
     volumes:

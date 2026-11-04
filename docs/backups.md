@@ -21,6 +21,13 @@ Wanneer en hoeveel: `huismus/core/auto_backups.py`; maken en terugzetten:
 `huismus/core/backup.py`; de pagina's: `huismus/core/backup_views.py`. Op Docker weigert
 Huismus een map die niet aan de container gekoppeld is (`/proc/self/mountinfo`).
 
+Voor een update: de desktop-app maakt een back-up voordat hij een nieuwe
+versie installeert (`huismus/core/updates.py`). Docker draait bij elke start
+`manage.py migrate_with_backup` (`docker/entrypoint.sh`): staan er migraties
+klaar op een bestaande administratie, dan eerst dezelfde back-up
+(`auto_backups.safety_backup`), en lukt die niet, dan migreert hij niet en
+stopt de container. Het pad staat in de log. Gebruikers: `docs/hulp/docker.nl.md`.
+
 Naar Dropbox of WebDAV (`SPEC.md` M15 stap 2): `huismus/core/cloud_backups.py` maakt
 elke dag een eigen archief, versleutelt het met de herstelcode in het open
 formaat age (`pyrage`) en uploadt het als `….tar.gz.age`; de schermen staan

@@ -42,17 +42,19 @@ waarschuwt je computer. Hoe je hem dan toch opent:
 
 ### Met Docker
 
-Op een Raspberry Pi, een NAS of een andere server:
+Op een Raspberry Pi, een NAS of een andere server gebruik je de image
+`ghcr.io/codebyarne/huismus`, voor Intel/AMD en ARM. Het makkelijkst is
+Docker Compose: het hele voorbeeld staat in
+[Huismus in Docker](docs/hulp/docker.nl.md). Met `docker run`:
 
 ```
-docker build -t huismus .
-docker run -d --name huismus \
+docker run -d --name huismus --restart unless-stopped \
   -e ALLOWED_HOSTS=huismus.local \
   -e DJANGO_SUPERUSER_USERNAME=<gebruikersnaam> \
   -e DJANGO_SUPERUSER_PASSWORD=<wachtwoord> \
   -v huismus-data:/app/data \
   -p 127.0.0.1:8000:8000 \
-  huismus
+  ghcr.io/codebyarne/huismus:0.1
 ```
 
 Wat de regels doen:
@@ -76,6 +78,21 @@ netwerk log je alleen over HTTPS in. De hele opzet met Tailscale staat in
 [`docs/tailscale.md`](docs/tailscale.md). Na 10 mislukte inlogpogingen
 binnen een kwartier weigert Huismus elke login tot dat kwartier voorbij is.
 
+### Bijwerken in Docker
+
+Huismus in Docker kijkt niet zelf of er een nieuwe versie is. Met Compose
+werk je bij met:
+
+```
+docker compose pull
+docker compose up -d
+```
+
+Je gegevens en back-ups blijven staan. Brengt de nieuwe versie wijzigingen
+in de database mee, dan maakt Huismus bij het starten eerst een back-up.
+Met `docker run`, naar een nieuwe versie en terug naar de vorige:
+[Huismus in Docker](docs/hulp/docker.nl.md#bijwerken).
+
 ### Docker op je eigen computer
 
 Om de container even te proberen, zonder reverse proxy:
@@ -87,7 +104,7 @@ docker run -d --name huismus \
   -e DJANGO_SUPERUSER_PASSWORD=<wachtwoord> \
   -v huismus-data:/app/data \
   -p 127.0.0.1:8000:8000 \
-  huismus
+  ghcr.io/codebyarne/huismus:0.1
 ```
 
 Open http://localhost:8000. Browsers behandelen `localhost` als veilig, dus
@@ -118,6 +135,7 @@ hier in [`docs/hulp/`](docs/hulp/):
 - [Mailen](docs/hulp/mailen.nl.md), ook met een app-wachtwoord van Gmail
 - [AI-assistenten](docs/hulp/ai-assistenten.nl.md)
 - [De desktop-app](docs/hulp/desktop-app.nl.md)
+- [Huismus in Docker](docs/hulp/docker.nl.md): installeren en bijwerken
 - [Huismus op je telefoon](docs/hulp/telefoon.nl.md)
 
 Wat er voor beheerders en ontwikkelaars in `docs/` staat:
@@ -149,7 +167,8 @@ schermen zijn Django-templates met HTMX en één stylesheet, zonder
 build-stap: [`docs/frontend.md`](docs/frontend.md), en het ontwerp staat in
 [`docs/design/`](docs/design/). Het hele ontwerp staat in `SPEC.md`, de
 regels voor het project in `CLAUDE.md`. De desktop-app bouwen:
-[`docs/desktop.md`](docs/desktop.md).
+[`docs/desktop.md`](docs/desktop.md). De Docker-image zelf bouwen:
+`docker build -t huismus .`.
 
 Tests en checks:
 
@@ -219,8 +238,11 @@ you the first time. How to open it anyway:
 
 #### With Docker
 
-On a Raspberry Pi, a NAS or another server, run the same commands as in the
-Dutch section above. What the lines do:
+On a Raspberry Pi, a NAS or another server, use the image
+`ghcr.io/codebyarne/huismus`, for Intel/AMD and ARM. Docker Compose is the
+easiest: the full example is in
+[Huismus in Docker](docs/hulp/docker.en.md). With `docker run`, use the same
+command as in the Dutch section above. What the lines do:
 
 - `ALLOWED_HOSTS` is the name you type in the address bar. Huismus only
   answers to that name. Any other name gets a bare "Bad Request (400)",
@@ -241,6 +263,21 @@ network, you can only log in over HTTPS. The full Tailscale setup is in
 [`docs/tailscale.md`](docs/tailscale.md) (Dutch). After 10 failed logins
 within a quarter of an hour, Huismus refuses every login until that quarter
 has passed.
+
+#### Updating in Docker
+
+Huismus in Docker doesn't check for new versions by itself. With Compose,
+you update with:
+
+```
+docker compose pull
+docker compose up -d
+```
+
+Your data and backups stay where they are. When the new version brings
+changes to the database, Huismus first makes a backup when it starts. With
+`docker run`, moving to a new version and going back to the previous one:
+[Huismus in Docker](docs/hulp/docker.en.md#updating).
 
 #### Docker on your own computer
 
@@ -273,6 +310,7 @@ The help is in the app under **Help**, for the version you run, and here in
 - [Mail](docs/hulp/mailen.en.md), including a Gmail app password
 - [AI assistants](docs/hulp/ai-assistenten.en.md)
 - [The desktop app](docs/hulp/desktop-app.en.md)
+- [Huismus in Docker](docs/hulp/docker.en.md): installing and updating
 - [Huismus on your phone](docs/hulp/telefoon.en.md)
 
 What's in `docs/` for administrators and developers:
@@ -297,7 +335,8 @@ are Django templates with HTMX and a single stylesheet, with no build step:
 [`docs/frontend.md`](docs/frontend.md), and the design is in
 [`docs/design/`](docs/design/). The full design is in `SPEC.md`, the project
 rules in `CLAUDE.md`. Building the desktop app:
-[`docs/desktop.md`](docs/desktop.md). These docs are in Dutch.
+[`docs/desktop.md`](docs/desktop.md). These docs are in Dutch. Building the
+Docker image yourself: `docker build -t huismus .`.
 
 Tests and checks:
 

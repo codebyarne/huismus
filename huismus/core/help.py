@@ -40,6 +40,7 @@ TOPICS = (
     "mailen",
     "ai-assistenten",
     "desktop-app",
+    "docker",
     "telefoon",
     FEEDBACK,
 )
