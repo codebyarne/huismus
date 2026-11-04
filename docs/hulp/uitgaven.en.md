@@ -19,7 +19,7 @@ bag? Use **Add line** and give each line its own category.
 ## Receipts
 
 Drop a receipt on the expense, or choose a file: a photo (JPG or PNG) or a
-PDF. For a new expense you can do this in the form itself, before you click
+PDF. For a new expense you can do this at the top of the form, before you click
 **Save**. An expense can have more than one receipt: add the others after
 saving.
 
