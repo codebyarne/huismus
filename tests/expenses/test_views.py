@@ -324,6 +324,21 @@ def test_the_new_page_has_a_receipt_field_in_its_form_and_the_edit_page_not(clie
     assert 'name="receipt-file"' not in edit_page
 
 
+def test_the_receipt_comes_first_on_the_new_and_the_edit_page(client):
+    """The receipt is what the rest is typed from, so it sits above the
+    date and the lines (Arne, 2026-11-04)."""
+    _login(client)
+    expense = create_expense([ExpenseLineInput("Hosting", 1000, None, None)], date="2026-01-15")
+
+    new_page = client.get(reverse("expenses:create")).content.decode()
+    edit_page = client.get(reverse("expenses:edit", kwargs={"pk": expense.pk})).content.decode()
+
+    assert new_page.index('name="receipt-file"') < new_page.index('name="date"')
+    assert edit_page.index(
+        reverse("expenses:receipt_upload", kwargs={"pk": expense.pk})
+    ) < edit_page.index('name="date"')
+
+
 def test_receipt_delete_removes_the_attachment(client):
     _login(client)
     expense = Expense.objects.create(date="2026-01-15", amount_cents=1000)
