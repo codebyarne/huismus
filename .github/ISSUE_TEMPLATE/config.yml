@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "Beveiligingsprobleem / Security problem"
+    url: https://github.com/codebyarne/huismus/security/advisories/new
+    about: "Meld het privé, niet als issue / Report it privately, not as an issue"
+  - name: "Geen GitHub-account? / No GitHub account?"
+    url: https://www.arnekrijnsen.com/huismus-vertel/
+    about: "Vertel het via het formulier op de site, of in Huismus onder Hulp → Feedback geven / Tell us through the form on the site, or in Huismus under Help → Give feedback"

@@ -160,6 +160,9 @@ Merge-methode: rebase (`main` heeft een rechte historie, geen
 merge-commits). Een merge rolt niets uit; dat doet pas een release (zie
 Releases).
 
+Claude mergt alleen eigen PR's. Een PR van iemand anders mergt alleen de
+eigenaar, ook als hij groen is.
+
 Eerst vragen blijft nodig bij: een migratie die bestaande gegevens wijzigt
 of verwijdert, wijzigingen in `scripts/verify.sh`, en als de eigenaar
 bij de PR zegt zelf te willen kijken.
