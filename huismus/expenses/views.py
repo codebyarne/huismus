@@ -18,6 +18,7 @@ from .forms import (
     ExpenseForm,
     ExpenseLineFormSet,
     ExpenseLineFormSetWithEmptyLine,
+    NewExpenseReceiptForm,
     ReceiptUploadForm,
 )
 from .lines import save_lines
@@ -113,13 +114,26 @@ def _expense_form(request, expense):
     # A new expense's amount 0 lasts only until save_lines() below, in the
     # same transaction, sets the sum of its lines.
     instance = expense or Expense(amount_cents=0)
+    # A new expense takes its receipt along in the same form; an existing
+    # one has the Bonnetjes section with its own upload (receipt_upload).
+    new_receipt_form = None
     if request.method == "POST":
         form = ExpenseForm(request.POST, instance=instance)
         formset = ExpenseLineFormSet(request.POST, instance=instance, prefix="lines")
-        if form.is_valid() and formset.is_valid():
+        if expense is None:
+            new_receipt_form = NewExpenseReceiptForm(request.POST, request.FILES)
+        forms_valid = [form.is_valid(), formset.is_valid()]
+        if new_receipt_form is not None:
+            forms_valid.append(new_receipt_form.is_valid())
+        if all(forms_valid):
             with transaction.atomic():
                 saved = form.save()
                 save_lines(saved, formset.line_inputs())
+                uploaded = new_receipt_form and new_receipt_form.cleaned_data["file"]
+                if uploaded:
+                    Attachment.objects.create(
+                        expense=saved, file=uploaded, kind="receipt", sha256=sha256_of(uploaded)
+                    )
             messages.success(request, _("Uitgave opgeslagen."))
             url = reverse("expenses:edit", kwargs={"pk": saved.pk})
             # "Regel toevoegen" (form.html) is a submit button named
@@ -135,7 +149,22 @@ def _expense_form(request, expense):
             ExpenseLineFormSetWithEmptyLine if request.GET.get("regel") else ExpenseLineFormSet
         )
         formset = formset_class(instance=instance, prefix="lines")
-    context = {"form": form, "formset": formset, "expense": expense}
+        if expense is None:
+            new_receipt_form = NewExpenseReceiptForm()
+    context = {
+        "form": form,
+        "formset": formset,
+        "expense": expense,
+        "new_receipt_form": new_receipt_form,
+        # A browser doesn't keep a chosen file when the page comes back
+        # with an error, so a valid receipt has to be chosen again.
+        "choose_receipt_again": bool(
+            new_receipt_form
+            and new_receipt_form.is_bound
+            and not new_receipt_form.errors
+            and request.FILES.get("receipt-file")
+        ),
+    }
     if expense:
         context["receipt_form"] = ReceiptUploadForm()
     return render(request, "expenses/form.html", context)

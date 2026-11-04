@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-04 15:04+0100\n"
+"POT-Creation-Date: 2026-11-04 20:46+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -4449,6 +4449,25 @@ msgstr "New expense"
 msgid "Regels"
 msgstr "Lines"
 
+msgid "Bonnetje"
+msgstr "Receipt"
+
+msgid "Bonnetje toevoegen"
+msgstr "Add receipt"
+
+msgid "Sleep een bonnetje hierheen"
+msgstr "Drop a receipt here"
+
+msgid "of kies een bestand · JPG, PNG, PDF"
+msgstr "or choose a file · JPG, PNG, PDF"
+
+msgid ""
+"Kies het bonnetje opnieuw: je browser bewaart het niet als er nog iets "
+"ontbrak."
+msgstr ""
+"Choose the receipt again: your browser doesn't keep it when something was "
+"still missing."
+
 msgid ""
 "Vul het bruto bedrag in: wat je echt betaald hebt. Het btw-bedrag is alleen "
 "ter informatie en telt nergens mee."
@@ -4477,15 +4496,6 @@ msgstr "Delete this receipt?"
 #
 msgid "Huismus verwijdert het bestand. Dat kun je niet ongedaan maken."
 msgstr "Huismus deletes the file. You can't undo this."
-
-msgid "Bonnetje toevoegen"
-msgstr "Add receipt"
-
-msgid "Sleep een bonnetje hierheen"
-msgstr "Drop a receipt here"
-
-msgid "of kies een bestand · JPG, PNG, PDF"
-msgstr "or choose a file · JPG, PNG, PDF"
 
 msgid "Uitgave verwijderen"
 msgstr "Delete expense"
