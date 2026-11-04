@@ -63,6 +63,8 @@ def test_every_link_inside_the_site_lands_on_a_page_and_heading(out):
             if link.startswith("#"):
                 assert link[1:] in page.ids, (address, link)
                 continue
+            if link == site.MAC_PRIVACY_SETTINGS:
+                continue
             if not link.startswith("/"):
                 # Another site, or a help file that core.help didn't turn into a page.
                 # Meebouwen links to the developer docs in the repository on purpose.
@@ -156,3 +158,9 @@ def test_a_folder_that_is_not_a_site_is_never_emptied(tmp_path):
     with pytest.raises(CommandError):
         call_command("build_site", str(tmp_path))
     assert (tmp_path / "pyproject.toml").exists()
+
+
+@pytest.mark.parametrize("language", help.LANGUAGES)
+def test_the_mac_steps_link_to_privacy_and_security(out, language):
+    for address in (site.install_url(language), site.download_page_url(language, "mac")):
+        assert site.MAC_PRIVACY_SETTINGS in _read(out, address).links, address

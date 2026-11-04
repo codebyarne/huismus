@@ -48,6 +48,9 @@ TOPICS = tuple(slug for slug in help.TOPICS if slug != help.FEEDBACK)
 LATEST_ASSETS = {"darwin": "Huismus-macos.dmg", "win32": "Huismus-windows.exe"}
 # The platforms of the download pages, by their address.
 PLATFORMS = {"mac": "darwin", "windows": "win32"}
+# Opens System Settings › Privacy & Security on a Mac, where "Toch openen" is
+# the first time you open the unsigned app. Elsewhere the link does nothing.
+MAC_PRIVACY_SETTINGS = "x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension"
 # GoatCounter, a visitor counter without cookies: the code of the account
 # (<code>.goatcounter.com), set by pages.yml from a repository variable.
 # Empty: the site counts nothing (besluit 2026-11-03).
@@ -187,6 +190,7 @@ def build(out: Path) -> list[str]:
         "repository": REPOSITORY,
         "version": version,
         "domain": DOMAIN,
+        "mac_privacy_settings": MAC_PRIVACY_SETTINGS,
         "counter": os.environ.get(COUNTER_VARIABLE, "").strip(),
     }
     addresses = []
