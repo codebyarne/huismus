@@ -20,7 +20,7 @@ from django.shortcuts import redirect, render
 from django.utils.translation import get_language
 from django.utils.translation import gettext as _
 
-from . import help, updates
+from . import help, site, updates
 
 # The heading "Bijwerken" / "Updating" on the help page "Huismus in Docker".
 DOCKER_UPDATING_ANCHOR = {"nl": "#bijwerken", "en": "#updating"}
@@ -86,6 +86,7 @@ def page(request):
             "enabled": status.enabled,
             "version": updates.current_version(),
             "release": release,
+            "whats_new_url": _whats_new_url(),
             "waiting": updates.waiting() is not None,
             "downloading": updates.downloading() is not None,
             "problem": _problem(code) if code else "",
@@ -94,6 +95,12 @@ def page(request):
             **({} if settings.DESKTOP else _docker(release)),
         },
     )
+
+
+def _whats_new_url() -> str:
+    """On the site, not in this Huismus: the new version brings its own text
+    for Hulp → Wat is er nieuw, so only the site has it before updating."""
+    return site.whats_new_url(help._language(get_language()))
 
 
 def _docker(release) -> dict:
@@ -121,4 +128,8 @@ def install(request):
             request.session["update_problem"] = str(error)
             return redirect("business:updates")
         return render(request, "business/updating.html", {"release": release})
-    return render(request, "business/update_confirm.html", {"release": release})
+    return render(
+        request,
+        "business/update_confirm.html",
+        {"release": release, "whats_new_url": _whats_new_url()},
+    )

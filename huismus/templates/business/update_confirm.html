@@ -14,7 +14,7 @@
         <p class="muted">{% translate "Huismus maakt eerst een back-up van je administratie." %}</p>
         <p class="muted">{% translate "Daarna installeert Huismus de nieuwe versie en start opnieuw." %}</p>
         <p class="muted">{% translate "Dit duurt ongeveer een minuut." %}</p>
-        <p><a href="{{ release.page_url }}" target="_blank" rel="noopener">{% blocktranslate with version=release.version %}Wat is er nieuw in {{ version }}?{% endblocktranslate %}</a></p>
+        <p><a href="{{ whats_new_url }}" target="_blank" rel="noopener">{% blocktranslate with version=release.version %}Wat is er nieuw in {{ version }}?{% endblocktranslate %}</a></p>
     </div>
     <div class="dialog-foot"><a class="btn btn-secondary" href="{% url 'business:updates' %}">{% translate "Later" %}</a><button type="submit" class="btn btn-primary"><span class="spinner" aria-hidden="true"></span>{% translate "Bijwerken" %}</button></div>
 </form>
