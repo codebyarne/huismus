@@ -45,6 +45,18 @@ Vuistregels, in deze volgorde:
 4. De gebruiker kan altijd terug, en ziet altijd wat er gebeurt.
 5. Geen betaalde diensten, geen nieuwe externe diensten.
 
+## Alles wat vanzelf gebeurt
+
+Gaat het om iets wat zonder klik van de gebruiker loopt (op de achtergrond
+downloaden, een back-up, een upload, iets wat bij het openen gebeurt), keur
+dan nooit alleen de eindstand. Schrijf eerst de tijdlijn uit: elke stand die
+de gebruiker kan zien, van begin tot eind, ook de tussenstanden ("bezig") en
+de mislukte. Zeg per stand wat het scherm laat zien. Ontbreekt een stand in
+de vraag, of klopt een tekst uit de oude situatie niet meer (een tekst die
+tot handelen uitnodigt terwijl de gebruiker niets hoeft te doen), dan is dat
+deel van je besluit. Zo miste in 2026-11-04 bij automatisch bijwerken de
+stand "wordt gedownload".
+
 ## Designs keuren
 
 Je krijgt screenshots of HTML. Keur goed als alles klopt, anders afkeuren

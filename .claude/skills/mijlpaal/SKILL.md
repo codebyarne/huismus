@@ -24,6 +24,10 @@ productvraag of een design gaat naar de `product-owner`-agent, niet naar de eige
 
 - Schrijf een kort plan: wat de gebruiker merkt, welke schermen, welke
   modellen, welke tests. Lijst open vragen.
+- Loopt er iets zonder klik van de gebruiker (achtergrond, bij het openen),
+  zet dan in het plan de tijdlijn van wat de gebruiker ziet: elke stand, ook
+  "bezig" en "mislukt", met de tekst op het scherm. Die tijdlijn gaat mee naar
+  `product-owner`.
 - Elke open vraag naar `product-owner`. `ESCALEREN` → vraag de eigenaar (zie 9) en
   bouw intussen alleen wat er niet van afhangt.
 - Werk `SPEC.md` bij (mijlpaalnummer pas nu kiezen, na `git fetch`). Dit gaat
