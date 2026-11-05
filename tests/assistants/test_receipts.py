@@ -169,6 +169,14 @@ def test_a_broken_pdf_is_left_to_the_user(call, business):
     assert "Maak de uitgave in Huismus" in result["content"][0]["text"]
 
 
+def test_an_image_of_too_many_pixels_is_left_to_the_user(call, business, monkeypatch):
+    monkeypatch.setattr(Image, "MAX_IMAGE_PIXELS", 1000)
+    for name, content in (("bon.jpg", _photo((100, 100))), ("scan.pdf", _scanned_pdf())):
+        result = call("read_receipt", id=_in_tray(name, content).pk)
+        assert result["isError"], name
+        assert "Maak de uitgave in Huismus" in result["content"][0]["text"]
+
+
 def test_only_receipts_without_an_expense_are_read(call, business):
     """Every other attachment stays closed to the assistant (SPEC.md M16)."""
     on_expense = _in_tray("bon.jpg", _photo((10, 10)))
