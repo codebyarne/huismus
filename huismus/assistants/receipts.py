@@ -6,8 +6,8 @@ assistant asks for a receipt through the AI connection and reads it.
 
 A photo comes back as a JPEG of at most LONG_SIDE pixels, upright: a phone
 photo can be 10 MB, more than an assistant takes in one answer, and the
-text on a receipt stays readable at this size. A PDF gives its text, and
-the images on its first page: a scan ("Scan documenten" on an iPhone) is
+text on a receipt stays readable at this size. A PDF gives the text and
+the images of its first pages: a scan ("Scan documenten" on an iPhone) is
 a PDF with one JPEG per page and no text. Rendering a PDF page the way a
 viewer does would need a PDF renderer; the text and the scan cover the
 receipts people have.
@@ -24,8 +24,7 @@ from pypdf.errors import PyPdfError
 # The size an assistant reads an image at without scaling it down itself.
 LONG_SIDE = 1568
 JPEG_QUALITY = 85
-# A receipt is a page or two; a long PDF is something else. read_receipt's
-# description (assistants.tools) names this number.
+# A receipt is a page or two; a long PDF is something else.
 MAX_PAGES = 3
 MAX_IMAGES = 3
 
@@ -59,9 +58,8 @@ def _read_pdf(data: bytes) -> Reading:
         reader = PdfReader(BytesIO(data))
         pages = reader.pages[:MAX_PAGES]
         text = "\n\n".join((page.extract_text() or "").strip() for page in pages).strip()
-        images = [
-            _image_content(found.image) for found in pages[0].images[:MAX_IMAGES] if found.image
-        ]
+        found = [image.image for page in pages for image in page.images if image.image]
+        images = [_image_content(image) for image in found[:MAX_IMAGES]]
     except (PyPdfError, OSError, ValueError, IndexError) as error:
         raise Unreadable() from error
     if not text and not images:

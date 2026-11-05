@@ -875,8 +875,9 @@ TOOLS = (
         gettext_lazy("Bonnetje lezen"),
         "read",
         "One receipt without an expense: a photo or a scanned page as an image, and the "
-        "text of a PDF's first 3 pages. Read date, supplier, what was bought, the total "
-        "paid (gross) and the VAT as the receipt shows it. Never guess an amount or VAT. "
+        f"text of a PDF's first {receipts.MAX_PAGES} pages. Read date, supplier, what was "
+        "bought, the total paid (gross) and the VAT as the receipt shows it. "
+        "Never guess an amount or VAT. "
         "When vat_required is true and the VAT isn't on the receipt or can't be read, "
         "don't fill in 0: skip the receipt. Otherwise leave vat_info out when the receipt "
         "shows none. Skip it too when it isn't a receipt or holds more than one. Tell "

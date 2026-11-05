@@ -10,6 +10,7 @@ from io import BytesIO
 
 import pytest
 from django.core.files.base import ContentFile
+from django.utils import timezone
 from PIL import Image
 from weasyprint import HTML
 
@@ -79,7 +80,7 @@ def test_the_list_holds_only_the_receipts_without_an_expense(call, business):
     assert [r["id"] for r in receipts] == [waiting.pk]
     assert receipts[0]["name"] == "tankstation.jpg"
     assert receipts[0]["type"] == "image"
-    assert receipts[0]["received"] == waiting.created_at.date().isoformat()
+    assert receipts[0]["received"] == timezone.localdate(waiting.created_at).isoformat()
 
 
 def test_an_empty_tray(call, business):
@@ -142,6 +143,16 @@ def test_a_scanned_pdf_gives_its_page_as_an_image(call, business):
     assert not result.get("isError"), result
     (image,) = _images(result)
     assert image.size == (1176, 1568)
+
+
+def test_a_scan_of_two_pages_gives_both(call, business):
+    buffer = BytesIO()
+    first, second = Image.new("RGB", (600, 800), "white"), Image.new("RGB", (600, 800), "white")
+    first.save(buffer, "PDF", save_all=True, append_images=[second])
+    receipt = _in_tray("scan.pdf", buffer.getvalue())
+    result = call("read_receipt", id=receipt.pk)
+    assert result["structuredContent"]["pages"] == 2
+    assert len(_images(result)) == 2
 
 
 def test_a_pdf_with_nothing_to_read_is_left_to_the_user(call, business):
