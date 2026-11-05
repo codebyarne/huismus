@@ -82,6 +82,7 @@ above is therefore optional.
 - UI-bugs zitten vaak pas op een echte administratie. `tests/e2e/test_walkthrough.py` loopt de hele app door op `huismus/core/demo_history.py` (9 jaar nepdata) in drie schermbreedtes; gebruik de `history` fixture voor alles met lijsten, filters of doorklikken.
 - `tests/e2e/test_every_page.py` bezoekt elke pagina in beide talen en drie breedtes en vangt hele soorten UI-bugs (templatesyntax, onvertaalde tekst, opzij scrollen, dubbele menu-items). Nieuwe pagina → toevoegen aan `_pages()`.
 - Een bug die iemand met de hand vond: test die faalt, fix, en een check die de hele *soort* vangt. Bijhouden in `BUGS-BY-HAND.md`.
+- Een test die één keer faalt, bij herhaling groen is en niet binnen een uur na te doen valt, krijgt géén backlogpunt (besluit eigenaar 2026-11-05). Noem hem in je melding en ga door. Pas oppakken als hij terugkomt (een falende browsertest toont dan "Wat de pagina deed", `tests/e2e/page_log.js`) of als een gebruiker het merkt. Een fout die je wél kunt nadoen, los je gewoon op.
 - A milestone is not done until tests pass in CI and the Docker image builds for both architectures.
 
 ## Definition of done (per milestone)
