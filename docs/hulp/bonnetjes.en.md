@@ -29,13 +29,14 @@ Huismus looks every 10 minutes. Don't want to wait? Click **Pick up now**.
 Choose the folder, for example iCloud Drive › Huismus receipts.
 
 Tip: in the Files app you can scan a receipt straight away. Open the folder,
-tap the three dots and choose **Scan Documents**. That makes a PDF. Huismus
-doesn't pick up HEIC photos yet, and a scan is always a PDF.
+tap the three dots and choose **Scan Documents**. That makes a PDF.
 
 **Android:** share the photo with the app of your service, such as Google
 Drive, OneDrive or Dropbox, and choose the folder.
 
-Huismus picks up PDFs, JPGs and PNGs, up to 10 MB per file.
+Huismus picks up PDFs, JPGs, PNGs and HEIC photos from an iPhone, up to
+10 MB per file. Huismus keeps a HEIC photo as a JPG. The original is in the
+**Picked up** folder.
 
 ## What Huismus does with the file
 
@@ -44,7 +45,7 @@ your folder to the **Picked up** folder. That way you see what came in, and
 Huismus never picks anything up twice.
 
 If something doesn't work, the file just stays in your folder. For example
-a HEIC photo, or a file bigger than 10 MB. The Receipts folder page then
+a Word file, or a file bigger than 10 MB. The Receipts folder page then
 says which file it is and why.
 
 ## Making an expense of a receipt
