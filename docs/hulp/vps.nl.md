@@ -134,8 +134,8 @@ voor iedereen. Dat gebeurt als je:
 - een reverse proxy (zoals nginx of Caddy) Huismus naar buiten laat
   doorgeven.
 
-Een server die vanaf internet bereikbaar is, wordt de hele dag door
-geprobeerd.
+Op internet proberen programma's de hele dag in te breken op elke server
+die ze vinden. Ook op die van jou.
 
 ## Back-ups
 
