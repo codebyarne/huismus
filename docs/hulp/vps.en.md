@@ -131,7 +131,8 @@ VPS. That happens if you:
 - let a reverse proxy (such as nginx or Caddy) pass Huismus on to the
   outside.
 
-A server that can be reached from the internet gets tried all day long.
+Programs on the internet try to break into every server they find, all
+day long. Yours too.
 
 ## Backups
 
