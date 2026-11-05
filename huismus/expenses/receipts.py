@@ -29,8 +29,10 @@ from django.core.files.base import ContentFile
 from django.utils.translation import gettext_lazy as _
 from PIL import Image, ImageOps, UnidentifiedImageError
 
-# Lets Pillow open HEIC/HEIF, with its own limit on pixels; Huismus only
-# reads them, it never writes one.
+# Lets Pillow open HEIC/HEIF, everywhere in the process: also where a logo
+# is checked (huismus/business/logo.py), which refuses it because it is
+# none of the formats a logo may be. Pillow's limit on pixels applies to a
+# HEIC as to any image. Huismus only reads them, it never writes one.
 pillow_heif.register_heif_opener()
 
 MAX_RECEIPT_BYTES = 10 * 1024 * 1024  # scans/photos run bigger than a logo
@@ -100,8 +102,11 @@ def _extension(name: str) -> str:
 def stored_receipt(uploaded_file):
     """The file Huismus keeps for a receipt that passed validate_receipt:
     a HEIC as an upright JPG without its metadata (such as where the photo
-    was taken), anything else as it is. The same HEIC always gives the
-    same JPG, so fetching it twice is still seen as the same receipt."""
+    was taken), anything else as it is. With the same versions of Pillow
+    and pillow-heif the same HEIC gives the same JPG, so fetching it twice
+    is seen as the same receipt; after an update of either, a HEIC fetched
+    again may come in twice. Nothing is lost then, so that is accepted
+    (huismus-intern/besluiten.md, "HEIC-foto's", point 2)."""
     if _extension(uploaded_file.name) not in HEIF_EXTENSIONS:
         return uploaded_file
     data = uploaded_file.read()

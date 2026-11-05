@@ -58,7 +58,7 @@ expense.pk.{% endcomment %}
             <input type="file" name="file" accept="image/png,image/jpeg,image/heic,image/heif,.heic,.heif,application/pdf" aria-label="{% translate 'Bonnetje toevoegen' %}" data-autosubmit required>
             <span class="dz-icon"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg></span>
             <strong class="small">{% translate "Sleep een bonnetje hierheen" %}</strong>
-            <span class="small">{% translate "of kies een bestand · JPG, PNG, PDF" %}</span>
+            <span class="small">{% translate "of kies een bestand · JPG, PNG, HEIC, PDF" %}</span>
             <noscript><button type="submit" class="btn btn-sm" style="position:relative;z-index:1">{% translate "Bonnetje toevoegen" %}</button></noscript>
         </form>
     </div>
@@ -94,7 +94,7 @@ expense.pk.{% endcomment %}
             <input type="file" name="{{ field.html_name }}" id="{{ field.auto_id }}" accept="image/png,image/jpeg,image/heic,image/heif,.heic,.heif,application/pdf" aria-label="{% translate 'Bonnetje toevoegen' %}" data-file-summary="gekozen-bonnetje"{% if field.errors %} aria-invalid="true" aria-describedby="{{ field.auto_id }}-fout"{% endif %}>
             <span class="dz-icon"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg></span>
             <strong class="small">{% translate "Sleep een bonnetje hierheen" %}</strong>
-            <span class="small">{% translate "of kies een bestand · JPG, PNG, PDF" %}</span>
+            <span class="small">{% translate "of kies een bestand · JPG, PNG, HEIC, PDF" %}</span>
             <span class="small" id="gekozen-bonnetje"></span>
         </label>
         {% for error in field.errors %}<p class="error" id="{{ field.auto_id }}-fout"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>{{ error }}</p>{% endfor %}

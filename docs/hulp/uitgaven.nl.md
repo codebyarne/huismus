@@ -23,8 +23,8 @@ eigen categorie.
 
 ## Bonnetjes
 
-Sleep een bonnetje op de uitgave, of kies een bestand: een foto (JPG of PNG)
-of een pdf. Bij een nieuwe uitgave kan dat al bovenaan het formulier, voordat je op
+Sleep een bonnetje op de uitgave, of kies een bestand: een foto (JPG, PNG of
+HEIC) of een pdf. Een HEIC-foto bewaart Huismus als JPG. Bij een nieuwe uitgave kan dat al bovenaan het formulier, voordat je op
 **Opslaan** klikt. Een uitgave kan meer bonnetjes hebben: de rest voeg je toe
 na het opslaan.
 
