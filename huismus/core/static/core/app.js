@@ -21,12 +21,13 @@ document.addEventListener("click", (event) => {
   if (command === "close") target?.close();
 });
 
-// An out-of-band swap keeps a button and only updates it. Leaving a field
+// An out-of-band swap keeps any button and only updates it. Leaving a field
 // sends the editor's live totals, whose answer brings a new "Uitgeven…"
 // button (documents/_editor_live.html). If that answer landed between
 // mousedown and mouseup, a new element got the mouseup and the click was
 // lost: the dialog stayed shut. Contents are only replaced when they differ,
-// for the same reason (the press may be on the icon).
+// for the same reason (the press may be on the icon). htmx then swaps
+// nothing, so process() picks up any hx-* attribute that changed.
 document.addEventListener("htmx:oobBeforeSwap", (event) => {
   const { target, fragment } = event.detail;
   const fresh = fragment.firstElementChild;
@@ -38,6 +39,7 @@ document.addEventListener("htmx:oobBeforeSwap", (event) => {
   }
   for (const { name, value } of fresh.attributes) target.setAttribute(name, value);
   if (target.innerHTML !== fresh.innerHTML) target.replaceChildren(...fresh.childNodes);
+  window.htmx.process(target);
 });
 
 // Toasts: the close button removes one; success and info disappear on their
