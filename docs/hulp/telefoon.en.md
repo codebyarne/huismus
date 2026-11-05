@@ -4,6 +4,9 @@ Does Huismus run on a server, such as a Raspberry Pi or a NAS? Then you can
 put it on your phone, tablet or laptop as an app. You don't need an app
 store for it. You get its own icon and a window without an address bar.
 
+No server at home? Huismus can also run on a server you rent:
+[On a VPS](vps.en.md).
+
 ## Installing Huismus as an app
 
 Open Huismus in the browser and choose:

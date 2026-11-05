@@ -4,6 +4,9 @@ Draai je Huismus op een Raspberry Pi, een NAS of een eigen server? Dan
 gebruik je de Docker-image. Hier lees je hoe je hem installeert, waar je
 gegevens staan en hoe je bijwerkt naar een nieuwe versie.
 
+Geen server in huis? Dan kan Huismus ook op een server die je huurt:
+[Op een VPS](vps.nl.md).
+
 ## Installeren
 
 Zet dit in een bestand `compose.yaml`, in een map op je Pi of NAS:

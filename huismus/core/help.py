@@ -41,6 +41,7 @@ TOPICS = (
     "ai-assistenten",
     "desktop-app",
     "docker",
+    "vps",
     "telefoon",
     # What each weekly release brings; written on release day (CLAUDE.md, Releases).
     "nieuw",
