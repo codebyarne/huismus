@@ -110,6 +110,10 @@ met precies wat er anders moet. Check:
 - Elk formulier werkt ook zonder JS.
 - Geen juridische of fiscale beweringen in UI-tekst (zie `CLAUDE.md`).
 
+Jouw designkeuring komt vóór het bouwen. Bij een grote wijziging met UI keurt de
+eigenaar daarna zelf de gebouwde flow, voordat die naar `main` gaat (`CLAUDE.md`,
+"Flow voorleggen"). Die keuring doe jij niet namens hem.
+
 ## Vastleggen
 
 Voeg elk besluit toe **bovenaan** de lijst in `huismus-intern/besluiten.md`, in dit

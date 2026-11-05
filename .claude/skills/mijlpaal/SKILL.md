@@ -75,11 +75,16 @@ Alles moet slagen voordat je verder gaat:
   merkt, de PO-besluiten, wat niet getest kon worden.
 - Raakt de PR iets van de escalatielijst (zoals een migratie die data
   wijzigt, of `scripts/verify.sh`): niet mergen, de eigenaar vragen (zie 9).
+- Een grote wijziging met UI (een nieuw scherm, of andere stappen in een taak):
+  leg de flow voor aan de eigenaar volgens `CLAUDE.md`, "Flow voorleggen". De
+  screenshots van `verify-e2e` op volgorde, met per stap één zin, telefoon en
+  desktop, via SendUserFile; vraag of het zo live mag (zie 9). Niet mergen voor
+  hij ja zegt. Intussen: `(wacht: eigenaar)` in de backlog en stap 10.
 
 ## 7. Mergen en release
 
 - CI groen (op een PR alleen `verify (chromium)`), geen conflict, geen open vraag van
-  de eigenaar → zelf mergen met rebase (`CLAUDE.md`, "Mergen").
+  de eigenaar, en bij een grote wijziging met UI de flow goedgekeurd → zelf mergen met rebase (`CLAUDE.md`, "Mergen").
 - Een merge rolt niets uit (`CLAUDE.md`, "Releases"). Wacht tot CI op `main` groen is
   (ook WebKit en Firefox, als die draaien), en maak dan een release volgens
   `docs/desktop.md`, "Een release maken": een PR `chore(release): X.Y.Z` die alleen
