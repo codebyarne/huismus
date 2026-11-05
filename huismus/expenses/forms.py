@@ -10,7 +10,7 @@ from huismus.core.forms import EuroCentsField, HTML5DateInput
 
 from .lines import ExpenseLineInput
 from .models import Expense, ExpenseCategory, ExpenseLine
-from .receipts import validate_receipt
+from .receipts import stored_receipt, validate_receipt
 
 
 class ExpenseForm(forms.ModelForm):
@@ -118,6 +118,7 @@ class ReceiptUploadForm(forms.Form):
         uploaded = self.cleaned_data["file"]
         if isinstance(uploaded, UploadedFile):
             validate_receipt(uploaded)
+            return stored_receipt(uploaded)
         return uploaded
 
 

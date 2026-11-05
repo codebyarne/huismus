@@ -38,11 +38,11 @@ def test_set_up_a_folder_pick_up_now_and_make_an_expense(app, tmp_path):
     assert folder.is_dir()
 
     (folder / "bouwmarkt.pdf").write_bytes(PDF)
-    (folder / "foto.heic").write_bytes(b"heic")
+    (folder / "bonnetje.docx").write_bytes(b"PK")
     app.get_by_role("button", name="Nu ophalen").click()
     # The look runs in its own thread; the status asks again until done.
     expect(app.locator("#bonnetjes-gekeken")).to_contain_text("1 nieuw bonnetje.")
-    expect(app.locator("#niet-opgehaald")).to_contain_text("foto.heic is niet opgehaald.")
+    expect(app.locator("#niet-opgehaald")).to_contain_text("bonnetje.docx is niet opgehaald.")
     assert (folder / "Opgehaald" / "bouwmarkt.pdf").exists()
 
     app.get_by_role("link", name="Naar de bonnetjes zonder uitgave").click()

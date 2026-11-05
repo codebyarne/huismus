@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 21:47+0100\n"
+"POT-Creation-Date: 2026-11-05 23:07+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1989,8 +1989,8 @@ msgid "Dropbox gaf een fout. Huismus probeert het over 10 minuten opnieuw."
 msgstr "Dropbox gave an error. Huismus tries again in 10 minutes."
 
 #
-msgid "Kies een PDF-, PNG- of JPG-bestand."
-msgstr "Choose a PDF, PNG or JPG file."
+msgid "Kies een PDF-, PNG-, JPG- of HEIC-bestand."
+msgstr "Choose a PDF, PNG, JPG or HEIC file."
 
 #, python-format
 msgid "Dit bonnetje is groter dan %(max_mb)s MB. Kies een kleiner bestand."
