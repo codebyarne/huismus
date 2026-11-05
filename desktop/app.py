@@ -215,6 +215,7 @@ def check() -> int:
             pdf = weasyprint.HTML(string="<p>Huismus</p>").write_pdf()
         assert pdf.startswith(b"%PDF"), "geen PDF"
         _check_the_certificates()
+        _check_heic()
     except Exception:
         logger.exception("Controle mislukt")
         print("Controle mislukt; zie", paths.log_file())  # noqa: T201
@@ -235,6 +236,23 @@ def _check_the_certificates():
         cafile = ssl.get_default_verify_paths().cafile or ""
         assert cafile.startswith(str(paths.bundle_dir())), f"certificaten buiten de app: {cafile}"
     assert ssl.create_default_context().cert_store_stats()["x509_ca"] > 0, "geen certificaten"
+
+
+def _check_heic():
+    """A HEIC photo can be read: pillow-heif's own libraries came along
+    into the app (huismus/expenses/receipts.py)."""
+    from io import BytesIO
+
+    import pillow_heif
+    from django.core.files.base import ContentFile
+    from PIL import Image
+
+    from huismus.expenses.receipts import stored_receipt
+
+    heic = BytesIO()
+    pillow_heif.from_pillow(Image.new("RGB", (8, 8), "white")).save(heic)
+    jpg = stored_receipt(ContentFile(heic.getvalue(), name="bon.heic"))
+    assert Image.open(jpg).format == "JPEG", "HEIC niet te lezen"
 
 
 def _check_the_lock():

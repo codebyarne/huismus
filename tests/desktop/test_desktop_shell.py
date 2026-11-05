@@ -8,7 +8,7 @@ import urllib.request
 import pytest
 from django.utils import translation
 
-from desktop import paths, screens
+from desktop import app, paths, screens
 from desktop.server import Server
 
 
@@ -108,3 +108,8 @@ def test_the_updating_screen_says_what_the_app_says(lang):
 def test_the_updating_screen_says_which_version(lang, line):
     assert line in screens.updating(lang, "1.4.0")
     assert line not in screens.updating(lang)
+
+
+def test_the_check_reads_a_heic_photo():
+    # The release's --check fails when pillow-heif's libraries are missing.
+    app._check_heic()
