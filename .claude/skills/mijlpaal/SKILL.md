@@ -87,8 +87,8 @@ Alles moet slagen voordat je verder gaat:
   is, en daarna die commit taggen met `vX.Y.Z` en de tag pushen.
 - Wacht tot de workflow Release groen is en de release op GitHub staat. Mislukt hij:
   oplossen, niet de tag verplaatsen; een nieuwe patch is goedkoper dan uitleg.
-- Alleen documentatie gewijzigd (`.md`, `docs/`): geen CI en geen release
-  (`CLAUDE.md`, "Mergen").
+- Alleen documentatie gewijzigd (`.md`, `docs/`): geen release (`CLAUDE.md`,
+  "Releases").
 
 ## 8. Melden
 

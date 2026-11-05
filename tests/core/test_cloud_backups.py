@@ -6,6 +6,7 @@ huismus/core/cloud_backups.py), against the fakes in tests/cloud_fakes.py."""
 import tarfile
 from datetime import datetime, timedelta
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 from django.utils import timezone
@@ -130,6 +131,20 @@ def test_upload_encrypts_a_backup_huismus_can_restore(linked_dav, data_dir, tmp_
     assert config.last_success and not config.failed and config.last_size == len(secret)
 
 
+def test_two_uploads_in_one_second_both_stay(linked_dav):
+    # The archive is made in an empty scratch folder, so core.backup's own
+    # -2 never comes up; the name in the cloud has to look at the cloud.
+    second = timezone.make_aware(datetime(2026, 10, 29, 9, 12))
+    with patch("huismus.core.backup.timezone.localtime", return_value=second):
+        first, again = cloud_backups.upload_backup(second), cloud_backups.upload_backup(second)
+
+    assert first.name == "huismus-backup-20261029-091200.tar.gz.age"
+    assert again.name == "huismus-backup-20261029-091200-2.tar.gz.age"
+    assert linked_dav.names() == sorted([first.name, again.name])
+    assert again.created_at == first.created_at
+    assert [file.name for file in cloud_backups.archives()] == [again.name, first.name]
+
+
 def test_no_upload_before_the_code_is_saved(data_dir, dav):
     cloud_backups.link_webdav(ADDRESS, USERNAME, PASSWORD)
     cloud_backups.new_code()
@@ -174,6 +189,18 @@ def test_the_cloud_keeps_30_days_then_one_a_month_and_only_huismus_files(linked_
     assert "huismus-backup-20260815-031200.tar.gz.age" in names
     assert "huismus-backup-20261020-031200.tar.gz.age" in names
     assert "eigen-bestand.txt" in names
+
+
+def test_of_two_old_backups_in_one_second_the_cloud_keeps_the_later(linked_dav):
+    now = timezone.make_aware(datetime(2026, 10, 31, 3, 0))
+    earlier = "huismus-backup-20260815-031200.tar.gz.age"
+    later = "huismus-backup-20260815-031200-2.tar.gz.age"
+    linked_dav.folders.add("Huismus")
+    for name in [earlier, later]:
+        linked_dav.files[f"Huismus/{name}"] = b"x"
+
+    assert cloud_backups.prune(cloud_backups.remote(), now) == [earlier]
+    assert linked_dav.names() == [later]
 
 
 # -- Dropbox -----------------------------------------------------------------

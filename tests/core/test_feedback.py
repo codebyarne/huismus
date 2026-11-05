@@ -20,11 +20,12 @@ from huismus.business.models import Settings
 from huismus.core import feedback
 from huismus.core.updates import current_version
 
-ISSUE_FORM = Path(__file__).resolve().parents[2] / ".github" / "ISSUE_TEMPLATE" / "idee.yml"
+ISSUE_FORMS = Path(__file__).resolve().parents[2] / ".github" / "ISSUE_TEMPLATE"
+ISSUE_FORM = ISSUE_FORMS / "idee.yml"
 
 
-def _issue_options(field):
-    block = ISSUE_FORM.read_text(encoding="utf-8").split(f"id: {field}\n")[1]
+def _issue_options(field, form=ISSUE_FORM):
+    block = form.read_text(encoding="utf-8").split(f"id: {field}\n")[1]
     block = block.split("validations:")[0]
     return [option.split(" / ")[0] for option in re.findall(r'^\s+- "(.+)"$', block, re.M)]
 
@@ -95,6 +96,11 @@ def test_the_organisations_match_the_issue_form():
 
 def test_where_it_runs_is_an_option_of_the_issue_form():
     assert {text for _key, text, _label in feedback.PLATFORMS} <= set(_issue_options("gebruik"))
+
+
+def test_the_bug_form_asks_where_it_runs_with_the_same_choices():
+    bug_form = ISSUE_FORMS / "bug.yml"
+    assert _issue_options("gebruik", bug_form) == [text for _k, text, _l in feedback.PLATFORMS]
 
 
 @pytest.mark.parametrize("choices", [feedback.ORGANISATIONS, feedback.PLATFORMS])

@@ -170,6 +170,28 @@ def test_updating_is_confirmed_first(desktop):
     assert "Huismus maakt eerst een back-up van je administratie." in page
 
 
+def test_wat_is_er_nieuw_opens_the_page_on_the_site(desktop, docker):
+    # The installed Huismus doesn't have the new version's text yet; the
+    # site's copy of the help page is rebuilt with every release.
+    updates.update_status(available=RELEASE)
+    for page in (
+        desktop.get(reverse("business:updates")),
+        desktop.get(reverse("business:updates_install")),
+        docker.get(reverse("business:updates")),
+    ):
+        html = page.content.decode()
+        assert 'href="https://huismus.arnekrijnsen.com/hulp/nieuw/"' in html
+        assert "releases/tag" not in html
+
+
+def test_wat_is_er_nieuw_opens_the_english_page_in_english(docker):
+    updates.update_status(available=DOCKER_RELEASE)
+    docker.cookies["django_language"] = "en"
+    html = docker.get(reverse("business:updates")).content.decode()
+    assert "What's new in 1.3.1?" in html
+    assert 'href="https://huismus.arnekrijnsen.com/en/help/nieuw/"' in html
+
+
 def test_after_bijwerken_the_app_takes_over(desktop):
     updates.update_status(available=RELEASE)
     with patch("huismus.core.updates.install") as install:

@@ -42,6 +42,8 @@ TOPICS = (
     "desktop-app",
     "docker",
     "telefoon",
+    # What each weekly release brings; written on release day (CLAUDE.md, Releases).
+    "nieuw",
     FEEDBACK,
 )
 

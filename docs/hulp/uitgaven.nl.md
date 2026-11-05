@@ -20,7 +20,9 @@ eigen categorie.
 ## Bonnetjes
 
 Sleep een bonnetje op de uitgave, of kies een bestand: een foto (JPG of PNG)
-of een pdf. Een uitgave kan meer bonnetjes hebben.
+of een pdf. Bij een nieuwe uitgave kan dat al bovenaan het formulier, voordat je op
+**Opslaan** klikt. Een uitgave kan meer bonnetjes hebben: de rest voeg je toe
+na het opslaan.
 
 ## Categorieën
 

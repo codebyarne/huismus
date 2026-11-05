@@ -263,6 +263,82 @@ def test_receipt_upload_rejects_an_invalid_file(client):
     assert messages == ["Huismus kan deze afbeelding niet openen. Kies een ander bestand."]
 
 
+def test_create_with_a_receipt_attaches_it_to_the_new_expense(client):
+    _login(client)
+
+    response = client.post(
+        reverse("expenses:create"),
+        _header() | _lines(("", "12.34", "")) | {"receipt-file": _receipt_png()},
+    )
+
+    assert response.status_code == 302
+    expense = Expense.objects.get()
+    attachment = Attachment.objects.get()
+    assert attachment.expense_id == expense.pk
+    assert attachment.kind == "receipt"
+    assert attachment.sha256
+
+
+def test_create_with_an_invalid_receipt_saves_nothing_and_says_why(client):
+    _login(client)
+    bad = SimpleUploadedFile("bon.png", b"not an image", content_type="image/png")
+
+    response = client.post(
+        reverse("expenses:create"),
+        _header() | _lines(("", "12.34", "")) | {"receipt-file": bad},
+    )
+
+    assert response.status_code == 200
+    assert Expense.objects.count() == 0
+    assert Attachment.objects.count() == 0
+    assert "Huismus kan deze afbeelding niet openen." in response.content.decode()
+
+
+def test_create_with_a_receipt_but_another_error_asks_to_choose_it_again(client):
+    """A browser doesn't keep a chosen file when the page comes back with
+    an error, so the page says so instead of silently losing it."""
+    _login(client)
+
+    response = client.post(
+        reverse("expenses:create"),
+        _header() | _lines(("", "", "")) | {"receipt-file": _receipt_png()},
+    )
+
+    assert response.status_code == 200
+    assert Expense.objects.count() == 0
+    assert Attachment.objects.count() == 0
+    assert "Kies het bonnetje opnieuw" in response.content.decode()
+
+
+def test_the_new_page_has_a_receipt_field_in_its_form_and_the_edit_page_not(client):
+    """On the edit page receipts have their own section with its own
+    upload; a second file field in the expense form would be confusing."""
+    _login(client)
+    expense = create_expense([ExpenseLineInput("Hosting", 1000, None, None)], date="2026-01-15")
+
+    new_page = client.get(reverse("expenses:create")).content.decode()
+    edit_page = client.get(reverse("expenses:edit", kwargs={"pk": expense.pk})).content.decode()
+
+    assert 'name="receipt-file"' in new_page
+    assert 'enctype="multipart/form-data"' in new_page
+    assert 'name="receipt-file"' not in edit_page
+
+
+def test_the_receipt_comes_first_on_the_new_and_the_edit_page(client):
+    """The receipt is what the rest is typed from, so it sits above the
+    date and the lines (Arne, 2026-11-04)."""
+    _login(client)
+    expense = create_expense([ExpenseLineInput("Hosting", 1000, None, None)], date="2026-01-15")
+
+    new_page = client.get(reverse("expenses:create")).content.decode()
+    edit_page = client.get(reverse("expenses:edit", kwargs={"pk": expense.pk})).content.decode()
+
+    assert new_page.index('name="receipt-file"') < new_page.index('name="date"')
+    assert edit_page.index(
+        reverse("expenses:receipt_upload", kwargs={"pk": expense.pk})
+    ) < edit_page.index('name="date"')
+
+
 def test_receipt_delete_removes_the_attachment(client):
     _login(client)
     expense = Expense.objects.create(date="2026-01-15", amount_cents=1000)

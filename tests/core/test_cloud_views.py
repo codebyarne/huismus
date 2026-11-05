@@ -4,12 +4,14 @@
 WebDAV, the recovery code, unlinking, and restoring from the cloud
 (SPEC.md M15 step 2; huismus/core/cloud_views.py, huismus/core/backup_views.py)."""
 
+from datetime import datetime
 from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.utils import timezone
 
 from huismus.contacts.models import Contact
 from huismus.core import auto_backups, cloud_backups, cloud_views
@@ -117,11 +119,15 @@ def test_linking_shows_the_code_first_and_uploads_once_it_is_saved(signed_in, da
 
 
 def test_linking_again_keeps_the_code_and_uploads_at_once(signed_in, dav):
-    _link_webdav(signed_in)
-    _save_code(signed_in)
-    signed_in.post(reverse("business:backups_unlink"))
+    # All in one second, as on a fast computer: the second upload gets
+    # its own name and the first stays.
+    second = timezone.make_aware(datetime(2026, 10, 29, 9, 12))
+    with patch("huismus.core.backup.timezone.localtime", return_value=second):
+        _link_webdav(signed_in)
+        _save_code(signed_in)
+        signed_in.post(reverse("business:backups_unlink"))
 
-    response = _link_webdav(signed_in)
+        response = _link_webdav(signed_in)
 
     assert response.url == reverse("business:backups")
     assert len(dav.names()) == 2

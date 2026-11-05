@@ -175,6 +175,7 @@ a:hover { color: var(--primary-hover); }
 .lang button[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: var(--sh-1); }
 .btn-new { anchor-name: --nieuw; }
 #nieuw-menu { position-anchor: --nieuw; inset: auto; top: anchor(bottom); left: anchor(left); width: anchor-size(width); margin-top: 6px; }
+#plus-menu { inset: auto 0 calc(72px + env(safe-area-inset-bottom)); margin: 0 auto; }
 #meer-menu { inset: auto 12px calc(72px + env(safe-area-inset-bottom)) auto; max-height: calc(100dvh - 140px); overflow-y: auto; }
 
 .main { min-width: 0; display: flex; flex-direction: column; }

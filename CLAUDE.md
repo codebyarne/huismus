@@ -101,9 +101,25 @@ De Raspberry Pi van de eigenaar is een gewone Docker-installatie (besluit
 `docs/hulp/docker.nl.md`. Huismus zelf is nooit vanaf internet bereikbaar.
 Adres van de Pi: `huismus-intern/werkwijze.md`.
 
-Claude maakt na elke gemergde mijlpaal of feature zelf een release (het laatste
-cijfer omhoog, 0.1.x) en meldt welke versie klaarstaat. Een PR die alleen
-documentatie wijzigt, krijgt geen release.
+Releases gaan **één keer per week, op woensdag** (besluit 2026-11-04): Claude
+maakt dan zelf een release van wat er die week op `main` kwam (het laatste cijfer
+omhoog, 0.1.x) en meldt welke versie klaarstaat en wat erin zit, in gewone taal.
+Eerst: `verify-e2e` op die `main`, en de WebKit- en Firefox-jobs op `main` groen.
+De release-PR (versie in `pyproject.toml`) zet bovenaan `docs/hulp/nieuw.nl.md` en
+`nieuw.en.md` wat de gebruiker er nu mee kan, volgens `docs/schrijfwijzer.md`:
+wat je ziet of doet, niet hoe het gebouwd is; interne wijzigingen (tests, CI) laat
+je weg. Die pagina staat onder Hulp in elke installatie.
+Kwam er die week alleen documentatie bij, dan is er geen release.
+
+Tussendoor alleen een release voor een bug die facturen, nummers of gegevens
+raakt, of die de app onbruikbaar maakt; meld waarom die niet tot woensdag kon
+wachten.
+
+Omdat werk tot een week op `main` ligt voordat iemand het krijgt, moet `main`
+altijd uit te brengen zijn: merge alleen wat af is. Een groot stuk knip je in
+delen die elk los werken; een scherm dat nog niet af is, krijgt pas een link in
+het menu als het af is. Geen feature flags: één gebruiker per installatie, en
+elke schakelaar verdubbelt wat er getest moet worden.
 
 Werk als agent altijd op een eigen branch en lever via een pull request. Push nooit
 rechtstreeks naar `main` (`.claude/settings.json` weigert het ook).
@@ -144,10 +160,8 @@ Merge-methode: rebase (`main` heeft een rechte historie, geen
 merge-commits). Een merge rolt niets uit; dat doet pas een release (zie
 Releases).
 
-Een PR die alleen documentatie wijzigt (`.md`-bestanden, `docs/`) krijgt geen
-CI (om Actions-minuten te sparen): die mag
-gemerged worden zonder CI, als `./scripts/verify.sh` lokaal groen is. Op `main`
-draait dan ook geen CI.
+Claude mergt alleen eigen PR's. Een PR van iemand anders mergt alleen de
+eigenaar, ook als hij groen is.
 
 Eerst vragen blijft nodig bij: een migratie die bestaande gegevens wijzigt
 of verwijdert, wijzigingen in `scripts/verify.sh`, en als de eigenaar

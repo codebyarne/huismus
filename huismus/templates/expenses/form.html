@@ -13,38 +13,13 @@
     </div>
 </div>
 
-{% form_errors form formset %}
+{% form_errors form formset new_receipt_form %}
 
-<form class="card card-pad stack" method="post" style="gap:var(--s-5)">
-    {% csrf_token %}
-    <div class="fieldset">
-        {% field form.date span=2 %}
-        {% field form.supplier span=4 %}
-        {% field form.description optional=True %}
-    </div>
-    {% comment %}The lines, each with its own category, as in Moneybird
-    (huismus-intern/besluiten.md, 2026-11-02). The amount of the expense is
-    their sum, computed when saving (huismus/expenses/lines.py).{% endcomment %}
-    <div class="stack" style="gap:var(--s-4)">
-        <h2>{% translate "Regels" %}</h2>
-        {{ formset.management_form }}
-        <div class="stack" style="gap:var(--s-4)" data-formset-forms="lines">
-            {% for line_form in formset.forms %}{% include "expenses/_line_form.html" %}{% endfor %}
-        </div>
-        <template data-formset-empty="lines">{% include "expenses/_line_form.html" with line_form=formset.empty_form %}</template>
-        <div class="row">
-            <button type="submit" name="regel_toevoegen" value="1" class="btn btn-ghost btn-sm" data-formset-add="lines"><svg class="i i-sm" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Regel toevoegen" %}</button>
-            {% if expense %}<span class="spacer"></span><span>{% translate "Totaal" %} <strong class="amount">{{ expense.amount_cents|money }}</strong></span>{% endif %}
-        </div>
-    </div>
-    <div class="kor-note"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{% translate "Vul het bruto bedrag in: wat je echt betaald hebt. Het btw-bedrag is alleen ter informatie en telt nergens mee." %}</span></div>
-    <div class="row" style="justify-content:flex-end"><button class="btn btn-primary" type="submit">{% translate "Opslaan" %}<span class="spinner"></span></button></div>
-</form>
-
-{% comment %}Receipts and delete need a saved expense: the URLs below take
+{% comment %}An existing expense's receipts, above its form like the
+receipt field of a new one. Its own upload and delete forms take
 expense.pk.{% endcomment %}
 {% if expense %}
-<section class="card card-pad stack" style="margin-top:var(--s-5)">
+<section class="card card-pad stack" style="margin-bottom:var(--s-5)">
     <div class="row">
         <h2>{% translate "Bonnetjes" %}</h2>
         {% with count=expense.attachments.count %}<span class="small muted">{% blocktranslate count count=count %}{{ count }} bestand{% plural %}{{ count }} bestanden{% endblocktranslate %}</span>{% endwith %}
@@ -87,7 +62,53 @@ expense.pk.{% endcomment %}
         </form>
     </div>
 </section>
+{% endif %}
 
+<form class="card card-pad stack" method="post"{% if new_receipt_form %} enctype="multipart/form-data"{% endif %} style="gap:var(--s-5)">
+    {% csrf_token %}
+    {% comment %}The receipt first: it's what the rest is typed from. A new
+    expense takes it along when it's saved; an existing one has the
+    Bonnetjes section above the form, with its own upload.{% endcomment %}
+    {% if new_receipt_form %}{% with field=new_receipt_form.file %}
+    <div class="stack" style="gap:var(--s-3)">
+        <h2>{% translate "Bonnetje" %} <span class="opt">({% translate "optioneel" %})</span></h2>
+        <label class="dropzone" style="padding:var(--s-5)" data-dropzone>
+            <input type="file" name="{{ field.html_name }}" id="{{ field.auto_id }}" accept="image/png,image/jpeg,application/pdf" aria-label="{% translate 'Bonnetje toevoegen' %}" data-file-summary="gekozen-bonnetje"{% if field.errors %} aria-invalid="true" aria-describedby="{{ field.auto_id }}-fout"{% endif %}>
+            <span class="dz-icon"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg></span>
+            <strong class="small">{% translate "Sleep een bonnetje hierheen" %}</strong>
+            <span class="small">{% translate "of kies een bestand · JPG, PNG, PDF" %}</span>
+            <span class="small" id="gekozen-bonnetje"></span>
+        </label>
+        {% for error in field.errors %}<p class="error" id="{{ field.auto_id }}-fout"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>{{ error }}</p>{% endfor %}
+        {% if choose_receipt_again %}<p class="small muted">{% translate "Kies het bonnetje opnieuw: je browser bewaart het niet als er nog iets ontbrak." %}</p>{% endif %}
+    </div>
+    {% endwith %}{% endif %}
+    <div class="fieldset">
+        {% field form.date span=2 %}
+        {% field form.supplier span=4 %}
+        {% field form.description optional=True %}
+    </div>
+    {% comment %}The lines, each with its own category, as in Moneybird
+    (huismus-intern/besluiten.md, 2026-11-02). The amount of the expense is
+    their sum, computed when saving (huismus/expenses/lines.py).{% endcomment %}
+    <div class="stack" style="gap:var(--s-4)">
+        <h2>{% translate "Regels" %}</h2>
+        {{ formset.management_form }}
+        <div class="stack" style="gap:var(--s-4)" data-formset-forms="lines">
+            {% for line_form in formset.forms %}{% include "expenses/_line_form.html" %}{% endfor %}
+        </div>
+        <template data-formset-empty="lines">{% include "expenses/_line_form.html" with line_form=formset.empty_form %}</template>
+        <div class="row">
+            <button type="submit" name="regel_toevoegen" value="1" class="btn btn-ghost btn-sm" data-formset-add="lines"><svg class="i i-sm" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Regel toevoegen" %}</button>
+            {% if expense %}<span class="spacer"></span><span>{% translate "Totaal" %} <strong class="amount">{{ expense.amount_cents|money }}</strong></span>{% endif %}
+        </div>
+    </div>
+    <div class="kor-note"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{% translate "Vul het bruto bedrag in: wat je echt betaald hebt. Het btw-bedrag is alleen ter informatie en telt nergens mee." %}</span></div>
+    <div class="row" style="justify-content:flex-end"><button class="btn btn-primary" type="submit">{% translate "Opslaan" %}<span class="spinner"></span></button></div>
+</form>
+
+{% comment %}Delete needs a saved expense: the URL below takes expense.pk.{% endcomment %}
+{% if expense %}
 <section class="card card-pad row" style="margin-top:var(--s-5);justify-content:space-between">
     <div class="stack" style="gap:2px"><strong>{% translate "Uitgave verwijderen" %}</strong><span class="small muted">{% translate "Ook de bonnetjes gaan weg." %}</span></div>
     <button class="btn btn-danger-quiet" type="button" command="show-modal" commandfor="verwijder-uitgave"><svg class="i" aria-hidden="true"><use href="#trash"></use></svg>{% translate "Verwijderen…" %}</button>
