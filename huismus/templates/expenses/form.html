@@ -55,7 +55,7 @@ expense.pk.{% endcomment %}
         {% endfor %}
         <form method="post" action="{% url 'expenses:receipt_upload' expense.pk %}" enctype="multipart/form-data" class="dropzone" style="aspect-ratio:3/4;padding:var(--s-4)" data-dropzone>
             {% csrf_token %}
-            <input type="file" name="file" accept="image/png,image/jpeg,application/pdf" aria-label="{% translate 'Bonnetje toevoegen' %}" data-autosubmit required>
+            <input type="file" name="file" accept="image/png,image/jpeg,image/heic,image/heif,.heic,.heif,application/pdf" aria-label="{% translate 'Bonnetje toevoegen' %}" data-autosubmit required>
             <span class="dz-icon"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg></span>
             <strong class="small">{% translate "Sleep een bonnetje hierheen" %}</strong>
             <span class="small">{% translate "of kies een bestand · JPG, PNG, PDF" %}</span>
@@ -91,7 +91,7 @@ expense.pk.{% endcomment %}
     <div class="stack" style="gap:var(--s-3)">
         <h2>{% translate "Bonnetje" %} <span class="opt">({% translate "optioneel" %})</span></h2>
         <label class="dropzone" style="padding:var(--s-5)" data-dropzone>
-            <input type="file" name="{{ field.html_name }}" id="{{ field.auto_id }}" accept="image/png,image/jpeg,application/pdf" aria-label="{% translate 'Bonnetje toevoegen' %}" data-file-summary="gekozen-bonnetje"{% if field.errors %} aria-invalid="true" aria-describedby="{{ field.auto_id }}-fout"{% endif %}>
+            <input type="file" name="{{ field.html_name }}" id="{{ field.auto_id }}" accept="image/png,image/jpeg,image/heic,image/heif,.heic,.heif,application/pdf" aria-label="{% translate 'Bonnetje toevoegen' %}" data-file-summary="gekozen-bonnetje"{% if field.errors %} aria-invalid="true" aria-describedby="{{ field.auto_id }}-fout"{% endif %}>
             <span class="dz-icon"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg></span>
             <strong class="small">{% translate "Sleep een bonnetje hierheen" %}</strong>
             <span class="small">{% translate "of kies een bestand · JPG, PNG, PDF" %}</span>

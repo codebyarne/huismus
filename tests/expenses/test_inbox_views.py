@@ -100,7 +100,7 @@ def test_a_folder_that_cannot_be_chosen_says_why(client, user, data_dir):
 
 def test_on_it_shows_the_place_and_how_the_last_look_went(client, user, folder):
     (folder / "bon.pdf").write_bytes(PDF)
-    (folder / "foto.heic").write_bytes(b"heic")
+    (folder / "bonnetje.docx").write_bytes(b"PK")
     inbox.fetch()
 
     content = client.get(reverse("business:receipts_folder")).content.decode()
@@ -109,7 +109,7 @@ def test_on_it_shows_the_place_and_how_the_last_look_went(client, user, folder):
     assert str(folder) in content
     assert "Laatst gekeken: vandaag" in content
     assert "1 nieuw bonnetje." in content
-    assert "foto.heic is niet opgehaald. Kies een PDF-, PNG- of JPG-bestand." in content
+    assert "bonnetje.docx is niet opgehaald. Kies een PDF-, PNG-, JPG- of HEIC-bestand." in content
 
 
 def test_a_failed_look_shows_red_with_the_reason(client, user, folder):

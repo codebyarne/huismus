@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 21:47+0100\n"
+"POT-Creation-Date: 2026-11-05 23:07+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1883,7 +1883,7 @@ msgstr ""
 msgid "Dropbox gaf een fout. Huismus probeert het over 10 minuten opnieuw."
 msgstr ""
 
-msgid "Kies een PDF-, PNG- of JPG-bestand."
+msgid "Kies een PDF-, PNG-, JPG- of HEIC-bestand."
 msgstr ""
 
 #, python-format

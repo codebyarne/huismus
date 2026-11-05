@@ -52,7 +52,13 @@ from huismus.core.auto_backups import FolderError
 from huismus.core.backup import RECEIPTS_FOLDER_FILE_NAME, sample_data_in_use
 from huismus.core.models import Attachment
 
-from .receipts import MAX_RECEIPT_BYTES, RASTER_FORMATS, sha256_of, validate_receipt
+from .receipts import (
+    MAX_RECEIPT_BYTES,
+    RASTER_FORMATS,
+    sha256_of,
+    stored_receipt,
+    validate_receipt,
+)
 
 FOLDER, DROPBOX = "folder", "dropbox"
 SOURCE = "bonnetjesmap"  # Attachment.source of a receipt fetched from here
@@ -256,7 +262,7 @@ def _dropbox_sentence(reason: str) -> str:
 def skip_sentence(reason: str) -> str:
     """Why a file stayed in the folder."""
     if reason == WRONG_TYPE:
-        return _("Kies een PDF-, PNG- of JPG-bestand.")
+        return _("Kies een PDF-, PNG-, JPG- of HEIC-bestand.")
     if reason == TOO_BIG:
         return _("Dit bonnetje is groter dan %(max_mb)s MB. Kies een kleiner bestand.") % {
             "max_mb": MAX_RECEIPT_BYTES // (1024 * 1024)
@@ -456,8 +462,8 @@ def _failed(now: datetime, reason: str, error: Exception) -> None:
 
 
 def _receipt(place, name: str, size: int) -> tuple[ContentFile | None, str | None]:
-    """The file as an upload, checked like one (validate_receipt), or the
-    reason it stays in the folder."""
+    """The file as an upload, checked like one (validate_receipt) and as
+    Huismus keeps it (stored_receipt), or the reason it stays in the folder."""
     extension = PurePosixPath(name).suffix.lower().lstrip(".")
     if extension not in ACCEPTED_EXTENSIONS:
         return None, WRONG_TYPE
@@ -469,9 +475,10 @@ def _receipt(place, name: str, size: int) -> tuple[ContentFile | None, str | Non
         return None, UNREADABLE
     try:
         validate_receipt(upload)
+        # A HEIC becomes a JPG here; the original moves to Opgehaald.
+        return stored_receipt(upload), None
     except ValidationError:
         return None, DAMAGED
-    return upload, None
 
 
 def _store(upload: ContentFile) -> bool:

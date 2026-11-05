@@ -1,7 +1,9 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
+import hashlib
 from io import BytesIO
 
+import pillow_heif
 import pytest
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -256,6 +258,23 @@ def test_receipt_upload_attaches_a_file_to_the_expense(client):
     assert attachment.expense_id == expense.pk
     assert attachment.kind == "receipt"
     assert attachment.sha256
+
+
+def test_a_heic_receipt_is_kept_as_a_jpg(client):
+    _login(client)
+    expense = Expense.objects.create(date="2026-01-15", amount_cents=1000)
+    buffer = BytesIO()
+    pillow_heif.from_pillow(Image.new("RGB", (8, 4), color="white")).save(buffer)
+
+    client.post(
+        reverse("expenses:receipt_upload", kwargs={"pk": expense.pk}),
+        {"file": SimpleUploadedFile("IMG_2041.HEIC", buffer.getvalue(), content_type="image/heic")},
+    )
+
+    attachment = Attachment.objects.get()
+    assert attachment.filename == "IMG_2041.jpg"
+    assert Image.open(attachment.file).format == "JPEG"
+    assert attachment.sha256 == hashlib.sha256(attachment.file.open().read()).hexdigest()
 
 
 def test_receipt_upload_rejects_an_invalid_file(client):

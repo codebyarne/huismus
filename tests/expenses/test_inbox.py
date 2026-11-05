@@ -82,6 +82,63 @@ def test_a_photo_is_a_receipt_too(folder):
     assert inbox.fetch().fetched == 1
 
 
+def _heic(size=(40, 20)) -> bytes:
+    out = BytesIO()
+    Image.new("RGB", size, "white").save(out, "HEIF")
+    return out.getvalue()
+
+
+def test_a_heic_photo_is_fetched_as_a_jpg_and_the_original_goes_to_fetched(folder):
+    heic = _heic()
+    (folder / "IMG_2041.HEIC").write_bytes(heic)
+
+    assert inbox.fetch().fetched == 1
+
+    receipt = Attachment.objects.in_tray().get()
+    assert receipt.filename == "IMG_2041.jpg"
+    assert Image.open(receipt.file).format == "JPEG"
+    assert (folder / "Opgehaald" / "IMG_2041.HEIC").read_bytes() == heic
+    assert inbox.load().skipped == []
+
+
+def test_the_same_heic_twice_is_fetched_once(folder):
+    (folder / "IMG_2041.HEIC").write_bytes(_heic())
+    inbox.fetch()
+    (folder / "IMG_2041 kopie.HEIC").write_bytes(_heic())
+
+    assert inbox.fetch().fetched == 0
+    assert Attachment.objects.count() == 1
+    assert (folder / "Opgehaald" / "IMG_2041 kopie.HEIC").exists()
+
+
+def test_a_heic_whose_move_failed_is_only_moved_the_next_time(folder, monkeypatch):
+    (folder / "IMG_2041.HEIC").write_bytes(_heic())
+    real_done = inbox.LocalFolder.done
+
+    def refuse(self, name):
+        raise PermissionError("alleen-lezen")
+
+    monkeypatch.setattr(inbox.LocalFolder, "done", refuse)
+    inbox.fetch()
+    monkeypatch.setattr(inbox.LocalFolder, "done", real_done)
+
+    assert inbox.fetch().fetched == 0
+    assert Attachment.objects.count() == 1
+    assert (folder / "Opgehaald" / "IMG_2041.HEIC").exists()
+
+
+def test_a_heic_photo_comes_from_dropbox_too(data_dir, monkeypatch):
+    fake = FakeDropbox()
+    fake.install(monkeypatch)
+    cloud_backups.link_dropbox("refresh-1")
+    inbox.choose_dropbox()
+    fake.files["Bonnetjes/IMG_2041.HEIC"] = _heic()
+
+    assert inbox.fetch().fetched == 1
+    assert Attachment.objects.in_tray().get().filename == "IMG_2041.jpg"
+    assert "Bonnetjes/Opgehaald/IMG_2041.HEIC" in fake.files
+
+
 def test_the_same_receipt_twice_is_fetched_once(folder):
     (folder / "bon.pdf").write_bytes(PDF)
     inbox.fetch()
@@ -120,7 +177,8 @@ def test_a_name_taken_in_fetched_gets_a_number(folder):
 @pytest.mark.parametrize(
     ("name", "content", "reason"),
     [
-        ("foto.heic", b"....ftypheic", inbox.WRONG_TYPE),
+        ("bonnetje.docx", b"PK", inbox.WRONG_TYPE),
+        ("kapot.heic", b"....ftypheic", inbox.DAMAGED),
         ("kapot.jpg", b"geen foto", inbox.DAMAGED),
         ("nep.pdf", b"geen pdf", inbox.DAMAGED),
     ],
@@ -249,7 +307,7 @@ def test_a_symlink_in_the_folder_is_not_followed(folder, tmp_path):
 
 
 def test_a_failed_look_forgets_what_was_skipped(folder):
-    (folder / "foto.heic").write_bytes(b"heic")
+    (folder / "bonnetje.docx").write_bytes(b"PK")
     inbox.fetch()
     folder.rename(folder.with_name("weg"))
 

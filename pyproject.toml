@@ -17,6 +17,7 @@ dependencies = [
     "markdown>=3.7",       # renders the help pages from docs/hulp/*.md (huismus/core/help.py)
     "pyrage>=1.4",         # encrypts backups before they go to a cloud service, in the open age format (huismus/core/cloud_backups.py)
     "pypdf>=5.0",          # reads a PDF receipt for the AI connection: its text and a scanned page (huismus/assistants/receipts.py)
+    "pillow-heif>=1.8",    # reads HEIC photos from an iPhone and turns them into a JPG receipt (huismus/expenses/receipts.py)
 ]
 
 [dependency-groups]
