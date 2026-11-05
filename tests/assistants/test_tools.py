@@ -361,6 +361,18 @@ def test_without_categories_the_category_is_left_out(tool, business):
     assert data["lines"][0]["category"] is None
 
 
+def test_without_the_kor_an_expense_needs_its_vat(tool, business):
+    """The same rule as the form (decision of the owner, 2026-11-05)."""
+    business.kor_enabled = False
+    business.save()
+    _data, text, is_error = tool("add_expense", lines=[{"amount": "12,10"}])
+    assert is_error
+    assert "Vul het btw-bedrag in." in text
+    data, _text, is_error = tool("add_expense", lines=[{"amount": "12,10", "vat_info": 0}])
+    assert not is_error
+    assert Expense.objects.get(pk=data["id"]).amount_cents == 1210
+
+
 def test_an_expense_with_lines_adds_them_up(tool, business):
     data, _text, is_error = tool(
         "add_expense",

@@ -16,6 +16,17 @@ from huismus.expenses.models import Expense, ExpenseCategory
 pytestmark = pytest.mark.django_db
 
 
+@pytest.fixture(autouse=True)
+def kor_on():
+    """These tests are about the form, not the VAT: with the KOR on the VAT
+    may stay empty. Without it: tests/expenses/test_vat_required.py."""
+    from huismus.business.models import Settings
+
+    settings = Settings.load()
+    settings.kor_enabled = True
+    settings.save()
+
+
 def _login(client):
     get_user_model().objects.create_user(username="freelancer", password="s3cret-pass")
     client.login(username="freelancer", password="s3cret-pass")

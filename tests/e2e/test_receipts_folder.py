@@ -55,6 +55,7 @@ def test_set_up_a_folder_pick_up_now_and_make_an_expense(app, tmp_path):
     app.get_by_label("Leverancier").fill("Bouwmarkt")
     app.locator("[name='lines-0-description']").fill("Schroeven")
     app.locator("[name='lines-0-amount_cents']").fill("12,50")
+    app.locator("[name=lines-0-vat_info_cents]").fill("0")
     app.get_by_role("button", name="Opslaan").click()
 
     expect(app.locator("#toasts")).to_contain_text("Uitgave opgeslagen.")
@@ -102,3 +103,20 @@ def test_after_a_failure_a_look_that_works_turns_the_pill_green(app, tmp_path):
 
     expect(app.locator("#bonnetjes-gekeken")).to_contain_text("1 nieuw bonnetje.")
     expect(app.locator("#bonnetjesmap-pill")).to_have_text("Aan")
+
+
+def test_without_the_kor_the_vat_must_be_filled_in(app):
+    """Decision of the owner, 2026-11-05: € 0,00 is fine, empty is not."""
+    app.goto(app.base + "/uitgaven/nieuw/")
+    app.get_by_label("Datum").fill("2026-11-05")
+    app.get_by_label("Leverancier").fill("Bouwmarkt")
+    app.locator("[name=lines-0-amount_cents]").fill("12,10")
+    app.get_by_role("button", name="Opslaan").click()
+
+    expect(
+        app.get_by_text("Vul het btw-bedrag in. Geen btw betaald? Vul dan 0 in.")
+    ).to_be_visible()
+    assert not Expense.objects.exists()
+    app.locator("[name=lines-0-vat_info_cents]").fill("0")
+    app.get_by_role("button", name="Opslaan").click()
+    expect(app.locator("#toasts")).to_contain_text("Uitgave opgeslagen.")

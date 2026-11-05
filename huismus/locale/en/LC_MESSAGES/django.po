@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 16:41+0100\n"
+"POT-Creation-Date: 2026-11-05 18:51+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1934,6 +1934,9 @@ msgstr "Draft invoice made from the quote."
 
 msgid "Geen categorie"
 msgstr "No category"
+
+msgid "Vul het btw-bedrag in. Geen btw betaald? Vul dan 0 in."
+msgstr "Fill in the VAT amount. No VAT paid? Then fill in 0."
 
 #
 msgid "Kies eerst een bonnetje."

@@ -5,6 +5,7 @@ from django.core.files.uploadedfile import UploadedFile
 from django.db.models import Max
 from django.utils.translation import gettext_lazy as _
 
+from huismus.business.models import Settings
 from huismus.core.forms import EuroCentsField, HTML5DateInput
 
 from .lines import ExpenseLineInput
@@ -37,6 +38,15 @@ class ExpenseLineForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["category"].empty_label = _("Geen categorie")
+        # Without the KOR every line needs its VAT, € 0,00 included
+        # (decision of the owner, 2026-11-05). Still information only: the
+        # amount stays gross (CLAUDE.md, hard rule 7).
+        if not Settings.load().kor_enabled:
+            vat = self.fields["vat_info_cents"]
+            vat.required = True
+            vat.error_messages["required"] = _(
+                "Vul het btw-bedrag in. Geen btw betaald? Vul dan 0 in."
+            )
 
 
 class BaseExpenseLineFormSet(forms.BaseInlineFormSet):

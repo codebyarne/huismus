@@ -13,6 +13,10 @@ Vul het bruto bedrag in: wat je echt betaald hebt, inclusief eventuele btw.
 Wil je de btw erbij zien, vul die dan ook in. Dat is alleen ter informatie en
 telt nergens mee.
 
+Gebruik je de KOR niet, dan vul je bij elke regel de btw in. Staat er
+geen btw op het bonnetje, vul dan 0 in. Het blijft ter informatie en
+telt nergens mee.
+
 Betaalde je voor dingen uit verschillende categorieën in één keer, zoals een
 laptop en een tas? Gebruik dan **Regel toevoegen** en geef elke regel zijn
 eigen categorie.
