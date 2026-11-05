@@ -130,6 +130,8 @@ def test_while_fetching_the_status_asks_again(client, user, folder, monkeypatch)
 
     assert "Bezig met ophalen…" in content
     assert 'hx-trigger="every 3s"' in content
+    # The pill is refreshed along: green again after a look that works.
+    assert 'hx-select-oob="#bonnetjesmap-pill"' in content
 
 
 def test_fetch_now(client, user, folder):

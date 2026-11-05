@@ -84,3 +84,21 @@ def test_the_receipts_button_counts_what_waits(app, tmp_path):
     app.get_by_role("button", name="Verwijderen", exact=True).click()
     expect(app.locator(".receipt")).to_have_count(1)
     expect(app.locator("#toasts")).to_contain_text("Bonnetje verwijderd.")
+
+
+def test_after_a_failure_a_look_that_works_turns_the_pill_green(app, tmp_path):
+    """Found by verify-e2e: the status refreshed, the pill above it stayed red."""
+    folder = tmp_path / "bonnetjes"
+    folder.mkdir()
+    inbox.choose_folder(folder)
+    folder.rename(tmp_path / "weg")
+    inbox.fetch()
+
+    app.goto(app.base + "/instellingen/bonnetjesmap/")
+    expect(app.locator("#bonnetjesmap-pill")).to_have_text("Mislukt")
+    (tmp_path / "weg").rename(folder)
+    (folder / "bon.pdf").write_bytes(PDF)
+    app.get_by_role("button", name="Nu ophalen").click()
+
+    expect(app.locator("#bonnetjes-gekeken")).to_contain_text("1 nieuw bonnetje.")
+    expect(app.locator("#bonnetjesmap-pill")).to_have_text("Aan")

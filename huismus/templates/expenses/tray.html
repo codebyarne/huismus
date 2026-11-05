@@ -9,7 +9,7 @@
     <div class="titles">
         <a class="back" href="{% url 'expenses:list' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Uitgaven" %}</a>
         <h1>{% translate "Bonnetjes zonder uitgave" %}</h1>
-        {% if on %}<p class="lede" style="overflow-wrap:anywhere">{% blocktranslate with place=place %}Uit {{ place }}.{% endblocktranslate %} <a href="{% url 'business:receipts_folder' %}">{% translate "Bonnetjesmap" %} →</a></p>{% endif %}
+        {% if on %}<p class="lede" style="overflow-wrap:anywhere">{% blocktranslate with place=place %}Uit de map {{ place }}.{% endblocktranslate %} <a href="{% url 'business:receipts_folder' %}">{% translate "Bonnetjesmap" %} →</a></p>{% endif %}
     </div>
     {% if on %}
     <div class="actions">
