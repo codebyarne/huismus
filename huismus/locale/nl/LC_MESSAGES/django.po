@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 16:27+0100\n"
+"POT-Creation-Date: 2026-11-05 16:33+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1846,6 +1846,13 @@ msgstr ""
 msgid "Huismus bonnetjes"
 msgstr ""
 
+msgid "Huismus kon een bonnetje niet bewaren. Is de schijf van Huismus vol?"
+msgstr ""
+
+#, python-format
+msgid "De map %(folder)s is niet bereikbaar. Is de schijf aangesloten?"
+msgstr ""
+
 msgid "Dropbox weigert de toegang. Koppel Dropbox opnieuw bij Back-ups."
 msgstr ""
 
@@ -1856,9 +1863,6 @@ msgid "De opslag in Dropbox is vol."
 msgstr ""
 
 msgid "Dropbox gaf een fout. Huismus probeert het over 10 minuten opnieuw."
-msgstr ""
-
-msgid "De map is niet bereikbaar. Is de schijf aangesloten?"
 msgstr ""
 
 msgid "Kies een PDF-, PNG- of JPG-bestand."

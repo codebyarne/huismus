@@ -113,25 +113,34 @@ def expense_list(request):
     )
 
 
-def _tray_receipt(request):
+class TrayReceiptGone(Exception):
+    """The receipt from the tray no longer waits for an expense: made into
+    an expense or removed meanwhile, in another tab."""
+
+
+def _tray_receipt(request) -> Attachment | None:
     """The receipt without an expense that "Uitgave maken" brought along:
     ?bonnetje=<pk> on the page, a hidden field in the POST. None when there
-    is none; TRAY_RECEIPT_GONE when it no longer waits for an expense
-    (made into an expense or removed meanwhile, in another tab)."""
+    is none; TrayReceiptGone when it no longer waits."""
     value = request.POST.get("bonnetje") if request.method == "POST" else None
     value = value or request.GET.get("bonnetje")
     if not value:
         return None
     try:
         return Attachment.objects.in_tray().get(pk=int(value))
-    except (ValueError, Attachment.DoesNotExist):
-        return TRAY_RECEIPT_GONE
-
-
-TRAY_RECEIPT_GONE = object()
+    except (ValueError, Attachment.DoesNotExist) as error:
+        raise TrayReceiptGone() from error
 
 
 def _expense_form(request, expense):
+    try:
+        return _expense_form_or_gone(request, expense)
+    except TrayReceiptGone:
+        messages.error(request, _("Dit bonnetje staat niet meer bij de bonnetjes zonder uitgave."))
+        return redirect("expenses:tray")
+
+
+def _expense_form_or_gone(request, expense):
     """The new and edit page: the expense and its lines. Saved through
     save_lines(), the one place that sets the expense's amount."""
     # A new expense's amount 0 lasts only until save_lines() below, in the
@@ -141,9 +150,6 @@ def _expense_form(request, expense):
     # tray (SPEC.md M20), or a file to upload. An existing one has the
     # Bonnetjes section with its own upload (receipt_upload).
     tray_receipt = _tray_receipt(request) if expense is None else None
-    if tray_receipt is TRAY_RECEIPT_GONE:
-        messages.error(request, _("Dit bonnetje staat niet meer bij de bonnetjes zonder uitgave."))
-        return redirect("expenses:tray")
     new_receipt_form = None
     if request.method == "POST":
         form = ExpenseForm(request.POST, instance=instance)
@@ -164,15 +170,11 @@ def _expense_form(request, expense):
                     )
                 if tray_receipt is not None:
                     # Out of the tray, onto the expense. Only if it still
-                    # waits: two tabs never put it on two expenses.
+                    # waits: two tabs never put it on two expenses. If not,
+                    # the exception undoes the new expense too.
                     taken = Attachment.objects.in_tray().filter(pk=tray_receipt.pk)
                     if not taken.update(expense=saved):
-                        transaction.set_rollback(True)
-                        messages.error(
-                            request,
-                            _("Dit bonnetje staat niet meer bij de bonnetjes zonder uitgave."),
-                        )
-                        return redirect("expenses:tray")
+                        raise TrayReceiptGone()
             messages.success(request, _("Uitgave opgeslagen."))
             url = reverse("expenses:edit", kwargs={"pk": saved.pk})
             # "Regel toevoegen" (form.html) is a submit button named

@@ -119,7 +119,7 @@ def test_a_failed_look_shows_red_with_the_reason(client, user, folder):
     content = client.get(reverse("business:receipts_folder")).content.decode()
 
     assert 'id="ophalen-mislukt"' in content
-    assert "De map is niet bereikbaar." in content
+    assert f"De map {folder} is niet bereikbaar." in content
     assert "pill-overdue" in content
 
 

@@ -11,12 +11,13 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext as _
 
-from huismus.core import cloud_backups, help
+from huismus.core import auto_backups, cloud_backups, help
 from huismus.core.models import Attachment
 
 from . import inbox
 
-OTHER, DROPBOX = "other", "dropbox"
+# The radio buttons besides a suggested folder's path.
+OTHER_FOLDER, DROPBOX = "other", inbox.DROPBOX
 
 
 def _state(status: inbox.Status) -> dict:
@@ -27,9 +28,7 @@ def _state(status: inbox.Status) -> dict:
         "on": on,
         "place": inbox.place(status) if on else "",
         "fetching": inbox.fetching(),
-        "failure": inbox.failure_sentence(status.failure_reason, status.source)
-        if on and status.failed
-        else "",
+        "failure": inbox.failure_sentence(status) if on and status.failed else "",
         "skipped": [
             {"name": item["name"], "reason": inbox.skip_sentence(item["reason"])}
             for item in status.skipped
@@ -71,8 +70,11 @@ def settings_page(request):
             if choice == DROPBOX:
                 inbox.choose_dropbox()
             else:
-                inbox.choose_folder(inbox.check_folder(other_path if choice == OTHER else choice))
-        except inbox.FolderError as problem:
+                text = other_path if choice == OTHER_FOLDER else choice
+                # As the backup folder: absolute, outside the administration,
+                # on Docker not inside the container.
+                inbox.choose_folder(auto_backups.check_folder(text))
+        except auto_backups.FolderError as problem:
             error = str(problem)
         else:
             inbox.fetch_in_background()
@@ -90,7 +92,7 @@ def settings_page(request):
         elif on and status.folder in suggested:
             selected, other_path = status.folder, ""
         elif on:
-            selected, other_path = OTHER, status.folder
+            selected, other_path = OTHER_FOLDER, status.folder
         else:
             selected = str(suggestions[0][1]) if suggestions else ""
             other_path = ""
@@ -101,8 +103,7 @@ def settings_page(request):
         {
             **_state(status),
             "suggestions": [
-                (name, str(path), inbox.auto_backups.folder_label(path))
-                for name, path in suggestions
+                (name, str(path), auto_backups.folder_label(path)) for name, path in suggestions
             ],
             "dropbox_linked": dropbox_linked,
             "selected": selected,
