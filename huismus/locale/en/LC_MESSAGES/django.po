@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 11:38+0100\n"
+"POT-Creation-Date: 2026-11-05 16:27+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -569,6 +569,15 @@ msgstr "Backups"
 
 msgid "Elke dag een kopie van je administratie in een map die jij kiest."
 msgstr "A copy of your records every day, in a folder you choose."
+
+msgid "Ophalen is mislukt"
+msgstr "Picking up failed"
+
+msgid "Bonnetjesmap"
+msgstr "Receipts folder"
+
+msgid "Bonnetjes van onderweg, vanzelf in Huismus."
+msgstr "Receipts from the road, in Huismus by themselves."
 
 msgid "Exporteren"
 msgstr "Export"
@@ -1930,6 +1939,57 @@ msgstr "No category"
 msgid "Kies eerst een bonnetje."
 msgstr "Choose a receipt first."
 
+msgid "Opgehaald"
+msgstr "Picked up"
+
+msgid "Koppel eerst Dropbox bij Back-ups."
+msgstr "Link Dropbox under Backups first."
+
+msgid "Bonnetjes"
+msgstr "Receipts"
+
+msgid "Huismus bonnetjes"
+msgstr "Huismus receipts"
+
+msgid "Dropbox weigert de toegang. Koppel Dropbox opnieuw bij Back-ups."
+msgstr "Dropbox refuses access. Link Dropbox again under Backups."
+
+msgid "Huismus kon Dropbox niet bereiken."
+msgstr "Huismus couldn't reach Dropbox."
+
+msgid "De opslag in Dropbox is vol."
+msgstr "Your Dropbox storage is full."
+
+msgid "Dropbox gaf een fout. Huismus probeert het over 10 minuten opnieuw."
+msgstr "Dropbox gave an error. Huismus tries again in 10 minutes."
+
+msgid "De map is niet bereikbaar. Is de schijf aangesloten?"
+msgstr "The folder can't be reached. Is the drive connected?"
+
+#
+msgid "Kies een PDF-, PNG- of JPG-bestand."
+msgstr "Choose a PDF, PNG or JPG file."
+
+#, python-format
+msgid "Dit bonnetje is groter dan %(max_mb)s MB. Kies een kleiner bestand."
+msgstr "This receipt is larger than %(max_mb)s MB. Choose a smaller file."
+
+msgid "Huismus kan dit bestand niet openen."
+msgstr "Huismus can't open this file."
+
+msgid "Huismus kan dit bestand niet lezen."
+msgstr "Huismus can't read this file."
+
+msgid "Huismus haalt geen bonnetjes meer op."
+msgstr "Huismus no longer picks up receipts."
+
+#, python-format
+msgid "Opgeslagen. Huismus kijkt elke 10 minuten in %(place)s."
+msgstr "Saved. Huismus looks in %(place)s every 10 minutes."
+
+msgid "Bonnetje verwijderd."
+msgstr "Receipt deleted."
+
 msgid "sorteervolgorde"
 msgstr "sort order"
 
@@ -1954,17 +2014,9 @@ msgstr "expense line"
 msgid "uitgaveregels"
 msgstr "expense lines"
 
-#, python-format
-msgid "Dit bonnetje is groter dan %(max_mb)s MB. Kies een kleiner bestand."
-msgstr "This receipt is larger than %(max_mb)s MB. Choose a smaller file."
-
 #
 msgid "Huismus kan deze PDF niet openen. Kies een ander bestand."
 msgstr "Huismus can't open this PDF. Choose another file."
-
-#
-msgid "Kies een PDF-, PNG- of JPG-bestand."
-msgstr "Choose a PDF, PNG or JPG file."
 
 #
 msgid "Huismus kan deze afbeelding niet openen. Kies een ander bestand."
@@ -1978,6 +2030,9 @@ msgstr ""
 "The name ends in .%(extension)s, but the file is something else. Choose "
 "another file."
 
+msgid "Dit bonnetje staat niet meer bij de bonnetjes zonder uitgave."
+msgstr "This receipt is no longer with the receipts without an expense."
+
 msgid "Uitgave opgeslagen."
 msgstr "Expense saved."
 
@@ -1986,9 +2041,6 @@ msgstr "Expense deleted."
 
 msgid "Bonnetje toegevoegd."
 msgstr "Receipt added."
-
-msgid "Bonnetje verwijderd."
-msgstr "Receipt deleted."
 
 msgid "Categorie aangemaakt."
 msgstr "Category created."
@@ -4378,6 +4430,33 @@ msgstr "Log in"
 msgid "Regel"
 msgstr "Line"
 
+msgid "Bezig met ophalen…"
+msgstr "Picking up receipts…"
+
+msgid "Ophalen mislukt."
+msgstr "Picking up failed."
+
+#, python-format
+msgid "Laatst gelukt: %(moment)s."
+msgstr "Last worked: %(moment)s."
+
+#, python-format
+msgid "Laatst gekeken: %(moment)s."
+msgstr "Last looked: %(moment)s."
+
+#, python-format
+msgid "%(count)s nieuw bonnetje."
+msgid_plural "%(count)s nieuwe bonnetjes."
+msgstr[0] "%(count)s new receipt."
+msgstr[1] "%(count)s new receipts."
+
+msgid "Nog niet gekeken."
+msgstr "Not looked yet."
+
+#, python-format
+msgid "%(name)s is niet opgehaald. %(reason)s"
+msgstr "%(name)s was not picked up. %(reason)s"
+
 msgid ""
 "De volgorde bepaalt hoe categorieën in keuzelijsten en in het jaaroverzicht "
 "staan."
@@ -4449,9 +4528,6 @@ msgstr "Got it"
 msgid "Nieuwe uitgave"
 msgstr "New expense"
 
-msgid "Bonnetjes"
-msgstr "Receipts"
-
 #, python-format
 msgid "%(count)s bestand"
 msgid_plural "%(count)s bestanden"
@@ -4482,6 +4558,13 @@ msgstr "or choose a file · JPG, PNG, PDF"
 
 msgid "Bonnetje"
 msgstr "Receipt"
+
+#, python-format
+msgid "%(name)s openen"
+msgstr "Open %(name)s"
+
+msgid "Uit je bonnetjesmap"
+msgstr "From your receipts folder"
 
 msgid ""
 "Kies het bonnetje opnieuw: je browser bewaart het niet als er nog iets "
@@ -4571,6 +4654,87 @@ msgstr "No expense matches your search and filters."
 
 msgid "betekent dat er een bonnetje bij de uitgave zit."
 msgstr "means the expense has a receipt."
+
+msgid ""
+"Bewaar onderweg een foto of pdf van een bonnetje in deze map. Huismus haalt "
+"hem elke 10 minuten op en zet hem bij de bonnetjes zonder uitgave."
+msgstr ""
+"On the road, save a photo or PDF of a receipt in this folder. Every 10 "
+"minutes Huismus picks it up and puts it with the receipts without an expense."
+
+#
+msgid "Huismus kijkt in"
+msgstr "Huismus looks in"
+
+msgid "Nu ophalen"
+msgstr "Pick up now"
+
+msgid "Naar de bonnetjes zonder uitgave"
+msgstr "To the receipts without an expense"
+
+msgid "Een andere map kiezen"
+msgstr "Choose another folder"
+
+msgid "Kies een map"
+msgstr "Choose a folder"
+
+msgid ""
+"Huismus in Docker ziet alleen mappen die je eraan koppelt. Gebruik Dropbox, "
+"of koppel een map, bijvoorbeeld een die Syncthing of Nextcloud bijhoudt."
+msgstr ""
+"In Docker, Huismus only sees folders you link to it. Use Dropbox, or link a "
+"folder, for example one that Syncthing or Nextcloud keeps in sync."
+
+msgid ""
+"Apps › Huismus › Bonnetjes, met de Dropbox die je voor back-ups koppelde"
+msgstr "Apps › Huismus › Receipts, with the Dropbox you linked for backups"
+
+msgid "Een map die je telefoon ook ziet"
+msgstr "A folder your phone can see too"
+
+msgid "Een gekoppelde map, bijvoorbeeld /bonnetjes"
+msgstr "A linked folder, for example /bonnetjes"
+
+msgid "Wil je Dropbox gebruiken? Koppel Dropbox eerst bij Back-ups."
+msgstr "Want to use Dropbox? Link Dropbox under Backups first."
+
+msgid "Huismus haalt dan niets meer op. De bonnetjes die er al zijn, blijven."
+msgstr "Huismus then stops picking up receipts. The ones it has stay."
+
+msgid "Bonnetjes zonder uitgave"
+msgstr "Receipts without an expense"
+
+#, python-format
+msgid "Uit %(place)s."
+msgstr "From %(place)s."
+
+#, python-format
+msgid "Opgehaald %(moment)s"
+msgstr "Picked up %(moment)s"
+
+msgid "Uitgave maken"
+msgstr "Make an expense"
+
+#
+msgid "Huismus haalt het bonnetje weg. Het bestand blijft in de map Opgehaald."
+msgstr "Huismus removes the receipt. The file stays in the Picked up folder."
+
+msgid "Nog geen bonnetjes"
+msgstr "No receipts yet"
+
+#, python-format
+msgid "Zet een bonnetje in %(place)s, dan staat het hier binnen 10 minuten."
+msgstr "Save a receipt in %(place)s and it shows up here within 10 minutes."
+
+msgid ""
+"Stel een bonnetjesmap in. Wat je onderweg in die map zet, komt hier vanzelf "
+"binnen."
+msgstr ""
+"Set up a receipts folder. What you save there on the road shows up here by "
+"itself."
+
+msgid "Bonnetjesmap instellen"
+msgstr "Set up a receipts folder"
 
 #, python-format
 msgid "%(count)s punt om na te lopen"
@@ -6075,9 +6239,6 @@ msgstr ""
 
 #~ msgid "De mailserver weigerde het wachtwoord of de gebruikersnaam."
 #~ msgstr "The mail server refused the password or the username."
-
-#~ msgid "Mailen is niet gelukt."
-#~ msgstr "Mailing didn't work."
 
 #~ msgid "Nog een keer"
 #~ msgstr "Once more"

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 11:38+0100\n"
+"POT-Creation-Date: 2026-11-05 16:27+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -521,6 +521,15 @@ msgid "Back-ups"
 msgstr ""
 
 msgid "Elke dag een kopie van je administratie in een map die jij kiest."
+msgstr ""
+
+msgid "Ophalen is mislukt"
+msgstr ""
+
+msgid "Bonnetjesmap"
+msgstr ""
+
+msgid "Bonnetjes van onderweg, vanzelf in Huismus."
 msgstr ""
 
 msgid "Exporteren"
@@ -1825,6 +1834,56 @@ msgstr ""
 msgid "Kies eerst een bonnetje."
 msgstr ""
 
+msgid "Opgehaald"
+msgstr ""
+
+msgid "Koppel eerst Dropbox bij Back-ups."
+msgstr ""
+
+msgid "Bonnetjes"
+msgstr ""
+
+msgid "Huismus bonnetjes"
+msgstr ""
+
+msgid "Dropbox weigert de toegang. Koppel Dropbox opnieuw bij Back-ups."
+msgstr ""
+
+msgid "Huismus kon Dropbox niet bereiken."
+msgstr ""
+
+msgid "De opslag in Dropbox is vol."
+msgstr ""
+
+msgid "Dropbox gaf een fout. Huismus probeert het over 10 minuten opnieuw."
+msgstr ""
+
+msgid "De map is niet bereikbaar. Is de schijf aangesloten?"
+msgstr ""
+
+msgid "Kies een PDF-, PNG- of JPG-bestand."
+msgstr ""
+
+#, python-format
+msgid "Dit bonnetje is groter dan %(max_mb)s MB. Kies een kleiner bestand."
+msgstr ""
+
+msgid "Huismus kan dit bestand niet openen."
+msgstr ""
+
+msgid "Huismus kan dit bestand niet lezen."
+msgstr ""
+
+msgid "Huismus haalt geen bonnetjes meer op."
+msgstr ""
+
+#, python-format
+msgid "Opgeslagen. Huismus kijkt elke 10 minuten in %(place)s."
+msgstr ""
+
+msgid "Bonnetje verwijderd."
+msgstr ""
+
 msgid "sorteervolgorde"
 msgstr ""
 
@@ -1849,14 +1908,7 @@ msgstr ""
 msgid "uitgaveregels"
 msgstr ""
 
-#, python-format
-msgid "Dit bonnetje is groter dan %(max_mb)s MB. Kies een kleiner bestand."
-msgstr ""
-
 msgid "Huismus kan deze PDF niet openen. Kies een ander bestand."
-msgstr ""
-
-msgid "Kies een PDF-, PNG- of JPG-bestand."
 msgstr ""
 
 msgid "Huismus kan deze afbeelding niet openen. Kies een ander bestand."
@@ -1868,6 +1920,9 @@ msgid ""
 "ander bestand."
 msgstr ""
 
+msgid "Dit bonnetje staat niet meer bij de bonnetjes zonder uitgave."
+msgstr ""
+
 msgid "Uitgave opgeslagen."
 msgstr ""
 
@@ -1875,9 +1930,6 @@ msgid "Uitgave verwijderd."
 msgstr ""
 
 msgid "Bonnetje toegevoegd."
-msgstr ""
-
-msgid "Bonnetje verwijderd."
 msgstr ""
 
 msgid "Categorie aangemaakt."
@@ -4035,6 +4087,33 @@ msgstr ""
 msgid "Regel"
 msgstr ""
 
+msgid "Bezig met ophalen…"
+msgstr ""
+
+msgid "Ophalen mislukt."
+msgstr ""
+
+#, python-format
+msgid "Laatst gelukt: %(moment)s."
+msgstr ""
+
+#, python-format
+msgid "Laatst gekeken: %(moment)s."
+msgstr ""
+
+#, python-format
+msgid "%(count)s nieuw bonnetje."
+msgid_plural "%(count)s nieuwe bonnetjes."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Nog niet gekeken."
+msgstr ""
+
+#, python-format
+msgid "%(name)s is niet opgehaald. %(reason)s"
+msgstr ""
+
 msgid ""
 "De volgorde bepaalt hoe categorieën in keuzelijsten en in het jaaroverzicht "
 "staan."
@@ -4100,9 +4179,6 @@ msgstr ""
 msgid "Nieuwe uitgave"
 msgstr ""
 
-msgid "Bonnetjes"
-msgstr ""
-
 #, python-format
 msgid "%(count)s bestand"
 msgid_plural "%(count)s bestanden"
@@ -4131,6 +4207,13 @@ msgid "of kies een bestand · JPG, PNG, PDF"
 msgstr ""
 
 msgid "Bonnetje"
+msgstr ""
+
+#, python-format
+msgid "%(name)s openen"
+msgstr ""
+
+msgid "Uit je bonnetjesmap"
 msgstr ""
 
 msgid ""
@@ -4211,6 +4294,79 @@ msgid "Geen uitgave past bij je zoekopdracht en filters."
 msgstr ""
 
 msgid "betekent dat er een bonnetje bij de uitgave zit."
+msgstr ""
+
+msgid ""
+"Bewaar onderweg een foto of pdf van een bonnetje in deze map. Huismus haalt "
+"hem elke 10 minuten op en zet hem bij de bonnetjes zonder uitgave."
+msgstr ""
+
+msgid "Huismus kijkt in"
+msgstr ""
+
+msgid "Nu ophalen"
+msgstr ""
+
+msgid "Naar de bonnetjes zonder uitgave"
+msgstr ""
+
+msgid "Een andere map kiezen"
+msgstr ""
+
+msgid "Kies een map"
+msgstr ""
+
+msgid ""
+"Huismus in Docker ziet alleen mappen die je eraan koppelt. Gebruik Dropbox, "
+"of koppel een map, bijvoorbeeld een die Syncthing of Nextcloud bijhoudt."
+msgstr ""
+
+msgid ""
+"Apps › Huismus › Bonnetjes, met de Dropbox die je voor back-ups koppelde"
+msgstr ""
+
+msgid "Een map die je telefoon ook ziet"
+msgstr ""
+
+msgid "Een gekoppelde map, bijvoorbeeld /bonnetjes"
+msgstr ""
+
+msgid "Wil je Dropbox gebruiken? Koppel Dropbox eerst bij Back-ups."
+msgstr ""
+
+msgid "Huismus haalt dan niets meer op. De bonnetjes die er al zijn, blijven."
+msgstr ""
+
+msgid "Bonnetjes zonder uitgave"
+msgstr ""
+
+#, python-format
+msgid "Uit %(place)s."
+msgstr ""
+
+#, python-format
+msgid "Opgehaald %(moment)s"
+msgstr ""
+
+msgid "Uitgave maken"
+msgstr ""
+
+msgid "Huismus haalt het bonnetje weg. Het bestand blijft in de map Opgehaald."
+msgstr ""
+
+msgid "Nog geen bonnetjes"
+msgstr ""
+
+#, python-format
+msgid "Zet een bonnetje in %(place)s, dan staat het hier binnen 10 minuten."
+msgstr ""
+
+msgid ""
+"Stel een bonnetjesmap in. Wat je onderweg in die map zet, komt hier vanzelf "
+"binnen."
+msgstr ""
+
+msgid "Bonnetjesmap instellen"
 msgstr ""
 
 #, python-format

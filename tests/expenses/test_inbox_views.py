@@ -109,7 +109,7 @@ def test_on_it_shows_the_place_and_how_the_last_look_went(client, user, folder):
     assert str(folder) in content
     assert "Laatst gekeken: vandaag" in content
     assert "1 nieuw bonnetje." in content
-    assert "Niet opgehaald: foto.heic — Kies een PDF-, PNG- of JPG-bestand." in content
+    assert "foto.heic is niet opgehaald. Kies een PDF-, PNG- of JPG-bestand." in content
 
 
 def test_a_failed_look_shows_red_with_the_reason(client, user, folder):
