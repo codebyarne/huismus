@@ -48,10 +48,11 @@ Wat de regels doen:
   [Waar je gegevens staan](#waar-je-gegevens-staan)).
 - `/pad/naar/je/backupmap:/backups` is de map voor je back-ups. Hoe je die
   kiest en klaarzet: [Een map koppelen](back-ups.nl.md#een-map-koppelen).
-- Wil je een bonnetjesmap die Syncthing of Nextcloud bijhoudt? Zet dan een
-  regel `- /pad/naar/je/bonnetjesmap:/bonnetjes` onder `volumes` en kies die
-  map bij **Instellingen → Bonnetjesmap**. Met Dropbox is dat niet nodig
-  (zie [Bonnetjes onderweg](bonnetjes.nl.md)).
+- Wil je een bonnetjesmap die Syncthing bijhoudt? Zet dan een regel
+  `- /pad/naar/je/bonnetjesmap:/bonnetjes` onder `volumes` en kies die map
+  bij **Instellingen → Bonnetjesmap**. Met Dropbox of WebDAV (zoals
+  Nextcloud) is dat niet nodig: die stel je in bij **Instellingen →
+  Back-ups** (zie [Bonnetjes onderweg](bonnetjes.nl.md)).
 - `127.0.0.1:8000` houdt Huismus op het apparaat zelf. Een reverse proxy
   met HTTPS stuurt het verkeer door. Zet Huismus niet rechtstreeks op
   internet.

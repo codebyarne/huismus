@@ -62,7 +62,8 @@ from .receipts import (
     validate_receipt,
 )
 
-FOLDER, DROPBOX, WEBDAV = "folder", cloud_backups.DROPBOX, cloud_backups.WEBDAV
+# Status.source, stored in data/: never rename these values.
+FOLDER, DROPBOX, WEBDAV = "folder", "dropbox", "webdav"
 SOURCE = "bonnetjesmap"  # Attachment.source of a receipt fetched from here
 # How often to look; "Nu ophalen" looks at once.
 INTERVAL = timedelta(minutes=10)
@@ -174,14 +175,14 @@ def choose_folder(folder: Path) -> None:
         raise FolderError(
             _("Huismus kan de map %(folder)s niet maken.") % {"folder": folder}
         ) from error
-    _start_over(source=FOLDER, folder=str(folder), dropbox_folder="", webdav_folder="")
+    _start_over(source=FOLDER, folder=str(folder))
 
 
 def choose_dropbox() -> None:
     """Bonnetjes in Dropbox › Apps › Huismus, made at once. FolderError
     without a linked Dropbox, or when Dropbox can't be reached."""
     folder = _make_cloud_folder(DROPBOX, _("Koppel eerst Dropbox bij Back-ups."))
-    _start_over(source=DROPBOX, folder="", dropbox_folder=folder, webdav_folder="")
+    _start_over(source=DROPBOX, dropbox_folder=folder)
 
 
 def choose_webdav() -> None:
@@ -189,7 +190,7 @@ def choose_webdav() -> None:
     made at once. FolderError without WebDAV set up, or when it can't be
     reached."""
     folder = _make_cloud_folder(WEBDAV, _("Stel eerst WebDAV in bij Back-ups."))
-    _start_over(source=WEBDAV, folder="", dropbox_folder="", webdav_folder=folder)
+    _start_over(source=WEBDAV, webdav_folder=folder)
 
 
 def _make_cloud_folder(service_name: str, not_linked: str) -> str:
@@ -211,7 +212,7 @@ def _make_cloud_folder(service_name: str, not_linked: str) -> str:
 
 def turn_off() -> None:
     """Huismus stops looking. The tray keeps what it fetched."""
-    _start_over(source="", folder="", dropbox_folder="", webdav_folder="")
+    _start_over(source="")
 
 
 def cloud_unlinked() -> None:
@@ -223,7 +224,12 @@ def cloud_unlinked() -> None:
 
 
 def _start_over(**changes) -> None:
+    """A new place (or none): its own field in changes, the others' wiped,
+    and nothing remembered of the last look."""
     _update(
+        folder="",
+        dropbox_folder="",
+        webdav_folder="",
         seen_until=timezone.now().isoformat(),
         done_folder=done_folder_name(),
         last_check="",
@@ -231,8 +237,8 @@ def _start_over(**changes) -> None:
         failure_reason="",
         last_fetched=0,
         skipped=[],
-        **changes,
     )
+    _update(**changes)
 
 
 def is_on(status: Status | None = None) -> bool:
