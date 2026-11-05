@@ -177,3 +177,26 @@ def test_choose_webdav_and_pick_up_from_it(app, monkeypatch):
         assert Attachment.objects.in_tray().count() == 1
     finally:
         dav.close()
+
+
+def test_a_long_webdav_address_in_the_notice_keeps_its_close_button(app, monkeypatch):
+    """The notice after Opslaan names the place; a long address breaks
+    inside it, so on a phone the close button stays on screen."""
+    dav = FakeWebDAV()
+    dav.install(monkeypatch)
+    try:
+        cloud_backups.link_webdav(ADDRESS, USERNAME, PASSWORD)
+        app.set_viewport_size({"width": 390, "height": 844})
+        app.goto(app.base + "/instellingen/bonnetjesmap/")
+        app.get_by_text("Huismus › Bonnetjes, met de WebDAV").click()
+        app.get_by_role("button", name="Opslaan").click()
+
+        toast = app.locator("#toasts .toast").first
+        expect(toast).to_contain_text("dav.test")
+        close = toast.locator("button")
+        box, button = toast.bounding_box(), close.bounding_box()
+        assert button["x"] >= box["x"]
+        assert button["x"] + button["width"] <= box["x"] + box["width"]
+        assert button["x"] + button["width"] <= 390
+    finally:
+        dav.close()
