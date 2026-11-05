@@ -67,6 +67,8 @@ READ_PAGE_LOG = '() => sessionStorage.getItem("huismus-test-log") ?? "[]"'
 @pytest.hookimpl(wrapper=True)
 def pytest_runtest_makereport(item, call):
     report = yield
+    # Only tests with the app fixture: that page carries page_log.js. A
+    # second tab has a sessionStorage of its own and isn't read.
     page = item.funcargs.get("app") if hasattr(item, "funcargs") else None
     if report.when == "call" and report.failed and page is not None:
         report.sections.append(("Wat de pagina deed", read_page_log(page)))
@@ -75,11 +77,12 @@ def pytest_runtest_makereport(item, call):
 
 def read_page_log(page) -> str:
     # wait_for_function, not evaluate: that one has no timeout of its own,
-    # and a page that hangs must not hang the report too.
+    # and a page that hangs must not hang the report too. The function's
+    # answer is always truthy (the stored JSON text), so it doesn't wait.
     try:
         lines = json.loads(page.wait_for_function(READ_PAGE_LOG, timeout=5000).json_value())
     except Exception as error:  # noqa: BLE001 - a report, never a second failure
-        return f"geen log ({type(error).__name__})"
+        return f"geen log ({type(error).__name__}: {error})"
     return "\n".join(lines) or "leeg"
 
 

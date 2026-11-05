@@ -15,6 +15,8 @@
     const text = node.closest("button, a")?.textContent.trim().slice(0, 30);
     return `${node.localName}${id}${text ? ` "${text}"` : ""}${node.isConnected ? "" : " (los)"}`;
   };
+  // Read and written whole on every line: only clicks, answers and dialogs
+  // log, never something as busy as mousemove.
   const log = (line) => {
     try {
       const lines = JSON.parse(sessionStorage.getItem(KEY) ?? "[]");
@@ -25,6 +27,8 @@
     }
   };
   log(`pagina ${location.pathname}${location.search}`);
+  // All four, not just click: a click that is lost (pressed on one element,
+  // released on another) shows as a press without a click.
   for (const type of ["pointerdown", "mousedown", "mouseup", "click"]) {
     document.addEventListener(type, (event) => log(`${type} op ${describe(event.target)}`), true);
   }
@@ -35,9 +39,15 @@
     (event) => event.target.localName === "dialog" && log(`${describe(event.target)} ${event.newState}`),
     true,
   );
-  // One line per htmx answer, with what it swapped out of band.
+  // One line per htmx answer, with what it swapped out of band. Without a
+  // view transition or swap delay (the editor's live totals) an answer's
+  // swaps run in one go between its beforeSwap and afterRequest, so no other
+  // answer lands in between. With one, a swap may show at the next answer.
   let swapped = [];
   document.addEventListener("htmx:beforeRequest", (event) => log(`htmx stuurt ${event.detail.requestConfig.path}`));
+  document.addEventListener("htmx:beforeSwap", () => {
+    swapped = [];
+  });
   document.addEventListener("htmx:oobBeforeSwap", (event) => swapped.push(`#${event.detail.target.id}`));
   document.addEventListener("htmx:afterRequest", (event) => {
     log(`htmx antwoord ${event.detail.xhr.status}${swapped.length ? `, oob: ${swapped.join(" ")}` : ""}`);
