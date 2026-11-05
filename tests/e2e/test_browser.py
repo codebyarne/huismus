@@ -1351,6 +1351,7 @@ def test_a_click_on_uitgeven_right_after_typing_opens_the_dialog(app, contact):
         " document.addEventListener('htmx:afterRequest', done, { once: true })) }"
     )
     app.mouse.down()
+    # htmx ends a request (afterRequest) after its swaps are done.
     app.evaluate("window.liveDone")
     app.mouse.up()
 
