@@ -31,12 +31,13 @@ Bestanden**. Kies de map, bijvoorbeeld iCloud Drive › Huismus bonnetjes.
 
 Tip: in de app Bestanden kun je een bonnetje meteen scannen. Open de map,
 tik op de drie puntjes en kies **Scan documenten**. Dat maakt een pdf.
-Huismus haalt nog geen HEIC-foto's op, en een scan is altijd een pdf.
 
 **Android:** deel de foto met de app van je dienst, zoals Google Drive,
 OneDrive of Dropbox, en kies de map.
 
-Huismus haalt pdf's, JPG's en PNG's op, tot 10 MB per bestand.
+Huismus haalt pdf's, JPG's, PNG's en HEIC-foto's van de iPhone op, tot
+10 MB per bestand. Huismus bewaart een HEIC-foto als JPG. Het origineel
+staat in de map **Opgehaald**.
 
 ## Wat Huismus met het bestand doet
 
@@ -45,7 +46,7 @@ hij het in je map naar de map **Opgehaald**. Zo zie je wat binnen is, en
 haalt Huismus niets twee keer op.
 
 Lukt iets niet, dan blijft het bestand gewoon in je map staan. Bijvoorbeeld
-een HEIC-foto, of een bestand dat groter is dan 10 MB. De pagina
+een Word-bestand, of een bestand dat groter is dan 10 MB. De pagina
 Bonnetjesmap zegt dan welk bestand het is en waarom.
 
 ## Een uitgave maken van een bonnetje
