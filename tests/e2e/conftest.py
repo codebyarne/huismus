@@ -7,6 +7,7 @@ huismus/core/static/core/app.js, page swaps with hx-boost and switching language
 One-time setup: `uv run playwright install chromium`.
 """
 
+import json
 import os
 from pathlib import Path
 
@@ -50,6 +51,36 @@ PASSWORD = "e2e-wachtwoord-123"
 # gave up after 5 s in WebKit on CI.
 TIMEOUT = 5000
 WEBKIT_TIMEOUT = 15000
+
+# The page's own log of clicks, htmx answers, dialogs and page changes
+# (page_log.js), read when a test fails. A click on "Uitgeven…" that left
+# the dialog shut, once in a full run and not again in hundreds of tries
+# (test_an_invoice_with_21_and_9_percent_shows_the_vat_per_rate,
+# 2026-11-05): the error said only that the next button never became
+# visible. Next time the log says whether the click reached
+# the button, whether the dialog opened and closed again, and what htmx
+# swapped in between.
+PAGE_LOG = Path(__file__).with_name("page_log.js")
+READ_PAGE_LOG = '() => sessionStorage.getItem("huismus-test-log") ?? "[]"'
+
+
+@pytest.hookimpl(wrapper=True)
+def pytest_runtest_makereport(item, call):
+    report = yield
+    page = item.funcargs.get("app") if hasattr(item, "funcargs") else None
+    if report.when == "call" and report.failed and page is not None:
+        report.sections.append(("Wat de pagina deed", read_page_log(page)))
+    return report
+
+
+def read_page_log(page) -> str:
+    # wait_for_function, not evaluate: that one has no timeout of its own,
+    # and a page that hangs must not hang the report too.
+    try:
+        lines = json.loads(page.wait_for_function(READ_PAGE_LOG, timeout=5000).json_value())
+    except Exception as error:  # noqa: BLE001 - a report, never a second failure
+        return f"geen log ({type(error).__name__})"
+    return "\n".join(lines) or "leeg"
 
 
 @pytest.fixture(scope="session")
@@ -125,6 +156,9 @@ def app(live_server, page, transactional_db, settings, browser_name):
     # Messages a test accepts on purpose (see test_walkthrough.py).
     page.tolerate = []
 
+    # Every page keeps a log of what it did; a failing test shows it
+    # (pytest_runtest_makereport above).
+    page.add_init_script(path=PAGE_LOG)
     page.on("pageerror", lambda error: record(str(error)))
     page.on("console", lambda message: record(message.text) if message.type == "error" else None)
     timeout = WEBKIT_TIMEOUT if browser_name == "webkit" else TIMEOUT
