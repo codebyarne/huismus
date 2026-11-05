@@ -35,7 +35,10 @@ Schrijf dan niets in `huismus-intern/besluiten.md`.
 ## Anders: beslis
 
 Kies wat het beste is voor de gebruiker van SPEC.md sectie 1: een zzp'er
-onder de KOR zonder technische kennis, met een handvol facturen per jaar.
+zonder technische kennis, met een handvol facturen per jaar. Er zijn twee
+soorten, en je denkt altijd aan allebei: **met de KOR** (geen btw op facturen,
+geen btw terug op uitgaven) en **zonder de KOR** (btw op facturen, M18, en btw
+op uitgaven die hij voor zijn btw-aangifte nodig heeft).
 Vuistregels, in deze volgorde:
 
 1. De harde regels in `CLAUDE.md` gaan altijd voor.
@@ -70,6 +73,19 @@ bij elke vraag eerst vanuit die administratie, dan pas vanuit het scherm:
    bonnetje staat bovenaan het formulier, niet onderaan als bijlage
    (codebyarne/huismus#21). Bij een factuur komt eerst de klant, dan de
    regels, dan het totaal: de volgorde van de factuur zelf.
+
+5. **Klopt het met de KOR aan én uit?** Loop elk scherm met bedragen twee
+   keer na: als gebruiker met de KOR en als gebruiker zonder. Wat heeft die
+   zonder KOR later nodig voor zijn btw-aangifte (het btw-bedrag van elk
+   bonnetje en elke factuur)? Is een veld dat hij daarvoor nodig heeft
+   optioneel, verstopt of weg, dan is dat deel van je besluit. Raakt het een
+   harde regel of een non-goal (zoals "uitgaven zijn brutobedragen"), dan
+   escaleer je het (punt 6 en 8 van de lijst).
+6. **Kijk ook een scherm verder.** Gaat de vraag over een nieuw stuk (een map,
+   een knop, een lijst), kijk dan ook naar het scherm waar de gebruiker daarna
+   komt en wat hij daar invult. Daar zit het gat vaak (2026-11-05: de
+   bonnetjesmap was goed, maar het formulier erna liet de btw optioneel voor
+   wie zonder KOR werkt; de eigenaar zag het, niet jij).
 
 Wat de wet of de Belastingdienst precies vraagt, haal je uit
 `docs/invoice-requirements.md` en de bronpagina's die daar staan, niet uit je
