@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 07:17+0100\n"
+"POT-Creation-Date: 2026-11-05 11:38+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1379,10 +1379,7 @@ msgstr ""
 msgid "De nepdata is weg. Je begint met een lege administratie."
 msgstr ""
 
-msgid "Fout 404"
-msgstr ""
-
-msgid "Deze pagina bestaat niet (meer)"
+msgid "Deze pagina bestaat niet"
 msgstr ""
 
 msgid ""
@@ -1390,36 +1387,29 @@ msgid ""
 "waar ze waren."
 msgstr ""
 
-msgid "Fout 403"
-msgstr ""
-
 msgid "Hier heb je geen toegang toe"
 msgstr ""
 
 msgid ""
-"Deze pagina is niet voor jou bedoeld, of je sessie hoort bij een ander "
-"account."
+"Je account mag deze pagina niet openen. Ga terug naar het overzicht, of log "
+"in met een ander account."
 msgstr ""
 
-msgid "Fout 500"
-msgstr ""
-
-msgid "Er ging iets mis"
-msgstr ""
-
-msgid "Huismus kon deze pagina niet laden. Probeer het zo nog eens."
-msgstr ""
-
-msgid "Formulier verlopen"
-msgstr ""
-
-msgid "Je sessie is verlopen"
+msgid "Huismus kon deze pagina niet laden"
 msgstr ""
 
 msgid ""
-"De pagina stond een tijd open, daardoor kon het formulier niet veilig worden "
-"verstuurd. Laad de pagina opnieuw en probeer het nog een keer. Er is niets "
-"opgeslagen."
+"Er ging iets mis in Huismus, niet bij jou. Probeer het over een minuut nog "
+"eens. Gaat het weer mis, start Huismus dan opnieuw."
+msgstr ""
+
+msgid "Dit formulier is verlopen"
+msgstr ""
+
+msgid ""
+"De pagina stond te lang open, of je logde in een ander tabblad uit. Er is "
+"niets opgeslagen. Ga terug, laad het formulier opnieuw en vul het nog een "
+"keer in."
 msgstr ""
 
 msgid "Vul een getal in, zoals 2 of 1,5."

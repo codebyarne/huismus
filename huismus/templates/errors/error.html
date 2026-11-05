@@ -13,7 +13,6 @@ the style of the login screen (docs/design/archief/2026-09-claude-design/html/fo
     <div class="card login-card error-page">
         <div class="empty" style="padding:0">
             <div class="empty-art"><svg class="mark" width="64" height="64" aria-hidden="true"><use href="#mus"></use></svg></div>
-            <span class="error-code">{{ code }}</span>
             <h1 style="font-size:var(--fs-xl)">{{ title }}</h1>
             <p>{{ text }}</p>
             <div class="row"><a class="btn btn-primary" href="{% url 'login' %}">{% translate "Naar inloggen" %}</a></div>
@@ -28,7 +27,6 @@ the style of the login screen (docs/design/archief/2026-09-claude-design/html/fo
 {% block content %}
 <div class="empty" style="max-width:520px">
     <div class="empty-art"><svg class="mark" width="72" height="72" aria-hidden="true"><use href="#mus"></use></svg></div>
-    <span class="error-code">{{ code }}</span>
     <h1 style="font-size:var(--fs-2xl)">{{ title }}</h1>
     <p>{{ text }}</p>
     <div class="row"><a class="btn btn-primary" href="{% url 'home' %}">{% translate "Naar het overzicht" %}</a></div>

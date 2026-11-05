@@ -275,22 +275,17 @@ def favicon(request):
     return redirect(static("core/favicon.svg"))
 
 
-# Error pages (M8). One template; the view only chooses the texts.
-def _error(request, status, code, title, text):
-    return render(
-        request,
-        "errors/error.html",
-        {"code": code, "title": title, "text": text},
-        status=status,
-    )
+# Error pages (M8). One template; the view only chooses the texts. No
+# error code on the page (docs/schrijfwijzer.md): the status is for the browser.
+def _error(request, status, title, text):
+    return render(request, "errors/error.html", {"title": title, "text": text}, status=status)
 
 
 def page_not_found(request, exception=None):
     return _error(
         request,
         404,
-        _("Fout 404"),
-        _("Deze pagina bestaat niet (meer)"),
+        _("Deze pagina bestaat niet"),
         _(
             "Misschien is de link oud of zit er een typefout in. "
             "Je gegevens zijn gewoon waar ze waren."
@@ -302,33 +297,39 @@ def permission_denied(request, exception=None):
     return _error(
         request,
         403,
-        _("Fout 403"),
         _("Hier heb je geen toegang toe"),
-        _("Deze pagina is niet voor jou bedoeld, of je sessie hoort bij een ander account."),
+        _(
+            "Je account mag deze pagina niet openen. "
+            "Ga terug naar het overzicht, of log in met een ander account."
+        ),
     )
 
 
 def server_error(request):
+    # Not "nothing was saved": after a crash Huismus can't know that.
     return _error(
         request,
         500,
-        _("Fout 500"),
-        _("Er ging iets mis"),
-        _("Huismus kon deze pagina niet laden. Probeer het zo nog eens."),
+        _("Huismus kon deze pagina niet laden"),
+        _(
+            "Er ging iets mis in Huismus, niet bij jou. Probeer het over een minuut "
+            "nog eens. Gaat het weer mis, start Huismus dan opnieuw."
+        ),
     )
 
 
 def csrf_failure(request, reason=""):
     """settings.CSRF_FAILURE_VIEW: a form sent after its page stood open
     too long (or from another tab after logging out). Django rejects it
-    before any view runs, so nothing was saved."""
+    before any view runs, so nothing was saved. Reloading this page would
+    send the same form again, hence "go back"."""
     return _error(
         request,
         403,
-        _("Formulier verlopen"),
-        _("Je sessie is verlopen"),
+        _("Dit formulier is verlopen"),
         _(
-            "De pagina stond een tijd open, daardoor kon het formulier niet veilig worden "
-            "verstuurd. Laad de pagina opnieuw en probeer het nog een keer. Er is niets opgeslagen."
+            "De pagina stond te lang open, of je logde in een ander tabblad uit. "
+            "Er is niets opgeslagen. Ga terug, laad het formulier opnieuw en vul "
+            "het nog een keer in."
         ),
     )
