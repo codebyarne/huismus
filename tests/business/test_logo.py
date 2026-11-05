@@ -2,11 +2,13 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 from io import BytesIO
 
+import pillow_heif
 import pytest
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from PIL import Image
 
+import huismus.expenses.receipts  # noqa: F401  (registers the HEIC opener)
 from huismus.business.logo import MAX_LOGO_BYTES, validate_and_sanitize_logo
 
 
@@ -77,3 +79,13 @@ def test_rejects_malicious_svg_and_leaves_it_unsanitized_on_failure():
     upload = SimpleUploadedFile("logo.svg", b"not xml", content_type="image/svg+xml")
     with pytest.raises(ValidationError):
         validate_and_sanitize_logo(upload)
+
+
+def test_rejects_a_heic_photo_named_png():
+    # HEIC can be opened anywhere since huismus/expenses/receipts.py
+    # registers it; a logo still must be what its name says.
+    buffer = BytesIO()
+    pillow_heif.from_pillow(Image.new("RGB", (4, 4), color="red")).save(buffer)
+
+    with pytest.raises(ValidationError):
+        validate_and_sanitize_logo(SimpleUploadedFile("logo.png", buffer.getvalue()))
