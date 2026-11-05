@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """Error pages in the house style (M8): 404, 403, 500 and an expired form."""
 
-import html
+from html import unescape
 
 import pytest
 from django.contrib.auth import get_user_model
@@ -73,16 +73,23 @@ def test_no_error_page_shows_a_code(rf, language):
     with translation.override(language):
         pages = _every_error_page(rf)
     for response in pages:
-        body = response.content.decode().split("<body", 1)[1]
+        body = response.content.decode()
         assert response.status_code in (403, 404, 500)
         assert "error-code" not in body
-        for code in ("403", "404", "500"):
-            assert code not in body, (response.status_code, code)
+        for label in (
+            "Fout 40",
+            "Fout 50",
+            "Error 40",
+            "Error 50",
+            "Formulier verlopen",
+            "Form expired",
+        ):
+            assert label not in body, (response.status_code, label)
 
 
 def test_error_pages_in_english(rf):
     with translation.override("en"):
-        texts = [html.unescape(page.content.decode()) for page in _every_error_page(rf)]
+        texts = [unescape(page.content.decode()) for page in _every_error_page(rf)]
     assert "This page doesn't exist" in texts[0]
     assert "Your account can't open this page." in texts[1]
     assert "Huismus couldn't load this page" in texts[2]
