@@ -13,13 +13,16 @@ Ga naar **Instellingen → Bonnetjesmap** en kies waar Huismus kijkt.
   `Huismus bonnetjes` voor in iCloud Drive, Google Drive, OneDrive of
   Dropbox, als die op je laptop staan. Huismus maakt de map meteen aan, zodat
   je hem ook op je telefoon ziet.
-- **In Docker, bijvoorbeeld op een Raspberry Pi,** kies je **Dropbox**. Daarvoor
-  koppel je eerst Dropbox bij **Instellingen → Back-ups**. Huismus kijkt dan
-  in **Apps › Huismus › Bonnetjes** in je Dropbox. Huismus haalt de
-  bonnetjes zelf op en blijft onbereikbaar vanaf internet.
-- Gebruik je Syncthing of Nextcloud? Kies dan een gewone map die zo'n
-  programma bijhoudt. In Docker koppel je die eerst, zie
-  [Huismus in Docker](docker.nl.md).
+- **In Docker, bijvoorbeeld op een Raspberry Pi,** kies je **Dropbox** of
+  **WebDAV**. Daarvoor stel je die eerst in bij **Instellingen → Back-ups**.
+  Huismus haalt de bonnetjes zelf op en blijft onbereikbaar vanaf internet.
+  - Met **Dropbox** kijkt Huismus in **Apps › Huismus › Bonnetjes** in je
+    Dropbox.
+  - Met **WebDAV**, zoals Nextcloud, kDrive of Koofr, kijkt Huismus in de map
+    **Huismus › Bonnetjes**, naast je back-ups. In de app van je opslagdienst
+    op je telefoon zie je die map ook.
+- Gebruik je Syncthing? Kies dan een gewone map die Syncthing bijhoudt. In
+  Docker koppel je die eerst, zie [Huismus in Docker](docker.nl.md).
 
 Huismus kijkt meteen als er iets in de map of in Dropbox verandert. Een
 bestand in een map haalt hij op als het een minuut niet meer verandert, zodat
@@ -36,7 +39,7 @@ Tip: in de app Bestanden kun je een bonnetje meteen scannen. Open de map,
 tik op de drie puntjes en kies **Scan documenten**. Dat maakt een pdf.
 
 **Android:** deel de foto met de app van je dienst, zoals Google Drive,
-OneDrive of Dropbox, en kies de map.
+OneDrive, Dropbox of Nextcloud, en kies de map.
 
 Huismus haalt pdf's, JPG's, PNG's en HEIC-foto's van de iPhone op, tot
 10 MB per bestand. Huismus bewaart een HEIC-foto als JPG. Het origineel
