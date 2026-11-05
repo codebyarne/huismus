@@ -143,7 +143,7 @@ worden twee keer uitgedeeld.
   erbij. Rebase vlak voor de PR nog een keer; botst een migratienummer, hernummer dan
   die van jou (nog niet uitgerold), nooit een die al op `main` staat.
 - **Klein en snel terug naar `main`.** Een PR die groen is wordt dezelfde dag
-  gemerged (zie Mergen hieronder), zodat de volgende sessie vanaf de nieuwste stand
+  gemerged (zie Mergen hieronder; een grote wijziging met UI wacht op de eigenaar), zodat de volgende sessie vanaf de nieuwste stand
   begint. Werk dat dagen naast `main` blijft liggen, wordt later een grote rebase.
 - **Vertaalbestanden** (`locale/*/django.po`) botsen bijna altijd bij een rebase.
   Neem dan de versie van `main`, draai `makemessages` opnieuw en vul je eigen
@@ -165,8 +165,29 @@ Claude mergt alleen eigen PR's. Een PR van iemand anders mergt alleen de
 eigenaar, ook als hij groen is.
 
 Eerst vragen blijft nodig bij: een migratie die bestaande gegevens wijzigt
-of verwijdert, wijzigingen in `scripts/verify.sh`, en als de eigenaar
-bij de PR zegt zelf te willen kijken.
+of verwijdert, wijzigingen in `scripts/verify.sh`, een grote wijziging met UI
+(zie "Flow voorleggen" hieronder), en als de eigenaar bij de PR zegt zelf te
+willen kijken.
+
+### Flow voorleggen
+
+Een grote wijziging met UI gaat pas naar `main` als de eigenaar de flow heeft
+gezien en goedgekeurd (besluit eigenaar 2026-11-05). De `product-owner`-agent keurt
+het design vooraf; de eigenaar keurt wat er echt gebouwd is.
+
+- **Groot** is: een nieuw scherm, of een taak waarvan de stappen veranderen (een
+  stap erbij, eraf of in een andere volgorde, een nieuwe weg naar iets). Niet: een
+  tekst, een kleur of uitlijning, of een bugfix die het oude gedrag terugbrengt.
+  Twijfel je, leg het dan voor.
+- **Hoe:** de screenshots van `verify-e2e`, op volgorde van de stappen, elk met één
+  zin wat de gebruiker daar doet en ziet, op telefoon en desktop. Stuur ze met
+  SendUserFile en vraag in producttaal of het zo live mag, met je advies. Geen
+  code, geen PR-link als enige uitleg.
+- **Intussen:** de PR blijft open en wordt niet gemerged, ook als hij groen is. Zet
+  `(wacht: eigenaar)` achter het onderwerp in `huismus-intern/backlog.md` en ga door
+  met werk dat er niet van afhangt (`/mijlpaal`, stap 10).
+- **Daarna:** goedgekeurd → mergen zoals hierboven. Wil de eigenaar iets anders:
+  aanpassen, `verify-e2e` opnieuw, en opnieuw voorleggen.
 
 ## Klaar is groen
 
@@ -250,7 +271,9 @@ een advies:
 6. iets wat een van de zeven harde regels raakt of afzwakt;
 7. Huismus of de laptop bereikbaar maken vanaf internet (een tunnel, een
    open poort);
-8. iets wat `SPEC.md` of een eerder besluit van de eigenaar tegenspreekt.
+8. iets wat `SPEC.md` of een eerder besluit van de eigenaar tegenspreekt;
+9. de flow van een grote wijziging met UI, voordat die naar `main` gaat (zie
+   "Flow voorleggen").
 
 Ga intussen door met werk dat er niet van afhangt. Na elke mijlpaal krijgt
 de eigenaar een melding: welke versie klaarstaat en wat er nieuw is, de besluiten
