@@ -57,3 +57,15 @@ op **Opslaan**.
 
 Heb je een bonnetje niet nodig, verwijder het dan uit de lijst. Het bestand
 blijft in de map **Opgehaald** staan.
+
+## Laat je AI-assistent ze verwerken
+
+Heb je een AI-assistent gekoppeld (zie [AI-assistenten](ai-assistenten.nl.md)),
+zeg dan: **Verwerk mijn bonnetjes in Huismus.** Hij leest elk bonnetje en
+maakt de uitgave, met het bonnetje eraan. Kan hij een bonnetje niet lezen,
+dan zegt hij dat en blijft het bij de bonnetjes zonder uitgave. Kijk de
+uitgaven daarna na bij
+**Uitgaven**.
+
+Je assistent ziet je bonnetjes alleen als je hem dit vraagt. Huismus stuurt
+zelf niets naar een AI-dienst.

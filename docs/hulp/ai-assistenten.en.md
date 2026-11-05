@@ -9,14 +9,17 @@ you only connect it.
 
 - **Read:** the overview (revenue this year, your KOR limit, what's open
   and what's overdue), find and open invoices, credit notes and quotes,
-  find customers, and expenses per year. It can't read settings,
-  attachments, PDFs, mail texts or the mail log.
+  find customers, and expenses per year. It can't read settings, PDFs,
+  mail texts or the mail log.
 - **Make drafts:** make and change a draft invoice or quote, and a draft
   credit note for an issued invoice. If the customer isn't in Huismus yet,
   you add them yourself first.
 - **Add expenses:** an expense with one or more lines, with the amount you
-  paid and an existing category. You change or delete it, and add a
-  receipt, yourself in Huismus.
+  paid and an existing category. You change or delete it yourself in
+  Huismus.
+- **Process receipts:** your assistant reads the receipts without an
+  expense and makes an expense from each one, with the receipt attached. It
+  doesn't see other attachments.
 - **With your permission:** issue an invoice or credit note, send a quote
   (it then gets its number) and mail a document to the customer's e-mail
   address, with the standard text. The assistant first gets a summary to

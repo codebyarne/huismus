@@ -56,3 +56,15 @@ usual form, with the receipt already at the top. Fill in the rest and click
 
 Don't need a receipt? Remove it from the list. The file stays in the
 **Picked up** folder.
+
+## Let your AI assistant process them
+
+If you've connected an AI assistant (see [AI assistants](ai-assistenten.en.md)),
+say: **Process my receipts in Huismus.** It reads each receipt and makes the
+expense, with the receipt attached. If it can't read a receipt, it says so
+and the receipt stays with the receipts without an expense. Check the
+expenses afterwards under
+**Expenses**.
+
+Your assistant only sees your receipts when you ask it to. Huismus itself
+sends nothing to an AI service.

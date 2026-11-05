@@ -9,14 +9,17 @@ de app van de assistent. In Huismus koppel je hem alleen.
 
 - **Lezen:** het overzicht (omzet dit jaar, je KOR-grens, wat openstaat en
   wat te laat is), facturen, creditnota's en offertes zoeken en openen,
-  klanten zoeken en de uitgaven per jaar. Instellingen, bijlagen, pdf's,
-  mailteksten en het maillog kan hij niet lezen.
+  klanten zoeken en de uitgaven per jaar. Instellingen, pdf's, mailteksten
+  en het maillog kan hij niet lezen.
 - **Concepten maken:** een concept voor een factuur of offerte maken en
   wijzigen, en een concept voor een creditnota bij een uitgegeven factuur.
   Staat de klant nog niet in Huismus, dan voeg je die eerst zelf toe.
 - **Uitgaven toevoegen:** een uitgave met een of meer regels, met het bedrag
-  dat je betaald hebt en een bestaande categorie. Wijzigen of verwijderen en
-  een bonnetje toevoegen doe je zelf in Huismus.
+  dat je betaald hebt en een bestaande categorie. Wijzigen of verwijderen doe
+  je zelf in Huismus.
+- **Bonnetjes verwerken:** je assistent leest de bonnetjes zonder uitgave en
+  maakt van elk bonnetje een uitgave, met het bonnetje eraan. Andere bijlagen
+  ziet hij niet.
 - **Met jouw toestemming:** een factuur of creditnota uitgeven, een offerte
   verzenden (die krijgt dan zijn nummer) en een document mailen naar het
   e-mailadres van de klant, met de standaardtekst. De assistent krijgt eerst

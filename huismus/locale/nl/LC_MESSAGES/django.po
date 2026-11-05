@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 18:51+0100\n"
+"POT-Creation-Date: 2026-11-05 21:47+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -29,6 +29,12 @@ msgid ""
 msgstr ""
 
 msgid "Dit document bestaat niet in Huismus, of past niet bij deze actie."
+msgstr ""
+
+msgid "Dit bonnetje staat niet meer bij de bonnetjes zonder uitgave."
+msgstr ""
+
+msgid "Huismus kan dit bonnetje niet lezen. Maak de uitgave in Huismus."
 msgstr ""
 
 msgid "Elke regel heeft een omschrijving en een prijs."
@@ -61,6 +67,9 @@ msgid "Deze categorie staat niet in Huismus. Kies een van deze: %(names)s."
 msgstr ""
 
 msgid "Vul minstens één regel in met een bedrag."
+msgstr ""
+
+msgid "Het bonnetje zit eraan vast."
 msgstr ""
 
 msgid "Een bonnetje voeg je toe in Huismus, bij de uitgave."
@@ -113,6 +122,12 @@ msgid "Klanten zoeken"
 msgstr ""
 
 msgid "Uitgaven bekijken"
+msgstr ""
+
+msgid "Bonnetjes zonder uitgave bekijken"
+msgstr ""
+
+msgid "Bonnetje lezen"
 msgstr ""
 
 msgid "Uitgave toevoegen"
@@ -1925,9 +1940,6 @@ msgstr ""
 msgid ""
 "De naam eindigt op .%(extension)s, maar het bestand is iets anders. Kies een "
 "ander bestand."
-msgstr ""
-
-msgid "Dit bonnetje staat niet meer bij de bonnetjes zonder uitgave."
 msgstr ""
 
 msgid "Uitgave opgeslagen."
