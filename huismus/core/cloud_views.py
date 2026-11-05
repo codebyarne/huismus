@@ -259,10 +259,10 @@ def recovery_code(request):
 def unlink(request):
     service = cloud_backups.load().service_label
     cloud_backups.unlink()
-    # The receipts folder in that Dropbox goes off too (SPEC.md M20).
+    # The receipts folder in that Dropbox or WebDAV goes off too (SPEC.md M20).
     from huismus.expenses import inbox
 
-    inbox.dropbox_unlinked()
+    inbox.cloud_unlinked()
     if service:
         messages.success(
             request,
