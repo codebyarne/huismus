@@ -811,7 +811,9 @@ TOOLS = (
                         },
                         "vat_info": {
                             "type": ["string", "number", "null"],
-                            "description": "The VAT on the receipt, for information only.",
+                            "description": "The VAT on the receipt, for information "
+                            "only. Required when the user doesn't use the KOR; 0 when "
+                            "the receipt shows no VAT.",
                         },
                         "category": {
                             "type": "string",

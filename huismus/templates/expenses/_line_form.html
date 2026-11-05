@@ -7,6 +7,7 @@ empty_form (with __prefix__) for "Regel toevoegen".{% endcomment %}
     {% field line_form.description span=4 optional=True %}
     {% field line_form.category span=2 %}
     {% field line_form.amount_cents span=2 money=True %}
-    {% field line_form.vat_info_cents span=2 money=True optional=True %}
+    {% comment %}Required without the KOR (ExpenseLineForm).{% endcomment %}
+    {% if line_form.fields.vat_info_cents.required %}{% field line_form.vat_info_cents span=2 money=True %}{% else %}{% field line_form.vat_info_cents span=2 money=True optional=True %}{% endif %}
     {% if line_form.instance.pk %}{% translate "Regel verwijderen" as delete_label %}{% field line_form.DELETE span=2 label=delete_label %}{% endif %}
 </fieldset>

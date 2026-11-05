@@ -13,6 +13,10 @@ Fill in the gross amount: what you actually paid, including any VAT. If you
 want to see the VAT too, fill that in as well. It's for information only and
 isn't counted anywhere.
 
+Don't use the KOR? Then fill in the VAT on every line. No VAT on the
+receipt? Fill in 0. It stays for information only and doesn't count
+anywhere.
+
 Did you pay for things from different categories at once, like a laptop and a
 bag? Use **Add line** and give each line its own category.
 
