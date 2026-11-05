@@ -24,6 +24,9 @@ of een pdf. Bij een nieuwe uitgave kan dat al bovenaan het formulier, voordat je
 **Opslaan** klikt. Een uitgave kan meer bonnetjes hebben: de rest voeg je toe
 na het opslaan.
 
+Bonnetjes van onderweg kun je ook in een map zetten die Huismus zelf
+ophaalt. Zie [Bonnetjes onderweg](bonnetjes.nl.md).
+
 ## Categorieën
 
 Via **Categorieën** op de pagina Uitgaven maak, hernoem en sorteer je je

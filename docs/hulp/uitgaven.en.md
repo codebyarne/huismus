@@ -23,6 +23,9 @@ PDF. For a new expense you can do this at the top of the form, before you click
 **Save**. An expense can have more than one receipt: add the others after
 saving.
 
+Receipts from the road can also go in a folder that Huismus picks up
+itself. See [Receipts on the road](bonnetjes.en.md).
+
 ## Categories
 
 Under **Categories** on the Expenses page you add, rename and order your

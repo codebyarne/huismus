@@ -67,6 +67,9 @@ def _pages():
         f"/contacten/{_first(Contact.objects, 'contact').pk}/",
         "/uitgaven/",
         "/uitgaven/nieuw/",
+        # Receipts without an expense (SPEC.md M20); with receipts and
+        # "Uitgave maken": tests/e2e/test_receipts_folder.py.
+        "/uitgaven/bonnetjes/",
         f"/uitgaven/{_first(Expense.objects, 'expense').pk}/",
         "/rapporten/jaaroverzicht/",
         "/uitgaven/categorieen/",
@@ -87,6 +90,7 @@ def _pages():
         "/instellingen/back-ups/dropbox/",
         "/instellingen/back-ups/webdav/",
         "/instellingen/exporteren/",
+        "/instellingen/bonnetjesmap/",
         # Not connected here; connected, with the key: the desktop test below.
         "/instellingen/ai-assistenten/",
         # Docker's, without a new version; with one: the Docker test below.

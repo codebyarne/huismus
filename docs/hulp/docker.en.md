@@ -48,6 +48,10 @@ What the lines do:
   [Where your data lives](#where-your-data-lives)).
 - `/path/to/your/backup/folder:/backups` is the folder for your backups.
   How to pick and prepare it: [Linking a folder](back-ups.en.md#linking-a-folder).
+- Want a receipts folder that Syncthing or Nextcloud keeps in sync? Add a
+  line `- /path/to/your/receipts/folder:/bonnetjes` under `volumes` and choose
+  that folder under **Settings → Receipts folder**. With Dropbox you don't
+  need this (see [Receipts on the road](bonnetjes.en.md)).
 - `127.0.0.1:8000` keeps Huismus on the device itself. A reverse proxy with
   HTTPS forwards the traffic. Don't put Huismus straight on the internet.
 
