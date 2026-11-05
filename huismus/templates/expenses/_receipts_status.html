@@ -10,7 +10,7 @@
     {% endif %}
     {% if skipped and not fetching %}
     <div class="hint-banner is-warn" id="niet-opgehaald"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>
-        <ul class="stack" style="gap:var(--s-1);margin:0;padding:0;list-style:none">
+        <ul class="stack" style="flex:1;min-width:0;gap:var(--s-1);margin:0;padding:0;list-style:none">
             {% for item in skipped %}<li><span style="overflow-wrap:anywhere">{% blocktranslate with name=item.name reason=item.reason %}{{ name }} is niet opgehaald. {{ reason }}{% endblocktranslate %}</span></li>{% endfor %}
         </ul>
     </div>

@@ -7,7 +7,8 @@
 {% block content %}
 <div class="page-head">
     <div class="titles">
-        <a class="back" href="{% url 'expenses:list' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Uitgaven" %}</a>
+        {% if tray_receipt %}<a class="back" href="{% url 'expenses:tray' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Bonnetjes zonder uitgave" %}</a>
+        {% else %}<a class="back" href="{% url 'expenses:list' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Uitgaven" %}</a>{% endif %}
         <h1>{% if expense %}{{ expense.description|default:expense.supplier|default:_("Uitgave")|truncatechars:60 }}{% else %}{% translate "Nieuwe uitgave" %}{% endif %}</h1>
         {% if expense %}<span class="small muted">{% if expense.supplier %}{{ expense.supplier }} · {% endif %}{{ expense.date|date:"j b Y" }}</span>{% endif %}
     </div>

@@ -4446,7 +4446,7 @@ msgstr "Last worked: %(moment)s."
 
 #, python-format
 msgid "Laatst gekeken: %(moment)s."
-msgstr "Last looked: %(moment)s."
+msgstr "Last checked: %(moment)s."
 
 #, python-format
 msgid "%(count)s nieuw bonnetje."
@@ -4455,7 +4455,7 @@ msgstr[0] "%(count)s new receipt."
 msgstr[1] "%(count)s new receipts."
 
 msgid "Nog niet gekeken."
-msgstr "Not looked yet."
+msgstr "Not checked yet."
 
 #, python-format
 msgid "%(name)s is niet opgehaald. %(reason)s"
@@ -4668,7 +4668,7 @@ msgstr ""
 
 #
 msgid "Huismus kijkt in"
-msgstr "Huismus looks in"
+msgstr "Huismus checks"
 
 msgid "Nu ophalen"
 msgstr "Pick up now"
@@ -4703,7 +4703,7 @@ msgid "Wil je Dropbox gebruiken? Koppel Dropbox eerst bij Back-ups."
 msgstr "Want to use Dropbox? Link Dropbox under Backups first."
 
 msgid "Huismus haalt dan niets meer op. De bonnetjes die er al zijn, blijven."
-msgstr "Huismus then stops picking up receipts. The ones it has stay."
+msgstr "Huismus stops picking up receipts. Receipts it already has stay."
 
 msgid "Bonnetjes zonder uitgave"
 msgstr "Receipts without an expense"
@@ -4717,7 +4717,7 @@ msgid "Opgehaald %(moment)s"
 msgstr "Picked up %(moment)s"
 
 msgid "Uitgave maken"
-msgstr "Make an expense"
+msgstr "Create expense"
 
 #
 msgid "Huismus haalt het bonnetje weg. Het bestand blijft in de map Opgehaald."
