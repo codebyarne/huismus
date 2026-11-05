@@ -72,8 +72,8 @@ installs the new version and opens again by itself. That takes about a
 minute. The overview then says "Updated to …". Huismus never updates while
 you're working.
 
-Don't want to wait? Choose **Update to …** under **Settings → Updates** and
-confirm.
+Don't want to wait? Choose **Check now** under **Settings → Updates**, or
+**Update to …** when there's already a new version, and confirm.
 
 If updating doesn't work, the window says so, with the buttons **Restore
 backup** and **Save log file**. Then install the previous version again.

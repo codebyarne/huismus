@@ -19,6 +19,7 @@ from django.http import Http404
 from django.shortcuts import redirect, render
 from django.utils.translation import get_language
 from django.utils.translation import gettext as _
+from django.views.decorators.http import require_POST
 
 from . import help, site, updates
 
@@ -95,6 +96,34 @@ def page(request):
             **({} if settings.DESKTOP else _docker(release)),
         },
     )
+
+
+@login_required
+@require_POST
+def check(request):
+    """ "Nu zoeken": look on GitHub now instead of waiting for the daily
+    look. The one place Huismus looks during a request, because the user
+    asked and waits for the answer (at most TIMEOUT_SECONDS). The desktop
+    app then downloads in the background, as after any look."""
+    if not updates.load_status().enabled:
+        return redirect("business:updates")
+    try:
+        release = updates.look_now()
+    except updates.UpdateError:
+        messages.error(
+            request, _("Zoeken lukte niet. Kijk of je internet hebt en probeer het nog een keer.")
+        )
+        return redirect("business:updates")
+    if release is None:
+        messages.success(request, _("Je gebruikt de nieuwste versie."))
+    else:
+        messages.success(
+            request,
+            _("Er is een nieuwe versie: Huismus %(version)s.") % {"version": release.version},
+        )
+        if settings.DESKTOP:
+            threading.Thread(target=updates.prepare, daemon=True).start()
+    return redirect("business:updates")
 
 
 def _whats_new_url() -> str:

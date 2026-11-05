@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-04 20:46+0100\n"
+"POT-Creation-Date: 2026-11-05 07:17+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1418,6 +1418,17 @@ msgstr "Updating only works in the app itself."
 
 msgid "Huismus kon de nieuwe versie niet installeren. Er is niets veranderd."
 msgstr "Huismus couldn't install the new version. Nothing has changed."
+
+msgid ""
+"Zoeken lukte niet. Kijk of je internet hebt en probeer het nog een keer."
+msgstr "Couldn't check. Make sure you're online and try again."
+
+msgid "Je gebruikt de nieuwste versie."
+msgstr "You're using the newest version."
+
+#, python-format
+msgid "Er is een nieuwe versie: Huismus %(version)s."
+msgstr "There's a new version: Huismus %(version)s."
 
 #, python-format
 msgid "%(value)s is geen geldig IBAN. Kijk of je een teken mist of omdraaide."
@@ -3195,6 +3206,9 @@ msgstr ""
 "new version is installed the next time you open Huismus, after a backup. "
 "Your records are never sent."
 
+msgid "Nu zoeken"
+msgstr "Check now"
+
 #, python-format
 msgid "Huismus %(version)s start zo vanzelf."
 msgstr "Huismus %(version)s will start by itself in a moment."
@@ -3519,10 +3533,6 @@ msgstr ""
 #, python-format
 msgid "Huismus %(version)s is gevonden en wordt gedownload."
 msgstr "Found Huismus %(version)s. It's being downloaded."
-
-#, python-format
-msgid "Er is een nieuwe versie: Huismus %(version)s."
-msgstr "There's a new version: Huismus %(version)s."
 
 msgid "Bekijken"
 msgstr "View"
@@ -4446,35 +4456,6 @@ msgstr "Got it"
 msgid "Nieuwe uitgave"
 msgstr "New expense"
 
-msgid "Regels"
-msgstr "Lines"
-
-msgid "Bonnetje"
-msgstr "Receipt"
-
-msgid "Bonnetje toevoegen"
-msgstr "Add receipt"
-
-msgid "Sleep een bonnetje hierheen"
-msgstr "Drop a receipt here"
-
-msgid "of kies een bestand · JPG, PNG, PDF"
-msgstr "or choose a file · JPG, PNG, PDF"
-
-msgid ""
-"Kies het bonnetje opnieuw: je browser bewaart het niet als er nog iets "
-"ontbrak."
-msgstr ""
-"Choose the receipt again: your browser doesn't keep it when something was "
-"still missing."
-
-msgid ""
-"Vul het bruto bedrag in: wat je echt betaald hebt. Het btw-bedrag is alleen "
-"ter informatie en telt nergens mee."
-msgstr ""
-"Enter the gross amount: what you actually paid. The VAT amount is for "
-"information only and isn't used anywhere."
-
 msgid "Bonnetjes"
 msgstr "Receipts"
 
@@ -4496,6 +4477,35 @@ msgstr "Delete this receipt?"
 #
 msgid "Huismus verwijdert het bestand. Dat kun je niet ongedaan maken."
 msgstr "Huismus deletes the file. You can't undo this."
+
+msgid "Bonnetje toevoegen"
+msgstr "Add receipt"
+
+msgid "Sleep een bonnetje hierheen"
+msgstr "Drop a receipt here"
+
+msgid "of kies een bestand · JPG, PNG, PDF"
+msgstr "or choose a file · JPG, PNG, PDF"
+
+msgid "Bonnetje"
+msgstr "Receipt"
+
+msgid ""
+"Kies het bonnetje opnieuw: je browser bewaart het niet als er nog iets "
+"ontbrak."
+msgstr ""
+"Choose the receipt again: your browser doesn't keep it when something was "
+"still missing."
+
+msgid "Regels"
+msgstr "Lines"
+
+msgid ""
+"Vul het bruto bedrag in: wat je echt betaald hebt. Het btw-bedrag is alleen "
+"ter informatie en telt nergens mee."
+msgstr ""
+"Enter the gross amount: what you actually paid. The VAT amount is for "
+"information only and isn't used anywhere."
 
 msgid "Uitgave verwijderen"
 msgstr "Delete expense"

@@ -50,7 +50,7 @@ docker compose up -d</code></pre>
         <label class="switch"><input type="checkbox" name="enabled" role="switch"{% if enabled %} checked{% endif %}>{% translate "Automatisch bijwerken" %}</label>
         <p class="small muted">{% translate "Huismus kijkt bij het openen en daarna elke dag op GitHub of er een nieuwe versie is. Die installeert hij de volgende keer dat je Huismus opent, na een back-up. Er gaat niets van je administratie mee." %}</p>
         {% endif %}
-        <div class="row"><span class="spacer"></span><button type="submit" class="btn btn-primary">{% translate "Opslaan" %}</button></div>
+        <div class="row">{% if enabled %}<button type="submit" class="btn" formaction="{% url 'business:updates_check' %}">{% translate "Nu zoeken" %}</button>{% endif %}<span class="spacer"></span><button type="submit" class="btn btn-primary">{% translate "Opslaan" %}</button></div>
     </div>
 </form>
 {% endblock %}
