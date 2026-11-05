@@ -14,6 +14,8 @@ to it one thread waits for something new and then starts a look at once:
   from iCloud, and this needs no dependency.
 - Dropbox: Dropbox's longpoll, a request that stays open until something
   in the folder Bonnetjes changes. Only outgoing, like the backups.
+- WebDAV: no way to wait for a change, so only the look every ten minutes
+  and "Nu ophalen".
 
 Waiting never holds the maintenance gate, so a restore never waits for it;
 only the look itself goes through the gate (inbox.fetch_when_open). A
