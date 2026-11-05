@@ -24,6 +24,8 @@ class FakeWebDAV:
     def __init__(self):
         self.files: dict[str, bytes] = {}  # path below the address -> content
         self.folders: set[str] = set()
+        # path -> getlastmodified, for a file the test says just changed
+        self.modified: dict[str, str] = {}
         self.password = PASSWORD
         self.full = False
         handler = self._handler()
@@ -77,14 +79,29 @@ class FakeWebDAV:
                     return self._answer(404)
                 entries = [f"<d:response><d:href>{root}{path}/</d:href></d:response>"]
                 if self.headers.get("Depth") == "1":
+                    for folder in sorted(fake.folders):
+                        parent, _, _name = folder.rpartition("/")
+                        if folder and parent == path:
+                            href = root + urllib.parse.quote(folder) + "/"
+                            entries.append(
+                                f"<d:response><d:href>{href}</d:href><d:propstat><d:prop>"
+                                "<d:resourcetype><d:collection/></d:resourcetype>"
+                                "</d:prop></d:propstat></d:response>"
+                            )
                     for name, content in fake.files.items():
                         folder, _, file_name = name.rpartition("/")
                         if folder == path:
                             href = root + urllib.parse.quote(name)
+                            modified = fake.modified.get(name)
                             entries.append(
                                 f"<d:response><d:href>{href}</d:href><d:propstat><d:prop>"
                                 f"<d:getcontentlength>{len(content)}</d:getcontentlength>"
-                                "</d:prop></d:propstat></d:response>"
+                                + (
+                                    f"<d:getlastmodified>{modified}</d:getlastmodified>"
+                                    if modified
+                                    else ""
+                                )
+                                + "</d:prop></d:propstat></d:response>"
                             )
                 body = '<?xml version="1.0"?><d:multistatus xmlns:d="DAV:">'
                 body += "".join(entries) + "</d:multistatus>"
@@ -98,6 +115,9 @@ class FakeWebDAV:
                     return
                 if path in fake.folders:
                     return self._answer(405)
+                if path.rpartition("/")[0] not in fake.folders | {""}:
+                    # As a real server: the folder above must be there.
+                    return self._answer(409)
                 fake.folders.add(path)
                 self._answer(201)
 
@@ -132,6 +152,25 @@ class FakeWebDAV:
                     return
                 fake.files.pop(self._path(), None)
                 self._answer(204)
+
+            def do_MOVE(self):
+                source = self._path()
+                if source is None:
+                    return self._answer(404)
+                if not self._allowed():
+                    return
+                destination = urllib.parse.unquote(
+                    urllib.parse.urlsplit(self.headers.get("Destination", "")).path
+                )
+                if not destination.startswith(root) or source not in fake.files:
+                    return self._answer(404)
+                target = destination.removeprefix(root).rstrip("/")
+                if target.rpartition("/")[0] not in fake.folders:
+                    return self._answer(409)
+                if target in fake.files and self.headers.get("Overwrite") == "F":
+                    return self._answer(412)
+                fake.files[target] = fake.files.pop(source)
+                self._answer(201)
 
         return Handler
 

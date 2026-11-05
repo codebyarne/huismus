@@ -9,14 +9,16 @@ looks in that folder and puts each new receipt in the tray: an Attachment
 of kind "receipt" that belongs to no expense yet. From the tray the user
 makes an expense of it (expenses.views).
 
-Two places to look, one at a time:
+Three places to look, one at a time:
 
 - LocalFolder: a folder on this computer (the desktop app), or one linked
   into the container (Docker), checked like the backup folder
   (core.auto_backups.check_folder).
-- DropboxFolder: Bonnetjes in the app folder Dropbox gave Huismus for its
-  backups (core.cloud_backups). Only outgoing requests, like the backups;
-  Huismus stays unreachable from the internet.
+- CloudFolder: Bonnetjes next to the backups of the one cloud service
+  linked at Back-ups (core.cloud_backups): in Dropbox's app folder Apps ›
+  Huismus, or in the folder Huismus on a WebDAV server (Nextcloud, kDrive,
+  Koofr). Only outgoing requests, like the backups; Huismus stays
+  unreachable from the internet.
 
 Order matters, so nothing is ever lost: a receipt is first saved in
 Huismus (the file in data/ and its row), and only then moved in the folder
@@ -54,7 +56,7 @@ from huismus.core.models import Attachment
 
 from .receipts import MAX_RECEIPT_BYTES, RASTER_FORMATS, sha256_of, validate_receipt
 
-FOLDER, DROPBOX = "folder", "dropbox"
+FOLDER, DROPBOX, WEBDAV = "folder", cloud_backups.DROPBOX, cloud_backups.WEBDAV
 SOURCE = "bonnetjesmap"  # Attachment.source of a receipt fetched from here
 # How often to look; "Nu ophalen" looks at once.
 INTERVAL = timedelta(minutes=10)
@@ -65,10 +67,11 @@ SETTLE_SECONDS = 60
 LINKED_FOLDER = Path("/bonnetjes")
 
 # Why a look failed: core.cloud_backups' reasons, and for a folder UNREACHABLE.
-UNREACHABLE, REFUSED, FULL, OTHER = (
+UNREACHABLE, REFUSED, FULL, NOT_WEBDAV, OTHER = (
     cloud_backups.UNREACHABLE,
     cloud_backups.REFUSED,
     cloud_backups.FULL,
+    cloud_backups.NOT_WEBDAV,
     cloud_backups.OTHER,
 )
 # Saving in Huismus itself failed (data/ full, say): not the folder's fault.
@@ -85,12 +88,13 @@ logger = logging.getLogger("huismus.receipts")
 
 @dataclass
 class Status:
-    source: str = ""  # FOLDER, DROPBOX, or "" when off
+    source: str = ""  # FOLDER, DROPBOX, WEBDAV, or "" when off
     folder: str = ""  # FOLDER: the path
     # The names Huismus gave its folders, in the language of the moment it
     # was set up; kept, so switching languages later makes no second one.
     done_folder: str = ""  # "Opgehaald", inside the receipts folder
     dropbox_folder: str = ""  # DROPBOX: "/Bonnetjes" in Apps › Huismus
+    webdav_folder: str = ""  # WEBDAV: "/Bonnetjes" in the folder Huismus
     last_check: str = ""  # ISO timestamps, as in core.auto_backups
     last_failure: str = ""
     failure_reason: str = ""
@@ -159,15 +163,30 @@ def choose_folder(folder: Path) -> None:
         raise FolderError(
             _("Huismus kan de map %(folder)s niet maken.") % {"folder": folder}
         ) from error
-    _start_over(source=FOLDER, folder=str(folder), dropbox_folder="")
+    _start_over(source=FOLDER, folder=str(folder), dropbox_folder="", webdav_folder="")
 
 
 def choose_dropbox() -> None:
     """Bonnetjes in Dropbox › Apps › Huismus, made at once. FolderError
     without a linked Dropbox, or when Dropbox can't be reached."""
+    folder = _make_cloud_folder(DROPBOX, _("Koppel eerst Dropbox bij Back-ups."))
+    _start_over(source=DROPBOX, folder="", dropbox_folder=folder, webdav_folder="")
+
+
+def choose_webdav() -> None:
+    """Bonnetjes in the folder Huismus on the WebDAV server of the backups,
+    made at once. FolderError without WebDAV set up, or when it can't be
+    reached."""
+    folder = _make_cloud_folder(WEBDAV, _("Stel eerst WebDAV in bij Back-ups."))
+    _start_over(source=WEBDAV, folder="", dropbox_folder="", webdav_folder=folder)
+
+
+def _make_cloud_folder(service_name: str, not_linked: str) -> str:
+    """Makes Bonnetjes, in the language of this moment, next to the
+    backups of the linked service; its path."""
+    if cloud_backups.load().service != service_name:
+        raise FolderError(not_linked)
     service = cloud_backups.remote()
-    if not isinstance(service, cloud_backups.Dropbox):
-        raise FolderError(_("Koppel eerst Dropbox bij Back-ups."))
     folder = "/" + _("Bonnetjes")
     try:
         try:
@@ -175,20 +194,20 @@ def choose_dropbox() -> None:
         except cloud_backups.NotFound:
             service.create_folder(folder)
     except cloud_backups.CloudError as error:
-        raise FolderError(_dropbox_sentence(error.reason)) from error
-    _start_over(source=DROPBOX, folder="", dropbox_folder=folder)
+        raise FolderError(_cloud_sentence(service_name, error.reason)) from error
+    return folder
 
 
 def turn_off() -> None:
     """Huismus stops looking. The tray keeps what it fetched."""
-    _start_over(source="", folder="", dropbox_folder="")
+    _start_over(source="", folder="", dropbox_folder="", webdav_folder="")
 
 
-def dropbox_unlinked() -> None:
-    """Unlinking Dropbox at Back-ups (core.cloud_views.unlink) turns the
-    receipts folder off when it was Dropbox: linking again later doesn't
-    quietly turn it back on."""
-    if load().source == DROPBOX:
+def cloud_unlinked() -> None:
+    """Unlinking Dropbox or WebDAV at Back-ups (core.cloud_views.unlink)
+    turns the receipts folder off when it was there: linking again later
+    doesn't quietly turn it back on."""
+    if load().source in (DROPBOX, WEBDAV):
         turn_off()
 
 
@@ -205,11 +224,11 @@ def _start_over(**changes) -> None:
 
 
 def is_on(status: Status | None = None) -> bool:
-    """A folder is chosen; Dropbox only while it is still linked (unlinking
-    it at Back-ups turns this off too)."""
+    """A folder is chosen; Dropbox or WebDAV only while it is still the
+    service linked at Back-ups (unlinking it there turns this off too)."""
     status = status or load()
-    if status.source == DROPBOX:
-        return cloud_backups.load().service == cloud_backups.DROPBOX
+    if status.source in (DROPBOX, WEBDAV):
+        return cloud_backups.load().service == status.source
     return status.source == FOLDER
 
 
@@ -220,6 +239,10 @@ def place(status: Status | None = None) -> str:
         return auto_backups.folder_label(status.folder)
     if status.source == DROPBOX:
         return "Dropbox › Apps › Huismus › " + status.dropbox_folder.strip("/")
+    if status.source == WEBDAV:
+        # As the backups' place: "https://… › Huismus", then the folder.
+        backups = cloud_backups.place(cloud_backups.load())
+        return f"{backups} › {status.webdav_folder.strip('/')}"
     return ""
 
 
@@ -236,11 +259,30 @@ def failure_sentence(status: Status) -> str:
     """Why the last look failed, for Bonnetjesmap and the tray."""
     if status.failure_reason == STORAGE:
         return _("Huismus kon een bonnetje niet bewaren. Is de schijf van Huismus vol?")
-    if status.source == DROPBOX:
-        return _dropbox_sentence(status.failure_reason)
+    if status.source in (DROPBOX, WEBDAV):
+        return _cloud_sentence(status.source, status.failure_reason)
     return _("De map %(folder)s is niet bereikbaar. Is de schijf aangesloten?") % {
         "folder": place(status)
     }
+
+
+def _cloud_sentence(service: str, reason: str) -> str:
+    if service == WEBDAV:
+        return _webdav_sentence(reason)
+    return _dropbox_sentence(reason)
+
+
+def _webdav_sentence(reason: str) -> str:
+    # Refused and full say what Back-ups says (core.cloud_backups.failure_sentence).
+    if reason == REFUSED:
+        return _("Het wachtwoord werd geweigerd. Stel WebDAV opnieuw in bij Back-ups.")
+    if reason == UNREACHABLE:
+        return _("Huismus kon WebDAV niet bereiken.")
+    if reason == FULL:
+        return _("De opslag in %(service)s is vol.") % {"service": "WebDAV"}
+    if reason == NOT_WEBDAV:
+        return _("Op dit adres staat geen WebDAV meer. Stel WebDAV opnieuw in bij Back-ups.")
+    return _("WebDAV gaf een fout. Huismus probeert het over 10 minuten opnieuw.")
 
 
 def _dropbox_sentence(reason: str) -> str:
@@ -266,7 +308,7 @@ def skip_sentence(reason: str) -> str:
     return _("Huismus kan dit bestand niet lezen.")
 
 
-# -- The two places -------------------------------------------------------------
+# -- The places -----------------------------------------------------------------
 
 
 class LocalFolder:
@@ -306,37 +348,49 @@ class LocalFolder:
         os.replace(self.path / name, target)
 
 
-class DropboxFolder:
-    """A folder in Dropbox › Apps › Huismus. A file there is whole once it
-    is listed (Dropbox commits an upload at once), so no waiting."""
+class CloudFolder:
+    """A folder next to the backups in Dropbox or on a WebDAV server. A file
+    in Dropbox is whole once it is listed (Dropbox commits an upload at
+    once). Not every WebDAV server waits like that, so a file it says it
+    changed in the last minute waits for the next look, as in a folder on
+    this computer; a server that gives no time isn't waited for."""
 
-    def __init__(self, dropbox: cloud_backups.Dropbox, folder: str, done_folder: str):
-        self.dropbox = dropbox
+    def __init__(
+        self, service: cloud_backups.Dropbox | cloud_backups.WebDAV, folder: str, done_folder: str
+    ):
+        self.service = service
         self.folder = folder
         self.done_folder = done_folder
 
     def names(self) -> list[tuple[str, int]]:
-        """The files in the folder. Removed in Dropbox meanwhile: made again
-        (empty), so the next receipt has a place."""
+        """The files in the folder. Removed meanwhile: made again (empty),
+        so the next receipt has a place."""
         try:
-            found = self.dropbox.files_in(self.folder)
+            found = self.service.files_in(self.folder)
         except cloud_backups.NotFound:
-            self.dropbox.create_folder(self.folder)
+            self.service.create_folder(self.folder)
             return []
-        return [(file.name, file.size) for file in found]
+        settled = timezone.now() - timedelta(seconds=SETTLE_SECONDS)
+        return [
+            (file.name, file.size)
+            for file in found
+            if file.modified is None or file.modified <= settled
+        ]
 
     def read(self, name: str) -> bytes:
-        return self.dropbox.read(f"{self.folder}/{name}")
+        return self.service.read(f"{self.folder}/{name}")
 
     def done(self, name: str) -> None:
-        # Dropbox gives the file another name when one is taken (autorename).
-        self.dropbox.move(f"{self.folder}/{name}", f"{self.folder}/{self.done_folder}/{name}")
+        # A name taken in Opgehaald gets another one, never overwritten:
+        # "bon (1).jpg" in Dropbox, "bon-2.jpg" on WebDAV.
+        self.service.move(f"{self.folder}/{name}", f"{self.folder}/{self.done_folder}/{name}")
 
 
 def _place(status: Status):
     if status.source == FOLDER:
         return LocalFolder(Path(status.folder), status.done_folder)
-    return DropboxFolder(cloud_backups.remote(), status.dropbox_folder, status.done_folder)
+    folder = status.dropbox_folder if status.source == DROPBOX else status.webdav_folder
+    return CloudFolder(cloud_backups.remote(), folder, status.done_folder)
 
 
 # -- Fetching -----------------------------------------------------------------------

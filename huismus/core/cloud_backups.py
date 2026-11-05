@@ -20,9 +20,11 @@ Huismus only talks to the service the user linked, and only from here
 """
 
 import base64
+import email.utils
 import hashlib
 import json
 import logging
+import posixpath
 import re
 import secrets
 import sqlite3
@@ -131,6 +133,9 @@ class Config:
 class RemoteFile:
     name: str
     size: int
+    # When the server last changed it, if it said (the receipts folder on
+    # WebDAV waits a minute after that, as for a folder on this computer).
+    modified: datetime | None = None
 
     @property
     def created_at(self) -> datetime | None:
@@ -328,6 +333,16 @@ def _json(body: bytes) -> dict:
     return data
 
 
+def _http_date(response) -> datetime | None:
+    """A WebDAV entry's getlastmodified ("Thu, 05 Nov 2026 14:20:00 GMT"),
+    or None when the server gives none or something else."""
+    text = response.findtext(".//{DAV:}getlastmodified")
+    try:
+        return email.utils.parsedate_to_datetime(text) if text else None
+    except (TypeError, ValueError):
+        return None
+
+
 def _reason_for(status: int) -> str:
     if status in (401, 403):
         return REFUSED
@@ -407,6 +422,79 @@ class WebDAV:
         status, _body = self._request("DELETE", self.folder + urllib.parse.quote(name))
         if status >= 400 and status != 404:
             raise CloudError(_reason_for(status), f"DELETE {status}")
+
+    # The receipts folder (huismus/expenses/inbox.py), a folder next to the
+    # backups in WEBDAV_FOLDER: any file in it, not only backups. Paths are
+    # below WEBDAV_FOLDER and start with "/", as Dropbox's do.
+
+    def _url(self, path: str) -> str:
+        return self.folder + urllib.parse.quote(path.strip("/"))
+
+    def files_in(self, folder: str) -> "list[RemoteFile]":
+        """The files directly in folder, not the folders in it; NotFound
+        when it doesn't exist."""
+        status, body = self._request("PROPFIND", self._url(folder) + "/", Depth="1")
+        if status == 404:
+            raise NotFound(OTHER, f"PROPFIND {status}")
+        if status >= 400:
+            raise CloudError(_reason_for(status), f"PROPFIND {status}")
+        try:
+            root = ElementTree.fromstring(body)
+        except ElementTree.ParseError as error:
+            raise CloudError(NOT_WEBDAV, str(error)) from error
+        found = []
+        for response in root.iter("{DAV:}response"):
+            href = response.findtext("{DAV:}href") or ""
+            # The folder itself and the folders in it (Opgehaald).
+            if href.endswith("/") or response.find(".//{DAV:}collection") is not None:
+                continue
+            name = urllib.parse.unquote(href.rsplit("/", 1)[-1])
+            length = response.findtext(".//{DAV:}getcontentlength")
+            size = int(length) if length and length.isdigit() else 0
+            found.append(RemoteFile(name, size, _http_date(response)))
+        return found
+
+    def create_folder(self, folder: str) -> None:
+        """Makes folder, and WEBDAV_FOLDER first if that is gone too."""
+        status, _body = self._request("MKCOL", self._url(folder))
+        if status == 409:
+            # The folder above isn't there (409 Conflict).
+            self.check()
+            status, _body = self._request("MKCOL", self._url(folder))
+        # 405: the folder exists already.
+        if status >= 400 and status != 405:
+            raise CloudError(_reason_for(status), f"MKCOL {status}")
+
+    def read(self, path: str) -> bytes:
+        status, body = self._request("GET", self._url(path))
+        if status == 404:
+            raise NotFound(OTHER, f"GET {status}")
+        if status >= 400:
+            raise CloudError(_reason_for(status), f"GET {status}")
+        return body
+
+    def move(self, source: str, destination: str) -> None:
+        """Moves a file, making the folder it goes to. Never overwrites: a
+        name taken there gets -2, -3, as in a folder on this computer."""
+        folder, _, name = destination.rpartition("/")
+        stem, suffix = posixpath.splitext(name)
+        for count in range(1, 100):
+            target = f"{folder}/{name if count == 1 else f'{stem}-{count}{suffix}'}"
+            status = self._move(source, target)
+            if status == 409:
+                # The folder it goes to (Opgehaald) isn't there yet.
+                self.create_folder(folder)
+                status = self._move(source, target)
+            if status != 412:  # 412 Precondition Failed: the name is taken.
+                break
+        if status >= 400:
+            raise CloudError(_reason_for(status), f"MOVE {status}")
+
+    def _move(self, source: str, destination: str) -> int:
+        status, _body = self._request(
+            "MOVE", self._url(source), Destination=self._url(destination), Overwrite="F"
+        )
+        return status
 
 
 class Dropbox:
