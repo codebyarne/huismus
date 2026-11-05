@@ -28,7 +28,8 @@
 <div id="bonnetjes-lijst">
 {% if receipts %}
 <section class="card card-pad">
-    <div class="receipts">
+    {% comment %}Narrower than on an expense, so a phone shows two side by side.{% endcomment %}
+    <div class="receipts" style="grid-template-columns:repeat(auto-fill,minmax(120px,1fr))">
         {% for receipt in receipts %}
         <div class="receipt" id="bonnetje-{{ receipt.pk }}">
             <a class="thumb" href="{{ receipt.file.url }}" hx-boost="false" target="_blank" rel="noopener" aria-label="{% blocktranslate with name=receipt.filename %}{{ name }} openen{% endblocktranslate %}">
