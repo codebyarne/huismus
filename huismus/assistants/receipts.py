@@ -19,7 +19,6 @@ from io import BytesIO
 
 from PIL import Image, ImageOps, UnidentifiedImageError
 from pypdf import PdfReader
-from pypdf.errors import PyPdfError
 
 # The size an assistant reads an image at without scaling it down itself.
 LONG_SIDE = 1568
@@ -48,9 +47,11 @@ def read(attachment) -> Reading:
     try:
         image = Image.open(BytesIO(data))
         image.load()
-    except (UnidentifiedImageError, OSError) as error:
+        return Reading("", [_image_content(image)], None)
+    # Pillow's own limit against an image of too many pixels stays on: a
+    # small file can unpack into gigabytes.
+    except (UnidentifiedImageError, OSError, Image.DecompressionBombError) as error:
         raise Unreadable() from error
-    return Reading("", [_image_content(image)], None)
 
 
 def _read_pdf(data: bytes) -> Reading:
@@ -60,7 +61,10 @@ def _read_pdf(data: bytes) -> Reading:
         text = "\n\n".join((page.extract_text() or "").strip() for page in pages).strip()
         found = [image.image for page in pages for image in page.images if image.image]
         images = [_image_content(image) for image in found[:MAX_IMAGES]]
-    except (PyPdfError, OSError, ValueError, IndexError) as error:
+    # A PDF can fail in many ways, in pypdf or in Pillow decoding a scan
+    # (Pillow's limit on pixels stays on). Each means: the user makes this
+    # expense by hand.
+    except Exception as error:
         raise Unreadable() from error
     if not text and not images:
         raise Unreadable()
