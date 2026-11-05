@@ -17,13 +17,14 @@
 {% if on %}
 <section class="card settings-section" id="bonnetjesmap-aan">
     <div class="card-head">
-        <h2 class="row" style="gap:var(--s-2)">{% translate "Huismus kijkt in" %} {% if failure %}<span class="pill pill-overdue">{% translate "Mislukt" %}</span>{% else %}<span class="pill pill-final">{% translate "Aan" context "back-upplek staat aan" %}</span>{% endif %}</h2>
+        <h2 class="row" style="gap:var(--s-2)">{% translate "Huismus kijkt in" %} {% if failure %}<span class="pill pill-overdue" id="bonnetjesmap-pill">{% translate "Mislukt" %}</span>{% else %}<span class="pill pill-final" id="bonnetjesmap-pill">{% translate "Aan" context "back-upplek staat aan" %}</span>{% endif %}</h2>
         <form method="post">{% csrf_token %}<input type="hidden" name="action" value="now"><button type="submit" class="btn btn-secondary btn-sm"><span class="spinner" aria-hidden="true"></span>{% translate "Nu ophalen" %}</button></form>
     </div>
     <div class="card-pad stack" style="gap:var(--s-3)">
         <p style="overflow-wrap:anywhere"><strong id="bonnetjesmap-plek">{{ place }}</strong></p>
         {% url 'business:receipts_folder' as refresh_url %}
-        {% include "expenses/_receipts_status.html" with refresh_url=refresh_url %}
+        {% comment %}The pill comes along with each refresh: a look that works after a failed one turns it green.{% endcomment %}
+        {% include "expenses/_receipts_status.html" with refresh_url=refresh_url oob="#bonnetjesmap-pill" %}
         <div class="row"><a href="{% url 'expenses:tray' %}">{% translate "Naar de bonnetjes zonder uitgave" %} →</a></div>
     </div>
 </section>
@@ -45,7 +46,7 @@
             {% for name, path, label in suggestions %}
             <label class="file-item"><span class="f-icon"><input type="radio" name="folder" value="{{ path }}"{% if selected == path %} checked{% endif %}></span><span><span class="f-name">{{ name }}</span><span class="f-meta">{{ label }}</span></span></label>
             {% endfor %}
-            <label class="file-item"><span class="f-icon"><input type="radio" name="folder" value="other"{% if selected == "other" or not selected %} checked{% endif %}></span><span><span class="f-name">{% translate "Andere map…" %}</span><span class="f-meta">{% if desktop %}{% translate "Een map die je telefoon ook ziet" %}{% else %}{% translate "Een gekoppelde map, bijvoorbeeld /bonnetjes" %}{% endif %}</span></span></label>
+            <label class="file-item"><span class="f-icon"><input type="radio" name="folder" value="other"{% if selected == "other" or not selected %} checked{% endif %}></span><span><span class="f-name">{% translate "Andere map…" %}</span><span class="f-meta">{% if desktop %}{% translate "Een map die je telefoon ook ziet" %}{% else %}{% translate "Een gekoppelde map, bijvoorbeeld op je NAS" %}{% endif %}</span></span></label>
         </div>
         <div class="field">
             <label class="label" for="other_path">{% translate "Pad naar de map" %}</label>

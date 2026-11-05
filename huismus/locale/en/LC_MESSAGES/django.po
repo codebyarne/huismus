@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 16:33+0100\n"
+"POT-Creation-Date: 2026-11-05 16:41+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -4532,6 +4532,9 @@ msgstr "Got it"
 msgid "Nieuwe uitgave"
 msgstr "New expense"
 
+msgid "Bonnetjes zonder uitgave"
+msgstr "Receipts without an expense"
+
 #, python-format
 msgid "%(count)s bestand"
 msgid_plural "%(count)s bestanden"
@@ -4696,21 +4699,15 @@ msgstr "Apps › Huismus › Receipts, with the Dropbox you linked for backups"
 msgid "Een map die je telefoon ook ziet"
 msgstr "A folder your phone can see too"
 
-msgid "Een gekoppelde map, bijvoorbeeld /bonnetjes"
-msgstr "A linked folder, for example /bonnetjes"
-
 msgid "Wil je Dropbox gebruiken? Koppel Dropbox eerst bij Back-ups."
 msgstr "Want to use Dropbox? Link Dropbox under Backups first."
 
 msgid "Huismus haalt dan niets meer op. De bonnetjes die er al zijn, blijven."
 msgstr "Huismus stops picking up receipts. Receipts it already has stay."
 
-msgid "Bonnetjes zonder uitgave"
-msgstr "Receipts without an expense"
-
 #, python-format
-msgid "Uit %(place)s."
-msgstr "From %(place)s."
+msgid "Uit de map %(place)s."
+msgstr "From the folder %(place)s."
 
 #, python-format
 msgid "Opgehaald %(moment)s"
@@ -5982,6 +5979,9 @@ msgid ""
 msgstr ""
 "If you have a Raspberry Pi, a NAS or a server of your own, you can also run "
 "Huismus in Docker. That's for people who are handy with that."
+
+#~ msgid "Een gekoppelde map, bijvoorbeeld /bonnetjes"
+#~ msgstr "A linked folder, for example /bonnetjes"
 
 #~ msgid "De map is niet bereikbaar. Is de schijf aangesloten?"
 #~ msgstr "The folder can't be reached. Is the drive connected?"
