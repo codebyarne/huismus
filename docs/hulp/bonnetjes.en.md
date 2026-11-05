@@ -50,7 +50,7 @@ says which file it is and why.
 ## Making an expense of a receipt
 
 On **Expenses** there is a **Receipts** button, with how many receipts have
-no expense yet. Click **Make an expense** next to a receipt: you get the
+no expense yet. Click **Create expense** next to a receipt: you get the
 usual form, with the receipt already at the top. Fill in the rest and click
 **Save**.
 
