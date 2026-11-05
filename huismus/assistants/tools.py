@@ -10,15 +10,17 @@ Three kinds of tool:
 - "draft": makes or changes a draft, through the editor's own forms and
   documents.drafts.
 - "add": adds an expense, through the expense page's own forms and
-  expenses.lines. It gets no number and the user can still change or
-  delete it in the app, so it is not marked destructive.
+  expenses.lines, with a receipt from the tray if given (SPEC.md M20,
+  part 2). It gets no number and the user can still change or delete it
+  in the app, so it is not marked destructive.
 - "confirm": issuing, sending a quote, mailing. Marked destructive and never
   read-only, so the assistant's app asks the user first; the button is the
   app's, the assistant cannot press it. Each has a preview tool before it
   that says what will happen.
 
-Never here: contacts, changing an expense, payments, a quote's answer,
-deleting, "Toch bewerken". Every action goes through the same function as in the
+Never here: contacts, changing an expense, attachments other than the
+receipts without an expense, payments, a quote's answer, deleting,
+"Toch bewerken". Every action goes through the same function as in the
 app (issue(), send_quote(), send_document()), so numbering, totals and
 immutability are checked where they always are.
 
@@ -43,6 +45,7 @@ from huismus.business.kor_limit import kor_limit_crossed_by, kor_limit_status
 from huismus.business.models import Settings
 from huismus.contacts.models import Contact
 from huismus.core.dashboard import outstanding_invoices
+from huismus.core.models import Attachment
 from huismus.core.templatetags.money import euros, money
 from huismus.documents.drafts import (
     create_credit_note,
@@ -68,9 +71,19 @@ from huismus.expenses.lines import save_lines
 from huismus.expenses.models import Expense, ExpenseCategory
 from huismus.reports.year_overview import compute_year_overview
 
+from . import receipts
+
 
 class ToolError(Exception):
     """A refusal the assistant passes on to the user, not a bug."""
+
+
+@dataclass(frozen=True)
+class WithImages:
+    """A handler's answer with images after its data: a receipt."""
+
+    data: dict
+    images: list[dict]
 
 
 @dataclass(frozen=True)
@@ -112,8 +125,11 @@ class Tool:
             data = self.handler(arguments)
         except ToolError as refusal:
             return {"content": [{"type": "text", "text": str(refusal)}], "isError": True}
+        images = []
+        if isinstance(data, WithImages):
+            data, images = data.data, data.images
         text = json.dumps(data, ensure_ascii=False, indent=1)
-        return {"content": [{"type": "text", "text": text}], "structuredContent": data}
+        return {"content": [{"type": "text", "text": text}, *images], "structuredContent": data}
 
 
 # --- What the assistant gets back ---
@@ -322,6 +338,51 @@ def list_expenses(arguments):
         # The names add_expense accepts.
         "categories": [category.name for category in ExpenseCategory.objects.all()],
     }
+
+
+# --- Receipts without an expense (SPEC.md M20, part 2) ---
+
+# The same words as "Uitgave maken" in the app (expenses.views).
+RECEIPT_GONE = gettext_lazy("Dit bonnetje staat niet meer bij de bonnetjes zonder uitgave.")
+
+
+def _tray_receipt(pk) -> Attachment:
+    """Only a receipt that waits for an expense: every other attachment
+    stays closed to the assistant (SPEC.md M16)."""
+    try:
+        return Attachment.objects.in_tray().get(pk=int(pk))
+    except (TypeError, ValueError, Attachment.DoesNotExist) as error:
+        raise ToolError(str(RECEIPT_GONE)) from error
+
+
+def list_receipts(arguments):
+    return {
+        # The same rule as the expense form (decision of the owner, 2026-11-05).
+        "vat_required": not Settings.load().kor_enabled,
+        "receipts": [
+            {
+                "id": receipt.pk,
+                "name": receipt.filename,
+                "received": _date(timezone.localdate(receipt.created_at)),
+                "type": "pdf" if receipt.is_pdf else "image",
+            }
+            for receipt in Attachment.objects.in_tray().order_by("created_at", "pk")
+        ],
+    }
+
+
+def read_receipt(arguments):
+    receipt = _tray_receipt(arguments.get("id"))
+    try:
+        reading = receipts.read(receipt)
+    except receipts.Unreadable as error:
+        raise ToolError(
+            _("Huismus kan dit bonnetje niet lezen. Maak de uitgave in Huismus.")
+        ) from error
+    data = {"id": receipt.pk, "name": receipt.filename, "text": reading.text}
+    if reading.pages is not None:
+        data["pages"] = reading.pages
+    return WithImages(data, reading.images)
 
 
 # --- Drafts ---
@@ -545,9 +606,17 @@ def add_expense(arguments):
     if not (form.is_valid() and formset.is_valid()):
         # The formset's own error: "at least one line with an amount".
         raise ToolError(_form_errors(form, *formset.forms) or " ".join(formset.non_form_errors()))
+    receipt = None
+    if arguments.get("receipt_id") is not None:
+        receipt = _tray_receipt(arguments["receipt_id"])
     with transaction.atomic():
         saved = form.save()
         save_lines(saved, formset.line_inputs())
+        if receipt is not None:
+            # Out of the tray, onto the expense, as "Uitgave maken" does:
+            # only if it still waits, else nothing is saved.
+            if not Attachment.objects.in_tray().filter(pk=receipt.pk).update(expense=saved):
+                raise ToolError(str(RECEIPT_GONE))
     return {
         "id": saved.pk,
         "date": _date(saved.date),
@@ -565,7 +634,9 @@ def add_expense(arguments):
         "amount": _amount(saved.amount_cents),
         # The page to change it or add the receipt, after Huismus's address.
         "path": reverse("expenses:edit", kwargs={"pk": saved.pk}),
-        "receipt": _("Een bonnetje voeg je toe in Huismus, bij de uitgave."),
+        "receipt": _("Het bonnetje zit eraan vast.")
+        if receipt
+        else _("Een bonnetje voeg je toe in Huismus, bij de uitgave."),
     }
 
 
@@ -788,11 +859,41 @@ TOOLS = (
         list_expenses,
     ),
     Tool(
+        "list_receipts",
+        gettext_lazy("Bonnetjes zonder uitgave bekijken"),
+        "read",
+        "The receipts that wait for an expense: Huismus fetched them from the user's "
+        "receipts folder. To process them: read each with read_receipt, then add_expense "
+        "with its receipt_id. One receipt is one expense. vat_required is true when the "
+        "user doesn't use the KOR: each line then needs the VAT from the receipt.",
+        {},
+        (),
+        list_receipts,
+    ),
+    Tool(
+        "read_receipt",
+        gettext_lazy("Bonnetje lezen"),
+        "read",
+        "One receipt without an expense: a photo or a scanned page as an image, and the "
+        "text of a PDF's first 3 pages. Read date, supplier, what was bought, the total "
+        "paid (gross) and the VAT as the receipt shows it. Never guess an amount or VAT. "
+        "When vat_required is true and the VAT isn't on the receipt or can't be read, "
+        "don't fill in 0: skip the receipt. Otherwise leave vat_info out when the receipt "
+        "shows none. Skip it too when it isn't a receipt or holds more than one. Tell "
+        "the user which you skipped and why; they stay in Huismus. Before adding, check "
+        "list_expenses for one with the same date and amount, and ask the user when "
+        "there is.",
+        _ID,
+        ("id",),
+        read_receipt,
+    ),
+    Tool(
         "add_expense",
         gettext_lazy("Uitgave toevoegen"),
         "add",
         "Add an expense: what the user paid, as gross amounts (including any VAT). "
-        "Receipts cannot be added here: the user adds them in Huismus, at path. "
+        "With receipt_id, the receipt from list_receipts goes onto the expense; other "
+        "receipts the user adds in Huismus, at path. "
         "Changing or deleting an expense is done in Huismus too.",
         {
             "date": {**_DATE, "description": "YYYY-MM-DD; default: today."},
@@ -823,6 +924,10 @@ TOOLS = (
                     "required": ["amount"],
                     "additionalProperties": False,
                 },
+            },
+            "receipt_id": {
+                "type": "integer",
+                "description": "A receipt from list_receipts that this expense is for.",
             },
         },
         ("lines",),

@@ -571,6 +571,7 @@ dependencies = [
     { name = "markdown" },
     { name = "openpyxl" },
     { name = "pillow" },
+    { name = "pypdf" },
     { name = "pyrage" },
     { name = "weasyprint" },
     { name = "whitenoise" },
@@ -584,7 +585,6 @@ desktop = [
 ]
 dev = [
     { name = "hypothesis" },
-    { name = "pypdf" },
     { name = "pytest" },
     { name = "pytest-django" },
     { name = "pytest-playwright" },
@@ -601,6 +601,7 @@ requires-dist = [
     { name = "markdown", specifier = ">=3.7" },
     { name = "openpyxl", specifier = ">=3.1" },
     { name = "pillow", specifier = ">=13.0" },
+    { name = "pypdf", specifier = ">=5.0" },
     { name = "pyrage", specifier = ">=1.4" },
     { name = "weasyprint", specifier = ">=62.0" },
     { name = "whitenoise", specifier = ">=6.7" },
@@ -614,7 +615,6 @@ desktop = [
 ]
 dev = [
     { name = "hypothesis", specifier = ">=6.115" },
-    { name = "pypdf", specifier = ">=5.0" },
     { name = "pytest", specifier = ">=8.3" },
     { name = "pytest-django", specifier = ">=4.9" },
     { name = "pytest-playwright", specifier = ">=0.9.0" },

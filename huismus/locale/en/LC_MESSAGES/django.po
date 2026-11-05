@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 18:51+0100\n"
+"POT-Creation-Date: 2026-11-05 21:47+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -31,6 +31,12 @@ msgstr ""
 
 msgid "Dit document bestaat niet in Huismus, of past niet bij deze actie."
 msgstr "This document doesn't exist in Huismus, or doesn't fit this action."
+
+msgid "Dit bonnetje staat niet meer bij de bonnetjes zonder uitgave."
+msgstr "This receipt is no longer with the receipts without an expense."
+
+msgid "Huismus kan dit bonnetje niet lezen. Maak de uitgave in Huismus."
+msgstr "Huismus can't read this receipt. Create the expense in Huismus."
 
 msgid "Elke regel heeft een omschrijving en een prijs."
 msgstr "Every line has a description and a price."
@@ -68,6 +74,9 @@ msgstr "This category isn't in Huismus. Choose one of these: %(names)s."
 
 msgid "Vul minstens één regel in met een bedrag."
 msgstr "Fill in at least one line with an amount."
+
+msgid "Het bonnetje zit eraan vast."
+msgstr "The receipt is attached."
 
 msgid "Een bonnetje voeg je toe in Huismus, bij de uitgave."
 msgstr "You add a receipt in Huismus, on the expense."
@@ -129,6 +138,12 @@ msgstr "Search customers"
 
 msgid "Uitgaven bekijken"
 msgstr "View expenses"
+
+msgid "Bonnetjes zonder uitgave bekijken"
+msgstr "View receipts without an expense"
+
+msgid "Bonnetje lezen"
+msgstr "Read receipt"
 
 msgid "Uitgave toevoegen"
 msgstr "Add expense"
@@ -2036,9 +2051,6 @@ msgid ""
 msgstr ""
 "The name ends in .%(extension)s, but the file is something else. Choose "
 "another file."
-
-msgid "Dit bonnetje staat niet meer bij de bonnetjes zonder uitgave."
-msgstr "This receipt is no longer with the receipts without an expense."
 
 msgid "Uitgave opgeslagen."
 msgstr "Expense saved."
