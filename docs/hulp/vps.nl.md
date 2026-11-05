@@ -126,6 +126,6 @@ geprobeerd.
 ## Back-ups
 
 Een back-up op dezelfde VPS helpt niet als de VPS kapotgaat of je het
-abonnement opzegt. Laat Huismus daarom elke nacht een versleutelde back-up
+abonnement opzegt. Laat Huismus daarom elke dag een versleutelde back-up
 naar Dropbox of WebDAV sturen:
 [In de cloud: Dropbox of WebDAV](back-ups.nl.md#in-de-cloud-dropbox-of-webdav).

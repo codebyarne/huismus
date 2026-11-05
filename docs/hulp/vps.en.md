@@ -123,5 +123,5 @@ A server that can be reached from the internet gets tried all day long.
 
 A backup on the same VPS doesn't help if the VPS breaks or you cancel the
 subscription. So let Huismus send an encrypted backup to Dropbox or WebDAV
-every night:
+every day:
 [In the cloud: Dropbox or WebDAV](back-ups.en.md#in-the-cloud-dropbox-or-webdav).
