@@ -21,6 +21,25 @@ document.addEventListener("click", (event) => {
   if (command === "close") target?.close();
 });
 
+// An out-of-band swap keeps a button and only updates it. Leaving a field
+// sends the editor's live totals, whose answer brings a new "Uitgeven…"
+// button (documents/_editor_live.html). If that answer landed between
+// mousedown and mouseup, a new element got the mouseup and the click was
+// lost: the dialog stayed shut. Contents are only replaced when they differ,
+// for the same reason (the press may be on the icon).
+document.addEventListener("htmx:oobBeforeSwap", (event) => {
+  const { target, fragment } = event.detail;
+  const fresh = fragment.firstElementChild;
+  if (!(target instanceof HTMLButtonElement) || !(fresh instanceof HTMLButtonElement)) return;
+  if (fragment.childElementCount !== 1) return;
+  event.detail.shouldSwap = false;
+  for (const { name } of [...target.attributes]) {
+    if (!fresh.hasAttribute(name)) target.removeAttribute(name);
+  }
+  for (const { name, value } of fresh.attributes) target.setAttribute(name, value);
+  if (target.innerHTML !== fresh.innerHTML) target.replaceChildren(...fresh.childNodes);
+});
+
 // Toasts: the close button removes one; success and info disappear on their
 // own after 5 seconds, warnings and errors stay until closed.
 document.addEventListener("click", (event) => {
