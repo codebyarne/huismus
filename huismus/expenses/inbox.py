@@ -54,8 +54,6 @@ from huismus.core.models import Attachment
 
 from .receipts import MAX_RECEIPT_BYTES, RASTER_FORMATS, sha256_of, validate_receipt
 
-__all__ = ["FolderError"]
-
 FOLDER, DROPBOX = "folder", "dropbox"
 SOURCE = "bonnetjesmap"  # Attachment.source of a receipt fetched from here
 # How often to look; "Nu ophalen" looks at once.
@@ -73,6 +71,8 @@ UNREACHABLE, REFUSED, FULL, OTHER = (
     cloud_backups.FULL,
     cloud_backups.OTHER,
 )
+# Saving in Huismus itself failed (data/ full, say): not the folder's fault.
+STORAGE = "storage"
 # Why a file was left in the folder.
 WRONG_TYPE, TOO_BIG, DAMAGED, UNREADABLE = "wrong_type", "too_big", "damaged", "unreadable"
 ACCEPTED_EXTENSIONS = {"pdf", *RASTER_FORMATS}
@@ -147,12 +147,6 @@ def _update(**changes) -> Status:
 # -- Choosing -----------------------------------------------------------------
 
 
-def check_folder(text: str) -> Path:
-    """As the backup folder: an absolute path, outside the administration,
-    on Docker not inside the container. FolderError with the reason."""
-    return auto_backups.check_folder(text)
-
-
 def done_folder_name() -> str:
     return _("Opgehaald")
 
@@ -181,13 +175,21 @@ def choose_dropbox() -> None:
         except cloud_backups.NotFound:
             service.create_folder(folder)
     except cloud_backups.CloudError as error:
-        raise FolderError(failure_sentence(error.reason, DROPBOX)) from error
+        raise FolderError(_dropbox_sentence(error.reason)) from error
     _start_over(source=DROPBOX, folder="", dropbox_folder=folder)
 
 
 def turn_off() -> None:
     """Huismus stops looking. The tray keeps what it fetched."""
     _start_over(source="", folder="", dropbox_folder="")
+
+
+def dropbox_unlinked() -> None:
+    """Unlinking Dropbox at Back-ups (core.cloud_views.unlink) turns the
+    receipts folder off when it was Dropbox: linking again later doesn't
+    quietly turn it back on."""
+    if load().source == DROPBOX:
+        turn_off()
 
 
 def _start_over(**changes) -> None:
@@ -230,17 +232,25 @@ def suggestions() -> list[tuple[str, Path]]:
     return [(service, path / name) for service, path in auto_backups.sync_folders()]
 
 
-def failure_sentence(reason: str, source: str) -> str:
-    """Why a look failed, for Bonnetjesmap and the tray."""
-    if source == DROPBOX:
-        if reason == REFUSED:
-            return _("Dropbox weigert de toegang. Koppel Dropbox opnieuw bij Back-ups.")
-        if reason == UNREACHABLE:
-            return _("Huismus kon Dropbox niet bereiken.")
-        if reason == FULL:
-            return _("De opslag in Dropbox is vol.")
-        return _("Dropbox gaf een fout. Huismus probeert het over 10 minuten opnieuw.")
-    return _("De map is niet bereikbaar. Is de schijf aangesloten?")
+def failure_sentence(status: Status) -> str:
+    """Why the last look failed, for Bonnetjesmap and the tray."""
+    if status.failure_reason == STORAGE:
+        return _("Huismus kon een bonnetje niet bewaren. Is de schijf van Huismus vol?")
+    if status.source == DROPBOX:
+        return _dropbox_sentence(status.failure_reason)
+    return _("De map %(folder)s is niet bereikbaar. Is de schijf aangesloten?") % {
+        "folder": place(status)
+    }
+
+
+def _dropbox_sentence(reason: str) -> str:
+    if reason == REFUSED:
+        return _("Dropbox weigert de toegang. Koppel Dropbox opnieuw bij Back-ups.")
+    if reason == UNREACHABLE:
+        return _("Huismus kon Dropbox niet bereiken.")
+    if reason == FULL:
+        return _("De opslag in Dropbox is vol.")
+    return _("Dropbox gaf een fout. Huismus probeert het over 10 minuten opnieuw.")
 
 
 def skip_sentence(reason: str) -> str:
@@ -306,10 +316,11 @@ class DropboxFolder:
         self.done_folder = done_folder
 
     def names(self) -> list[tuple[str, int]]:
+        """The files in the folder. Removed in Dropbox meanwhile: made again
+        (empty), so the next receipt has a place."""
         try:
             found = self.dropbox.files_in(self.folder)
         except cloud_backups.NotFound:
-            # Removed in Dropbox: made again, for the next receipt.
             self.dropbox.create_folder(self.folder)
             return []
         return [(file.name, file.size) for file in found]
@@ -346,15 +357,19 @@ def fetch(now: datetime | None = None) -> Result | None:
     to the tray and which files were left; None when nothing was looked at:
     off, the sample data in use (made-up and real records never mix),
     another look running, or a failure (recorded, and logged)."""
-    status = load()
-    if not is_on(status) or sample_data_in_use():
+    if not _can_look():
         return None
     if not _fetch_lock.acquire(blocking=False):
         return None
     try:
-        return _fetch(status, now or timezone.localtime())
+        return _fetch(load(), now or timezone.localtime())
     finally:
         _fetch_lock.release()
+
+
+def _can_look() -> bool:
+    """On, and not with the sample data (made-up and real records never mix)."""
+    return is_on() and not sample_data_in_use()
 
 
 def fetching() -> bool:
@@ -380,11 +395,13 @@ def fetch_in_background() -> bool:
     (huismus-intern/besluiten.md, 2026-11-05). The lock is taken here, so
     the page that follows already sees fetching(). True when a look is
     running now, this one or one that already was."""
-    status = load()
-    if not is_on(status) or sample_data_in_use():
+    if not _can_look():
         return False
     if not _fetch_lock.acquire(blocking=False):
         return True
+
+    # From here the lock is held; the thread releases it when it is done
+    # (or this function, if the thread doesn't start).
 
     def work():
         try:
@@ -405,9 +422,9 @@ def fetch_in_background() -> bool:
 
 
 def _fetch(status: Status, now: datetime) -> Result | None:
+    place = _place(status)
+    fetched, skipped = 0, []
     try:
-        place = _place(status)
-        fetched, skipped = 0, []
         for name, size in sorted(place.names()):
             if name.startswith("."):
                 # Hidden: iCloud's ".bon.jpg.icloud" for a file not
@@ -417,15 +434,25 @@ def _fetch(status: Status, now: datetime) -> Result | None:
             if reason is not None:
                 skipped.append({"name": name, "reason": reason})
                 continue
-            if _store(upload):
-                fetched += 1
+            try:
+                new = _store(upload)
+            except OSError as error:
+                # Huismus's own disk, not the folder: the file stays there.
+                return _failed(now, STORAGE, error)
+            fetched += new
             _done(place, name)
     except (OSError, cloud_backups.CloudError) as error:
-        logger.warning("Bonnetjes ophalen mislukt: %s", error)
-        _update(last_failure=now.isoformat(), failure_reason=_reason(error))
-        return None
+        reason = error.reason if isinstance(error, cloud_backups.CloudError) else UNREACHABLE
+        return _failed(now, reason, error)
     _update(last_check=now.isoformat(), last_fetched=fetched, skipped=skipped)
     return Result(fetched, skipped)
+
+
+def _failed(now: datetime, reason: str, error: Exception) -> None:
+    """Recorded for the red line. What was skipped last time is forgotten:
+    whether those files are still there can't be seen now."""
+    logger.warning("Bonnetjes ophalen mislukt: %s", error)
+    _update(last_failure=now.isoformat(), failure_reason=reason, skipped=[])
 
 
 def _receipt(place, name: str, size: int) -> tuple[ContentFile | None, str | None]:
@@ -466,17 +493,11 @@ def _done(place, name: str) -> None:
         logger.warning("Bonnetje %s niet verplaatst: %s", name, error)
 
 
-def _reason(error: Exception) -> str:
-    if isinstance(error, cloud_backups.CloudError):
-        return error.reason
-    return UNREACHABLE
-
-
-def fetch_if_due() -> Result | None:
-    """What the thread calls: a look if it's time, never while a backup is
-    being restored."""
+def fetch_if_due(at_start: bool = False) -> Result | None:
+    """What the thread calls: a look if it's time (or the app just
+    started), never while a backup is being restored."""
     with maintenance.gate.request() as open_:
-        if not open_ or not is_due():
+        if not open_ or not (at_start or is_due()):
             return None
         return fetch()
 
@@ -487,13 +508,15 @@ def start_thread() -> threading.Thread:
     (gunicorn.conf.py) start it once."""
 
     def every_minute():
+        at_start = True
         while True:
             try:
-                fetch_if_due()
+                fetch_if_due(at_start)
             except Exception:
                 logger.exception("Bonnetjes ophalen mislukt")
             finally:
                 connections.close_all()
+            at_start = False
             time.sleep(60)
 
     thread = threading.Thread(target=every_minute, name="huismus-receipts", daemon=True)

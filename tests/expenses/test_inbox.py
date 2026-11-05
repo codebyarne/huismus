@@ -238,9 +238,44 @@ def test_turning_it_off_forgets_the_folder_but_keeps_the_tray(folder):
     assert Attachment.objects.in_tray().count() == 1
 
 
-def test_the_receipts_folder_is_refused_inside_the_administration(data_dir):
-    with pytest.raises(inbox.FolderError):
-        inbox.check_folder(str(data_dir / "bonnetjes"))
+def test_a_symlink_in_the_folder_is_not_followed(folder, tmp_path):
+    elsewhere = tmp_path / "elders.pdf"
+    elsewhere.write_bytes(PDF)
+    (folder / "link.pdf").symlink_to(elsewhere)
+
+    assert inbox.fetch().fetched == 0
+    assert elsewhere.exists()
+    assert (folder / "link.pdf").is_symlink()
+
+
+def test_a_failed_look_forgets_what_was_skipped(folder):
+    (folder / "foto.heic").write_bytes(b"heic")
+    inbox.fetch()
+    folder.rename(folder.with_name("weg"))
+
+    inbox.fetch()
+
+    assert inbox.load().skipped == []
+
+
+def test_the_folder_that_is_gone_is_named(folder):
+    folder.rename(folder.with_name("weg"))
+    inbox.fetch()
+
+    assert str(folder) in inbox.failure_sentence(inbox.load())
+
+
+def test_a_disk_problem_in_huismus_is_not_blamed_on_the_folder(folder, monkeypatch):
+    (folder / "bon.pdf").write_bytes(PDF)
+
+    def full(*args, **kwargs):
+        raise OSError(28, "No space left on device")
+
+    monkeypatch.setattr(inbox, "_store", full)
+    inbox.fetch()
+
+    assert inbox.load().failure_reason == inbox.STORAGE
+    assert "Huismus kon een bonnetje niet bewaren" in inbox.failure_sentence(inbox.load())
 
 
 def test_is_due_every_few_minutes(folder):
@@ -300,6 +335,22 @@ def test_unlinking_dropbox_turns_the_receipts_folder_off(dropbox):
     assert not inbox.is_on()
     assert inbox.fetch() is None
     assert not inbox.load().failed
+
+
+def test_linking_dropbox_again_leaves_it_off(dropbox):
+    cloud_backups.unlink()
+    inbox.dropbox_unlinked()
+    cloud_backups.link_dropbox("refresh-1")
+
+    assert not inbox.is_on()
+
+
+def test_at_start_it_looks_even_within_ten_minutes(folder):
+    inbox.fetch()
+    (folder / "bon.pdf").write_bytes(PDF)
+
+    assert inbox.fetch_if_due() is None
+    assert inbox.fetch_if_due(at_start=True).fetched == 1
 
 
 def test_the_backups_leave_the_bonnetjes_folder_alone(dropbox, monkeypatch):
