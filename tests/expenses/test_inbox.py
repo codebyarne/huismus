@@ -504,12 +504,28 @@ def test_webdav_a_file_still_being_written_waits_for_the_next_look(webdav, monke
     assert inbox.fetch().fetched == 1
 
 
+def test_webdav_a_time_without_a_zone_is_read_as_utc(webdav, monkeypatch):
+    monkeypatch.setattr(inbox, "SETTLE_SECONDS", 60)
+    webdav.files["Huismus/Bonnetjes/bon.pdf"] = PDF
+    webdav.modified["Huismus/Bonnetjes/bon.pdf"] = "Thu, 05 Nov 2026 08:00:00 -0000"
+
+    assert inbox.fetch().fetched == 1
+
+
 def test_webdav_without_a_time_does_not_wait(webdav, monkeypatch):
     monkeypatch.setattr(inbox, "SETTLE_SECONDS", 60)
     webdav.files["Huismus/Bonnetjes/bon.pdf"] = PDF
     webdav.modified["Huismus/Bonnetjes/bon.pdf"] = "gisteren"
 
     assert inbox.fetch().fetched == 1
+
+
+def test_webdav_hidden_files_are_left_alone(webdav):
+    webdav.files["Huismus/Bonnetjes/.bon.pdf"] = PDF
+
+    assert inbox.fetch().fetched == 0
+    assert inbox.load().skipped == []
+    assert "Huismus/Bonnetjes/.bon.pdf" in webdav.files
 
 
 def test_webdav_makes_the_folders_again_if_they_were_removed(webdav):

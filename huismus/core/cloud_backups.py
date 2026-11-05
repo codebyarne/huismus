@@ -35,7 +35,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from dataclasses import asdict, dataclass
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 
 from defusedxml import ElementTree
@@ -338,9 +338,13 @@ def _http_date(response) -> datetime | None:
     or None when the server gives none or something else."""
     text = response.findtext(".//{DAV:}getlastmodified")
     try:
-        return email.utils.parsedate_to_datetime(text) if text else None
+        moment = email.utils.parsedate_to_datetime(text) if text else None
     except (TypeError, ValueError):
         return None
+    if moment is not None and moment.tzinfo is None:
+        # "-0000" gives no time zone; HTTP dates are in UTC.
+        moment = moment.replace(tzinfo=UTC)
+    return moment
 
 
 def _reason_for(status: int) -> str:
@@ -455,7 +459,9 @@ class WebDAV:
         return found
 
     def create_folder(self, folder: str) -> None:
-        """Makes folder, and WEBDAV_FOLDER first if that is gone too."""
+        """Makes folder, and WEBDAV_FOLDER first if that is gone too. One
+        level at a time: the folder above folder must be WEBDAV_FOLDER or
+        exist already (Bonnetjes, then Bonnetjes/Opgehaald)."""
         status, _body = self._request("MKCOL", self._url(folder))
         if status == 409:
             # The folder above isn't there (409 Conflict).
@@ -475,7 +481,9 @@ class WebDAV:
 
     def move(self, source: str, destination: str) -> None:
         """Moves a file, making the folder it goes to. Never overwrites: a
-        name taken there gets -2, -3, as in a folder on this computer."""
+        name taken there gets -2, -3, as in a folder on this computer
+        (Dropbox makes that "bon (1).jpg" itself). With 99 names taken, the
+        last 412 is a CloudError and the file stays where it was."""
         folder, _, name = destination.rpartition("/")
         stem, suffix = posixpath.splitext(name)
         for count in range(1, 100):
