@@ -72,7 +72,8 @@ dezelfde back-upmap meegeeft. Dat is precies wat er bij bijwerken gebeurt.
 ## Bijwerken
 
 Huismus kijkt elke dag of er een nieuwe versie is en zegt het dan op het
-overzicht. Bijwerken doe je zelf, wanneer jij wilt:
+overzicht. Wil je niet wachten, kies dan **Nu zoeken** bij
+**Instellingen → Updates**. Bijwerken doe je zelf, wanneer jij wilt:
 
 ```
 docker compose pull

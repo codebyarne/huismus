@@ -31,6 +31,7 @@ urlpatterns = [
     # The desktop app only (SPEC.md M11); a 404 on Docker.
     path("updates/", update_views.page, name="updates"),
     path("updates/bijwerken/", update_views.install, name="updates_install"),
+    path("updates/zoeken/", update_views.check, name="updates_check"),
     path("wachtwoord/", password_views.page, name="password"),
     path("ai-assistenten/", assistant_views.page, name="assistants"),
     path("weergave/", appearance_views.page, name="appearance"),

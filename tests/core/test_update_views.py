@@ -4,6 +4,7 @@
 desktop app (SPEC.md M11, huismus/core/update_views.py), and the notice
 Huismus in Docker gives instead."""
 
+import json
 from unittest.mock import patch
 
 import pytest
@@ -238,3 +239,70 @@ def test_an_update_that_didnt_get_installed_is_said_once(desktop):
     page = _overview(desktop)
     assert "Bijwerken naar 1.4.0 is niet gelukt. Je gebruikt nog versie 1.3.0." in page
     assert "is niet gelukt" not in _overview(desktop)
+
+
+# -- "Nu zoeken": look right away, on request ---------------------------------
+
+
+def _release_list(version):
+    return json.dumps(
+        [{"tag_name": f"v{version}", "html_url": "https://example.invalid", "assets": []}]
+    )
+
+
+def test_docker_nu_zoeken_finds_a_new_version(docker):
+    with patch("huismus.core.updates._fetch", return_value=_release_list("1.3.1")):
+        page = docker.post(reverse("business:updates_check"), follow=True).content.decode()
+    assert "Er is een nieuwe versie: Huismus 1.3.1." in page
+    assert "Huismus 1.3.1 is er" in page
+    assert updates.load_status().last_check
+
+
+def test_nu_zoeken_says_when_this_is_the_newest(docker):
+    with patch("huismus.core.updates._fetch", return_value=_release_list("1.3.0")):
+        page = docker.post(reverse("business:updates_check"), follow=True).content.decode()
+    assert "Je gebruikt de nieuwste versie." in page
+    assert 'id="nieuwe-versie"' not in page
+
+
+def test_nu_zoeken_says_when_looking_failed(docker):
+    updates.update_status(last_check="2026-01-01T00:00:00+01:00")
+    with patch("huismus.core.updates._fetch", side_effect=OSError("offline")):
+        page = docker.post(reverse("business:updates_check"), follow=True).content.decode()
+    assert "Zoeken lukte niet." in page
+    assert updates.load_status().last_check == "2026-01-01T00:00:00+01:00"
+
+
+def test_nu_zoeken_only_while_looking_is_on(docker):
+    page = docker.get(reverse("business:updates")).content.decode()
+    assert "Nu zoeken" in page
+    updates.update_status(enabled=False)
+    assert "Nu zoeken" not in docker.get(reverse("business:updates")).content.decode()
+    with patch("huismus.core.updates._fetch") as fetch:
+        docker.post(reverse("business:updates_check"))
+    fetch.assert_not_called()
+
+
+def test_nu_zoeken_is_a_post(docker):
+    with patch("huismus.core.updates._fetch") as fetch:
+        assert docker.get(reverse("business:updates_check")).status_code == 405
+    fetch.assert_not_called()
+
+
+def test_desktop_nu_zoeken_downloads_in_the_background(desktop):
+    listing = json.dumps(
+        [
+            {
+                "tag_name": "v1.4.0",
+                "html_url": "https://example.invalid",
+                "assets": [{"name": "Huismus-1.4.0-macos.dmg", "digest": "sha256:" + "ab" * 32}],
+            }
+        ]
+    )
+    with (
+        patch("huismus.core.updates._fetch", return_value=listing),
+        patch("huismus.core.update_views.threading.Thread") as thread,
+    ):
+        page = desktop.post(reverse("business:updates_check"), follow=True).content.decode()
+    assert "Er is een nieuwe versie: Huismus 1.4.0." in page
+    assert thread.call_args.kwargs["target"] is updates.prepare

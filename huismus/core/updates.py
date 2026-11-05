@@ -214,12 +214,21 @@ def newest_release(releases: list, current: str) -> Release | None:
 def check(now: datetime | None = None) -> Release | None:
     """Fetches the release list and records what's available. Silent on a
     network error (no internet): the last result stays."""
+    try:
+        return look_now(now)
+    except UpdateError:
+        return load_status().release
+
+
+def look_now(now: datetime | None = None) -> Release | None:
+    """check(), but UpdateError("look") when GitHub can't be reached, so
+    "Nu zoeken" on Instellingen → Updates can say so."""
     now = now or timezone.localtime()
     try:
         releases = json.loads(_fetch(releases_url()))
     except (OSError, ValueError) as error:
         logger.info("Zoeken naar een nieuwe versie lukte niet: %s", error)
-        return load_status().release
+        raise UpdateError("look") from error
     release = newest_release(releases if isinstance(releases, list) else [], current_version())
     update_status(last_check=now.isoformat(), available=asdict(release) if release else {})
     return release

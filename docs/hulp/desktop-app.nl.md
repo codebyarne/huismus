@@ -73,8 +73,8 @@ back-up, installeert de nieuwe versie en opent vanzelf weer. Dat duurt
 ongeveer een minuut. Op het overzicht staat daarna "Bijgewerkt naar …".
 Terwijl je werkt, wordt Huismus nooit bijgewerkt.
 
-Wil je niet wachten? Kies dan bij **Instellingen → Updates** **Bijwerken
-naar …** en bevestig.
+Wil je niet wachten? Kies dan bij **Instellingen → Updates** **Nu zoeken**,
+of **Bijwerken naar …** als er al een nieuwe versie is, en bevestig.
 
 Lukt het bijwerken niet, dan zegt het venster dat, met de knoppen **Back-up
 terugzetten** en **Logbestand bewaren**. Installeer daarna de vorige versie

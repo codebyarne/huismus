@@ -72,7 +72,8 @@ you update.
 ## Updating
 
 Huismus checks once a day for a new version and tells you on the
-overview. You update it yourself, whenever you like:
+overview. Don't want to wait? Choose **Check now** under
+**Settings → Updates**. You update it yourself, whenever you like:
 
 ```
 docker compose pull
