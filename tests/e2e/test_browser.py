@@ -1327,6 +1327,36 @@ def test_the_kor_limit_shows_in_the_issue_dialog_and_on_the_overview(app, contac
     )
 
 
+def test_a_click_on_uitgeven_right_after_typing_opens_the_dialog(app, contact):
+    # Leaving the price field sends the live totals; their answer comes back
+    # while the mouse is still down on "Uitgeven…". If that answer replaced
+    # the button, the click got lost and the dialog stayed shut (WebKit on CI).
+    app.goto(app.base + "/facturen/nieuw/")
+    picker = app.locator("input[role=combobox]")
+    picker.fill("korrel")
+    picker.press("Enter")
+    line = app.locator("[data-formset-forms=lines] .line").first
+    line.locator("textarea[name$=-description]").fill("Uren")
+    line.locator("input[name$=-unit_price_cents]").fill("850")
+    expect(app.locator("#totalen")).to_contain_text("850,00")
+    expect(app.locator("#uitgeven-knop")).to_be_enabled()
+
+    # Typing has sent its own live totals; let those land first.
+    app.wait_for_function("!document.querySelector('.htmx-request')")
+
+    box = app.locator("#uitgeven-knop").bounding_box()
+    app.mouse.move(box["x"] + box["width"] / 2, box["y"] + box["height"] / 2)
+    app.evaluate(
+        "() => { window.liveDone = new Promise((done) =>"
+        " document.addEventListener('htmx:afterRequest', done, { once: true })) }"
+    )
+    app.mouse.down()
+    app.evaluate("window.liveDone")
+    app.mouse.up()
+
+    expect(app.locator("#uitgeven")).to_be_visible()
+
+
 def test_starting_step_by_step_without_moneybird(app, live_server):
     # A fresh installation: nothing filled in yet.
     Settings.objects.all().delete()
