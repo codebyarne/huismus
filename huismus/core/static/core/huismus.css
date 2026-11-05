@@ -479,7 +479,7 @@ a:hover { color: var(--primary-hover); }
 .flash-error   { --f-fg: var(--bad); --f-bg: var(--bad-bg); }
 .toasts { position: fixed; z-index: 100; top: 16px; right: 16px; display: flex; flex-direction: column; gap: 8px; width: min(380px, calc(100% - 32px)); }
 .toast { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border-radius: var(--r-md); background: var(--surface); border: 1px solid var(--border); box-shadow: var(--sh-pop); animation: hm-toast-in .28s var(--ease); }
-.toast .flash-body { flex: 1; display: flex; flex-direction: column; gap: 2px; font-size: var(--fs-sm); }
+.toast .flash-body { flex: 1; min-width: 0; overflow-wrap: anywhere; display: flex; flex-direction: column; gap: 2px; font-size: var(--fs-sm); }
 .toast .flash-body strong { font-size: var(--fs-md); }
 .toast.flash-success > .i { color: var(--ok); } .toast.flash-info > .i { color: var(--primary-ink); }
 .toast.flash-warning > .i { color: var(--warn); } .toast.flash-error > .i { color: var(--bad); }
