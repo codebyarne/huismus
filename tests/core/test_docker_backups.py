@@ -172,7 +172,11 @@ def test_gunicorn_starts_the_thread_in_its_worker():
     import runpy
 
     config = runpy.run_path(str(Path(__file__).parents[2] / "gunicorn.conf.py"))
-    with patch.object(backups, "start_hourly_thread") as start:
+    with (
+        patch.object(backups, "start_hourly_thread") as start,
+        patch("huismus.core.updates.start_hourly_thread"),
+        patch("huismus.expenses.inbox.start_thread"),
+    ):
         config["post_worker_init"](worker=None)
 
     assert config["workers"] == 1

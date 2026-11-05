@@ -12,9 +12,13 @@ timeout = 300
 
 
 def post_worker_init(worker):
-    """The daily backup (SPEC.md M15) and the daily look for a new version
-    (SPEC.md M11), started once the worker has loaded Django."""
+    """The daily backup (SPEC.md M15), the daily look for a new version
+    (SPEC.md M11) and the receipts folder (SPEC.md M20), started once the
+    worker has loaded Django."""
     from huismus.core import auto_backups, updates
+    from huismus.expenses import inbox
 
     auto_backups.start_hourly_thread()
     updates.start_hourly_thread()
+    # Every ten minutes a look in the receipts folder (SPEC.md M20).
+    inbox.start_thread()

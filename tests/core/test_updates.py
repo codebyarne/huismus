@@ -468,11 +468,13 @@ def test_gunicorn_starts_the_daily_look_next_to_the_backups():
     with (
         patch("huismus.core.auto_backups.start_hourly_thread") as backups,
         patch("huismus.core.updates.start_hourly_thread") as looking,
+        patch("huismus.expenses.inbox.start_thread") as receipts,
     ):
         conf["post_worker_init"](worker=None)
 
     backups.assert_called_once_with()
     looking.assert_called_once_with()
+    receipts.assert_called_once_with()
 
 
 def test_the_daily_look_checks_once_and_waits(docker):

@@ -13,6 +13,7 @@ from django.utils.translation import gettext_lazy as _
 
 from huismus.core.models import Attachment
 
+from . import inbox
 from .forms import (
     ExpenseCategoryForm,
     ExpenseForm,
@@ -104,8 +105,30 @@ def expense_list(request):
             "category_pk": category_pk,
             "categories": ExpenseCategory.objects.all(),
             "has_any": Expense.objects.exists(),
+            # "Bonnetjes (3)" once the receipts folder is on or the tray
+            # holds something (huismus-intern/besluiten.md, 2026-11-05).
+            "tray_count": Attachment.objects.in_tray().count(),
+            "receipts_folder_on": inbox.is_on(),
         },
     )
+
+
+def _tray_receipt(request):
+    """The receipt without an expense that "Uitgave maken" brought along:
+    ?bonnetje=<pk> on the page, a hidden field in the POST. None when there
+    is none; TRAY_RECEIPT_GONE when it no longer waits for an expense
+    (made into an expense or removed meanwhile, in another tab)."""
+    value = request.POST.get("bonnetje") if request.method == "POST" else None
+    value = value or request.GET.get("bonnetje")
+    if not value:
+        return None
+    try:
+        return Attachment.objects.in_tray().get(pk=int(value))
+    except (ValueError, Attachment.DoesNotExist):
+        return TRAY_RECEIPT_GONE
+
+
+TRAY_RECEIPT_GONE = object()
 
 
 def _expense_form(request, expense):
@@ -114,13 +137,18 @@ def _expense_form(request, expense):
     # A new expense's amount 0 lasts only until save_lines() below, in the
     # same transaction, sets the sum of its lines.
     instance = expense or Expense(amount_cents=0)
-    # A new expense takes its receipt along in the same form; an existing
-    # one has the Bonnetjes section with its own upload (receipt_upload).
+    # A new expense takes its receipt along in the same form: one from the
+    # tray (SPEC.md M20), or a file to upload. An existing one has the
+    # Bonnetjes section with its own upload (receipt_upload).
+    tray_receipt = _tray_receipt(request) if expense is None else None
+    if tray_receipt is TRAY_RECEIPT_GONE:
+        messages.error(request, _("Dit bonnetje staat niet meer bij de bonnetjes zonder uitgave."))
+        return redirect("expenses:tray")
     new_receipt_form = None
     if request.method == "POST":
         form = ExpenseForm(request.POST, instance=instance)
         formset = ExpenseLineFormSet(request.POST, instance=instance, prefix="lines")
-        if expense is None:
+        if expense is None and tray_receipt is None:
             new_receipt_form = NewExpenseReceiptForm(request.POST, request.FILES)
         forms_valid = [form.is_valid(), formset.is_valid()]
         if new_receipt_form is not None:
@@ -134,6 +162,17 @@ def _expense_form(request, expense):
                     Attachment.objects.create(
                         expense=saved, file=uploaded, kind="receipt", sha256=sha256_of(uploaded)
                     )
+                if tray_receipt is not None:
+                    # Out of the tray, onto the expense. Only if it still
+                    # waits: two tabs never put it on two expenses.
+                    taken = Attachment.objects.in_tray().filter(pk=tray_receipt.pk)
+                    if not taken.update(expense=saved):
+                        transaction.set_rollback(True)
+                        messages.error(
+                            request,
+                            _("Dit bonnetje staat niet meer bij de bonnetjes zonder uitgave."),
+                        )
+                        return redirect("expenses:tray")
             messages.success(request, _("Uitgave opgeslagen."))
             url = reverse("expenses:edit", kwargs={"pk": saved.pk})
             # "Regel toevoegen" (form.html) is a submit button named
@@ -149,9 +188,10 @@ def _expense_form(request, expense):
             ExpenseLineFormSetWithEmptyLine if request.GET.get("regel") else ExpenseLineFormSet
         )
         formset = formset_class(instance=instance, prefix="lines")
-        if expense is None:
+        if expense is None and tray_receipt is None:
             new_receipt_form = NewExpenseReceiptForm()
     context = {
+        "tray_receipt": tray_receipt,
         "form": form,
         "formset": formset,
         "expense": expense,

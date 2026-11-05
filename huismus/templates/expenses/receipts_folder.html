@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Bonnetjesmap" %} — {% translate "Instellingen" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+{% comment %}Instellingen → Bonnetjesmap (SPEC.md M20, expenses.inbox_views.settings_page). Built like Map voor back-ups: a radio per place, a plain POST.{% endcomment %}
+<div class="page-head">
+    <div class="titles">
+        <a class="small" href="{% url 'business:overview' %}">← {% translate "Instellingen" %}</a>
+        <h1>{% translate "Bonnetjesmap" %}</h1>
+        <p class="lede">{% translate "Bewaar onderweg een foto of pdf van een bonnetje in deze map. Huismus haalt hem elke 10 minuten op en zet hem bij de bonnetjes zonder uitgave." %} <a href="{{ help_url }}">{% translate "Zo werkt het" %} →</a></p>
+    </div>
+</div>
+
+{% if on %}
+<section class="card settings-section" id="bonnetjesmap-aan">
+    <div class="card-head">
+        <h2 class="row" style="gap:var(--s-2)">{% translate "Huismus kijkt in" %} {% if failure %}<span class="pill pill-overdue">{% translate "Mislukt" %}</span>{% else %}<span class="pill pill-final">{% translate "Aan" context "back-upplek staat aan" %}</span>{% endif %}</h2>
+        <form method="post">{% csrf_token %}<input type="hidden" name="action" value="now"><button type="submit" class="btn btn-secondary btn-sm"><span class="spinner" aria-hidden="true"></span>{% translate "Nu ophalen" %}</button></form>
+    </div>
+    <div class="card-pad stack" style="gap:var(--s-3)">
+        <p style="overflow-wrap:anywhere"><strong id="bonnetjesmap-plek">{{ place }}</strong></p>
+        {% url 'business:receipts_folder' as refresh_url %}
+        {% include "expenses/_receipts_status.html" with refresh_url=refresh_url %}
+        <div class="row"><a href="{% url 'expenses:tray' %}">{% translate "Naar de bonnetjes zonder uitgave" %} →</a></div>
+    </div>
+</section>
+{% endif %}
+
+<form method="post" class="card settings-section" id="bonnetjesmap-kiezen">
+    {% csrf_token %}
+    <div class="card-head"><h2>{% if on %}{% translate "Een andere map kiezen" %}{% else %}{% translate "Kies een map" %}{% endif %}</h2></div>
+    <div class="card-pad stack" style="gap:var(--s-3)">
+        {% if desktop %}
+        {% if suggestions %}<p class="label">{% translate "Gevonden op deze computer" %}</p>{% endif %}
+        {% elif not suggestions %}
+        <p class="small" id="map-koppelen">{% translate "Huismus in Docker ziet alleen mappen die je eraan koppelt. Gebruik Dropbox, of koppel een map, bijvoorbeeld een die Syncthing of Nextcloud bijhoudt." %} <a href="{{ help_url }}">{% translate "Zo werkt het" %} →</a></p>
+        {% endif %}
+        <div class="stack folder-choices" style="gap:var(--s-2)">
+            {% if dropbox_linked %}
+            <label class="file-item"><span class="f-icon"><input type="radio" name="folder" value="dropbox"{% if selected == "dropbox" %} checked{% endif %}></span><span><span class="f-name">Dropbox</span><span class="f-meta">{% translate "Apps › Huismus › Bonnetjes, met de Dropbox die je voor back-ups koppelde" %}</span></span></label>
+            {% endif %}
+            {% for name, path, label in suggestions %}
+            <label class="file-item"><span class="f-icon"><input type="radio" name="folder" value="{{ path }}"{% if selected == path %} checked{% endif %}></span><span><span class="f-name">{{ name }}</span><span class="f-meta">{{ label }}</span></span></label>
+            {% endfor %}
+            <label class="file-item"><span class="f-icon"><input type="radio" name="folder" value="other"{% if selected == "other" or not selected %} checked{% endif %}></span><span><span class="f-name">{% translate "Andere map…" %}</span><span class="f-meta">{% if desktop %}{% translate "Een map die je telefoon ook ziet" %}{% else %}{% translate "Een gekoppelde map, bijvoorbeeld /bonnetjes" %}{% endif %}</span></span></label>
+        </div>
+        <div class="field">
+            <label class="label" for="other_path">{% translate "Pad naar de map" %}</label>
+            <div class="row" style="gap:var(--s-2)">
+                <input class="input" type="text" id="other_path" name="other_path" value="{{ other_path }}" autocomplete="off" spellcheck="false"{% if error %} aria-invalid="true" aria-describedby="map-fout"{% endif %}>
+                {% comment %}Only in the app's own window, where it opens the system's folder dialog (core/app.js, desktop/app.py).{% endcomment %}
+                <button type="button" class="btn btn-secondary" data-choose-folder hidden>{% translate "Kiezen…" %}</button>
+            </div>
+            {% if error %}<p class="error" id="map-fout"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>{{ error }}</p>{% endif %}
+        </div>
+        {% if not dropbox_linked %}<p class="small muted" id="dropbox-eerst">{% translate "Wil je Dropbox gebruiken? Koppel Dropbox eerst bij Back-ups." %} <a href="{% url 'business:backups' %}">{% translate "Naar Back-ups" %} →</a></p>{% endif %}
+        <div class="row"><a class="btn btn-ghost" href="{% url 'business:overview' %}">{% translate "Annuleren" %}</a><span class="spacer"></span><button type="submit" class="btn btn-primary"><span class="spinner" aria-hidden="true"></span>{% translate "Opslaan" %}</button></div>
+    </div>
+</form>
+
+{% if on %}
+<section class="card card-pad row" style="margin-top:var(--s-5);justify-content:space-between">
+    <div class="stack" style="gap:2px"><strong>{% translate "Uitzetten" %}</strong><span class="small muted">{% translate "Huismus haalt dan niets meer op. De bonnetjes die er al zijn, blijven." %}</span></div>
+    <form method="post">{% csrf_token %}<input type="hidden" name="action" value="off"><button class="btn btn-secondary" type="submit">{% translate "Uitzetten" %}</button></form>
+</section>
+{% endif %}
+{% endblock %}
