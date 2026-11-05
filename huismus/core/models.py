@@ -24,8 +24,9 @@ def attachment_upload_to(instance, filename):
         return f"attachments/expenses/{instance.expense_id}/{filename}"
     if instance.kind == "receipt":
         # A receipt in the tray, from the receipts folder (huismus/expenses/inbox.py).
-        # It keeps this name once an expense is made of it.
-        return f"attachments/bakje/{filename}"
+        # In a folder of its own, so it keeps the name it had in the
+        # receipts folder; it keeps this place once an expense is made of it.
+        return f"attachments/bakje/{instance.sha256[:12]}/{filename}"
     return f"attachments/{filename}"
 
 

@@ -553,6 +553,36 @@ class Dropbox:
     def revoke(self) -> None:
         self._api("auth/token/revoke", None)
 
+    # The receipts folder (huismus/expenses/inbox.py), a folder in the same
+    # app folder: any file in it, not only backups. Paths start with "/".
+
+    def files_in(self, folder: str) -> "list[RemoteFile]":
+        """The files directly in folder; NotFound when it doesn't exist."""
+        page = self._api("files/list_folder", {"path": folder})
+        entries = list(page.get("entries", []))
+        while page.get("has_more"):
+            page = self._api("files/list_folder/continue", {"cursor": page.get("cursor")})
+            entries.extend(page.get("entries", []))
+        return [
+            RemoteFile(entry["name"], entry.get("size", 0))
+            for entry in entries
+            if entry.get(".tag") == "file"
+        ]
+
+    def create_folder(self, folder: str) -> None:
+        self._api("files/create_folder_v2", {"path": folder, "autorename": False})
+
+    def read(self, path: str) -> bytes:
+        return self._call(self.CONTENT + "files/download", b"", {"path": path})
+
+    def move(self, source: str, destination: str) -> None:
+        """Moves a file; Dropbox makes the folder, and gives the file
+        another name ("bon (1).jpg") when the name is taken."""
+        self._api(
+            "files/move_v2",
+            {"from_path": source, "to_path": destination, "autorename": True},
+        )
+
 
 def remote(config: Config | None = None) -> WebDAV | Dropbox | None:
     config = config or load()

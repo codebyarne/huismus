@@ -155,7 +155,8 @@ class FakeDropbox:
     CODE = "goede-code"
 
     def __init__(self):
-        self.files: dict[str, bytes] = {}
+        self.files: dict[str, bytes] = {}  # path in the app folder, without "/"
+        self.folders: set[str] = set()
         self.refresh_tokens = {"refresh-1"}
         self.revoked = False
         self.calls: list[str] = []
@@ -206,11 +207,31 @@ class FakeDropbox:
             self.files[arg["commit"]["path"].lstrip("/")] = self.session + body
             return 200, b"{}"
         if endpoint == "files/list_folder":
+            folder = arg["path"].strip("/")
+            holds_files = any(path.startswith(f"{folder}/") for path in self.files)
+            if folder and folder not in self.folders and not holds_files:
+                return 409, b'{"error_summary": "path/not_found/"}'
+            prefix = f"{folder}/" if folder else ""
             entries = [
-                {".tag": "file", "name": name, "size": len(content)}
-                for name, content in self.files.items()
+                {".tag": "file", "name": path.removeprefix(prefix), "size": len(content)}
+                for path, content in self.files.items()
+                if path.startswith(prefix) and "/" not in path.removeprefix(prefix)
+            ] + [
+                {".tag": "folder", "name": path.removeprefix(prefix)}
+                for path in self.folders
+                if path.startswith(prefix) and "/" not in path.removeprefix(prefix)
             ]
             return 200, json.dumps({"entries": entries, "has_more": False}).encode()
+        if endpoint == "files/create_folder_v2":
+            self.folders.add(arg["path"].strip("/"))
+            return 200, b"{}"
+        if endpoint == "files/move_v2":
+            source, destination = arg["from_path"].lstrip("/"), arg["to_path"].lstrip("/")
+            if source not in self.files:
+                return 409, b'{"error_summary": "from_lookup/not_found/"}'
+            self.folders.add(destination.rsplit("/", 1)[0])
+            self.files[destination] = self.files.pop(source)
+            return 200, b"{}"
         if endpoint == "files/download":
             name = arg["path"].lstrip("/")
             if name not in self.files:

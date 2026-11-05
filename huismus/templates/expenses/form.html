@@ -64,11 +64,28 @@ expense.pk.{% endcomment %}
 </section>
 {% endif %}
 
-<form class="card card-pad stack" method="post"{% if new_receipt_form %} enctype="multipart/form-data"{% endif %} style="gap:var(--s-5)">
+<form class="card card-pad stack" method="post"{% if tray_receipt %} action="{% url 'expenses:create' %}"{% endif %}{% if new_receipt_form %} enctype="multipart/form-data"{% endif %} style="gap:var(--s-5)">
     {% csrf_token %}
     {% comment %}The receipt first: it's what the rest is typed from. A new
     expense takes it along when it's saved; an existing one has the
     Bonnetjes section above the form, with its own upload.{% endcomment %}
+    {% if tray_receipt %}
+    {% comment %}From the receipts without an expense (SPEC.md M20): on saving it goes onto this expense. The hidden field carries it in a plain POST.{% endcomment %}
+    <div class="stack" style="gap:var(--s-3)" id="bonnetje-uit-bakje">
+        <h2>{% translate "Bonnetje" %}</h2>
+        <input type="hidden" name="bonnetje" value="{{ tray_receipt.pk }}">
+        <div class="receipts">
+            <div class="receipt">
+                <a class="thumb" href="{{ tray_receipt.file.url }}" hx-boost="false" target="_blank" rel="noopener" aria-label="{% blocktranslate with name=tray_receipt.filename %}{{ name }} openen{% endblocktranslate %}">
+                    {% if tray_receipt.is_pdf %}<svg class="i i-lg" aria-hidden="true"><use href="#file"></use></svg>
+                    {% else %}<img src="{{ tray_receipt.file.url }}" alt="" style="width:100%;height:100%;object-fit:cover">{% endif %}
+                </a>
+                <div class="r-row"><span class="r-name" title="{{ tray_receipt.filename }}">{{ tray_receipt.filename }}</span></div>
+                <span class="muted">{% translate "Uit je bonnetjesmap" %}</span>
+            </div>
+        </div>
+    </div>
+    {% endif %}
     {% if new_receipt_form %}{% with field=new_receipt_form.file %}
     <div class="stack" style="gap:var(--s-3)">
         <h2>{% translate "Bonnetje" %} <span class="opt">({% translate "optioneel" %})</span></h2>

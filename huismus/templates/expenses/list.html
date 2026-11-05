@@ -14,6 +14,7 @@
     </div>
     <div class="actions">
         <a class="btn btn-ghost" href="{% url 'expenses:category_list' %}">{% translate "Categorieën" %}</a>
+        {% if tray_count or receipts_folder_on %}<a class="btn btn-secondary" id="naar-bonnetjes" href="{% url 'expenses:tray' %}">{% translate "Bonnetjes" %}{% if tray_count %} ({{ tray_count }}){% endif %}</a>{% endif %}
         <a class="btn btn-primary" href="{% url 'expenses:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuwe uitgave" %}</a>
     </div>
 </div>

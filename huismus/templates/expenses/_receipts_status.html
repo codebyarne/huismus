@@ -1,0 +1,18 @@
+{% load i18n backups %}
+{% comment %}How the receipts folder is doing, on Bonnetjesmap and above the receipts without an expense (huismus-intern/besluiten.md, 2026-11-05, the timeline). While a look runs in the background (expenses.inbox.fetch_in_background) this part fetches itself again every few seconds from `refresh_url`; once it is done the new part has no hx-trigger and the asking stops. The tray swaps its list along (hx-select-oob). Without JS: reload the page.{% endcomment %}
+<div class="stack" id="bonnetjes-stand" style="gap:var(--s-3)"{% if fetching %} hx-get="{{ refresh_url }}" hx-select="#bonnetjes-stand" hx-target="this" hx-swap="outerHTML" hx-trigger="every 3s"{% if oob %} hx-select-oob="{{ oob }}"{% endif %}{% endif %}>
+    {% if fetching %}
+    <p class="small row" style="gap:var(--s-2)" id="bonnetjes-bezig"><span class="spinner" aria-hidden="true"></span>{% translate "Bezig met ophalen…" %}</p>
+    {% elif failure %}
+    <p class="hint-banner is-bad" id="ophalen-mislukt"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% translate "Ophalen mislukt." %} {{ failure }}{% if status.last_check_at %} {% blocktranslate with moment=status.last_check_at|moment %}Laatst gelukt: {{ moment }}.{% endblocktranslate %}{% endif %}</span></p>
+    {% elif on %}
+    <p class="small muted" id="bonnetjes-gekeken">{% if status.last_check_at %}{% blocktranslate with moment=status.last_check_at|moment %}Laatst gekeken: {{ moment }}.{% endblocktranslate %}{% if status.last_fetched %} {% blocktranslate count count=status.last_fetched %}{{ count }} nieuw bonnetje.{% plural %}{{ count }} nieuwe bonnetjes.{% endblocktranslate %}{% endif %}{% else %}{% translate "Nog niet gekeken." %}{% endif %}</p>
+    {% endif %}
+    {% if skipped and not fetching %}
+    <div class="hint-banner is-warn" id="niet-opgehaald"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>
+        <ul class="stack" style="gap:var(--s-1);margin:0;padding:0;list-style:none">
+            {% for item in skipped %}<li><span style="overflow-wrap:anywhere">{% blocktranslate with name=item.name reason=item.reason %}Niet opgehaald: {{ name }} — {{ reason }}{% endblocktranslate %}</span></li>{% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</div>

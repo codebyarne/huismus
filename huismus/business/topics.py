@@ -19,6 +19,7 @@ from huismus.core.models import THEME_CHOICES
 from huismus.core.templatetags.backups import moment
 from huismus.core.templatetags.money import money
 from huismus.documents.numbering import next_numbers_if_issued_today
+from huismus.expenses import inbox
 
 from . import smtp
 from .forms import MAIL_TEXT_FIELDS
@@ -169,6 +170,7 @@ def cards(settings: Settings, theme: str = "") -> list[dict]:
         for topic in TOPICS
     ]
     result.append(_backups_card(ok, off))
+    result.append(_receipts_folder_card(ok, off))
     result.append(_export_card())
     result.append(_assistants_card(ok, off))
     result.append(_updates_card(ok, off))
@@ -196,6 +198,26 @@ def _backups_card(ok, off) -> dict:
         "intro": _("Elke dag een kopie van je administratie in een map die jij kiest."),
         "slug": "back-ups",
         "url": reverse("business:backups"),
+        "line": line,
+        "pill": pill,
+    }
+
+
+def _receipts_folder_card(ok, off) -> dict:
+    """Bonnetjesmap (SPEC.md M20, expenses.inbox_views): where Huismus picks
+    up receipts saved on the road."""
+    status = inbox.load()
+    if not inbox.is_on(status):
+        line, pill = _("Nog geen map gekozen"), (pgettext_lazy("setting", "Uit"), off)
+    elif status.failed:
+        line, pill = _("Ophalen is mislukt"), (_("Mislukt"), "pill-overdue")
+    else:
+        line, pill = inbox.place(status), (pgettext_lazy("setting", "Aan"), ok)
+    return {
+        "title": _("Bonnetjesmap"),
+        "intro": _("Bonnetjes van onderweg, vanzelf in Huismus."),
+        "slug": "bonnetjesmap",
+        "url": reverse("business:receipts_folder"),
         "line": line,
         "pill": pill,
     }

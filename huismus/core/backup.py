@@ -30,6 +30,8 @@ STATUS_FILE_NAME = "backup-status.json"
 # Kept by core.cloud_backups, which imports this module.
 CLOUD_FILE_PREFIX = "cloud-backup"
 UPDATE_STATUS_FILE_NAME = "update-status.json"
+# Kept by expenses.inbox: which receipts folder, and how the last look went.
+RECEIPTS_FOLDER_FILE_NAME = "receipts-folder.json"
 # The state from before "Probeer met nepdata" (core.sample_data).
 BEFORE_SAMPLE_DATA_FILE_NAME = "voor-nepdata.tar.gz"
 # data/backups: on Docker where the backup before a restore goes when no
@@ -136,6 +138,10 @@ def _belongs_to_this_installation(name: str) -> bool:
     # belong to this computer, not to the administration (core.auto_backups,
     # core.updates).
     if name.startswith((STATUS_FILE_NAME, UPDATE_STATUS_FILE_NAME)):
+        return True
+    # So does the receipts folder (expenses.inbox), like the backup folder.
+    # The receipts it fetched are the administration's and do go along.
+    if name.startswith(RECEIPTS_FOLDER_FILE_NAME):
         return True
     # The way back from the sample data is not part of any administration
     # (core.sample_data).

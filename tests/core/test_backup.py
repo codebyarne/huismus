@@ -293,6 +293,7 @@ def test_restoring_unpacks_inside_the_data_dir(settings, tmp_path):
         "cloud-backup-code",
         "backup-status.json",
         "update-status.json",
+        "receipts-folder.json",
         "voor-nepdata.tar.gz",
         "import-staging",
     ],

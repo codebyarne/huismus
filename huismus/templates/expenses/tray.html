@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load i18n backups %}
+
+{% block title %}{% translate "Bonnetjes zonder uitgave" %} — Huismus{% endblock %}
+
+{% block content %}
+{% comment %}The receipts the receipts folder brought in (SPEC.md M20, expenses.inbox_views.tray). "Uitgave maken" opens the new-expense form with the receipt in it.{% endcomment %}
+<div class="page-head">
+    <div class="titles">
+        <a class="back" href="{% url 'expenses:list' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Uitgaven" %}</a>
+        <h1>{% translate "Bonnetjes zonder uitgave" %}</h1>
+        {% if on %}<p class="lede" style="overflow-wrap:anywhere">{% blocktranslate with place=place %}Uit {{ place }}.{% endblocktranslate %} <a href="{% url 'business:receipts_folder' %}">{% translate "Bonnetjesmap" %} →</a></p>{% endif %}
+    </div>
+    {% if on %}
+    <div class="actions">
+        <form method="post">{% csrf_token %}<input type="hidden" name="action" value="now"><button type="submit" class="btn btn-secondary"><span class="spinner" aria-hidden="true"></span>{% translate "Nu ophalen" %}</button></form>
+    </div>
+    {% endif %}
+</div>
+
+{% if on %}
+<div style="margin-bottom:var(--s-4)">
+    {% url 'expenses:tray' as refresh_url %}
+    {% include "expenses/_receipts_status.html" with refresh_url=refresh_url oob="#bonnetjes-lijst" %}
+</div>
+{% endif %}
+
+<div id="bonnetjes-lijst">
+{% if receipts %}
+<section class="card card-pad">
+    <div class="receipts">
+        {% for receipt in receipts %}
+        <div class="receipt" id="bonnetje-{{ receipt.pk }}">
+            <a class="thumb" href="{{ receipt.file.url }}" hx-boost="false" target="_blank" rel="noopener" aria-label="{% blocktranslate with name=receipt.filename %}{{ name }} openen{% endblocktranslate %}">
+                {% if receipt.is_pdf %}<svg class="i i-lg" aria-hidden="true"><use href="#file"></use></svg>
+                {% else %}<img src="{{ receipt.file.url }}" alt="" style="width:100%;height:100%;object-fit:cover">{% endif %}
+            </a>
+            <div class="r-row">
+                <span class="r-name" title="{{ receipt.filename }}">{{ receipt.filename }}</span>
+                <button type="button" class="btn btn-ghost btn-sm btn-icon" aria-label="{% translate 'Bonnetje verwijderen' %}" command="show-modal" commandfor="verwijder-bon-{{ receipt.pk }}"><svg class="i i-sm" aria-hidden="true"><use href="#trash"></use></svg></button>
+            </div>
+            <span class="muted">{% blocktranslate with moment=receipt.created_at|moment %}Opgehaald {{ moment }}{% endblocktranslate %}</span>
+            <a class="btn btn-primary btn-sm" href="{% url 'expenses:create' %}?bonnetje={{ receipt.pk }}">{% translate "Uitgave maken" %}</a>
+        </div>
+        <dialog class="dialog" id="verwijder-bon-{{ receipt.pk }}" aria-labelledby="verwijder-bon-{{ receipt.pk }}-titel">
+            <form method="post" action="{% url 'expenses:tray_delete' receipt.pk %}">
+                {% csrf_token %}
+                <div class="dialog-body">
+                    <div class="dialog-icon is-danger"><svg class="i" aria-hidden="true"><use href="#trash"></use></svg></div>
+                    <h2 id="verwijder-bon-{{ receipt.pk }}-titel">{% translate "Dit bonnetje verwijderen?" %}</h2>
+                    <p class="muted">{% translate "Huismus verwijdert het bestand. Het bestand blijft in de map Opgehaald." %}</p>
+                </div>
+                <div class="dialog-foot">
+                    <button type="button" class="btn" command="close" commandfor="verwijder-bon-{{ receipt.pk }}">{% translate "Annuleren" %}</button>
+                    <button type="submit" class="btn btn-danger">{% translate "Verwijderen" %}</button>
+                </div>
+            </form>
+        </dialog>
+        {% endfor %}
+    </div>
+</section>
+{% else %}
+<div class="card">
+    <div class="empty">
+        <div class="empty-art"><svg class="mark" width="56" height="56" aria-hidden="true"><use href="#mus"></use></svg></div>
+        <h2>{% translate "Nog geen bonnetjes" %}</h2>
+        {% if on %}
+        <p style="overflow-wrap:anywhere">{% blocktranslate with place=place %}Zet een bonnetje in {{ place }}, dan staat het hier binnen 10 minuten.{% endblocktranslate %}</p>
+        {% else %}
+        <p>{% translate "Stel een bonnetjesmap in. Wat je onderweg in die map zet, komt hier vanzelf binnen." %}</p>
+        <div class="row"><a class="btn btn-primary" href="{% url 'business:receipts_folder' %}">{% translate "Bonnetjesmap instellen" %}</a></div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+</div>
+{% endblock %}

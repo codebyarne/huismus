@@ -83,3 +83,15 @@ def _no_cloud_link():
     forget()
     yield
     forget()
+
+
+@pytest.fixture(autouse=True)
+def _no_receipts_folder():
+    """Which receipts folder Huismus looks in is a file in DATA_DIR too
+    (expenses.inbox)."""
+    from django.conf import settings
+
+    status = Path(settings.DATA_DIR) / "receipts-folder.json"
+    status.unlink(missing_ok=True)
+    yield
+    status.unlink(missing_ok=True)
