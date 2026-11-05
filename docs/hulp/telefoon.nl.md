@@ -4,6 +4,9 @@ Draait Huismus op een server, zoals een Raspberry Pi of een NAS? Dan zet je
 hem als app op je telefoon, tablet of laptop. Je hebt er geen app store voor
 nodig. Je krijgt een eigen icoon en een venster zonder adresbalk.
 
+Geen server in huis? Dan kan Huismus ook op een server die je huurt:
+[Op een VPS](vps.nl.md).
+
 ## Huismus als app installeren
 
 Open Huismus in de browser en kies:

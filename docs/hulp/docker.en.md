@@ -4,6 +4,9 @@ Running Huismus on a Raspberry Pi, a NAS or your own server? Then you use
 the Docker image. This page covers installing it, where your data lives and
 how to update to a new version.
 
+No server at home? Huismus can also run on a server you rent:
+[On a VPS](vps.en.md).
+
 ## Installing
 
 Put this in a file called `compose.yaml`, in a folder on your Pi or NAS:
