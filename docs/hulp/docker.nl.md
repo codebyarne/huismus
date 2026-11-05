@@ -131,17 +131,19 @@ Ging er iets mis na het bijwerken, ga dan terug naar de versie die je
 daarvoor had, met het hele versienummer. In het logboek staat naar welke
 versie Huismus werd bijgewerkt, bijvoorbeeld 0.1.2. De vorige is dan 0.1.1.
 
-1. Zet in `compose.yaml` de oude versie: `ghcr.io/codebyarne/huismus:0.1.1`.
-2. Zet de back-up van vóór het bijwerken terug. In het logboek staat welke
-   het is. Zo ziet dat eruit, met de naam uit het logboek:
+Zet eerst in `compose.yaml` de oude versie: `ghcr.io/codebyarne/huismus:0.1.1`.
 
-   ```
-   docker compose run --rm --entrypoint python huismus manage.py restore /backups/huismus-backup-<datum>-<tijd>.tar.gz --yes
-   ```
+Zet dan de back-up van vóór het bijwerken terug. In het logboek staat welke
+het is. Zo ziet dat eruit, met de naam uit het logboek:
 
-   Stond de back-up in `huismus-data`, dan begint het pad met
-   `/app/data/backups/` in plaats van `/backups/`.
-3. Start Huismus: `docker compose up -d`.
+```
+docker compose run --rm --entrypoint python huismus manage.py restore /backups/huismus-backup-<datum>-<tijd>.tar.gz --yes
+```
+
+Stond de back-up in `huismus-data`, dan begint het pad met
+`/app/data/backups/` in plaats van `/backups/`.
+
+Start Huismus daarna: `docker compose up -d`.
 
 Start Huismus wel, dan kan het ook in de app: **Instellingen → Back-ups →
 Een back-up terugzetten…**.

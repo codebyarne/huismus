@@ -131,17 +131,19 @@ If something went wrong after updating, go back to the version you had
 before, with its full version number. The log says which version Huismus
 was updated to, for example 0.1.2. The previous one is then 0.1.1.
 
-1. Set the old version in `compose.yaml`: `ghcr.io/codebyarne/huismus:0.1.1`.
-2. Restore the backup from before the update. The log says which one it
-   is. It looks like this, with the name from the log:
+First set the old version in `compose.yaml`: `ghcr.io/codebyarne/huismus:0.1.1`.
 
-   ```
-   docker compose run --rm --entrypoint python huismus manage.py restore /backups/huismus-backup-<date>-<time>.tar.gz --yes
-   ```
+Then restore the backup from before the update. The log says which one it
+is. It looks like this, with the name from the log:
 
-   If the backup was in `huismus-data`, the path starts with
-   `/app/data/backups/` instead of `/backups/`.
-3. Start Huismus: `docker compose up -d`.
+```
+docker compose run --rm --entrypoint python huismus manage.py restore /backups/huismus-backup-<date>-<time>.tar.gz --yes
+```
+
+If the backup was in `huismus-data`, the path starts with
+`/app/data/backups/` instead of `/backups/`.
+
+Then start Huismus: `docker compose up -d`.
 
 If Huismus does start, you can also do it in the app: **Settings → Backups
 → Restore a backup…**.
