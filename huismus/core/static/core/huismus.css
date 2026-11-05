@@ -895,7 +895,6 @@ a:hover { color: var(--primary-hover); }
 .combo-list .combo-action .i { width: 15px; height: 15px; }
 /* Foutpagina */
 .error-page { min-height: calc(100vh - 160px); display: grid; place-items: center; }
-.error-code { font: 700 var(--fs-xs)/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); }
 .login .error-page { min-height: 0; }
 
 /* ---------- 18. Aanvullingen bij de implementatie (M8, Huismus-repo) ---------- */

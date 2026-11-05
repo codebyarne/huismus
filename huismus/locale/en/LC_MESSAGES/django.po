@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 07:17+0100\n"
+"POT-Creation-Date: 2026-11-05 11:38+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1467,51 +1467,44 @@ msgstr "Huismus is busy for a moment. Try again shortly."
 msgid "De nepdata is weg. Je begint met een lege administratie."
 msgstr "The sample data is gone. You're starting with empty records."
 
-msgid "Fout 404"
-msgstr "Error 404"
-
-msgid "Deze pagina bestaat niet (meer)"
-msgstr "This page doesn't exist (anymore)"
+msgid "Deze pagina bestaat niet"
+msgstr "This page doesn't exist"
 
 msgid ""
 "Misschien is de link oud of zit er een typefout in. Je gegevens zijn gewoon "
 "waar ze waren."
 msgstr "Maybe the link is old or has a typo. Your data is right where it was."
 
-msgid "Fout 403"
-msgstr "Error 403"
-
 msgid "Hier heb je geen toegang toe"
 msgstr "You don't have access to this"
 
 msgid ""
-"Deze pagina is niet voor jou bedoeld, of je sessie hoort bij een ander "
-"account."
+"Je account mag deze pagina niet openen. Ga terug naar het overzicht, of log "
+"in met een ander account."
 msgstr ""
-"This page isn't meant for you, or your session belongs to another account."
+"Your account can't open this page. Go back to the overview, or log in with "
+"another account."
 
-msgid "Fout 500"
-msgstr "Error 500"
-
-msgid "Er ging iets mis"
-msgstr "Something went wrong"
-
-msgid "Huismus kon deze pagina niet laden. Probeer het zo nog eens."
-msgstr "Huismus couldn't load this page. Please try again in a moment."
-
-msgid "Formulier verlopen"
-msgstr "Form expired"
-
-msgid "Je sessie is verlopen"
-msgstr "Your session has expired"
+msgid "Huismus kon deze pagina niet laden"
+msgstr "Huismus couldn't load this page"
 
 msgid ""
-"De pagina stond een tijd open, daardoor kon het formulier niet veilig worden "
-"verstuurd. Laad de pagina opnieuw en probeer het nog een keer. Er is niets "
-"opgeslagen."
+"Er ging iets mis in Huismus, niet bij jou. Probeer het over een minuut nog "
+"eens. Gaat het weer mis, start Huismus dan opnieuw."
 msgstr ""
-"The page was open for a while, so the form couldn't be sent securely. Reload "
-"the page and try again. Nothing was saved."
+"Something went wrong in Huismus, not on your end. Try again in a minute. If "
+"it happens again, restart Huismus."
+
+msgid "Dit formulier is verlopen"
+msgstr "This form has expired"
+
+msgid ""
+"De pagina stond te lang open, of je logde in een ander tabblad uit. Er is "
+"niets opgeslagen. Ga terug, laad het formulier opnieuw en vul het nog een "
+"keer in."
+msgstr ""
+"The page was open too long, or you logged out in another tab. Nothing was "
+"saved. Go back, reload the form and fill it in again."
 
 msgid "Vul een getal in, zoals 2 of 1,5."
 msgstr "Enter a number, like 2 or 1.5."
@@ -4380,7 +4373,7 @@ msgstr ""
 "expired, mark it as expired on the quote page."
 
 msgid "Naar inloggen"
-msgstr "To log in"
+msgstr "Log in"
 
 msgid "Regel"
 msgstr "Line"
@@ -5821,6 +5814,35 @@ msgid ""
 msgstr ""
 "If you have a Raspberry Pi, a NAS or a server of your own, you can also run "
 "Huismus in Docker. That's for people who are handy with that."
+
+#~ msgid "Fout 404"
+#~ msgstr "Error 404"
+
+#~ msgid "Fout 403"
+#~ msgstr "Error 403"
+
+#~ msgid ""
+#~ "Deze pagina is niet voor jou bedoeld, of je sessie hoort bij een ander "
+#~ "account."
+#~ msgstr ""
+#~ "This page isn't meant for you, or your session belongs to another account."
+
+#~ msgid "Fout 500"
+#~ msgstr "Error 500"
+
+#~ msgid "Er ging iets mis"
+#~ msgstr "Something went wrong"
+
+#~ msgid "Je sessie is verlopen"
+#~ msgstr "Your session has expired"
+
+#~ msgid ""
+#~ "De pagina stond een tijd open, daardoor kon het formulier niet veilig "
+#~ "worden verstuurd. Laad de pagina opnieuw en probeer het nog een keer. Er "
+#~ "is niets opgeslagen."
+#~ msgstr ""
+#~ "The page was open for a while, so the form couldn't be sent securely. "
+#~ "Reload the page and try again. Nothing was saved."
 
 #
 #~ msgid ""
