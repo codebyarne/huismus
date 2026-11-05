@@ -36,13 +36,13 @@ as its own program all the time.
    instructions for the Linux on your VPS (usually Ubuntu or Debian).
 
 2. **Tailscale.** Install Tailscale on the VPS following Tailscale's
-   instructions, and add the VPS to your network with:
+   instructions, and add the VPS to your network under the name `huismus`:
 
    ```
-   sudo tailscale up
+   sudo tailscale up --hostname=huismus
    ```
 
-   Name the VPS `huismus` in Tailscale. In Tailscale's admin console, under
+   In Tailscale's admin console, under
    DNS, turn on **MagicDNS** and **HTTPS certificates**. The VPS then gets
    its own address, such as `huismus.your-tailnet.ts.net`. That address
    only works on devices running Tailscale with your account.
@@ -75,7 +75,9 @@ as its own program all the time.
    ```
 
    `127.0.0.1:8000` keeps Huismus on the VPS itself. Nobody outside can
-   reach it, even with the firewall off. What the other lines do is under
+   reach it, even with the firewall off. There's no backup folder
+   (`/backups`) on purpose: a folder on the same VPS doesn't help if the
+   VPS is gone (see [Backups](#backups)). What the other lines do is under
    [Installing](docker.en.md#installing) on the Docker page.
 
 4. **HTTPS through Tailscale.** Let Tailscale pass Huismus on to your own
@@ -121,7 +123,9 @@ A server that can be reached from the internet gets tried all day long.
 
 ## Backups
 
-A backup on the same VPS doesn't help if the VPS breaks or you cancel the
+Without a backup folder, Huismus keeps its backups in `backups` inside
+`huismus-data`, so on the VPS itself. That includes the backup it makes
+before an update. A backup on the same VPS doesn't help if the VPS breaks or you cancel the
 subscription. So let Huismus send an encrypted backup to Dropbox or WebDAV
-every day:
+every day. You set that up once Huismus is running:
 [In the cloud: Dropbox or WebDAV](back-ups.en.md#in-the-cloud-dropbox-or-webdav).
