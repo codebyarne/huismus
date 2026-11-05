@@ -33,6 +33,7 @@ TOPICS = (
     "facturen",
     "offertes",
     "uitgaven",
+    "bonnetjes",
     "kor-en-btw",
     "moneybird",
     "back-ups",
