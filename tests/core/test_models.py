@@ -41,6 +41,25 @@ def test_attachment_cannot_belong_to_neither():
             Attachment.objects.create(file=ContentFile(b"%PDF-1.4", name="a.pdf"), kind="other")
 
 
+def test_a_receipt_may_wait_in_the_tray_without_an_expense():
+    """Bonnetjes onderweg (SPEC.md M20): a receipt from the receipts folder
+    belongs to nothing until the user makes an expense of it."""
+    attachment = Attachment.objects.create(
+        file=ContentFile(b"%PDF-1.4", name="a.pdf"), kind="receipt", source="bonnetjesmap"
+    )
+    assert attachment.document_id is None and attachment.expense_id is None
+    assert list(Attachment.objects.in_tray()) == [attachment]
+    assert attachment.file.name.startswith("attachments/bakje/")
+
+
+def test_only_a_receipt_may_wait_without_an_expense():
+    with pytest.raises(IntegrityError):
+        with transaction.atomic():
+            Attachment.objects.create(
+                file=ContentFile(b"%PDF-1.4", name="a.pdf"), kind="original_pdf"
+            )
+
+
 def test_attachment_cannot_belong_to_both():
     document = _issued_invoice()
     expense = Expense.objects.create(date="2026-01-15", amount_cents=1000)

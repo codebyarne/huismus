@@ -22,6 +22,10 @@ def attachment_upload_to(instance, filename):
         return f"attachments/documents/{instance.document_id}/{filename}"
     if instance.expense_id:
         return f"attachments/expenses/{instance.expense_id}/{filename}"
+    if instance.kind == "receipt":
+        # A receipt in the tray, from the receipts folder (huismus/expenses/inbox.py).
+        # It keeps this name once an expense is made of it.
+        return f"attachments/bakje/{filename}"
     return f"attachments/{filename}"
 
 
@@ -30,6 +34,13 @@ ATTACHMENT_KIND_CHOICES = [
     ("receipt", _("bonnetje")),
     ("other", _("overig")),
 ]
+
+
+class AttachmentQuerySet(models.QuerySet):
+    def in_tray(self):
+        """Receipts that wait for an expense: fetched from the receipts
+        folder, nothing made of them yet (SPEC.md M20)."""
+        return self.filter(document__isnull=True, expense__isnull=True, kind="receipt")
 
 
 class Attachment(TimestampedModel):
@@ -62,20 +73,24 @@ class Attachment(TimestampedModel):
     sha256 = models.CharField(_("sha256"), max_length=64, blank=True)
     source = models.CharField(_("bron"), max_length=50, blank=True)
 
+    objects = AttachmentQuerySet.as_manager()
+
     class Meta:
         verbose_name = _("bijlage")
         verbose_name_plural = _("bijlagen")
         constraints = [
             # SPEC.md's "`document` or `expense` FK" is exclusive-or, not
-            # "either or both/neither" — an attachment that belongs to
-            # nothing, or to both at once, is a data-integrity bug, not
-            # a state the schema should even allow.
+            # "either or both" — an attachment that belongs to both at once
+            # is a data-integrity bug, not a state the schema should even
+            # allow. Belonging to neither is only for a receipt in the
+            # tray, waiting for an expense (SPEC.md M20).
             models.CheckConstraint(
                 condition=(
                     models.Q(document__isnull=False, expense__isnull=True)
                     | models.Q(document__isnull=True, expense__isnull=False)
+                    | models.Q(document__isnull=True, expense__isnull=True, kind="receipt")
                 ),
-                name="attachment_exactly_one_of_document_expense",
+                name="attachment_one_of_document_expense_or_tray",
             )
         ]
 
