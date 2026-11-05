@@ -37,13 +37,13 @@ moet als eigen programma de hele tijd draaien.
    zelf, voor de Linux die op je VPS staat (meestal Ubuntu of Debian).
 
 2. **Tailscale.** Installeer Tailscale op de VPS volgens de uitleg van
-   Tailscale, en meld de VPS aan met:
+   Tailscale, en meld de VPS aan onder de naam `huismus`:
 
    ```
-   sudo tailscale up
+   sudo tailscale up --hostname=huismus
    ```
 
-   Geef de VPS in Tailscale de naam `huismus`. Zet in de beheeromgeving van
+   Zet in de beheeromgeving van
    Tailscale, bij DNS, **MagicDNS** en **HTTPS-certificaten** aan. De VPS
    krijgt dan een eigen adres, zoals `huismus.jouw-tailnet.ts.net`. Dat
    adres werkt alleen op apparaten waarop Tailscale aanstaat met jouw
@@ -77,7 +77,9 @@ moet als eigen programma de hele tijd draaien.
    ```
 
    `127.0.0.1:8000` houdt Huismus op de VPS zelf. Van buiten kan niemand
-   erbij, ook niet als de firewall uit staat. Wat de andere regels doen,
+   erbij, ook niet als de firewall uit staat. Een eigen back-upmap
+   (`/backups`) is er bewust niet: een map op dezelfde VPS helpt niet als
+   de VPS weg is (zie [Back-ups](#back-ups)). Wat de andere regels doen,
    staat bij [Installeren](docker.nl.md#installeren) op de pagina over
    Docker.
 
@@ -125,7 +127,9 @@ geprobeerd.
 
 ## Back-ups
 
-Een back-up op dezelfde VPS helpt niet als de VPS kapotgaat of je het
+Zonder back-upmap zet Huismus zijn back-ups in `backups` in `huismus-data`,
+dus op de VPS zelf. Dat geldt ook voor de back-up die hij maakt voordat hij
+bijwerkt. Een back-up op dezelfde VPS helpt niet als de VPS kapotgaat of je het
 abonnement opzegt. Laat Huismus daarom elke dag een versleutelde back-up
-naar Dropbox of WebDAV sturen:
+naar Dropbox of WebDAV sturen. Dat stel je in zodra Huismus draait:
 [In de cloud: Dropbox of WebDAV](back-ups.nl.md#in-de-cloud-dropbox-of-webdav).
