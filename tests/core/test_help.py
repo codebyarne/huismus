@@ -56,6 +56,20 @@ def test_help_links_only_to_help_pages_and_headings_that_exist(slug, language):
             assert f'id="{anchor}"' in help.render(other, language).html, href
 
 
+@pytest.mark.parametrize("language", help.LANGUAGES)
+@pytest.mark.parametrize("slug", help.TOPICS)
+def test_no_code_block_inside_a_list(slug, language):
+    """Python-Markdown doesn't see a fenced block inside a list item: the code
+    runs together on one line and the numbering starts over (found by
+    verify-e2e on Op een VPS, 2026-11-05). Write steps as headings instead."""
+    indented_fences = [
+        line for line in help.source(slug, language).splitlines() if re.match(r"\s+```", line)
+    ]
+    assert indented_fences == []
+    outside_blocks = re.sub(r"<pre>.*?</pre>", "", help.render(slug, language).html, flags=re.S)
+    assert not re.search(r"<code>[^<]*\n", outside_blocks)
+
+
 def test_a_link_to_another_help_file_becomes_its_page():
     html = help.render("desktop-app", "nl").html
     assert 'href="/hulp/back-ups/"' in html

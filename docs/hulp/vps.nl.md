@@ -33,83 +33,95 @@ moet als eigen programma de hele tijd draaien.
 
 ## Installeren
 
-1. **Docker.** Installeer Docker op de VPS volgens de uitleg van Docker
-   zelf, voor de Linux die op je VPS staat (meestal Ubuntu of Debian).
+### 1. Docker installeren
 
-2. **Tailscale.** Installeer Tailscale op de VPS volgens de uitleg van
-   Tailscale, en meld de VPS aan onder de naam `huismus`:
+Installeer Docker op de VPS volgens de uitleg van Docker
+zelf, voor de Linux die op je VPS staat (meestal Ubuntu of Debian).
 
-   ```
-   sudo tailscale up --hostname=huismus
-   ```
+### 2. Tailscale installeren
 
-   Zet in de beheeromgeving van
-   Tailscale, bij DNS, **MagicDNS** en **HTTPS-certificaten** aan. De VPS
-   krijgt dan een eigen adres, zoals `huismus.jouw-tailnet.ts.net`. Dat
-   adres werkt alleen op apparaten waarop Tailscale aanstaat met jouw
-   account.
+Installeer Tailscale op de VPS volgens de uitleg van
+Tailscale, en meld de VPS aan onder de naam `huismus`:
 
-3. **Huismus.** Zet dit in een bestand `compose.yaml`, in een map op de VPS.
-   Vul bij `jouw-tailnet` het adres in dat Tailscale je gaf:
+```
+sudo tailscale up --hostname=huismus
+```
 
-   ```yaml
-   services:
-     huismus:
-       image: ghcr.io/codebyarne/huismus:0.1
-       restart: unless-stopped
-       environment:
-         ALLOWED_HOSTS: huismus.jouw-tailnet.ts.net
-         CSRF_TRUSTED_ORIGINS: https://huismus.jouw-tailnet.ts.net
-         DJANGO_SUPERUSER_USERNAME: <gebruikersnaam>
-         DJANGO_SUPERUSER_PASSWORD: <wachtwoord>
-       volumes:
-         - huismus-data:/app/data
-       ports:
-         - "127.0.0.1:8000:8000"
-   volumes:
-     huismus-data:
-   ```
+Zet in de beheeromgeving van
+Tailscale, bij DNS, **MagicDNS** en **HTTPS-certificaten** aan. De VPS
+krijgt dan een eigen adres, zoals `huismus.jouw-tailnet.ts.net`. Dat
+adres werkt alleen op apparaten waarop Tailscale aanstaat met jouw
+account.
 
-   Start Huismus in die map met:
+### 3. Huismus starten
 
-   ```
-   docker compose up -d
-   ```
+Zet dit in een bestand `compose.yaml`, in een map op de VPS.
+Vul bij `jouw-tailnet` het adres in dat Tailscale je gaf:
 
-   `127.0.0.1:8000` houdt Huismus op de VPS zelf. Van buiten kan niemand
-   erbij, ook niet als de firewall uit staat. Een eigen back-upmap
-   (`/backups`) is er bewust niet: een map op dezelfde VPS helpt niet als
-   de VPS weg is (zie [Back-ups](#back-ups)). Wat de andere regels doen,
-   staat bij [Installeren](docker.nl.md#installeren) op de pagina over
-   Docker.
+```yaml
+services:
+  huismus:
+    image: ghcr.io/codebyarne/huismus:0.1
+    restart: unless-stopped
+    environment:
+      ALLOWED_HOSTS: huismus.jouw-tailnet.ts.net
+      CSRF_TRUSTED_ORIGINS: https://huismus.jouw-tailnet.ts.net
+      DJANGO_SUPERUSER_USERNAME: <gebruikersnaam>
+      DJANGO_SUPERUSER_PASSWORD: <wachtwoord>
+    volumes:
+      - huismus-data:/app/data
+    ports:
+      - "127.0.0.1:8000:8000"
+volumes:
+  huismus-data:
+```
 
-4. **HTTPS via Tailscale.** Laat Tailscale Huismus doorgeven aan je eigen
-   apparaten:
+Start Huismus in die map met:
 
-   ```
-   sudo tailscale serve --bg 8000
-   ```
+```
+docker compose up -d
+```
 
-   Met `tailscale serve status` zie je het adres.
+`127.0.0.1:8000` houdt Huismus op de VPS zelf. Van buiten kan niemand
+erbij, ook niet als de firewall uit staat. Een eigen back-upmap
+(`/backups`) is er bewust niet: een map op dezelfde VPS helpt niet als
+de VPS weg is (zie [Back-ups](#back-ups)). Wat de andere regels doen,
+staat bij [Installeren](docker.nl.md#installeren) op de pagina over
+Docker.
 
-5. **De firewall.** De poort op `127.0.0.1` is de bescherming. Een firewall
-   is een tweede slot voor al het andere op de VPS. Met `ufw` (op Ubuntu en
-   Debian) laat je alleen SSH en Tailscale binnen:
+### 4. HTTPS via Tailscale
 
-   ```
-   sudo ufw allow OpenSSH
-   sudo ufw allow in on tailscale0
-   sudo ufw enable
-   ```
+Laat Tailscale Huismus doorgeven aan je eigen
+apparaten:
 
-   Heeft je hostingbedrijf ook een firewall in de beheeromgeving? Zet daar
-   alleen SSH open.
+```
+sudo tailscale serve --bg 8000
+```
 
-6. **Openen.** Zet Tailscale aan op je telefoon, tablet of laptop en open
-   `https://huismus.jouw-tailnet.ts.net`. Log in met de gebruikersnaam en
-   het wachtwoord uit `compose.yaml`. Daarna mag je die twee regels
-   weghalen. Op je telefoon zet je Huismus als app op je beginscherm:
-   [Op je telefoon](telefoon.nl.md#huismus-als-app-installeren).
+Met `tailscale serve status` zie je het adres.
+
+### 5. De firewall instellen
+
+De poort op `127.0.0.1` is de bescherming. Een firewall
+is een tweede slot voor al het andere op de VPS. Met `ufw` (op Ubuntu en
+Debian) laat je alleen SSH en Tailscale binnen:
+
+```
+sudo ufw allow OpenSSH
+sudo ufw allow in on tailscale0
+sudo ufw enable
+```
+
+Heeft je hostingbedrijf ook een firewall in de beheeromgeving? Zet daar
+alleen SSH open.
+
+### 6. Huismus openen
+
+Zet Tailscale aan op je telefoon, tablet of laptop en open
+`https://huismus.jouw-tailnet.ts.net`. Log in met de gebruikersnaam en
+het wachtwoord uit `compose.yaml`. Daarna mag je die twee regels
+weghalen. Op je telefoon zet je Huismus als app op je beginscherm:
+[Op je telefoon](telefoon.nl.md#huismus-als-app-installeren).
 
 ## Nooit open op internet
 
