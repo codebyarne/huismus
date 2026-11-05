@@ -17,7 +17,7 @@ from huismus.core.models import Attachment
 from . import inbox
 
 # The radio buttons besides a suggested folder's path.
-OTHER_FOLDER, DROPBOX = "other", inbox.DROPBOX
+OTHER_FOLDER, DROPBOX, WEBDAV = "other", inbox.DROPBOX, inbox.WEBDAV
 
 
 def _state(status: inbox.Status) -> dict:
@@ -60,7 +60,8 @@ def settings_page(request):
 
     suggestions = inbox.suggestions()
     suggested = {str(path) for _name, path in suggestions}
-    dropbox_linked = cloud_backups.load().service == cloud_backups.DROPBOX
+    # The one cloud service linked at Back-ups, if any: it can be a choice.
+    cloud = cloud_backups.load().service
     error = None
 
     if request.method == "POST":
@@ -69,6 +70,8 @@ def settings_page(request):
         try:
             if choice == DROPBOX:
                 inbox.choose_dropbox()
+            elif choice == WEBDAV:
+                inbox.choose_webdav()
             else:
                 text = other_path if choice == OTHER_FOLDER else choice
                 # As the backup folder: absolute, outside the administration,
@@ -87,8 +90,8 @@ def settings_page(request):
         selected = choice
     else:
         on = inbox.is_on(status)
-        if on and status.source == inbox.DROPBOX:
-            selected, other_path = DROPBOX, ""
+        if on and status.source in (DROPBOX, WEBDAV):
+            selected, other_path = status.source, ""
         elif on and status.folder in suggested:
             selected, other_path = status.folder, ""
         elif on:
@@ -105,7 +108,7 @@ def settings_page(request):
             "suggestions": [
                 (name, str(path), auto_backups.folder_label(path)) for name, path in suggestions
             ],
-            "dropbox_linked": dropbox_linked,
+            "cloud": cloud,
             "selected": selected,
             "other_path": other_path,
             "error": error,

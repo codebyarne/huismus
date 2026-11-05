@@ -37,11 +37,13 @@
         {% if desktop %}
         {% if suggestions %}<p class="label">{% translate "Gevonden op deze computer" %}</p>{% endif %}
         {% elif not suggestions %}
-        <p class="small" id="map-koppelen">{% translate "Huismus in Docker ziet alleen mappen die je eraan koppelt. Gebruik Dropbox, of koppel een map, bijvoorbeeld een die Syncthing of Nextcloud bijhoudt." %} <a href="{{ help_url }}">{% translate "Zo werkt het" %} →</a></p>
+        <p class="small" id="map-koppelen">{% translate "Huismus in Docker ziet alleen mappen die je eraan koppelt. Gebruik Dropbox of WebDAV, of koppel een map, bijvoorbeeld een die Syncthing bijhoudt." %} <a href="{{ help_url }}">{% translate "Zo werkt het" %} →</a></p>
         {% endif %}
         <div class="stack folder-choices" style="gap:var(--s-2)">
-            {% if dropbox_linked %}
+            {% if cloud == "dropbox" %}
             <label class="file-item"><span class="f-icon"><input type="radio" name="folder" value="dropbox"{% if selected == "dropbox" %} checked{% endif %}></span><span><span class="f-name">Dropbox</span><span class="f-meta">{% translate "Apps › Huismus › Bonnetjes, met de Dropbox die je voor back-ups koppelde" %}</span></span></label>
+            {% elif cloud == "webdav" %}
+            <label class="file-item"><span class="f-icon"><input type="radio" name="folder" value="webdav"{% if selected == "webdav" %} checked{% endif %}></span><span><span class="f-name">WebDAV</span><span class="f-meta">{% translate "Huismus › Bonnetjes, met de WebDAV die je voor back-ups instelde" %}</span></span></label>
             {% endif %}
             {% for name, path, label in suggestions %}
             <label class="file-item"><span class="f-icon"><input type="radio" name="folder" value="{{ path }}"{% if selected == path %} checked{% endif %}></span><span><span class="f-name">{{ name }}</span><span class="f-meta">{{ label }}</span></span></label>
@@ -57,7 +59,7 @@
             </div>
             {% if error %}<p class="error" id="map-fout"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>{{ error }}</p>{% endif %}
         </div>
-        {% if not dropbox_linked %}<p class="small muted" id="dropbox-eerst">{% translate "Wil je Dropbox gebruiken? Koppel Dropbox eerst bij Back-ups." %} <a href="{% url 'business:backups' %}">{% translate "Naar Back-ups" %} →</a></p>{% endif %}
+        {% if not cloud %}<p class="small muted" id="cloud-eerst">{% translate "Wil je Dropbox of WebDAV gebruiken? Stel dat eerst in bij Back-ups." %} <a href="{% url 'business:backups' %}">{% translate "Naar Back-ups" %} →</a></p>{% endif %}
         <div class="row"><a class="btn btn-ghost" href="{% url 'business:overview' %}">{% translate "Annuleren" %}</a><span class="spacer"></span><button type="submit" class="btn btn-primary"><span class="spinner" aria-hidden="true"></span>{% translate "Opslaan" %}</button></div>
     </div>
 </form>
