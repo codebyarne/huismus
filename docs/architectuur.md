@@ -71,7 +71,8 @@ uit het diagram haalt:
 - **`Attachment` staat in `core`**, omdat zowel `documents` (de originele pdf
   uit Moneybird) als `expenses` (bonnetjes) ernaar wijzen; zo hoeven die twee
   apps niet van elkaar af te hangen. Een bijlage hoort bij een document óf
-  een uitgave.
+  een uitgave. Alleen een bonnetje uit de bonnetjesmap hoort even bij geen
+  van beide, tot je er een uitgave van maakt (`expenses/inbox.py`, M20).
 - **`NumberSequence`** heeft geen relaties: één rij per soort (en per jaar
   als de nummering jaarlijks opnieuw begint). Nummers deelt alleen
   `documents.numbering` uit; de Moneybird-import zet de teller daarnaast
@@ -101,7 +102,7 @@ uit het diagram haalt:
 | `business` | Instellingen: bedrijfsgegevens, de KOR-instellingen van de gebruiker (aan/uit, de tekst op de factuur), nummerformaten, logo, mailserver. | `models.py` (`Settings`), `topics.py`, `kor_limit.py`, `smtp.py`, `svg_sanitize.py` |
 | `contacts` | Klanten en hun contactpersonen. | `models.py`, `numbering.py` (klantnummers) |
 | `documents` | Offertes, facturen en creditnota's: bewerken, uitgeven, pdf, betalingen, mailen. Het hart van Huismus. | `totals.py`, `issuing.py`, `numbering.py`, `reopening.py`, `snapshots.py`, `quoting.py`, `drafts.py`, `pdf.py`, `mailing.py` |
-| `expenses` | Uitgaven met regels (elk een eigen categorie, zoals in Moneybird), categorieën, bonnetjes. | `models.py`, `lines.py` (de regels en het totaal van een uitgave), `receipts.py` |
+| `expenses` | Uitgaven met regels (elk een eigen categorie, zoals in Moneybird), categorieën, bonnetjes, en de bonnetjesmap die bonnetjes van onderweg ophaalt. | `models.py`, `lines.py` (de regels en het totaal van een uitgave), `receipts.py`, `inbox.py` (de bonnetjesmap) |
 | `reports` | Rapporten, nu alleen het jaaroverzicht: omzet, kosten en winst per kwartaal en per categorie, de KOR-grens, CSV. Alleen lezen. | `year_overview.py`, `views.py` |
 | `imports` | De Moneybird-import: herkennen, inlezen, proefdraai, doorvoeren, en bewaren wat er in de export stond. | `pipeline.py`, `detect.py`, `columns.py` (waar elke kolom heen gaat), `archive.py` (ruwe rijen en de originele export), `contacts.py`, `invoices.py`, `quotes.py`, `expenses.py` (inkomende documenten → uitgaven met bonnetjes), `commit.py`, `staging.py` |
 | `assistants` | De koppeling met AI-assistenten via MCP op `/mcp`, en de pagina Instellingen → AI-assistenten. | `protocol.py`, `tools.py`, `key.py`, `views.py` |
