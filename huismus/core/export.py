@@ -59,7 +59,9 @@ def years() -> list[int]:
 
 
 def filename(year: int | None) -> str:
-    return f"huismus-export-{year or pgettext('export of', 'alles')}.zip"
+    # Outside the f-string: makemessages (xgettext) doesn't see a call inside one.
+    which = year or pgettext("export of", "alles")
+    return f"huismus-export-{which}.zip"
 
 
 def _yes_no(value: bool) -> str:
