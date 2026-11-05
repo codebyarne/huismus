@@ -14,7 +14,7 @@ from huismus.core import cloud_backups
 from huismus.core.models import Attachment
 from huismus.expenses import inbox
 from huismus.expenses.models import Expense
-from tests.cloud_fakes import FakeDropbox
+from tests.cloud_fakes import ADDRESS, PASSWORD, USERNAME, FakeDropbox, FakeWebDAV
 
 pytestmark = pytest.mark.django_db
 
@@ -63,13 +63,14 @@ def test_the_pages_need_a_login(client):
 # -- Bonnetjesmap -------------------------------------------------------------------
 
 
-def test_off_it_offers_a_folder_and_says_to_link_dropbox_first(client, user):
+def test_off_it_offers_a_folder_and_says_to_set_up_a_cloud_service_first(client, user):
     response = client.get(reverse("business:receipts_folder"))
 
     assert response.status_code == 200
     assert b'id="bonnetjesmap-aan"' not in response.content
-    assert b'id="dropbox-eerst"' in response.content
+    assert b'id="cloud-eerst"' in response.content
     assert b'value="dropbox"' not in response.content
+    assert b'value="webdav"' not in response.content
 
 
 def test_choosing_a_folder_makes_it_and_looks_at_once(client, user, tmp_path):
@@ -155,12 +156,69 @@ def test_dropbox_is_a_choice_once_linked(client, user, monkeypatch):
 
     content = client.get(reverse("business:receipts_folder")).content.decode()
     assert 'value="dropbox"' in content
-    assert 'id="dropbox-eerst"' not in content
+    assert 'value="webdav"' not in content
+    assert 'id="cloud-eerst"' not in content
 
     client.post(reverse("business:receipts_folder"), {"folder": "dropbox"})
 
     assert inbox.load().source == inbox.DROPBOX
     assert "Bonnetjes" in fake.folders
+
+
+@pytest.fixture
+def webdav(monkeypatch):
+    fake = FakeWebDAV()
+    fake.install(monkeypatch)
+    cloud_backups.link_webdav(ADDRESS, USERNAME, PASSWORD)
+    yield fake
+    fake.close()
+
+
+def test_webdav_is_a_choice_once_set_up(client, user, webdav):
+    content = client.get(reverse("business:receipts_folder")).content.decode()
+    assert 'value="webdav"' in content
+    assert 'value="dropbox"' not in content
+    assert 'id="cloud-eerst"' not in content
+
+    webdav.files["Huismus/Bonnetjes/bon.pdf"] = PDF  # waiting before it was chosen
+    webdav.folders.update({"Huismus", "Huismus/Bonnetjes"})
+    response = client.post(reverse("business:receipts_folder"), {"folder": "webdav"})
+
+    assert response.status_code == 302
+    assert inbox.load().source == inbox.WEBDAV
+    # Choosing looks at once.
+    assert Attachment.objects.in_tray().count() == 1
+    content = client.get(reverse("business:receipts_folder")).content.decode()
+    assert "https://dav.test/remote.php/dav/files/sanne › Huismus › Bonnetjes" in content
+    assert 'value="webdav" checked' in content
+
+
+def test_webdav_that_cannot_be_reached_is_not_chosen(client, user, webdav):
+    webdav.password = "ingetrokken"
+
+    response = client.post(reverse("business:receipts_folder"), {"folder": "webdav"})
+
+    assert response.status_code == 200
+    assert "Het wachtwoord werd geweigerd." in response.content.decode()
+    assert inbox.load().source == ""
+
+
+def test_a_failed_webdav_look_says_why(client, user, webdav):
+    inbox.choose_webdav()
+    webdav.close()
+    inbox.fetch()
+
+    content = client.get(reverse("expenses:tray")).content.decode()
+    assert "Huismus kon WebDAV niet bereiken." in content
+
+
+def test_unlinking_webdav_at_backups_turns_it_off(client, user, webdav):
+    inbox.choose_webdav()
+
+    client.post(reverse("business:backups_unlink"))
+
+    assert inbox.load().source == ""
+    assert b'id="cloud-eerst"' in client.get(reverse("business:receipts_folder")).content
 
 
 def test_the_settings_card(client, user, folder):

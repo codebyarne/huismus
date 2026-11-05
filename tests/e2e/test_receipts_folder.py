@@ -8,9 +8,11 @@ and at every width: test_every_page.py."""
 import pytest
 from playwright.sync_api import expect
 
+from huismus.core import cloud_backups
 from huismus.core.models import Attachment
 from huismus.expenses import inbox
 from huismus.expenses.models import Expense
+from tests.cloud_fakes import ADDRESS, PASSWORD, USERNAME, FakeWebDAV
 
 pytestmark = pytest.mark.django_db(transaction=True)
 
@@ -120,3 +122,31 @@ def test_without_the_kor_the_vat_must_be_filled_in(app):
     app.locator("[name=lines-0-vat_info_cents]").fill("0")
     app.get_by_role("button", name="Opslaan").click()
     expect(app.locator("#toasts")).to_contain_text("Uitgave opgeslagen.")
+
+
+def test_choose_webdav_and_pick_up_from_it(app, monkeypatch):
+    """WebDAV set up for backups is a choice too (huismus-intern/besluiten.md,
+    2026-11-05, "WebDAV als bron"), against the fake of tests/cloud_fakes.py."""
+    dav = FakeWebDAV()
+    dav.install(monkeypatch)
+    try:
+        app.goto(app.base + "/instellingen/bonnetjesmap/")
+        expect(app.locator("#cloud-eerst")).to_contain_text("Dropbox of WebDAV")
+        cloud_backups.link_webdav(ADDRESS, USERNAME, PASSWORD)
+
+        app.reload()
+        expect(app.locator("#cloud-eerst")).to_have_count(0)
+        app.get_by_text("Huismus › Bonnetjes, met de WebDAV").click()
+        app.get_by_role("button", name="Opslaan").click()
+
+        place = "https://dav.test/remote.php/dav/files/sanne › Huismus › Bonnetjes"
+        expect(app.locator("#bonnetjesmap-plek")).to_have_text(place)
+        assert "Huismus/Bonnetjes" in dav.folders
+
+        dav.files["Huismus/Bonnetjes/bouwmarkt.pdf"] = PDF
+        app.get_by_role("button", name="Nu ophalen").click()
+        expect(app.locator("#bonnetjes-gekeken")).to_contain_text("1 nieuw bonnetje.")
+        assert dav.files["Huismus/Bonnetjes/Opgehaald/bouwmarkt.pdf"] == PDF
+        assert Attachment.objects.in_tray().count() == 1
+    finally:
+        dav.close()

@@ -13,13 +13,16 @@ Go to **Settings → Receipts folder** and choose where Huismus looks.
   a folder `Huismus receipts` in iCloud Drive, Google Drive, OneDrive or
   Dropbox, if they are on your laptop. Huismus makes the folder right away,
   so you see it on your phone too.
-- **In Docker, on a Raspberry Pi for example,** you choose **Dropbox**. For
-  that you first link Dropbox under **Settings → Backups**. Huismus then
-  looks in **Apps › Huismus › Receipts** in your Dropbox. Huismus fetches the
-  receipts itself and stays unreachable from the internet.
-- Do you use Syncthing or Nextcloud? Then choose a plain folder that such a
-  program keeps in sync. In Docker you link it first, see
-  [Huismus in Docker](docker.en.md).
+- **In Docker, on a Raspberry Pi for example,** you choose **Dropbox** or
+  **WebDAV**. For that you first set it up under **Settings → Backups**.
+  Huismus fetches the receipts itself and stays unreachable from the internet.
+  - With **Dropbox**, Huismus looks in **Apps › Huismus › Receipts** in your
+    Dropbox.
+  - With **WebDAV**, such as Nextcloud, kDrive or Koofr, Huismus looks in the
+    folder **Huismus › Receipts**, next to your backups. You see that folder
+    in your storage service's app on your phone too.
+- Do you use Syncthing? Then choose a plain folder that Syncthing keeps in
+  sync. In Docker you link it first, see [Huismus in Docker](docker.en.md).
 
 Huismus looks every 10 minutes. Don't want to wait? Click **Pick up now**.
 
@@ -33,7 +36,7 @@ tap the three dots and choose **Scan Documents**. That makes a PDF. Huismus
 doesn't pick up HEIC photos yet, and a scan is always a PDF.
 
 **Android:** share the photo with the app of your service, such as Google
-Drive, OneDrive or Dropbox, and choose the folder.
+Drive, OneDrive, Dropbox or Nextcloud, and choose the folder.
 
 Huismus picks up PDFs, JPGs and PNGs, up to 10 MB per file.
 
