@@ -3,26 +3,22 @@
 """Instellingen → Bonnetjes lezen (SPEC.md M20, part 3; huismus/expenses/
 ai_service.py; choices in huismus-intern/besluiten.md, 2026-11-06).
 
-One form, a plain POST. Saving first sends one small test image, as
-setting up WebDAV first tries the address: when that fails nothing is
-saved and the form says why. The key is never put back in the field.
+One form, a plain POST. Saving first sends one small test image
+(_works): when that fails nothing is saved and the form says why. The key
+is never put back in the field.
 """
 
 from django import forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
-from django.utils.translation import get_language, gettext_lazy, ngettext
 from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy, ngettext
 
-from huismus.core import help
 from huismus.core.models import Attachment
 
 from . import ai_service, inbox
 from .ai_service import Config, ServiceError
-
-# The heading on the help page, per language (docs/hulp/bonnetjes.*.md).
-HELP_ANCHOR = {"nl": "#bonnetjes-lezen", "en": "#receipt-reading"}
 
 
 class ServiceSelect(forms.Select):
@@ -68,6 +64,7 @@ class ReadingForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.saved = saved
         self.fields["provider"].choices = [("", _("Kies een dienst")), *ai_service.choices()]
+        # What clean() made of the fields; the view tests it before saving.
         self.config: Config | None = None
 
     def clean(self):
@@ -87,20 +84,13 @@ class ReadingForm(forms.Form):
             self.add_error("url", error)
         if not model:
             self.add_error("model", _("Vul dit in."))
-        key = cleaned.get("key") or self.saved.key
+        # The saved key only goes along to the same address: never one
+        # service's key to another.
+        key = cleaned.get("key") or (self.saved.key if url == self.saved.url else "")
         if not key and url and not ai_service.is_nearby(url):
             self.add_error("key", _("Vul je API-sleutel in."))
-        if self.errors:
-            return cleaned
-        config = Config(provider=provider, url=url, model=model, key=key)
-        try:
-            ai_service.test_connection(config)
-        except ServiceError as error:
-            # Under "Nog niet opgeslagen" of the form's error summary.
-            raise forms.ValidationError(
-                ai_service.failure_sentence(error.reason, config)
-            ) from error
-        self.config = config
+        if not self.errors:
+            self.config = Config(provider=provider, url=url, model=model, key=key)
         return cleaned
 
 
@@ -114,7 +104,7 @@ def _sentence(form: ReadingForm) -> str:
             "adres hierboven, in je eigen netwerk."
         )
     if provider:
-        service = ai_service.name(Config(provider=provider, url=url))
+        service = ai_service.provider_name(provider, url)
         return _(
             "Na het opslaan stuurt Huismus elk nieuw bonnetje uit je bonnetjesmap naar "
             "%(service)s. %(service)s rekent de kosten met jou af."
@@ -134,6 +124,18 @@ def _waiting_sentence() -> str:
         "Ook de %(count)s bonnetjes zonder uitgave die er nu zijn.",
         count,
     ) % {"count": count}
+
+
+def _works(form: ReadingForm) -> bool:
+    """Saving first sends one small test image, as setting up WebDAV first
+    tries the address. When it fails, the reason goes under "Nog niet
+    opgeslagen" of the form's error summary."""
+    try:
+        ai_service.test_connection(form.config)
+    except ServiceError as error:
+        form.add_error(None, ai_service.failure_sentence(error.reason, form.config))
+        return False
+    return True
 
 
 @login_required
@@ -161,7 +163,7 @@ def settings_page(request):
                 )
             return redirect("business:receipt_reading")
         form = ReadingForm(request.POST, saved=saved)
-        if form.is_valid():
+        if form.is_valid() and _works(form):
             ai_service.save(form.config)
             messages.success(
                 request,
@@ -194,6 +196,7 @@ def settings_page(request):
             "sentence": _sentence(form),
             "waiting": _waiting_sentence(),
             "key_help": key_help,
-            "help_url": help.url("bonnetjes", HELP_ANCHOR.get(get_language(), HELP_ANCHOR["nl"])),
+            # The help heading comes with reading itself (part 3, step 2).
+            "help_url": "",
         },
     )

@@ -17,6 +17,7 @@ the mail password. The key is never shown again after it is saved.
 import base64
 import ipaddress
 import json
+import logging
 import urllib.error
 import urllib.request
 from dataclasses import asdict, dataclass
@@ -30,6 +31,8 @@ from django.utils.translation import gettext_lazy
 from PIL import Image, ImageDraw
 
 from huismus.core.private_files import write_owner_only
+
+logger = logging.getLogger("huismus.receipts")
 
 FILE_PREFIX = "ai-service"
 CONFIG_FILE_NAME = f"{FILE_PREFIX}.json"
@@ -91,9 +94,15 @@ def _path() -> Path:
 
 
 def load() -> Config:
+    """The saved service; off (an empty Config) without the file. A file
+    that can't be read counts as off too, with a line in the log: the
+    page then offers to set the service up again."""
     try:
         data = json.loads(_path().read_text(encoding="utf-8"))
-    except (FileNotFoundError, ValueError):
+    except FileNotFoundError:
+        return Config()
+    except (OSError, ValueError) as error:
+        logger.warning("%s niet te lezen: %s", CONFIG_FILE_NAME, error)
         return Config()
     return Config(**{name: str(data.get(name, "")) for name in Config.__dataclass_fields__})
 
@@ -114,9 +123,13 @@ def is_on(config: Config | None = None) -> bool:
 def name(config: Config | None = None) -> str:
     """The service as the user knows it: "Mistral", or the address's host."""
     config = config or load()
-    if config.provider in PROVIDERS:
-        return PROVIDERS[config.provider].name
-    return urlsplit(config.url).hostname or config.url
+    return provider_name(config.provider, config.url)
+
+
+def provider_name(provider: str, url: str) -> str:
+    if provider in PROVIDERS:
+        return PROVIDERS[provider].name
+    return urlsplit(url).hostname or url
 
 
 # -- The address --------------------------------------------------------------
@@ -153,11 +166,10 @@ def address_error(url: str) -> str | None:
 
 # -- Talking to the service ---------------------------------------------------
 
-# Why a request failed. REFUSED, UNREACHABLE, BUSY and SERVER mean the
-# service did no work: nothing was paid, so the receipt may be tried again.
+# Why a request failed. Only after TIMEOUT_REASON may the service have
+# done the work (and charged for it): with every other reason it did none.
 REFUSED, UNREACHABLE, BUSY, SERVER = "refused", "unreachable", "busy", "server"
 NO_MODEL, NO_IMAGES, TIMEOUT_REASON, ANSWER = "no_model", "no_images", "timeout", "answer"
-NOTHING_PAID = (REFUSED, UNREACHABLE, BUSY, SERVER)
 
 
 class ServiceError(Exception):
@@ -240,8 +252,11 @@ def _reason(status: int, body: bytes) -> str:
         return BUSY
     if status >= 500:
         return SERVER
-    if status == 404 or "model" in message and ("not found" in message or "exist" in message):
+    if "model" in message and ("not found" in message or "exist" in message):
         return NO_MODEL
+    if status == 404:
+        # Nothing at this address: a typing error in it, most likely.
+        return UNREACHABLE
     if "image" in message or "vision" in message or "multimodal" in message:
         return NO_IMAGES
     return ANSWER

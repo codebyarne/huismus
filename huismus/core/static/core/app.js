@@ -604,13 +604,18 @@ document.addEventListener("click", async (event) => {
 });
 
 // Bonnetjes lezen: choosing a known service puts its address and model
-// (data-url, data-model on its option) in the fields. Without JS, saving
-// fills in what was left empty (expenses.reading_views).
+// (data-url, data-model on its option) in the fields, unless the user typed
+// something of their own there: a field is filled only while it is empty
+// or still holds another service's suggestion. Without JS, saving fills in
+// what was left empty (expenses.reading_views).
 document.addEventListener("change", (event) => {
   const select = event.target;
   if (!select.matches?.("[data-service-fields] select[name=provider]")) return;
   const option = select.selectedOptions[0];
   if (!option?.dataset.url) return;
-  select.form.elements.url.value = option.dataset.url;
-  select.form.elements.model.value = option.dataset.model;
+  const suggested = (name) => [...select.options].map((o) => o.dataset[name]).filter(Boolean);
+  for (const name of ["url", "model"]) {
+    const field = select.form.elements[name];
+    if (!field.value || suggested(name).includes(field.value)) field.value = option.dataset[name];
+  }
 });
