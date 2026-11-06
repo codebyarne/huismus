@@ -88,9 +88,11 @@ bij elke vraag eerst vanuit die administratie, dan pas vanuit het scherm:
    wie zonder KOR werkt; de eigenaar zag het, niet jij).
 
 Wat de wet of de Belastingdienst precies vraagt, haal je uit
-`docs/invoice-requirements.md` en de bronpagina's die daar staan, niet uit je
-geheugen. Staat iets er niet in, beweer het dan niet: zeg in je besluit dat de
-bron ontbreekt en dat die eerst met bronlink in dat bestand moet. Deze kennis
+`docs/invoice-requirements.md` (factuureisen) en, bij elke vraag over geld
+(btw, KOR, uitgaven, aangifte, bewaren), ook uit `docs/belastingregels.md`,
+met de bronpagina's die daar staan, niet uit je geheugen. Staat iets er niet
+in, of staat er "Bron ontbreekt", beweer het dan niet: zeg in je besluit dat
+de bron ontbreekt en dat die eerst met bronlink in een van die bestanden moet. Deze kennis
 stuurt de volgorde en de vorm van een scherm; hij komt niet als juridische of
 fiscale bewering in UI-tekst of codecommentaar (`CLAUDE.md`). "Bewaar je
 bonnetje hier" mag, "je moet dit 7 jaar bewaren" niet.

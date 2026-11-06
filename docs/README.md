@@ -60,6 +60,8 @@ Bij elke release zet `.github/workflows/pages.yml` hem online, en met de hand
 - [`design/`](design/): het ontwerp en de componentenpagina.
 - [`invoice-requirements.md`](invoice-requirements.md): factuureisen met
   bronnen.
+- [`belastingregels.md`](belastingregels.md): KOR, btw-tarieven,
+  voorbelasting, btw-aangifte en bewaarplicht, met bronnen.
 
 De productbesluiten, de backlog, het logboek per mijlpaal en de registratie
 bij Google, Microsoft en Dropbox staan in een privé-repo van de maintainer,
