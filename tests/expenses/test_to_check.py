@@ -104,13 +104,14 @@ def test_the_expense_shows_the_notice(logged_in):
 
 def test_klopt_saves_and_goes_on_to_the_next_one(logged_in):
     first = _expense("Gamma", needs_review=True)
-    _expense("Praxis", needs_review=True)
+    second = _expense("Praxis", needs_review=True)
 
     response = logged_in.post(
         reverse("expenses:edit", args=[first.pk]), _form(first, supplier="Gamma BV", klopt="1")
     )
 
-    assert response.url == reverse("expenses:list") + "?nakijken=1"
+    # The order and "Overslaan": tests/expenses/test_batch.py.
+    assert response.url == reverse("expenses:edit", args=[second.pk])
     first.refresh_from_db()
     assert (first.needs_review, first.supplier) == (False, "Gamma BV")
 

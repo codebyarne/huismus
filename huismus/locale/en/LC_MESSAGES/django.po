@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 12:20+0100\n"
+"POT-Creation-Date: 2026-11-06 17:22+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -4528,8 +4528,20 @@ msgstr "Receipts without an expense"
 msgid "Je AI-assistent vulde deze uitgave in. Klopt alles?"
 msgstr "Your AI assistant filled in this expense. Is everything right?"
 
+#, python-format
+msgid "Hierna nog %(count)s."
+msgid_plural "Hierna nog %(count)s."
+msgstr[0] "%(count)s more after this one."
+msgstr[1] "%(count)s more after this one."
+
 msgid "Klopt"
 msgstr "Looks right"
+
+#, python-format
+msgid "Hierna nog %(count)s bonnetje."
+msgid_plural "Hierna nog %(count)s bonnetjes."
+msgstr[0] "%(count)s more receipt after this one."
+msgstr[1] "%(count)s more receipts after this one."
 
 #, python-format
 msgid "%(count)s bestand"

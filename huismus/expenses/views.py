@@ -13,7 +13,7 @@ from django.utils.translation import gettext_lazy as _
 
 from huismus.core.models import Attachment
 
-from . import inbox
+from . import batch, inbox
 from .forms import (
     ExpenseCategoryForm,
     ExpenseForm,
@@ -161,6 +161,8 @@ def _expense_form_or_gone(request, expense):
     # A new expense's amount 0 lasts only until save_lines() below, in the
     # same transaction, sets the sum of its lines.
     instance = expense or Expense(amount_cents=0)
+    # Where it stands in Nakijken, before the form changes its date.
+    date_in_list = expense.date if expense else None
     # A new expense takes its receipt along in the same form: one from the
     # tray (SPEC.md M20), or a file to upload. An existing one has the
     # Bonnetjes section with its own upload (receipt_upload).
@@ -195,13 +197,20 @@ def _expense_form_or_gone(request, expense):
                         raise TrayReceiptGone()
             if "klopt" in request.POST:
                 # "Klopt" in the notice saves the form too, so nothing the
-                # user just changed is lost; then back to what's left to check.
+                # user just changed is lost; then on to the next one to
+                # check (huismus/expenses/batch.py), after the last one the list.
                 messages.success(request, _("Uitgave nagekeken."))
-                url = reverse("expenses:list")
-                if Expense.objects.filter(needs_review=True).exists():
-                    url += "?nakijken=1"
-                return redirect(url)
+                following = batch.next_to_check(saved, date=date_in_list)
+                if following is not None:
+                    return redirect("expenses:edit", pk=following.pk)
+                return redirect("expenses:list")
             messages.success(request, _("Uitgave opgeslagen."))
+            if tray_receipt is not None and "regel_toevoegen" not in request.POST:
+                # From the receipts without an expense: on to the next one,
+                # after the last one this expense.
+                following = batch.next_receipt(tray_receipt)
+                if following is not None:
+                    return redirect(reverse("expenses:create") + f"?bonnetje={following.pk}")
             url = reverse("expenses:edit", kwargs={"pk": saved.pk})
             # "Regel toevoegen" (form.html) is a submit button named
             # regel_toevoegen. With JS, app.js adds the line on the spot
@@ -235,6 +244,13 @@ def _expense_form_or_gone(request, expense):
     }
     if expense:
         context["receipt_form"] = ReceiptUploadForm()
+    # "Hierna nog 2." and "Overslaan": the next without saving.
+    if expense and expense.needs_review:
+        context["skip_to"] = batch.next_to_check(expense)
+        context["left_after"] = batch.to_check_after(expense)
+    if tray_receipt is not None:
+        context["skip_to_receipt"] = batch.next_receipt(tray_receipt)
+        context["left_after"] = batch.receipts_after(tray_receipt)
     return render(request, "expenses/form.html", context)
 
 
