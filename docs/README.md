@@ -26,13 +26,15 @@ de app, maak ze dan opnieuw en commit ze:
 ./scripts/site-beelden.sh
 ```
 
-Een promofilmpje (16 stille seconden in een lus, 1920×1080 mp4, voor LinkedIn
-en dergelijke): een nieuwe factuur krijgt een klant en een regel, en wordt
+Een promofilmpje (16 seconden in een lus, 1920×1080 mp4, voor LinkedIn en
+dergelijke): een nieuwe factuur krijgt een klant en een regel, en wordt
 uitgegeven. Van dezelfde verzonnen administratie, met een camera die in- en
-uitzoomt. Komt in `~/Downloads`, niet in de repo:
+uitzoomt en een zacht tikje bij elke klik en toets. Komt in `~/Downloads`,
+niet in de repo. Muziek eronder is optioneel (let op de licentie):
 
 ```
 ./scripts/promo-film.sh
+./scripts/promo-film.sh ~/Downloads/huismus-factuur.mp4 muziek.mp3
 ```
 
 Zelf bekijken:
