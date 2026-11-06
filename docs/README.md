@@ -71,6 +71,8 @@ Bij elke release zet `.github/workflows/pages.yml` hem online, en met de hand
 - [`design/`](design/): het ontwerp en de componentenpagina.
 - [`invoice-requirements.md`](invoice-requirements.md): factuureisen met
   bronnen.
+- [`belastingregels.md`](belastingregels.md): KOR, btw-tarieven,
+  voorbelasting, btw-aangifte en bewaarplicht, met bronnen.
 
 De backlog staat openbaar in de
 [issues](https://github.com/codebyarne/huismus/issues). De productbesluiten,
