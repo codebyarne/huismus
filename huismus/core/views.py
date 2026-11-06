@@ -20,6 +20,7 @@ from huismus.business.models import Settings
 from huismus.documents.listing import expiry_hint
 from huismus.documents.models import Document
 from huismus.documents.numbering import next_numbers_if_issued_today
+from huismus.expenses.inbox_views import new_receipts_context
 from huismus.reports.year_overview import compute_year_overview
 
 from . import (
@@ -121,6 +122,7 @@ def home(request):
             ],
             **_backup_context(now),
             **_update_notices(request),
+            **new_receipts_context(),
         },
     )
 

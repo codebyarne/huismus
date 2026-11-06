@@ -33,7 +33,7 @@ def test_set_up_a_folder_pick_up_now_and_make_an_expense(app, tmp_path):
     app.get_by_label("Pad naar de map").fill(str(folder))
     app.get_by_role("button", name="Opslaan").click()
 
-    expect(app.locator("#toasts")).to_contain_text("Huismus kijkt elke 10 minuten in")
+    expect(app.locator("#toasts")).to_contain_text("Huismus haalt nieuwe bonnetjes vanzelf op uit")
     expect(app.locator("#bonnetjesmap-plek")).to_have_text(str(folder))
     assert folder.is_dir()
 
@@ -120,3 +120,30 @@ def test_without_the_kor_the_vat_must_be_filled_in(app):
     app.locator("[name=lines-0-vat_info_cents]").fill("0")
     app.get_by_role("button", name="Opslaan").click()
     expect(app.locator("#toasts")).to_contain_text("Uitgave opgeslagen.")
+
+
+def test_new_receipts_appear_on_the_overview_without_reloading(app, tmp_path):
+    # huismus-intern/besluiten.md, 2026-11-06: the overview asks every 30
+    # seconds while the receipts folder is on.
+    from huismus.contacts.models import Contact
+
+    Contact.objects.create(company_name="Klant BV")
+    folder = tmp_path / "bonnetjes"
+    folder.mkdir()
+    inbox.choose_folder(folder)
+
+    app.goto(app.base + "/")
+    expect(app.locator("#nieuwe-bonnetjes")).to_be_attached()
+    expect(app.locator("#nieuwe-bonnetjes")).to_have_text("")
+
+    (folder / "een.pdf").write_bytes(PDF)
+    (folder / "twee.pdf").write_bytes(PDF + b"2")
+    inbox.fetch()
+
+    notice = app.locator("#nieuwe-bonnetjes")
+    expect(notice).to_contain_text("2 nieuwe bonnetjes.", timeout=40_000)
+    notice.get_by_role("link").click()
+    expect(app.locator("h1")).to_have_text("Bonnetjes zonder uitgave")
+
+    app.goto(app.base + "/")
+    expect(app.locator("#nieuwe-bonnetjes")).not_to_contain_text("bonnetje")

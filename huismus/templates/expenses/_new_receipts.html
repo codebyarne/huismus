@@ -1,0 +1,14 @@
+{% load i18n %}
+{% comment %}"2 nieuwe bonnetjes" on the overview (huismus-intern/besluiten.md, 2026-11-06; SPEC.md M20): receipts the receipts folder brought in since the last visit to the tray. While the folder is on, the holder fetches itself every 30 seconds (expenses.inbox_views.new_receipts, which only reads), so the notice appears without reloading; without JS it shows at the next load. No close button: it goes once the tray is opened.{% endcomment %}
+{% if receipts_folder_on %}
+<div id="nieuwe-bonnetjes" role="status" hx-get="{% url 'expenses:new_receipts' %}" hx-trigger="every 30s" hx-swap="outerHTML">
+    {% if new_receipts %}
+    <a class="hint-banner is-info" href="{% url 'expenses:tray' %}" style="margin-bottom:var(--s-4)">
+        <svg class="i" aria-hidden="true"><use href="#paperclip"></use></svg>
+        <span>{% blocktranslate count count=new_receipts trimmed %}{{ count }} nieuw bonnetje.{% plural %}{{ count }} nieuwe bonnetjes.{% endblocktranslate %}</span>
+        <span class="spacer"></span>
+        <span>{% translate "Bekijken" %} →</span>
+    </a>
+    {% endif %}
+</div>
+{% endif %}

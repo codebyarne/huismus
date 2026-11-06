@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 06:51+0100\n"
+"POT-Creation-Date: 2026-11-06 07:54+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1900,7 +1900,7 @@ msgid "Huismus haalt geen bonnetjes meer op."
 msgstr ""
 
 #, python-format
-msgid "Opgeslagen. Huismus kijkt elke 10 minuten in %(place)s."
+msgid "Opgeslagen. Huismus haalt nieuwe bonnetjes vanzelf op uit %(place)s."
 msgstr ""
 
 msgid "Bonnetje verwijderd."
@@ -4112,6 +4112,12 @@ msgstr ""
 msgid "Regel"
 msgstr ""
 
+#, python-format
+msgid "%(count)s nieuw bonnetje."
+msgid_plural "%(count)s nieuwe bonnetjes."
+msgstr[0] "%(count)s nieuw bonnetje."
+msgstr[1] "%(count)s nieuwe bonnetjes."
+
 msgid "Bezig met ophalen…"
 msgstr ""
 
@@ -4125,12 +4131,6 @@ msgstr ""
 #, python-format
 msgid "Laatst gekeken: %(moment)s."
 msgstr ""
-
-#, python-format
-msgid "%(count)s nieuw bonnetje."
-msgid_plural "%(count)s nieuwe bonnetjes."
-msgstr[0] ""
-msgstr[1] ""
 
 msgid "Nog niet gekeken."
 msgstr ""
@@ -4345,7 +4345,7 @@ msgstr ""
 
 msgid ""
 "Bewaar onderweg een foto of pdf van een bonnetje in deze map. Huismus haalt "
-"hem elke 10 minuten op en zet hem bij de bonnetjes zonder uitgave."
+"hem vanzelf op en zet hem bij de bonnetjes zonder uitgave."
 msgstr ""
 
 msgid "Huismus kijkt in"
@@ -4399,7 +4399,7 @@ msgid "Nog geen bonnetjes"
 msgstr ""
 
 #, python-format
-msgid "Zet een bonnetje in %(place)s, dan staat het hier binnen 10 minuten."
+msgid "Zet een bonnetje in %(place)s, dan haalt Huismus het vanzelf hierheen."
 msgstr ""
 
 msgid ""

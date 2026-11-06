@@ -179,7 +179,7 @@ def test_the_tray_off_and_empty_says_how_to_set_it_up(client, user):
 
 def test_the_tray_on_and_empty_names_the_folder(client, user, folder):
     content = client.get(reverse("expenses:tray")).content.decode()
-    assert "dan staat het hier binnen 10 minuten" in content
+    assert "dan haalt Huismus het vanzelf hierheen" in content
     assert str(folder) in content
 
 

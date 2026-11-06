@@ -1,8 +1,8 @@
 # Bonnetjes onderweg
 
 Maak onderweg een foto of scan van een bonnetje en zet hem in een map die
-synchroniseert, zoals iCloud Drive of Dropbox. Huismus haalt hem binnen 10
-minuten op. Thuis maak je er met één klik een uitgave van, met het bonnetje
+synchroniseert, zoals iCloud Drive of Dropbox. Huismus haalt hem meestal
+binnen een paar minuten op. Thuis maak je er met één klik een uitgave van, met het bonnetje
 er al aan vast.
 
 ## Een bonnetjesmap instellen
@@ -21,8 +21,11 @@ Ga naar **Instellingen → Bonnetjesmap** en kies waar Huismus kijkt.
   programma bijhoudt. In Docker koppel je die eerst, zie
   [Huismus in Docker](docker.nl.md).
 
-Huismus kijkt elke 10 minuten. Wil je niet wachten, klik dan op
-**Nu ophalen**.
+Huismus kijkt meteen als er iets in de map of in Dropbox verandert. Een
+bestand in een map haalt hij op als het een minuut niet meer verandert, zodat
+het helemaal gesynchroniseerd is. Voor de zekerheid kijkt hij ook elke 10
+minuten. Komt er iets binnen, dan zie je op het overzicht bijvoorbeeld **2
+nieuwe bonnetjes**. Wil je niet wachten, klik dan op **Nu ophalen**.
 
 ## Een bonnetje bewaren op je telefoon
 

@@ -66,7 +66,7 @@
         <div class="empty-art"><svg class="mark" width="56" height="56" aria-hidden="true"><use href="#mus"></use></svg></div>
         <h2>{% translate "Nog geen bonnetjes" %}</h2>
         {% if on %}
-        <p style="overflow-wrap:anywhere">{% blocktranslate with place=place %}Zet een bonnetje in {{ place }}, dan staat het hier binnen 10 minuten.{% endblocktranslate %}</p>
+        <p style="overflow-wrap:anywhere">{% blocktranslate with place=place %}Zet een bonnetje in {{ place }}, dan haalt Huismus het vanzelf hierheen.{% endblocktranslate %}</p>
         {% else %}
         <p>{% translate "Stel een bonnetjesmap in. Wat je onderweg in die map zet, komt hier vanzelf binnen." %}</p>
         <div class="row"><a class="btn btn-primary" href="{% url 'business:receipts_folder' %}">{% translate "Bonnetjesmap instellen" %}</a></div>

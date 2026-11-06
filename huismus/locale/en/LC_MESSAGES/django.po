@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 06:51+0100\n"
+"POT-Creation-Date: 2026-11-06 07:54+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1979,8 +1979,8 @@ msgid "Huismus haalt geen bonnetjes meer op."
 msgstr "Huismus no longer picks up receipts."
 
 #, python-format
-msgid "Opgeslagen. Huismus kijkt elke 10 minuten in %(place)s."
-msgstr "Saved. Huismus looks in %(place)s every 10 minutes."
+msgid "Opgeslagen. Huismus haalt nieuwe bonnetjes vanzelf op uit %(place)s."
+msgstr "Saved. Huismus picks up new receipts from %(place)s by itself."
 
 msgid "Bonnetje verwijderd."
 msgstr "Receipt deleted."
@@ -4403,6 +4403,12 @@ msgstr "Log in"
 msgid "Regel"
 msgstr "Line"
 
+#, python-format
+msgid "%(count)s nieuw bonnetje."
+msgid_plural "%(count)s nieuwe bonnetjes."
+msgstr[0] "%(count)s new receipt."
+msgstr[1] "%(count)s new receipts."
+
 msgid "Bezig met ophalen…"
 msgstr "Picking up receipts…"
 
@@ -4416,12 +4422,6 @@ msgstr "Last worked: %(moment)s."
 #, python-format
 msgid "Laatst gekeken: %(moment)s."
 msgstr "Last checked: %(moment)s."
-
-#, python-format
-msgid "%(count)s nieuw bonnetje."
-msgid_plural "%(count)s nieuwe bonnetjes."
-msgstr[0] "%(count)s new receipt."
-msgstr[1] "%(count)s new receipts."
 
 msgid "Nog niet gekeken."
 msgstr "Not checked yet."
@@ -4646,10 +4646,8 @@ msgstr "means the expense has a receipt."
 
 msgid ""
 "Bewaar onderweg een foto of pdf van een bonnetje in deze map. Huismus haalt "
-"hem elke 10 minuten op en zet hem bij de bonnetjes zonder uitgave."
-msgstr ""
-"On the road, save a photo or PDF of a receipt in this folder. Every 10 "
-"minutes Huismus picks it up and puts it with the receipts without an expense."
+"hem vanzelf op en zet hem bij de bonnetjes zonder uitgave."
+msgstr "On the road, save a photo or PDF of a receipt in this folder. Huismus picks it up by itself and puts it with the receipts without an expense."
 
 msgid "Huismus kijkt in"
 msgstr "Huismus checks"
@@ -4704,8 +4702,8 @@ msgid "Nog geen bonnetjes"
 msgstr "No receipts yet"
 
 #, python-format
-msgid "Zet een bonnetje in %(place)s, dan staat het hier binnen 10 minuten."
-msgstr "Save a receipt in %(place)s and it shows up here within 10 minutes."
+msgid "Zet een bonnetje in %(place)s, dan haalt Huismus het vanzelf hierheen."
+msgstr "Save a receipt in %(place)s and Huismus brings it here by itself."
 
 msgid ""
 "Stel een bonnetjesmap in. Wat je onderweg in die map zet, komt hier vanzelf "
