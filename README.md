@@ -217,7 +217,9 @@ uv sync
 Open http://127.0.0.1:8790 and log in with `demo` / `demo-wachtwoord-123`.
 Everything lives in a temporary folder that's gone once you stop the server
 (Ctrl-C). You need Python 3.12 or newer, uv and Pango (see
-[Development](#development)).
+[Development](#development)). The receipts folder works here too: under
+**Settings → Receipts folder** choose any folder on your computer, and a
+receipt you put in it shows up within seconds.
 
 Already installed Huismus? Choose **Try with sample data** on the empty
 overview. You get the same 9 years of made-up records, with a banner on

@@ -45,4 +45,6 @@ echo "Huismus met nepdata: http://127.0.0.1:$port  (demo / demo-wachtwoord-123)"
 if [ "${HUISMUS_DESKTOP:-}" = "true" ]; then
   echo "Desktopstand: begin bij http://127.0.0.1:$port/desktop/start/?token=demo-token"
 fi
-uv run python manage.py runserver "127.0.0.1:$port" --noreload
+# runserver_with_receipts: runserver plus het ophalen uit de bonnetjesmap
+# (SPEC.md M20), zoals in Docker en de desktop-app.
+uv run python manage.py runserver_with_receipts "127.0.0.1:$port" --noreload
