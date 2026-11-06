@@ -1,10 +1,9 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""A stack, one after the other (huismus-intern/besluiten.md, 2026-11-06,
-"Stapel nakijken of verwerken"): "Klopt" goes on to the next expense to
-check, saving from a receipt goes on to the next receipt, and "Overslaan"
-goes there without saving. In the order of the list they come from; after
-the last one of that order, the top one that is left."""
+"""The stack of Verwerken (huismus/expenses/batch.py; huismus-intern/besluiten.md,
+2026-11-06): first the expenses to check, newest first, then the receipts
+without an expense, newest first; after the last one, the top one left.
+The screen itself: tests/expenses/test_process.py."""
 
 import datetime
 import hashlib
@@ -82,105 +81,112 @@ def _in_tray(name):
     )
 
 
-def _new_expense(**extra):
-    return {
-        "date": "2026-11-05",
-        "supplier": "Tankstation",
-        "description": "",
-        "lines-TOTAL_FORMS": "1",
-        "lines-INITIAL_FORMS": "0",
-        "lines-MIN_NUM_FORMS": "0",
-        "lines-MAX_NUM_FORMS": "1000",
-        "lines-0-description": "Benzine",
-        "lines-0-amount_cents": "45,10",
-        "lines-0-vat_info_cents": "0",
-        **extra,
-    }
-
-
 # --- The order ---------------------------------------------------------
 
 
-def test_the_next_to_check_follows_the_list_newest_first():
-    newest = _to_check("Nieuw", 5)
-    middle = _to_check("Midden", 4)
-    oldest = _to_check("Oud", 3)
-    _to_check("Al nagekeken", 2, needs_review=False)
+def _e(expense):
+    return batch.Item(batch.EXPENSE, expense.pk)
 
-    assert batch.next_to_check(newest) == middle
-    assert batch.next_to_check(middle) == oldest
-    # After the last one of the order: the top one that is left.
-    assert batch.next_to_check(oldest) == newest
-    assert batch.to_check_after(newest) == 2
+
+def _r(receipt):
+    return batch.Item(batch.RECEIPT, receipt.pk)
+
+
+def test_first_the_expenses_to_check_then_the_receipts_each_newest_first():
+    older_receipt = _in_tray("oud.pdf")
+    newer_receipt = _in_tray("nieuw.pdf")
+    oldest = _to_check("Oud", 3)
+    newest = _to_check("Nieuw", 5)
+    _to_check("Al nagekeken", 4, needs_review=False)
+
+    assert batch.items() == [_e(newest), _e(oldest), _r(newer_receipt), _r(older_receipt)]
+    assert batch.count() == 4
 
 
 def test_on_the_same_day_the_newer_one_comes_first():
     first = _to_check("Eerst", 5)
     second = _to_check("Tweede", 5)
-    assert batch.next_to_check(second) == first
-    assert batch.next_to_check(first) == second
+    assert batch.items() == [_e(second), _e(first)]
+
+
+def test_next_follows_the_order_and_comes_round_again():
+    newest = _to_check("Nieuw", 5)
+    oldest = _to_check("Oud", 3)
+    receipt = _in_tray("bon.pdf")
+    stack = batch.items()
+
+    assert batch.next_item(_e(newest), stack) == _e(oldest)
+    assert batch.next_item(_e(oldest), stack) == _r(receipt)
+    # After the last one: the top one that is left.
+    assert batch.next_item(_r(receipt), stack) == _e(newest)
+
+
+def test_next_goes_by_where_it_was_also_when_saving_took_it_out():
+    first = _to_check("Gamma", 5)
+    second = _to_check("Praxis", 4)
+    third = _to_check("Hornbach", 3)
+    stack = batch.items()
+    # Checked, with a new date that would put it at the top.
+    Expense.objects.filter(pk=second.pk).update(needs_review=False, date=datetime.date(2026, 11, 9))
+
+    assert batch.next_item(_e(second), stack) == _e(third)
+    assert first.pk != third.pk
+
+
+def test_next_skips_what_left_the_stack_meanwhile_and_takes_what_came_in():
+    first = _to_check("Gamma", 5)
+    gone = _to_check("Praxis", 4)
+    stack = batch.items()
+    Expense.objects.filter(pk=gone.pk).update(needs_review=False)
+    Expense.objects.filter(pk=first.pk).update(needs_review=False)
+    assert batch.next_item(_e(first), stack) is None
+    arrived = _in_tray("nieuw.pdf")
+    assert batch.next_item(_e(first), stack) == _r(arrived)
 
 
 def test_nothing_next_when_it_is_the_only_one():
     only = _to_check("Enige", 5)
-    assert batch.next_to_check(only) is None
-    assert batch.to_check_after(only) == 0
+    assert batch.next_item(_e(only), batch.items()) is None
 
 
-def test_the_next_receipt_follows_the_tray_newest_first():
-    oldest = _in_tray("oud.pdf")
-    middle = _in_tray("midden.pdf")
-    newest = _in_tray("nieuw.pdf")
-
-    assert batch.next_receipt(newest) == middle
-    assert batch.next_receipt(middle) == oldest
-    assert batch.next_receipt(oldest) == newest
-    assert batch.receipts_after(newest) == 2
-
-
-# --- Nakijken ----------------------------------------------------------
+def test_the_position_counts_the_ones_done_in_this_round():
+    a, b, c = _to_check("A", 5), _to_check("B", 4), _to_check("C", 3)
+    stack = batch.items()
+    assert batch.position(_e(a), stack, 0) == (1, 3)
+    assert batch.position(_e(b), stack, 0) == (2, 3)  # after Overslaan
+    # After Klopt on A, of 3: A is no longer in the stack, one is done.
+    Expense.objects.filter(pk=a.pk).update(needs_review=False)
+    stack = batch.items()
+    assert batch.position(_e(b), stack, 1) == (2, 3)
+    assert batch.position(_e(c), stack, 1) == (3, 3)
 
 
-def test_klopt_goes_on_to_the_next_expense_to_check(logged_in):
+# --- The expense page's own notice ----------------------------------------
+
+
+def test_klopt_on_the_expense_page_goes_on_in_verwerken(logged_in):
     first = _to_check("Gamma", 5)
-    second = _to_check("Praxis", 4)
+    receipt = _in_tray("bon.pdf")
 
-    response = logged_in.post(
-        reverse("expenses:edit", args=[first.pk]), _form(first, klopt="1"), follow=True
+    response = logged_in.post(reverse("expenses:edit", args=[first.pk]), _form(first, klopt="1"))
+
+    assert (
+        response.url == reverse("expenses:process_item", args=["bonnetje", receipt.pk]) + "?klaar=1"
     )
-
-    assert response.redirect_chain[-1][0] == reverse("expenses:edit", args=[second.pk])
-    page = response.content.decode()
-    assert "Uitgave nagekeken." in page
-    assert "Klopt alles?" in page
     first.refresh_from_db()
     assert not first.needs_review
 
 
-def test_klopt_goes_by_where_it_was_in_the_list_also_with_a_new_date(logged_in):
+def test_the_notice_counts_the_whole_stack_and_skips_in_verwerken(logged_in):
     first = _to_check("Gamma", 5)
     second = _to_check("Praxis", 4)
-    third = _to_check("Hornbach", 3)
-
-    response = logged_in.post(
-        reverse("expenses:edit", args=[second.pk]), _form(second, date="2026-11-09", klopt="1")
-    )
-
-    assert response.url == reverse("expenses:edit", args=[third.pk])
-    assert first.pk != third.pk
-
-
-def test_the_notice_counts_what_is_left_and_can_skip(logged_in):
-    first = _to_check("Gamma", 5)
-    second = _to_check("Praxis", 4)
-    _to_check("Hornbach", 3)
+    _in_tray("bon.pdf")
 
     page = logged_in.get(reverse("expenses:edit", args=[first.pk])).content.decode()
 
     assert "Hierna nog 2." in page
-    skip = f'href="{reverse("expenses:edit", args=[second.pk])}"'
+    skip = f'href="{reverse("expenses:process_item", args=["uitgave", second.pk])}"'
     assert skip in page and ">Overslaan<" in page
-    # Skipping saves nothing: the mark stays.
     first.refresh_from_db()
     assert first.needs_review
 
@@ -192,13 +198,6 @@ def test_the_last_one_has_no_count_and_no_skip(logged_in):
     assert "Hierna nog" not in page and "Overslaan" not in page
 
 
-def test_one_more_is_singular(logged_in):
-    first = _to_check("Gamma", 5)
-    _to_check("Praxis", 4)
-    page = logged_in.get(reverse("expenses:edit", args=[first.pk])).content.decode()
-    assert "Hierna nog 1." in page
-
-
 def test_in_english(logged_in):
     first = _to_check("Gamma", 5)
     _to_check("Praxis", 4)
@@ -208,72 +207,7 @@ def test_in_english(logged_in):
     assert "2 more after this one." in page and ">Skip<" in page
 
 
-# --- Bonnetjes zonder uitgave --------------------------------------------
-
-
-def test_saving_from_a_receipt_goes_on_to_the_next_receipt(logged_in):
-    older = _in_tray("ouder.pdf")
-    newest = _in_tray("nieuw.pdf")
-
-    response = logged_in.post(
-        reverse("expenses:create"), _new_expense(bonnetje=newest.pk), follow=True
-    )
-
-    url, _status = response.redirect_chain[-1]
-    assert url == reverse("expenses:create") + f"?bonnetje={older.pk}"
-    page = response.content.decode()
-    assert "Uitgave opgeslagen." in page
-    assert f'name="bonnetje" value="{older.pk}"' in page
-    newest.refresh_from_db()
-    assert newest.expense == Expense.objects.get()
-
-
-def test_saving_the_last_receipt_opens_the_expense(logged_in):
-    only = _in_tray("enige.pdf")
-    response = logged_in.post(reverse("expenses:create"), _new_expense(bonnetje=only.pk))
-    assert response.url == reverse("expenses:edit", args=[Expense.objects.get().pk])
-
-
-def test_adding_a_line_without_js_stays_on_the_expense(logged_in):
-    newest = _in_tray("nieuw.pdf")
-    _in_tray("ouder.pdf")
-    response = logged_in.post(
-        reverse("expenses:create"), _new_expense(bonnetje=newest.pk, regel_toevoegen="1")
-    )
-    assert response.url == reverse("expenses:edit", args=[Expense.objects.get().pk]) + "?regel=1"
-
-
-def test_the_receipt_form_counts_what_is_left_and_can_skip(logged_in):
-    oldest = _in_tray("oud.pdf")
-    middle = _in_tray("midden.pdf")
-    newest = _in_tray("nieuw.pdf")
-
-    page = logged_in.get(reverse("expenses:create") + f"?bonnetje={newest.pk}").content.decode()
-
-    assert "Hierna nog 2 bonnetjes." in page
-    assert f'href="{reverse("expenses:create")}?bonnetje={middle.pk}"' in page
-    assert ">Overslaan<" in page
-    single = logged_in.get(reverse("expenses:create") + f"?bonnetje={middle.pk}")
-    assert "Hierna nog 2 bonnetjes." in single.content.decode()  # wraps to the top
-    oldest.delete()
-    middle.delete()
-    last = logged_in.get(reverse("expenses:create") + f"?bonnetje={newest.pk}").content.decode()
-    assert "Hierna nog" not in last and "Overslaan" not in last
-
-
-def test_one_more_receipt_is_singular_and_english(logged_in):
-    _in_tray("oud.pdf")
-    newest = _in_tray("nieuw.pdf")
-    url = reverse("expenses:create") + f"?bonnetje={newest.pk}"
-    assert "Hierna nog 1 bonnetje." in logged_in.get(url).content.decode()
-    logged_in.cookies["django_language"] = "en"
-    english = logged_in.get(url).content.decode()
-    assert "1 more receipt after this one." in english
-
-
 def test_a_new_expense_without_a_receipt_is_unchanged(logged_in):
     _in_tray("nieuw.pdf")
     page = logged_in.get(reverse("expenses:create")).content.decode()
-    assert "Hierna nog" not in page
-    response = logged_in.post(reverse("expenses:create"), _new_expense())
-    assert response.url == reverse("expenses:edit", args=[Expense.objects.get().pk])
+    assert "Hierna nog" not in page and 'name="receipt-file"' in page

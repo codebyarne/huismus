@@ -252,7 +252,8 @@ def test_the_tray_lists_its_receipts(client, user):
 
     assert "tankstation.pdf" in content
     assert "al-verwerkt.pdf" not in content
-    assert f"{reverse('expenses:create')}?bonnetje={receipt.pk}" in content
+    # "Uitgave maken" opens Verwerken at this receipt.
+    assert reverse("expenses:process_item", args=["bonnetje", receipt.pk]) in content
 
 
 def test_removing_from_the_tray(client, user):
@@ -315,26 +316,36 @@ def _expense_post(**extra):
     }
 
 
+def _make(receipt_pk):
+    return reverse("expenses:process_item", args=["bonnetje", receipt_pk])
+
+
 def test_make_an_expense_shows_the_receipt_instead_of_the_upload(client, user):
     receipt = _in_tray("tankstation.pdf")
 
-    content = client.get(reverse("expenses:create") + f"?bonnetje={receipt.pk}").content.decode()
+    content = client.get(_make(receipt.pk)).content.decode()
 
-    assert 'id="bonnetje-uit-bakje"' in content
-    assert f'name="bonnetje" value="{receipt.pk}"' in content
     assert "tankstation.pdf" in content
+    assert receipt.file.url in content
     assert 'name="receipt-file"' not in content
+
+
+def test_the_old_link_with_a_receipt_opens_verwerken(client, user):
+    receipt = _in_tray()
+    response = client.get(reverse("expenses:create") + f"?bonnetje={receipt.pk}")
+    assert response.url == _make(receipt.pk)
 
 
 def test_saving_puts_the_receipt_on_the_expense(client, user):
     receipt = _in_tray()
 
-    response = client.post(reverse("expenses:create"), _expense_post(bonnetje=receipt.pk))
+    response = client.post(_make(receipt.pk), _expense_post())
 
     expense = Expense.objects.get()
     assert response.status_code == 302
     receipt.refresh_from_db()
     assert receipt.expense == expense
+    assert not expense.needs_review
     assert not Attachment.objects.in_tray().exists()
     assert expense.amount_cents == 4510
 
@@ -342,25 +353,35 @@ def test_saving_puts_the_receipt_on_the_expense(client, user):
 def test_a_form_error_keeps_the_receipt(client, user):
     receipt = _in_tray()
 
-    response = client.post(reverse("expenses:create"), _expense_post(bonnetje=receipt.pk, date=""))
+    response = client.post(_make(receipt.pk), _expense_post(date=""))
 
     assert response.status_code == 200
-    assert f'name="bonnetje" value="{receipt.pk}"' in response.content.decode()
+    assert receipt.file.url in response.content.decode()
     assert Attachment.objects.in_tray().exists()
+    assert not Expense.objects.exists()
 
 
-def test_a_receipt_taken_meanwhile_is_not_used_twice(client, user):
+def test_a_receipt_taken_meanwhile_is_not_used_twice(client, user, monkeypatch):
     receipt = _in_tray()
     other = Expense.objects.create(date="2026-11-05", amount_cents=100)
-    Attachment.objects.filter(pk=receipt.pk).update(expense=other)
+    # Taken by another tab between opening the page and saving it.
+    from huismus.expenses import views
 
-    response = client.post(reverse("expenses:create"), _expense_post(bonnetje=receipt.pk))
+    real_save = views.save_expense
+
+    def taken_first(*args, **kwargs):
+        Attachment.objects.filter(pk=receipt.pk).update(expense=other)
+        return real_save(*args, **kwargs)
+
+    monkeypatch.setattr("huismus.expenses.process_views.save_expense", taken_first)
+
+    response = client.post(_make(receipt.pk), _expense_post())
 
     assert response.status_code == 302
-    assert response.url == reverse("expenses:tray")
+    assert response.url == reverse("expenses:process")
     assert Expense.objects.count() == 1  # only the other one
 
 
-def test_an_unknown_receipt_goes_back_to_the_tray(client, user):
-    response = client.get(reverse("expenses:create") + "?bonnetje=999")
-    assert response.url == reverse("expenses:tray")
+def test_an_unknown_receipt_goes_back_to_verwerken(client, user):
+    response = client.get(_make(999))
+    assert response.url == reverse("expenses:process")

@@ -4,7 +4,7 @@
 {% block title %}{% translate "Bonnetjes zonder uitgave" %} — Huismus{% endblock %}
 
 {% block content %}
-{% comment %}The receipts the receipts folder brought in (SPEC.md M20, expenses.inbox_views.tray). "Uitgave maken" opens the new-expense form with the receipt in it.{% endcomment %}
+{% comment %}The receipts the receipts folder brought in (SPEC.md M20, expenses.inbox_views.tray). "Uitgave maken" opens Verwerken at that receipt.{% endcomment %}
 <div class="page-head">
     <div class="titles">
         <a class="back" href="{% url 'expenses:list' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Uitgaven" %}</a>
@@ -47,7 +47,7 @@
             <span class="muted">{% blocktranslate with moment=receipt.created_at|moment %}Opgehaald {{ moment }}{% endblocktranslate %}</span>
             {% if item.waiting %}<span class="small muted row" style="gap:var(--s-1)" data-bonnetje-bezig><span class="spinner" aria-hidden="true"></span>{% translate "Huismus leest dit bonnetje…" %}</span>
             {% elif item.reason %}<span class="small muted" data-bonnetje-reden>{% if receipt.read_similar %}<a href="{% url 'expenses:edit' receipt.read_similar.pk %}">{{ item.reason }}</a>{% else %}{{ item.reason }}{% endif %}</span>{% endif %}
-            <a class="btn btn-primary btn-sm" href="{% url 'expenses:create' %}?bonnetje={{ receipt.pk }}">{% translate "Uitgave maken" %}</a>
+            <a class="btn btn-primary btn-sm" href="{% url 'expenses:process_item' 'bonnetje' receipt.pk %}">{% translate "Uitgave maken" %}</a>
         </div>
         <dialog class="dialog" id="verwijder-bon-{{ receipt.pk }}" aria-labelledby="verwijder-bon-{{ receipt.pk }}-titel">
             <form method="post" action="{% url 'expenses:tray_delete' receipt.pk %}">

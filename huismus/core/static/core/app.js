@@ -619,3 +619,22 @@ document.addEventListener("change", (event) => {
     if (!field.value || suggested(name).includes(field.value)) field.value = option.dataset[name];
   }
 });
+
+// Verwerken: a PDF receipt in the browser's own viewer, only on a wide
+// screen (huismus-intern/besluiten.md, 2026-11-06). The frame gets its src
+// here, so a phone never loads it: an iPhone shows only the first page in a
+// frame, Android often nothing. Without JS: the file's name and "Bonnetje
+// openen", as on a phone.
+const wideScreen = window.matchMedia("(min-width: 981px)");
+function showReceiptPdfs(root) {
+  for (const frame of root.querySelectorAll("iframe[data-wide-src]")) {
+    const wide = wideScreen.matches;
+    if (wide && !frame.src) frame.src = frame.dataset.wideSrc;
+    frame.hidden = !wide;
+    const file = frame.parentElement.querySelector("[data-pdf-file]");
+    if (file) file.hidden = wide;
+  }
+}
+wideScreen.addEventListener("change", () => showReceiptPdfs(document));
+if (window.htmx) window.htmx.onLoad(showReceiptPdfs);
+else showReceiptPdfs(document);

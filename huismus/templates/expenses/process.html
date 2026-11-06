@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load i18n forms %}
+
+{% block title %}{% translate "Verwerken" %} — Huismus{% endblock %}
+{% block content_class %}content-wide{% endblock %}
+
+{% block content %}
+{% comment %}Verwerken (huismus/expenses/process_views.py, batch.py): the
+expenses to check and the receipts without an expense, one at a time. The
+receipt large on the left, the fields on the right; on a phone the receipt
+above the fields.{% endcomment %}
+<div class="page-head">
+    <div class="titles">
+        <a class="back" href="{% url 'expenses:list' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Uitgaven" %}</a>
+        <div class="row" style="gap:var(--s-3)">
+            <h1>{% translate "Verwerken" %}</h1>
+            {% if not empty %}<span class="pill" id="verwerken-teller">{% blocktranslate %}{{ position }} van {{ total }}{% endblocktranslate %}</span>{% endif %}
+        </div>
+    </div>
+</div>
+
+{% if empty %}
+<div class="card">
+    <div class="empty" id="niets-te-verwerken">
+        <div class="empty-art"><svg class="mark" width="56" height="56" aria-hidden="true"><use href="#mus"></use></svg></div>
+        <h2>{% translate "Niets meer te verwerken." %}</h2>
+        <div class="row"><a class="btn btn-primary" href="{% url 'expenses:list' %}">{% translate "Naar Uitgaven" %}</a></div>
+    </div>
+</div>
+{% else %}
+<div class="process">
+    <section class="card process-receipt" aria-label="{% translate 'Bonnetje' %}">
+        {% if receipt %}
+        {% blocktranslate with name=receipt.filename asvar receipt_label %}Bonnetje {{ name }}{% endblocktranslate %}
+        {% if receipt.is_pdf %}
+        {% comment %}The browser's own PDF viewer, with every page, only on a
+        wide screen: app.js sets the src there. A phone shows the file and
+        "Bonnetje openen" instead: an iPhone shows only the first page in a
+        frame, Android often nothing.{% endcomment %}
+        <iframe class="process-pdf" data-wide-src="{{ receipt.file.url }}" title="{{ receipt_label }}" hidden></iframe>
+        <div class="process-file" data-pdf-file>
+            <svg class="i i-lg" aria-hidden="true"><use href="#file"></use></svg>
+            <span class="r-name" title="{{ receipt.filename }}">{{ receipt.filename }}</span>
+        </div>
+        {% else %}
+        <img class="process-img" src="{{ receipt.file.url }}" alt="{{ receipt_label }}">
+        {% endif %}
+        <a class="small" id="bonnetje-openen" href="{{ receipt.file.url }}" hx-boost="false" target="_blank" rel="noopener">{% translate "Bonnetje openen" %} ↗</a>
+        {% else %}
+        <p class="muted" id="geen-bonnetje">{% translate "Geen bonnetje bij deze uitgave." %}</p>
+        <form method="post" action="{% url 'expenses:receipt_upload' expense.pk %}" enctype="multipart/form-data" class="dropzone" data-dropzone>
+            {% csrf_token %}
+            <input type="hidden" name="verwerken" value="1">
+            <input type="hidden" name="klaar" value="{{ done }}">
+            <input type="file" name="file" accept="image/png,image/jpeg,image/heic,image/heif,.heic,.heif,application/pdf" aria-label="{% translate 'Bonnetje toevoegen' %}" data-autosubmit required>
+            <span class="dz-icon"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg></span>
+            <strong class="small">{% translate "Sleep een bonnetje hierheen" %}</strong>
+            <span class="small">{% translate "of kies een bestand · JPG, PNG, HEIC, PDF" %}</span>
+            <noscript><button type="submit" class="btn btn-sm" style="position:relative;z-index:1">{% translate "Bonnetje toevoegen" %}</button></noscript>
+        </form>
+        {% endif %}
+    </section>
+
+    <div class="stack process-fields">
+        {% form_errors form formset %}
+        {% if expense %}
+        <div class="flash flash-info" id="nakijken">
+            <svg class="i" aria-hidden="true"><use href="#info"></use></svg>
+            <div class="flash-body">{% if read_by %}{% blocktranslate with service=read_by %}Huismus las dit bonnetje met {{ service }}. Klopt alles?{% endblocktranslate %}{% else %}{% translate "Je AI-assistent vulde deze uitgave in. Klopt alles?" %}{% endif %}</div>
+        </div>
+        {% elif waiting %}
+        <p class="small muted row" style="gap:var(--s-1)" data-bonnetje-bezig><span class="spinner" aria-hidden="true"></span>{% translate "Huismus leest dit bonnetje…" %}</p>
+        {% elif reason %}
+        <p class="small muted" data-bonnetje-reden>{% if tray_receipt.read_similar %}<a href="{% url 'expenses:edit' tray_receipt.read_similar.pk %}">{{ reason }}</a>{% else %}{{ reason }}{% endif %}</p>
+        {% endif %}
+        <form class="card card-pad stack" id="uitgave-form" method="post" style="gap:var(--s-5)">
+            {% csrf_token %}
+            <input type="hidden" name="klaar" value="{{ done }}">
+            {% include "expenses/_fields.html" %}
+            <div class="row" style="justify-content:flex-end">
+                {% if skip_to %}<a class="btn btn-ghost" id="overslaan" href="{{ skip_to }}">{% translate "Overslaan" %}</a>{% endif %}
+                {% if expense %}<button class="btn btn-primary" type="submit" name="klopt" value="1">{% translate "Klopt" %}<span class="spinner"></span></button>
+                {% else %}<button class="btn btn-primary" type="submit">{% translate "Opslaan" %}<span class="spinner"></span></button>{% endif %}
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

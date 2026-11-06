@@ -7,8 +7,7 @@
 {% block content %}
 <div class="page-head">
     <div class="titles">
-        {% if tray_receipt %}<a class="back" href="{% url 'expenses:tray' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Bonnetjes zonder uitgave" %}</a>
-        {% else %}<a class="back" href="{% url 'expenses:list' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Uitgaven" %}</a>{% endif %}
+        <a class="back" href="{% url 'expenses:list' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Uitgaven" %}</a>
         <h1>{% if expense %}{{ expense.description|default:expense.supplier|default:_("Uitgave")|truncatechars:60 }}{% else %}{% translate "Nieuwe uitgave" %}{% endif %}</h1>
         {% if expense %}<span class="small muted">{% if expense.supplier %}{{ expense.supplier }} · {% endif %}{{ expense.date|date:"j b Y" }}</span>{% endif %}
     </div>
@@ -30,16 +29,12 @@ on the last line clicks this copy too; it does the same.{% endcomment %}
     <svg class="i" aria-hidden="true" style="margin-top:0"><use href="#info"></use></svg>
     {% comment %}At least 16rem for the text: on a phone the buttons go below it rather than squeeze it.{% endcomment %}
     <div class="flash-body" style="flex:1 1 16rem">{% if read_by %}{% blocktranslate with service=read_by %}Huismus las dit bonnetje met {{ service }}. Klopt alles?{% endblocktranslate %}{% else %}{% translate "Je AI-assistent vulde deze uitgave in. Klopt alles?" %}{% endif %}{% if skip_to %} <span id="nog-nakijken">{% blocktranslate count count=left_after %}Hierna nog {{ count }}.{% plural %}Hierna nog {{ count }}.{% endblocktranslate %}</span>{% endif %}</div>
-    {% comment %}On to the next one without saving: the mark stays (huismus/expenses/batch.py).{% endcomment %}
-    {% if skip_to %}<a class="btn btn-ghost btn-sm" id="overslaan" href="{% url 'expenses:edit' skip_to.pk %}">{% translate "Overslaan" %}</a>{% endif %}
+    {% comment %}On to the next one in Verwerken without saving: the mark stays (huismus/expenses/batch.py).{% endcomment %}
+    {% if skip_to %}<a class="btn btn-ghost btn-sm" id="overslaan" href="{{ skip_to }}">{% translate "Overslaan" %}</a>{% endif %}
     <button type="submit" form="uitgave-form" name="klopt" value="1" class="btn btn-sm">{% translate "Klopt" %}<span class="spinner"></span></button>
 </div>
 {% endif %}
 
-{% if skip_to_receipt %}
-{% comment %}Saving goes on to the next receipt; "Overslaan" goes there without saving (huismus/expenses/batch.py).{% endcomment %}
-<p class="small muted" id="nog-bonnetjes" style="margin-bottom:var(--s-4)">{% blocktranslate count count=left_after %}Hierna nog {{ count }} bonnetje.{% plural %}Hierna nog {{ count }} bonnetjes.{% endblocktranslate %} <a id="overslaan" href="{% url 'expenses:create' %}?bonnetje={{ skip_to_receipt.pk }}">{% translate "Overslaan" %}</a></p>
-{% endif %}
 
 {% comment %}An existing expense's receipts, above its form like the
 receipt field of a new one. Its own upload and delete forms take
@@ -90,28 +85,11 @@ expense.pk.{% endcomment %}
 </section>
 {% endif %}
 
-<form class="card card-pad stack" id="uitgave-form" method="post"{% if tray_receipt %} action="{% url 'expenses:create' %}"{% endif %}{% if new_receipt_form %} enctype="multipart/form-data"{% endif %} style="gap:var(--s-5)">
+<form class="card card-pad stack" id="uitgave-form" method="post"{% if new_receipt_form %} enctype="multipart/form-data"{% endif %} style="gap:var(--s-5)">
     {% csrf_token %}
     {% comment %}The receipt first: it's what the rest is typed from. A new
     expense takes it along when it's saved; an existing one has the
     Bonnetjes section above the form, with its own upload.{% endcomment %}
-    {% if tray_receipt %}
-    {% comment %}From the receipts without an expense (SPEC.md M20): on saving it goes onto this expense. The hidden field carries it in a plain POST.{% endcomment %}
-    <div class="stack" style="gap:var(--s-3)" id="bonnetje-uit-bakje">
-        <h2>{% translate "Bonnetje" %}</h2>
-        <input type="hidden" name="bonnetje" value="{{ tray_receipt.pk }}">
-        <div class="receipts">
-            <div class="receipt">
-                <a class="thumb" href="{{ tray_receipt.file.url }}" hx-boost="false" target="_blank" rel="noopener" aria-label="{% blocktranslate with name=tray_receipt.filename %}{{ name }} openen{% endblocktranslate %}">
-                    {% if tray_receipt.is_pdf %}<svg class="i i-lg" aria-hidden="true"><use href="#file"></use></svg>
-                    {% else %}<img src="{{ tray_receipt.file.url }}" alt="" style="width:100%;height:100%;object-fit:cover">{% endif %}
-                </a>
-                <div class="r-row"><span class="r-name" title="{{ tray_receipt.filename }}">{{ tray_receipt.filename }}</span></div>
-                <span class="muted">{% translate "Uit je bonnetjesmap" %}</span>
-            </div>
-        </div>
-    </div>
-    {% endif %}
     {% if new_receipt_form %}{% with field=new_receipt_form.file %}
     <div class="stack" style="gap:var(--s-3)">
         <h2>{% translate "Bonnetje" %} <span class="opt">({% translate "optioneel" %})</span></h2>
@@ -126,27 +104,7 @@ expense.pk.{% endcomment %}
         {% if choose_receipt_again %}<p class="small muted">{% translate "Kies het bonnetje opnieuw: je browser bewaart het niet als er nog iets ontbrak." %}</p>{% endif %}
     </div>
     {% endwith %}{% endif %}
-    <div class="fieldset">
-        {% field form.date span=2 %}
-        {% field form.supplier span=4 %}
-        {% field form.description optional=True %}
-    </div>
-    {% comment %}The lines, each with its own category, as in Moneybird
-    (huismus-intern/besluiten.md, 2026-11-02). The amount of the expense is
-    their sum, computed when saving (huismus/expenses/lines.py).{% endcomment %}
-    <div class="stack" style="gap:var(--s-4)">
-        <h2>{% translate "Regels" %}</h2>
-        {{ formset.management_form }}
-        <div class="stack" style="gap:var(--s-4)" data-formset-forms="lines">
-            {% for line_form in formset.forms %}{% include "expenses/_line_form.html" %}{% endfor %}
-        </div>
-        <template data-formset-empty="lines">{% include "expenses/_line_form.html" with line_form=formset.empty_form %}</template>
-        <div class="row">
-            <button type="submit" name="regel_toevoegen" value="1" class="btn btn-ghost btn-sm" data-formset-add="lines"><svg class="i i-sm" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Regel toevoegen" %}</button>
-            {% if expense %}<span class="spacer"></span><span>{% translate "Totaal" %} <strong class="amount">{{ expense.amount_cents|money }}</strong></span>{% endif %}
-        </div>
-    </div>
-    <div class="kor-note"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{% translate "Vul het bruto bedrag in: wat je echt betaald hebt. Het btw-bedrag is alleen ter informatie en telt nergens mee." %}</span></div>
+    {% include "expenses/_fields.html" %}
     <div class="row" style="justify-content:flex-end"><button class="btn btn-primary" type="submit">{% translate "Opslaan" %}<span class="spinner"></span></button></div>
 </form>
 
