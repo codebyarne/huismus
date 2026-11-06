@@ -61,7 +61,9 @@ Bij elke release zet `.github/workflows/pages.yml` hem online, en met de hand
 - [`invoice-requirements.md`](invoice-requirements.md): factuureisen met
   bronnen.
 
-De productbesluiten, de backlog, het logboek per mijlpaal en de registratie
+De backlog staat openbaar in de
+[issues](https://github.com/codebyarne/huismus/issues). De productbesluiten,
+het logboek per mijlpaal en de registratie
 bij Google, Microsoft en Dropbox staan in een privé-repo van de maintainer,
 `huismus-intern`. Code en commentaar verwijzen ernaar als
 `huismus-intern/besluiten.md` met een datum; het besluit zelf staat in

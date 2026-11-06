@@ -82,7 +82,7 @@ above is therefore optional.
 - UI-bugs zitten vaak pas op een echte administratie. `tests/e2e/test_walkthrough.py` loopt de hele app door op `huismus/core/demo_history.py` (9 jaar nepdata) in drie schermbreedtes; gebruik de `history` fixture voor alles met lijsten, filters of doorklikken.
 - `tests/e2e/test_every_page.py` bezoekt elke pagina in beide talen en drie breedtes en vangt hele soorten UI-bugs (templatesyntax, onvertaalde tekst, opzij scrollen, dubbele menu-items). Nieuwe pagina → toevoegen aan `_pages()`.
 - Een bug die iemand met de hand vond: test die faalt, fix, en een check die de hele *soort* vangt. Bijhouden in `BUGS-BY-HAND.md`.
-- Een test die één keer faalt, bij herhaling groen is en niet binnen een uur na te doen valt, krijgt géén backlogpunt (besluit eigenaar 2026-11-05). Noem hem in je melding en ga door. Pas oppakken als hij terugkomt (een falende browsertest toont dan "Wat de pagina deed", `tests/e2e/page_log.js`) of als een gebruiker het merkt. Een fout die je wél kunt nadoen, los je gewoon op.
+- Een test die één keer faalt, bij herhaling groen is en niet binnen een uur na te doen valt, krijgt géén issue (besluit eigenaar 2026-11-05). Noem hem in je melding en ga door. Pas oppakken als hij terugkomt (een falende browsertest toont dan "Wat de pagina deed", `tests/e2e/page_log.js`) of als een gebruiker het merkt. Een fout die je wél kunt nadoen, los je gewoon op.
 - A milestone is not done until tests pass in CI and the Docker image builds for both architectures.
 
 ## Definition of done (per milestone)
@@ -183,9 +183,9 @@ het design vooraf; de eigenaar keurt wat er echt gebouwd is.
   zin wat de gebruiker daar doet en ziet, op telefoon en desktop. Stuur ze met
   SendUserFile en vraag in producttaal of het zo live mag, met je advies. Geen
   code, geen PR-link als enige uitleg.
-- **Intussen:** de PR blijft open en wordt niet gemerged, ook als hij groen is. Zet
-  `(wacht: eigenaar)` achter het onderwerp in `huismus-intern/backlog.md` en ga door
-  met werk dat er niet van afhangt (`/mijlpaal`, stap 10).
+- **Intussen:** de PR blijft open en wordt niet gemerged, ook als hij groen is. Geef
+  het issue het label `wacht` (zie "Backlog") en ga door met werk dat er niet van
+  afhangt (`/mijlpaal`, stap 10).
 - **Daarna:** goedgekeurd → mergen zoals hierboven. Wil de eigenaar iets anders:
   aanpassen, `verify-e2e` opnieuw, en opnieuw voorleggen.
 
@@ -211,11 +211,37 @@ ruff (lint + format), pytest, en `makemigrations --check`. De regel blijft: als
 een invariant belangrijk genoeg is om in dit document te staan, hoort hij op
 termijn in de poort.
 
+## Backlog: GitHub Issues
+
+De backlog staat openbaar in de issues van `codebyarne/huismus` (besluit eigenaar
+2026-11-06; daarvoor `huismus-intern/backlog.md`, dat nu alleen nog verwijst).
+Iedereen kan meelezen en met een GitHub-account een issue of reactie plaatsen.
+
+- **Wachtrij voor `/mijlpaal`:** het open issue met het laagste nummer zonder het
+  label `wacht`, `idee` of `pauze`. Een issue met `voorrang` gaat voor. Zo vraag je
+  het op:
+  `gh issue list --state open --search "-label:wacht -label:idee -label:pauze sort:created-asc"`
+  (eerst die met `--label voorrang`).
+- **`wacht`:** het onderwerp wacht op iets buiten de code (een beslissing, een
+  apparaat, een externe dienst). Zeg in het issue waarop, in een regel "**Wacht
+  op:** …". Weg met het label zodra het niet meer wacht.
+- **`idee`:** binnengekomen via het formulier "Idee of iets wat je mist". Het gaat
+  pas in de wachtrij als de `product-owner`-agent het aanneemt en het label
+  weghaalt.
+- **Stoppen:** een open issue met het label `pauze` (titel "PAUZE") stopt de keten
+  van `/mijlpaal`. Sluiten zet hem weer aan.
+- **Afronden:** de PR die het live zet, zegt `Closes #<nummer>`.
+- **Schrijven:** een issue is openbaar, dus volgens "Wat er niet in deze repo
+  hoort" hieronder: geen namen, geen echte gegevens, geen adressen van apparaten,
+  geen verwijzing naar de inhoud van `huismus-intern`. Het waarom van een besluit
+  blijft in `huismus-intern/besluiten.md`; het issue zegt wat er gebouwd wordt.
+- **Bord:** het openbare GitHub Project "Huismus" toont dezelfde issues per status.
+  Het is een weergave; de wachtrij volgt de labels hierboven.
+
 ## Privé: huismus-intern
 
 De repo is openbaar. Wat privé is, staat in de privé-repo
-`codebyarne/huismus-intern`: `besluiten.md` (productbesluiten), `backlog.md`
-(de wachtrij voor `/mijlpaal`), `STATUS.md` (logboek per mijlpaal) en
+`codebyarne/huismus-intern`: `besluiten.md` (productbesluiten), `STATUS.md` (logboek per mijlpaal) en
 `cloud-registratie.md` en `werkwijze.md` (de Pi en de eigenaar). Code en docs verwijzen ernaar als
 `huismus-intern/<bestand>`.
 
@@ -227,7 +253,7 @@ De repo is openbaar. Wat privé is, staat in de privé-repo
   regel per commit, en direct naar zijn `main` pushen met `git -C <map> push`.
   Dat mag: hij heeft geen CI en geen release. Geen PR nodig.
 - **Wat er niet in deze repo hoort:** namen van mensen (testers, klanten, de
-  eigenaar), de backlog, persoonlijke notities, adressen van apparaten. Twijfel je, zet het in
+  eigenaar), persoonlijke notities, adressen van apparaten. Twijfel je, zet het in
   `huismus-intern`.
 
 ## Reviewers
@@ -257,8 +283,8 @@ zonder tussendoor te vragen. Een productvraag of een design gaat naar de
 
 **Eén onderwerp per sessie, daarna een verse sessie.** Een volle context maakt
 een sessie traag. Na het melden start `/mijlpaal` zelf een nieuwe cloudsessie
-voor het bovenste open onderwerp in `huismus-intern/backlog.md` (stap 10 van de skill).
-`PAUZE` in dat bestand of een lege lijst stopt de keten.
+voor het volgende issue uit de wachtrij (zie "Backlog"; stap 10 van de skill).
+Een open issue met het label `pauze` of een lege wachtrij stopt de keten.
 
 **Escalatielijst.** Alleen dit vraag je aan de eigenaar zelf, in producttaal en met
 een advies:
