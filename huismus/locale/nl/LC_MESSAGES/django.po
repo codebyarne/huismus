@@ -5735,7 +5735,7 @@ msgstr ""
 
 msgid ""
 "Vul het bruto bedrag in: wat je echt betaald hebt. Btw: zoals op het "
-"bonnetje. Staat er geen btw op, vul dan 0 in en kies 0% of geen btw."
+"bonnetje. Staat er geen btw op, vul dan 0 in en kies 0%% of geen btw."
 msgstr ""
 
 msgid "Btw-tarief onbekend"
@@ -5744,4 +5744,7 @@ msgstr ""
 msgid ""
 "Huismus kent dit btw-tarief niet en importeert deze regels zonder tarief. "
 "Kies het tarief bij de uitgave."
+msgstr ""
+
+msgid "Niet gelezen: het btw-tarief staat er niet bij."
 msgstr ""
