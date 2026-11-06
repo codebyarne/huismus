@@ -63,9 +63,8 @@ Don't need a receipt? Remove it from the list. The file stays in the
 If you've connected an AI assistant (see [AI assistants](ai-assistenten.en.md)),
 say: **Process my receipts in Huismus.** It reads each receipt and makes the
 expense, with the receipt attached. If it can't read a receipt, it says so
-and the receipt stays with the receipts without an expense. Check the
-expenses afterwards under
-**Expenses**.
+and the receipt stays with the receipts without an expense. What your
+assistant filled in is under **To check** on **Expenses**.
 
 Your assistant only sees your receipts when you ask it to. Huismus itself
 sends nothing to an AI service.

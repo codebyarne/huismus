@@ -42,9 +42,13 @@ def _int_param(request, name, default=None):
 def expense_list(request):
     """Expenses with a year filter (default this year, or "alle"), a
     category filter, search on supplier or description, "Meer laden", and
-    the total of everything that matches (not just the rows shown)."""
+    the total of everything that matches (not just the rows shown).
+    ?nakijken=1 shows only what an AI assistant filled in, of every year."""
     this_year = timezone.localdate().year
+    to_check = request.GET.get("nakijken") == "1"
     year = None if request.GET.get("jaar") == "alle" else _int_param(request, "jaar", this_year)
+    if to_check and "jaar" not in request.GET:
+        year = None
     category_pk = _int_param(request, "categorie")
     query = request.GET.get("q", "").strip()
     shown = max(_int_param(request, "toon", LIST_PAGE_SIZE), LIST_PAGE_SIZE)
@@ -53,6 +57,8 @@ def expense_list(request):
     years = sorted(years_with_expenses | {this_year}, reverse=True)
 
     expenses = Expense.objects.all()
+    if to_check:
+        expenses = expenses.filter(needs_review=True)
     if year is not None:
         expenses = expenses.filter(date__year=year)
     if category_pk is not None:
@@ -85,7 +91,12 @@ def expense_list(request):
         .annotate(shown_cents=_shown_cents(category_pk))
         .order_by("-date", "-pk")[:shown]
     )
-    params = {"q": query, "jaar": year or "alle", "categorie": category_pk or ""}
+    params = {
+        "q": query,
+        "jaar": year or "alle",
+        "categorie": category_pk or "",
+        "nakijken": "1" if to_check else "",
+    }
     more_url = None
     if total > shown:
         more_url = "?" + urlencode(
@@ -109,6 +120,9 @@ def expense_list(request):
             # holds something (huismus-intern/besluiten.md, 2026-11-05).
             "tray_count": Attachment.objects.in_tray().count(),
             "receipts_folder_on": inbox.is_on(),
+            # "Nakijken (2)": of every year, whatever the filters.
+            "to_check": to_check,
+            "to_check_count": Expense.objects.filter(needs_review=True).count(),
         },
     )
 
@@ -160,6 +174,8 @@ def _expense_form_or_gone(request, expense):
         if new_receipt_form is not None:
             forms_valid.append(new_receipt_form.is_valid())
         if all(forms_valid):
+            # Saving is checking it: "Nakijken" goes, and so with "Klopt".
+            instance.needs_review = False
             with transaction.atomic():
                 saved = form.save()
                 save_lines(saved, formset.line_inputs())
@@ -175,6 +191,14 @@ def _expense_form_or_gone(request, expense):
                     taken = Attachment.objects.in_tray().filter(pk=tray_receipt.pk)
                     if not taken.update(expense=saved):
                         raise TrayReceiptGone()
+            if expense is not None and "klopt" in request.POST:
+                # "Klopt" in the notice saves the form too, so nothing the
+                # user just changed is lost; then on to the next one.
+                messages.success(request, _("Uitgave nagekeken."))
+                url = reverse("expenses:list")
+                if Expense.objects.filter(needs_review=True).exists():
+                    url += "?nakijken=1"
+                return redirect(url)
             messages.success(request, _("Uitgave opgeslagen."))
             url = reverse("expenses:edit", kwargs={"pk": saved.pk})
             # "Regel toevoegen" (form.html) is a submit button named

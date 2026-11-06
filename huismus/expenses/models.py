@@ -48,6 +48,11 @@ class Expense(TimestampedModel):
     # Document.
     source = models.CharField(_("bron"), max_length=50, blank=True)
     external_id = models.CharField(_("extern ID"), max_length=100, blank=True)
+    # "Nakijken": an AI assistant filled it in (add_expense), and the user
+    # hasn't said yet that it's right. "Klopt" or saving the expense turns
+    # it off (huismus-intern/besluiten.md, 2026-11-05, "Bonnetjes onderweg,
+    # deel 2").
+    needs_review = models.BooleanField(_("nakijken"), default=False)
 
     class Meta:
         verbose_name = _("uitgave")

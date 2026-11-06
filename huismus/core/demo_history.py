@@ -85,6 +85,19 @@ def create_history(seed: int = 1, last_day: date = LAST_DAY) -> None:
     # Open work in the current year: a draft invoice and a sent quote.
     _draft(rng, contacts[0])
     _quote(rng, last_day.year, contacts[1], last_day, status="sent")
+    # Two expenses an AI assistant filled in, still to check ("Nakijken",
+    # SPEC.md M20 part 2b). Without rng, so the rest stays the same.
+    for supplier, cents, category in (
+        ("Bouwmarkt Noord", 4235, categories[2]),
+        ("NS", 1890, categories[1]),
+    ):
+        create_expense(
+            [ExpenseLineInput("", cents, None, category)],
+            date=last_day,
+            supplier=supplier,
+            description="Voorbeelduitgave",
+            needs_review=True,
+        )
 
 
 def _settings() -> None:

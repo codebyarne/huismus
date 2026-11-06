@@ -600,7 +600,8 @@ def add_expense(arguments):
         data[f"lines-{index}-vat_info_cents"] = "" if vat_info is None else str(vat_info)
         data[f"lines-{index}-category"] = str(category.pk) if category else ""
     # The amount 0 lasts only until save_lines() sets the sum of the lines.
-    expense = Expense(amount_cents=0)
+    # needs_review: "Nakijken" in Huismus until the user says it's right.
+    expense = Expense(amount_cents=0, needs_review=True)
     form = ExpenseForm(data, instance=expense)
     formset = ExpenseLineFormSet(data, instance=expense, prefix="lines")
     if not (form.is_valid() and formset.is_valid()):
@@ -895,6 +896,7 @@ TOOLS = (
         "Add an expense: what the user paid, as gross amounts (including any VAT). "
         "With receipt_id, the receipt from list_receipts goes onto the expense; other "
         "receipts the user adds in Huismus, at path. "
+        "Huismus marks it 'to check' until the user says it's right there. "
         "Changing or deleting an expense is done in Huismus too.",
         {
             "date": {**_DATE, "description": "YYYY-MM-DD; default: today."},

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 23:19+0100\n"
+"POT-Creation-Date: 2026-11-06 06:51+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1918,6 +1918,9 @@ msgstr ""
 msgid "btw ter info (cent)"
 msgstr ""
 
+msgid "nakijken"
+msgstr ""
+
 msgid "uitgaven"
 msgstr ""
 
@@ -1940,6 +1943,9 @@ msgstr ""
 msgid ""
 "De naam eindigt op .%(extension)s, maar het bestand is iets anders. Kies een "
 "ander bestand."
+msgstr ""
+
+msgid "Uitgave nagekeken."
 msgstr ""
 
 msgid "Uitgave opgeslagen."
@@ -4201,6 +4207,12 @@ msgstr ""
 msgid "Bonnetjes zonder uitgave"
 msgstr ""
 
+msgid "Je AI-assistent vulde deze uitgave in. Klopt alles?"
+msgstr ""
+
+msgid "Klopt"
+msgstr ""
+
 #, python-format
 msgid "%(count)s bestand"
 msgid_plural "%(count)s bestanden"
@@ -4271,6 +4283,10 @@ msgstr ""
 msgid "Bedragen zijn bruto: wat je echt betaald hebt, inclusief eventuele btw."
 msgstr ""
 
+#, python-format
+msgid "Nakijken (%(count)s)"
+msgstr ""
+
 msgid "Nog geen uitgaven"
 msgstr ""
 
@@ -4291,6 +4307,12 @@ msgstr ""
 msgid "Alle categorieën"
 msgstr ""
 
+msgid "Alleen uitgaven om na te kijken."
+msgstr ""
+
+msgid "Alle uitgaven"
+msgstr ""
+
 msgid "Leverancier"
 msgstr ""
 
@@ -4298,6 +4320,9 @@ msgid "Bedrag"
 msgstr ""
 
 msgid "Met bonnetje"
+msgstr ""
+
+msgid "Nakijken"
 msgstr ""
 
 #, python-format

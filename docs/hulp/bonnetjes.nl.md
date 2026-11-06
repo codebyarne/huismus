@@ -64,9 +64,8 @@ blijft in de map **Opgehaald** staan.
 Heb je een AI-assistent gekoppeld (zie [AI-assistenten](ai-assistenten.nl.md)),
 zeg dan: **Verwerk mijn bonnetjes in Huismus.** Hij leest elk bonnetje en
 maakt de uitgave, met het bonnetje eraan. Kan hij een bonnetje niet lezen,
-dan zegt hij dat en blijft het bij de bonnetjes zonder uitgave. Kijk de
-uitgaven daarna na bij
-**Uitgaven**.
+dan zegt hij dat en blijft het bij de bonnetjes zonder uitgave. Wat je
+assistent invulde, staat bij **Uitgaven** onder **Nakijken**.
 
 Je assistent ziet je bonnetjes alleen als je hem dit vraagt. Huismus stuurt
 zelf niets naar een AI-dienst.

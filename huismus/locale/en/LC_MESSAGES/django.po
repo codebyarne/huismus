@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 23:19+0100\n"
+"POT-Creation-Date: 2026-11-06 06:51+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -14,7 +14,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#
 msgid "Huismus werkt zichzelf bij…"
 msgstr "Huismus is updating…"
 
@@ -44,7 +43,6 @@ msgstr "Every line has a description and a price."
 msgid "Het btw-tarief is 0, 9 of 21 procent."
 msgstr "The VAT rate is 0, 9 or 21 percent."
 
-#
 msgid ""
 "Deze klant staat niet in Huismus. Maak de klant eerst aan in Huismus, onder "
 "Klanten."
@@ -132,7 +130,6 @@ msgstr "Search documents"
 msgid "Document openen"
 msgstr "Open document"
 
-#
 msgid "Klanten zoeken"
 msgstr "Search customers"
 
@@ -175,7 +172,6 @@ msgstr "Mail document"
 msgid "Nieuwe sleutel gemaakt. De oude werkt niet meer."
 msgstr "New key made. The old one no longer works."
 
-#
 msgid "Ontkoppeld. De sleutel werkt niet meer."
 msgstr "Disconnected. The key no longer works."
 
@@ -214,19 +210,15 @@ msgstr "Credit note"
 msgid "Offerte"
 msgstr "Quote"
 
-#
 msgid "onderwerp in het Nederlands"
 msgstr "subject in Dutch"
 
-#
 msgid "tekst in het Nederlands"
 msgstr "text in Dutch"
 
-#
 msgid "onderwerp in het Engels"
 msgstr "subject in English"
 
-#
 msgid "tekst in het Engels"
 msgstr "text in English"
 
@@ -274,7 +266,6 @@ msgstr "Huismus doesn't know %(unknown)s. You can use: %(known)s."
 msgid "Vul je Gmail-adres in."
 msgstr "Enter your Gmail address."
 
-#
 msgid "Vul dit in om via je eigen mailserver te mailen."
 msgstr "Fill this in to mail through your own mail server."
 
@@ -283,11 +274,9 @@ msgid "Dit logo is groter dan %(max_mb)s MB. Kies een kleiner bestand."
 msgstr "This logo is larger than %(max_mb)s MB. Choose a smaller file."
 
 #
-#
 msgid "Kies een PNG-, JPG- of SVG-bestand."
 msgstr "Choose a PNG, JPG or SVG file."
 
-#
 #
 msgid ""
 "Huismus kan dit bestand niet als afbeelding openen. Kies een ander bestand."
@@ -352,7 +341,6 @@ msgstr "KOR notice text"
 msgid "Wordt getoond op elke factuur zolang “KOR van toepassing” aan staat."
 msgstr "Shown on every invoice while “KOR applies” is on."
 
-#
 msgid "tekst bij btw verlegd"
 msgstr "reverse charge text"
 
@@ -459,14 +447,12 @@ msgid ""
 "KOR-vermeldingstekst is verplicht zolang “KOR van toepassing” aan staat."
 msgstr "KOR notice text is required while “KOR applies” is on."
 
-#
 msgid ""
 "Huismus kan de mailserver niet bereiken. Kijk of de SMTP-server en de poort "
 "kloppen."
 msgstr ""
 "Huismus can't reach the mail server. Check the SMTP server and the port."
 
-#
 msgid "Mailen is niet gelukt. Kijk bij Instellingen → Mailen of alles klopt."
 msgstr "Mailing didn't work. Check Settings → Mail."
 
@@ -477,7 +463,6 @@ msgstr ""
 "The mail server refuses your username or password. Check both; for Gmail, "
 "use an app password."
 
-#
 msgid "De mailserver reageerde niet op tijd. Probeer het zo nog eens."
 msgstr "The mail server didn't answer in time. Try again in a moment."
 
@@ -521,7 +506,6 @@ msgstr "Your logo at the top and the footer at the bottom of your invoices."
 msgid "Mailen"
 msgstr "Mail"
 
-#
 msgid "Hoe Huismus je facturen en offertes mailt, en met welke tekst."
 msgstr "How Huismus mails your invoices and quotes, and with which text."
 
@@ -612,7 +596,6 @@ msgstr "Waiting for connection"
 msgid "AI-assistenten"
 msgstr "AI assistants"
 
-#
 msgid "Laat een AI-assistent met je administratie werken."
 msgstr "Let an AI assistant work with your records."
 
@@ -728,19 +711,15 @@ msgstr "contact person"
 msgid "contactpersonen"
 msgstr "contact persons"
 
-#
 msgid "Klant toegevoegd."
 msgstr "Customer added."
 
-#
 msgid "Klant opgeslagen."
 msgstr "Customer saved."
 
-#
 msgid "Klant gearchiveerd."
 msgstr "Customer archived."
 
-#
 msgid "Klant gedearchiveerd."
 msgstr "Customer unarchived."
 
@@ -1046,7 +1025,6 @@ msgstr "delivery date"
 msgid "gecrediteerde factuur"
 msgstr "credited invoice"
 
-#
 msgid "klant"
 msgstr "customer"
 
@@ -1255,7 +1233,6 @@ msgstr "Fill this in."
 msgid "Vul een datum in."
 msgstr "Enter a date."
 
-#
 msgid "Vul een getal in."
 msgstr "Enter a number."
 
@@ -1263,7 +1240,6 @@ msgstr "Enter a number."
 msgid "“%(value)s” is geen e-mailadres. Kijk na of je het goed typte."
 msgstr "“%(value)s” isn't an e-mail address. Check how you typed it."
 
-#
 msgid "Dit bestand is leeg. Kies een ander bestand."
 msgstr "This file is empty. Choose another file."
 
@@ -1370,7 +1346,6 @@ msgstr "New password"
 msgid "Minstens %(count)d tekens."
 msgstr "At least %(count)d characters."
 
-#
 msgid "Nieuw wachtwoord, nog een keer"
 msgstr "New password again"
 
@@ -1953,7 +1928,6 @@ msgstr "No category"
 msgid "Vul het btw-bedrag in. Geen btw betaald? Vul dan 0 in."
 msgstr "Fill in the VAT amount. No VAT paid? Then fill in 0."
 
-#
 msgid "Kies eerst een bonnetje."
 msgstr "Choose a receipt first."
 
@@ -1988,7 +1962,6 @@ msgstr "Your Dropbox storage is full."
 msgid "Dropbox gaf een fout. Huismus probeert het over 10 minuten opnieuw."
 msgstr "Dropbox gave an error. Huismus tries again in 10 minutes."
 
-#
 msgid "Kies een PDF-, PNG-, JPG- of HEIC-bestand."
 msgstr "Choose a PDF, PNG, JPG or HEIC file."
 
@@ -2024,6 +1997,9 @@ msgstr "expense categories"
 msgid "btw ter info (cent)"
 msgstr "VAT for reference (cents)"
 
+msgid "nakijken"
+msgstr "to check"
+
 msgid "uitgaven"
 msgstr "expenses"
 
@@ -2036,11 +2012,9 @@ msgstr "expense line"
 msgid "uitgaveregels"
 msgstr "expense lines"
 
-#
 msgid "Huismus kan deze PDF niet openen. Kies een ander bestand."
 msgstr "Huismus can't open this PDF. Choose another file."
 
-#
 msgid "Huismus kan deze afbeelding niet openen. Kies een ander bestand."
 msgstr "Huismus can't open this image. Choose another file."
 
@@ -2051,6 +2025,9 @@ msgid ""
 msgstr ""
 "The name ends in .%(extension)s, but the file is something else. Choose "
 "another file."
+
+msgid "Uitgave nagekeken."
+msgstr "Expense checked."
 
 msgid "Uitgave opgeslagen."
 msgstr "Expense saved."
@@ -2077,7 +2054,6 @@ msgstr ""
 "This category still has expenses. Give them another category first, then you "
 "can delete it."
 
-#
 msgid "de klanten"
 msgstr "the customers"
 
@@ -2324,7 +2300,6 @@ msgstr ""
 "the schedule, not the invoices themselves. Anything already invoiced is with "
 "your other invoices."
 
-#
 msgid "klanten"
 msgstr "customers"
 
@@ -2366,7 +2341,6 @@ msgstr ""
 "Quote %(number)s has a VAT rate Huismus doesn't recognize: ‘%(rate)s’. Check "
 "the quote in Moneybird and export again."
 
-#
 msgid "Klanten"
 msgstr "Customers"
 
@@ -2581,7 +2555,6 @@ msgstr ""
 msgid "Weer leegmaken"
 msgstr "Clear sample data"
 
-#
 msgid "Facturen en uitgaven voor zzp'ers, met of zonder KOR"
 msgstr "Invoices and expenses for Dutch freelancers, with or without the KOR"
 
@@ -2963,7 +2936,6 @@ msgstr ""
 msgid "ZIP downloaden"
 msgstr "Download ZIP"
 
-#
 msgid ""
 "Wijzigingen gelden voor concepten en nieuwe documenten. Een uitgegeven "
 "factuur houdt de gegevens van toen."
@@ -3129,7 +3101,6 @@ msgstr "Drop your logo here"
 msgid "PNG, JPG of SVG. Huismus bewaart hem als je opslaat."
 msgstr "PNG, JPG or SVG. Huismus keeps it when you save."
 
-#
 msgid ""
 "Bij Gmail vul je je Gmail-adres en een app-wachtwoord in. Bij Anders vul je "
 "de gegevens van je eigen mailserver in."
@@ -3149,7 +3120,6 @@ msgstr "For Gmail, Huismus fills this in itself."
 msgid "Wachtwoord ingesteld"
 msgstr "Password set"
 
-#
 msgid "(niet in de back-up; kies “Niet ingesteld” om het te wissen)"
 msgstr "(not in the backup; choose “Not set up” to remove it)"
 
@@ -3194,7 +3164,6 @@ msgstr "Update to %(version)s?"
 msgid "Huismus maakt eerst een back-up van je administratie."
 msgstr "Huismus first makes a backup of your records."
 
-#
 msgid "Daarna installeert Huismus de nieuwe versie en start opnieuw."
 msgstr "Then Huismus installs the new version and restarts."
 
@@ -3280,7 +3249,6 @@ msgstr "Huismus %(version)s will start by itself in a moment."
 msgid "Deze contactpersoon verwijderen bij opslaan"
 msgstr "Remove this contact person when saving"
 
-#
 msgid "Nieuwe klant"
 msgstr "New customer"
 
@@ -3300,7 +3268,6 @@ msgstr "Archive"
 msgid "Opslaan en terug naar factuur"
 msgstr "Save and back to invoice"
 
-#
 msgid "Na opslaan ga je terug naar je factuur, met deze klant al gekozen."
 msgstr ""
 "After saving you go back to your invoice, with this customer already chosen."
@@ -3338,7 +3305,6 @@ msgstr "Draft"
 msgid "Totaal gefactureerd"
 msgstr "Total invoiced"
 
-#
 msgid "Nog geen facturen of offertes voor deze klant."
 msgstr "No invoices or quotes for this customer yet."
 
@@ -3347,11 +3313,9 @@ msgid ""
 "blijven bewaard."
 msgstr "Archive a customer you no longer need. Their invoices and quotes stay."
 
-#
 msgid "Nog geen klanten"
 msgstr "No customers yet"
 
-#
 msgid ""
 "Voeg je eerste klant toe, of haal al je klanten in één keer uit Moneybird."
 msgstr ""
@@ -3370,7 +3334,6 @@ msgstr "Active"
 msgid "Gearchiveerd"
 msgstr "Archived"
 
-#
 msgid "Zoek klanten"
 msgstr "Search customers"
 
@@ -3389,19 +3352,15 @@ msgstr "City"
 msgid "Actie"
 msgstr "Action"
 
-#
 msgid "Geen klanten gevonden"
 msgstr "No customers found"
 
-#
 msgid "Geen klant past bij je zoekopdracht."
 msgstr "No customer matches your search."
 
-#
 msgid "Je hebt geen gearchiveerde klanten."
 msgstr "You have no archived customers."
 
-#
 msgid "Al je klanten zijn gearchiveerd."
 msgstr "All your customers are archived."
 
@@ -3780,7 +3739,6 @@ msgstr ""
 "Check the document carefully. After this it is final again, with the same "
 "date and number."
 
-#
 msgid "Controleer het document goed."
 msgstr "Check the document carefully."
 
@@ -4255,11 +4213,9 @@ msgstr "Search or choose a customer"
 msgid "Kies een klant"
 msgstr "Choose a customer"
 
-#
 msgid "Je hebt nog geen klanten."
 msgstr "You don't have any customers yet."
 
-#
 #
 msgid "+ Nieuwe klant"
 msgstr "+ New customer"
@@ -4340,7 +4296,6 @@ msgstr "Create your first invoice"
 msgid "Zoeken in facturen"
 msgstr "Search invoices"
 
-#
 msgid "Zoek op nummer of klant"
 msgstr "Search by number or customer"
 
@@ -4356,7 +4311,6 @@ msgstr "Kind"
 msgid "Status"
 msgstr "Status"
 
-#
 msgid "Nog geen klant"
 msgstr "No customer yet"
 
@@ -4499,7 +4453,6 @@ msgstr "Edit"
 msgid "%(name)s verwijderen: niet mogelijk, er horen uitgaven bij"
 msgstr "Delete %(name)s: not possible, it has expenses"
 
-#
 msgid "Er horen uitgaven bij, dus verwijderen kan niet"
 msgstr "It has expenses, so you can't delete it"
 
@@ -4530,7 +4483,6 @@ msgstr "New category, e.g. Insurance"
 msgid "Toevoegen"
 msgstr "Add"
 
-#
 msgid ""
 "Geef die uitgaven eerst een andere categorie, of geef deze categorie een "
 "andere naam. Zo raakt geen uitgave zijn categorie kwijt."
@@ -4550,6 +4502,12 @@ msgstr "New expense"
 msgid "Bonnetjes zonder uitgave"
 msgstr "Receipts without an expense"
 
+msgid "Je AI-assistent vulde deze uitgave in. Klopt alles?"
+msgstr "Your AI assistant filled in this expense. Is everything right?"
+
+msgid "Klopt"
+msgstr "Looks right"
+
 #, python-format
 msgid "%(count)s bestand"
 msgid_plural "%(count)s bestanden"
@@ -4565,7 +4523,6 @@ msgstr "Photo"
 msgid "Dit bonnetje verwijderen?"
 msgstr "Delete this receipt?"
 
-#
 msgid "Huismus verwijdert het bestand. Dat kun je niet ongedaan maken."
 msgstr "Huismus deletes the file. You can't undo this."
 
@@ -4608,7 +4565,6 @@ msgstr ""
 msgid "Uitgave verwijderen"
 msgstr "Delete expense"
 
-#
 msgid "Ook de bonnetjes gaan weg."
 msgstr "The receipts go too."
 
@@ -4618,7 +4574,6 @@ msgstr "Delete…"
 msgid "Deze uitgave verwijderen?"
 msgstr "Delete this expense?"
 
-#
 msgid ""
 "Huismus verwijdert de uitgave met de bonnetjes. Dat kun je niet ongedaan "
 "maken."
@@ -4626,6 +4581,10 @@ msgstr "Huismus deletes the expense and its receipts. You can't undo this."
 
 msgid "Bedragen zijn bruto: wat je echt betaald hebt, inclusief eventuele btw."
 msgstr "Amounts are gross: what you actually paid, including any VAT."
+
+#, python-format
+msgid "Nakijken (%(count)s)"
+msgstr "To check (%(count)s)"
 
 msgid "Nog geen uitgaven"
 msgstr "No expenses yet"
@@ -4649,6 +4608,12 @@ msgstr "Category"
 msgid "Alle categorieën"
 msgstr "All categories"
 
+msgid "Alleen uitgaven om na te kijken."
+msgstr "Only expenses to check."
+
+msgid "Alle uitgaven"
+msgstr "All expenses"
+
 msgid "Leverancier"
 msgstr "Supplier"
 
@@ -4657,6 +4622,9 @@ msgstr "Amount"
 
 msgid "Met bonnetje"
 msgstr "With receipt"
+
+msgid "Nakijken"
+msgstr "To check"
 
 #, python-format
 msgid "Totaal van %(total)s uitgave in %(year)s"
@@ -4670,7 +4638,6 @@ msgid_plural "Totaal van alle %(total)s uitgaven"
 msgstr[0] "Total of %(total)s expense"
 msgstr[1] "Total of all %(total)s expenses"
 
-#
 msgid "Geen uitgave past bij je zoekopdracht en filters."
 msgstr "No expense matches your search and filters."
 
@@ -4684,7 +4651,6 @@ msgstr ""
 "On the road, save a photo or PDF of a receipt in this folder. Every 10 "
 "minutes Huismus picks it up and puts it with the receipts without an expense."
 
-#
 msgid "Huismus kijkt in"
 msgstr "Huismus checks"
 
@@ -4731,7 +4697,6 @@ msgstr "Picked up %(moment)s"
 msgid "Uitgave maken"
 msgstr "Create expense"
 
-#
 msgid "Huismus haalt het bonnetje weg. Het bestand blijft in de map Opgehaald."
 msgstr "Huismus removes the receipt. The file stays in the Picked up folder."
 
@@ -4781,7 +4746,6 @@ msgstr "Skipped"
 msgid "De klant staat niet in het klantenbestand."
 msgstr "The customer isn't in the customers file."
 
-#
 msgid "Er staan geen regels voor in het regelbestand."
 msgstr "There are no lines for it in the lines file."
 
@@ -4845,7 +4809,6 @@ msgid "Huismus importeert ze wel, zonder origineel, en maakt de PDF zelf."
 msgstr ""
 "Huismus imports them anyway, without the original, and makes the PDF itself."
 
-#
 msgid "Geen bonnetje gevonden"
 msgstr "No receipt found"
 
@@ -5246,11 +5209,9 @@ msgstr "Oct–Dec"
 msgid "Kosten per categorie"
 msgstr "Costs per category"
 
-#
 msgid "Je hebt dit jaar geen uitgaven."
 msgstr "You have no expenses this year."
 
-#
 msgid ""
 "Huismus telt omzet zonder btw, op de factuurdatum, niet op de dag dat er "
 "betaald is. Kosten zijn bruto: wat je echt betaald hebt."
@@ -5273,7 +5234,6 @@ msgstr "Download for Mac"
 msgid "Download voor Windows"
 msgstr "Download for Windows"
 
-#
 msgid "macOS 14 of nieuwer met een Apple-chip · Windows 10 of nieuwer"
 msgstr "macOS 14 or newer with an Apple chip · Windows 10 or newer"
 
@@ -5318,7 +5278,6 @@ msgstr ""
 msgid "Klik op <strong>Toch uitvoeren</strong>."
 msgstr "Click <strong>Run anyway</strong>."
 
-#
 msgid ""
 "Offertes, facturen en uitgaven voor zzp’ers, met of zonder KOR. Een gratis "
 "app voor Mac en Windows, en je administratie blijft op je eigen computer."
@@ -5327,11 +5286,9 @@ msgstr ""
 "KOR. A free app for Mac and Windows, and your records stay on your own "
 "computer."
 
-#
 msgid "Huismus: je facturen, op je eigen computer"
 msgstr "Huismus: your invoices, on your own computer"
 
-#
 msgid ""
 "Offertes, facturen en uitgaven voor zzp’ers, met of zonder KOR. Gratis en "
 "open source."
@@ -5359,7 +5316,6 @@ msgstr ""
 msgid "Deze site telt bezoeken met GoatCounter, zonder cookies."
 msgstr "This site counts visits with GoatCounter, without cookies."
 
-#
 msgid "Installeren"
 msgstr "Install"
 
@@ -5372,7 +5328,6 @@ msgstr "All versions"
 msgid "Voor ontwikkelaars"
 msgstr "For developers"
 
-#
 msgid "Bouw mee aan Huismus"
 msgstr "Help build Huismus"
 
@@ -5510,7 +5465,6 @@ msgid ""
 "float."
 msgstr "<strong>Money in cents:</strong> amounts are integers, never a float."
 
-#
 msgid ""
 "<strong>Uitgegeven is vast:</strong> een uitgegeven factuur verandert niet "
 "meer. Corrigeren doe je met een creditnota."
@@ -5566,15 +5520,12 @@ msgstr ""
 "<strong>A DCO instead of a CLA:</strong> sign off your commits with "
 "<code>git commit -s</code>. The license is AGPL-3.0-or-later."
 
-#
 msgid "Alles over bijdragen"
 msgstr "All about contributing"
 
-#
 msgid "Gedragscode"
 msgstr "Code of conduct"
 
-#
 msgid "Je download begint"
 msgstr "Your download is starting"
 
@@ -5599,7 +5550,6 @@ msgstr ""
 msgid "Daarna"
 msgstr "Then"
 
-#
 msgid ""
 "Begin je nieuw? Vul in vier stappen je bedrijfsgegevens in. Kom je van "
 "Moneybird? Importeer je hele administratie in één keer."
@@ -5621,7 +5571,6 @@ msgstr ""
 msgid "Voor zzp’ers, met of zonder KOR"
 msgstr "For Dutch freelancers, with or without the KOR"
 
-#
 msgid "Je facturen, op je eigen computer"
 msgstr "Your invoices, on your own computer"
 
@@ -5639,7 +5588,6 @@ msgstr ""
 "The Huismus overview: what's outstanding, this year's revenue against the "
 "KOR limit, the latest invoices and a quote awaiting a reply."
 
-#
 msgid "Waarom Huismus"
 msgstr "Why Huismus"
 
@@ -5653,7 +5601,6 @@ msgstr ""
 "No subscription and no trial period. The source code is public, so anyone "
 "can see how Huismus works."
 
-#
 msgid "Op je eigen computer"
 msgstr "On your own computer"
 
@@ -5677,7 +5624,6 @@ msgstr ""
 "If you use the KOR, Huismus puts your KOR text on every invoice. If you "
 "charge VAT, you choose 0, 9 or 21%% per line."
 
-#
 msgid "Zo werkt Huismus"
 msgstr "How Huismus works"
 
@@ -5696,7 +5642,6 @@ msgstr ""
 "<strong>Issue</strong> gives the invoice a fixed number, with no gaps in the "
 "series. Paid? You record it with one click."
 
-#
 msgid "Zo maak je een factuur"
 msgstr "How to make an invoice"
 
@@ -5724,11 +5669,9 @@ msgstr ""
 "The list of invoices, with each invoice's number, customer, total and "
 "whether it's paid."
 
-#
 msgid "Van offerte naar factuur"
 msgstr "From quote to invoice"
 
-#
 msgid ""
 "Stuur een offerte, leg vast of de klant ja zegt, en zet hem met één klik om "
 "naar een factuur. De klant en de regels gaan mee."
@@ -5736,15 +5679,12 @@ msgstr ""
 "Send a quote, record whether the customer says yes, and turn it into an "
 "invoice with one click. The customer and the lines come along."
 
-#
 msgid "Meer over offertes"
 msgstr "More about quotes"
 
-#
 msgid "Animatie: een verzonden offerte wordt omgezet naar een conceptfactuur."
 msgstr "Animation: a sent quote is converted into a draft invoice."
 
-#
 msgid "Bonnetjes bij je uitgaven"
 msgstr "Receipts with your expenses"
 
@@ -5755,7 +5695,6 @@ msgstr ""
 "Record your costs with the receipt attached, as a photo or PDF. You fill in "
 "what you actually paid, and choose a category."
 
-#
 msgid "Meer over uitgaven"
 msgstr "More about expenses"
 
@@ -5772,7 +5711,6 @@ msgstr ""
 "Revenue, costs and profit, also per quarter. For your accountant you "
 "download everything as CSV, with the PDFs and receipts."
 
-#
 msgid "Meer over exporteren"
 msgstr "More about exporting"
 
@@ -5783,11 +5721,9 @@ msgstr ""
 "The year overview with revenue, costs, profit and the KOR limit, and a chart "
 "per quarter."
 
-#
 msgid "AI-assistent"
 msgstr "AI assistant"
 
-#
 msgid "Werk samen met Claude"
 msgstr "Work together with Claude"
 
@@ -5807,7 +5743,6 @@ msgstr ""
 "Other assistants, such as ChatGPT, work too. For now that takes some "
 "technical know-how."
 
-#
 msgid "Meer over AI-assistenten"
 msgstr "More about AI assistants"
 
@@ -5817,11 +5752,9 @@ msgid ""
 msgstr ""
 "The AI assistants page in the settings, with the button to connect Claude."
 
-#
 msgid "Overstappen"
 msgstr "Switching"
 
-#
 msgid "Neem je administratie mee"
 msgstr "Bring your records along"
 
@@ -5845,7 +5778,6 @@ msgstr ""
 "Animation: choosing a Moneybird export, reviewing the trial run and "
 "importing."
 
-#
 msgid "Elke dag een back-up"
 msgstr "A backup every day"
 
@@ -5856,7 +5788,6 @@ msgstr ""
 "Choose a folder, for example in iCloud Drive or OneDrive, or connect "
 "Dropbox. Huismus puts a backup there every day, as long as it's open."
 
-#
 msgid "Meer over back-ups"
 msgstr "More about backups"
 
@@ -5867,11 +5798,9 @@ msgstr ""
 "The settings overview, with business details, KOR, backups and exporting "
 "among others."
 
-#
 msgid "Eerst rondkijken?"
 msgstr "Look around first?"
 
-#
 msgid ""
 "Kies bij de eerste start <strong>Probeer met nepdata</strong>. Huismus vult "
 "zich dan met een verzonnen administratie van negen jaar, en met één knop is "
@@ -5890,14 +5819,12 @@ msgstr ""
 "The Huismus welcome screen, with the buttons Start step by step, Import from "
 "Moneybird and Try with sample data."
 
-#
 msgid "Twee manieren om Huismus te gebruiken"
 msgstr "Two ways to use Huismus"
 
 msgid "Voor de meeste mensen"
 msgstr "For most people"
 
-#
 msgid "De app voor Mac en Windows"
 msgstr "The app for Mac and Windows"
 
@@ -5910,7 +5837,6 @@ msgstr "Your records live on your own computer."
 msgid "Een nieuwe versie installeer je met één klik."
 msgstr "A new version installs with one click."
 
-#
 msgid "Naar de download"
 msgstr "Go to the download"
 
@@ -5931,7 +5857,6 @@ msgstr ""
 msgid "Installeren met Docker"
 msgstr "Install with Docker"
 
-#
 msgid "Op je telefoon"
 msgstr "On your phone"
 
@@ -5945,15 +5870,12 @@ msgstr ""
 msgid "Zo bouw je mee"
 msgstr "How to contribute"
 
-#
 msgid "Probeer Huismus"
 msgstr "Try Huismus"
 
-#
 msgid "Gratis, zonder account. Je administratie blijft op je eigen computer."
 msgstr "Free, no account. Your records stay on your own computer."
 
-#
 msgid "Huismus installeren"
 msgstr "Installing Huismus"
 
@@ -6442,9 +6364,6 @@ msgstr ""
 
 #~ msgid "Deze stonden er al en worden overgeslagen."
 #~ msgstr "These were already there and are skipped."
-
-#~ msgid "Geen uitgaven dit jaar."
-#~ msgstr "No expenses this year."
 
 #~ msgid "Alleen concepten kunnen worden uitgegeven."
 #~ msgstr "Only drafts can be issued."
