@@ -48,3 +48,15 @@ def apply():
         "Dit mag hoogstens %(limit_value)d tekens zijn. Nu zijn het er %(show_value)d.",
         "limit_value",
     )
+
+
+def as_text(*forms) -> str:
+    """The errors of these forms on one line, each after its field's label,
+    for an answer without a page: the AI connection (assistants.tools),
+    an expense from a receipt (expenses.adding)."""
+    messages = []
+    for form in forms:
+        for field, errors in form.errors.items():
+            label = form.fields[field].label if field in form.fields else ""
+            messages.extend(f"{label}: {error}" if label else str(error) for error in errors)
+    return " ".join(messages)

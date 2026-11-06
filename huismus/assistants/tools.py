@@ -34,7 +34,6 @@ from dataclasses import dataclass
 from decimal import Decimal
 from typing import Literal
 
-from django.db import transaction
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -44,6 +43,7 @@ from huismus.business import smtp
 from huismus.business.kor_limit import kor_limit_crossed_by, kor_limit_status
 from huismus.business.models import Settings
 from huismus.contacts.models import Contact
+from huismus.core import form_messages
 from huismus.core.dashboard import outstanding_invoices
 from huismus.core.models import Attachment
 from huismus.core.templatetags.money import euros, money
@@ -66,8 +66,7 @@ from huismus.documents.models import Document
 from huismus.documents.quoting import QuoteError, send_quote
 from huismus.documents.totals import compute_totals
 from huismus.documents.vat import default_rate, editor_value
-from huismus.expenses.forms import ExpenseForm, ExpenseLineFormSet
-from huismus.expenses.lines import save_lines
+from huismus.expenses import adding
 from huismus.expenses.models import Expense, ExpenseCategory
 from huismus.reports.year_overview import compute_year_overview
 
@@ -342,8 +341,7 @@ def list_expenses(arguments):
 
 # --- Receipts without an expense (SPEC.md M20, part 2) ---
 
-# The same words as "Uitgave maken" in the app (expenses.views).
-RECEIPT_GONE = gettext_lazy("Dit bonnetje staat niet meer bij de bonnetjes zonder uitgave.")
+RECEIPT_GONE = adding.RECEIPT_GONE
 
 
 def _tray_receipt(pk) -> Attachment:
@@ -397,15 +395,6 @@ DOCUMENT_FIELDS = (
     "footer_text",
     "notes",
 )
-
-
-def _form_errors(*forms) -> str:
-    messages = []
-    for form in forms:
-        for field, errors in form.errors.items():
-            label = form.fields[field].label if field in form.fields else ""
-            messages.extend(f"{label}: {error}" if label else str(error) for error in errors)
-    return " ".join(messages)
 
 
 # The line formset's POST data is built here, not saved directly, so the
@@ -492,7 +481,9 @@ def _save(document, data: dict):
     form = document_form(document, data)
     formset = line_formset(document, data)
     if not (form.is_valid() and formset.is_valid()):
-        raise ToolError(_form_errors(form, *formset.forms) or str(formset.non_form_errors()))
+        raise ToolError(
+            form_messages.as_text(form, *formset.forms) or str(formset.non_form_errors())
+        )
     saved = save_draft(document, form, formset)
     return _detail(Document.objects.with_payment_totals().get(pk=saved.pk))
 
@@ -577,47 +568,34 @@ def _category(name, categories: list[ExpenseCategory]) -> ExpenseCategory | None
 
 
 def add_expense(arguments):
-    """Validates and saves like "Opslaan" on the expense page
-    (expenses.views._expense_form)."""
+    """Validates and saves like "Opslaan" on the expense page, through
+    expenses.adding, as Huismus does with a receipt it read itself."""
     lines = arguments.get("lines")
     if not lines or not all(isinstance(line, dict) for line in lines):
         raise ToolError(_("Vul minstens één regel in met een bedrag."))
-    data = {
-        "date": arguments.get("date") or timezone.localdate().isoformat(),
-        "supplier": arguments.get("supplier") or "",
-        "description": arguments.get("description") or "",
-        "lines-TOTAL_FORMS": str(len(lines)),
-        "lines-INITIAL_FORMS": "0",
-        "lines-MIN_NUM_FORMS": "1",
-        "lines-MAX_NUM_FORMS": "1000",
-    }
     categories = list(ExpenseCategory.objects.all())
-    for index, line in enumerate(lines):
-        category = _category(line.get("category"), categories)
-        vat_info = line.get("vat_info")
-        data[f"lines-{index}-description"] = str(line.get("description") or "")
-        data[f"lines-{index}-amount_cents"] = str(line.get("amount", ""))
-        data[f"lines-{index}-vat_info_cents"] = "" if vat_info is None else str(vat_info)
-        data[f"lines-{index}-category"] = str(category.pk) if category else ""
-    # The amount 0 lasts only until save_lines() sets the sum of the lines.
-    # needs_review: "Nakijken" in Huismus until the user says it's right.
-    expense = Expense(amount_cents=0, needs_review=True)
-    form = ExpenseForm(data, instance=expense)
-    formset = ExpenseLineFormSet(data, instance=expense, prefix="lines")
-    if not (form.is_valid() and formset.is_valid()):
-        # The formset's own error: "at least one line with an amount".
-        raise ToolError(_form_errors(form, *formset.forms) or " ".join(formset.non_form_errors()))
+    inputs = [
+        adding.Line(
+            description=str(line.get("description") or ""),
+            amount=str(line.get("amount", "")),
+            vat_info=None if line.get("vat_info") is None else str(line["vat_info"]),
+            category=_category(line.get("category"), categories),
+        )
+        for line in lines
+    ]
     receipt = None
     if arguments.get("receipt_id") is not None:
         receipt = _tray_receipt(arguments["receipt_id"])
-    with transaction.atomic():
-        saved = form.save()
-        save_lines(saved, formset.line_inputs())
-        if receipt is not None:
-            # Out of the tray, onto the expense, as "Uitgave maken" does:
-            # only if it still waits, else nothing is saved.
-            if not Attachment.objects.in_tray().filter(pk=receipt.pk).update(expense=saved):
-                raise ToolError(str(RECEIPT_GONE))
+    try:
+        saved = adding.add_expense(
+            date=arguments.get("date") or timezone.localdate().isoformat(),
+            supplier=arguments.get("supplier") or "",
+            description=arguments.get("description") or "",
+            lines=inputs,
+            receipt=receipt,
+        )
+    except adding.NotAdded as error:
+        raise ToolError(str(error)) from error
     return {
         "id": saved.pk,
         "date": _date(saved.date),
