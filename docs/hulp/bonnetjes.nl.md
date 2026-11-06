@@ -60,7 +60,8 @@ Bonnetjesmap zegt dan welk bestand het is en waarom.
 Bij **Uitgaven** staat de knop **Bonnetjes**, met hoeveel bonnetjes er nog
 geen uitgave hebben. Klik op **Uitgave maken** bij een bonnetje: je krijgt
 het gewone formulier, met het bonnetje al bovenaan. Vul de rest in en klik
-op **Opslaan**.
+op **Opslaan**. Wacht er nog een bonnetje, dan krijg je meteen het volgende.
+Wil je er een later doen, klik dan op **Overslaan**.
 
 Heb je een bonnetje niet nodig, verwijder het dan uit de lijst. Het bestand
 blijft in de map **Opgehaald** staan.
@@ -71,7 +72,9 @@ Heb je een AI-assistent gekoppeld (zie [AI-assistenten](ai-assistenten.nl.md)),
 zeg dan: **Verwerk mijn bonnetjes in Huismus.** Hij leest elk bonnetje en
 maakt de uitgave, met het bonnetje eraan. Kan hij een bonnetje niet lezen,
 dan zegt hij dat en blijft het bij de bonnetjes zonder uitgave. Wat je
-assistent invulde, staat bij **Uitgaven** onder **Nakijken**.
+assistent invulde, staat bij **Uitgaven** onder **Nakijken**. Open de
+bovenste en klik op **Klopt** als alles goed is: je krijgt meteen de
+volgende. Met **Overslaan** laat je er een staan voor later.
 
 Je assistent ziet je bonnetjes alleen als je hem dit vraagt. Huismus stuurt
 zelf niets naar een AI-dienst.

@@ -27,9 +27,16 @@ on the last line clicks this copy too; it does the same.{% endcomment %}
 <button type="submit" form="uitgave-form" name="regel_toevoegen" value="1" class="sr-only" tabindex="-1" aria-hidden="true" data-formset-add="lines"></button>
 <div class="flash flash-info" id="nakijken" style="margin-bottom:var(--s-5);align-items:center;flex-wrap:wrap">
     <svg class="i" aria-hidden="true" style="margin-top:0"><use href="#info"></use></svg>
-    <div class="flash-body">{% translate "Je AI-assistent vulde deze uitgave in. Klopt alles?" %}</div>
+    <div class="flash-body">{% translate "Je AI-assistent vulde deze uitgave in. Klopt alles?" %}{% if skip_to %} <span id="nog-nakijken">{% blocktranslate count count=left_after %}Hierna nog {{ count }}.{% plural %}Hierna nog {{ count }}.{% endblocktranslate %}</span>{% endif %}</div>
+    {% comment %}On to the next one without saving: the mark stays (huismus/expenses/batch.py).{% endcomment %}
+    {% if skip_to %}<a class="btn btn-ghost btn-sm" id="overslaan" href="{% url 'expenses:edit' skip_to.pk %}">{% translate "Overslaan" %}</a>{% endif %}
     <button type="submit" form="uitgave-form" name="klopt" value="1" class="btn btn-sm">{% translate "Klopt" %}<span class="spinner"></span></button>
 </div>
+{% endif %}
+
+{% if skip_to_receipt %}
+{% comment %}Saving goes on to the next receipt; "Overslaan" goes there without saving (huismus/expenses/batch.py).{% endcomment %}
+<p class="small muted" id="nog-bonnetjes" style="margin-bottom:var(--s-4)">{% blocktranslate count count=left_after %}Hierna nog {{ count }} bonnetje.{% plural %}Hierna nog {{ count }} bonnetjes.{% endblocktranslate %} <a id="overslaan" href="{% url 'expenses:create' %}?bonnetje={{ skip_to_receipt.pk }}">{% translate "Overslaan" %}</a></p>
 {% endif %}
 
 {% comment %}An existing expense's receipts, above its form like the

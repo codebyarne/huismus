@@ -79,6 +79,55 @@ def test_set_up_a_folder_pick_up_now_and_make_an_expense(app, tmp_path):
     expect(app.locator("#naar-bonnetjes")).to_have_text("Bonnetjes")
 
 
+def test_make_expenses_of_three_receipts_one_after_the_other(app, tmp_path):
+    """Saving goes on to the next receipt, "Overslaan" skips one, and
+    after the last one you're on its expense (huismus-intern/besluiten.md,
+    2026-11-06, huismus/expenses/batch.py)."""
+    folder = tmp_path / "bonnetjes"
+    folder.mkdir()
+    inbox.choose_folder(folder)
+    for number, name in enumerate(("een.pdf", "twee.pdf", "drie.pdf")):
+        (folder / name).write_bytes(PDF + str(number).encode())
+    inbox.fetch()
+    # In the order of the tray: newest first.
+    first, second, third = (
+        r.filename for r in Attachment.objects.in_tray().order_by("-created_at", "-pk")
+    )
+
+    def fill(supplier):
+        app.get_by_label("Datum").fill("2026-11-05")
+        app.get_by_label("Leverancier").fill(supplier)
+        app.locator("[name='lines-0-amount_cents']").fill("12,50")
+        app.locator("[name=lines-0-vat_info_cents]").fill("0")
+        app.get_by_role("button", name="Opslaan").click()
+
+    app.goto(app.base + "/uitgaven/bonnetjes/")
+    app.get_by_role("link", name="Uitgave maken").first.click()
+    expect(app.locator("#bonnetje-uit-bakje")).to_contain_text(first)
+    expect(app.locator("#nog-bonnetjes")).to_contain_text("Hierna nog 2 bonnetjes.")
+    fill("Bouwmarkt")
+
+    expect(app.locator("#toasts")).to_contain_text("Uitgave opgeslagen.")
+    expect(app.locator("h1")).to_have_text("Nieuwe uitgave")
+    expect(app.locator("#bonnetje-uit-bakje")).to_contain_text(second)
+    expect(app.locator("#nog-bonnetjes")).to_contain_text("Hierna nog 1 bonnetje.")
+    app.get_by_role("link", name="Overslaan").click()
+
+    expect(app.locator("#bonnetje-uit-bakje")).to_contain_text(third)
+    fill("Tankstation")
+
+    # Round again to the one skipped, now the last: no line, no skip.
+    expect(app.locator("#bonnetje-uit-bakje")).to_contain_text(second)
+    expect(app.locator("#nog-bonnetjes")).to_have_count(0)
+    fill("Kantoorwinkel")
+
+    expect(app.locator("#toasts")).to_contain_text("Uitgave opgeslagen.")
+    expect(app.locator("h1")).to_contain_text("Kantoorwinkel")
+    expect(app.get_by_text(second)).to_be_visible()
+    assert not Attachment.objects.in_tray().exists()
+    assert Expense.objects.count() == 3
+
+
 def test_the_receipts_button_counts_what_waits(app, tmp_path):
     folder = tmp_path / "bonnetjes"
     folder.mkdir()

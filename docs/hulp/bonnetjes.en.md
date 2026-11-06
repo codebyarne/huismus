@@ -61,7 +61,8 @@ says which file it is and why.
 On **Expenses** there is a **Receipts** button, with how many receipts have
 no expense yet. Click **Create expense** next to a receipt: you get the
 usual form, with the receipt already at the top. Fill in the rest and click
-**Save**.
+**Save**. If another receipt is waiting, you get the next one right away.
+Want to do one later? Click **Skip**.
 
 Don't need a receipt? Remove it from the list. The file stays in the
 **Picked up** folder.
@@ -72,7 +73,9 @@ If you've connected an AI assistant (see [AI assistants](ai-assistenten.en.md)),
 say: **Process my receipts in Huismus.** It reads each receipt and makes the
 expense, with the receipt attached. If it can't read a receipt, it says so
 and the receipt stays with the receipts without an expense. What your
-assistant filled in is under **To check** on **Expenses**.
+assistant filled in is under **To check** on **Expenses**. Open the top
+one and click **Looks right** if it's all correct: you get the next one
+right away. **Skip** leaves one for later.
 
 Your assistant only sees your receipts when you ask it to. Huismus itself
 sends nothing to an AI service.
