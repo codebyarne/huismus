@@ -17,7 +17,8 @@
 {% form_errors form formset new_receipt_form %}
 
 {% if expense.needs_review %}
-{% comment %}An AI assistant filled it in (add_expense). "Klopt" submits the
+{% comment %}An AI assistant filled it in (add_expense), or Huismus read
+the receipt with the user's AI service (expenses.reading, read_by). "Klopt" submits the
 expense form below (form="uitgave-form"), so what the user just changed is
 saved with it. A browser's Enter clicks the form's first submit button,
 which would now be "Klopt". On every expense that first button is "Regel
@@ -28,7 +29,7 @@ on the last line clicks this copy too; it does the same.{% endcomment %}
 <div class="flash flash-info" id="nakijken" style="margin-bottom:var(--s-5);align-items:center;flex-wrap:wrap">
     <svg class="i" aria-hidden="true" style="margin-top:0"><use href="#info"></use></svg>
     {% comment %}At least 16rem for the text: on a phone the buttons go below it rather than squeeze it.{% endcomment %}
-    <div class="flash-body" style="flex:1 1 16rem">{% translate "Je AI-assistent vulde deze uitgave in. Klopt alles?" %}{% if skip_to %} <span id="nog-nakijken">{% blocktranslate count count=left_after %}Hierna nog {{ count }}.{% plural %}Hierna nog {{ count }}.{% endblocktranslate %}</span>{% endif %}</div>
+    <div class="flash-body" style="flex:1 1 16rem">{% if read_by %}{% blocktranslate with service=read_by %}Huismus las dit bonnetje met {{ service }}. Klopt alles?{% endblocktranslate %}{% else %}{% translate "Je AI-assistent vulde deze uitgave in. Klopt alles?" %}{% endif %}{% if skip_to %} <span id="nog-nakijken">{% blocktranslate count count=left_after %}Hierna nog {{ count }}.{% plural %}Hierna nog {{ count }}.{% endblocktranslate %}</span>{% endif %}</div>
     {% comment %}On to the next one without saving: the mark stays (huismus/expenses/batch.py).{% endcomment %}
     {% if skip_to %}<a class="btn btn-ghost btn-sm" id="overslaan" href="{% url 'expenses:edit' skip_to.pk %}">{% translate "Overslaan" %}</a>{% endif %}
     <button type="submit" form="uitgave-form" name="klopt" value="1" class="btn btn-sm">{% translate "Klopt" %}<span class="spinner"></span></button>

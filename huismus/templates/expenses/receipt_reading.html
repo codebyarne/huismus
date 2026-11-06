@@ -21,11 +21,12 @@
 {% if on %}
 <section class="card settings-section" id="lezen-aan">
     <div class="card-head">
-        <h2 class="row" style="gap:var(--s-2)">{% translate "Huismus leest met" %} <span class="pill pill-final" id="lezen-pill">{% translate "Aan" context "back-upplek staat aan" %}</span></h2>
+        <h2 class="row" style="gap:var(--s-2)">{% translate "Huismus leest met" %} {% if failure %}<span class="pill pill-overdue" id="lezen-pill">{% translate "Mislukt" %}</span>{% else %}<span class="pill pill-final" id="lezen-pill">{% translate "Aan" context "back-upplek staat aan" %}</span>{% endif %}</h2>
         <form method="post">{% csrf_token %}<input type="hidden" name="action" value="test"><button type="submit" class="btn btn-secondary btn-sm"><span class="spinner" aria-hidden="true"></span>{% translate "Verbinding testen" %}</button></form>
     </div>
     <div class="card-pad stack" style="gap:var(--s-3)">
         <p style="overflow-wrap:anywhere"><strong id="lezen-dienst">{{ service }} · {{ saved.model }}</strong></p>
+        {% if failure %}<p class="hint-banner is-bad" id="lezen-mislukt"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% blocktranslate with reason=failure trimmed %}Huismus kon je bonnetjes niet lezen. {{ reason }} Ze wachten hier tot het weer lukt.{% endblocktranslate %}</span></p>{% endif %}
         <div class="row"><a href="{% url 'expenses:tray' %}">{% translate "Naar de bonnetjes zonder uitgave" %} →</a></div>
     </div>
 </section>

@@ -76,5 +76,56 @@ assistent invulde, staat bij **Uitgaven** onder **Nakijken**. Open de
 bovenste en klik op **Klopt** als alles goed is: je krijgt meteen de
 volgende. Met **Overslaan** laat je er een staan voor later.
 
-Je assistent ziet je bonnetjes alleen als je hem dit vraagt. Huismus stuurt
-zelf niets naar een AI-dienst.
+Je assistent ziet je bonnetjes alleen als je hem dit vraagt. Wil je dat
+Huismus ze zelf laat lezen, zie dan hieronder.
+
+## Bonnetjes lezen
+
+Huismus kan je bonnetjes ook zelf laten lezen, zonder dat je het vraagt. Dat
+doet hij met een AI-dienst die jij kiest, met je eigen sleutel. Elk bonnetje
+dat binnenkomt, wordt dan vanzelf een uitgave met **Nakijken**. Jij kijkt
+hem na en klikt op **Klopt**.
+
+Ga naar **Instellingen → Bonnetjes lezen** en kies een dienst:
+
+- **Anthropic (Claude), Google Gemini, Mistral of OpenAI.** Maak op de site
+  van de dienst een account en een API-sleutel. Huismus vult het adres en een
+  model in dat foto's kan lezen. Je betaalt de dienst zelf, per bonnetje een
+  klein bedrag. Kijk op de site van de dienst wat het kost.
+- **Ollama**, op je eigen computer of in je eigen netwerk. Dan gaan je
+  bonnetjes niet het internet op, en heb je geen sleutel nodig. Kies een
+  model dat foto's kan lezen. Draait Huismus in Docker, gebruik dan het adres
+  van de computer met Ollama in je netwerk, bijvoorbeeld
+  `http://192.168.1.20:11434/v1`.
+- **Andere dienst.** Elke dienst die werkt met OpenAI-compatibele apps. Vul
+  het adres, het model en je sleutel in.
+
+Huismus probeert de dienst bij **Opslaan** eerst met één klein plaatje. Lukt
+dat niet, dan zegt Huismus waarom en bewaart hij niets. Je sleutel zie je
+daarna niet meer terug, en hij gaat niet mee in je back-ups.
+
+Na het opslaan leest Huismus ook de bonnetjes zonder uitgave die er al
+waren. Op het overzicht zie je dan bijvoorbeeld **2 nieuwe uitgaven om na te
+kijken**.
+
+### Wat Huismus laat liggen
+
+Huismus raadt nooit een bedrag. Een bonnetje blijft bij de bonnetjes zonder
+uitgave, met de reden erbij, als:
+
+- het niet goed leesbaar is, of geen bonnetje is;
+- er meer bonnetjes op staan;
+- er geen totaal op staat, of de bedragen niet optellen tot het totaal;
+- de btw er niet bij staat, terwijl je de KOR niet gebruikt;
+- het lijkt op een uitgave die je al hebt: dezelfde dag en hetzelfde bedrag.
+
+Maak die uitgave dan zelf, met **Uitgave maken**. Huismus stuurt hetzelfde
+bonnetje nooit twee keer naar de dienst.
+
+Lukt het lezen even niet, omdat de dienst je sleutel weigert of niet
+bereikbaar is? Dan zie je dat in rood bij de bonnetjes zonder uitgave. De
+bonnetjes wachten, en Huismus probeert het opnieuw als hij de volgende keer
+in je bonnetjesmap kijkt.
+
+Zet het uit met **Uitzetten** op dezelfde pagina. Huismus vergeet dan de
+dienst en je sleutel.

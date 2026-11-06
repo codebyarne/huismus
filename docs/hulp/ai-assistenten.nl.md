@@ -19,7 +19,8 @@ de app van de assistent. In Huismus koppel je hem alleen.
   je zelf in Huismus.
 - **Bonnetjes verwerken:** je assistent leest de bonnetjes zonder uitgave en
   maakt van elk bonnetje een uitgave, met het bonnetje eraan. Andere bijlagen
-  ziet hij niet.
+  ziet hij niet. Wil je dat Huismus dit zelf doet, zonder dat je het vraagt?
+  Zie [Bonnetjes lezen](bonnetjes.nl.md#bonnetjes-lezen).
 - **Met jouw toestemming:** een factuur of creditnota uitgeven, een offerte
   verzenden (die krijgt dan zijn nummer) en een document mailen naar het
   e-mailadres van de klant, met de standaardtekst. De assistent krijgt eerst
