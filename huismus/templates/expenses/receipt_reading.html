@@ -10,7 +10,7 @@
     <div class="titles">
         <a class="small" href="{% url 'business:overview' %}">← {% translate "Instellingen" %}</a>
         <h1>{% translate "Bonnetjes lezen" %}</h1>
-        <p class="lede">{% translate "Huismus stuurt elk bonnetje uit je bonnetjesmap naar een AI-dienst die jij kiest, en maakt er een uitgave van. Jij kijkt hem na met Klopt." %} <a href="{{ help_url }}">{% translate "Zo werkt het" %} →</a></p>
+        <p class="lede">{% translate "Huismus stuurt elk bonnetje uit je bonnetjesmap naar een AI-dienst die jij kiest, en maakt er een uitgave van. Jij kijkt hem na met Klopt." %}{% if help_url %} <a href="{{ help_url }}">{% translate "Zo werkt het" %} →</a>{% endif %}</p>
     </div>
 </div>
 
