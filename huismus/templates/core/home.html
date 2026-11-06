@@ -48,28 +48,7 @@
     </div>
 </div>
 
-<div class="grid-3" style="margin-bottom:var(--s-4)">
-    <a class="card kpi kpi-hero" href="{% url 'documents:list' %}?tab=openstaand&amp;jaar=alle" style="text-decoration:none">
-        <span class="kpi-label">{% translate "Openstaand" %}</span>
-        <span class="kpi-value">{{ outstanding.total_cents|money }}</span>
-        <span class="kpi-sub">{% blocktranslate count count=outstanding.count %}{{ count }} factuur{% plural %}{{ count }} facturen{% endblocktranslate %}{% if outstanding.overdue_count %}, {% blocktranslate count count=outstanding.overdue_count %}waarvan {{ count }} vervallen{% plural %}waarvan {{ count }} vervallen{% endblocktranslate %}{% endif %} →</span>
-    </a>
-    <div class="card kpi">
-        <span class="kpi-label">{% blocktranslate %}Omzet {{ year }}{% endblocktranslate %}</span>
-        <span class="kpi-value">{{ overview.revenue_cents|money }}</span>
-        <span class="kpi-sub">{% blocktranslate with costs=overview.expenses_cents|money %}Kosten {{ costs }}{% endblocktranslate %}</span>
-        {% if kor_limit %}
-        <span class="progress{% if kor_limit.level == 'near' %} is-warn{% elif kor_limit.level == 'over' %} is-bad{% endif %}" style="margin-top:var(--s-2)" aria-hidden="true"><span style="width:{{ kor_limit.bar_percent }}%"></span></span>
-        <span class="kpi-sub">{% blocktranslate with percent=kor_limit.percent %}{{ percent }}% van je KOR-grens{% endblocktranslate %}</span>
-        {% endif %}
-    </div>
-    <a class="card kpi" href="{% url 'reports:year_overview' %}" style="text-decoration:none;color:inherit">
-        <span class="kpi-label">{% blocktranslate %}Winst {{ year }}{% endblocktranslate %}</span>
-        <span class="kpi-value">{{ overview.profit_cents|money }}</span>
-        <span class="kpi-sub">{% translate "Naar het jaaroverzicht" %} →</span>
-    </a>
-</div>
-
+{% comment %}The notices come before the figures: on a phone the three figures stack and would push them out of sight (BUGS-BY-HAND.md).{% endcomment %}
 {% if backup_warning.level == "bad" %}{% include "core/_backup_banner.html" %}{% endif %}
 {% if kor_limit and kor_limit.level != "ok" %}
 <a class="hint-banner {% if kor_limit.level == 'over' %}is-bad{% else %}is-warn{% endif %}" id="kor-melding" href="{% url 'reports:year_overview' %}?jaar={{ year }}" style="margin-bottom:var(--s-4)">
@@ -99,7 +78,7 @@
 {% endif %}
 {% if drafts %}
 {% with first=drafts.0 %}
-<a class="hint-banner" href="{% url 'documents:edit' first.pk %}" style="margin-bottom:var(--s-6)">
+<a class="hint-banner" href="{% url 'documents:edit' first.pk %}" style="margin-bottom:var(--s-4)">
     <svg class="i" aria-hidden="true"><use href="#edit"></use></svg>
     <span>{% blocktranslate count count=drafts|length %}Je hebt nog {{ count }} concept:{% plural %}Je hebt nog {{ count }} concepten, waaronder:{% endblocktranslate %} <strong>{{ first|contact_name|default:_("zonder klant") }}, {{ first.total_cents|money }}</strong></span>
     <span class="spacer"></span>
@@ -107,6 +86,28 @@
 </a>
 {% endwith %}
 {% endif %}
+
+<div class="grid-3" style="margin-bottom:var(--s-6)">
+    <a class="card kpi kpi-hero" href="{% url 'documents:list' %}?tab=openstaand&amp;jaar=alle" style="text-decoration:none">
+        <span class="kpi-label">{% translate "Openstaand" %}</span>
+        <span class="kpi-value">{{ outstanding.total_cents|money }}</span>
+        <span class="kpi-sub">{% blocktranslate count count=outstanding.count %}{{ count }} factuur{% plural %}{{ count }} facturen{% endblocktranslate %}{% if outstanding.overdue_count %}, {% blocktranslate count count=outstanding.overdue_count %}waarvan {{ count }} vervallen{% plural %}waarvan {{ count }} vervallen{% endblocktranslate %}{% endif %} →</span>
+    </a>
+    <div class="card kpi">
+        <span class="kpi-label">{% blocktranslate %}Omzet {{ year }}{% endblocktranslate %}</span>
+        <span class="kpi-value">{{ overview.revenue_cents|money }}</span>
+        <span class="kpi-sub">{% blocktranslate with costs=overview.expenses_cents|money %}Kosten {{ costs }}{% endblocktranslate %}</span>
+        {% if kor_limit %}
+        <span class="progress{% if kor_limit.level == 'near' %} is-warn{% elif kor_limit.level == 'over' %} is-bad{% endif %}" style="margin-top:var(--s-2)" aria-hidden="true"><span style="width:{{ kor_limit.bar_percent }}%"></span></span>
+        <span class="kpi-sub">{% blocktranslate with percent=kor_limit.percent %}{{ percent }}% van je KOR-grens{% endblocktranslate %}</span>
+        {% endif %}
+    </div>
+    <a class="card kpi" href="{% url 'reports:year_overview' %}" style="text-decoration:none;color:inherit">
+        <span class="kpi-label">{% blocktranslate %}Winst {{ year }}{% endblocktranslate %}</span>
+        <span class="kpi-value">{{ overview.profit_cents|money }}</span>
+        <span class="kpi-sub">{% translate "Naar het jaaroverzicht" %} →</span>
+    </a>
+</div>
 
 <div class="split">
     <section class="card">

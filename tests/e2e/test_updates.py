@@ -40,3 +40,31 @@ def test_nu_zoeken_shows_a_new_version_right_away(app, tmp_path, monkeypatch):
     app.get_by_role("button", name="Nu zoeken").click()
     expect(app.locator("body")).to_contain_text("Er is een nieuwe versie: Huismus 1.3.1.")
     expect(app.locator("#nieuwe-versie")).to_contain_text("docker compose pull")
+
+
+def test_on_a_phone_the_new_version_is_in_sight_without_scrolling(app, history, settings, tmp_path):
+    """The owner on the Pi: on a phone the three figures stack, and the notice
+    below them fell out of sight (BUGS-BY-HAND.md, 2026-11-06). Every notice on
+    the overview comes before the figures."""
+    from huismus.core import updates
+
+    settings.DATA_DIR = tmp_path
+    updates.update_status(
+        available={
+            "version": "1.3.1",
+            "page_url": "https://github.com/codebyarne/huismus/releases/tag/v1.3.1",
+            "asset_url": "",
+            "asset_name": "",
+            "sha256": "",
+        }
+    )
+    app.set_viewport_size({"width": 390, "height": 844})
+    app.goto(app.base + "/")
+
+    banner = app.locator("#nieuwe-versie")
+    expect(banner).to_be_in_viewport()
+    first_figure = app.locator(".kpi").first.bounding_box()
+    notices = app.locator(".hint-banner")
+    assert notices.count() >= 2
+    for box in (notices.nth(i).bounding_box() for i in range(notices.count())):
+        assert box["y"] < first_figure["y"]
