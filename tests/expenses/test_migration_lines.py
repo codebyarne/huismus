@@ -10,7 +10,10 @@ import pytest
 from django.db import connection
 from django.db.migrations.executor import MigrationExecutor
 
-pytestmark = pytest.mark.django_db(transaction=True)
+pytestmark = [
+    pytest.mark.django_db(transaction=True),
+    pytest.mark.usefixtures("newest_migrations_after"),
+]
 
 BEFORE = [("expenses", "0001_initial")]
 AFTER = [("expenses", "0002_expense_lines")]
@@ -69,5 +72,3 @@ def test_the_migration_can_be_reversed_without_losing_a_category():
 
     old = executor.loader.project_state(BEFORE).apps
     assert old.get_model("expenses", "Expense").objects.get().category.name == "Software"
-    executor = MigrationExecutor(connection)
-    executor.migrate(executor.loader.graph.leaf_nodes())

@@ -7,7 +7,10 @@ import pytest
 from django.db import connection
 from django.db.migrations.executor import MigrationExecutor
 
-pytestmark = pytest.mark.django_db(transaction=True)
+pytestmark = [
+    pytest.mark.django_db(transaction=True),
+    pytest.mark.usefixtures("newest_migrations_after"),
+]
 
 TRIGGERS = {
     "documents_document_immutable_update",
