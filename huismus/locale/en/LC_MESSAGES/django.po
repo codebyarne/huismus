@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 07:54+0100\n"
+"POT-Creation-Date: 2026-11-06 12:30+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1937,6 +1937,9 @@ msgstr "Picked up"
 msgid "Koppel eerst Dropbox bij Back-ups."
 msgstr "Link Dropbox under Backups first."
 
+msgid "Stel eerst WebDAV in bij Back-ups."
+msgstr "Set up WebDAV at Backups first."
+
 msgid "Bonnetjes"
 msgstr "Receipts"
 
@@ -1949,6 +1952,20 @@ msgstr "Huismus couldn't save a receipt. Is the disk Huismus is on full?"
 #, python-format
 msgid "De map %(folder)s is niet bereikbaar. Is de schijf aangesloten?"
 msgstr "The folder %(folder)s can't be reached. Is the drive connected?"
+
+msgid "Het wachtwoord werd geweigerd. Stel WebDAV opnieuw in bij Back-ups."
+msgstr "The password was refused. Set up WebDAV again at Backups."
+
+msgid "Huismus kon WebDAV niet bereiken."
+msgstr "Huismus couldn't reach WebDAV."
+
+msgid ""
+"Op dit adres staat geen WebDAV meer. Stel WebDAV opnieuw in bij Back-ups."
+msgstr ""
+"There is no WebDAV at this address any more. Set up WebDAV again at Backups."
+
+msgid "WebDAV gaf een fout. Huismus probeert het over 10 minuten opnieuw."
+msgstr "WebDAV gave an error. Huismus tries again in 10 minutes."
 
 msgid "Dropbox weigert de toegang. Koppel Dropbox opnieuw bij Back-ups."
 msgstr "Dropbox refuses access. Link Dropbox again under Backups."
@@ -4653,7 +4670,9 @@ msgstr "means the expense has a receipt."
 msgid ""
 "Bewaar onderweg een foto of pdf van een bonnetje in deze map. Huismus haalt "
 "hem vanzelf op en zet hem bij de bonnetjes zonder uitgave."
-msgstr "On the road, save a photo or PDF of a receipt in this folder. Huismus picks it up by itself and puts it with the receipts without an expense."
+msgstr ""
+"On the road, save a photo or PDF of a receipt in this folder. Huismus picks "
+"it up by itself and puts it with the receipts without an expense."
 
 msgid "Huismus kijkt in"
 msgstr "Huismus checks"
@@ -4671,21 +4690,24 @@ msgid "Kies een map"
 msgstr "Choose a folder"
 
 msgid ""
-"Huismus in Docker ziet alleen mappen die je eraan koppelt. Gebruik Dropbox, "
-"of koppel een map, bijvoorbeeld een die Syncthing of Nextcloud bijhoudt."
+"Huismus in Docker ziet alleen mappen die je eraan koppelt. Gebruik Dropbox "
+"of WebDAV, of koppel een map, bijvoorbeeld een die Syncthing bijhoudt."
 msgstr ""
-"In Docker, Huismus only sees folders you link to it. Use Dropbox, or link a "
-"folder, for example one that Syncthing or Nextcloud keeps in sync."
+"Huismus in Docker only sees folders you link to it. Use Dropbox or WebDAV, "
+"or link a folder, for example one that Syncthing keeps up to date."
 
 msgid ""
 "Apps › Huismus › Bonnetjes, met de Dropbox die je voor back-ups koppelde"
 msgstr "Apps › Huismus › Receipts, with the Dropbox you linked for backups"
 
+msgid "Huismus › Bonnetjes, met de WebDAV die je voor back-ups instelde"
+msgstr "Huismus › Receipts, with the WebDAV you set up for backups"
+
 msgid "Een map die je telefoon ook ziet"
 msgstr "A folder your phone can see too"
 
-msgid "Wil je Dropbox gebruiken? Koppel Dropbox eerst bij Back-ups."
-msgstr "Want to use Dropbox? Link Dropbox under Backups first."
+msgid "Wil je Dropbox of WebDAV gebruiken? Stel dat eerst in bij Back-ups."
+msgstr "Want to use Dropbox or WebDAV? Set it up at Backups first."
 
 msgid "Huismus haalt dan niets meer op. De bonnetjes die er al zijn, blijven."
 msgstr "Huismus stops picking up receipts. Receipts it already has stay."
