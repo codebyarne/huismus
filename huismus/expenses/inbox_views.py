@@ -137,7 +137,7 @@ def new_receipts_context() -> dict:
 
 
 @login_required
-def new_receipts(request):
+def new_receipts_notice(request):
     """The overview's notice on its own, fetched every 30 seconds while the
     overview is open. Only reads: never starts a look."""
     return render(request, "expenses/_new_receipts.html", new_receipts_context())

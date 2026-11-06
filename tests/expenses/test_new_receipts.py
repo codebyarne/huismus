@@ -164,14 +164,14 @@ def test_after_the_tray_the_overview_has_no_notice(client, user, folder):
 
     assert "nieuw bonnetje" not in content
     # Still asking, for the next one.
-    assert reverse("expenses:new_receipts") in content
+    assert reverse("expenses:new_receipts_notice") in content
 
 
 def test_without_a_folder_the_overview_does_not_ask(client, user):
     content = _home(client)
 
     assert 'id="nieuwe-bonnetjes"' not in content
-    assert reverse("expenses:new_receipts") not in content
+    assert reverse("expenses:new_receipts_notice") not in content
 
 
 def test_the_notice_on_its_own_only_reads(client, user, folder, data_dir, monkeypatch):
@@ -182,7 +182,7 @@ def test_the_notice_on_its_own_only_reads(client, user, folder, data_dir, monkey
     path = data_dir / RECEIPTS_FOLDER_FILE_NAME
     before = path.read_text()
 
-    response = client.get(reverse("expenses:new_receipts"))
+    response = client.get(reverse("expenses:new_receipts_notice"))
 
     assert response.status_code == 200
     assert looks == []
@@ -190,13 +190,13 @@ def test_the_notice_on_its_own_only_reads(client, user, folder, data_dir, monkey
 
 
 def test_the_notice_on_its_own_needs_a_login(client):
-    assert client.get(reverse("expenses:new_receipts")).status_code == 302
+    assert client.get(reverse("expenses:new_receipts_notice")).status_code == 302
 
 
 def test_the_notice_in_english(client, user, folder):
     _bring(folder, "a.pdf", "b.pdf")
     client.cookies["django_language"] = "en"
 
-    content = client.get(reverse("expenses:new_receipts"), HTTP_ACCEPT_LANGUAGE="en").content
+    content = client.get(reverse("expenses:new_receipts_notice"), HTTP_ACCEPT_LANGUAGE="en").content
 
     assert b"2 new receipts." in content

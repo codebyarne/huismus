@@ -102,8 +102,10 @@ class Status:
     failure_reason: str = ""
     last_fetched: int = 0  # new receipts at the last look that worked
     skipped: list = field(default_factory=list)  # [{"name": …, "reason": …}]
-    # The last visit to the receipts without an expense that had something
-    # new: what came in after it is "2 nieuwe bonnetjes" on the overview.
+    # What came in after this moment is "2 nieuwe bonnetjes" on the
+    # overview. Set when a place is chosen (_start_over), by the first look
+    # with a status file from before the notice (_fetch), and by a visit to
+    # the receipts without an expense that had something new (seen).
     seen_until: str = ""
 
     @property
@@ -529,7 +531,9 @@ def new_receipts() -> int:
 
 def seen() -> None:
     """The tray was opened: nothing is new any more. Written only when
-    something was."""
+    something was, so an ordinary visit writes nothing. A receipt fetched
+    between the count and the write counts as seen: the tray, rendered
+    after this, shows it."""
     if new_receipts():
         _update(seen_until=timezone.now().isoformat())
 
