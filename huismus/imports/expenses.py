@@ -56,6 +56,8 @@ class ParsedExpenseLine:
     # own name for it ("btw-tarief naam"), for the report.
     vat_rate: str = ""
     vat_rate_name: str = ""
+    # Moneybird's "btw-tarief" itself, for the report when it has no name.
+    vat_rate_number: str = ""
 
 
 @dataclass(frozen=True)
@@ -110,8 +112,12 @@ def _required(row: dict, column: str, document: str):
     return value
 
 
-# Moneybird's own names for reverse charge ("btw-tarief naam"), as in its
-# exports: the VAT return asks for them apart (SPEC.md M21, part 2).
+# Moneybird's own names for reverse charge ("btw-tarief naam"), as they are
+# in the per-line sheet of its exports (tests/fixtures/moneybird-example-data,
+# documents_details/inkoop.xlsx); the VAT return asks for them apart
+# (SPEC.md M21, part 2). Reverse charge within the Netherlands has no name in
+# those exports, so it isn't here: such a line stays without a rate and is
+# named in the report, never guessed.
 _REVERSE_CHARGE_NAMES = {
     "Binnen EU 21% (btw verlegd)": "reverse_eu",
     "Buiten EU 21% (btw verlegd)": "reverse_non_eu",
@@ -126,9 +132,9 @@ def vat_rate_from(rate, name) -> str:
     name = to_str(name)
     if name in _REVERSE_CHARGE_NAMES:
         return _REVERSE_CHARGE_NAMES[name]
-    plain = {"21": "21", "9": "9", "0": "0"}.get(to_str(rate))
-    if plain and name == f"{plain}% btw":
-        return plain
+    rate = to_str(rate)
+    if rate in ("21", "9", "0") and name == f"{rate}% btw":
+        return rate
     return ""
 
 
@@ -142,6 +148,7 @@ def _parse_lines(content: bytes) -> dict[str, list[ParsedExpenseLine]]:
                 category=to_str(row.get("categorie")),
                 vat_rate=vat_rate_from(row.get("btw-tarief"), row.get("btw-tarief naam")),
                 vat_rate_name=to_str(row.get("btw-tarief naam")),
+                vat_rate_number=to_str(row.get("btw-tarief")),
             )
         )
     return lines

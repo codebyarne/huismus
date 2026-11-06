@@ -263,17 +263,17 @@ COLUMNS: dict[FileKind, SheetColumns] = {
     ),
     FileKind.EXPENSE_LINES: SheetColumns(
         # "categorie": each line's own category (besluit 2026-11-02,
-        # "Uitgaven krijgen regels, net als Moneybird").
-        read=frozenset(EXPENSE_LINES_REQUIRED) | {"categorie"},
+        # "Uitgaven krijgen regels, net als Moneybird"). "btw-tarief" and
+        # "btw-tarief naam": each line's VAT rate (SPEC.md M21, part 2;
+        # imports.expenses.vat_rate_from).
+        read=frozenset(EXPENSE_LINES_REQUIRED) | {"categorie", "btw-tarief", "btw-tarief naam"},
         required=frozenset(EXPENSE_LINES_REQUIRED),
         left_out={
             **dict.fromkeys(_EXPENSE_HEADER_REPEATS, _REPEATS_THE_DOCUMENT),
             "aantal": "the expense's lines are amounts, not quantities",
             "aantal (decimaal)": "the expense's lines are amounts, not quantities",
             "categorienummer": "Moneybird's number for the category; its name is read",
-            "btw-tarief": "VAT is information only on an expense (CLAUDE.md rule 7)",
-            "btw-tarief naam": "VAT is information only on an expense (CLAUDE.md rule 7)",
-            "btw": "VAT is information only on an expense (CLAUDE.md rule 7)",
+            "btw": "the expense's VAT comes from the document's total, split over its lines",
             "totaalprijs exclusief btw": "in the document's own currency; read in euros (EUR)",
             "totaalprijs inclusief btw": "in the document's own currency; read in euros (EUR)",
             "totaalprijs inclusief btw (EUR)": _LINE_TOTALS,

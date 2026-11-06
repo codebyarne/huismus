@@ -79,6 +79,16 @@ def test_each_line_keeps_its_vat_rate_and_an_unknown_one_is_named():
     assert report.unknown_vat_rates == ["F-42 (Drukkerij Voorbeeld): 6% btw"]
 
 
+def test_a_rate_without_a_name_is_named_too_and_no_rate_columns_is_no_message():
+    with_number = ParsedExpenseLine("Oud", 500, "", "", "", "6")
+    without = ParsedExpenseLine("Geen kolommen", 500, "")
+    parsed = _expense(lines=[with_number, without], stated_tax_cents=0, stated_total_cents=1000)
+
+    report = import_expenses([parsed], {}, commit=True)
+
+    assert report.unknown_vat_rates == ["F-42 (Drukkerij Voorbeeld): 6%"]
+
+
 def test_each_line_keeps_its_own_category_and_the_lines_add_up_to_what_was_paid():
     # huismus-intern/besluiten.md, 2026-11-02: the data model follows Moneybird.
     lines = [
