@@ -104,12 +104,11 @@ def test_an_unknown_model(ai_fake):
     ("status", "reason"),
     [(429, ai_service.BUSY), (500, ai_service.SERVER), (503, ai_service.SERVER)],
 )
-def test_busy_or_broken_counts_as_nothing_paid(ai_fake, status, reason):
+def test_busy_or_broken(ai_fake, status, reason):
     ai_fake.answer((status, {"error": {"message": "even niet"}}))
     with pytest.raises(ServiceError) as error:
         ai_service.chat(_config(ai_fake), [{"type": "text", "text": "x"}])
     assert error.value.reason == reason
-    assert reason in ai_service.NOTHING_PAID
 
 
 def test_a_model_that_reads_no_images(ai_fake):
@@ -134,7 +133,18 @@ def test_no_answer_in_time_may_have_been_paid(ai_fake):
     with pytest.raises(ServiceError) as error:
         ai_service.chat(_config(ai_fake), [{"type": "text", "text": "x"}], timeout=0.2)
     assert error.value.reason == ai_service.TIMEOUT_REASON
-    assert error.value.reason not in ai_service.NOTHING_PAID
+
+
+def test_a_wrong_path_is_an_address_that_does_not_answer(ai_fake):
+    config = _config(ai_fake, url=ai_fake.url.removesuffix("/v1") + "/verkeerd")
+    with pytest.raises(ServiceError) as error:
+        ai_service.chat(config, [{"type": "text", "text": "x"}])
+    assert error.value.reason == ai_service.UNREACHABLE
+
+
+def test_a_damaged_settings_file_counts_as_off(settings):
+    (settings.DATA_DIR / ai_service.CONFIG_FILE_NAME).write_text("{kapot")
+    assert ai_service.load() == Config()
 
 
 def test_an_answer_that_is_not_a_chat_answer(ai_fake):

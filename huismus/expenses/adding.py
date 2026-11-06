@@ -1,8 +1,8 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """An expense that a model filled in, marked "Nakijken" (SPEC.md M20, parts
-2b and 3): from the AI assistant (assistants.tools.add_expense) and from
-the user's own AI service reading a receipt (expenses.reading).
+2b and 3): from the AI assistant (assistants.tools.add_expense), and,
+in part 3's second step, from the user's own AI service reading a receipt.
 
 Both go through the expense page's own forms, so the amounts get the same
 validation as typed ones (the notation, VAT required without the KOR), and

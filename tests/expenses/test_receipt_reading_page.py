@@ -108,6 +108,31 @@ def test_a_known_service_fills_in_what_was_left_empty(client_in, monkeypatch):
     assert sent == [ai_service.load()]
 
 
+@pytest.mark.parametrize(
+    "url",
+    [
+        "http://localhost:11434/v1",
+        "http://192.168.1.20:11434/v1",
+        "http://nas.local:11434/v1",
+        "http://172.20.0.1:11434/v1",
+    ],
+)
+def test_nearby_saves_without_a_key(client_in, monkeypatch, url):
+    monkeypatch.setattr(ai_service, "test_connection", lambda config: None)
+    response = client_in.post(URL, {"provider": "ollama", "url": url, "model": "m", "key": ""})
+    assert response.status_code == 302
+    assert ai_service.load() == Config("ollama", url, "m", "")
+
+
+def test_the_saved_key_never_goes_to_another_address(client_in, monkeypatch):
+    monkeypatch.setattr(ai_service, "test_connection", lambda config: None)
+    ai_service.save(Config("openai", "https://api.openai.com/v1", "gpt-5-mini", "sk-openai"))
+    response = client_in.post(URL, {"provider": "mistral", "url": "", "model": "", "key": ""})
+    assert "Vul je API-sleutel in." in response.content.decode()
+    assert ai_service.load().key == "sk-openai"
+    assert ai_service.load().provider == "openai"
+
+
 def test_https_needs_a_key(client_in, monkeypatch):
     monkeypatch.setattr(ai_service, "test_connection", lambda config: None)
     response = client_in.post(URL, {"provider": "openai", "url": "", "model": "", "key": ""})
