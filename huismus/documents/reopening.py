@@ -23,6 +23,7 @@ from django.utils.translation import gettext_lazy as _
 
 from .issuing import IssueError, validate_credit_note_amount
 from .models import Document, DocumentLine
+from .vat_snapshot import store_vat_rows
 
 
 class ReopenError(Exception):
@@ -156,9 +157,20 @@ def undo_reopen(document: Document) -> Document:
         # The lines first, while the document is still a draft (an issued
         # document's lines are immutable), then the document in one UPDATE.
         document.lines.all().delete()
-        DocumentLine.objects.bulk_create(
+        restored = DocumentLine.objects.bulk_create(
             DocumentLine(document_id=document.pk, **line) for line in copy["lines"]
         )
+        # Its VAT per rate as it was issued: "Toch bewerken" left the rows
+        # alone (only issuing writes them), so they stay as they are. A
+        # document reopened before rows were kept gets them now, from what
+        # it was issued with. Still a draft here, so the triggers allow it.
+        if not document.vat_rows.exists():
+            store_vat_rows(
+                document,
+                restored,
+                subtotal_cents=fields["subtotal_cents"],
+                tax_cents=fields["tax_cents"],
+            )
         Document.objects.filter(pk=document.pk).update(
             **fields,
             status="issued",
