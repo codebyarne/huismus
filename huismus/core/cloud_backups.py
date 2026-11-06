@@ -286,11 +286,11 @@ def decrypt(data: bytes, recovery_code: str) -> bytes:
 # -- Talking to a service ----------------------------------------------------
 
 
-def _open(request: urllib.request.Request) -> tuple[int, bytes]:
+def _open(request: urllib.request.Request, timeout: float = TIMEOUT) -> tuple[int, bytes]:
     """One HTTP request; the status and body, also for an error status. The
     one place this module goes on the network, so tests replace it."""
     try:
-        with urllib.request.urlopen(request, timeout=TIMEOUT) as response:
+        with urllib.request.urlopen(request, timeout=timeout) as response:
             return response.status, response.read()
     except urllib.error.HTTPError as error:
         return error.code, error.read()
@@ -417,6 +417,8 @@ class Dropbox:
     TOKEN = "https://api.dropboxapi.com/oauth2/token"
     API = "https://api.dropboxapi.com/2/"
     CONTENT = "https://content.dropboxapi.com/2/"
+    # Waiting for a change in the receipts folder (expenses.watch).
+    NOTIFY = "https://notify.dropboxapi.com/2/"
     # Dropbox takes at most 150 MB in one upload; bigger goes in parts.
     CHUNK = 64 * 1024 * 1024
 
@@ -582,6 +584,35 @@ class Dropbox:
             "files/move_v2",
             {"from_path": source, "to_path": destination, "autorename": True},
         )
+
+    def latest_cursor(self, folder: str) -> str:
+        """Where the folder stands now, for wait_for_change; NotFound when
+        it doesn't exist."""
+        cursor = self._api("files/list_folder/get_latest_cursor", {"path": folder}).get("cursor")
+        if not cursor:
+            raise CloudError(OTHER, "geen cursor")
+        return cursor
+
+    def wait_for_change(self, cursor: str, seconds: int) -> tuple[bool, int]:
+        """Waits until something in the folder changed since cursor, at
+        most seconds (30 to 480). Whether it did, and how many seconds
+        Dropbox asks to wait before the next call (0 when it asks nothing).
+        This request carries no token: Dropbox only wants the cursor."""
+        request = urllib.request.Request(
+            self.NOTIFY + "files/list_folder/longpoll",
+            data=json.dumps({"cursor": cursor, "timeout": seconds}).encode(),
+            method="POST",
+        )
+        request.add_header("Content-Type", "application/json")
+        # Dropbox adds up to 90 seconds of its own to the wait.
+        status, body = _open(request, timeout=seconds + 120)
+        if status >= 400:
+            # A cursor Dropbox no longer knows ("reset") is a failure too:
+            # the caller asks for a new one.
+            raise CloudError(_reason_for(status), f"longpoll {status}: {body[:200]!r}")
+        data = _json(body)
+        backoff = data.get("backoff", 0)
+        return bool(data.get("changes")), backoff if isinstance(backoff, int) else 0
 
 
 def remote(config: Config | None = None) -> WebDAV | Dropbox | None:

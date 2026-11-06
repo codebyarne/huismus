@@ -141,10 +141,12 @@ class App:
         if self._background is None:
             self._background = threading.Thread(target=_every_hour, daemon=True)
             self._background.start()
-            # Every ten minutes a look in the receipts folder (SPEC.md M20).
-            from huismus.expenses import inbox
+            # Every ten minutes a look in the receipts folder, and one at
+            # once when something new is there (SPEC.md M20).
+            from huismus.expenses import inbox, watch
 
             inbox.start_thread()
+            watch.start_thread()
 
     def install_update(self, package, sha256):
         """core.updates.installer: hands package to desktop/updater.py and

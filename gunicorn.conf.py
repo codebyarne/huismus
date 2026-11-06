@@ -16,9 +16,11 @@ def post_worker_init(worker):
     (SPEC.md M11) and the receipts folder (SPEC.md M20), started once the
     worker has loaded Django."""
     from huismus.core import auto_backups, updates
-    from huismus.expenses import inbox
+    from huismus.expenses import inbox, watch
 
     auto_backups.start_hourly_thread()
     updates.start_hourly_thread()
-    # Every ten minutes a look in the receipts folder (SPEC.md M20).
+    # Every ten minutes a look in the receipts folder, and one at once when
+    # something new is there (SPEC.md M20).
     inbox.start_thread()
+    watch.start_thread()
