@@ -227,7 +227,8 @@ def test_without_the_kor_a_missing_or_unknown_rate_leaves_the_receipt(service, k
     reading.read_waiting()
     assert not Expense.objects.exists()
     receipt.refresh_from_db()
-    assert receipt.read_reason == reading.NO_VAT
+    assert receipt.read_reason == reading.NO_VAT_RATE
+    assert reading.reason_sentence(receipt) == "Niet gelezen: het btw-tarief staat er niet bij."
 
 
 def test_under_the_kor_the_rate_is_not_needed(service, kor):

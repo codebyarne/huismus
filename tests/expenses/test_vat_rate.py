@@ -142,3 +142,35 @@ def test_with_the_kor_the_form_stays_as_it_was(client):
     content = _page(client)
     assert "ter info" in content
     assert "Btw-tarief" not in content
+
+
+def test_with_the_kor_on_an_expense_with_a_rate_still_opens_and_saves(client):
+    """Found in review: a form method named like the field made the page
+    render a string as a field under the KOR."""
+    _kor(False)
+    expense = create_expense(
+        [ExpenseLineInput("Schroeven", 1210, 210, None, VatRate.HIGH)], date=date(2026, 3, 1)
+    )
+    _kor(True)
+    get_user_model().objects.create_user(username="freelancer", password="s3cret-pass")
+    client.login(username="freelancer", password="s3cret-pass")
+
+    response = client.get(reverse("expenses:edit", kwargs={"pk": expense.pk}))
+
+    assert response.status_code == 200
+    content = response.content.decode()
+    assert "Btw-tarief" not in content
+    assert "ter info" in content
+
+
+def test_the_note_without_the_kor_is_translated(client):
+    """Found by verify-e2e: the new note stayed Dutch in English."""
+    from django.utils import translation
+
+    _kor(False)
+    with translation.override("en"):
+        get_user_model().objects.create_user(username="freelancer", password="s3cret-pass")
+        client.login(username="freelancer", password="s3cret-pass")
+        client.cookies["django_language"] = "en"
+        content = client.get(reverse("expenses:create"), HTTP_ACCEPT_LANGUAGE="en").content
+    assert "VAT: as on the receipt" in content.decode()

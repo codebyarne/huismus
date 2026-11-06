@@ -10,6 +10,6 @@ empty_form (with __prefix__) for "Regel toevoegen".{% endcomment %}
     {% comment %}Required without the KOR (ExpenseLineForm).{% endcomment %}
     {% if line_form.fields.vat_info_cents.required %}{% field line_form.vat_info_cents span=2 money=True %}{% else %}{% field line_form.vat_info_cents span=2 money=True optional=True %}{% endif %}
     {% comment %}Only without the KOR (ExpenseLineForm), SPEC.md M21.{% endcomment %}
-    {% if line_form.vat_rate %}{% field line_form.vat_rate span=2 %}{% endif %}
+    {% if "vat_rate" in line_form.fields %}{% field line_form.vat_rate span=2 %}{% endif %}
     {% if line_form.instance.pk %}{% translate "Regel verwijderen" as delete_label %}{% field line_form.DELETE span=2 label=delete_label %}{% endif %}
 </fieldset>

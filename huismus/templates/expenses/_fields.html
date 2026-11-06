@@ -21,4 +21,4 @@ their sum, computed when saving (huismus/expenses/lines.py).{% endcomment %}
     </div>
 </div>
 {% comment %}Without the KOR the VAT counts (SPEC.md M21): no "ter info" then (#96).{% endcomment %}
-<div class="kor-note"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{% if formset.empty_form.vat_rate %}{% translate "Vul het bruto bedrag in: wat je echt betaald hebt. Btw: zoals op het bonnetje. Staat er geen btw op, vul dan 0 in en kies 0% of geen btw." %}{% else %}{% translate "Vul het bruto bedrag in: wat je echt betaald hebt. Het btw-bedrag is alleen ter informatie en telt nergens mee." %}{% endif %}</span></div>
+<div class="kor-note"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{% if "vat_rate" in formset.empty_form.fields %}{% translate "Vul het bruto bedrag in: wat je echt betaald hebt. Btw: zoals op het bonnetje. Staat er geen btw op, vul dan 0 in en kies 0% of geen btw." %}{% else %}{% translate "Vul het bruto bedrag in: wat je echt betaald hebt. Het btw-bedrag is alleen ter informatie en telt nergens mee." %}{% endif %}</span></div>
