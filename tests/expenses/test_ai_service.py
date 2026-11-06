@@ -163,4 +163,5 @@ def test_every_reason_has_a_sentence():
         ai_service.TIMEOUT_REASON,
         ai_service.ANSWER,
     ):
-        assert ai_service.failure_sentence(reason, "Mistral")
+        sentence = ai_service.failure_sentence(reason, Config("mistral", "u", "m-1", "k"))
+        assert sentence and "%(" not in sentence

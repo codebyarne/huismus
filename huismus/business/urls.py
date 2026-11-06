@@ -11,7 +11,7 @@ from huismus.core import (
     password_views,
     update_views,
 )
-from huismus.expenses import inbox_views
+from huismus.expenses import inbox_views, reading_views
 
 from . import views
 
@@ -28,6 +28,7 @@ urlpatterns = [
     path("back-ups/herstelcode/", cloud_views.recovery_code, name="backups_code"),
     path("back-ups/ontkoppelen/", cloud_views.unlink, name="backups_unlink"),
     path("bonnetjesmap/", inbox_views.settings_page, name="receipts_folder"),
+    path("bonnetjes-lezen/", reading_views.settings_page, name="receipt_reading"),
     path("exporteren/", export_views.page, name="export"),
     path("exporteren/zip/", export_views.download, name="export_zip"),
     # The desktop app only (SPEC.md M11); a 404 on Docker.

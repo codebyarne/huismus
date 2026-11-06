@@ -95,6 +95,7 @@ def _pages():
         "/instellingen/back-ups/webdav/",
         "/instellingen/exporteren/",
         "/instellingen/bonnetjesmap/",
+        "/instellingen/bonnetjes-lezen/",
         # Not connected here; connected, with the key: the desktop test below.
         "/instellingen/ai-assistenten/",
         # Docker's, without a new version; with one: the Docker test below.
