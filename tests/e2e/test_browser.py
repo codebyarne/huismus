@@ -1363,7 +1363,10 @@ def test_a_click_on_uitgeven_right_after_typing_opens_the_dialog(app, contact):
     expect(app.locator("#uitgeven-knop")).to_be_enabled()
 
     # Typing has sent its own live totals; let those land first.
-    app.wait_for_function("!document.querySelector('.htmx-request')")
+    # A locator, not wait_for_function with a string: Playwright evaluates
+    # that string with eval while it waits, which the CSP refuses, so the
+    # test failed whenever the totals were still on their way.
+    expect(app.locator(".htmx-request")).to_have_count(0)
 
     box = app.locator("#uitgeven-knop").bounding_box()
     app.mouse.move(box["x"] + box["width"] / 2, box["y"] + box["height"] / 2)
