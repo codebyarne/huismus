@@ -27,7 +27,7 @@ Ga naar **Instellingen → Bonnetjesmap** en kies waar Huismus kijkt.
 Huismus kijkt meteen als er iets in de map of in Dropbox verandert. Een
 bestand in een map haalt hij op als het een minuut niet meer verandert, zodat
 het helemaal gesynchroniseerd is. Voor de zekerheid kijkt hij ook elke 10
-minuten. Komt er iets binnen, dan zie je op het overzicht bijvoorbeeld **2
+minuten. Bij WebDAV kijkt hij alleen elke 10 minuten. Komt er iets binnen, dan zie je op het overzicht bijvoorbeeld **2
 nieuwe bonnetjes**. Wil je niet wachten, klik dan op **Nu ophalen**.
 
 ## Een bonnetje bewaren op je telefoon

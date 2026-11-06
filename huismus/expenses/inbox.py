@@ -227,10 +227,10 @@ def _start_over(**changes) -> None:
     """A new place (or none): its own field in changes, the others' wiped,
     and nothing remembered of the last look."""
     _update(
-        seen_until=timezone.now().isoformat(),
         folder="",
         dropbox_folder="",
         webdav_folder="",
+        seen_until=timezone.now().isoformat(),
         done_folder=done_folder_name(),
         last_check="",
         last_failure="",

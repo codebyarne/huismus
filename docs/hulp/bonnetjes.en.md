@@ -26,7 +26,8 @@ Go to **Settings → Receipts folder** and choose where Huismus looks.
 
 Huismus looks right away when something changes in the folder or in
 Dropbox. It picks up a file in a folder once it hasn't changed for a minute,
-so it's fully synced. To be safe it also looks every 10 minutes. When
+so it's fully synced. To be safe it also looks every 10 minutes. With
+WebDAV it only looks every 10 minutes. When
 something comes in, the overview says, for example, **2 new receipts**. Don't
 want to wait? Click **Pick up now**.
 
