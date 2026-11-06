@@ -612,7 +612,9 @@ class Dropbox:
             raise CloudError(_reason_for(status), f"longpoll {status}: {body[:200]!r}")
         data = _json(body)
         backoff = data.get("backoff", 0)
-        return bool(data.get("changes")), backoff if isinstance(backoff, int) else 0
+        if not isinstance(backoff, int):
+            backoff = 0
+        return bool(data.get("changes")), backoff
 
 
 def remote(config: Config | None = None) -> WebDAV | Dropbox | None:

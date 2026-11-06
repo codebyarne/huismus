@@ -87,15 +87,19 @@ def _glance(watch: Watch, status: inbox.Status) -> float:
         # The look every ten minutes says the folder is gone.
         watch.known = None
         return FOLDER_SECONDS
-    # The first glance only remembers: the look at start
-    # (inbox.start_thread) or after choosing the folder takes what is there.
-    new = watch.known is not None and now - watch.known
+    if watch.known is None:
+        # The first glance only remembers: the look at start
+        # (inbox.start_thread) or after choosing the folder takes what is there.
+        watch.known = now
+        return FOLDER_SECONDS
+    new = now - watch.known
     if new and inbox.fetching():
         # A look is running; whether it saw the new file is unknown, so
-        # the next glance tries again.
+        # known stays as it was and the next glance tries again.
         return FOLDER_SECONDS
-    # Remembered before the look: a file it leaves (not a receipt) won't
-    # start another one.
+    # Remembered before the look, whatever it does: a file it leaves (not a
+    # receipt), a look that failed or one skipped during a restore starts no
+    # new look every five seconds. The look every ten minutes tries again.
     watch.known = now
     if new:
         inbox.fetch_when_open()
@@ -103,6 +107,11 @@ def _glance(watch: Watch, status: inbox.Status) -> float:
 
 
 def _wait(watch: Watch, status: inbox.Status) -> float:
+    """Waits for a change in Dropbox, then looks. The cursor is taken before
+    the look, so what arrives during the look wakes the next wait. A failure
+    is never shown: when Dropbox can't be reached or refuses, the look every
+    ten minutes fails too and says so; when only the wait fails (a cursor
+    Dropbox forgot), that look still fetches."""
     dropbox = cloud_backups.remote()
     if not isinstance(dropbox, cloud_backups.Dropbox):
         return FOLDER_SECONDS
@@ -120,8 +129,14 @@ def _wait(watch: Watch, status: inbox.Status) -> float:
         # Unreachable, a cursor Dropbox forgot, the folder removed (the
         # next look makes it again): start over in a while.
         watch.cursor = ""
-        watch.retry = min(watch.retry * 2 or RETRY_SECONDS, MAX_RETRY_SECONDS)
-        logger.info("Wachten op Dropbox mislukt: %s", error)
+        if watch.retry:
+            watch.retry = min(watch.retry * 2, MAX_RETRY_SECONDS)
+        else:
+            watch.retry = RETRY_SECONDS
+        if error.reason == cloud_backups.UNREACHABLE:
+            logger.info("Wachten op Dropbox mislukt: %s", error)
+        else:
+            logger.warning("Wachten op Dropbox mislukt: %s", error)
         return watch.retry
     watch.retry = 0
     return backoff
