@@ -15,8 +15,8 @@
     <div class="actions">
         <a class="btn btn-ghost" href="{% url 'expenses:category_list' %}">{% translate "Categorieën" %}</a>
         {% if tray_count or receipts_folder_on %}<a class="btn btn-secondary" id="naar-bonnetjes" href="{% url 'expenses:tray' %}">{% translate "Bonnetjes" %}{% if tray_count %} ({{ tray_count }}){% endif %}</a>{% endif %}
-        {% comment %}What an AI assistant filled in (add_expense), of every year.{% endcomment %}
-        {% if to_check_count %}<a class="btn btn-secondary" id="naar-nakijken" href="?nakijken=1">{% blocktranslate with count=to_check_count %}Nakijken ({{ count }}){% endblocktranslate %}</a>{% endif %}
+        {% comment %}Everything that waits: the expenses to check and the receipts without an expense (Verwerken, huismus/expenses/batch.py).{% endcomment %}
+        {% if process_count %}<a class="btn btn-secondary" id="naar-verwerken" href="{% url 'expenses:process' %}">{% blocktranslate with count=process_count %}Verwerken ({{ count }}){% endblocktranslate %}</a>{% endif %}
         <a class="btn btn-primary" href="{% url 'expenses:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuwe uitgave" %}</a>
     </div>
 </div>

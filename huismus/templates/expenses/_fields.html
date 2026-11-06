@@ -1,0 +1,23 @@
+{% load i18n forms money %}
+{% comment %}The fields of an expense and its lines: on the expense page (form.html) and in Verwerken (process.html).{% endcomment %}
+<div class="fieldset">
+    {% field form.date span=2 %}
+    {% field form.supplier span=4 %}
+    {% field form.description optional=True %}
+</div>
+{% comment %}The lines, each with its own category, as in Moneybird
+(huismus-intern/besluiten.md, 2026-11-02). The amount of the expense is
+their sum, computed when saving (huismus/expenses/lines.py).{% endcomment %}
+<div class="stack" style="gap:var(--s-4)">
+    <h2>{% translate "Regels" %}</h2>
+    {{ formset.management_form }}
+    <div class="stack" style="gap:var(--s-4)" data-formset-forms="lines">
+        {% for line_form in formset.forms %}{% include "expenses/_line_form.html" %}{% endfor %}
+    </div>
+    <template data-formset-empty="lines">{% include "expenses/_line_form.html" with line_form=formset.empty_form %}</template>
+    <div class="row">
+        <button type="submit" name="regel_toevoegen" value="1" class="btn btn-ghost btn-sm" data-formset-add="lines"><svg class="i i-sm" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Regel toevoegen" %}</button>
+        {% if expense %}<span class="spacer"></span><span>{% translate "Totaal" %} <strong class="amount">{{ expense.amount_cents|money }}</strong></span>{% endif %}
+    </div>
+</div>
+<div class="kor-note"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{% translate "Vul het bruto bedrag in: wat je echt betaald hebt. Het btw-bedrag is alleen ter informatie en telt nergens mee." %}</span></div>

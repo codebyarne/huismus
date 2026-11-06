@@ -1,58 +1,73 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""A stack, one after the other (huismus-intern/besluiten.md, 2026-11-06,
-"Stapel nakijken of verwerken"): the next expense to check, and the next
-receipt without an expense.
+"""The stack of Verwerken (huismus-intern/besluiten.md, 2026-11-06,
+"Verwerken: één stapel, het bonnetje groot naast de velden"): everything
+that waits for the user, one after the other.
 
-"Next" is in the order of the list the stack comes from, newest first:
-the first one after this one, and after the last one of that order the
-top one that is left. Without a "previous": you skip forward and come
-round again."""
+First the expenses to check (the order of Nakijken: date, newest first),
+then the receipts without an expense (the order of the tray: picked up,
+newest first). "Next" is the first one after this one in that order, and
+after the last one the top one that is left. Without a "previous": you skip
+forward and come round again.
 
-from django.db.models import Q, QuerySet
+Nothing is stored: the stack is what the database holds now. "3 van 24"
+counts the ones done in this round from `?klaar=`, a number that only the
+links and the form carry (position())."""
+
+from dataclasses import dataclass
+
+from django.urls import reverse
 
 from huismus.core.models import Attachment
 
 from .models import Expense
 
-
-def _next(others: QuerySet, after: Q, order: tuple[str, ...]):
-    """The first of `others` after this one in `order`, else the first."""
-    others = others.order_by(*order)
-    return others.filter(after).first() or others.first()
+EXPENSE, RECEIPT = "uitgave", "bonnetje"
 
 
-def _to_check_except(expense: Expense) -> QuerySet:
-    return Expense.objects.filter(needs_review=True).exclude(pk=expense.pk)
+@dataclass(frozen=True)
+class Item:
+    """One thing in the stack: an expense to check or a receipt."""
+
+    kind: str
+    pk: int
+
+    def url(self, done: int = 0) -> str:
+        url = reverse("expenses:process_item", kwargs={"kind": self.kind, "pk": self.pk})
+        return f"{url}?klaar={done}" if done else url
 
 
-def next_to_check(expense: Expense, date=None) -> Expense | None:
-    """The next expense to check after this one, in the order of Nakijken
-    (date, newest first). `date` is where this one was in that order, when
-    the user just changed its date."""
-    date = date or expense.date
-    after = Q(date__lt=date) | Q(date=date, pk__lt=expense.pk)
-    return _next(_to_check_except(expense), after, ("-date", "-pk"))
+def items() -> list[Item]:
+    """The whole stack, in its order."""
+    expenses = Expense.objects.filter(needs_review=True).order_by("-date", "-pk")
+    receipts = Attachment.objects.in_tray().order_by("-created_at", "-pk")
+    return [Item(EXPENSE, pk) for pk in expenses.values_list("pk", flat=True)] + [
+        Item(RECEIPT, pk) for pk in receipts.values_list("pk", flat=True)
+    ]
 
 
-def to_check_after(expense: Expense) -> int:
-    """How many more to check besides this one: "Hierna nog 2."."""
-    return _to_check_except(expense).count()
+def count() -> int:
+    """ "Verwerken (24)" on Uitgaven."""
+    return Expense.objects.filter(needs_review=True).count() + Attachment.objects.in_tray().count()
 
 
-def _tray_except(receipt: Attachment) -> QuerySet:
-    return Attachment.objects.in_tray().exclude(pk=receipt.pk)
+def next_item(current: Item, before: list[Item]) -> Item | None:
+    """The next one after `current`, by where it was in `before` (the stack
+    as it was before this one was saved: saving can take it out, or change
+    its date). Of those, the first that is still in the stack now; else the
+    top one that is left, so one that came in meanwhile comes along too."""
+    now = items()
+    if current in before:
+        at = before.index(current)
+        for item in before[at + 1 :] + before[:at]:
+            if item in now:
+                return item
+    return next((item for item in now if item != current), None)
 
 
-def next_receipt(receipt: Attachment) -> Attachment | None:
-    """The next receipt without an expense after this one, in the order of
-    the tray (picked up, newest first)."""
-    after = Q(created_at__lt=receipt.created_at) | Q(
-        created_at=receipt.created_at, pk__lt=receipt.pk
-    )
-    return _next(_tray_except(receipt), after, ("-created_at", "-pk"))
-
-
-def receipts_after(receipt: Attachment) -> int:
-    """How many more receipts wait besides this one."""
-    return _tray_except(receipt).count()
+def position(current: Item, stack: list[Item], done: int) -> tuple[int, int]:
+    """ "3 van 24": the ones done in this round, plus where this one is in
+    what is left, of the ones done plus what is left."""
+    at = stack.index(current) + 1 if current in stack else 1
+    total = done + max(len(stack), 1)
+    return min(done + at, total), total

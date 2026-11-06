@@ -23,6 +23,7 @@ import pytest
 from huismus.business.models import Settings
 from huismus.contacts.models import Contact
 from huismus.core import help
+from huismus.core.models import Attachment
 from huismus.documents.models import Document
 from huismus.expenses.models import Expense, ExpenseCategory
 
@@ -75,6 +76,17 @@ def _pages():
         # the notice and "Klopt"; the flow: tests/e2e/test_to_check.py.
         "/uitgaven/?nakijken=1",
         f"/uitgaven/{_first(Expense.objects.filter(needs_review=True), 'expense to check').pk}/",
+        # Verwerken (huismus/expenses/process_views.py): an expense with a
+        # photo, one with a PDF, and a receipt from the tray with a reason
+        # (huismus/core/demo_receipts.py); the flow: tests/e2e/test_process.py.
+        *(
+            f"/uitgaven/verwerken/uitgave/{expense.pk}/"
+            for expense in Expense.objects.filter(needs_review=True)
+        ),
+        *(
+            f"/uitgaven/verwerken/bonnetje/{receipt.pk}/"
+            for receipt in Attachment.objects.in_tray()
+        ),
         "/rapporten/jaaroverzicht/",
         "/uitgaven/categorieen/",
         f"/uitgaven/categorieen/?bewerk={_first(ExpenseCategory.objects, 'category').pk}",
