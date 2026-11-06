@@ -92,6 +92,28 @@ formulieren, htmx-verzoeken en downloads laat hij met rust.
 - Installeren en de service worker werken alleen via HTTPS (of op
   `localhost`).
 
+## Eerst ontwerpen of direct bouwen?
+
+Het design systeem dekt de meeste schermen. De agent beslist zelf of een
+feature eerst een ontwerp nodig heeft (in Claude Design), niet Arne. Doe vóór
+elk UI-werk deze toets en zet de uitkomst in één regel in het plan:
+
+1. Bestaat er een component op `docs/design/componenten.html`, een voorbeeld
+   in het archief of een bestaand scherm met hetzelfde patroon (lijst,
+   formulier, editor, dialoog, instellingensectie, rapport)? → Direct bouwen.
+2. Kan het met de bestaande klassen uit `huismus.css`, met hooguit een kleine
+   variant of een eenmalige afstand? → Direct bouwen.
+3. Anders eerst ontwerpen. Dat geldt als er een nieuw component of patroon
+   nodig is (nieuwe interactie, nieuw soort layout, grafiek, wizard, slepen),
+   als het buiten de webapp valt (zoals de desktop-app), of als er meerdere
+   redelijke vormen zijn en de keuze voor het product uitmaakt. Vraag dan
+   eerst de product-owner-agent en stel Arne een ontwerp voor, met één zin
+   waarom.
+
+Struikeldraad tijdens het bouwen: blijkt er toch een nieuwe componentklasse
+of meer dan een klein blok nieuwe CSS nodig, stop dan en ga naar stap 3.
+Improviseer geen ontwerp.
+
 ## Een scherm toevoegen
 
 1. Zoek de component op `docs/design/componenten.html` (of een voorbeeld in
