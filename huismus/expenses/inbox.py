@@ -102,6 +102,9 @@ class Status:
     failure_reason: str = ""
     last_fetched: int = 0  # new receipts at the last look that worked
     skipped: list = field(default_factory=list)  # [{"name": …, "reason": …}]
+    # The last visit to the receipts without an expense that had something
+    # new: what came in after it is "2 nieuwe bonnetjes" on the overview.
+    seen_until: str = ""
 
     @property
     def last_check_at(self) -> datetime | None:
@@ -200,6 +203,7 @@ def dropbox_unlinked() -> None:
 
 def _start_over(**changes) -> None:
     _update(
+        seen_until=timezone.now().isoformat(),
         done_folder=done_folder_name(),
         last_check="",
         last_failure="",
@@ -450,7 +454,13 @@ def _fetch(status: Status, now: datetime) -> Result | None:
     except (OSError, cloud_backups.CloudError) as error:
         reason = error.reason if isinstance(error, cloud_backups.CloudError) else UNREACHABLE
         return _failed(now, reason, error)
-    _update(last_check=now.isoformat(), last_fetched=fetched, skipped=skipped)
+    _update(
+        last_check=now.isoformat(),
+        last_fetched=fetched,
+        skipped=skipped,
+        # A status file from before the notice: new from this look on.
+        seen_until=status.seen_until or now.isoformat(),
+    )
     return Result(fetched, skipped)
 
 
@@ -498,6 +508,30 @@ def _done(place, name: str) -> None:
         place.done(name)
     except (OSError, cloud_backups.CloudError) as error:
         logger.warning("Bonnetje %s niet verplaatst: %s", name, error)
+
+
+# -- "2 nieuwe bonnetjes" ---------------------------------------------------------
+
+
+def new_receipts() -> int:
+    """Receipts the folder brought in since the last visit to the tray that
+    still wait for an expense; 0 when the folder is off or with the sample
+    data. Only reads: the overview asks every 30 seconds."""
+    status = load()
+    if not status.seen_until or not is_on(status) or sample_data_in_use():
+        return 0
+    return (
+        Attachment.objects.in_tray()
+        .filter(source=SOURCE, created_at__gt=datetime.fromisoformat(status.seen_until))
+        .count()
+    )
+
+
+def seen() -> None:
+    """The tray was opened: nothing is new any more. Written only when
+    something was."""
+    if new_receipts():
+        _update(seen_until=timezone.now().isoformat())
 
 
 def fetch_when_open() -> Result | None:

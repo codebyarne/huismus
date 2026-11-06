@@ -80,6 +80,7 @@
 </a>
 {% endif %}
 {% if backup_warning and backup_warning.level != "bad" %}{% include "core/_backup_banner.html" %}{% endif %}
+{% include "expenses/_new_receipts.html" %}
 {% if new_release %}
 {% comment %}The desktop app only (SPEC.md M11): below red and amber, not dismissable.{% endcomment %}
 {% comment %}While the version downloads in the background (core.updates.prepare), the banner fetches itself again every few seconds until it says "staat klaar". Without JS: reload the page.{% endcomment %}

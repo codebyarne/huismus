@@ -80,7 +80,7 @@ def settings_page(request):
             inbox.fetch_in_background()
             messages.success(
                 request,
-                _("Opgeslagen. Huismus kijkt elke 10 minuten in %(place)s.")
+                _("Opgeslagen. Huismus haalt nieuwe bonnetjes vanzelf op uit %(place)s.")
                 % {"place": inbox.place()},
             )
             return redirect("business:receipts_folder")
@@ -118,6 +118,8 @@ def tray(request):
     """Bonnetjes zonder uitgave: each with "Uitgave maken" and "Verwijderen"."""
     if request.method == "POST" and request.POST.get("action") == "now":
         return _fetch_now(request, "expenses:tray")
+    # What the overview called new is seen now.
+    inbox.seen()
     return render(
         request,
         "expenses/tray.html",
@@ -126,6 +128,19 @@ def tray(request):
             "receipts": Attachment.objects.in_tray().order_by("-created_at", "-pk"),
         },
     )
+
+
+def new_receipts_context() -> dict:
+    """ "2 nieuwe bonnetjes" on the overview (huismus-intern/besluiten.md,
+    2026-11-06): the count, and whether to keep asking (the folder is on)."""
+    return {"new_receipts": inbox.new_receipts(), "receipts_folder_on": inbox.is_on()}
+
+
+@login_required
+def new_receipts(request):
+    """The overview's notice on its own, fetched every 30 seconds while the
+    overview is open. Only reads: never starts a look."""
+    return render(request, "expenses/_new_receipts.html", new_receipts_context())
 
 
 @login_required

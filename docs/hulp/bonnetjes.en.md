@@ -1,8 +1,8 @@
 # Receipts on the road
 
 On the road, take a photo or scan of a receipt and save it in a folder that
-syncs, such as iCloud Drive or Dropbox. Huismus picks it up within 10
-minutes. At home you make an expense of it in one click, with the receipt
+syncs, such as iCloud Drive or Dropbox. Huismus usually picks it up within a
+few minutes. At home you make an expense of it in one click, with the receipt
 already attached.
 
 ## Setting up a receipts folder
@@ -21,7 +21,11 @@ Go to **Settings → Receipts folder** and choose where Huismus looks.
   program keeps in sync. In Docker you link it first, see
   [Huismus in Docker](docker.en.md).
 
-Huismus looks every 10 minutes. Don't want to wait? Click **Pick up now**.
+Huismus looks right away when something changes in the folder or in
+Dropbox. It picks up a file in a folder once it hasn't changed for a minute,
+so it's fully synced. To be safe it also looks every 10 minutes. When
+something comes in, the overview says, for example, **2 new receipts**. Don't
+want to wait? Click **Pick up now**.
 
 ## Saving a receipt on your phone
 

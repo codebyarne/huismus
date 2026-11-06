@@ -11,6 +11,7 @@ urlpatterns = [
     path("", views.expense_list, name="list"),
     path("nieuw/", views.expense_create, name="create"),
     path("bonnetjes/", inbox_views.tray, name="tray"),
+    path("bonnetjes/nieuw/", inbox_views.new_receipts, name="new_receipts"),
     path("bonnetjes/<int:pk>/verwijderen/", inbox_views.tray_delete, name="tray_delete"),
     # The year overview moved to "Rapporten"; old bookmarks still arrive.
     path(
