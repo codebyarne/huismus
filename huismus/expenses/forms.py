@@ -40,7 +40,7 @@ class ExpenseLineForm(forms.ModelForm):
         self.fields["category"].empty_label = _("Geen categorie")
         if Settings.load().kor_enabled:
             # Under the KOR the rate is not asked; a stored one stays
-            # (line_inputs takes it from the line).
+            # (rate_to_save takes it from the line).
             del self.fields["vat_rate"]
             return
         # Without the KOR every line needs its VAT, € 0,00 included
@@ -65,7 +65,7 @@ class ExpenseLineForm(forms.ModelForm):
             self.add_error("vat_info_cents", _("Bij 0% of geen btw is het btw-bedrag € 0,00."))
         return cleaned
 
-    def vat_rate(self) -> str:
+    def rate_to_save(self) -> str:
         """The rate to save: the one chosen, or under the KOR the one the
         line already had."""
         if "vat_rate" in self.fields:
@@ -89,7 +89,7 @@ class BaseExpenseLineFormSet(forms.BaseInlineFormSet):
                 amount_cents=form.cleaned_data["amount_cents"],
                 vat_info_cents=form.cleaned_data.get("vat_info_cents"),
                 category=form.cleaned_data.get("category"),
-                vat_rate=form.vat_rate(),
+                vat_rate=form.rate_to_save(),
             )
             for form in self.forms
             if form.cleaned_data and not form.cleaned_data.get("DELETE")

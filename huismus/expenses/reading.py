@@ -55,6 +55,7 @@ SOURCE = "bonnetjes-lezen"
 # rename these values. The first three are also the model's "kind".
 UNREADABLE, NOT_A_RECEIPT, MORE_THAN_ONE = "unreadable", "not_a_receipt", "more_than_one"
 NO_TOTAL, NOT_ADDING_UP, NO_VAT = "no_total", "not_adding_up", "no_vat"
+NO_VAT_RATE = "no_vat_rate"
 SIMILAR, TIMEOUT = "similar", "timeout"
 
 # Left out of backups, as the settings (core.backup skips ai_service.FILE_PREFIX).
@@ -293,7 +294,7 @@ def _expense_from(data: dict, receipt: Attachment, categories, vat_required: boo
         if rate not in VatRate.values:
             if vat_required:
                 # Without the KOR the rate is needed too: never guessed.
-                return Outcome(reason=NO_VAT)
+                return Outcome(reason=NO_VAT_RATE)
             rate = None
         amounts.append(amount)
         lines.append(
@@ -445,6 +446,8 @@ def reason_sentence(receipt: Attachment) -> str:
         return _("Niet gelezen: de bedragen tellen niet op tot het totaal.")
     if reason == NO_VAT:
         return _("Niet gelezen: de btw staat er niet bij.")
+    if reason == NO_VAT_RATE:
+        return _("Niet gelezen: het btw-tarief staat er niet bij.")
     if reason == SIMILAR and receipt.read_similar is None:
         # That expense was deleted since.
         return _("Niet gelezen: lijkt op een uitgave die er al was.")
