@@ -118,3 +118,21 @@ def test_the_red_line_goes_once_reading_works_again(app, ai_fake, tmp_path, monk
     expect(app.locator("#lezen-mislukt")).to_have_count(0)
     expect(app.locator(".receipt")).to_have_count(0)
     assert Expense.objects.count() == 1
+
+
+def test_while_huismus_reads_the_tray_says_so(app, ai_fake, tmp_path, monkeypatch):
+    monkeypatch.setattr(inbox, "SETTLE_SECONDS", 0)
+    folder = tmp_path / "bonnetjes"
+    folder.mkdir()
+    inbox.choose_folder(folder)
+    ai_service.save(Config("other", ai_fake.url, "nep-model", KEY))
+    ai_fake.answer(ANSWER)
+    ai_fake.delay = 4
+    (folder / "bouwmarkt.png").write_bytes(_png())
+
+    app.goto(app.base + "/uitgaven/bonnetjes/")
+    app.get_by_role("button", name="Nu ophalen").click()
+    expect(app.locator("[data-bonnetje-bezig]")).to_have_text("Huismus leest dit bonnetje…")
+    # Done: the page refreshed itself, and the receipt is an expense now.
+    expect(app.locator(".receipt")).to_have_count(0, timeout=15000)
+    assert Expense.objects.count() == 1
