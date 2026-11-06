@@ -77,5 +77,55 @@ assistant filled in is under **To check** on **Expenses**. Open the top
 one and click **Looks right** if it's all correct: you get the next one
 right away. **Skip** leaves one for later.
 
-Your assistant only sees your receipts when you ask it to. Huismus itself
-sends nothing to an AI service.
+Your assistant only sees your receipts when you ask it to. Want Huismus to
+have them read by itself? See below.
+
+## Receipt reading
+
+Huismus can also have your receipts read by itself, without you asking. It
+does that with an AI service you choose, with your own key. Every receipt
+that comes in then becomes an expense marked **To check**. You check it and
+click **Looks right**.
+
+Go to **Settings → Receipt reading** and choose a service:
+
+- **Anthropic (Claude), Google Gemini, Mistral or OpenAI.** Create an account
+  and an API key on the service's site. Huismus fills in the address and a
+  model that can read images. You pay the service yourself, a small amount
+  per receipt. Check the service's site for what it costs.
+- **Ollama**, on your own computer or network. Your receipts then stay off the
+  internet, and you need no key. Choose a model that can read images. If
+  Huismus runs in Docker, use the address of the computer with Ollama on
+  your network, for example `http://192.168.1.20:11434/v1`.
+- **Another service.** Any service that works with OpenAI-compatible apps.
+  Fill in the address, the model and your key.
+
+When you click **Save**, Huismus first tries the service with one small
+image. If that doesn't work, Huismus says why and saves nothing. You won't
+see your key again after that, and it doesn't go into your backups.
+
+After saving, Huismus also reads the receipts without an expense that were
+already there. On the overview you then see, for example, **2 new expenses
+to check**.
+
+### What Huismus leaves
+
+Huismus never guesses an amount. A receipt stays with the receipts without an
+expense, with the reason, when:
+
+- it isn't clear enough, or isn't a receipt;
+- there's more than one receipt on it;
+- there's no total on it, or the amounts don't add up to the total;
+- the VAT isn't on it, while you don't use the KOR;
+- it looks like an expense you already have: the same day and the same amount.
+
+Make that expense yourself, with **Create expense**. Huismus never sends the
+same receipt to the service twice.
+
+Can't Huismus read for a while, because the service refuses your key or can't
+be reached? You'll see that in red with the receipts without an expense. The
+receipts wait, and Huismus tries again the next time it looks in your
+receipts folder.
+
+Turn it off with **Turn off** on the same page. Huismus then forgets the
+service and your key.

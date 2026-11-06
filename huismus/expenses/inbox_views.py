@@ -14,7 +14,7 @@ from django.utils.translation import gettext as _
 from huismus.core import auto_backups, cloud_backups, help
 from huismus.core.models import Attachment
 
-from . import inbox
+from . import inbox, reading
 
 # The radio buttons besides a suggested folder's path.
 OTHER_FOLDER, DROPBOX, WEBDAV = "other", inbox.DROPBOX, inbox.WEBDAV
@@ -36,6 +36,9 @@ def _state(status: inbox.Status) -> dict:
         if on
         else [],
         "help_url": help.url("bonnetjes"),
+        # Huismus reading the receipts (SPEC.md M20, part 3).
+        "reading_now": reading.reading(),
+        "reading_failure": reading.failure_sentence(),
     }
 
 
@@ -128,7 +131,16 @@ def tray(request):
         "expenses/tray.html",
         {
             **_state(inbox.load()),
-            "receipts": Attachment.objects.in_tray().order_by("-created_at", "-pk"),
+            "receipts": [
+                {
+                    "receipt": receipt,
+                    "waiting": reading.is_waiting(receipt),
+                    "reason": reading.reason_sentence(receipt),
+                }
+                for receipt in Attachment.objects.in_tray()
+                .select_related("read_similar")
+                .order_by("-created_at", "-pk")
+            ],
         },
     )
 
@@ -136,7 +148,12 @@ def tray(request):
 def new_receipts_context() -> dict:
     """ "2 nieuwe bonnetjes" on the overview (huismus-intern/besluiten.md,
     2026-11-06): the count, and whether to keep asking (the folder is on)."""
-    return {"new_receipts": inbox.new_receipts(), "receipts_folder_on": inbox.is_on()}
+    return {
+        "new_receipts": inbox.new_receipts(),
+        # And "2 nieuwe uitgaven om na te kijken" (SPEC.md M20, part 3).
+        "new_expenses": reading.new_expenses(),
+        "receipts_folder_on": inbox.is_on() or reading.is_on(),
+    }
 
 
 @login_required

@@ -9,14 +9,20 @@ test_every_page.py."""
 import pytest
 from playwright.sync_api import expect
 
-from huismus.expenses import ai_service
+from huismus.contacts.models import Contact
+from huismus.core.models import Attachment
+from huismus.expenses import ai_service, inbox
+from huismus.expenses.ai_service import Config
+from huismus.expenses.models import Expense
 from tests.ai_fakes import KEY
+from tests.expenses.test_reading import ANSWER, _png
 
 pytestmark = pytest.mark.django_db(transaction=True)
 
 
 def test_choose_a_service_save_and_turn_off(app, ai_fake):
-    app.goto(app.base + "/instellingen/bonnetjes-lezen/")
+    app.goto(app.base + "/instellingen/")
+    app.get_by_role("link", name="Bonnetjes lezen").click()
     expect(app.locator("h1")).to_have_text("Bonnetjes lezen")
 
     # A known service puts its address and model in the fields.
@@ -49,3 +55,40 @@ def test_choose_a_service_save_and_turn_off(app, ai_fake):
     expect(app.locator("#toasts")).to_contain_text("Bonnetjes lezen staat uit.")
     expect(app.locator("#lezen-aan")).to_have_count(0)
     assert ai_service.load().key == ""
+
+
+def test_a_receipt_comes_in_is_read_and_checked(app, ai_fake, tmp_path, monkeypatch):
+    monkeypatch.setattr(inbox, "SETTLE_SECONDS", 0)
+    # Not the welcome on the overview: an administration with something in it.
+    Contact.objects.create(company_name="Klant BV")
+    folder = tmp_path / "bonnetjes"
+    folder.mkdir()
+    inbox.choose_folder(folder)
+    ai_service.save(Config("other", ai_fake.url, "nep-model", KEY))
+    ai_fake.answer(ANSWER, {**ANSWER, "total": None})
+    (folder / "bouwmarkt.png").write_bytes(_png())
+    (folder / "onleesbaar.png").write_bytes(_png() + b"2")
+
+    app.goto(app.base + "/uitgaven/bonnetjes/")
+    app.get_by_role("button", name="Nu ophalen").click()
+    # One becomes an expense; the other stays, with why.
+    expect(app.locator("[data-bonnetje-reden]")).to_have_text(
+        "Niet gelezen: er staat geen totaal op."
+    )
+    expect(app.locator(".receipt")).to_have_count(1)
+    expense = Expense.objects.get()
+    assert expense.needs_review
+
+    app.goto(app.base + "/")
+    expect(app.locator("#nieuwe-uitgaven")).to_contain_text("1 nieuwe uitgave om na te kijken.")
+    app.locator("#nieuwe-uitgaven").click()
+    app.get_by_role("link", name="Bouwmarkt De Spijker").click()
+    expect(app.locator("#nakijken")).to_contain_text(
+        "Huismus las dit bonnetje met 127.0.0.1. Klopt alles?"
+    )
+    app.get_by_role("button", name="Klopt").click()
+    expect(app.locator("#toasts")).to_contain_text("Uitgave nagekeken.")
+    expense.refresh_from_db()
+    assert not expense.needs_review
+    assert expense.attachments.get().filename == "bouwmarkt.png"
+    assert Attachment.objects.in_tray().count() == 1

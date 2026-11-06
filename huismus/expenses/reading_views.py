@@ -12,13 +12,17 @@ from django import forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
+from django.utils.translation import get_language, gettext_lazy, ngettext
 from django.utils.translation import gettext as _
-from django.utils.translation import gettext_lazy, ngettext
 
+from huismus.core import help
 from huismus.core.models import Attachment
 
-from . import ai_service, inbox
+from . import ai_service, inbox, reading
 from .ai_service import Config, ServiceError
+
+# The heading on the help page, per language (docs/hulp/bonnetjes.*.md).
+HELP_ANCHOR = {"nl": "#bonnetjes-lezen", "en": "#receipt-reading"}
 
 
 class ServiceSelect(forms.Select):
@@ -165,6 +169,9 @@ def settings_page(request):
         form = ReadingForm(request.POST, saved=saved)
         if form.is_valid() and _works(form):
             ai_service.save(form.config)
+            reading.forget_failure()
+            # The receipts that already wait, in the background.
+            reading.read_in_background()
             messages.success(
                 request,
                 _("Opgeslagen. %(service)s kan je bonnetjes lezen.")
@@ -196,7 +203,7 @@ def settings_page(request):
             "sentence": _sentence(form),
             "waiting": _waiting_sentence(),
             "key_help": key_help,
-            # The help heading comes with reading itself (part 3, step 2).
-            "help_url": "",
+            "failure": reading.failure_sentence(),
+            "help_url": help.url("bonnetjes", HELP_ANCHOR.get(get_language(), HELP_ANCHOR["nl"])),
         },
     )

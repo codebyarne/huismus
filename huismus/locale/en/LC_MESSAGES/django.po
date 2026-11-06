@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 21:03+0100\n"
+"POT-Creation-Date: 2026-11-06 21:04+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -573,6 +573,22 @@ msgstr "Receipts folder"
 
 msgid "Bonnetjes van onderweg, vanzelf in Huismus."
 msgstr "Receipts from the road, in Huismus by themselves."
+
+msgid "Nog geen dienst gekozen"
+msgstr "No service chosen yet"
+
+msgid "Lezen is mislukt"
+msgstr "Reading failed"
+
+#, python-format
+msgid "Met %(service)s"
+msgstr "With %(service)s"
+
+msgid "Bonnetjes lezen"
+msgstr "Receipt reading"
+
+msgid "Huismus maakt van elk nieuw bonnetje een uitgave om na te kijken."
+msgstr "Huismus turns each new receipt into an expense for you to check."
 
 msgid "Exporteren"
 msgstr "Export"
@@ -1285,6 +1301,18 @@ msgstr "file"
 
 msgid "sha256"
 msgstr "sha256"
+
+msgid "gelezen op"
+msgstr "read on"
+
+msgid "gelezen met"
+msgstr "read with"
+
+msgid "reden niet gelezen"
+msgstr "reason not read"
+
+msgid "lijkt op"
+msgstr "looks like"
 
 msgid "bijlage"
 msgstr "attachment"
@@ -2083,6 +2111,32 @@ msgstr "expense line"
 
 msgid "uitgaveregels"
 msgstr "expense lines"
+
+msgid "Niet gelezen: dit lijkt geen bonnetje."
+msgstr "Not read: this doesn't look like a receipt."
+
+msgid "Niet gelezen: hier staan meer bonnetjes op."
+msgstr "Not read: there's more than one receipt on it."
+
+msgid "Niet gelezen: er staat geen totaal op."
+msgstr "Not read: there's no total on it."
+
+msgid "Niet gelezen: de bedragen tellen niet op tot het totaal."
+msgstr "Not read: the amounts don't add up to the total."
+
+msgid "Niet gelezen: de btw staat er niet bij."
+msgstr "Not read: the VAT isn't on it."
+
+#, python-format
+msgid "Niet gelezen: lijkt op je uitgave van %(date)s (%(amount)s)."
+msgstr "Not read: looks like your expense of %(date)s (%(amount)s)."
+
+#, python-format
+msgid "Niet gelezen: %(service)s gaf te laat antwoord."
+msgstr "Not read: %(service)s took too long to answer."
+
+msgid "Niet gelezen: dit bonnetje is niet goed leesbaar."
+msgstr "Not read: this receipt isn't clear enough."
 
 msgid "Dienst"
 msgstr "Service"
@@ -4568,6 +4622,12 @@ msgid_plural "%(count)s nieuwe bonnetjes."
 msgstr[0] "%(count)s new receipt."
 msgstr[1] "%(count)s new receipts."
 
+#, python-format
+msgid "%(count)s nieuwe uitgave om na te kijken."
+msgid_plural "%(count)s nieuwe uitgaven om na te kijken."
+msgstr[0] "%(count)s new expense to check."
+msgstr[1] "%(count)s new expenses to check."
+
 msgid "Bezig met ophalen…"
 msgstr "Picking up receipts…"
 
@@ -4666,6 +4726,10 @@ msgstr "New expense"
 
 msgid "Bonnetjes zonder uitgave"
 msgstr "Receipts without an expense"
+
+#, python-format
+msgid "Huismus las dit bonnetje met %(service)s. Klopt alles?"
+msgstr "Huismus read this receipt with %(service)s. Is everything right?"
 
 msgid "Je AI-assistent vulde deze uitgave in. Klopt alles?"
 msgstr "Your AI assistant filled in this expense. Is everything right?"
@@ -4822,9 +4886,6 @@ msgstr "No expense matches your search and filters."
 msgid "betekent dat er een bonnetje bij de uitgave zit."
 msgstr "means the expense has a receipt."
 
-msgid "Bonnetjes lezen"
-msgstr "Receipt reading"
-
 msgid ""
 "Huismus stuurt elk bonnetje uit je bonnetjesmap naar een AI-dienst die jij "
 "kiest, en maakt er een uitgave van. Jij kijkt hem na met Klopt."
@@ -4843,6 +4904,14 @@ msgstr "Huismus reads with"
 
 msgid "Verbinding testen"
 msgstr "Test connection"
+
+#, python-format
+msgid ""
+"Huismus kon je bonnetjes niet lezen. %(reason)s Ze wachten hier tot het weer"
+" lukt."
+msgstr ""
+"Huismus couldn't read your receipts. %(reason)s They wait here until it "
+"works again."
 
 msgid "Naar de bonnetjes zonder uitgave"
 msgstr "To the receipts without an expense"
@@ -4907,6 +4976,9 @@ msgstr "From the folder %(place)s."
 #, python-format
 msgid "Opgehaald %(moment)s"
 msgstr "Picked up %(moment)s"
+
+msgid "Huismus leest dit bonnetje…"
+msgstr "Huismus is reading this receipt…"
 
 msgid "Uitgave maken"
 msgstr "Create expense"

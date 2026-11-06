@@ -19,7 +19,8 @@ you only connect it.
   Huismus.
 - **Process receipts:** your assistant reads the receipts without an
   expense and makes an expense from each one, with the receipt attached. It
-  doesn't see other attachments.
+  doesn't see other attachments. Want Huismus to do this by itself, without
+  you asking? See [Receipt reading](bonnetjes.en.md#receipt-reading).
 - **With your permission:** issue an invoice or credit note, send a quote
   (it then gets its number) and mail a document to the customer's e-mail
   address, with the standard text. The assistant first gets a summary to
