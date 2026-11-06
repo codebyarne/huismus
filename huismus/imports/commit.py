@@ -641,8 +641,13 @@ def import_expenses(
                 )
 
             for line in parsed.lines:
-                if line.vat_rate_name and not line.vat_rate:
-                    report.unknown_vat_rates.append(f"{label}: {line.vat_rate_name}")
+                # A rate Moneybird gave that Huismus doesn't take over; no
+                # rate columns at all is no message.
+                given = line.vat_rate_name or (
+                    f"{line.vat_rate_number}%" if line.vat_rate_number else ""
+                )
+                if given and not line.vat_rate:
+                    report.unknown_vat_rates.append(f"{label}: {given}")
             expense = create_expense(
                 _expense_lines(parsed, categories, report),
                 date=parsed.date,
