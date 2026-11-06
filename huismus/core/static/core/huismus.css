@@ -779,6 +779,10 @@ a:hover { color: var(--primary-hover); }
 .file-item .f-text .f-meta { display: block; }
 .thumb { width: 100%; aspect-ratio: 3 / 4; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--border); display: grid; place-items: center; color: var(--text-muted); overflow: hidden; }
 .receipts { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: var(--s-3); }
+/* The upload tile beside an expense's receipts: as tall as a receipt; on a
+   phone the whole width, on a row of its own (huismus-intern/besluiten.md, 2026-11-06). */
+.receipts > .dropzone { aspect-ratio: 3/4; padding: var(--s-4); }
+@media (max-width: 560px) { .receipts > .dropzone { grid-column: 1 / -1; aspect-ratio: auto; padding: var(--s-5); } }
 .receipt { display: flex; flex-direction: column; gap: 6px; font-size: var(--fs-xs); }
 .receipt .r-row { display: flex; align-items: center; gap: 4px; }
 .receipt .r-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: var(--fw-semibold); font-size: var(--fs-sm); }
