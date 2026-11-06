@@ -163,14 +163,35 @@ class FakeDropbox:
         self.full = False
         self.session = b""  # an upload in parts, between start and finish
         self.used_codes: set[str] = set()  # Dropbox takes each code once
+        self.cursors: dict[str, tuple[str, frozenset]] = {}  # list_folder cursors
+        self.longpoll_extra: dict = {}  # added to every longpoll answer
+
+    def _contents(self, folder: str) -> frozenset:
+        """What a cursor on folder sees: its direct files and folders."""
+        prefix = f"{folder}/"
+        return frozenset(
+            path
+            for path in [*self.files, *self.folders]
+            if path.startswith(prefix) and "/" not in path.removeprefix(prefix)
+        )
 
     def install(self, monkeypatch):
         monkeypatch.setattr(cloud_backups, "_open", self.open)
 
-    def open(self, request):
+    def open(self, request, timeout=None):
         url = request.full_url
         self.calls.append(url)
         body = request.data or b""
+        if url == cloud_backups.Dropbox.NOTIFY + "files/list_folder/longpoll":
+            # No token here, as at Dropbox; a cursor stands for the folder's
+            # contents when it was given.
+            assert request.get_header("Authorization") is None
+            arg = json.loads(body)
+            if arg["cursor"] not in self.cursors:
+                return 409, b'{"error_summary": "reset/"}'
+            folder, before = self.cursors[arg["cursor"]]
+            changes = self._contents(folder) != before
+            return 200, json.dumps({"changes": changes, **self.longpoll_extra}).encode()
         if url == cloud_backups.Dropbox.TOKEN:
             form = dict(urllib.parse.parse_qsl(body.decode()))
             if form["grant_type"] == "authorization_code" and form["code"] == self.CODE:
@@ -222,6 +243,14 @@ class FakeDropbox:
                 if path.startswith(prefix) and "/" not in path.removeprefix(prefix)
             ]
             return 200, json.dumps({"entries": entries, "has_more": False}).encode()
+        if endpoint == "files/list_folder/get_latest_cursor":
+            folder = arg["path"].strip("/")
+            holds_files = any(path.startswith(f"{folder}/") for path in self.files)
+            if folder not in self.folders and not holds_files:
+                return 409, b'{"error_summary": "path/not_found/"}'
+            cursor = f"cursor-{len(self.cursors) + 1}"
+            self.cursors[cursor] = (folder, self._contents(folder))
+            return 200, json.dumps({"cursor": cursor}).encode()
         if endpoint == "files/create_folder_v2":
             self.folders.add(arg["path"].strip("/"))
             return 200, b"{}"

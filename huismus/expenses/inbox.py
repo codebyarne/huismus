@@ -500,6 +500,13 @@ def _done(place, name: str) -> None:
         logger.warning("Bonnetje %s niet verplaatst: %s", name, error)
 
 
+def fetch_when_open() -> Result | None:
+    """A look now, unless a backup is being restored: what expenses.watch
+    starts when something new is in the folder."""
+    with maintenance.gate.request() as open_:
+        return fetch() if open_ else None
+
+
 def fetch_if_due(at_start: bool = False) -> Result | None:
     """What the thread calls: a look if it's time (or the app just
     started), never while a backup is being restored."""
