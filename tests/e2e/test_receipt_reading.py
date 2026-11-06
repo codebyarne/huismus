@@ -92,3 +92,29 @@ def test_a_receipt_comes_in_is_read_and_checked(app, ai_fake, tmp_path, monkeypa
     assert not expense.needs_review
     assert expense.attachments.get().filename == "bouwmarkt.png"
     assert Attachment.objects.in_tray().count() == 1
+
+
+def test_the_red_line_goes_once_reading_works_again(app, ai_fake, tmp_path, monkeypatch):
+    """Found by verify-e2e: after the service worked again, "Nu ophalen"
+    read the receipt, but the red line stayed until the page was reloaded."""
+    monkeypatch.setattr(inbox, "SETTLE_SECONDS", 0)
+    folder = tmp_path / "bonnetjes"
+    folder.mkdir()
+    inbox.choose_folder(folder)
+    ai_service.save(Config("other", ai_fake.url, "nep-model", KEY))
+    ai_fake.key = "een-andere"
+    (folder / "bouwmarkt.png").write_bytes(_png())
+
+    app.goto(app.base + "/uitgaven/bonnetjes/")
+    app.get_by_role("button", name="Nu ophalen").click()
+    expect(app.locator("#lezen-mislukt")).to_contain_text("127.0.0.1 weigert je sleutel.")
+    expect(app.locator(".receipt")).to_have_count(1)
+
+    ai_fake.key = KEY
+    ai_fake.answer(ANSWER)
+    for close in app.locator("#toasts [data-dismiss]").all():
+        close.click()
+    app.get_by_role("button", name="Nu ophalen").click()
+    expect(app.locator("#lezen-mislukt")).to_have_count(0)
+    expect(app.locator(".receipt")).to_have_count(0)
+    assert Expense.objects.count() == 1

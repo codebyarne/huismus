@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 21:04+0100\n"
+"POT-Creation-Date: 2026-11-06 21:24+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2126,6 +2126,9 @@ msgstr "Not read: the amounts don't add up to the total."
 
 msgid "Niet gelezen: de btw staat er niet bij."
 msgstr "Not read: the VAT isn't on it."
+
+msgid "Niet gelezen: lijkt op een uitgave die er al was."
+msgstr "Not read: looks like an expense that was already there."
 
 #, python-format
 msgid "Niet gelezen: lijkt op je uitgave van %(date)s (%(amount)s)."

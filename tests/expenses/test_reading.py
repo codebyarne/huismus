@@ -404,3 +404,31 @@ def test_now_in_the_background_reads_too(service, folder, monkeypatch):
     service.answer(ANSWER)
     inbox.fetch_in_background()
     assert Expense.objects.count() == 1
+
+
+def test_now_tries_a_failed_receipt_again_without_a_new_file(service, folder, monkeypatch):
+    """Found by verify-e2e: after the key works again, "Nu ophalen" with
+    nothing new in the folder has to read the receipt that waited."""
+    monkeypatch.setattr(inbox, "_start", lambda work: work())
+    (folder / "bon.png").write_bytes(_png())
+    service.key = "een-andere"
+    inbox.fetch_in_background()
+    assert Attachment.objects.in_tray().count() == 1
+    assert reading.failure_sentence()
+    service.key = KEY
+    service.answer(ANSWER)
+    inbox.fetch_in_background()
+    assert Expense.objects.count() == 1
+    assert reading.failure_sentence() == ""
+
+
+def test_a_similar_expense_deleted_since_keeps_the_reason(service):
+    """Found by verify-e2e: the line said "niet goed leesbaar" once the
+    expense it looked like was gone."""
+    similar = create_expense([ExpenseLineInput("Verf", 4235, None, None)], date="2026-11-04")
+    receipt = _receipt()
+    service.answer(ANSWER)
+    reading.read_waiting()
+    similar.delete()
+    receipt.refresh_from_db()
+    assert reading.reason_sentence(receipt) == "Niet gelezen: lijkt op een uitgave die er al was."
