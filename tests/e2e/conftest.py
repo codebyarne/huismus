@@ -229,5 +229,7 @@ def history(transactional_db):
     one. Use it for what only shows on long lists: filters, pagination,
     clicking through."""
     from huismus.core.demo_history import create_history
+    from huismus.core.demo_receipts import add_receipts
 
     create_history()
+    add_receipts()
