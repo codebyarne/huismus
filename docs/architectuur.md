@@ -174,7 +174,7 @@ achtergrond, in `SPEC.md` sectie 5. Hier alleen waar je ze in de code vindt:
 | `tests/` | Een map per app, plus `desktop/`, `e2e/` (browsertests met Playwright) en `fixtures/` (fictieve Moneybird-exports). |
 | `desktop/` | De desktop-app voor macOS en Windows: een venster om dezelfde Django-app heen. Zie `docs/desktop.md`. |
 | `docker/` | `entrypoint.sh` voor de container; het `Dockerfile` staat in de hoofdmap. |
-| `scripts/` | `verify.sh` (de poort), `demo-server.sh`, en bouwscripts voor de desktop-app en het design system. |
+| `scripts/` | `verify.sh` (de poort), `demo-server.sh`, `site-beelden.sh` en `promo-film.sh` (beelden en filmpje van de app), en bouwscripts voor de desktop-app en het design system. |
 | `docs/` | Documentatie; `docs/README.md` zegt wat voor wie is. `docs/hulp/` is de uitleg die de app zelf toont. |
 | `.claude/`, `.github/` | De werkwijze met Claude Code (agents, skills, hooks) en CI. |
 
