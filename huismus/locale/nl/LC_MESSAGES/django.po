@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 07:54+0100\n"
+"POT-Creation-Date: 2026-11-06 12:20+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1858,6 +1858,9 @@ msgstr ""
 msgid "Koppel eerst Dropbox bij Back-ups."
 msgstr ""
 
+msgid "Stel eerst WebDAV in bij Back-ups."
+msgstr ""
+
 msgid "Bonnetjes"
 msgstr ""
 
@@ -1869,6 +1872,19 @@ msgstr ""
 
 #, python-format
 msgid "De map %(folder)s is niet bereikbaar. Is de schijf aangesloten?"
+msgstr ""
+
+msgid "Het wachtwoord werd geweigerd. Stel WebDAV opnieuw in bij Back-ups."
+msgstr ""
+
+msgid "Huismus kon WebDAV niet bereiken."
+msgstr ""
+
+msgid ""
+"Op dit adres staat geen WebDAV meer. Stel WebDAV opnieuw in bij Back-ups."
+msgstr ""
+
+msgid "WebDAV gaf een fout. Huismus probeert het over 10 minuten opnieuw."
 msgstr ""
 
 msgid "Dropbox weigert de toegang. Koppel Dropbox opnieuw bij Back-ups."
@@ -4370,18 +4386,21 @@ msgid "Kies een map"
 msgstr ""
 
 msgid ""
-"Huismus in Docker ziet alleen mappen die je eraan koppelt. Gebruik Dropbox, "
-"of koppel een map, bijvoorbeeld een die Syncthing of Nextcloud bijhoudt."
+"Huismus in Docker ziet alleen mappen die je eraan koppelt. Gebruik Dropbox "
+"of WebDAV, of koppel een map, bijvoorbeeld een die Syncthing bijhoudt."
 msgstr ""
 
 msgid ""
 "Apps › Huismus › Bonnetjes, met de Dropbox die je voor back-ups koppelde"
 msgstr ""
 
+msgid "Huismus › Bonnetjes, met de WebDAV die je voor back-ups instelde"
+msgstr ""
+
 msgid "Een map die je telefoon ook ziet"
 msgstr ""
 
-msgid "Wil je Dropbox gebruiken? Koppel Dropbox eerst bij Back-ups."
+msgid "Wil je Dropbox of WebDAV gebruiken? Stel dat eerst in bij Back-ups."
 msgstr ""
 
 msgid "Huismus haalt dan niets meer op. De bonnetjes die er al zijn, blijven."
