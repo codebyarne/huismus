@@ -171,6 +171,8 @@ def _data_texts():
 CUT_OFF_PLACEHOLDERS = """() => [...document.querySelectorAll('input[placeholder]')]
     .filter(el => {
         if (!el.placeholder || el.value || !el.checkVisibility()) return false;
+        // A placeholder made transparent (next to a column head) can't be cut off.
+        if (getComputedStyle(el, '::placeholder').color === 'rgba(0, 0, 0, 0)') return false;
         const style = getComputedStyle(el);
         const text = document.createElement('span');
         text.textContent = el.placeholder;
@@ -188,6 +190,24 @@ CUT_OFF_PLACEHOLDERS = """() => [...document.querySelectorAll('input[placeholder
         return width > room + 1;
     })
     .map(el => el.placeholder)"""
+
+
+# An empty field with no border, no background of its own and no placeholder
+# is invisible: you can't see where to click (the quantity and unit of an
+# invoice line, feedback 2026-11-06). Every field you can type in shows itself.
+INVISIBLE_FIELDS = """() => [...document.querySelectorAll(
+        'main :is(textarea, select, '
+        + 'input:not([type=hidden], [type=checkbox], [type=radio], [type=file]))'
+    )].filter(el => {
+        if (el.value || el.placeholder || el.readOnly || el.disabled) return false;
+        if (!el.checkVisibility() || el.closest('.sr-only')) return false;
+        const style = getComputedStyle(el);
+        const none = color => color === 'transparent' || color === 'rgba(0, 0, 0, 0)';
+        const border = ['Top', 'Right', 'Bottom', 'Left'].some(side =>
+            parseFloat(style[`border${side}Width`]) > 0 && !none(style[`border${side}Color`]));
+        return !border && none(style.backgroundColor);
+    })
+    .map(el => el.name || el.outerHTML.slice(0, 60))"""
 
 
 # A tab row that scrolls sideways with a hidden scrollbar cuts the last tab
@@ -265,6 +285,11 @@ def _problems_on(page, path, language, dutch, data):
     cut_off = page.evaluate(CUT_OFF_PLACEHOLDERS)
     if cut_off:
         problems.append(f"placeholder afgeknipt: {sorted(set(cut_off))}")
+    invisible = page.evaluate(INVISIBLE_FIELDS)
+    if invisible:
+        problems.append(
+            f"leeg veld zonder rand, achtergrond of placeholder: {sorted(set(invisible))}"
+        )
     cut_off_tabs = page.evaluate(CUT_OFF_TABS)
     if cut_off_tabs:
         problems.append(f"tab afgeknipt: {sorted(set(cut_off_tabs))}")
@@ -288,6 +313,20 @@ def test_the_placeholder_check_reports_a_cut_off_text_and_only_that(page):
         f'<input style="{field}; width: {width + outside - 10}px" placeholder="{text} ">'
     )
     assert page.evaluate(CUT_OFF_PLACEHOLDERS) == [f"{text} "]
+
+
+def test_the_field_check_reports_an_empty_field_you_cannot_see_and_only_that(page):
+    quiet = "border: 1px solid transparent; background: transparent"
+    page.set_content(
+        "<main>"
+        f'<input name="invisible" style="{quiet}">'
+        f'<input name="placeholder" style="{quiet}" placeholder="Aantal">'
+        f'<input name="filled" style="{quiet}" value="2">'
+        '<input name="border" style="border: 1px solid #ccc; background: transparent">'
+        f'<textarea name="quiet-textarea" style="{quiet}"></textarea>'
+        "</main>"
+    )
+    assert sorted(page.evaluate(INVISIBLE_FIELDS)) == ["invisible", "quiet-textarea"]
 
 
 def test_the_tab_check_reports_a_row_that_cuts_tabs_off_and_not_one_that_breaks(page):

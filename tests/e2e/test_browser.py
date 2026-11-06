@@ -804,6 +804,27 @@ def test_a_long_line_description_is_fully_readable(app, contact):
         assert description.evaluate("el => el.scrollHeight <= el.clientHeight + 1")
 
 
+LINE_FIELDS = ("description", "quantity", "unit", "unit_price_cents", "tax_rate_bp")
+
+
+def test_a_line_is_one_row_of_visible_fields(app, contact):
+    """BUGS-BY-HAND.md, "Factuurregel": the figures sat a row below the description,
+    and empty fields had no border, so you couldn't see where to click."""
+    app.set_viewport_size({"width": 1280, "height": 900})
+    app.goto(app.base + "/facturen/nieuw/")
+    fields = [app.locator(f"[name=lines-0-{name}]") for name in LINE_FIELDS]
+
+    tops = [round(field.bounding_box()["y"]) for field in fields]
+    assert len(set(tops)) == 1, dict(zip(LINE_FIELDS, tops, strict=True))
+
+    for width in (1280, 390):
+        app.set_viewport_size({"width": width, "height": 900})
+        for name, field in zip(LINE_FIELDS, fields, strict=True):
+            # Empty and not hovered: the border alone must show it's a field.
+            border = field.evaluate("el => getComputedStyle(el).borderTopColor")
+            assert border not in ("transparent", "rgba(0, 0, 0, 0)"), (width, name)
+
+
 def test_a_draft_invoice_can_be_deleted_from_the_editor(app, contact):
     draft = Document.objects.create(kind="invoice", status="draft", contact=contact)
     app.goto(f"{app.base}/facturen/{draft.pk}/")
