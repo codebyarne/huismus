@@ -14,16 +14,16 @@ glides between close-ups (`Film.cam_to`) without ever scaling a pixel up much,
 so text stays sharp. A drawn mouse pointer shows where the clicks go, since a
 headless browser has none.
 
-Every click and key gets a soft tick on the soundtrack, made here (no sound
-files). Music is optional: any audio file, mixed in under the ticks. Mind
+Every click and key gets a soft tick on the soundtrack, from the CC0 sounds
+in scripts/promo-geluiden/. Music is optional: any audio file, mixed in under the ticks. Mind
 its licence before you post the clip.
 
 The server, the made-up administration and the login are those of
 scripts/site_beelden.py.
 """
 
+import array
 import io
-import math
 import random
 import subprocess
 import sys
@@ -241,30 +241,36 @@ def scene(film: Film) -> None:
 RATE = 48_000
 
 
-def _tick(seconds: float, decay: float, loudness: float, tone: float, rng) -> list[float]:
-    """A short burst of noise that dies away, with a faint pitch in it: a
-    mouse click (lower, louder) or a key (shorter, softer). Made here, so
-    there is no sound file whose licence we have to mind."""
-    samples, previous = [], 0.0
-    for i in range(int(seconds * RATE)):
-        t = i / RATE
-        noise = rng.uniform(-1, 1)
-        # The difference of two noise samples is noise without the low rumble.
-        crisp, previous = noise - previous, noise
-        body = 0.6 * crisp + 0.4 * math.sin(2 * math.pi * tone * t)
-        samples.append(loudness * body * math.exp(-t / decay))
-    return samples
+SOUNDS = Path(__file__).resolve().parent / "promo-geluiden"
+# Kenney's Interface Sounds (CC0, see promo-geluiden/LICENSE-Kenney.txt): a real
+# mouse click, and four very short clicks that, softer, sound like keys.
+CLICK = "click_001.ogg"
+KEYS = ["click_002.ogg", "click_003.ogg", "click_004.ogg", "click_005.ogg"]
+
+
+def _samples(name: str) -> list[float]:
+    """A sound file as mono samples between -1 and 1, decoded by ffmpeg."""
+    raw = subprocess.run(
+        [imageio_ffmpeg.get_ffmpeg_exe(), "-loglevel", "error", "-i", str(SOUNDS / name)]
+        + ["-f", "s16le", "-ac", "1", "-ar", str(RATE), "-"],
+        check=True,
+        capture_output=True,
+    ).stdout
+    return [v / 32768 for v in array.array("h", raw)]
 
 
 def soundtrack(sounds: list[tuple[int, str]], frames: int, out: Path) -> None:
     """A mono WAV as long as the film, with a tick at every click and key."""
     rng = random.Random(1)  # the same clip every run
-    track = [0.0] * (frames * RATE // FPS + RATE // 10)
+    click, keys = _samples(CLICK), [_samples(name) for name in KEYS]
+    track = [0.0] * (frames * RATE // FPS + RATE // 2)
     for frame, kind in sounds:
         if kind == "click":
-            tick = _tick(0.03, 0.004, 0.55, 1400, rng)
+            loudness, sample = 0.6, click
         else:
-            tick = _tick(0.015, 0.0025, rng.uniform(0.18, 0.26), rng.uniform(2200, 3000), rng)
+            # A different key and loudness each time, as with real typing.
+            loudness, sample = rng.uniform(0.12, 0.2), rng.choice(keys)
+        tick = [loudness * v for v in sample]
         start = frame * RATE // FPS
         for i, value in enumerate(tick):
             track[start + i] += value

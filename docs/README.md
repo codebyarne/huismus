@@ -29,7 +29,7 @@ de app, maak ze dan opnieuw en commit ze:
 Een promofilmpje (16 seconden in een lus, 1920×1080 mp4, voor LinkedIn en
 dergelijke): een nieuwe factuur krijgt een klant en een regel, en wordt
 uitgegeven. Van dezelfde verzonnen administratie, met een camera die in- en
-uitzoomt en een zacht tikje bij elke klik en toets. Komt in `~/Downloads`,
+uitzoomt en een klik- of toetsgeluid bij elke klik en toets (CC0, van Kenney). Komt in `~/Downloads`,
 niet in de repo. Muziek eronder is optioneel (let op de licentie):
 
 ```

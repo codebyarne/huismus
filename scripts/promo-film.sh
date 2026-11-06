@@ -9,7 +9,7 @@
 #   ./scripts/promo-film.sh ergens/anders.mp4
 #   ./scripts/promo-film.sh ergens/anders.mp4 muziek.mp3   # met muziek eronder
 #
-# Elke klik en toetsaanslag krijgt een zacht tikje. Muziek is optioneel: elk
+# Elke klik en toetsaanslag krijgt een zacht tikje (scripts/promo-geluiden/, CC0). Muziek is optioneel: elk
 # geluidsbestand, zachter onder de tikjes gemengd en aan het eind uitgefaded.
 # Let op de licentie van de muziek voordat je het filmpje post.
 #
