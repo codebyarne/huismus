@@ -34,8 +34,11 @@ wanneer je moet weten wat een regel precies inhoudt.
    totaal tot op de cent. Kolommen worden herkend aan headers, nooit aan
    bestandsnaam of positie. Onbekende kolom = waarschuwing, ontbrekende
    verplichte kolom = duidelijke fout.
-7. **Uitgaven zijn brutobedragen.** Onder de KOR is er geen voorbelasting-
-   aftrek. Elke berekening die btw van een uitgave aftrekt is fout.
+7. **Uitgaven worden bruto bewaard.** Onder de KOR telt de btw van een
+   uitgave nergens mee: elke berekening die daar btw aftrekt is fout. Met de
+   KOR uit is de btw per regel voorbelasting (aangifterapport, kosten zonder
+   btw op het jaaroverzicht), altijd gelezen uit `vat_info_cents`, nooit door
+   een opgeslagen bedrag te veranderen.
 
 ## Ook melden
 

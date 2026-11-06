@@ -15,7 +15,7 @@ A self-hosted, minimal invoicing and light-admin tool for Dutch freelancers who:
 
 ### Non-goals
 
-VAT returns (btw-aangifte), input VAT on expenses (voorbelasting), bank reconciliation, payroll, multi-user or multi-tenant, hosted SaaS, e-commerce, time tracking.
+Bank reconciliation, payroll, multi-user or multi-tenant, hosted SaaS, e-commerce, time tracking.
 
 ## 2. Principles
 
@@ -87,10 +87,10 @@ One table for quotes, invoices and credit notes.
 `document` or `expense` FK, `file`, `kind` (`original_pdf`, `receipt`, `other`), `sha256`, `source`. Never both. Neither only for a receipt waiting for an expense, fetched from the receipts folder (`source` `bonnetjesmap`, M20).
 
 ### Expense
-`date`, `supplier`, `description`, `amount_cents` (**gross amount paid**: under KOR there is no input VAT deduction), `vat_info_cents` (optional, informational), `source`, `external_id`. Has lines, as in Moneybird (decided 2026-11-02, `huismus-intern/besluiten.md`): `amount_cents` and `vat_info_cents` are the sums of its lines, stored by one function (`huismus/expenses/lines.py`).
+`date`, `supplier`, `description`, `amount_cents` (**gross amount paid**, always stored gross: invariant 7 of CLAUDE.md), `vat_info_cents` (under the KOR informational; with the KOR off the input VAT, decided by the owner 2026-11-06, not built yet: issue "Voorbelasting op uitgaven"), `source`, `external_id`. Has lines, as in Moneybird (decided 2026-11-02, `huismus-intern/besluiten.md`): `amount_cents` and `vat_info_cents` are the sums of its lines, stored by one function (`huismus/expenses/lines.py`).
 
 ### ExpenseLine
-`expense` FK, `position`, `description`, `amount_cents` (gross), `vat_info_cents` (informational; optional with the KOR on, required without it, where € 0,00 is a valid answer: decided by the owner 2026-11-05; still never deducted, the amount stays gross), `category` FK (optional). The year overview's per-category breakdown and the list's category filter work per line. Existing expenses got one line each with their amount, VAT and category (migration `expenses.0002`).
+`expense` FK, `position`, `description`, `amount_cents` (gross), `vat_info_cents` (informational; optional with the KOR on, required without it, where € 0,00 is a valid answer: decided by the owner 2026-11-05; the amount stays gross; with the KOR off this is the input VAT once that is built), `category` FK (optional). The year overview's per-category breakdown and the list's category filter work per line. Existing expenses got one line each with their amount, VAT and category (migration `expenses.0002`).
 
 ### ExpenseCategory
 `name`, `sort_order`.
@@ -394,7 +394,7 @@ Collect **anonymised sample exports** (contacts, invoices per invoice/per line, 
 
 ## 12. Later / out of scope for v1
 
-VAT returns and input VAT, recurring invoices, bank statement import (CAMT.053), UBL/Peppol export, payment reminders, multi-currency.
+Recurring invoices, bank statement import (CAMT.053), UBL/Peppol export, payment reminders, multi-currency.
 
 ## 13. Open questions
 
