@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 #
-# Maak een promofilmpje van Huismus opnieuw: zo'n twintig seconden die in een
+# Maak een promofilmpje van Huismus opnieuw: tien à twintig seconden die in een
 # lus spelen (1920x1080 mp4, voor LinkedIn en dergelijke). Draai dit als een
 # scherm in het filmpje er anders uit is gaan zien. Duurt een paar minuten.
 #
 #   ./scripts/promo-film.sh factuur      # een factuur maken en uitgeven
-#   ./scripts/promo-film.sh bonnetjes    # foto van een bonnetje, AI-assistent, nakijken
+#   ./scripts/promo-film.sh bonnetjes    # bonnetje komt binnen, AI-assistent vulde in, Klopt
 #   ./scripts/promo-film.sh bonnetjes ergens/anders.mp4 muziek.mp3
 #
 # Standaard naar ~/Downloads/huismus-<film>.mp4. Elke klik en toetsaanslag

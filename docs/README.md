@@ -26,16 +26,17 @@ de app, maak ze dan opnieuw en commit ze:
 ./scripts/site-beelden.sh
 ```
 
-Promofilmpjes (zo'n twintig seconden in een lus, 1920×1080 mp4, voor
+Promofilmpjes (tien à twintig seconden in een lus, 1920×1080 mp4, voor
 LinkedIn en dergelijke), van dezelfde verzonnen administratie, met een camera
 die in- en uitzoomt en een klik- of toetsgeluid bij elke klik en toets (CC0,
 van Kenney). Ze komen in `~/Downloads`, niet in de repo.
 
 - `factuur`: een nieuwe factuur krijgt een klant en een regel, en wordt uitgegeven.
-- `bonnetjes`: een getekende telefoon fotografeert een (verzonnen) bonnetje en
-  bewaart het in de bonnetjesmap; Huismus haalt het op; een AI-assistent leest
-  het en maakt de uitgave, met toestemming; jij zegt "Klopt". Het chatpaneel is
-  getekend, maar wat het laat zien doet het script echt via `/mcp`.
+- `bonnetjes`: een (verzonnen) foto van een bonnetje komt binnen via de
+  bonnetjesmap; de AI-assistent heeft de uitgave gemaakt (Nakijken); jij zegt
+  "Klopt". Alleen wat in Huismus gebeurt: de foto onderweg en de assistent zijn
+  andere apps, dat vertelt de tekst bij het filmpje. Wat de assistent doet,
+  doet het script echt via `/mcp`.
 
 Muziek eronder is optioneel (let op de licentie):
 

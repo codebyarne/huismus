@@ -8,9 +8,10 @@ Clips of about twenty seconds that loop, for LinkedIn and the like:
 
 - factuur: a new invoice gets a customer and a line, Huismus adds it up, and
   it is issued.
-- bonnetjes: a phone photographs a receipt and saves it in the receipts
-  folder; Huismus fetches it; an AI assistant reads it and adds the expense,
-  with the user's permission; the user checks it ("Klopt").
+- bonnetjes: a photo of a receipt comes in from the receipts folder; the
+  user's AI assistant has added the expense (Nakijken); the user checks it.
+  Only what happens in Huismus: the photo on the road and the assistant are
+  other apps, and the post with the clip tells that part.
 
 The browser plays the scene frame by frame, not in real time: before every
 frame Huismus gets all the time it needs, so the clip never stutters. A
@@ -24,14 +25,12 @@ Music is optional: any audio file, mixed in under the clicks. Mind its licence
 before you post the clip.
 
 The server, the made-up administration and the login are those of
-scripts/site_beelden.py. The phone and the assistant's chat panel are drawn
-(scripts/promo/): plain on purpose, in the look of no real app. What the
-panel shows the assistant doing, the script really does through Huismus's
-/mcp, as Claude or ChatGPT would; the receipt is a made-up one, drawn here.
+scripts/site_beelden.py. What the AI assistant does, the script really does
+through Huismus's /mcp, as Claude or ChatGPT would; the receipt is a
+made-up one, drawn here.
 """
 
 import array
-import base64
 import io
 import json
 import os
@@ -42,7 +41,7 @@ import tempfile
 import time
 import urllib.request
 import wave
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
 import imageio_ffmpeg
@@ -52,16 +51,14 @@ from site_beelden import TOKEN, _env, _manage, _prepare, server
 
 FPS = 30
 KEYS_PER_SECOND = 6.5
-# The browser window: tall enough that the whole invoice fits without
-# scrolling, so the camera only has to move, never the page.
-VW, VH, SCALE = 1440, 1120, 2
+# The browser window's width; its height is per film (FILMS): tall enough
+# that the page fits without scrolling, so the camera only has to move.
+VW, SCALE = 1440, 2
 OUT_W, OUT_H = 1920, 1080
 ASPECT = OUT_H / OUT_W
 # The camera on the top of the window at its full width: the whole app.
 WHOLE_WINDOW = (VW / 2, VW * ASPECT / 2, VW)
 STAGE = Path(__file__).resolve().parent / "promo"
-# The chat panel's height (promo/assistent.js): what the camera shows at most.
-PANEL_H = round(VW * ASPECT)
 
 # A plain arrow, drawn on the page because headless Chromium shows no pointer.
 POINTER = """
@@ -76,13 +73,7 @@ POINTER = """
     zIndex: 2147483647, pointerEvents: 'none',
     filter: 'drop-shadow(0 2px 3px rgba(0,0,0,.25))'});
   const style = document.createElement('style');
-  // On the phone the pointer is a fingertip: a round spot instead of an arrow.
-  style.textContent = `#film-pointer.down svg {transform: scale(.85); transform-origin: 3px 2px}
-    #film-pointer.touch svg {display: none}
-    #film-pointer.touch::after {content: ''; position: absolute; left: -24px; top: -24px;
-      width: 48px; height: 48px; border-radius: 50%; background: rgba(255, 255, 255, .5);
-      box-shadow: 0 0 0 2px rgba(0, 0, 0, .18)}
-    #film-pointer.touch.down::after {transform: scale(.8); background: rgba(255, 255, 255, .8)}`;
+  style.textContent = '#film-pointer.down svg {transform: scale(.85); transform-origin: 3px 2px}';
   document.head.append(style);
   document.body.append(p);
 })()
@@ -114,12 +105,13 @@ class Film:
     """Frames on disk, with a camera (centre x, centre y, width, in CSS
     pixels of the browser window) and a pointer (x, y) that move between them."""
 
-    def __init__(self, page: Page, frames: Path):
+    def __init__(self, page: Page, frames: Path, height: int):
         self.page = page
+        self.height = height
         self.frames = frames
         self.frame = 0
         self.camera = Move.still(WHOLE_WINDOW)
-        self.pointer = Move.still((VW + 40, VH / 2))
+        self.pointer = Move.still((VW + 40, height / 2))
         self.rng = random.Random(7)  # the same typing rhythm every run
         # (frame, "click" or "key"): where the soundtrack gets a tick.
         self.sounds: list[tuple[int, str]] = []
@@ -151,12 +143,15 @@ class Film:
                 " `translate(${x}px, ${y}px)`",
                 [x, y],
             )
+            # The page's clock (installed in main) moves on with the film, so
+            # its timers, such as a toast's, last as long as for a user.
+            self.page.clock.run_for(round(1000 / FPS))
             shot = Image.open(io.BytesIO(self.page.screenshot(caret="initial")))
             cx, cy, w = self.camera.at(self.frame)
             h = w * ASPECT
             # Keep the camera inside the window: no empty edges.
             left = min(max(cx - w / 2, 0), VW - w)
-            top = min(max(cy - h / 2, 0), VH - h)
+            top = min(max(cy - h / 2, 0), self.height - h)
             crop = tuple(round(v * SCALE) for v in (left, top, left + w, top + h))
             image = shot.crop(crop).resize((OUT_W, OUT_H), Image.LANCZOS)
             image.save(self.frames / f"{self.frame:05d}.png")
@@ -173,20 +168,6 @@ class Film:
             self.sounds.append((self.frame, "key"))
             self.page.keyboard.type(key)
             self.shoot(self._key_frames(key))
-
-    def type_in_panel(self, text: str) -> None:
-        """Typing in the drawn chat panel, which has no real text field."""
-        for end in range(1, len(text) + 1):
-            self.sounds.append((self.frame, "key"))
-            self.page.evaluate("text => assistent.typing(text)", text[:end])
-            self.shoot(self._key_frames(text[end - 1]))
-
-    def animate(self, script: str, frames: int, **values) -> None:
-        """Runs `script` (a function of t and the values) before each frame,
-        t going from 0 to 1 with ease: for what the drawn stage moves itself."""
-        for i in range(frames):
-            self.page.evaluate(script, {"t": ease((i + 1) / frames), **values})
-            self.shoot()
 
     def press_pointer(self, down: bool) -> None:
         if down:
@@ -301,7 +282,6 @@ SUPPLIER, AMOUNT, VAT, CATEGORY, PHOTO = (
     "Kantoor",
     "IMG_0412.jpg",
 )
-MONTHS = "jan feb mrt apr mei jun jul aug sep okt nov dec".split()
 
 
 def receipt_photo(day: date) -> bytes:
@@ -362,8 +342,8 @@ def receipt_photo(day: date) -> bytes:
 
 
 def prepare_receipts(env: dict, work: Path) -> None:
-    """A receipts folder with the photo in it, fetched by Huismus, and a key
-    for the assistant (in `work`/mcp-key)."""
+    """A receipts folder with the photo in it, as the phone left it, and a
+    key for the AI assistant (in `work`/mcp-key)."""
     # A home folder with Dropbox in it, so that Huismus names the folder the
     # way the phone does: "Dropbox › Huismus bonnetjes", not a temporary path.
     home = work / "thuis"
@@ -375,13 +355,14 @@ def prepare_receipts(env: dict, work: Path) -> None:
     # Huismus waits until a file is a minute old (inbox.SETTLE_SECONDS).
     old = time.time() - 120
     os.utime(photo, (old, old))
+    # Not fetched yet: in the film "Nu ophalen" does that.
     _manage(
         env,
         "shell",
         "-c",
         "from pathlib import Path; from huismus.expenses import inbox; "
         "from huismus.assistants import key; "
-        f"inbox.choose_folder(Path({str(folder)!r})); inbox.fetch(); "
+        f"inbox.choose_folder(Path({str(folder)!r})); "
         f"Path({str(work / 'mcp-key')!r}).write_text(key.create())",
     )
 
@@ -407,91 +388,13 @@ def ask_huismus(url: str, key: str, tool: str, arguments: dict) -> dict:
     return result.get("structuredContent") or json.loads(result["content"][0]["text"])
 
 
-def receipts(film: Film, url: str, key: str) -> None:
-    page = film.page
+def assistant_adds_expense(url: str, key: str) -> None:
+    """What the user's AI assistant does in its own app, out of the film:
+    find the receipt, read it, add the expense (then marked Nakijken)."""
     today = date.today()
-
-    # 1. On the road: photograph the receipt, save it in the receipts folder.
-    phone = page.context.new_page()
-    phone.set_content((STAGE / "telefoon.html").read_text())
-    photo = base64.b64encode(receipt_photo(today)).decode()
-    phone.evaluate(
-        "src => document.getElementById('bon').src = src", f"data:image/jpeg;base64,{photo}"
-    )
-    phone.evaluate(POINTER)
-    phone.evaluate("document.getElementById('film-pointer').classList.add('touch')")
-    film.page = phone
-    stage = "({t, ...v}) => stage(v)"
-    film.camera = Move.still(WHOLE_WINDOW)
-    x, y, w, h = film.box("#sluiter")
-    film.pointer = Move.still((x + w * 0.9, y + 260))
-    film.shoot(12)
-    film.point_to("#sluiter", 16)
-    film.shoot(18)
-    film.click("#sluiter", 0)
-    film.animate("({t}) => stage({flash: 1 - t})", 8)
-    film.animate("({t}) => stage({sheet: t})", 12)
-    film.shoot(8)
-    film.point_to("#map", 14, ox=0.35)
-    film.shoot(16)
-    film.click("#map", 0)
-    film.animate(stage, 6, sheet=1, chosen=True)
-    film.animate("({t}) => stage({sheet: 1 - t, chosen: true, saved: t})", 10)
-    film.shoot(22)
-    phone.close()
-
-    # 2. At the computer: Huismus fetched it.
-    film.page = page
-    page.goto(f"{url}/")
-    page.wait_for_load_state("networkidle")
-    notice = "#nieuwe-bonnetjes a"
-    x, y, w, h = film.box(notice)
-    film.camera = Move.still(film.view(x - 20, y - 130, 760, h + 260, margin=1.0))
-    film.pointer = Move.still((x + w * 0.75, y + h + 90))
-    film.shoot(14)
-    film.point_to(notice, 12, ox=0.85)
-    film.shoot(14)
-    film.click(notice, 2)
-    card = ".receipt"
-    film.cam_to(film.view(*film.box(card), margin=1.6), 20)
-    film.shoot(26)
-
-    # 3. The AI assistant reads it and, with permission, adds the expense.
-    page.add_script_tag(path=str(STAGE / "assistent.js"))
-    film.cam_to(WHOLE_WINDOW, 16)
-    film.animate("({t}) => assistent.slide(t)", 14)
-    # The lower half of the panel: the conversation and where you type.
-    film.cam_to(film.view(VW - 470, PANEL_H - 470, 470, 470, margin=1.0), 18)
-    film.pointer = Move.still(film.pointer.at(film.frame))
-    film.point_to("#ai .veld", 14, ox=0.8)
-    film.shoot(6)
-    film.type_in_panel("Maak een uitgave van mijn nieuwe bonnetje")
-    film.shoot(6)
-    film.sounds.append((film.frame, "key"))
-    page.evaluate("assistent.send()")
-    film.shoot(8)
-    row = page.evaluate_handle("assistent.step('Bonnetjes zonder uitgave bekijken', true)")
-    film.shoot(10)
     waiting = ask_huismus(url, key, "list_receipts", {})
     receipt = next(r for r in waiting["receipts"] if r["name"] == PHOTO)
-    page.evaluate("row => assistent.done(row)", row)
-    row = page.evaluate_handle("assistent.step('Bonnetje lezen', true)")
-    film.shoot(18)
     ask_huismus(url, key, "read_receipt", {"id": receipt["id"]})
-    page.evaluate("row => assistent.done(row)", row)
-    film.shoot(6)
-    facts = [
-        ["Leverancier", SUPPLIER],
-        ["Datum", f"{today.day} {MONTHS[today.month - 1]} {today.year}"],
-        ["Bedrag", f"€ {AMOUNT}"],
-        ["Categorie", CATEGORY],
-        ["Bonnetje", PHOTO],
-    ]
-    ask = page.evaluate_handle("([facts]) => assistent.ask('Uitgave toevoegen', facts)", [facts])
-    film.shoot(20)
-    film.point_to("#toestaan", 18)
-    film.shoot(30)
-    film.click("#toestaan", 0)
     ask_huismus(
         url,
         key,
@@ -504,39 +407,66 @@ def receipts(film: Film, url: str, key: str) -> None:
             "receipt_id": receipt["id"],
         },
     )
-    page.evaluate("card => assistent.allowed(card)", ask)
-    page.evaluate("assistent.step('Uitgave toevoegen', false)")
-    film.shoot(8)
-    page.evaluate(
-        "text => assistent.say(text)",
-        f"Toegevoegd: {SUPPLIER}, € {AMOUNT}. In Huismus staat hij op Nakijken: kijk hem even na.",
-    )
+
+
+def receipts(film: Film, url: str, key: str) -> None:
+    """Only what happens in Huismus. The photo on the road and the AI
+    assistant happen in other apps; the post that goes with the clip tells
+    that part."""
+    page = film.page
+
+    # 1. The photo from the road comes in.
+    page.goto(f"{url}/uitgaven/bonnetjes/")
+    page.wait_for_load_state("networkidle")
+    fetch = "button:has-text('Nu ophalen')"
+    x, y, _, _ = film.box("h1")
+    bx, by, bw, bh = film.box(fetch)
+    film.camera = Move.still(film.view(x - 20, y - 60, bx + bw + 40 - x, 520, margin=1.0))
+    film.pointer = Move.still((bx + bw * 0.4, by + 220))
+    film.shoot(24)
+    film.point_to(fetch, 16, ox=0.45)
+    film.shoot(18)
+    film.click(fetch, 0)
+    # "Bezig met ophalen…" for a moment; Huismus checks every 3 seconds whether
+    # the look is done, so skip ahead on the page's clock, unfilmed.
+    film.shoot(12)
+    for _ in range(100):
+        if page.locator(".receipt").count():
+            break
+        page.clock.run_for(500)
+        page.wait_for_load_state("networkidle")
+    film.cam_to(film.view(*film.box(".receipt"), margin=1.7), 22)
     film.shoot(40)
 
-    # 4. Back in Huismus: the expense waits to be checked.
+    # 2. The assistant made the expense; it waits to be checked.
+    assistant_adds_expense(url, key)
     page.goto(f"{url}/uitgaven/")
     page.wait_for_load_state("networkidle")
     row = f"tr:has-text({SUPPLIER!r})"
     film.camera = Move.still(film.view(*film.box(row), margin=1.15))
     film.pointer = Move.still(film.pointer.at(film.frame))
-    film.shoot(12)
-    film.point_to(f"{row} a", 14, ox=0.3)
-    film.shoot(18)
+    film.shoot(16)
+    film.point_to(f"{row} a", 16, ox=0.3)
+    film.shoot(20)
     film.click(f"{row} a", 2)
-    film.cam_to(film.view(*film.box("#nakijken"), margin=1.15), 18)
-    film.shoot(30)
-    # Back a little: the banner, the receipt and what the assistant filled in.
-    x, y, w, _ = film.box("#nakijken")
-    film.cam_to(film.view(x - 20, y - 60, w + 40, 720, margin=1.0), 30)
-    film.shoot(40)
 
-    # 5. "Klopt": checked, and back to the whole app.
+    # 3. The banner and the receipt, down to what the assistant filled in.
+    x, y, w, _ = film.box("#nakijken")
+    film.cam_to(film.view(x - 20, y - 60, w + 40, 640, margin=1.0), 20)
+    film.shoot(36)
+    _, ay, _, ah = film.box("[name=lines-0-amount_cents]")
+    _, dy, _, _ = film.box("#id_date")
+    film.cam_to(film.view(x - 20, dy - 60, w + 40, ay + ah + 40 - dy + 60, margin=1.0), 36)
+    film.shoot(56)
+
+    # 4. Klopt.
     klopt = "button[name=klopt]"
-    film.cam_to(film.view(*film.box("#nakijken"), margin=1.15), 18)
-    film.point_to(klopt, 18)
-    film.shoot(24)
-    film.click(klopt, 4)
-    film.cam_to(WHOLE_WINDOW, 30)
+    film.cam_to(film.view(x - 20, y - 60, w + 40, 640, margin=1.0), 30)
+    film.point_to(klopt, 30)
+    film.shoot(40)
+    film.click(klopt, 2)
+    # Back on the list: the whole app, with "Uitgave nagekeken." at the top.
+    film.cam_to(WHOLE_WINDOW, 24)
     film.shoot(60)
 
 
@@ -625,14 +555,16 @@ def encode(frames: Path, sound: Path, music: Path | None, out: Path) -> None:
 
 
 FILMS = {
-    # name: (the scene, what it needs set up before the server starts)
-    "factuur": (invoice, None),
-    "bonnetjes": (receipts, prepare_receipts),
+    # name: (the scene, what it needs set up before the server starts,
+    # the window's height)
+    "factuur": (invoice, None, 1120),
+    # The expense page has the receipt above the fields: all of it fits.
+    "bonnetjes": (receipts, prepare_receipts, 1500),
 }
 
 
 def main(name: str, out: Path, music: Path | None) -> None:
-    scene, prepare = FILMS[name]
+    scene, prepare, height = FILMS[name]
     with tempfile.TemporaryDirectory() as work, sync_playwright() as playwright:
         work = Path(work)
         administration, _, releases = _prepare(work)
@@ -654,19 +586,23 @@ def main(name: str, out: Path, music: Path | None) -> None:
         with server(administration, releases) as url:
             browser = playwright.chromium.launch(args=["--lang=nl-NL"])
             context = browser.new_context(
-                viewport={"width": VW, "height": VH},
+                viewport={"width": VW, "height": height},
                 device_scale_factor=SCALE,
                 locale="nl-NL",
                 timezone_id="Europe/Amsterdam",
                 reduced_motion="reduce",
                 # Huismus allows only its own scripts and styles; the drawn
-                # pointer and chat panel are laid over it for the film alone.
+                # pointer is laid over it for the film alone.
                 bypass_csp=True,
             )
             context.add_init_script(f"addEventListener('DOMContentLoaded', () => {POINTER})")
+            # Pages run on the film's time, not the clock on the wall: filming a
+            # frame takes far longer than 1/FPS of a second (Film.shoot).
+            context.clock.install()
+            context.clock.pause_at(datetime.now())
             page = context.new_page()
             page.goto(f"{url}/desktop/start/?token={TOKEN}")
-            film = Film(page, frames)
+            film = Film(page, frames, height)
             scene(film, url, key)
             browser.close()
         sound = work / "klikken.wav"
