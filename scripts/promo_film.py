@@ -261,17 +261,19 @@ def invoice(film: Film, url: str, _key: str) -> None:
     page.wait_for_load_state("networkidle")
     film.shoot(16)
 
-    # 3. The total, worked out by Huismus.
+    # 3. The total, worked out by Huismus, and in the same shot the button
+    # that issues it: no pulling back to find the button afterwards.
     calculated = "text=Berekend door Huismus"
-    x, y, w, _ = film.box(calculated)
-    film.cam_to(film.view(x - 260, y - 170, w + 270, 210, margin=1.15), 26)
+    x, y, _, _ = film.box(calculated)
+    bx, by, bw, bh = film.box(issue)
+    left, top = min(x, bx) - 280, y - 170
+    film.cam_to(film.view(left, top, bx + bw + 20 - left, by + bh + 20 - top, margin=1.0), 26)
     film.point_to(calculated, 26, ox=1.3, oy=2.0)
     film.shoot(50)
 
     # 4. Issue it: the dialog names the number it will get.
-    film.cam_to(film.view(VW - 720, VH - 340, 720, 340, margin=1.0), 26)
-    film.point_to(issue, 26, ox=0.45)
-    film.shoot(30)
+    film.point_to(issue, 22, ox=0.45)
+    film.shoot(28)
     film.click(issue, 2)
     film.cam_to(film.view(*film.box("dialog[open]"), margin=1.25), 22)
     film.shoot(22)
