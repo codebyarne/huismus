@@ -23,6 +23,7 @@ from django.utils import timezone
 from huismus.assistants import key as assistant_key
 from huismus.business import smtp
 from huismus.config import secret_key
+from huismus.expenses import ai_service
 
 DB_NAME_IN_ARCHIVE = "db.sqlite3"
 # Kept by core.auto_backups; here so this module needs nothing from it.
@@ -128,6 +129,9 @@ def _belongs_to_this_installation(name: str) -> bool:
     # And the AI connection's key (assistants.key): a restored backup should
     # not let an old key in.
     if name.startswith(assistant_key.FILE_NAME):
+        return True
+    # The AI service that reads receipts (expenses.ai_service): its key.
+    if name.startswith(ai_service.FILE_PREFIX):
         return True
     # The link to a cloud service and the recovery code (core.cloud_backups):
     # secrets of this installation, and a backup encrypted with a code must
