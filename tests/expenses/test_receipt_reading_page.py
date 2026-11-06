@@ -164,12 +164,14 @@ def test_the_sentence_names_the_service(client_in, ai_fake, monkeypatch):
 
 
 def test_the_sentence_counts_receipts_already_waiting(client_in):
-    for name in ("a.pdf", "b.pdf"):
+    first, _second = (
         Attachment.objects.create(file=ContentFile(b"%PDF-1.4", name=name), kind="receipt")
+        for name in ("a.pdf", "b.pdf")
+    )
     page = client_in.get(URL).content.decode()
     assert "Ook de 2 bonnetjes zonder uitgave die er nu zijn." in page
     # One Huismus already read doesn't go again.
-    Attachment.objects.filter(file__endswith="a.pdf").update(read_at="2026-11-06T10:00:00Z")
+    Attachment.objects.filter(pk=first.pk).update(read_at="2026-11-06T10:00:00Z")
     page = client_in.get(URL).content.decode()
     assert "Ook het bonnetje zonder uitgave dat er nu is." in page
 
