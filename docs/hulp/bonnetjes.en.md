@@ -59,13 +59,31 @@ says which file it is and why.
 ## Making an expense of a receipt
 
 On **Expenses** there is a **Receipts** button, with how many receipts have
-no expense yet. Click **Create expense** next to a receipt: you get the
-usual form, with the receipt already at the top. Fill in the rest and click
-**Save**. If another receipt is waiting, you get the next one right away.
-Want to do one later? Click **Skip**.
+no expense yet. Click **Create expense** next to a receipt: you go to
+**Process** (see below), with the receipt large beside the fields. Fill them
+in and click **Save**. You get the next one right away.
 
 Don't need a receipt? Remove it from the list. The file stays in the
 **Picked up** folder.
+
+## Process everything at once
+
+Receipts come in by themselves for a month or a quarter. Then process them
+in one go: on **Expenses**, click **Process**. The number after it is how
+many are waiting for you: first the expenses to check, then the receipts
+without an expense.
+
+You see one at a time. The receipt is large on the left, the expense's
+fields on the right, and the top shows where you are, for example **3 of
+24**. On your phone the receipt is above the fields.
+
+- An expense to check: if it's all correct, click **Looks right**.
+- A receipt: fill in the fields and click **Save**.
+- Want to do one later? Click **Skip**. It comes round again at the end.
+
+After the last one you see **Nothing left to process.** On a computer you see
+every page of a PDF. On your phone, or to see the receipt larger, click
+**Open receipt**.
 
 ## Let your AI assistant process them
 
@@ -73,9 +91,9 @@ If you've connected an AI assistant (see [AI assistants](ai-assistenten.en.md)),
 say: **Process my receipts in Huismus.** It reads each receipt and makes the
 expense, with the receipt attached. If it can't read a receipt, it says so
 and the receipt stays with the receipts without an expense. What your
-assistant filled in is under **To check** on **Expenses**. Open the top
-one and click **Looks right** if it's all correct: you get the next one
-right away. **Skip** leaves one for later.
+assistant filled in gets the label **To check** and is under **Process** on
+**Expenses**. Click **Looks right** if it's all correct: you get the next
+one right away.
 
 Your assistant only sees your receipts when you ask it to. Want Huismus to
 have them read by itself? See below.

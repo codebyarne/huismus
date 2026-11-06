@@ -58,13 +58,32 @@ Bonnetjesmap zegt dan welk bestand het is en waarom.
 ## Een uitgave maken van een bonnetje
 
 Bij **Uitgaven** staat de knop **Bonnetjes**, met hoeveel bonnetjes er nog
-geen uitgave hebben. Klik op **Uitgave maken** bij een bonnetje: je krijgt
-het gewone formulier, met het bonnetje al bovenaan. Vul de rest in en klik
-op **Opslaan**. Wacht er nog een bonnetje, dan krijg je meteen het volgende.
-Wil je er een later doen, klik dan op **Overslaan**.
+geen uitgave hebben. Klik op **Uitgave maken** bij een bonnetje: je komt in
+**Verwerken** (zie hieronder), met het bonnetje groot naast de velden. Vul
+ze in en klik op **Opslaan**. Je krijgt meteen het volgende.
 
 Heb je een bonnetje niet nodig, verwijder het dan uit de lijst. Het bestand
 blijft in de map **Opgehaald** staan.
+
+## Alles in één keer verwerken
+
+Bonnetjes komen een maand of een kwartaal lang vanzelf binnen. Verwerk ze dan
+in één keer: klik bij **Uitgaven** op **Verwerken**. Het getal erachter is
+hoeveel er op je wachten: eerst de uitgaven om na te kijken, dan de
+bonnetjes zonder uitgave.
+
+Je ziet er steeds één. Links staat het bonnetje groot, rechts de velden van
+de uitgave, en bovenaan waar je bent, bijvoorbeeld **3 van 24**. Op je
+telefoon staat het bonnetje boven de velden.
+
+- Bij een uitgave om na te kijken: klopt alles, klik dan op **Klopt**.
+- Bij een bonnetje: vul de velden in en klik op **Opslaan**.
+- Wil je er een later doen? Klik op **Overslaan**. Hij komt aan het eind
+  weer langs.
+
+Na de laatste zie je **Niets meer te verwerken.** Een pdf zie je op de
+computer met alle pagina's. Op je telefoon, of als je het bonnetje groter wilt
+zien, klik je op **Bonnetje openen**.
 
 ## Laat je AI-assistent ze verwerken
 
@@ -72,9 +91,9 @@ Heb je een AI-assistent gekoppeld (zie [AI-assistenten](ai-assistenten.nl.md)),
 zeg dan: **Verwerk mijn bonnetjes in Huismus.** Hij leest elk bonnetje en
 maakt de uitgave, met het bonnetje eraan. Kan hij een bonnetje niet lezen,
 dan zegt hij dat en blijft het bij de bonnetjes zonder uitgave. Wat je
-assistent invulde, staat bij **Uitgaven** onder **Nakijken**. Open de
-bovenste en klik op **Klopt** als alles goed is: je krijgt meteen de
-volgende. Met **Overslaan** laat je er een staan voor later.
+assistent invulde, krijgt het label **Nakijken** en staat bij **Uitgaven**
+onder **Verwerken**. Klik op **Klopt** als alles goed is: je krijgt meteen
+de volgende.
 
 Je assistent ziet je bonnetjes alleen als je hem dit vraagt. Wil je dat
 Huismus ze zelf laat lezen, zie dan hieronder.
