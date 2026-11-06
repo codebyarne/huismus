@@ -433,7 +433,10 @@ def reason_sentence(receipt: Attachment) -> str:
         return _("Niet gelezen: de bedragen tellen niet op tot het totaal.")
     if reason == NO_VAT:
         return _("Niet gelezen: de btw staat er niet bij.")
-    if reason == SIMILAR and receipt.read_similar is not None:
+    if reason == SIMILAR and receipt.read_similar is None:
+        # That expense was deleted since.
+        return _("Niet gelezen: lijkt op een uitgave die er al was.")
+    if reason == SIMILAR:
         similar = receipt.read_similar
         return _("Niet gelezen: lijkt op je uitgave van %(date)s (%(amount)s).") % {
             "date": date_filter(similar.date, "j b Y"),

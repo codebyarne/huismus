@@ -481,14 +481,15 @@ def fetch_in_background() -> bool:
             with maintenance.gate.request() as open_:
                 if open_:
                     _fetch(load(), timezone.localtime())
+            # Then the receipts that wait are read (SPEC.md M20, part 3),
+            # still under the look's lock: the page keeps refreshing until
+            # both are done (found by verify-e2e: between the two it stopped,
+            # and a red line that had gone stayed on the screen).
+            reading.read_when_open()
         except Exception:
             logger.exception("Bonnetjes ophalen mislukt")
         finally:
             _fetch_lock.release()
-        # Then the new receipts are read (SPEC.md M20, part 3), with the
-        # look's lock free again, so "Bezig met ophalen…" doesn't stay up
-        # while a service reads.
-        reading.read_when_open()
 
     try:
         _start(work)

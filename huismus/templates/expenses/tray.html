@@ -18,10 +18,6 @@
     {% endif %}
 </div>
 
-{% if reading_failure %}
-<p class="hint-banner is-bad" id="lezen-mislukt" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% blocktranslate with reason=reading_failure trimmed %}Huismus kon je bonnetjes niet lezen. {{ reason }} Ze wachten hier tot het weer lukt.{% endblocktranslate %} <a href="{% url 'business:receipt_reading' %}">{% translate "Bonnetjes lezen" %} →</a></span></p>
-{% endif %}
-
 {% if on %}
 <div style="margin-bottom:var(--s-4)">
     {% url 'expenses:tray' as refresh_url %}
@@ -30,6 +26,10 @@
 {% endif %}
 
 <div id="bonnetjes-lijst">
+{% comment %}Inside the list, so it goes along with each refresh while a look or reading runs.{% endcomment %}
+{% if reading_failure %}
+<p class="hint-banner is-bad" id="lezen-mislukt" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% blocktranslate with reason=reading_failure trimmed %}Huismus kon je bonnetjes niet lezen. {{ reason }} Ze wachten hier tot het weer lukt.{% endblocktranslate %} <a href="{% url 'business:receipt_reading' %}">{% translate "Bonnetjes lezen" %} →</a></span></p>
+{% endif %}
 {% if receipts %}
 <section class="card card-pad">
     {% comment %}Narrower than on an expense, so a phone shows two side by side.{% endcomment %}
