@@ -40,6 +40,10 @@ def test_check_two_expenses_from_the_assistant(app):
 
     expect(app.locator("#toasts")).to_contain_text("Uitgave nagekeken.")
     expect(app.locator("#filter-nakijken")).to_be_visible()
+    # The filter line lines up with the rows, also after this redirect.
+    line = app.locator("#filter-nakijken").bounding_box()
+    cell = app.locator("tbody td").first.bounding_box()
+    assert abs(line["x"] - cell["x"]) <= 2, (line, cell)
     expect(app.locator("#naar-nakijken")).to_have_text("Nakijken (1)")
     first.refresh_from_db()
     assert (first.supplier, first.needs_review) == ("Bouwmarkt Noord", False)

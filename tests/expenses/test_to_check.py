@@ -149,3 +149,21 @@ def test_an_empty_filter_says_nothing_was_found(logged_in):
     _expense("Gamma", needs_review=True)
     page = logged_in.get(reverse("expenses:list") + "?nakijken=1&q=praxis").content.decode()
     assert "Niets gevonden" in page and "Filters wissen" in page
+
+
+def test_without_the_kor_klopt_still_needs_the_vat(logged_in):
+    from huismus.business.models import Settings
+
+    settings = Settings.load()
+    settings.kor_enabled = False
+    settings.save()
+    expense = _expense("Gamma", needs_review=True)
+
+    response = logged_in.post(
+        reverse("expenses:edit", args=[expense.pk]), _form(expense, klopt="1")
+    )
+
+    assert response.status_code == 200
+    assert "Vul het btw-bedrag in." in response.content.decode()
+    expense.refresh_from_db()
+    assert expense.needs_review
