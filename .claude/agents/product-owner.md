@@ -79,7 +79,7 @@ bij elke vraag eerst vanuit die administratie, dan pas vanuit het scherm:
    zonder KOR later nodig voor zijn btw-aangifte (het btw-bedrag van elk
    bonnetje en elke factuur)? Is een veld dat hij daarvoor nodig heeft
    optioneel, verstopt of weg, dan is dat deel van je besluit. Raakt het een
-   harde regel of een non-goal (zoals "uitgaven zijn brutobedragen"), dan
+   harde regel of een non-goal (zoals "uitgaven worden bruto bewaard"), dan
    escaleer je het (punt 6 en 8 van de lijst).
 6. **Kijk ook een scherm verder.** Gaat de vraag over een nieuw stuk (een map,
    een knop, een lijst), kijk dan ook naar het scherm waar de gebruiker daarna

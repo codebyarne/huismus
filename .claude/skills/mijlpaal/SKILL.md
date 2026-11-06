@@ -17,9 +17,10 @@ productvraag of een design gaat naar de `product-owner`-agent, niet naar de eige
 - Koppel de privé-repo `huismus-intern` (`CLAUDE.md`, "Privé: huismus-intern")
   en pull hem.
 - Lees `SPEC.md`, `huismus-intern/besluiten.md` en het plan in de opdracht.
-- Geen onderwerp meegekregen? Neem het volgende issue uit de wachtrij
-  (`CLAUDE.md`, "Backlog: GitHub Issues"). Is er geen: meld dat en stop.
-- Lees het issue en zijn reacties: dat is de opdracht, naast `SPEC.md`.
+- Geen onderwerp meegekregen? Neem het bovenste issue uit de wachtrij op het
+  bord (`CLAUDE.md`, "Backlog: GitHub Issues"). Is er geen: meld dat en stop.
+- Lees het issue en zijn reacties: dat is de opdracht, naast `SPEC.md`. Zet het
+  op het bord op `In Progress`.
 
 ## 2. Plan en spec
 
@@ -103,8 +104,8 @@ Alles moet slagen voordat je verder gaat:
 - Een regel in `huismus-intern/STATUS.md`: een commit in `huismus-intern`,
   gepusht vóór stap 10. Niets daarvan in de PR van Huismus. Het issue sluit
   vanzelf met de merge (`Closes #…`); sluit het anders zelf, met de PR erbij.
-- Iets gevonden wat later moet? Een nieuw issue, openbaar geschreven
-  (`CLAUDE.md`, "Backlog: GitHub Issues").
+- Iets gevonden wat later moet? Een nieuw issue, openbaar geschreven, en op het
+  bord (`CLAUDE.md`, "Backlog: GitHub Issues").
 - Workflow gewijzigd (`CLAUDE.md`, `.claude/`, `scripts/verify.sh`, CI)?
   Werk ook `codebyarne/agentic-playbook` bij en zet `Playbook: …` in een commit
   (`CLAUDE.md`, "Playbook bijhouden").
@@ -126,7 +127,7 @@ afhangt.
 Een lange sessie wordt traag. Bouw daarom nooit een tweede onderwerp in deze
 sessie, maar geef het door aan een nieuwe:
 
-1. Kijk in de wachtrij (`CLAUDE.md`, "Backlog: GitHub Issues"). Stop zonder
+1. Kijk in de wachtrij op het bord (`CLAUDE.md`, "Backlog: GitHub Issues"). Stop zonder
    opvolger als er een open issue met het label `pauze` is, als de wachtrij leeg
    is, of als je onderwerp nog niet op `main` staat (zie de uitzondering
    hieronder).

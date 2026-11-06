@@ -50,7 +50,9 @@ above is therefore optional.
 4. **One totals function** for everything (UI, PDF, import validation). Do not recompute totals elsewhere.
 5. **Snapshots.** Issued documents store business, contact and KOR text snapshots. Never render an issued document from live settings or contact data. Eén uitzondering (SPEC.md invariant 4): een document zonder logo in de snapshot krijgt het huidige logo.
 6. **Import must be idempotent, dry-run by default, and verify every total to the cent.** Never guess column meanings: detect by headers, warn on unknown ones, fail clearly on missing required ones.
-7. **Expenses are gross amounts** (no input VAT deduction under the KOR).
+7. **Expenses are stored gross.** Under the KOR their VAT counts nowhere. With the KOR
+   off, each line's VAT is input VAT: it goes into the VAT return report, and costs on the
+   year overview are without VAT (owner, 2026-11-06). Stored amounts never change for it.
 
 ## Conventions
 
@@ -214,21 +216,39 @@ termijn in de poort.
 
 ## Backlog: GitHub Issues
 
-De backlog staat openbaar in de issues van `codebyarne/huismus` (besluit eigenaar
-2026-11-06; daarvoor `huismus-intern/backlog.md`, dat nu alleen nog verwijst).
+De backlog staat openbaar in de issues van `codebyarne/huismus`; de volgorde staat
+op het bord "Huismus" (besluiten eigenaar 2026-11-06; daarvoor
+`huismus-intern/backlog.md`, dat nu alleen nog verwijst).
 Iedereen kan meelezen en met een GitHub-account een issue of reactie plaatsen.
 
-- **Wachtrij voor `/mijlpaal`:** het open issue met het laagste nummer zonder het
-  label `wacht`, `idee` of `pauze`. Een issue met `voorrang` gaat voor. Zo vraag je
-  het op:
-  `gh issue list --state open --search "-label:wacht -label:idee -label:pauze sort:created-asc"`
-  (eerst die met `--label voorrang`).
+- **Bord = wachtrij.** Het GitHub Project "Huismus" (`gh project … 1 --owner
+  codebyarne`) bepaalt de volgorde: de eigenaar sleept wat eerst moet naar boven.
+  De wachtrij voor `/mijlpaal` is het bovenste item op het bord met Status `Todo`
+  dat een issue is zonder het label `wacht`, `idee` of `pauze`. Zo vraag je het op
+  (de lijst komt in de volgorde van het bord):
+
+  ```
+  gh project item-list 1 --owner codebyarne --limit 500 --format json --jq '[.items[] | select(.content.type == "Issue" and .status == "Todo" and ((.labels // []) | any(. == "wacht" or . == "idee" or . == "pauze") | not))][0] | "#\(.content.number) \(.title)"'
+  ```
+
+  Een open issue dat niet op het bord staat, zit niet in de wachtrij. Het label
+  `voorrang` is vervallen: naar boven slepen doet dat werk.
+- **Status op het bord:** begin je aan een issue, zet het dan op `In Progress`.
+  `Done` volgt vanzelf als het issue sluit; zo niet, zet het zelf. Het item-id
+  (`PVTI_…`) staat in `.id` van `gh project item-list`:
+
+  ```
+  gh project item-edit --project-id PVT_kwHOELVXCM4BqhnM --id <item-id> --field-id PVTSSF_lAHOELVXCM4BqhnMzho4YqM --single-select-option-id 47fc9ee4  # Done: 98236657
+  ```
+- **Nieuw issue:** zet het meteen op het bord met
+  `gh project item-add 1 --owner codebyarne --url <issue-url>`. Het komt onderaan;
+  de eigenaar schuift het omhoog als het eerder moet.
 - **`wacht`:** het onderwerp wacht op iets buiten de code (een beslissing, een
   apparaat, een externe dienst). Zeg in het issue waarop, in een regel "**Wacht
   op:** …". Weg met het label zodra het niet meer wacht.
 - **`idee`:** binnengekomen via het formulier "Idee of iets wat je mist". Het gaat
-  pas in de wachtrij als de `product-owner`-agent het aanneemt en het label
-  weghaalt.
+  pas in de wachtrij als de `product-owner`-agent het aanneemt, het label
+  weghaalt en het op het bord zet.
 - **Stoppen:** een open issue met het label `pauze` (titel "PAUZE") stopt de keten
   van `/mijlpaal`. Sluiten zet hem weer aan.
 - **Afronden:** de PR die het live zet, zegt `Closes #<nummer>`.
@@ -236,8 +256,6 @@ Iedereen kan meelezen en met een GitHub-account een issue of reactie plaatsen.
   hoort" hieronder: geen namen, geen echte gegevens, geen adressen van apparaten,
   geen verwijzing naar de inhoud van `huismus-intern`. Het waarom van een besluit
   blijft in `huismus-intern/besluiten.md`; het issue zegt wat er gebouwd wordt.
-- **Bord:** het openbare GitHub Project "Huismus" toont dezelfde issues per status.
-  Het is een weergave; de wachtrij volgt de labels hierboven.
 
 ## Privé: huismus-intern
 
