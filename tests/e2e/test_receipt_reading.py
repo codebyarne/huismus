@@ -81,8 +81,10 @@ def test_a_receipt_comes_in_is_read_and_checked(app, ai_fake, tmp_path, monkeypa
 
     app.goto(app.base + "/")
     expect(app.locator("#nieuwe-uitgaven")).to_contain_text("1 nieuwe uitgave om na te kijken.")
+    # Straight to Verwerken: the expense first, then the receipt left.
     app.locator("#nieuwe-uitgaven").click()
-    app.get_by_role("link", name="Bouwmarkt De Spijker").click()
+    expect(app.locator("#verwerken-teller")).to_have_text("1 van 2")
+    expect(app.get_by_label("Leverancier")).to_have_value("Bouwmarkt De Spijker")
     expect(app.locator("#nakijken")).to_contain_text(
         "Huismus las dit bonnetje met 127.0.0.1. Klopt alles?"
     )

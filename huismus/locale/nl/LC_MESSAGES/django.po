@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 21:24+0100\n"
+"POT-Creation-Date: 2026-11-06 21:58+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -737,8 +737,8 @@ msgid "Kies een map buiten je administratie."
 msgstr ""
 
 msgid ""
-"Deze map is weg zodra Huismus wordt bijgewerkt. Koppel een map van je NAS of"
-" een USB-schijf en kies die."
+"Deze map is weg zodra Huismus wordt bijgewerkt. Koppel een map van je NAS of "
+"een USB-schijf en kies die."
 msgstr ""
 
 #, python-format
@@ -752,8 +752,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Terugzetten is niet gelukt. De stand van daarvoor staat in %(file)s; zet die"
-" terug om verder te gaan waar je was."
+"Terugzetten is niet gelukt. De stand van daarvoor staat in %(file)s; zet die "
+"terug om verder te gaan waar je was."
 msgstr ""
 
 msgid ""
@@ -870,8 +870,7 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Gekoppeld met %(service)s. Tijdens het voorbeeld maakt Huismus geen back-"
-"ups."
+"Gekoppeld met %(service)s. Tijdens het voorbeeld maakt Huismus geen back-ups."
 msgstr ""
 
 #, python-format
@@ -1219,8 +1218,7 @@ msgstr ""
 msgid ""
 "Dit mag hoogstens %(limit_value)d teken zijn. Nu zijn het er %(show_value)d."
 msgid_plural ""
-"Dit mag hoogstens %(limit_value)d tekens zijn. Nu zijn het er "
-"%(show_value)d."
+"Dit mag hoogstens %(limit_value)d tekens zijn. Nu zijn het er %(show_value)d."
 msgstr[0] ""
 msgstr[1] ""
 
@@ -1363,8 +1361,8 @@ msgid "Huismus kon de nieuwe versie niet controleren. Er is niets veranderd."
 msgstr ""
 
 msgid ""
-"Huismus kan zichzelf niet bijwerken. Download de nieuwe versie en installeer"
-" hem."
+"Huismus kan zichzelf niet bijwerken. Download de nieuwe versie en installeer "
+"hem."
 msgstr ""
 
 msgid ""
@@ -1535,8 +1533,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Samen komen de creditnota's hoger uit dan het factuurbedrag. Maak het bedrag"
-" op deze creditnota lager."
+"Samen komen de creditnota's hoger uit dan het factuurbedrag. Maak het bedrag "
+"op deze creditnota lager."
 msgstr ""
 
 msgid "Vul eerst de tekst bij btw verlegd in, bij Instellingen → KOR."
@@ -2028,6 +2026,12 @@ msgstr ""
 msgid "uitgaveregels"
 msgstr ""
 
+msgid "Uitgave nagekeken."
+msgstr ""
+
+msgid "Uitgave opgeslagen."
+msgstr ""
+
 msgid "Niet gelezen: dit lijkt geen bonnetje."
 msgstr ""
 
@@ -2064,8 +2068,8 @@ msgid "Adres"
 msgstr ""
 
 msgid ""
-"Vult Huismus in bij een bekende dienst. Bij een andere dienst: het adres dat"
-" die geeft voor OpenAI-compatibele apps."
+"Vult Huismus in bij een bekende dienst. Bij een andere dienst: het adres dat "
+"die geeft voor OpenAI-compatibele apps."
 msgstr ""
 
 msgid "Model"
@@ -2095,8 +2099,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Na het opslaan stuurt Huismus elk nieuw bonnetje uit je bonnetjesmap naar de"
-" dienst die je kiest. Die rekent de kosten met jou af."
+"Na het opslaan stuurt Huismus elk nieuw bonnetje uit je bonnetjesmap naar de "
+"dienst die je kiest. Die rekent de kosten met jou af."
 msgstr ""
 
 #, python-format
@@ -2135,14 +2139,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"De naam eindigt op .%(extension)s, maar het bestand is iets anders. Kies een"
-" ander bestand."
-msgstr ""
-
-msgid "Uitgave nagekeken."
-msgstr ""
-
-msgid "Uitgave opgeslagen."
+"De naam eindigt op .%(extension)s, maar het bestand is iets anders. Kies een "
+"ander bestand."
 msgstr ""
 
 msgid "Uitgave verwijderd."
@@ -2262,8 +2260,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Factuur %(number)s staat in %(currency)s, niet in euro's. Huismus importeert"
-" nog alleen euro's, dus er is niets opgeslagen."
+"Factuur %(number)s staat in %(currency)s, niet in euro's. Huismus importeert "
+"nog alleen euro's, dus er is niets opgeslagen."
 msgstr ""
 
 #, python-format
@@ -2338,8 +2336,7 @@ msgid ""
 msgstr ""
 
 #, python-format
-msgid ""
-"In %(export)s staan wel uitgaven, maar geen uitgaveregels, of andersom."
+msgid "In %(export)s staan wel uitgaven, maar geen uitgaveregels, of andersom."
 msgstr ""
 
 #, python-format
@@ -2347,8 +2344,8 @@ msgid ""
 "In %(file)s staat een kolom die Huismus niet kent: %(columns)s. Huismus "
 "neemt hem niet over, maar bewaart hem wel."
 msgid_plural ""
-"In %(file)s staan kolommen die Huismus niet kent: %(columns)s. Huismus neemt"
-" ze niet over, maar bewaart ze wel."
+"In %(file)s staan kolommen die Huismus niet kent: %(columns)s. Huismus neemt "
+"ze niet over, maar bewaart ze wel."
 msgstr[0] ""
 msgstr[1] ""
 
@@ -2360,8 +2357,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"%(label)s %(key)s verschilt tussen %(old)s en %(new)s. Huismus neemt die uit"
-" %(new)s, de nieuwste."
+"%(label)s %(key)s verschilt tussen %(old)s en %(new)s. Huismus neemt die uit "
+"%(new)s, de nieuwste."
 msgstr ""
 
 msgid "Er zat geen klantenbestand bij, dus Huismus importeert geen klanten."
@@ -2372,8 +2369,8 @@ msgstr ""
 
 msgid ""
 "Huismus neemt je periodieke facturen niet mee: Moneybird exporteert alleen "
-"de planning, niet de facturen zelf. Wat al gefactureerd is, staat gewoon bij"
-" je facturen."
+"de planning, niet de facturen zelf. Wat al gefactureerd is, staat gewoon bij "
+"je facturen."
 msgstr ""
 
 msgid "klanten"
@@ -2393,8 +2390,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Offerte %(number)s staat in %(currency)s, niet in euro's. Huismus importeert"
-" nog alleen euro's, dus er is niets opgeslagen."
+"Offerte %(number)s staat in %(currency)s, niet in euro's. Huismus importeert "
+"nog alleen euro's, dus er is niets opgeslagen."
 msgstr ""
 
 #, python-format
@@ -2435,8 +2432,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Huismus kent de indeling van %(file)s niet en vergelijkt je facturen er niet"
-" mee. De import gaat gewoon door."
+"Huismus kent de indeling van %(file)s niet en vergelijkt je facturen er niet "
+"mee. De import gaat gewoon door."
 msgstr ""
 
 #, python-format
@@ -2481,8 +2478,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Bij %(count)s factuur stonden de prijzen in Moneybird inclusief btw. Huismus"
-" nam daar de prijzen zonder btw uit de UBL."
+"Bij %(count)s factuur stonden de prijzen in Moneybird inclusief btw. Huismus "
+"nam daar de prijzen zonder btw uit de UBL."
 msgid_plural ""
 "Bij %(count)s facturen stonden de prijzen in Moneybird inclusief btw. "
 "Huismus nam daar de prijzen zonder btw uit de UBL."
@@ -2503,8 +2500,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"%(label)s de UBL wijkt af in %(fields)s. Huismus neemt hier de regels uit de"
-" Excel-export."
+"%(label)s de UBL wijkt af in %(fields)s. Huismus neemt hier de regels uit de "
+"Excel-export."
 msgstr ""
 
 #, python-format
@@ -2619,8 +2616,7 @@ msgid "Adres en sleutel"
 msgstr ""
 
 msgid ""
-"Elke AI-assistent die met een adres en een sleutel werkt, gebruikt deze "
-"twee."
+"Elke AI-assistent die met een adres en een sleutel werkt, gebruikt deze twee."
 msgstr ""
 
 msgid "Gekopieerd"
@@ -2710,8 +2706,8 @@ msgid "Opslaan"
 msgstr ""
 
 msgid ""
-"Hier koppel je een AI-assistent aan Huismus. Daarna werk je in de app van de"
-" assistent zelf."
+"Hier koppel je een AI-assistent aan Huismus. Daarna werk je in de app van de "
+"assistent zelf."
 msgstr ""
 
 msgid "Zo werkt het"
@@ -2748,8 +2744,8 @@ msgid "Nu back-up maken"
 msgstr ""
 
 msgid ""
-"Huismus maakt elke dag een back-up op elke plek die aan staat. Naar de cloud"
-" gaat hij versleuteld."
+"Huismus maakt elke dag een back-up op elke plek die aan staat. Naar de cloud "
+"gaat hij versleuteld."
 msgstr ""
 
 msgid "Map"
@@ -2930,8 +2926,8 @@ msgid "Maak bij je opslagdienst een apart wachtwoord voor Huismus."
 msgstr ""
 
 msgid ""
-"Download je facturen, offertes, klanten en uitgaven als CSV, met de pdf's en"
-" bonnetjes erbij. Werkt ook zonder Huismus."
+"Download je facturen, offertes, klanten en uitgaven als CSV, met de pdf's en "
+"bonnetjes erbij. Werkt ook zonder Huismus."
 msgstr ""
 
 msgid "Wat zit erin"
@@ -3049,8 +3045,7 @@ msgid "KOR-tekst"
 msgstr ""
 
 msgid ""
-"Verplicht zolang de KOR aan staat. Deze tekst komt onder elke nieuwe "
-"factuur."
+"Verplicht zolang de KOR aan staat. Deze tekst komt onder elke nieuwe factuur."
 msgstr ""
 
 msgid ""
@@ -3063,8 +3058,7 @@ msgstr ""
 msgid "Tekst bij btw verlegd"
 msgstr ""
 
-msgid ""
-"Komt onder elke factuur, offerte en creditnota met een regel “verlegd”."
+msgid "Komt onder elke factuur, offerte en creditnota met een regel “verlegd”."
 msgstr ""
 
 msgid "dagen"
@@ -3191,8 +3185,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Voor %(new_tag)s pas je eerst je <code>compose.yaml</code> aan: zet de regel"
-" <code>image</code> op <code>ghcr.io/codebyarne/huismus:%(new_tag)s</code>. "
+"Voor %(new_tag)s pas je eerst je <code>compose.yaml</code> aan: zet de regel "
+"<code>image</code> op <code>ghcr.io/codebyarne/huismus:%(new_tag)s</code>. "
 "Typ daarna in dezelfde map:"
 msgstr ""
 
@@ -3220,8 +3214,8 @@ msgstr ""
 
 msgid ""
 "Huismus kijkt bij het openen en daarna elke dag op GitHub of er een nieuwe "
-"versie is. Die installeert hij de volgende keer dat je Huismus opent, na een"
-" back-up. Er gaat niets van je administratie mee."
+"versie is. Die installeert hij de volgende keer dat je Huismus opent, na een "
+"back-up. Er gaat niets van je administratie mee."
 msgstr ""
 
 msgid "Nu zoeken"
@@ -3293,8 +3287,8 @@ msgid "Nog geen facturen of offertes voor deze klant."
 msgstr ""
 
 msgid ""
-"Een klant die je niet meer nodig hebt, archiveer je. De facturen en offertes"
-" blijven bewaard."
+"Een klant die je niet meer nodig hebt, archiveer je. De facturen en offertes "
+"blijven bewaard."
 msgstr ""
 
 msgid "Nog geen klanten"
@@ -3363,8 +3357,7 @@ msgid ""
 "koppelt. Koppel eerst een map, bijvoorbeeld van je NAS of een USB-schijf."
 msgstr ""
 
-msgid ""
-"Je hebt nog geen back-up. Kies de gekoppelde map, dan gaat het vanzelf."
+msgid "Je hebt nog geen back-up. Kies de gekoppelde map, dan gaat het vanzelf."
 msgstr ""
 
 msgid "Je hebt nog geen back-up. Kies een map, dan gaat het vanzelf."
@@ -3389,8 +3382,7 @@ msgstr ""
 msgid "Dit gaat naar de appbouwer:"
 msgstr ""
 
-msgid ""
-"Versturen lukte niet. Kijk of je internet hebt en probeer het nog eens."
+msgid "Versturen lukte niet. Kijk of je internet hebt en probeer het nog eens."
 msgstr ""
 
 msgid "Versturen"
@@ -3611,8 +3603,8 @@ msgid "Je kunt factureren"
 msgstr ""
 
 msgid ""
-"Je bedrijfsgegevens staan klaar. Voeg nu je eerste klant toe, daarna maak je"
-" je eerste factuur. Wat je net invulde, kun je later aanpassen in "
+"Je bedrijfsgegevens staan klaar. Voeg nu je eerste klant toe, daarna maak je "
+"je eerste factuur. Wat je net invulde, kun je later aanpassen in "
 "Instellingen."
 msgstr ""
 
@@ -3750,7 +3742,8 @@ msgid "Uitgeven…"
 msgstr ""
 
 #, python-format
-msgid "Het document krijgt het nummer <strong class=\"num\">%(number)s</strong>."
+msgid ""
+"Het document krijgt het nummer <strong class=\"num\">%(number)s</strong>."
 msgstr ""
 
 msgid "Het document krijgt het volgende nummer."
@@ -3933,8 +3926,7 @@ msgid "Crediteert factuur %(number)s"
 msgstr ""
 
 msgid ""
-"Klantgegevens zoals ze op de factuurdatum waren. Ze zijn sindsdien "
-"veranderd."
+"Klantgegevens zoals ze op de factuurdatum waren. Ze zijn sindsdien veranderd."
 msgstr ""
 
 msgid "Factuurdatum"
@@ -4007,9 +3999,9 @@ msgstr ""
 
 #, python-format
 msgid ""
-"%(number)s is uitgegeven. Een uitgegeven creditnota corrigeer je meestal met"
-" een nieuw document: dan blijft wat je klant kreeg zoals het was, en staat "
-"de correctie er apart naast."
+"%(number)s is uitgegeven. Een uitgegeven creditnota corrigeer je meestal met "
+"een nieuw document: dan blijft wat je klant kreeg zoals het was, en staat de "
+"correctie er apart naast."
 msgstr ""
 
 #, python-format
@@ -4028,8 +4020,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Hij wordt weer een concept, met nummer %(number)s en dezelfde datum. Pas aan"
-" wat nodig is en geef hem daarna opnieuw uit."
+"Hij wordt weer een concept, met nummer %(number)s en dezelfde datum. Pas aan "
+"wat nodig is en geef hem daarna opnieuw uit."
 msgstr ""
 
 #, python-format
@@ -4063,8 +4055,7 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Huismus maakt een lege concept-creditnota. Je kunt nog %(amount)s "
-"crediteren."
+"Huismus maakt een lege concept-creditnota. Je kunt nog %(amount)s crediteren."
 msgstr ""
 
 #, python-format
@@ -4099,9 +4090,9 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Je gaf deze al uit als %(number)s. Nu is hij weer een concept en bij opnieuw"
-" uitgeven houdt hij dit nummer. Had je klant hem al, stuur dan de nieuwe PDF"
-" en laat weten wat er veranderd is."
+"Je gaf deze al uit als %(number)s. Nu is hij weer een concept en bij opnieuw "
+"uitgeven houdt hij dit nummer. Had je klant hem al, stuur dan de nieuwe PDF "
+"en laat weten wat er veranderd is."
 msgstr ""
 
 msgid "Annuleren zet hem terug zoals je hem uitgaf."
@@ -4109,8 +4100,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Dit concept heeft al nummer %(number)s uit Moneybird. Bij uitgeven houdt hij"
-" dat nummer."
+"Dit concept heeft al nummer %(number)s uit Moneybird. Bij uitgeven houdt hij "
+"dat nummer."
 msgstr ""
 
 #, python-format
@@ -4307,6 +4298,14 @@ msgstr ""
 msgid "Naar inloggen"
 msgstr ""
 
+msgid "Regels"
+msgstr ""
+
+msgid ""
+"Vul het bruto bedrag in: wat je echt betaald hebt. Het btw-bedrag is alleen "
+"ter informatie en telt nergens mee."
+msgstr ""
+
 msgid "Regel"
 msgstr ""
 
@@ -4414,9 +4413,6 @@ msgstr ""
 msgid "Nieuwe uitgave"
 msgstr ""
 
-msgid "Bonnetjes zonder uitgave"
-msgstr ""
-
 #, python-format
 msgid "Huismus las dit bonnetje met %(service)s. Klopt alles?"
 msgstr ""
@@ -4432,12 +4428,6 @@ msgstr[1] ""
 
 msgid "Klopt"
 msgstr ""
-
-#, python-format
-msgid "Hierna nog %(count)s bonnetje."
-msgid_plural "Hierna nog %(count)s bonnetjes."
-msgstr[0] ""
-msgstr[1] ""
 
 #, python-format
 msgid "%(count)s bestand"
@@ -4469,24 +4459,9 @@ msgstr ""
 msgid "Bonnetje"
 msgstr ""
 
-#, python-format
-msgid "%(name)s openen"
-msgstr ""
-
-msgid "Uit je bonnetjesmap"
-msgstr ""
-
 msgid ""
 "Kies het bonnetje opnieuw: je browser bewaart het niet als er nog iets "
 "ontbrak."
-msgstr ""
-
-msgid "Regels"
-msgstr ""
-
-msgid ""
-"Vul het bruto bedrag in: wat je echt betaald hebt. Het btw-bedrag is alleen "
-"ter informatie en telt nergens mee."
 msgstr ""
 
 msgid "Uitgave verwijderen"
@@ -4506,12 +4481,11 @@ msgid ""
 "maken."
 msgstr ""
 
-msgid ""
-"Bedragen zijn bruto: wat je echt betaald hebt, inclusief eventuele btw."
+msgid "Bedragen zijn bruto: wat je echt betaald hebt, inclusief eventuele btw."
 msgstr ""
 
 #, python-format
-msgid "Nakijken (%(count)s)"
+msgid "Verwerken (%(count)s)"
 msgstr ""
 
 msgid "Nog geen uitgaven"
@@ -4570,6 +4544,32 @@ msgstr ""
 msgid "betekent dat er een bonnetje bij de uitgave zit."
 msgstr ""
 
+msgid "Verwerken"
+msgstr ""
+
+#, python-format
+msgid "%(position)s van %(total)s"
+msgstr ""
+
+msgid "Niets meer te verwerken."
+msgstr ""
+
+msgid "Naar Uitgaven"
+msgstr ""
+
+#, python-format
+msgid "Bonnetje %(name)s"
+msgstr ""
+
+msgid "Bonnetje openen"
+msgstr ""
+
+msgid "Geen bonnetje bij deze uitgave."
+msgstr ""
+
+msgid "Huismus leest dit bonnetje…"
+msgstr ""
+
 msgid ""
 "Huismus stuurt elk bonnetje uit je bonnetjesmap naar een AI-dienst die jij "
 "kiest, en maakt er een uitgave van. Jij kijkt hem na met Klopt."
@@ -4589,8 +4589,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Huismus kon je bonnetjes niet lezen. %(reason)s Ze wachten hier tot het weer"
-" lukt."
+"Huismus kon je bonnetjes niet lezen. %(reason)s Ze wachten hier tot het weer "
+"lukt."
 msgstr ""
 
 msgid "Naar de bonnetjes zonder uitgave"
@@ -4644,22 +4644,25 @@ msgstr ""
 msgid "Huismus haalt dan niets meer op. De bonnetjes die er al zijn, blijven."
 msgstr ""
 
+msgid "Bonnetjes zonder uitgave"
+msgstr ""
+
 #, python-format
 msgid "Uit de map %(place)s."
+msgstr ""
+
+#, python-format
+msgid "%(name)s openen"
 msgstr ""
 
 #, python-format
 msgid "Opgehaald %(moment)s"
 msgstr ""
 
-msgid "Huismus leest dit bonnetje…"
-msgstr ""
-
 msgid "Uitgave maken"
 msgstr ""
 
-msgid ""
-"Huismus haalt het bonnetje weg. Het bestand blijft in de map Opgehaald."
+msgid "Huismus haalt het bonnetje weg. Het bestand blijft in de map Opgehaald."
 msgstr ""
 
 msgid "Nog geen bonnetjes"
@@ -4728,8 +4731,8 @@ msgid "Moneybirds eigen rapporten"
 msgstr ""
 
 msgid ""
-"Hier wijken Moneybirds eigen rapporten meer dan een cent per factuurregel af"
-" van je facturen. Huismus importeert je facturen gewoon. Kijk na of er een "
+"Hier wijken Moneybirds eigen rapporten meer dan een cent per factuurregel af "
+"van je facturen. Huismus importeert je facturen gewoon. Kijk na of er een "
 "factuur ontbreekt."
 msgstr ""
 
@@ -4835,8 +4838,7 @@ msgid "Proefdraai: er is nog niets opgeslagen"
 msgstr ""
 
 #, python-format
-msgid ""
-"Huismus las %(count)s bestand. Hieronder zie je wat de import zou doen."
+msgid "Huismus las %(count)s bestand. Hieronder zie je wat de import zou doen."
 msgid_plural ""
 "Huismus las %(count)s bestanden. Hieronder zie je wat de import zou doen."
 msgstr[0] ""
@@ -4926,8 +4928,8 @@ msgid "Ziet het er goed uit?"
 msgstr ""
 
 msgid ""
-"Importeer nu met precies deze bestanden. Importeer je ze later nog eens, dan"
-" verandert er niets: wat er al is, slaat Huismus over."
+"Importeer nu met precies deze bestanden. Importeer je ze later nog eens, dan "
+"verandert er niets: wat er al is, slaat Huismus over."
 msgstr ""
 
 msgid "Nu echt importeren"
@@ -4946,8 +4948,8 @@ msgid "Bestanden kiezen"
 msgstr ""
 
 msgid ""
-"De proefdraai laat per bestand zien wat Huismus herkent en wat de import zou"
-" doen. Daarna importeer je met één klik, zonder de bestanden opnieuw te "
+"De proefdraai laat per bestand zien wat Huismus herkent en wat de import zou "
+"doen. Daarna importeer je met één klik, zonder de bestanden opnieuw te "
 "kiezen."
 msgstr ""
 
@@ -4961,8 +4963,8 @@ msgid "Log in bij Moneybird en open de administratie die je wilt verhuizen."
 msgstr ""
 
 msgid ""
-"Ga naar <strong>Instellingen › Boekhouding › Boekhouding exporteren</strong>"
-" en kies <strong>Download jaarexport</strong>."
+"Ga naar <strong>Instellingen › Boekhouding › Boekhouding exporteren</strong> "
+"en kies <strong>Download jaarexport</strong>."
 msgstr ""
 
 msgid ""
@@ -4997,8 +4999,8 @@ msgstr ""
 #, python-format
 msgid ""
 "We verzoeken je vriendelijk het bovenstaande bedrag van %(amount)s vóór "
-"%(date)s te voldoen op IBAN-nummer %(iban)s t.n.v. %(name)s onder vermelding"
-" van factuurnummer %(number)s."
+"%(date)s te voldoen op IBAN-nummer %(iban)s t.n.v. %(name)s onder vermelding "
+"van factuurnummer %(number)s."
 msgstr ""
 
 #, python-format
@@ -5209,9 +5211,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Huismus is gratis en open source, onder de <a "
-"href=\"%(repository)s/blob/main/LICENSE\">AGPL-3.0</a>. Een hobbyproject, "
-"gemaakt in Nederland."
+"Huismus is gratis en open source, onder de <a href=\"%(repository)s/blob/"
+"main/LICENSE\">AGPL-3.0</a>. Een hobbyproject, gemaakt in Nederland."
 msgstr ""
 
 msgid "Deze site telt bezoeken met GoatCounter, zonder cookies."
@@ -5285,8 +5286,7 @@ msgstr ""
 
 msgid ""
 "<strong>Bugs en wensen:</strong> open een issue. Kom je van Moneybird en "
-"gaat er iets mis bij het importeren, beschrijf het dan zonder echte "
-"gegevens."
+"gaat er iets mis bij het importeren, beschrijf het dan zonder echte gegevens."
 msgstr ""
 
 msgid ""
@@ -5298,9 +5298,9 @@ msgid "Zo begin je"
 msgstr ""
 
 msgid ""
-"Je hebt Python 3.12 of nieuwer nodig, <a "
-"href=\"https://docs.astral.sh/uv/\">uv</a> en Pango voor de pdf's (op een "
-"Mac: <code>brew install pango</code>)."
+"Je hebt Python 3.12 of nieuwer nodig, <a href=\"https://docs.astral.sh/uv/"
+"\">uv</a> en Pango voor de pdf's (op een Mac: <code>brew install pango</"
+"code>)."
 msgstr ""
 
 msgid "Huismus met negen jaar nepdata"
@@ -5311,26 +5311,25 @@ msgstr ""
 
 #, python-format
 msgid ""
-"<code>./scripts/verify.sh</code> is de poort: een wijziging is klaar als die"
-" groen is. Hoe de code in elkaar zit, staat in <a "
-"href=\"%(repository)s/blob/main/docs/architectuur.md\">docs/architectuur.md</a>,"
-" het ontwerp in <a href=\"%(repository)s/blob/main/SPEC.md\">SPEC.md</a>."
+"<code>./scripts/verify.sh</code> is de poort: een wijziging is klaar als die "
+"groen is. Hoe de code in elkaar zit, staat in <a href=\"%(repository)s/blob/"
+"main/docs/architectuur.md\">docs/architectuur.md</a>, het ontwerp in <a "
+"href=\"%(repository)s/blob/main/SPEC.md\">SPEC.md</a>."
 msgstr ""
 
 #, python-format
 msgid ""
 "Werk je met een AI-assistent, zoals Claude Code? De afspraken voor het "
-"project staan in <a "
-"href=\"%(repository)s/blob/main/CLAUDE.md\">CLAUDE.md</a>, en ook dan keurt "
-"<code>./scripts/verify.sh</code> elke wijziging."
+"project staan in <a href=\"%(repository)s/blob/main/CLAUDE.md\">CLAUDE.md</"
+"a>, en ook dan keurt <code>./scripts/verify.sh</code> elke wijziging."
 msgstr ""
 
 msgid "De regels van het huis"
 msgstr ""
 
 msgid ""
-"Een paar regels zijn hard, omdat het om iemands administratie gaat. De tests"
-" en de database bewaken ze."
+"Een paar regels zijn hard, omdat het om iemands administratie gaat. De tests "
+"en de database bewaken ze."
 msgstr ""
 
 msgid ""
@@ -5344,8 +5343,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"<strong>Nummers zonder gaten:</strong> een nummer krijgt een factuur pas bij"
-" het uitgeven."
+"<strong>Nummers zonder gaten:</strong> een nummer krijgt een factuur pas bij "
+"het uitgeven."
 msgstr ""
 
 msgid ""
@@ -5431,8 +5430,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Het overzicht van Huismus: wat openstaat, de omzet van dit jaar tegenover de"
-" KOR-grens, de laatste facturen en een offerte die op antwoord wacht."
+"Het overzicht van Huismus: wat openstaat, de omzet van dit jaar tegenover de "
+"KOR-grens, de laatste facturen en een offerte die op antwoord wacht."
 msgstr ""
 
 msgid "Waarom Huismus"
@@ -5451,8 +5450,8 @@ msgstr ""
 
 msgid ""
 "Er is geen Huismus-server. Je administratie gaat nergens heen, behalve naar "
-"je eigen back-upmap. Huismus kijkt alleen of er een nieuwe versie is, en dat"
-" kun je uitzetten."
+"je eigen back-upmap. Huismus kijkt alleen of er een nieuwe versie is, en dat "
+"kun je uitzetten."
 msgstr ""
 
 msgid "Met of zonder KOR"
@@ -5475,24 +5474,24 @@ msgstr ""
 
 msgid ""
 "Kies een klant, typ wat je deed en Huismus rekent het totaal uit. Met "
-"<strong>Uitgeven</strong> krijgt de factuur een vast nummer, zonder gaten in"
-" de reeks. Betaald? Dat zet je erbij met één klik."
+"<strong>Uitgeven</strong> krijgt de factuur een vast nummer, zonder gaten in "
+"de reeks. Betaald? Dat zet je erbij met één klik."
 msgstr ""
 
 msgid "Zo maak je een factuur"
 msgstr ""
 
 msgid ""
-"Animatie: een regel toevoegen aan een conceptfactuur, de factuur uitgeven en"
-" een betaling registreren."
+"Animatie: een regel toevoegen aan een conceptfactuur, de factuur uitgeven en "
+"een betaling registreren."
 msgstr ""
 
 msgid "Je ziet meteen wat openstaat"
 msgstr ""
 
 msgid ""
-"Per factuur zie je of hij betaald is, nog open staat of te laat is. Je zoekt"
-" op nummer of klant, en filtert op jaar."
+"Per factuur zie je of hij betaald is, nog open staat of te laat is. Je zoekt "
+"op nummer of klant, en filtert op jaar."
 msgstr ""
 
 msgid ""
@@ -5578,8 +5577,8 @@ msgstr ""
 msgid ""
 "Kom je van Moneybird? Huismus neemt je klanten, facturen, offertes en "
 "uitgaven één op één over, met de pdf's en bonnetjes. Eerst doet hij een "
-"proefdraai en vergelijkt hij elk totaal tot op de cent. Pas als jij het goed"
-" vindt, slaat hij iets op."
+"proefdraai en vergelijkt hij elk totaal tot op de cent. Pas als jij het goed "
+"vindt, slaat hij iets op."
 msgstr ""
 
 msgid "Zo stap je over"
@@ -5703,6 +5702,6 @@ msgid "Liever zelf draaien op een server?"
 msgstr ""
 
 msgid ""
-"Heb je een Raspberry Pi, een NAS of een eigen server, dan kun je Huismus ook"
-" in Docker draaien. Dat is voor wie daar handig mee is."
+"Heb je een Raspberry Pi, een NAS of een eigen server, dan kun je Huismus ook "
+"in Docker draaien. Dat is voor wie daar handig mee is."
 msgstr ""

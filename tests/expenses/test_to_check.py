@@ -70,13 +70,14 @@ def test_the_list_shows_the_pill_and_the_button_with_the_count_of_every_year(log
 
     page = logged_in.get(reverse("expenses:list")).content.decode()
 
-    assert "Nakijken (2)" in page
+    # The whole stack of Verwerken (huismus/expenses/batch.py).
+    assert "Verwerken (2)" in page
     assert page.count('class="pill pill-check"') == 1  # 2019 isn't shown
 
 
 def test_no_button_when_nothing_is_to_check(logged_in):
     _expense("Praxis")
-    assert "naar-nakijken" not in logged_in.get(reverse("expenses:list")).content.decode()
+    assert "naar-verwerken" not in logged_in.get(reverse("expenses:list")).content.decode()
 
 
 def test_the_filter_shows_only_what_to_check_of_every_year(logged_in):
@@ -110,8 +111,10 @@ def test_klopt_saves_and_goes_on_to_the_next_one(logged_in):
         reverse("expenses:edit", args=[first.pk]), _form(first, supplier="Gamma BV", klopt="1")
     )
 
-    # The order and "Overslaan": tests/expenses/test_batch.py.
-    assert response.url == reverse("expenses:edit", args=[second.pk])
+    # On in Verwerken, one done (tests/expenses/test_process.py).
+    assert (
+        response.url == reverse("expenses:process_item", args=["uitgave", second.pk]) + "?klaar=1"
+    )
     first.refresh_from_db()
     assert (first.needs_review, first.supplier) == (False, "Gamma BV")
 
@@ -121,11 +124,12 @@ def test_klopt_on_the_last_one_goes_to_the_list(logged_in):
     response = logged_in.post(
         reverse("expenses:edit", args=[expense.pk]), _form(expense, klopt="1"), follow=True
     )
-    assert response.redirect_chain[-1][0] == reverse("expenses:list")
-    assert "Uitgave nagekeken." in response.content.decode()
+    assert response.redirect_chain[-1][0] == reverse("expenses:process")
+    page = response.content.decode()
+    assert "Uitgave nagekeken." in page and "Niets meer te verwerken." in page
     # Twice (a second tab): saved again, same way, no error.
     again = logged_in.post(reverse("expenses:edit", args=[expense.pk]), _form(expense, klopt="1"))
-    assert again.url == reverse("expenses:list")
+    assert again.url == reverse("expenses:process")
 
 
 def test_klopt_with_an_error_keeps_the_mark(logged_in):

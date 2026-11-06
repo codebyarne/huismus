@@ -60,8 +60,8 @@ def test_set_up_a_folder_pick_up_now_and_make_an_expense(app, tmp_path):
     expect(app.locator("h1")).to_have_text("Bonnetjes zonder uitgave")
     app.get_by_role("link", name="Uitgave maken").click()
 
-    expect(app.locator("h1")).to_have_text("Nieuwe uitgave")
-    expect(app.locator("#bonnetje-uit-bakje")).to_contain_text("bouwmarkt.pdf")
+    expect(app.locator("h1")).to_have_text("Verwerken")
+    expect(app.locator(".process-receipt")).to_contain_text("bouwmarkt.pdf")
     app.get_by_label("Datum").fill("2026-11-05")
     app.get_by_label("Leverancier").fill("Bouwmarkt")
     app.locator("[name='lines-0-description']").fill("Schroeven")
@@ -70,7 +70,7 @@ def test_set_up_a_folder_pick_up_now_and_make_an_expense(app, tmp_path):
     app.get_by_role("button", name="Opslaan").click()
 
     expect(app.locator("#toasts")).to_contain_text("Uitgave opgeslagen.")
-    expect(app.get_by_text("bouwmarkt.pdf")).to_be_visible()
+    expect(app.locator("#niets-te-verwerken")).to_be_visible()
     expense = Expense.objects.get()
     assert expense.attachments.get().filename == "bouwmarkt.pdf"
     assert not Attachment.objects.in_tray().exists()
@@ -80,9 +80,9 @@ def test_set_up_a_folder_pick_up_now_and_make_an_expense(app, tmp_path):
 
 
 def test_make_expenses_of_three_receipts_one_after_the_other(app, tmp_path):
-    """Saving goes on to the next receipt, "Overslaan" skips one, and
-    after the last one you're on its expense (huismus-intern/besluiten.md,
-    2026-11-06, huismus/expenses/batch.py)."""
+    """ "Uitgave maken" opens Verwerken: saving goes on to the next receipt,
+    "Overslaan" skips one, and after the last one nothing is left
+    (huismus-intern/besluiten.md, 2026-11-06, huismus/expenses/batch.py)."""
     folder = tmp_path / "bonnetjes"
     folder.mkdir()
     inbox.choose_folder(folder)
@@ -93,6 +93,8 @@ def test_make_expenses_of_three_receipts_one_after_the_other(app, tmp_path):
     first, second, third = (
         r.filename for r in Attachment.objects.in_tray().order_by("-created_at", "-pk")
     )
+    receipt = app.locator(".process-receipt")
+    count = app.locator("#verwerken-teller")
 
     def fill(supplier):
         app.get_by_label("Datum").fill("2026-11-05")
@@ -103,27 +105,27 @@ def test_make_expenses_of_three_receipts_one_after_the_other(app, tmp_path):
 
     app.goto(app.base + "/uitgaven/bonnetjes/")
     app.get_by_role("link", name="Uitgave maken").first.click()
-    expect(app.locator("#bonnetje-uit-bakje")).to_contain_text(first)
-    expect(app.locator("#nog-bonnetjes")).to_contain_text("Hierna nog 2 bonnetjes.")
+    expect(count).to_have_text("1 van 3")
+    expect(receipt).to_contain_text(first)
     fill("Bouwmarkt")
 
     expect(app.locator("#toasts")).to_contain_text("Uitgave opgeslagen.")
-    expect(app.locator("h1")).to_have_text("Nieuwe uitgave")
-    expect(app.locator("#bonnetje-uit-bakje")).to_contain_text(second)
-    expect(app.locator("#nog-bonnetjes")).to_contain_text("Hierna nog 1 bonnetje.")
+    expect(count).to_have_text("2 van 3")
+    expect(receipt).to_contain_text(second)
     app.get_by_role("link", name="Overslaan").click()
 
-    expect(app.locator("#bonnetje-uit-bakje")).to_contain_text(third)
+    expect(count).to_have_text("3 van 3")
+    expect(receipt).to_contain_text(third)
     fill("Tankstation")
 
-    # Round again to the one skipped, now the last: no line, no skip.
-    expect(app.locator("#bonnetje-uit-bakje")).to_contain_text(second)
-    expect(app.locator("#nog-bonnetjes")).to_have_count(0)
+    # Round again to the one skipped, now the last: no skip.
+    expect(receipt).to_contain_text(second)
+    expect(count).to_have_text("3 van 3")
+    expect(app.locator("#overslaan")).to_have_count(0)
     fill("Kantoorwinkel")
 
     expect(app.locator("#toasts")).to_contain_text("Uitgave opgeslagen.")
-    expect(app.locator("h1")).to_contain_text("Kantoorwinkel")
-    expect(app.get_by_text(second)).to_be_visible()
+    expect(app.locator("#niets-te-verwerken")).to_contain_text("Niets meer te verwerken.")
     assert not Attachment.objects.in_tray().exists()
     assert Expense.objects.count() == 3
 

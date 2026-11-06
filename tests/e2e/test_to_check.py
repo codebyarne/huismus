@@ -25,17 +25,19 @@ def _from_the_assistant(supplier, cents):
 
 
 def test_check_three_expenses_from_the_assistant_one_after_the_other(app):
-    """ "Klopt" goes on to the next one, "Overslaan" skips one without
-    saving, and after the last one you're back on the list
-    (huismus-intern/besluiten.md, 2026-11-06, huismus/expenses/batch.py)."""
+    """From an expense on the Nakijken list, "Klopt" goes on in Verwerken,
+    "Overslaan" skips one without saving, and after the last one nothing is
+    left (huismus-intern/besluiten.md, 2026-11-06, huismus/expenses/batch.py)."""
     _from_the_assistant("Bouwmarkt", 4235)
     skipped = _from_the_assistant("NS", 1890)
     last = _from_the_assistant("Kantoorwinkel", 2599)
     # Newest first, as on the list: Kantoorwinkel, NS, Bouwmarkt.
+    count = app.locator("#verwerken-teller")
 
     app.goto(app.base + "/uitgaven/")
     expect(app.locator(".pill-check")).to_have_count(3)
-    app.locator("#naar-nakijken").click()
+    expect(app.locator("#naar-verwerken")).to_have_text("Verwerken (3)")
+    app.goto(app.base + "/uitgaven/?nakijken=1")
     expect(app.locator("#filter-nakijken")).to_contain_text("Alleen uitgaven om na te kijken.")
     # The filter line lines up with the rows.
     line = app.locator("#filter-nakijken").bounding_box()
@@ -48,27 +50,28 @@ def test_check_three_expenses_from_the_assistant_one_after_the_other(app):
     app.get_by_role("button", name="Klopt").click()
 
     expect(app.locator("#toasts")).to_contain_text("Uitgave nagekeken.")
+    expect(count).to_have_text("2 van 3")
     expect(app.get_by_label("Leverancier")).to_have_value("NS")
-    expect(app.locator("#nog-nakijken")).to_have_text("Hierna nog 1.")
     last.refresh_from_db()
     assert (last.supplier, last.needs_review) == ("Kantoorwinkel Noord", False)
 
     app.get_by_role("link", name="Overslaan").click()
     expect(app.get_by_label("Leverancier")).to_have_value("Bouwmarkt")
+    expect(count).to_have_text("3 van 3")
     skipped.refresh_from_db()
     assert skipped.needs_review
 
     app.get_by_role("button", name="Klopt").click()
-    # Round again to the one skipped, now the only one: no count, no skip.
+    # Round again to the one skipped, now the only one: no skip.
     expect(app.get_by_label("Leverancier")).to_have_value("NS")
-    expect(app.locator("#nakijken")).to_be_visible()
+    expect(count).to_have_text("3 van 3")
     expect(app.locator("#overslaan")).to_have_count(0)
-    expect(app.locator("#nog-nakijken")).to_have_count(0)
 
     app.get_by_role("button", name="Klopt").click()
     expect(app.locator("#toasts")).to_contain_text("Uitgave nagekeken.")
-    expect(app.locator("h1")).to_have_text("Uitgaven")
-    expect(app.locator("#naar-nakijken")).to_have_count(0)
+    expect(app.locator("#niets-te-verwerken")).to_contain_text("Niets meer te verwerken.")
+    app.get_by_role("link", name="Naar Uitgaven").click()
+    expect(app.locator("#naar-verwerken")).to_have_count(0)
     assert not Expense.objects.filter(needs_review=True).exists()
 
 

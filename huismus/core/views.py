@@ -268,7 +268,13 @@ def media(request, path):
     normalized = posixpath.normpath(path).lstrip("/")
     if not normalized.startswith(SERVED_MEDIA_DIRS):
         raise Http404
-    return static_serve(request, normalized, document_root=settings.MEDIA_ROOT)
+    response = static_serve(request, normalized, document_root=settings.MEDIA_ROOT)
+    if response.get("Content-Type", "").startswith("application/pdf"):
+        # Verwerken shows a PDF receipt in a frame on Huismus's own page
+        # (process.html); every other response keeps DENY
+        # (XFrameOptionsMiddleware leaves a header that is already set).
+        response["X-Frame-Options"] = "SAMEORIGIN"
+    return response
 
 
 def favicon(request):

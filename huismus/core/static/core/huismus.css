@@ -785,6 +785,25 @@ a:hover { color: var(--primary-hover); }
 .receipt .r-row { display: flex; align-items: center; gap: 4px; }
 .receipt .r-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: var(--fw-semibold); font-size: var(--fs-sm); }
 
+/* Verwerken (huismus-intern/besluiten.md, 2026-11-06): the receipt large
+   beside the fields, staying in view while the fields scroll; on a phone
+   above them, a photo at most half the screen high. A PDF in the browser's
+   viewer only on a wide screen (app.js); elsewhere its name and "Bonnetje
+   openen". */
+.process { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s-6); align-items: start; }
+.process-receipt { position: sticky; top: var(--s-6); padding: var(--s-4); display: flex; flex-direction: column; gap: var(--s-3); align-items: center; }
+.process-img { display: block; width: 100%; height: auto; max-height: calc(100dvh - 180px); object-fit: contain; border-radius: 8px; background: var(--surface-2); }
+.process-pdf { display: block; width: 100%; height: calc(100dvh - 180px); border: 1px solid var(--border); border-radius: 8px; background: var(--surface-2); }
+.process-file { width: 100%; display: flex; align-items: center; gap: var(--s-3); padding: var(--s-4); border-radius: 8px; background: var(--surface-2); color: var(--text-muted); }
+.process-file .r-name { min-width: 0; overflow-wrap: anywhere; font-weight: var(--fw-semibold); color: var(--text); }
+.process-pdf[hidden], .process-file[hidden] { display: none; }
+.process-receipt > .dropzone { width: 100%; padding: var(--s-5); }
+@media (max-width: 980px) {
+  .process { grid-template-columns: minmax(0, 1fr); gap: var(--s-4); }
+  .process-receipt { position: static; }
+  .process-img { max-height: 50dvh; }
+}
+
 .report { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--sh-1); overflow: hidden; }
 .report + .report { margin-top: var(--s-3); }
 .stack > .report + .report { margin-top: 0; }
