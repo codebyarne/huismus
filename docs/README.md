@@ -32,9 +32,9 @@ die in- en uitzoomt en een klik- of toetsgeluid bij elke klik en toets (CC0,
 van Kenney). Ze komen in `~/Downloads`, niet in de repo.
 
 - `factuur`: een nieuwe factuur krijgt een klant en een regel, en wordt uitgegeven.
-- `bonnetjes`: een (verzonnen) foto van een bonnetje komt binnen via de
-  bonnetjesmap; de AI-assistent heeft de uitgave gemaakt (Nakijken); jij zegt
-  "Klopt". Alleen wat in Huismus gebeurt: de foto onderweg en de assistent zijn
+- `bonnetjes`: drie (verzonnen) foto's van bonnetjes komen samen binnen via
+  de bonnetjesmap; de AI-assistent heeft de uitgaven gemaakt (Nakijken); jij
+  zegt bij elk "Klopt". Alleen wat in Huismus gebeurt: de foto onderweg en de assistent zijn
   andere apps, dat vertelt de tekst bij het filmpje. Wat de assistent doet,
   doet het script echt via `/mcp`.
 

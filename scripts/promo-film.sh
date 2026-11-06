@@ -5,7 +5,7 @@
 # scherm in het filmpje er anders uit is gaan zien. Duurt een paar minuten.
 #
 #   ./scripts/promo-film.sh factuur      # een factuur maken en uitgeven
-#   ./scripts/promo-film.sh bonnetjes    # bonnetje komt binnen, AI-assistent vulde in, Klopt
+#   ./scripts/promo-film.sh bonnetjes    # bonnetjes komen binnen, AI-assistent vulde in, Klopt
 #   ./scripts/promo-film.sh bonnetjes ergens/anders.mp4 muziek.mp3
 #
 # Standaard naar ~/Downloads/huismus-<film>.mp4. Elke klik en toetsaanslag

@@ -8,8 +8,9 @@ Clips of about twenty seconds that loop, for LinkedIn and the like:
 
 - factuur: a new invoice gets a customer and a line, Huismus adds it up, and
   it is issued.
-- bonnetjes: a photo of a receipt comes in from the receipts folder; the
-  user's AI assistant has added the expense (Nakijken); the user checks it.
+- bonnetjes: a day's photos of receipts come in from the receipts folder;
+  the user's AI assistant has added the expenses (Nakijken); the user checks
+  them, the first calmly, the others quicker.
   Only what happens in Huismus: the photo on the road and the assistant are
   other apps, and the post with the clip tells that part.
 
@@ -41,6 +42,7 @@ import tempfile
 import time
 import urllib.request
 import wave
+from dataclasses import dataclass
 from datetime import date, datetime
 from pathlib import Path
 
@@ -51,6 +53,7 @@ from site_beelden import TOKEN, _env, _manage, _prepare, server
 
 FPS = 30
 KEYS_PER_SECOND = 6.5
+SPINNER_TURN = 0.7  # seconds per turn, as huismus.css's hm-spin
 # The browser window's width; its height is per film (FILMS): tall enough
 # that the page fits without scrolling, so the camera only has to move.
 VW, SCALE = 1440, 2
@@ -138,6 +141,13 @@ class Film:
             x, y = self.pointer.at(self.frame)
             # A new page, or HTMX swapping the body, takes the pointer away.
             self.page.evaluate(POINTER)
+            # Spinners turn on the film's time: with reduced motion Huismus
+            # stops their animation, and a frame takes far longer than 1/FPS.
+            self.page.evaluate(
+                "turn => document.querySelectorAll('.spinner').forEach(s => {"
+                " s.style.animation = 'none'; s.style.transform = `rotate(${turn}turn)`; })",
+                self.frame / (SPINNER_TURN * FPS),
+            )
             self.page.evaluate(
                 "([x, y]) => document.getElementById('film-pointer').style.transform ="
                 " `translate(${x}px, ${y}px)`",
@@ -275,16 +285,65 @@ def invoice(film: Film, url: str, _key: str) -> None:
 
 # -- The receipts film ---------------------------------------------------------
 
-SUPPLIER, AMOUNT, VAT, CATEGORY, PHOTO = (
-    "Bouwmarkt Noord",
-    "42,35",
-    "7,35",
-    "Kantoor",
-    "IMG_0412.jpg",
-)
+
+@dataclass
+class Receipt:
+    """A made-up receipt: what the photo shows and the expense it becomes."""
+
+    supplier: str
+    address: str
+    items: list[tuple[str, str]]
+    total: str
+    vat: str
+    category: str
+    description: str
+    time: str
+    photo: str
 
 
-def receipt_photo(day: date) -> bytes:
+# Three receipts from one day, as they come in together.
+RECEIPTS = [
+    Receipt(
+        "Bouwmarkt Noord",
+        "Industrieweg 4, Voorbeeldstad",
+        [
+            ("Verlengsnoer 5m", "12,99"),
+            ("Bureaulamp LED", "24,95"),
+            ("Schroeven 4x30 (2x)", "4,41"),
+        ],
+        "42,35",
+        "7,35",
+        "Kantoor",
+        "Verlengsnoer, bureaulamp, schroeven",
+        "10:12",
+        "IMG_0412.jpg",
+    ),
+    Receipt(
+        "Parkeergarage Centrum",
+        "Stationsplein 1, Voorbeeldstad",
+        [("Parkeren 2u 40m", "7,50")],
+        "7,50",
+        "1,30",
+        "Reiskosten",
+        "Parkeren bij de klant",
+        "14:05",
+        "IMG_0415.jpg",
+    ),
+    Receipt(
+        "Kantoorboekhandel Plein",
+        "Plein 12, Voorbeeldstad",
+        [("Notitieboek A5", "12,95"), ("Pennen (3x)", "6,00")],
+        "18,95",
+        "3,29",
+        "Kantoor",
+        "Notitieboek en pennen",
+        "16:48",
+        "IMG_0419.jpg",
+    ),
+]
+
+
+def receipt_photo(receipt: Receipt, day: date) -> bytes:
     """A made-up till receipt on a table, as a phone photographs it (JPEG)."""
     try:
         font = lambda size, bold=False: ImageFont.truetype(  # noqa: E731
@@ -313,20 +372,19 @@ def receipt_photo(day: date) -> bytes:
         )
         y += size + 16
 
-    centred(SUPPLIER.upper(), 44, True)
-    centred("Industrieweg 4, Voorbeeldstad", 24)
+    centred(receipt.supplier.upper(), 44 if len(receipt.supplier) < 18 else 36, True)
+    centred(receipt.address, 24)
     y += 20
     centred("-" * 38)
-    row("Verlengsnoer 5m", "12,99")
-    row("Bureaulamp LED", "24,95")
-    row("Schroeven 4x30 (2x)", "4,41")
+    for item, price in receipt.items:
+        row(item, price)
     centred("-" * 38)
-    row("TOTAAL", AMOUNT, 38, True)
-    row("Pin", AMOUNT)
-    row("waarvan 21% btw", VAT, 24)
+    row("TOTAAL", receipt.total, 38, True)
+    row("Pin", receipt.total)
+    row("waarvan 21% btw", receipt.vat, 24)
     y += 30
-    centred(f"{day:%d-%m-%Y}  14:32")
-    centred("Bon 0412  Kassa 3", 24)
+    centred(f"{day:%d-%m-%Y}  {receipt.time}")
+    centred(f"Bon {receipt.photo[4:8]}  Kassa 3", 24)
     y += 20
     centred("Bedankt en tot ziens!", 28)
     for x in range(0, width, 20):  # the torn-off bottom edge
@@ -342,19 +400,20 @@ def receipt_photo(day: date) -> bytes:
 
 
 def prepare_receipts(env: dict, work: Path) -> None:
-    """A receipts folder with the photo in it, as the phone left it, and a
-    key for the AI assistant (in `work`/mcp-key)."""
+    """A receipts folder with the photos in it, as the phone left them, and
+    a key for the AI assistant (in `work`/mcp-key)."""
     # A home folder with Dropbox in it, so that Huismus names the folder the
     # way the phone does: "Dropbox › Huismus bonnetjes", not a temporary path.
     home = work / "thuis"
     folder = home / "Dropbox" / "Huismus bonnetjes"
     folder.mkdir(parents=True)
     os.environ["HOME"] = env["HOME"] = str(home)
-    photo = folder / PHOTO
-    photo.write_bytes(receipt_photo(date.today()))
-    # Huismus waits until a file is a minute old (inbox.SETTLE_SECONDS).
-    old = time.time() - 120
-    os.utime(photo, (old, old))
+    for receipt in RECEIPTS:
+        photo = folder / receipt.photo
+        photo.write_bytes(receipt_photo(receipt, date.today()))
+        # Huismus waits until a file is a minute old (inbox.SETTLE_SECONDS).
+        old = time.time() - 120
+        os.utime(photo, (old, old))
     # Not fetched yet: in the film "Nu ophalen" does that.
     _manage(
         env,
@@ -388,34 +447,32 @@ def ask_huismus(url: str, key: str, tool: str, arguments: dict) -> dict:
     return result.get("structuredContent") or json.loads(result["content"][0]["text"])
 
 
-def assistant_adds_expense(url: str, key: str) -> None:
+def assistant_adds_expenses(url: str, key: str) -> None:
     """What the user's AI assistant does in its own app, out of the film:
-    find the receipt, read it, add the expense (then marked Nakijken)."""
+    for each receipt, read it and add the expense (then marked Nakijken)."""
     today = date.today()
-    waiting = ask_huismus(url, key, "list_receipts", {})
-    receipt = next(r for r in waiting["receipts"] if r["name"] == PHOTO)
-    ask_huismus(url, key, "read_receipt", {"id": receipt["id"]})
-    ask_huismus(
-        url,
-        key,
-        "add_expense",
-        {
+    waiting = ask_huismus(url, key, "list_receipts", {})["receipts"]
+    for receipt in RECEIPTS:
+        found = next(r for r in waiting if r["name"] == receipt.photo)
+        ask_huismus(url, key, "read_receipt", {"id": found["id"]})
+        line = {"amount": receipt.total, "vat_info": receipt.vat, "category": receipt.category}
+        expense = {
             "date": today.isoformat(),
-            "supplier": SUPPLIER,
-            "description": "Verlengsnoer, bureaulamp, schroeven",
-            "lines": [{"amount": AMOUNT, "vat_info": VAT, "category": CATEGORY}],
-            "receipt_id": receipt["id"],
-        },
-    )
+            "supplier": receipt.supplier,
+            "description": receipt.description,
+            "lines": [line],
+            "receipt_id": found["id"],
+        }
+        ask_huismus(url, key, "add_expense", expense)
 
 
 def receipts(film: Film, url: str, key: str) -> None:
-    """Only what happens in Huismus. The photo on the road and the AI
+    """Only what happens in Huismus. The photos on the road and the AI
     assistant happen in other apps; the post that goes with the clip tells
     that part."""
     page = film.page
 
-    # 1. The photo from the road comes in.
+    # 1. The photos from the road come in, a day's worth at once.
     page.goto(f"{url}/uitgaven/bonnetjes/")
     page.wait_for_load_state("networkidle")
     fetch = "button:has-text('Nu ophalen')"
@@ -427,47 +484,63 @@ def receipts(film: Film, url: str, key: str) -> None:
     film.point_to(fetch, 16, ox=0.45)
     film.shoot(18)
     film.click(fetch, 0)
-    # "Bezig met ophalen…" for a moment; Huismus checks every 3 seconds whether
-    # the look is done, so skip ahead on the page's clock, unfilmed.
-    film.shoot(12)
+    # "Bezig met ophalen…" with its spinner, a little closer; then, since
+    # Huismus checks only every 3 seconds whether the look is done, skip
+    # ahead on the page's clock, unfilmed.
+    sx, sy, _, sh = film.box("#bonnetjes-bezig")
+    film.cam_to(film.view(sx - 20, y - 40, 560, sy + sh + 50 - y, margin=1.0), 18)
+    film.shoot(45)
     for _ in range(100):
-        if page.locator(".receipt").count():
+        if page.locator(".receipt").count() == len(RECEIPTS):
             break
         page.clock.run_for(500)
         page.wait_for_load_state("networkidle")
-    film.cam_to(film.view(*film.box(".receipt"), margin=1.7), 22)
-    film.shoot(40)
+    film.cam_to(film.view(*film.box("#bonnetjes-lijst"), margin=1.15), 22)
+    film.shoot(45)
 
-    # 2. The assistant made the expense; it waits to be checked.
-    assistant_adds_expense(url, key)
+    # 2. The assistant made the expenses; they wait to be checked.
+    assistant_adds_expenses(url, key)
     page.goto(f"{url}/uitgaven/")
     page.wait_for_load_state("networkidle")
-    row = f"tr:has-text({SUPPLIER!r})"
-    film.camera = Move.still(film.view(*film.box(row), margin=1.15))
+    rows = [f"tr:has-text({receipt.supplier!r})" for receipt in RECEIPTS]
+    x, y, w, _ = film.box(rows[0])
+    _, last_y, _, last_h = film.box(rows[-1])
+    top = min(y, last_y)
+    film.camera = Move.still(film.view(x, top - 50, w, max(y, last_y) + last_h - top + 70))
     film.pointer = Move.still(film.pointer.at(film.frame))
-    film.shoot(16)
-    film.point_to(f"{row} a", 16, ox=0.3)
-    film.shoot(20)
-    film.click(f"{row} a", 2)
+    film.shoot(30)
 
-    # 3. The banner and the receipt, down to what the assistant filled in.
-    x, y, w, _ = film.box("#nakijken")
-    film.cam_to(film.view(x - 20, y - 60, w + 40, 640, margin=1.0), 20)
-    film.shoot(36)
-    _, ay, _, ah = film.box("[name=lines-0-amount_cents]")
-    _, dy, _, _ = film.box("#id_date")
-    film.cam_to(film.view(x - 20, dy - 60, w + 40, ay + ah + 40 - dy + 60, margin=1.0), 36)
-    film.shoot(56)
+    # 3. Checking them: the first one calmly, the others quicker.
+    for number, (receipt, row) in enumerate(zip(RECEIPTS, rows, strict=True)):
+        check(film, receipt, row, calm=number == 0)
 
-    # 4. Klopt.
-    klopt = "button[name=klopt]"
-    film.cam_to(film.view(x - 20, y - 60, w + 40, 640, margin=1.0), 30)
-    film.point_to(klopt, 30)
-    film.shoot(40)
-    film.click(klopt, 2)
-    # Back on the list: the whole app, with "Uitgave nagekeken." at the top.
+    # 4. All checked: the whole app, with "Uitgave nagekeken." at the top.
     film.cam_to(WHOLE_WINDOW, 24)
     film.shoot(60)
+
+
+def check(film: Film, receipt: Receipt, row: str, calm: bool) -> None:
+    """From the list to the expense, and Klopt. Huismus goes back to the
+    list, with only what is still to check while there is any."""
+    if not calm:
+        film.cam_to(film.view(*film.box(row), margin=1.25), 14)
+    film.point_to(f"{row} a", 14 if calm else 10, ox=0.3)
+    film.shoot(18 if calm else 12)
+    film.click(f"{row} a", 2)
+    x, y, w, _ = film.box("#nakijken")
+    film.cam_to(film.view(x - 20, y - 60, w + 40, 640, margin=1.0), 20 if calm else 14)
+    film.shoot(36 if calm else 20)
+    if calm:
+        # Down to what the assistant filled in, and back.
+        _, ay, _, ah = film.box("[name=lines-0-amount_cents]")
+        _, dy, _, _ = film.box("#id_date")
+        film.cam_to(film.view(x - 20, dy - 60, w + 40, ay + ah + 100 - dy, margin=1.0), 36)
+        film.shoot(56)
+        film.cam_to(film.view(x - 20, y - 60, w + 40, 640, margin=1.0), 30)
+    klopt = "button[name=klopt]"
+    film.point_to(klopt, 30 if calm else 14)
+    film.shoot(40 if calm else 18)
+    film.click(klopt, 2)
 
 
 RATE = 48_000
