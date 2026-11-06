@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """Films a short promo clip of Huismus, run by scripts/promo-film.sh:
 
-    promo_film.py <file.mp4>
+    promo_film.py <file.mp4> [music]
 
 Sixteen silent seconds that loop, for LinkedIn and the like: a new invoice
 gets a customer and a line, Huismus adds it up, and it is issued.
@@ -14,14 +14,21 @@ glides between close-ups (`Film.cam_to`) without ever scaling a pixel up much,
 so text stays sharp. A drawn mouse pointer shows where the clicks go, since a
 headless browser has none.
 
+Every click and key gets a soft tick on the soundtrack, made here (no sound
+files). Music is optional: any audio file, mixed in under the ticks. Mind
+its licence before you post the clip.
+
 The server, the made-up administration and the login are those of
 scripts/site_beelden.py.
 """
 
 import io
+import math
+import random
 import subprocess
 import sys
 import tempfile
+import wave
 from pathlib import Path
 
 import imageio_ffmpeg
@@ -89,6 +96,8 @@ class Film:
         self.frame = 0
         self.camera = Move.still(WHOLE_WINDOW)
         self.pointer = Move.still((VW + 40, VH / 2))
+        # (frame, "click" or "key"): where the soundtrack gets a tick.
+        self.sounds: list[tuple[int, str]] = []
 
     def box(self, selector: str) -> tuple[float, float, float, float]:
         b = self.page.locator(selector).first.bounding_box()
@@ -128,10 +137,13 @@ class Film:
 
     def type(self, text: str, frames_per_key: int) -> None:
         for key in text:
+            self.sounds.append((self.frame, "key"))
             self.page.keyboard.type(key)
             self.shoot(frames_per_key)
 
     def press_pointer(self, down: bool) -> None:
+        if down:
+            self.sounds.append((self.frame, "click"))
         self.page.evaluate(
             f"document.getElementById('film-pointer').classList.toggle('down', {str(down).lower()})"
         )
@@ -226,7 +238,60 @@ def scene(film: Film) -> None:
     film.shoot(80)
 
 
-def encode(frames: Path, out: Path) -> None:
+RATE = 48_000
+
+
+def _tick(seconds: float, decay: float, loudness: float, tone: float, rng) -> list[float]:
+    """A short burst of noise that dies away, with a faint pitch in it: a
+    mouse click (lower, louder) or a key (shorter, softer). Made here, so
+    there is no sound file whose licence we have to mind."""
+    samples, previous = [], 0.0
+    for i in range(int(seconds * RATE)):
+        t = i / RATE
+        noise = rng.uniform(-1, 1)
+        # The difference of two noise samples is noise without the low rumble.
+        crisp, previous = noise - previous, noise
+        body = 0.6 * crisp + 0.4 * math.sin(2 * math.pi * tone * t)
+        samples.append(loudness * body * math.exp(-t / decay))
+    return samples
+
+
+def soundtrack(sounds: list[tuple[int, str]], frames: int, out: Path) -> None:
+    """A mono WAV as long as the film, with a tick at every click and key."""
+    rng = random.Random(1)  # the same clip every run
+    track = [0.0] * (frames * RATE // FPS + RATE // 10)
+    for frame, kind in sounds:
+        if kind == "click":
+            tick = _tick(0.03, 0.004, 0.55, 1400, rng)
+        else:
+            tick = _tick(0.015, 0.0025, rng.uniform(0.18, 0.26), rng.uniform(2200, 3000), rng)
+        start = frame * RATE // FPS
+        for i, value in enumerate(tick):
+            track[start + i] += value
+    with wave.open(str(out), "wb") as file:
+        file.setnchannels(1)
+        file.setsampwidth(2)
+        file.setframerate(RATE)
+        file.writeframes(
+            b"".join(
+                int(max(-1, min(1, v)) * 32767).to_bytes(2, "little", signed=True) for v in track
+            )
+        )
+
+
+def encode(frames: Path, sound: Path, music: Path | None, out: Path) -> None:
+    """The frames and the ticks into an mp4, with music under it if given:
+    quieter than the ticks, cut to the film's length and faded out."""
+    seconds = len(list(frames.glob("*.png"))) / FPS
+    if music:
+        inputs = ["-i", str(music)]
+        mix = (
+            f"[2:a]volume=0.35,atrim=0:{seconds},afade=t=in:d=0.5,"
+            f"afade=t=out:st={seconds - 1.5}:d=1.5[m];"
+            "[1:a][m]amix=inputs=2:duration=first:normalize=0[a]"
+        )
+    else:
+        inputs, mix = [], "[1:a]anull[a]"
     subprocess.run(
         [
             imageio_ffmpeg.get_ffmpeg_exe(),
@@ -234,6 +299,12 @@ def encode(frames: Path, out: Path) -> None:
             "-loglevel", "error",
             "-framerate", str(FPS),
             "-i", str(frames / "%05d.png"),
+            "-i", str(sound),
+            *inputs,
+            "-filter_complex", mix,
+            "-map", "0:v", "-map", "[a]",
+            "-c:a", "aac", "-b:a", "192k",
+            "-shortest",
             "-c:v", "libx264",
             "-pix_fmt", "yuv420p",  # plays everywhere, LinkedIn included
             "-crf", "18",
@@ -245,7 +316,7 @@ def encode(frames: Path, out: Path) -> None:
     )  # fmt: skip
 
 
-def main(out: Path) -> None:
+def main(out: Path, music: Path | None) -> None:
     with tempfile.TemporaryDirectory() as work, sync_playwright() as playwright:
         administration, _, releases = _prepare(Path(work))
         # The site's KOR line says "(voorbeeldtekst)"; in a promo it should read as real.
@@ -276,9 +347,12 @@ def main(out: Path) -> None:
             film = Film(page, frames)
             scene(film)
             browser.close()
-        encode(frames, out)
+        sound = Path(work) / "ticks.wav"
+        soundtrack(film.sounds, film.frame, sound)
+        encode(frames, sound, music, out)
     print(f"{out}: {film.frame / FPS:.1f} seconden", flush=True)
 
 
 if __name__ == "__main__":
-    main(Path(sys.argv[1]).resolve())
+    music = Path(sys.argv[2]).resolve() if len(sys.argv) > 2 else None
+    main(Path(sys.argv[1]).resolve(), music)
