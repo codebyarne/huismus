@@ -51,6 +51,7 @@ from playwright.sync_api import Page, sync_playwright
 from site_beelden import TOKEN, _env, _manage, _prepare, server
 
 FPS = 30
+KEYS_PER_SECOND = 6.5
 # The browser window: tall enough that the whole invoice fits without
 # scrolling, so the camera only has to move, never the page.
 VW, VH, SCALE = 1440, 1120, 2
@@ -119,6 +120,7 @@ class Film:
         self.frame = 0
         self.camera = Move.still(WHOLE_WINDOW)
         self.pointer = Move.still((VW + 40, VH / 2))
+        self.rng = random.Random(7)  # the same typing rhythm every run
         # (frame, "click" or "key"): where the soundtrack gets a tick.
         self.sounds: list[tuple[int, str]] = []
 
@@ -160,18 +162,24 @@ class Film:
             image.save(self.frames / f"{self.frame:05d}.png")
             self.frame += 1
 
-    def type(self, text: str, frames_per_key: int) -> None:
+    def _key_frames(self, key: str) -> int:
+        """How long a key takes: a quick typist's 6.5 keys a second, never
+        quite even, and a beat longer after a word."""
+        frames = FPS / KEYS_PER_SECOND * self.rng.uniform(0.7, 1.4)
+        return round(frames + (3 if key == " " else 0))
+
+    def type(self, text: str) -> None:
         for key in text:
             self.sounds.append((self.frame, "key"))
             self.page.keyboard.type(key)
-            self.shoot(frames_per_key)
+            self.shoot(self._key_frames(key))
 
-    def type_in_panel(self, text: str, frames_per_key: int) -> None:
+    def type_in_panel(self, text: str) -> None:
         """Typing in the drawn chat panel, which has no real text field."""
         for end in range(1, len(text) + 1):
             self.sounds.append((self.frame, "key"))
             self.page.evaluate("text => assistent.typing(text)", text[:end])
-            self.shoot(frames_per_key)
+            self.shoot(self._key_frames(text[end - 1]))
 
     def animate(self, script: str, frames: int, **values) -> None:
         """Runs `script` (a function of t and the values) before each frame,
@@ -221,7 +229,7 @@ def invoice(film: Film, url: str, _key: str) -> None:
     film.point_to(customer_field, 12, ox=0.3)
     film.shoot(12)
     film.click(customer_field, 3)
-    film.type(customer[:4], 4)
+    film.type(customer[:4])
     page.wait_for_selector(option)
     film.shoot(6)
     film.point_to(option, 10, ox=0.4)
@@ -236,7 +244,7 @@ def invoice(film: Film, url: str, _key: str) -> None:
     film.point_to(description, 22, ox=0.2)
     film.shoot(24)
     film.click(description, 2)
-    film.type("Website onderhoud oktober", 2)
+    film.type("Website onderhoud oktober")
     x, y, _, _ = film.box(quantity)
     tx, _, tw, _ = film.box("#lines-0-totaal")
     film.cam_to(film.view(x - 40, y - 60, tx + tw - x + 60, 140, margin=1.08), 18)
@@ -247,7 +255,7 @@ def invoice(film: Film, url: str, _key: str) -> None:
             film.point_to(field, travel)
             film.shoot(travel)
         film.click(field, 1)
-        film.type(text, 3)
+        film.type(text)
     film.shoot(4)
     page.keyboard.press("Tab")
     page.wait_for_load_state("networkidle")
@@ -455,7 +463,7 @@ def receipts(film: Film, url: str, key: str) -> None:
     film.pointer = Move.still(film.pointer.at(film.frame))
     film.point_to("#ai .veld", 14, ox=0.8)
     film.shoot(6)
-    film.type_in_panel("Maak een uitgave van mijn nieuwe bonnetje", 2)
+    film.type_in_panel("Maak een uitgave van mijn nieuwe bonnetje")
     film.shoot(6)
     film.sounds.append((film.frame, "key"))
     page.evaluate("assistent.send()")
