@@ -7,7 +7,8 @@ de bronpagina erbij. **Dit is geen boekhoudkundig of fiscaal advies.** Regels
 kunnen wijzigen na het nakijken. Controleer bij twijfel de bronpagina's zelf
 of vraag een boekhouder.
 
-Nagekeken op 6 november 2026. Alleen officiële bronnen: belastingdienst.nl en
+Nagekeken op 6 november 2026. Alleen officiële bronnen: belastingdienst.nl (ook
+de pdf's op `download.belastingdienst.nl`) en
 Ondernemersplein (sinds kort `ondernemersplein.overheid.nl`; het oude adres
 `ondernemersplein.kvk.nl` stuurt daarheen door). Citaten staan tussen
 aanhalingstekens en zijn letterlijk overgenomen, ook de u-vorm. Een bedrag of
@@ -203,16 +204,38 @@ Bron: [Btw-aangifte: waar moet u aan denken?](https://www.belastingdienst.nl/wps
   - 3 en 4: leveringen en diensten met het buitenland.
   - 5a "Verschuldige btw (rubrieken 1 t/m 4)": het totaal.
   - 5b "Voorbelasting": de aftrekbare btw op inkopen.
-- De andere rubrieken (zoals voor 9 %, 0 % of verlegde btw): **Bron
-  ontbreekt**. Ze staan in de Toelichting bij de btw-aangifte (pdf op
-  `download.belastingdienst.nl`, nog niet nagekeken).
+- Alle rubrieken volgens de Toelichting 2026 (voor ondernemers in
+  Nederland):
+  - 1a en 1b "Leveringen/diensten belast met hoog of laag tarief": "Vul in de
+    kolom 'Omzet' het bedrag waarover btw wordt berekend in. Vul in de kolom
+    'Btw' het btw-bedrag in."
+  - 1c "Leveringen/diensten belast met overige tarieven, behalve 0%" (het
+    voorbeeld is een sportkantine met een forfaitair tarief).
+  - 1d "Privégebruik": "Vul deze vraag alleen in de laatste aangifte van het
+    jaar in."
+  - 1e "Leveringen/diensten belast met 0% of niet bij u belast": onder meer
+    het 0%-tarief in Nederland en "leveringen van goederen en diensten waarbij
+    de btw verlegd is naar een andere ondernemer".
+  - 2a "Leveringen/diensten waarbij de btw naar u is verlegd": je rekent de
+    verlegde btw zelf uit en mag hem onder voorwaarden aftrekken bij 5b. "Toch
+    moet u vraag 2a en 5b invullen."
+  - 3a uitvoer buiten de EU, 3b leveringen naar of diensten in andere
+    EU-landen (ook in de opgaaf ICP), 3c installatie en afstandsverkopen
+    binnen de EU.
+  - 4a en 4b leveringen en diensten uit landen buiten en binnen de EU, met de
+    btw die je zelf aangeeft en bij 5b weer aftrekt.
+  - 5b "Voorbelasting": "De btw die u als voorbelasting aftrekt, moet u kunnen
+    aantonen met facturen die aan de wettelijke eisen voldoen."
+- "Leveringen van goederen en diensten die onder een vrijstelling vallen, hoeft
+  u niet aan te geven."
+- "Rond alle bedragen af op hele euro's. Dit mag u in uw voordeel doen."
 - In de laatste aangifte van het jaar komen afrekeningen over het kalenderjaar,
   zoals privégebruik.
 
 Bron: [Ik moet btw-aangifte doen - hoe vul ik die in?](https://www.belastingdienst.nl/wps/wcm/connect/nl/btw/content/ik-moet-btw-aangifte-doen-hoe-vul-ik-die-in)
 (Belastingdienst), [Btw-aangifte invullen en versturen](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aangifte_doen_en_betalen/btw-aangifte-waar-moet-u-aan-denken/hoe-btw-aangifte-invullen-en-versturen)
-(Belastingdienst), [Toelichting bij de btw-aangifte (omzetbelasting)](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/themaoverstijgend/brochures_en_publicaties/toelichting_bij_de_digitale_aangifte_omzetbelasting)
-(Belastingdienst)
+(Belastingdienst), [Toelichting bij de btw-aangifte (omzetbelasting) 2026](https://download.belastingdienst.nl/belastingdienst/docs/toelichting_bij_btw_aangifte_ob0731t63fd.pdf)
+(Belastingdienst, pdf, oktober 2026)
 
 ## 5. Bewaarplicht
 
@@ -230,11 +253,25 @@ Bron: [Ik moet btw-aangifte doen - hoe vul ik die in?](https://www.belastingdien
   digitaal of op papier." Digitaal: "moet u ervoor zorgen dat wij uw
   programma's en bestanden bij een controle kunnen gebruiken. Het is niet
   voldoende als u uw bestanden uitsluitend in afgedrukte vorm bewaart."
-- Een papieren bon scannen en het papier weggooien: **Bron ontbreekt** op deze
-  pagina's. Mogelijk staat het in de brochure "Uw geautomatiseerde
-  administratie en de fiscale bewaarplicht" (nog niet nagekeken).
+- Onroerende zaken: de webpagina zegt 10 jaar, de brochure "een
+  bewaartermijn van 9 jaar, volgend op het jaar waarin het vastgoed in gebruik
+  is genomen". Voor Huismus speelt dit niet; noem het niet zonder beide
+  bronnen.
+- Scannen (conversie): "Een balans en staat van baten en lasten op papier mag
+  u niet converteren. Verder mag u alle gegevens converteren als u aan de
+  volgende voorwaarden voldoet": je zet alle gegevens over, inhoudelijk juist,
+  de nieuwe drager is de hele bewaartermijn beschikbaar, en je kunt ze binnen
+  redelijke tijd leesbaar maken en laten controleren.
+- "Scant u een document? Dan moet u de informatie op alle bladzijden (voor- en
+  achterzijde) en bijlagen van het document converteren." Let ook op
+  echtheidskenmerken zoals papiersoort, kleur, logo en watermerk.
+- Een ontvangen factuur onderbouw je ook met de betaling (bankafschrift) en
+  andere stukken, zoals offertes, orderbevestigingen en e-mails.
+- "Voldoet u aan de voorwaarden? Dan hoeft u de originele gegevens niet te
+  bewaren na een conversie."
 
 Bron: [Hoe lang moet u uw administratie bewaren voor de btw: 7 of 10 jaar?](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/administratie_bijhouden/administratie_bewaren/)
 (Belastingdienst), [Wat moet u bewaren?](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/administratie_bijhouden/administratie_bewaren/wat_moet_u_bewaren)
 (Belastingdienst), [Hoe bewaart u uw administratie?](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/administratie_bijhouden/administratie_bewaren/hoe_bewaart_u_uw_administratie)
-(Belastingdienst)
+(Belastingdienst), [Uw geautomatiseerde administratie en de fiscale bewaarplicht](https://download.belastingdienst.nl/belastingdienst/docs/geautomatiseerde_administratie_en_fiscale_bewaarplicht_al0401z14fd.pdf)
+(Belastingdienst, pdf, juli 2026)
