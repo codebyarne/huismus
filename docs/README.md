@@ -26,15 +26,23 @@ de app, maak ze dan opnieuw en commit ze:
 ./scripts/site-beelden.sh
 ```
 
-Een promofilmpje (16 seconden in een lus, 1920×1080 mp4, voor LinkedIn en
-dergelijke): een nieuwe factuur krijgt een klant en een regel, en wordt
-uitgegeven. Van dezelfde verzonnen administratie, met een camera die in- en
-uitzoomt en een klik- of toetsgeluid bij elke klik en toets (CC0, van Kenney). Komt in `~/Downloads`,
-niet in de repo. Muziek eronder is optioneel (let op de licentie):
+Promofilmpjes (zo'n twintig seconden in een lus, 1920×1080 mp4, voor
+LinkedIn en dergelijke), van dezelfde verzonnen administratie, met een camera
+die in- en uitzoomt en een klik- of toetsgeluid bij elke klik en toets (CC0,
+van Kenney). Ze komen in `~/Downloads`, niet in de repo.
+
+- `factuur`: een nieuwe factuur krijgt een klant en een regel, en wordt uitgegeven.
+- `bonnetjes`: een getekende telefoon fotografeert een (verzonnen) bonnetje en
+  bewaart het in de bonnetjesmap; Huismus haalt het op; een AI-assistent leest
+  het en maakt de uitgave, met toestemming; jij zegt "Klopt". Het chatpaneel is
+  getekend, maar wat het laat zien doet het script echt via `/mcp`.
+
+Muziek eronder is optioneel (let op de licentie):
 
 ```
-./scripts/promo-film.sh
-./scripts/promo-film.sh ~/Downloads/huismus-factuur.mp4 muziek.mp3
+./scripts/promo-film.sh factuur
+./scripts/promo-film.sh bonnetjes
+./scripts/promo-film.sh bonnetjes ~/Downloads/huismus-bonnetjes.mp4 muziek.mp3
 ```
 
 Zelf bekijken:

@@ -2,10 +2,15 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """Films a short promo clip of Huismus, run by scripts/promo-film.sh:
 
-    promo_film.py <file.mp4> [music]
+    promo_film.py <factuur|bonnetjes> <file.mp4> [music]
 
-Sixteen silent seconds that loop, for LinkedIn and the like: a new invoice
-gets a customer and a line, Huismus adds it up, and it is issued.
+Clips of about twenty seconds that loop, for LinkedIn and the like:
+
+- factuur: a new invoice gets a customer and a line, Huismus adds it up, and
+  it is issued.
+- bonnetjes: a phone photographs a receipt and saves it in the receipts
+  folder; Huismus fetches it; an AI assistant reads it and adds the expense,
+  with the user's permission; the user checks it ("Klopt").
 
 The browser plays the scene frame by frame, not in real time: before every
 frame Huismus gets all the time it needs, so the clip never stutters. A
@@ -14,25 +19,34 @@ glides between close-ups (`Film.cam_to`) without ever scaling a pixel up much,
 so text stays sharp. A drawn mouse pointer shows where the clicks go, since a
 headless browser has none.
 
-Every click and key gets a soft tick on the soundtrack, from the CC0 sounds
-in scripts/promo-geluiden/. Music is optional: any audio file, mixed in under the ticks. Mind
-its licence before you post the clip.
+Every click and key sounds, with the CC0 recordings in scripts/promo/geluiden/.
+Music is optional: any audio file, mixed in under the clicks. Mind its licence
+before you post the clip.
 
 The server, the made-up administration and the login are those of
-scripts/site_beelden.py.
+scripts/site_beelden.py. The phone and the assistant's chat panel are drawn
+(scripts/promo/): plain on purpose, in the look of no real app. What the
+panel shows the assistant doing, the script really does through Huismus's
+/mcp, as Claude or ChatGPT would; the receipt is a made-up one, drawn here.
 """
 
 import array
+import base64
 import io
+import json
+import os
 import random
 import subprocess
 import sys
 import tempfile
+import time
+import urllib.request
 import wave
+from datetime import date
 from pathlib import Path
 
 import imageio_ffmpeg
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 from playwright.sync_api import Page, sync_playwright
 from site_beelden import TOKEN, _env, _manage, _prepare, server
 
@@ -44,6 +58,9 @@ OUT_W, OUT_H = 1920, 1080
 ASPECT = OUT_H / OUT_W
 # The camera on the top of the window at its full width: the whole app.
 WHOLE_WINDOW = (VW / 2, VW * ASPECT / 2, VW)
+STAGE = Path(__file__).resolve().parent / "promo"
+# The chat panel's height (promo/assistent.js): what the camera shows at most.
+PANEL_H = round(VW * ASPECT)
 
 # A plain arrow, drawn on the page because headless Chromium shows no pointer.
 POINTER = """
@@ -58,7 +75,13 @@ POINTER = """
     zIndex: 2147483647, pointerEvents: 'none',
     filter: 'drop-shadow(0 2px 3px rgba(0,0,0,.25))'});
   const style = document.createElement('style');
-  style.textContent = '#film-pointer.down svg {transform: scale(.85); transform-origin: 3px 2px}';
+  // On the phone the pointer is a fingertip: a round spot instead of an arrow.
+  style.textContent = `#film-pointer.down svg {transform: scale(.85); transform-origin: 3px 2px}
+    #film-pointer.touch svg {display: none}
+    #film-pointer.touch::after {content: ''; position: absolute; left: -24px; top: -24px;
+      width: 48px; height: 48px; border-radius: 50%; background: rgba(255, 255, 255, .5);
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, .18)}
+    #film-pointer.touch.down::after {transform: scale(.8); background: rgba(255, 255, 255, .8)}`;
   document.head.append(style);
   document.body.append(p);
 })()
@@ -119,6 +142,8 @@ class Film:
     def shoot(self, count: int = 1) -> None:
         for _ in range(count):
             x, y = self.pointer.at(self.frame)
+            # A new page, or HTMX swapping the body, takes the pointer away.
+            self.page.evaluate(POINTER)
             self.page.evaluate(
                 "([x, y]) => document.getElementById('film-pointer').style.transform ="
                 " `translate(${x}px, ${y}px)`",
@@ -141,9 +166,24 @@ class Film:
             self.page.keyboard.type(key)
             self.shoot(frames_per_key)
 
+    def type_in_panel(self, text: str, frames_per_key: int) -> None:
+        """Typing in the drawn chat panel, which has no real text field."""
+        for end in range(1, len(text) + 1):
+            self.sounds.append((self.frame, "key"))
+            self.page.evaluate("text => assistent.typing(text)", text[:end])
+            self.shoot(frames_per_key)
+
+    def animate(self, script: str, frames: int, **values) -> None:
+        """Runs `script` (a function of t and the values) before each frame,
+        t going from 0 to 1 with ease: for what the drawn stage moves itself."""
+        for i in range(frames):
+            self.page.evaluate(script, {"t": ease((i + 1) / frames), **values})
+            self.shoot()
+
     def press_pointer(self, down: bool) -> None:
         if down:
             self.sounds.append((self.frame, "click"))
+        self.page.evaluate(POINTER)
         self.page.evaluate(
             f"document.getElementById('film-pointer').classList.toggle('down', {str(down).lower()})"
         )
@@ -157,8 +197,10 @@ class Film:
         self.shoot(frames_after)
 
 
-def scene(film: Film) -> None:
+def invoice(film: Film, url: str, _key: str) -> None:
     page = film.page
+    page.goto(f"{url}/facturen/nieuw/")
+    page.wait_for_load_state("networkidle")
     customer_field = "input[placeholder='Zoek of kies een klant']"
     description = "textarea[name=lines-0-description]"
     quantity = "input[name=lines-0-quantity]"
@@ -232,7 +274,6 @@ def scene(film: Film) -> None:
     with page.expect_navigation():
         page.locator(confirm).click()
     page.wait_for_load_state("networkidle")
-    page.evaluate(POINTER)  # a new page: draw the pointer again
 
     # 5. The issued invoice, then back to the whole app.
     film.pointer = Move.still(film.pointer.at(film.frame))
@@ -241,11 +282,259 @@ def scene(film: Film) -> None:
     film.shoot(80)
 
 
+# -- The receipts film ---------------------------------------------------------
+
+SUPPLIER, AMOUNT, VAT, CATEGORY, PHOTO = (
+    "Bouwmarkt Noord",
+    "42,35",
+    "7,35",
+    "Kantoor",
+    "IMG_0412.jpg",
+)
+MONTHS = "jan feb mrt apr mei jun jul aug sep okt nov dec".split()
+
+
+def receipt_photo(day: date) -> bytes:
+    """A made-up till receipt on a table, as a phone photographs it (JPEG)."""
+    try:
+        font = lambda size, bold=False: ImageFont.truetype(  # noqa: E731
+            "/System/Library/Fonts/Menlo.ttc", size, index=int(bold)
+        )
+        font(10)
+    except OSError:  # not on a Mac: Pillow's own font
+        font = lambda size, bold=False: ImageFont.load_default(size)  # noqa: E731
+    width, height = 760, 1000
+    paper = Image.new("RGB", (width, height), (252, 250, 244))
+    draw = ImageDraw.Draw(paper)
+    y = 70
+
+    def centred(text, size=26, bold=False, gap=16):
+        nonlocal y
+        f = font(size, bold)
+        draw.text(((width - draw.textlength(text, font=f)) / 2, y), text, font=f, fill=(40, 38, 36))
+        y += size + gap
+
+    def row(left, right, size=28, bold=False):
+        nonlocal y
+        f = font(size, bold)
+        draw.text((60, y), left, font=f, fill=(40, 38, 36))
+        draw.text(
+            (width - 60 - draw.textlength(right, font=f), y), right, font=f, fill=(40, 38, 36)
+        )
+        y += size + 16
+
+    centred(SUPPLIER.upper(), 44, True)
+    centred("Industrieweg 4, Voorbeeldstad", 24)
+    y += 20
+    centred("-" * 38)
+    row("Verlengsnoer 5m", "12,99")
+    row("Bureaulamp LED", "24,95")
+    row("Schroeven 4x30 (2x)", "4,41")
+    centred("-" * 38)
+    row("TOTAAL", AMOUNT, 38, True)
+    row("Pin", AMOUNT)
+    row("waarvan 21% btw", VAT, 24)
+    y += 30
+    centred(f"{day:%d-%m-%Y}  14:32")
+    centred("Bon 0412  Kassa 3", 24)
+    y += 20
+    centred("Bedankt en tot ziens!", 28)
+    for x in range(0, width, 20):  # the torn-off bottom edge
+        draw.polygon([(x, height), (x + 10, height - 14), (x + 20, height)], fill=(0, 0, 0))
+    paper = paper.rotate(-3, expand=True, fillcolor=(0, 0, 0), resample=Image.BICUBIC)
+    mask = paper.convert("L").point(lambda v: 255 if v > 10 else 0)
+    table = Image.new("RGB", (1100, 1300), (120, 112, 104))
+    table.paste((70, 64, 58), (180, 150), mask.filter(ImageFilter.GaussianBlur(18)))
+    table.paste(paper, (160, 120), mask)
+    out = io.BytesIO()
+    table.save(out, "JPEG", quality=88)
+    return out.getvalue()
+
+
+def prepare_receipts(env: dict, work: Path) -> None:
+    """A receipts folder with the photo in it, fetched by Huismus, and a key
+    for the assistant (in `work`/mcp-key)."""
+    # A home folder with Dropbox in it, so that Huismus names the folder the
+    # way the phone does: "Dropbox › Huismus bonnetjes", not a temporary path.
+    home = work / "thuis"
+    folder = home / "Dropbox" / "Huismus bonnetjes"
+    folder.mkdir(parents=True)
+    os.environ["HOME"] = env["HOME"] = str(home)
+    photo = folder / PHOTO
+    photo.write_bytes(receipt_photo(date.today()))
+    # Huismus waits until a file is a minute old (inbox.SETTLE_SECONDS).
+    old = time.time() - 120
+    os.utime(photo, (old, old))
+    _manage(
+        env,
+        "shell",
+        "-c",
+        "from pathlib import Path; from huismus.expenses import inbox; "
+        "from huismus.assistants import key; "
+        f"inbox.choose_folder(Path({str(folder)!r})); inbox.fetch(); "
+        f"Path({str(work / 'mcp-key')!r}).write_text(key.create())",
+    )
+
+
+def ask_huismus(url: str, key: str, tool: str, arguments: dict) -> dict:
+    """One call to Huismus's /mcp, as an AI assistant makes it."""
+    message = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "tools/call",
+        "params": {"name": tool, "arguments": arguments},
+    }
+    request = urllib.request.Request(
+        f"{url}/mcp",
+        data=json.dumps(message).encode(),
+        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+    )
+    with urllib.request.urlopen(request) as response:
+        answer = json.load(response)
+    result = answer["result"]
+    if result.get("isError"):
+        raise RuntimeError(f"{tool}: {result}")
+    return result.get("structuredContent") or json.loads(result["content"][0]["text"])
+
+
+def receipts(film: Film, url: str, key: str) -> None:
+    page = film.page
+    today = date.today()
+
+    # 1. On the road: photograph the receipt, save it in the receipts folder.
+    phone = page.context.new_page()
+    phone.set_content((STAGE / "telefoon.html").read_text())
+    photo = base64.b64encode(receipt_photo(today)).decode()
+    phone.evaluate(
+        "src => document.getElementById('bon').src = src", f"data:image/jpeg;base64,{photo}"
+    )
+    phone.evaluate(POINTER)
+    phone.evaluate("document.getElementById('film-pointer').classList.add('touch')")
+    film.page = phone
+    stage = "({t, ...v}) => stage(v)"
+    film.camera = Move.still(WHOLE_WINDOW)
+    x, y, w, h = film.box("#sluiter")
+    film.pointer = Move.still((x + w * 0.9, y + 260))
+    film.shoot(12)
+    film.point_to("#sluiter", 16)
+    film.shoot(18)
+    film.click("#sluiter", 0)
+    film.animate("({t}) => stage({flash: 1 - t})", 8)
+    film.animate("({t}) => stage({sheet: t})", 12)
+    film.shoot(8)
+    film.point_to("#map", 14, ox=0.35)
+    film.shoot(16)
+    film.click("#map", 0)
+    film.animate(stage, 6, sheet=1, chosen=True)
+    film.animate("({t}) => stage({sheet: 1 - t, chosen: true, saved: t})", 10)
+    film.shoot(22)
+    phone.close()
+
+    # 2. At the computer: Huismus fetched it.
+    film.page = page
+    page.goto(f"{url}/")
+    page.wait_for_load_state("networkidle")
+    notice = "#nieuwe-bonnetjes a"
+    x, y, w, h = film.box(notice)
+    film.camera = Move.still(film.view(x - 20, y - 130, 760, h + 260, margin=1.0))
+    film.pointer = Move.still((x + w * 0.75, y + h + 90))
+    film.shoot(14)
+    film.point_to(notice, 12, ox=0.85)
+    film.shoot(14)
+    film.click(notice, 2)
+    card = ".receipt"
+    film.cam_to(film.view(*film.box(card), margin=1.6), 20)
+    film.shoot(26)
+
+    # 3. The AI assistant reads it and, with permission, adds the expense.
+    page.add_script_tag(path=str(STAGE / "assistent.js"))
+    film.cam_to(WHOLE_WINDOW, 16)
+    film.animate("({t}) => assistent.slide(t)", 14)
+    # The lower half of the panel: the conversation and where you type.
+    film.cam_to(film.view(VW - 470, PANEL_H - 470, 470, 470, margin=1.0), 18)
+    film.pointer = Move.still(film.pointer.at(film.frame))
+    film.point_to("#ai .veld", 14, ox=0.8)
+    film.shoot(6)
+    film.type_in_panel("Maak een uitgave van mijn nieuwe bonnetje", 2)
+    film.shoot(6)
+    film.sounds.append((film.frame, "key"))
+    page.evaluate("assistent.send()")
+    film.shoot(8)
+    row = page.evaluate_handle("assistent.step('Bonnetjes zonder uitgave bekijken', true)")
+    film.shoot(10)
+    waiting = ask_huismus(url, key, "list_receipts", {})
+    receipt = next(r for r in waiting["receipts"] if r["name"] == PHOTO)
+    page.evaluate("row => assistent.done(row)", row)
+    row = page.evaluate_handle("assistent.step('Bonnetje lezen', true)")
+    film.shoot(18)
+    ask_huismus(url, key, "read_receipt", {"id": receipt["id"]})
+    page.evaluate("row => assistent.done(row)", row)
+    film.shoot(6)
+    facts = [
+        ["Leverancier", SUPPLIER],
+        ["Datum", f"{today.day} {MONTHS[today.month - 1]} {today.year}"],
+        ["Bedrag", f"€ {AMOUNT}"],
+        ["Categorie", CATEGORY],
+        ["Bonnetje", PHOTO],
+    ]
+    ask = page.evaluate_handle("([facts]) => assistent.ask('Uitgave toevoegen', facts)", [facts])
+    film.shoot(20)
+    film.point_to("#toestaan", 18)
+    film.shoot(30)
+    film.click("#toestaan", 0)
+    ask_huismus(
+        url,
+        key,
+        "add_expense",
+        {
+            "date": today.isoformat(),
+            "supplier": SUPPLIER,
+            "description": "Verlengsnoer, bureaulamp, schroeven",
+            "lines": [{"amount": AMOUNT, "vat_info": VAT, "category": CATEGORY}],
+            "receipt_id": receipt["id"],
+        },
+    )
+    page.evaluate("card => assistent.allowed(card)", ask)
+    page.evaluate("assistent.step('Uitgave toevoegen', false)")
+    film.shoot(8)
+    page.evaluate(
+        "text => assistent.say(text)",
+        f"Toegevoegd: {SUPPLIER}, € {AMOUNT}. In Huismus staat hij op Nakijken: kijk hem even na.",
+    )
+    film.shoot(40)
+
+    # 4. Back in Huismus: the expense waits to be checked.
+    page.goto(f"{url}/uitgaven/")
+    page.wait_for_load_state("networkidle")
+    row = f"tr:has-text({SUPPLIER!r})"
+    film.camera = Move.still(film.view(*film.box(row), margin=1.15))
+    film.pointer = Move.still(film.pointer.at(film.frame))
+    film.shoot(12)
+    film.point_to(f"{row} a", 14, ox=0.3)
+    film.shoot(18)
+    film.click(f"{row} a", 2)
+    film.cam_to(film.view(*film.box("#nakijken"), margin=1.15), 18)
+    film.shoot(30)
+    # Back a little: the banner, the receipt and what the assistant filled in.
+    x, y, w, _ = film.box("#nakijken")
+    film.cam_to(film.view(x - 20, y - 60, w + 40, 720, margin=1.0), 30)
+    film.shoot(40)
+
+    # 5. "Klopt": checked, and back to the whole app.
+    klopt = "button[name=klopt]"
+    film.cam_to(film.view(*film.box("#nakijken"), margin=1.15), 18)
+    film.point_to(klopt, 18)
+    film.shoot(24)
+    film.click(klopt, 4)
+    film.cam_to(WHOLE_WINDOW, 30)
+    film.shoot(60)
+
+
 RATE = 48_000
 
 
-SOUNDS = Path(__file__).resolve().parent / "promo-geluiden"
-# Kenney's Interface Sounds (CC0, see promo-geluiden/LICENSE-Kenney.txt): a real
+SOUNDS = STAGE / "geluiden"
+# Kenney's Interface Sounds (CC0, see geluiden/LICENSE-Kenney.txt): a real
 # mouse click, and four very short clicks that, softer, sound like keys.
 CLICK = "click_001.ogg"
 KEYS = ["click_002.ogg", "click_003.ogg", "click_004.ogg", "click_005.ogg"]
@@ -325,19 +614,32 @@ def encode(frames: Path, sound: Path, music: Path | None, out: Path) -> None:
     )  # fmt: skip
 
 
-def main(out: Path, music: Path | None) -> None:
+FILMS = {
+    # name: (the scene, what it needs set up before the server starts)
+    "factuur": (invoice, None),
+    "bonnetjes": (receipts, prepare_receipts),
+}
+
+
+def main(name: str, out: Path, music: Path | None) -> None:
+    scene, prepare = FILMS[name]
     with tempfile.TemporaryDirectory() as work, sync_playwright() as playwright:
-        administration, _, releases = _prepare(Path(work))
+        work = Path(work)
+        administration, _, releases = _prepare(work)
+        env = _env(administration, releases)
         # The site's KOR line says "(voorbeeldtekst)"; in a promo it should read as real.
         _manage(
-            _env(administration, releases),
+            env,
             "shell",
             "-c",
             "from huismus.business.models import Settings; s = Settings.load(); "
             "s.kor_text = 'Factuur vrijgesteld van btw op grond van de "
             "kleineondernemersregeling.'; s.save()",
         )
-        frames = Path(work) / "frames"
+        if prepare:
+            prepare(env, work)
+        key = (work / "mcp-key").read_text() if (work / "mcp-key").exists() else ""
+        frames = work / "frames"
         frames.mkdir()
         with server(administration, releases) as url:
             browser = playwright.chromium.launch(args=["--lang=nl-NL"])
@@ -347,21 +649,24 @@ def main(out: Path, music: Path | None) -> None:
                 locale="nl-NL",
                 timezone_id="Europe/Amsterdam",
                 reduced_motion="reduce",
+                # Huismus allows only its own scripts and styles; the drawn
+                # pointer and chat panel are laid over it for the film alone.
+                bypass_csp=True,
             )
             context.add_init_script(f"addEventListener('DOMContentLoaded', () => {POINTER})")
             page = context.new_page()
             page.goto(f"{url}/desktop/start/?token={TOKEN}")
-            page.goto(f"{url}/facturen/nieuw/")
-            page.wait_for_load_state("networkidle")
             film = Film(page, frames)
-            scene(film)
+            scene(film, url, key)
             browser.close()
-        sound = Path(work) / "ticks.wav"
+        sound = work / "klikken.wav"
         soundtrack(film.sounds, film.frame, sound)
         encode(frames, sound, music, out)
     print(f"{out}: {film.frame / FPS:.1f} seconden", flush=True)
 
 
 if __name__ == "__main__":
-    music = Path(sys.argv[2]).resolve() if len(sys.argv) > 2 else None
-    main(Path(sys.argv[1]).resolve(), music)
+    if len(sys.argv) < 3 or sys.argv[1] not in FILMS:
+        sys.exit(f"promo_film.py <{'|'.join(FILMS)}> <file.mp4> [music]")
+    music = Path(sys.argv[3]).resolve() if len(sys.argv) > 3 else None
+    main(sys.argv[1], Path(sys.argv[2]).resolve(), music)

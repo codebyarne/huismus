@@ -1,0 +1,93 @@
+<!doctype html>
+<!--
+  SPDX-FileCopyrightText: 2026 Huismus contributors
+  SPDX-License-Identifier: AGPL-3.0-or-later
+
+  The opening of the receipts clip (scripts/promo_film.py): a drawn phone that
+  photographs a receipt and saves it in the receipts folder. Deliberately
+  plain: no phone maker's, camera app's or cloud service's look. The script
+  fills in the photo (#bon) and drives every change through stage(), one
+  frame at a time, so nothing here animates by itself.
+-->
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<style>
+  :root { --ink: #23201c; --muted: #8b847b; --blue: #1f6fd1; --paper: #f6f3ee; }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    width: 1440px; height: 1120px; overflow: hidden; background: var(--paper);
+    font: 17px/1.35 -apple-system, "Helvetica Neue", Arial, sans-serif; color: var(--ink);
+    /* At the top of the window: the camera shows its top 810 pixels. */
+    display: grid; justify-content: center; align-content: start; padding-top: 10px;
+  }
+  .phone {
+    position: relative; width: 384px; height: 790px; border-radius: 58px; padding: 14px;
+    background: #1b1a19; box-shadow: 0 30px 80px rgba(40, 30, 20, .28), inset 0 0 0 2px #3a3835;
+  }
+  .screen { position: relative; width: 100%; height: 100%; border-radius: 45px; overflow: hidden; background: #000; }
+  .notch { position: absolute; top: 12px; left: 50%; width: 104px; height: 30px; margin-left: -52px; border-radius: 16px; background: #000; z-index: 5; }
+  .viewfinder { position: absolute; inset: 0; overflow: hidden; }
+  #bon { position: absolute; left: 50%; top: 46%; width: 128%; transform: translate(-50%, -50%); }
+  .corners { position: absolute; left: 16%; right: 16%; top: 20%; bottom: 30%; }
+  .corners i { position: absolute; width: 34px; height: 34px; border: 3px solid #ffd54a; }
+  .corners i:nth-child(1) { left: 0; top: 0; border-right: 0; border-bottom: 0; }
+  .corners i:nth-child(2) { right: 0; top: 0; border-left: 0; border-bottom: 0; }
+  .corners i:nth-child(3) { left: 0; bottom: 0; border-right: 0; border-top: 0; }
+  .corners i:nth-child(4) { right: 0; bottom: 0; border-left: 0; border-top: 0; }
+  .bar { position: absolute; left: 0; right: 0; bottom: 0; height: 150px; background: rgba(0, 0, 0, .55);
+         display: grid; place-items: center; }
+  #sluiter { width: 76px; height: 76px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 6px rgba(255,255,255,.35); }
+  #flits { position: absolute; inset: 0; background: #fff; opacity: 0; z-index: 4; pointer-events: none; }
+  .sheet { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; padding: 14px 18px 34px;
+           border-radius: 26px 26px 0 0; background: #fbfaf8; transform: translateY(100%); }
+  .sheet .grip { width: 40px; height: 5px; border-radius: 3px; background: #d6d0c7; margin: 0 auto 14px; }
+  .sheet h2 { font-size: 17px; font-weight: 600; text-align: center; margin-bottom: 14px; }
+  .row { display: flex; align-items: center; gap: 14px; padding: 13px 12px; border-radius: 14px; }
+  .row + .row { margin-top: 2px; }
+  .row svg { flex: none; width: 34px; height: 34px; }
+  .row b { display: block; font-weight: 600; }
+  .row span { color: var(--muted); font-size: 14px; }
+  #map.gekozen { background: #e4eefb; }
+  #bewaard { position: absolute; left: 50%; top: 42%; z-index: 4; pointer-events: none; transform: translate(-50%, -50%) scale(.9); opacity: 0;
+             padding: 18px 22px; border-radius: 18px; background: rgba(30, 28, 26, .88); color: #fff; text-align: center; width: 250px; }
+  #bewaard .vink { width: 46px; height: 46px; margin: 0 auto 8px; border-radius: 50%; background: #2e9d5b; display: grid; place-items: center; }
+</style>
+</head>
+<body>
+<div class="phone"><div class="screen">
+  <div class="notch"></div>
+  <div class="viewfinder"><img id="bon" alt=""><div class="corners"><i></i><i></i><i></i><i></i></div></div>
+  <div class="bar"><div id="sluiter"></div></div>
+  <div id="flits"></div>
+  <div class="sheet" id="sheet">
+    <div class="grip"></div>
+    <h2>Bewaar foto in</h2>
+    <div class="row" id="map">
+      <svg viewBox="0 0 34 34"><path d="M3 9a3 3 0 0 1 3-3h7l3 3h12a3 3 0 0 1 3 3v13a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3z" fill="#1f6fd1"/></svg>
+      <div><b>Huismus bonnetjes</b><span>Bonnetjesmap</span></div>
+    </div>
+    <div class="row">
+      <svg viewBox="0 0 34 34"><path d="M3 9a3 3 0 0 1 3-3h7l3 3h12a3 3 0 0 1 3 3v13a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3z" fill="#b9b2a8"/></svg>
+      <div><b>Documenten</b><span>Map</span></div>
+    </div>
+    <div class="row">
+      <svg viewBox="0 0 34 34"><rect x="4" y="6" width="26" height="22" rx="4" fill="#b9b2a8"/><circle cx="12" cy="13" r="3" fill="#fbfaf8"/><path d="M6 26l8-8 5 5 4-4 6 7z" fill="#fbfaf8"/></svg>
+      <div><b>Foto's</b><span>Album</span></div>
+    </div>
+  </div>
+  <div id="bewaard"><div class="vink"><svg width="26" height="26" viewBox="0 0 26 26"><path d="M6 13.5l4.5 4.5L20 8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Bewaard in<br><b>Huismus bonnetjes</b></div>
+</div></div>
+<script>
+  // How far each part is, from 0 to 1; the script calls this before every frame.
+  function stage({flash = 0, sheet = 0, chosen = false, saved = 0} = {}) {
+    document.getElementById('flits').style.opacity = flash;
+    document.getElementById('sheet').style.transform = `translateY(${(1 - sheet) * 100}%)`;
+    document.getElementById('map').classList.toggle('gekozen', chosen);
+    const done = document.getElementById('bewaard');
+    done.style.opacity = saved;
+    done.style.transform = `translate(-50%, -50%) scale(${0.9 + 0.1 * saved})`;
+  }
+</script>
+</body>
+</html>
