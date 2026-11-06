@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 12:20+0100\n"
+"POT-Creation-Date: 2026-11-06 20:36+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -30,9 +30,6 @@ msgstr ""
 
 msgid "Dit document bestaat niet in Huismus, of past niet bij deze actie."
 msgstr "This document doesn't exist in Huismus, or doesn't fit this action."
-
-msgid "Dit bonnetje staat niet meer bij de bonnetjes zonder uitgave."
-msgstr "This receipt is no longer with the receipts without an expense."
 
 msgid "Huismus kan dit bonnetje niet lezen. Maak de uitgave in Huismus."
 msgstr "Huismus can't read this receipt. Create the expense in Huismus."
@@ -273,11 +270,9 @@ msgstr "Fill this in to mail through your own mail server."
 msgid "Dit logo is groter dan %(max_mb)s MB. Kies een kleiner bestand."
 msgstr "This logo is larger than %(max_mb)s MB. Choose a smaller file."
 
-#
 msgid "Kies een PNG-, JPG- of SVG-bestand."
 msgstr "Choose a PNG, JPG or SVG file."
 
-#
 msgid ""
 "Huismus kan dit bestand niet als afbeelding openen. Kies een ander bestand."
 msgstr "Huismus can't open this file as an image. Choose another file."
@@ -1153,7 +1148,6 @@ msgctxt "export file"
 msgid "regels"
 msgstr "lines"
 
-#
 msgctxt "export file"
 msgid "klanten"
 msgstr "customers"
@@ -1922,6 +1916,63 @@ msgstr "Quote marked as expired."
 msgid "Conceptfactuur gemaakt van de offerte."
 msgstr "Draft invoice made from the quote."
 
+msgid "Dit bonnetje staat niet meer bij de bonnetjes zonder uitgave."
+msgstr "This receipt is no longer with the receipts without an expense."
+
+msgid "Ollama (eigen computer of netwerk)"
+msgstr "Ollama (your own computer or network)"
+
+msgid "Andere dienst"
+msgstr "Another service"
+
+msgid ""
+"Vul een adres in dat met https:// begint. http:// werkt alleen op je eigen "
+"computer of netwerk."
+msgstr ""
+"Enter an address starting with https://. http:// only works on your own "
+"computer or network."
+
+#, python-format
+msgid "%(service)s weigert je sleutel. Kijk of je hem goed hebt overgenomen."
+msgstr "%(service)s refuses your key. Check that you copied it correctly."
+
+#, python-format
+msgid ""
+"Huismus kan %(service)s niet bereiken. Kijk of het adres klopt en of je "
+"internet hebt."
+msgstr ""
+"Huismus can't reach %(service)s. Check the address and your internet "
+"connection."
+
+#, python-format
+msgid ""
+"%(service)s is te druk of je tegoed is op. Huismus probeert het later "
+"opnieuw."
+msgstr ""
+"%(service)s is busy or your credit has run out. Huismus tries again later."
+
+#, python-format
+msgid "%(service)s gaf een fout. Huismus probeert het later opnieuw."
+msgstr "%(service)s gave an error. Huismus tries again later."
+
+#, python-format
+msgid ""
+"%(service)s kent het model %(model)s niet. Kijk hoe het model precies heet."
+msgstr "%(service)s doesn't know the model %(model)s. Check its exact name."
+
+#, python-format
+msgid ""
+"Het model %(model)s kan geen plaatjes lezen. Kies een model dat dat wel kan."
+msgstr "The model %(model)s can't read images. Choose one that can."
+
+#, python-format
+msgid "%(service)s gaf te laat antwoord."
+msgstr "%(service)s took too long to answer."
+
+#, python-format
+msgid "%(service)s gaf een antwoord dat Huismus niet begrijpt."
+msgstr "%(service)s gave an answer Huismus doesn't understand."
+
 msgid "Geen categorie"
 msgstr "No category"
 
@@ -2028,6 +2079,85 @@ msgstr "expense line"
 
 msgid "uitgaveregels"
 msgstr "expense lines"
+
+msgid "Dienst"
+msgstr "Service"
+
+msgid "Adres"
+msgstr "Address"
+
+msgid ""
+"Vult Huismus in bij een bekende dienst. Bij een andere dienst: het adres dat "
+"die geeft voor OpenAI-compatibele apps."
+msgstr ""
+"Huismus fills this in for a known service. For another service: the address "
+"it gives for OpenAI-compatible apps."
+
+msgid "Model"
+msgstr "Model"
+
+msgid "Een model dat foto's kan lezen. Huismus stelt er een voor."
+msgstr "A model that can read images. Huismus suggests one."
+
+msgid "API-sleutel"
+msgstr "API key"
+
+msgid "Kies een dienst"
+msgstr "Choose a service"
+
+msgid "Vul je API-sleutel in."
+msgstr "Fill in your API key."
+
+msgid ""
+"Na het opslaan stuurt Huismus elk nieuw bonnetje uit je bonnetjesmap naar "
+"het adres hierboven, in je eigen netwerk."
+msgstr ""
+"After saving, Huismus sends every new receipt from your receipts folder to "
+"the address above, on your own network."
+
+#, python-format
+msgid ""
+"Na het opslaan stuurt Huismus elk nieuw bonnetje uit je bonnetjesmap naar "
+"%(service)s. %(service)s rekent de kosten met jou af."
+msgstr ""
+"After saving, Huismus sends every new receipt from your receipts folder to "
+"%(service)s. %(service)s charges you for it."
+
+msgid ""
+"Na het opslaan stuurt Huismus elk nieuw bonnetje uit je bonnetjesmap naar de "
+"dienst die je kiest. Die rekent de kosten met jou af."
+msgstr ""
+"After saving, Huismus sends every new receipt from your receipts folder to "
+"the service you choose. It charges you for it."
+
+#, python-format
+msgid "Ook het bonnetje zonder uitgave dat er nu is."
+msgid_plural "Ook de %(count)s bonnetjes zonder uitgave die er nu zijn."
+msgstr[0] "This includes the receipt without an expense that's there now."
+msgstr[1] ""
+"This includes the %(count)s receipts without an expense that are there now."
+
+msgid "Bonnetjes lezen staat uit. Huismus is de sleutel vergeten."
+msgstr "Receipt reading is off. Huismus forgot the key."
+
+#, python-format
+msgid "Het werkt. %(service)s kan je bonnetjes lezen."
+msgstr "It works. %(service)s can read your receipts."
+
+#, python-format
+msgid "Opgeslagen. %(service)s kan je bonnetjes lezen."
+msgstr "Saved. %(service)s can read your receipts."
+
+msgid "Niet nodig voor een adres op je eigen computer of netwerk."
+msgstr "Not needed for an address on your own computer or network."
+
+msgid "Leeg laten houdt de bewaarde sleutel."
+msgstr "Leave empty to keep the saved key."
+
+msgid ""
+"Maak je aan op de site van de dienst. Huismus laat hem daarna nooit meer "
+"zien."
+msgstr "Create one on the service's site. Huismus never shows it again."
 
 msgid "Huismus kan deze PDF niet openen. Kies een ander bestand."
 msgstr "Huismus can't open this PDF. Choose another file."
@@ -2591,9 +2721,6 @@ msgid ""
 "Elke AI-assistent die met een adres en een sleutel werkt, gebruikt deze twee."
 msgstr ""
 "Every AI assistant that works with an address and a key uses these two."
-
-msgid "Adres"
-msgstr "Address"
 
 msgid "Gekopieerd"
 msgstr "Copied"
@@ -3524,31 +3651,6 @@ msgid "Nieuwe factuur"
 msgstr "New invoice"
 
 #, python-format
-msgid "waarvan %(count)s vervallen"
-msgid_plural "waarvan %(count)s vervallen"
-msgstr[0] "of which %(count)s overdue"
-msgstr[1] "of which %(count)s overdue"
-
-#, python-format
-msgid "Omzet %(year)s"
-msgstr "Revenue %(year)s"
-
-#, python-format
-msgid "Kosten %(costs)s"
-msgstr "Costs %(costs)s"
-
-#, python-format
-msgid "%(percent)s%% van je KOR-grens"
-msgstr "%(percent)s%% of your KOR limit"
-
-#, python-format
-msgid "Winst %(year)s"
-msgstr "Profit %(year)s"
-
-msgid "Naar het jaaroverzicht"
-msgstr "To the year overview"
-
-#, python-format
 msgid ""
 "Je omzet in %(year)s (%(revenue)s) is hoger dan je KOR-grens van %(limit)s."
 msgstr ""
@@ -3561,6 +3663,9 @@ msgid ""
 msgstr ""
 "Your revenue in %(year)s is %(revenue)s: %(percent)s%% of your KOR limit of "
 "%(limit)s."
+
+msgid "Naar het jaaroverzicht"
+msgstr "To the year overview"
 
 #, python-format
 msgid ""
@@ -3588,6 +3693,28 @@ msgstr "without customer"
 
 msgid "Verder werken"
 msgstr "Continue"
+
+#, python-format
+msgid "waarvan %(count)s vervallen"
+msgid_plural "waarvan %(count)s vervallen"
+msgstr[0] "of which %(count)s overdue"
+msgstr[1] "of which %(count)s overdue"
+
+#, python-format
+msgid "Omzet %(year)s"
+msgstr "Revenue %(year)s"
+
+#, python-format
+msgid "Kosten %(costs)s"
+msgstr "Costs %(costs)s"
+
+#, python-format
+msgid "%(percent)s%% van je KOR-grens"
+msgstr "%(percent)s%% of your KOR limit"
+
+#, python-format
+msgid "Winst %(year)s"
+msgstr "Profit %(year)s"
 
 msgid "Laatste facturen"
 msgstr "Latest invoices"
@@ -4233,7 +4360,6 @@ msgstr "Choose a customer"
 msgid "Je hebt nog geen klanten."
 msgstr "You don't have any customers yet."
 
-#
 msgid "+ Nieuwe klant"
 msgstr "+ New customer"
 
@@ -4667,6 +4793,42 @@ msgstr "No expense matches your search and filters."
 msgid "betekent dat er een bonnetje bij de uitgave zit."
 msgstr "means the expense has a receipt."
 
+msgid "Bonnetjes lezen"
+msgstr "Receipt reading"
+
+msgid ""
+"Huismus stuurt elk bonnetje uit je bonnetjesmap naar een AI-dienst die jij "
+"kiest, en maakt er een uitgave van. Jij kijkt hem na met Klopt."
+msgstr ""
+"Huismus sends each receipt from your receipts folder to an AI service you "
+"choose, and makes an expense from it. You check it with Looks right."
+
+msgid "Dit werkt op bonnetjes uit je bonnetjesmap. Stel die eerst in."
+msgstr "This works on receipts from your receipts folder. Set that up first."
+
+msgid "Bonnetjesmap instellen"
+msgstr "Set up a receipts folder"
+
+msgid "Huismus leest met"
+msgstr "Huismus reads with"
+
+msgid "Verbinding testen"
+msgstr "Test connection"
+
+msgid "Naar de bonnetjes zonder uitgave"
+msgstr "To the receipts without an expense"
+
+msgid "Dienst wijzigen"
+msgstr "Change service"
+
+msgid "Opslaan stuurt eerst één klein plaatje om te testen."
+msgstr "Saving first sends one small test image."
+
+msgid ""
+"Huismus vergeet de dienst en de sleutel. Je bonnetjes en uitgaven blijven."
+msgstr ""
+"Huismus forgets the service and the key. Your receipts and expenses stay."
+
 msgid ""
 "Bewaar onderweg een foto of pdf van een bonnetje in deze map. Huismus haalt "
 "hem vanzelf op en zet hem bij de bonnetjes zonder uitgave."
@@ -4679,9 +4841,6 @@ msgstr "Huismus checks"
 
 msgid "Nu ophalen"
 msgstr "Pick up now"
-
-msgid "Naar de bonnetjes zonder uitgave"
-msgstr "To the receipts without an expense"
 
 msgid "Een andere map kiezen"
 msgstr "Choose another folder"
@@ -4739,9 +4898,6 @@ msgid ""
 msgstr ""
 "Set up a receipts folder. What you save there on the road shows up here by "
 "itself."
-
-msgid "Bonnetjesmap instellen"
-msgstr "Set up a receipts folder"
 
 #, python-format
 msgid "%(count)s punt om na te lopen"
@@ -5943,6 +6099,10 @@ msgstr ""
 "If you have a Raspberry Pi, a NAS or a server of your own, you can also run "
 "Huismus in Docker. That's for people who are handy with that."
 
+#, python-format
+#~ msgid "Niet opgeslagen. %(reason)s"
+#~ msgstr "Not saved. %(reason)s"
+
 #~ msgid "Een gekoppelde map, bijvoorbeeld /bonnetjes"
 #~ msgstr "A linked folder, for example /bonnetjes"
 
@@ -5978,7 +6138,6 @@ msgstr ""
 #~ "The page was open for a while, so the form couldn't be sent securely. "
 #~ "Reload the page and try again. Nothing was saved."
 
-#
 #~ msgid ""
 #~ "Gratis, zonder account. Je computer vraagt de eerste keer of je de app "
 #~ "vertrouwt; daarna niet meer."
@@ -6011,11 +6170,9 @@ msgstr ""
 #~ msgid "Uniek kenmerk (voorkomt dubbel importeren)"
 #~ msgstr "Unique reference (prevents importing twice)"
 
-#
 #~ msgid "Huismus kan dit bestand niet lezen. Kies een Excel- of CSV-bestand."
 #~ msgstr "Huismus can't read this file. Choose an Excel or CSV file."
 
-#
 #~ msgid "Er staan geen uitgaven in dit bestand."
 #~ msgstr "There are no expenses in this file."
 
@@ -6068,9 +6225,6 @@ msgstr ""
 #~ msgstr[0] "%(count)s column"
 #~ msgstr[1] "%(count)s columns"
 
-#~ msgid "Ander bestand"
-#~ msgstr "Other file"
-
 #~ msgid "Welke kolom is wat?"
 #~ msgstr "Which column is what?"
 
@@ -6080,7 +6234,6 @@ msgstr ""
 #~ msgid "Categorie voor alle rijen"
 #~ msgstr "Category for all rows"
 
-#
 #~ msgid ""
 #~ "Staan er verschillende soorten uitgaven in je bestand, importeer ze dan "
 #~ "in delen."

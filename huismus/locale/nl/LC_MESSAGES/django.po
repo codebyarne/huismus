@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 12:20+0100\n"
+"POT-Creation-Date: 2026-11-06 20:36+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -29,9 +29,6 @@ msgid ""
 msgstr ""
 
 msgid "Dit document bestaat niet in Huismus, of past niet bij deze actie."
-msgstr ""
-
-msgid "Dit bonnetje staat niet meer bij de bonnetjes zonder uitgave."
 msgstr ""
 
 msgid "Huismus kan dit bonnetje niet lezen. Maak de uitgave in Huismus."
@@ -1843,6 +1840,58 @@ msgstr ""
 msgid "Conceptfactuur gemaakt van de offerte."
 msgstr ""
 
+msgid "Dit bonnetje staat niet meer bij de bonnetjes zonder uitgave."
+msgstr ""
+
+msgid "Ollama (eigen computer of netwerk)"
+msgstr ""
+
+msgid "Andere dienst"
+msgstr ""
+
+msgid ""
+"Vul een adres in dat met https:// begint. http:// werkt alleen op je eigen "
+"computer of netwerk."
+msgstr ""
+
+#, python-format
+msgid "%(service)s weigert je sleutel. Kijk of je hem goed hebt overgenomen."
+msgstr ""
+
+#, python-format
+msgid ""
+"Huismus kan %(service)s niet bereiken. Kijk of het adres klopt en of je "
+"internet hebt."
+msgstr ""
+
+#, python-format
+msgid ""
+"%(service)s is te druk of je tegoed is op. Huismus probeert het later "
+"opnieuw."
+msgstr ""
+
+#, python-format
+msgid "%(service)s gaf een fout. Huismus probeert het later opnieuw."
+msgstr ""
+
+#, python-format
+msgid ""
+"%(service)s kent het model %(model)s niet. Kijk hoe het model precies heet."
+msgstr ""
+
+#, python-format
+msgid ""
+"Het model %(model)s kan geen plaatjes lezen. Kies een model dat dat wel kan."
+msgstr ""
+
+#, python-format
+msgid "%(service)s gaf te laat antwoord."
+msgstr ""
+
+#, python-format
+msgid "%(service)s gaf een antwoord dat Huismus niet begrijpt."
+msgstr ""
+
 msgid "Geen categorie"
 msgstr ""
 
@@ -1947,6 +1996,76 @@ msgid "uitgaveregel"
 msgstr ""
 
 msgid "uitgaveregels"
+msgstr ""
+
+msgid "Dienst"
+msgstr ""
+
+msgid "Adres"
+msgstr ""
+
+msgid ""
+"Vult Huismus in bij een bekende dienst. Bij een andere dienst: het adres dat "
+"die geeft voor OpenAI-compatibele apps."
+msgstr ""
+
+msgid "Model"
+msgstr ""
+
+msgid "Een model dat foto's kan lezen. Huismus stelt er een voor."
+msgstr ""
+
+msgid "API-sleutel"
+msgstr ""
+
+msgid "Kies een dienst"
+msgstr ""
+
+msgid "Vul je API-sleutel in."
+msgstr ""
+
+msgid ""
+"Na het opslaan stuurt Huismus elk nieuw bonnetje uit je bonnetjesmap naar "
+"het adres hierboven, in je eigen netwerk."
+msgstr ""
+
+#, python-format
+msgid ""
+"Na het opslaan stuurt Huismus elk nieuw bonnetje uit je bonnetjesmap naar "
+"%(service)s. %(service)s rekent de kosten met jou af."
+msgstr ""
+
+msgid ""
+"Na het opslaan stuurt Huismus elk nieuw bonnetje uit je bonnetjesmap naar de "
+"dienst die je kiest. Die rekent de kosten met jou af."
+msgstr ""
+
+#, python-format
+msgid "Ook het bonnetje zonder uitgave dat er nu is."
+msgid_plural "Ook de %(count)s bonnetjes zonder uitgave die er nu zijn."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Bonnetjes lezen staat uit. Huismus is de sleutel vergeten."
+msgstr ""
+
+#, python-format
+msgid "Het werkt. %(service)s kan je bonnetjes lezen."
+msgstr ""
+
+#, python-format
+msgid "Opgeslagen. %(service)s kan je bonnetjes lezen."
+msgstr ""
+
+msgid "Niet nodig voor een adres op je eigen computer of netwerk."
+msgstr ""
+
+msgid "Leeg laten houdt de bewaarde sleutel."
+msgstr ""
+
+msgid ""
+"Maak je aan op de site van de dienst. Huismus laat hem daarna nooit meer "
+"zien."
 msgstr ""
 
 msgid "Huismus kan deze PDF niet openen. Kies een ander bestand."
@@ -2441,9 +2560,6 @@ msgstr ""
 
 msgid ""
 "Elke AI-assistent die met een adres en een sleutel werkt, gebruikt deze twee."
-msgstr ""
-
-msgid "Adres"
 msgstr ""
 
 msgid "Gekopieerd"
@@ -3297,31 +3413,6 @@ msgid "Nieuwe factuur"
 msgstr ""
 
 #, python-format
-msgid "waarvan %(count)s vervallen"
-msgid_plural "waarvan %(count)s vervallen"
-msgstr[0] ""
-msgstr[1] ""
-
-#, python-format
-msgid "Omzet %(year)s"
-msgstr ""
-
-#, python-format
-msgid "Kosten %(costs)s"
-msgstr ""
-
-#, python-format
-msgid "%(percent)s%% van je KOR-grens"
-msgstr ""
-
-#, python-format
-msgid "Winst %(year)s"
-msgstr ""
-
-msgid "Naar het jaaroverzicht"
-msgstr ""
-
-#, python-format
 msgid ""
 "Je omzet in %(year)s (%(revenue)s) is hoger dan je KOR-grens van %(limit)s."
 msgstr ""
@@ -3330,6 +3421,9 @@ msgstr ""
 msgid ""
 "Je omzet in %(year)s is %(revenue)s: %(percent)s%% van je KOR-grens van "
 "%(limit)s."
+msgstr ""
+
+msgid "Naar het jaaroverzicht"
 msgstr ""
 
 #, python-format
@@ -3355,6 +3449,28 @@ msgid "zonder klant"
 msgstr ""
 
 msgid "Verder werken"
+msgstr ""
+
+#, python-format
+msgid "waarvan %(count)s vervallen"
+msgid_plural "waarvan %(count)s vervallen"
+msgstr[0] ""
+msgstr[1] ""
+
+#, python-format
+msgid "Omzet %(year)s"
+msgstr ""
+
+#, python-format
+msgid "Kosten %(costs)s"
+msgstr ""
+
+#, python-format
+msgid "%(percent)s%% van je KOR-grens"
+msgstr ""
+
+#, python-format
+msgid "Winst %(year)s"
 msgstr ""
 
 msgid "Laatste facturen"
@@ -4365,6 +4481,39 @@ msgstr ""
 msgid "betekent dat er een bonnetje bij de uitgave zit."
 msgstr ""
 
+msgid "Bonnetjes lezen"
+msgstr ""
+
+msgid ""
+"Huismus stuurt elk bonnetje uit je bonnetjesmap naar een AI-dienst die jij "
+"kiest, en maakt er een uitgave van. Jij kijkt hem na met Klopt."
+msgstr ""
+
+msgid "Dit werkt op bonnetjes uit je bonnetjesmap. Stel die eerst in."
+msgstr ""
+
+msgid "Bonnetjesmap instellen"
+msgstr ""
+
+msgid "Huismus leest met"
+msgstr ""
+
+msgid "Verbinding testen"
+msgstr ""
+
+msgid "Naar de bonnetjes zonder uitgave"
+msgstr ""
+
+msgid "Dienst wijzigen"
+msgstr ""
+
+msgid "Opslaan stuurt eerst één klein plaatje om te testen."
+msgstr ""
+
+msgid ""
+"Huismus vergeet de dienst en de sleutel. Je bonnetjes en uitgaven blijven."
+msgstr ""
+
 msgid ""
 "Bewaar onderweg een foto of pdf van een bonnetje in deze map. Huismus haalt "
 "hem vanzelf op en zet hem bij de bonnetjes zonder uitgave."
@@ -4374,9 +4523,6 @@ msgid "Huismus kijkt in"
 msgstr ""
 
 msgid "Nu ophalen"
-msgstr ""
-
-msgid "Naar de bonnetjes zonder uitgave"
 msgstr ""
 
 msgid "Een andere map kiezen"
@@ -4430,9 +4576,6 @@ msgstr ""
 msgid ""
 "Stel een bonnetjesmap in. Wat je onderweg in die map zet, komt hier vanzelf "
 "binnen."
-msgstr ""
-
-msgid "Bonnetjesmap instellen"
 msgstr ""
 
 #, python-format
