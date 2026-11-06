@@ -602,3 +602,15 @@ document.addEventListener("click", async (event) => {
   button.textContent = button.dataset.copied;
   setTimeout(() => (button.textContent = button.dataset.label), 2000);
 });
+
+// Bonnetjes lezen: choosing a known service puts its address and model
+// (data-url, data-model on its option) in the fields. Without JS, saving
+// fills in what was left empty (expenses.reading_views).
+document.addEventListener("change", (event) => {
+  const select = event.target;
+  if (!select.matches?.("[data-service-fields] select[name=provider]")) return;
+  const option = select.selectedOptions[0];
+  if (!option?.dataset.url) return;
+  select.form.elements.url.value = option.dataset.url;
+  select.form.elements.model.value = option.dataset.model;
+});

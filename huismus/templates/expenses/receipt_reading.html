@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load i18n forms %}
+
+{% block title %}{% translate "Bonnetjes lezen" %} — {% translate "Instellingen" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+{% comment %}Instellingen → Bonnetjes lezen (SPEC.md M20 part 3, expenses.reading_views). Built like Bonnetjesmap: a card for what is on, a form card, Uitzetten.{% endcomment %}
+<div class="page-head">
+    <div class="titles">
+        <a class="small" href="{% url 'business:overview' %}">← {% translate "Instellingen" %}</a>
+        <h1>{% translate "Bonnetjes lezen" %}</h1>
+        <p class="lede">{% translate "Huismus stuurt elk bonnetje uit je bonnetjesmap naar een AI-dienst die jij kiest, en maakt er een uitgave van. Jij kijkt hem na met Klopt." %} <a href="{{ help_url }}">{% translate "Zo werkt het" %} →</a></p>
+    </div>
+</div>
+
+{% if not folder_on %}
+<p class="hint-banner is-info" id="eerst-bonnetjesmap" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#paperclip"></use></svg><span>{% translate "Dit werkt op bonnetjes uit je bonnetjesmap. Stel die eerst in." %} <a href="{% url 'business:receipts_folder' %}">{% translate "Bonnetjesmap instellen" %} →</a></span></p>
+{% endif %}
+
+{% if on %}
+<section class="card settings-section" id="lezen-aan">
+    <div class="card-head">
+        <h2 class="row" style="gap:var(--s-2)">{% translate "Huismus leest met" %} <span class="pill pill-final" id="lezen-pill">{% translate "Aan" context "back-upplek staat aan" %}</span></h2>
+        <form method="post">{% csrf_token %}<input type="hidden" name="action" value="test"><button type="submit" class="btn btn-secondary btn-sm"><span class="spinner" aria-hidden="true"></span>{% translate "Verbinding testen" %}</button></form>
+    </div>
+    <div class="card-pad stack" style="gap:var(--s-3)">
+        <p style="overflow-wrap:anywhere"><strong id="lezen-dienst">{{ service }} · {{ saved.model }}</strong></p>
+        <div class="row"><a href="{% url 'expenses:tray' %}">{% translate "Naar de bonnetjes zonder uitgave" %} →</a></div>
+    </div>
+</section>
+{% endif %}
+
+<form method="post" class="card settings-section" id="lezen-kiezen">
+    {% csrf_token %}
+    <div class="card-head"><h2>{% if on %}{% translate "Dienst wijzigen" %}{% else %}{% translate "Kies een dienst" %}{% endif %}</h2></div>
+    <div class="card-pad stack" style="gap:var(--s-3)">
+        {% form_errors form %}
+        <div class="fieldset" data-service-fields>
+            {% field form.provider %}
+            {% field form.url %}
+            {% field form.model %}
+            {% field form.key help=key_help %}
+        </div>
+        <p class="small" id="lezen-zin">{{ sentence }}{% if waiting %} {{ waiting }}{% endif %} {% translate "Opslaan stuurt eerst één klein plaatje om te testen." %}</p>
+        <div class="row"><a class="btn btn-ghost" href="{% url 'business:overview' %}">{% translate "Annuleren" %}</a><span class="spacer"></span><button type="submit" class="btn btn-primary"><span class="spinner" aria-hidden="true"></span>{% translate "Opslaan" %}</button></div>
+    </div>
+</form>
+
+{% if on %}
+<section class="card card-pad row" style="margin-top:var(--s-5);justify-content:space-between">
+    <div class="stack" style="gap:2px"><strong>{% translate "Uitzetten" %}</strong><span class="small muted">{% translate "Huismus vergeet de dienst en de sleutel. Je bonnetjes en uitgaven blijven." %}</span></div>
+    <form method="post">{% csrf_token %}<input type="hidden" name="action" value="off"><button class="btn btn-secondary" type="submit">{% translate "Uitzetten" %}</button></form>
+</section>
+{% endif %}
+{% endblock %}

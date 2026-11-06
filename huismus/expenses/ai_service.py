@@ -34,31 +34,48 @@ from huismus.core.private_files import write_owner_only
 FILE_PREFIX = "ai-service"
 CONFIG_FILE_NAME = f"{FILE_PREFIX}.json"
 
-# Seconds to wait for an answer: reading a photo takes a model a while.
-TIMEOUT = 120
+# Seconds to wait for an answer: reading a photo takes a model a while
+# (huismus-intern/besluiten.md, 2026-11-06: three minutes).
+TIMEOUT = 180
 
 
 @dataclass(frozen=True)
 class Provider:
-    name: str
+    name: str  # in sentences: "Mistral weigert je sleutel."
+    label: str  # in the list of services
     url: str
-    model: str
+    model: str  # one that reads images
 
 
-# Stored in data/: never rename the keys. The models are a start; a
-# service renames its models now and then, so the field stays editable.
+# Stored in data/: never rename the keys. In the order of the list:
+# alphabetical, then Ollama and "Andere dienst" (besluit 2026-11-06). The
+# models are a start; a service renames its models now and then, so the
+# field stays editable.
 PROVIDERS = {
-    "mistral": Provider("Mistral", "https://api.mistral.ai/v1", "mistral-medium-latest"),
-    "openai": Provider("OpenAI", "https://api.openai.com/v1", "gpt-5-mini"),
+    "anthropic": Provider(
+        "Anthropic", "Anthropic (Claude)", "https://api.anthropic.com/v1", "claude-haiku-5-5"
+    ),
     "gemini": Provider(
+        "Google Gemini",
         "Google Gemini",
         "https://generativelanguage.googleapis.com/v1beta/openai",
         "gemini-2.5-flash",
     ),
-    "anthropic": Provider("Anthropic", "https://api.anthropic.com/v1", "claude-haiku-5-5"),
-    "ollama": Provider("Ollama", "http://localhost:11434/v1", "qwen2.5vl"),
+    "mistral": Provider("Mistral", "Mistral", "https://api.mistral.ai/v1", "mistral-medium-latest"),
+    "openai": Provider("OpenAI", "OpenAI", "https://api.openai.com/v1", "gpt-5-mini"),
+    "ollama": Provider(
+        "Ollama",
+        gettext_lazy("Ollama (eigen computer of netwerk)"),
+        "http://localhost:11434/v1",
+        "qwen2.5vl",
+    ),
 }
 OTHER = "other"
+OTHER_LABEL = gettext_lazy("Andere dienst")
+
+
+def choices() -> list[tuple[str, str]]:
+    return [(slug, str(p.label)) for slug, p in PROVIDERS.items()] + [(OTHER, str(OTHER_LABEL))]
 
 
 @dataclass
@@ -121,11 +138,16 @@ def is_nearby(url: str) -> bool:
 def address_error(url: str) -> str | None:
     """Why this address can't be used, or None."""
     parts = urlsplit(url)
-    if parts.scheme not in ("https", "http") or not parts.hostname:
-        return _("Vul een adres in dat begint met https://.")
-    if parts.scheme == "http" and not is_nearby(url):
-        # A receipt goes over the internet only encrypted.
-        return _("Gebruik https://. Alleen op je eigen computer of thuisnetwerk mag http://.")
+    # A receipt goes over the internet only encrypted.
+    if (
+        parts.scheme not in ("https", "http")
+        or not parts.hostname
+        or (parts.scheme == "http" and not is_nearby(url))
+    ):
+        return _(
+            "Vul een adres in dat met https:// begint. "
+            "http:// werkt alleen op je eigen computer of netwerk."
+        )
     return None
 
 
@@ -251,28 +273,36 @@ def test_connection(config: Config) -> None:
     )
 
 
-def failure_sentence(reason: str, service: str) -> str:
+def failure_sentence(reason: str, config: Config) -> str:
     """Why a request to the service failed, in plain words."""
-    values = {"service": service}
+    values = {"service": name(config), "model": config.model}
     if reason == REFUSED:
-        return _("%(service)s weigert je sleutel. Kijk of hij klopt.") % values
+        return _("%(service)s weigert je sleutel. Kijk of je hem goed hebt overgenomen.") % values
     if reason == UNREACHABLE:
-        return _("Huismus kan %(service)s niet bereiken. Kijk of het adres klopt.") % values
+        return (
+            _(
+                "Huismus kan %(service)s niet bereiken. "
+                "Kijk of het adres klopt en of je internet hebt."
+            )
+            % values
+        )
     if reason == BUSY:
         return (
-            _("%(service)s is te druk, of je tegoed is op. Huismus probeert het later opnieuw.")
+            _("%(service)s is te druk of je tegoed is op. Huismus probeert het later opnieuw.")
             % values
         )
     if reason == SERVER:
         return _("%(service)s gaf een fout. Huismus probeert het later opnieuw.") % values
     if reason == NO_MODEL:
-        return _("%(service)s kent dit model niet. Kijk of de naam klopt.") % values
+        return (
+            _("%(service)s kent het model %(model)s niet. Kijk hoe het model precies heet.")
+            % values
+        )
     if reason == NO_IMAGES:
-        return _("Dit model kan geen foto's lezen. Kies een ander model.")
+        return (
+            _("Het model %(model)s kan geen plaatjes lezen. Kies een model dat dat wel kan.")
+            % values
+        )
     if reason == TIMEOUT_REASON:
-        return _("%(service)s gaf niet op tijd antwoord.") % values
+        return _("%(service)s gaf te laat antwoord.") % values
     return _("%(service)s gaf een antwoord dat Huismus niet begrijpt.") % values
-
-
-# For makemessages: the "Andere" choice in the list of services.
-OTHER_LABEL = gettext_lazy("Andere")
