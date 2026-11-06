@@ -95,3 +95,17 @@ def _no_receipts_folder():
     status.unlink(missing_ok=True)
     yield
     status.unlink(missing_ok=True)
+
+
+@pytest.fixture
+def newest_migrations_after(transactional_db):
+    """For a test that migrates the test database back and forth: afterwards,
+    pass or fail, the database is at the newest migrations again. Without it
+    the next test on the same worker can miss a column added later (a
+    migration test that stopped at expenses 0002 hid needs_review, 0003)."""
+    yield
+    from django.db import connection
+    from django.db.migrations.executor import MigrationExecutor
+
+    executor = MigrationExecutor(connection)
+    executor.migrate(executor.loader.graph.leaf_nodes())
