@@ -494,3 +494,11 @@ def test_the_assistant_sees_a_verlegd_line_and_keeps_it(tool, business, customer
     _data, _text, is_error = tool("update_draft", id=document.pk, notes="Bellen")
     assert not is_error
     assert document.lines.get().reverse_charge is True
+
+
+def test_an_expense_from_the_assistant_is_to_check(tool, business):
+    """ "Nakijken" in Huismus until the user says it's right
+    (huismus-intern/besluiten.md, 2026-11-05, "Bonnetjes onderweg, deel 2")."""
+    data, _text, is_error = tool("add_expense", lines=[{"amount": "10"}])
+    assert not is_error
+    assert Expense.objects.get(pk=data["id"]).needs_review

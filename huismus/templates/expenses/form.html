@@ -16,6 +16,19 @@
 
 {% form_errors form formset new_receipt_form %}
 
+{% if expense.needs_review %}
+{% comment %}An AI assistant filled it in (add_expense). "Klopt" submits the
+expense form below (form="uitgave-form"), so what the user just changed is
+saved with it. The hidden button before it stays the form's default, so
+Enter in a field still does what it did, not "Klopt".{% endcomment %}
+<button type="submit" form="uitgave-form" name="regel_toevoegen" value="1" class="sr-only" tabindex="-1" aria-hidden="true" data-formset-add="lines"></button>
+<div class="flash flash-info" id="nakijken" style="margin-bottom:var(--s-5);align-items:center;flex-wrap:wrap">
+    <svg class="i" aria-hidden="true" style="margin-top:0"><use href="#info"></use></svg>
+    <div class="flash-body">{% translate "Je AI-assistent vulde deze uitgave in. Klopt alles?" %}</div>
+    <button type="submit" form="uitgave-form" name="klopt" value="1" class="btn btn-sm">{% translate "Klopt" %}<span class="spinner"></span></button>
+</div>
+{% endif %}
+
 {% comment %}An existing expense's receipts, above its form like the
 receipt field of a new one. Its own upload and delete forms take
 expense.pk.{% endcomment %}
@@ -65,7 +78,7 @@ expense.pk.{% endcomment %}
 </section>
 {% endif %}
 
-<form class="card card-pad stack" method="post"{% if tray_receipt %} action="{% url 'expenses:create' %}"{% endif %}{% if new_receipt_form %} enctype="multipart/form-data"{% endif %} style="gap:var(--s-5)">
+<form class="card card-pad stack" id="uitgave-form" method="post"{% if tray_receipt %} action="{% url 'expenses:create' %}"{% endif %}{% if new_receipt_form %} enctype="multipart/form-data"{% endif %} style="gap:var(--s-5)">
     {% csrf_token %}
     {% comment %}The receipt first: it's what the rest is typed from. A new
     expense takes it along when it's saved; an existing one has the

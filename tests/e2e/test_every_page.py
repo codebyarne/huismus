@@ -71,6 +71,10 @@ def _pages():
         # "Uitgave maken": tests/e2e/test_receipts_folder.py.
         "/uitgaven/bonnetjes/",
         f"/uitgaven/{_first(Expense.objects, 'expense').pk}/",
+        # "Nakijken" (SPEC.md M20 part 2b): the filter, and an expense with
+        # the notice and "Klopt"; the flow: tests/e2e/test_to_check.py.
+        "/uitgaven/?nakijken=1",
+        f"/uitgaven/{_first(Expense.objects.filter(needs_review=True), 'expense to check').pk}/",
         "/rapporten/jaaroverzicht/",
         "/uitgaven/categorieen/",
         f"/uitgaven/categorieen/?bewerk={_first(ExpenseCategory.objects, 'category').pk}",
