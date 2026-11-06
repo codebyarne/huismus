@@ -1,6 +1,6 @@
 {% load i18n backups %}
-{% comment %}How the receipts folder is doing, on Bonnetjesmap and above the receipts without an expense (huismus-intern/besluiten.md, 2026-11-05, the timeline). While a look runs in the background (expenses.inbox.fetch_in_background) this part fetches itself again every few seconds from `refresh_url`; once it is done the new part has no hx-trigger and the asking stops. The tray swaps its list along (hx-select-oob). Without JS: reload the page.{% endcomment %}
-<div class="stack" id="bonnetjes-stand" style="gap:var(--s-3)"{% if fetching %} hx-get="{{ refresh_url }}" hx-select="#bonnetjes-stand" hx-target="this" hx-swap="outerHTML" hx-trigger="every 3s"{% if oob %} hx-select-oob="{{ oob }}"{% endif %}{% endif %}>
+{% comment %}How the receipts folder is doing, on Bonnetjesmap and above the receipts without an expense (huismus-intern/besluiten.md, 2026-11-05, the timeline). While a look runs in the background (expenses.inbox.fetch_in_background), or Huismus reads receipts (expenses.reading), this part fetches itself again every few seconds from `refresh_url`; once it is done the new part has no hx-trigger and the asking stops. The tray swaps its list along (hx-select-oob). Without JS: reload the page.{% endcomment %}
+<div class="stack" id="bonnetjes-stand" style="gap:var(--s-3)"{% if fetching or reading_now %} hx-get="{{ refresh_url }}" hx-select="#bonnetjes-stand" hx-target="this" hx-swap="outerHTML" hx-trigger="every 3s"{% if oob %} hx-select-oob="{{ oob }}"{% endif %}{% endif %}>
     {% if fetching %}
     <p class="small row" style="gap:var(--s-2)" id="bonnetjes-bezig"><span class="spinner" aria-hidden="true"></span>{% translate "Bezig met ophalen…" %}</p>
     {% elif failure %}

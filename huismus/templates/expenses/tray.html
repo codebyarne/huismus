@@ -18,6 +18,10 @@
     {% endif %}
 </div>
 
+{% if reading_failure %}
+<p class="hint-banner is-bad" id="lezen-mislukt" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% blocktranslate with reason=reading_failure trimmed %}Huismus kon je bonnetjes niet lezen. {{ reason }} Ze wachten hier tot het weer lukt.{% endblocktranslate %} <a href="{% url 'business:receipt_reading' %}">{% translate "Bonnetjes lezen" %} →</a></span></p>
+{% endif %}
+
 {% if on %}
 <div style="margin-bottom:var(--s-4)">
     {% url 'expenses:tray' as refresh_url %}
@@ -30,7 +34,7 @@
 <section class="card card-pad">
     {% comment %}Narrower than on an expense, so a phone shows two side by side.{% endcomment %}
     <div class="receipts" style="grid-template-columns:repeat(auto-fill,minmax(120px,1fr))">
-        {% for receipt in receipts %}
+        {% for item in receipts %}{% with receipt=item.receipt %}
         <div class="receipt" id="bonnetje-{{ receipt.pk }}">
             <a class="thumb" href="{{ receipt.file.url }}" hx-boost="false" target="_blank" rel="noopener" aria-label="{% blocktranslate with name=receipt.filename %}{{ name }} openen{% endblocktranslate %}">
                 {% if receipt.is_pdf %}<svg class="i i-lg" aria-hidden="true"><use href="#file"></use></svg>
@@ -41,6 +45,8 @@
                 <button type="button" class="btn btn-ghost btn-sm btn-icon" aria-label="{% translate 'Bonnetje verwijderen' %}" command="show-modal" commandfor="verwijder-bon-{{ receipt.pk }}"><svg class="i i-sm" aria-hidden="true"><use href="#trash"></use></svg></button>
             </div>
             <span class="muted">{% blocktranslate with moment=receipt.created_at|moment %}Opgehaald {{ moment }}{% endblocktranslate %}</span>
+            {% if item.waiting %}<span class="small muted row" style="gap:var(--s-1)" data-bonnetje-bezig><span class="spinner" aria-hidden="true"></span>{% translate "Huismus leest dit bonnetje…" %}</span>
+            {% elif item.reason %}<span class="small muted" data-bonnetje-reden>{% if receipt.read_similar %}<a href="{% url 'expenses:edit' receipt.read_similar.pk %}">{{ item.reason }}</a>{% else %}{{ item.reason }}{% endif %}</span>{% endif %}
             <a class="btn btn-primary btn-sm" href="{% url 'expenses:create' %}?bonnetje={{ receipt.pk }}">{% translate "Uitgave maken" %}</a>
         </div>
         <dialog class="dialog" id="verwijder-bon-{{ receipt.pk }}" aria-labelledby="verwijder-bon-{{ receipt.pk }}-titel">
@@ -57,7 +63,7 @@
                 </div>
             </form>
         </dialog>
-        {% endfor %}
+        {% endwith %}{% endfor %}
     </div>
 </section>
 {% else %}

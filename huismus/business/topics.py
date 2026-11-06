@@ -19,7 +19,7 @@ from huismus.core.models import THEME_CHOICES
 from huismus.core.templatetags.backups import moment
 from huismus.core.templatetags.money import money
 from huismus.documents.numbering import next_numbers_if_issued_today
-from huismus.expenses import inbox
+from huismus.expenses import ai_service, inbox, reading
 
 from . import smtp
 from .forms import MAIL_TEXT_FIELDS
@@ -171,6 +171,7 @@ def cards(settings: Settings, theme: str = "") -> list[dict]:
     ]
     result.append(_backups_card(ok, off))
     result.append(_receipts_folder_card(ok, off))
+    result.append(_receipt_reading_card(ok, off))
     result.append(_export_card())
     result.append(_assistants_card(ok, off))
     result.append(_updates_card(ok, off))
@@ -218,6 +219,26 @@ def _receipts_folder_card(ok, off) -> dict:
         "intro": _("Bonnetjes van onderweg, vanzelf in Huismus."),
         "slug": "bonnetjesmap",
         "url": reverse("business:receipts_folder"),
+        "line": line,
+        "pill": pill,
+    }
+
+
+def _receipt_reading_card(ok, off) -> dict:
+    """Bonnetjes lezen (SPEC.md M20, part 3, expenses.reading_views): the
+    user's own AI service turns receipts into expenses to check."""
+    if not ai_service.is_on():
+        line, pill = _("Nog geen dienst gekozen"), (pgettext_lazy("setting", "Uit"), off)
+    elif reading.failure_sentence():
+        line, pill = _("Lezen is mislukt"), (_("Mislukt"), "pill-overdue")
+    else:
+        line = _("Met %(service)s") % {"service": ai_service.name()}
+        pill = (pgettext_lazy("setting", "Aan"), ok)
+    return {
+        "title": _("Bonnetjes lezen"),
+        "intro": _("Huismus maakt van elk nieuw bonnetje een uitgave om na te kijken."),
+        "slug": "bonnetjes-lezen",
+        "url": reverse("business:receipt_reading"),
         "line": line,
         "pill": pill,
     }

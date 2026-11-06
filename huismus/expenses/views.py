@@ -13,7 +13,7 @@ from django.utils.translation import gettext_lazy as _
 
 from huismus.core.models import Attachment
 
-from . import batch, inbox
+from . import batch, inbox, reading
 from .forms import (
     ExpenseCategoryForm,
     ExpenseForm,
@@ -60,6 +60,8 @@ def expense_list(request):
     expenses = Expense.objects.all()
     if to_check:
         expenses = expenses.filter(needs_review=True)
+        # What the overview called new to check is seen now.
+        reading.seen()
     if year is not None:
         expenses = expenses.filter(date__year=year)
     if category_pk is not None:
@@ -244,6 +246,9 @@ def _expense_form_or_gone(request, expense):
     }
     if expense:
         context["receipt_form"] = ReceiptUploadForm()
+        # "Huismus las dit bonnetje met Mistral." (SPEC.md M20, part 3): the
+        # service it was read with then, not the one in the settings now.
+        context["read_by"] = reading.read_by(expense)
     # "Hierna nog 2." and "Overslaan": the next without saving.
     if expense and expense.needs_review:
         context["skip_to"] = batch.next_to_check(expense)

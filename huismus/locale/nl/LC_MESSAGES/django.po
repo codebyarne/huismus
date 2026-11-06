@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 21:03+0100\n"
+"POT-Creation-Date: 2026-11-06 21:04+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -542,6 +542,22 @@ msgid "Bonnetjesmap"
 msgstr ""
 
 msgid "Bonnetjes van onderweg, vanzelf in Huismus."
+msgstr ""
+
+msgid "Nog geen dienst gekozen"
+msgstr ""
+
+msgid "Lezen is mislukt"
+msgstr ""
+
+#, python-format
+msgid "Met %(service)s"
+msgstr ""
+
+msgid "Bonnetjes lezen"
+msgstr ""
+
+msgid "Huismus maakt van elk nieuw bonnetje een uitgave om na te kijken."
 msgstr ""
 
 msgid "Exporteren"
@@ -1233,6 +1249,18 @@ msgid "bestand"
 msgstr ""
 
 msgid "sha256"
+msgstr ""
+
+msgid "gelezen op"
+msgstr ""
+
+msgid "gelezen met"
+msgstr ""
+
+msgid "reden niet gelezen"
+msgstr ""
+
+msgid "lijkt op"
 msgstr ""
 
 msgid "bijlage"
@@ -1998,6 +2026,32 @@ msgid "uitgaveregel"
 msgstr ""
 
 msgid "uitgaveregels"
+msgstr ""
+
+msgid "Niet gelezen: dit lijkt geen bonnetje."
+msgstr ""
+
+msgid "Niet gelezen: hier staan meer bonnetjes op."
+msgstr ""
+
+msgid "Niet gelezen: er staat geen totaal op."
+msgstr ""
+
+msgid "Niet gelezen: de bedragen tellen niet op tot het totaal."
+msgstr ""
+
+msgid "Niet gelezen: de btw staat er niet bij."
+msgstr ""
+
+#, python-format
+msgid "Niet gelezen: lijkt op je uitgave van %(date)s (%(amount)s)."
+msgstr ""
+
+#, python-format
+msgid "Niet gelezen: %(service)s gaf te laat antwoord."
+msgstr ""
+
+msgid "Niet gelezen: dit bonnetje is niet goed leesbaar."
 msgstr ""
 
 msgid "Dienst"
@@ -4259,6 +4313,12 @@ msgid_plural "%(count)s nieuwe bonnetjes."
 msgstr[0] "%(count)s nieuw bonnetje."
 msgstr[1] "%(count)s nieuwe bonnetjes."
 
+#, python-format
+msgid "%(count)s nieuwe uitgave om na te kijken."
+msgid_plural "%(count)s nieuwe uitgaven om na te kijken."
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Bezig met ophalen…"
 msgstr ""
 
@@ -4352,6 +4412,10 @@ msgid "Nieuwe uitgave"
 msgstr ""
 
 msgid "Bonnetjes zonder uitgave"
+msgstr ""
+
+#, python-format
+msgid "Huismus las dit bonnetje met %(service)s. Klopt alles?"
 msgstr ""
 
 msgid "Je AI-assistent vulde deze uitgave in. Klopt alles?"
@@ -4503,9 +4567,6 @@ msgstr ""
 msgid "betekent dat er een bonnetje bij de uitgave zit."
 msgstr ""
 
-msgid "Bonnetjes lezen"
-msgstr ""
-
 msgid ""
 "Huismus stuurt elk bonnetje uit je bonnetjesmap naar een AI-dienst die jij "
 "kiest, en maakt er een uitgave van. Jij kijkt hem na met Klopt."
@@ -4521,6 +4582,12 @@ msgid "Huismus leest met"
 msgstr ""
 
 msgid "Verbinding testen"
+msgstr ""
+
+#, python-format
+msgid ""
+"Huismus kon je bonnetjes niet lezen. %(reason)s Ze wachten hier tot het weer"
+" lukt."
 msgstr ""
 
 msgid "Naar de bonnetjes zonder uitgave"
@@ -4580,6 +4647,9 @@ msgstr ""
 
 #, python-format
 msgid "Opgehaald %(moment)s"
+msgstr ""
+
+msgid "Huismus leest dit bonnetje…"
 msgstr ""
 
 msgid "Uitgave maken"
