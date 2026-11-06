@@ -311,13 +311,15 @@ def test_a_receipt_has_empty_fields_and_opslaan(logged_in):
     page = logged_in.get(_url("bonnetje", receipt.pk)).content.decode()
     assert "1 van 1" in page and "tankstation.pdf" in page
     assert 'name="klopt"' not in page and "Opslaan" in page
-    assert "Klopt alles?" not in page
+    assert "Klopt alles?" not in page and 'id="nakijken"' not in page
 
 
 def test_a_receipt_shows_why_huismus_left_it(logged_in):
     receipt = _in_tray(read_at=timezone.now(), read_reason=reading.NOT_A_RECEIPT)
     page = logged_in.get(_url("bonnetje", receipt.pk)).content.decode()
     assert "Niet gelezen: dit lijkt geen bonnetje." in page
+    # In the notice, as an expense's "Klopt alles?".
+    assert 'class="flash flash-info" id="nakijken"' in page
 
 
 def test_opslaan_puts_the_receipt_on_a_new_expense_and_goes_on(logged_in):
