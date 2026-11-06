@@ -82,6 +82,9 @@ class ExpenseImportReport:
     missing_receipts: list[str] = field(default_factory=list)
     # Moneybird categories that weren't in Huismus yet: made by the import.
     new_categories: list[str] = field(default_factory=list)
+    # Lines whose VAT rate Huismus doesn't know, "<document>: <Moneybird's
+    # name>": imported without a rate (SPEC.md M21, part 2).
+    unknown_vat_rates: list[str] = field(default_factory=list)
 
 
 def _mismatch_text(document_label, number, mismatches) -> str:
@@ -637,6 +640,9 @@ def import_expenses(
                     _mismatch_text(_("Uitgave %(number)s"), label, mismatches)
                 )
 
+            for line in parsed.lines:
+                if line.vat_rate_name and not line.vat_rate:
+                    report.unknown_vat_rates.append(f"{label}: {line.vat_rate_name}")
             expense = create_expense(
                 _expense_lines(parsed, categories, report),
                 date=parsed.date,
@@ -689,6 +695,7 @@ def _expense_lines(parsed, categories: dict, report) -> list[ExpenseLineInput]:
             amount_cents=amount,
             vat_info_cents=line_vat,
             category=_category(line.category, categories, report),
+            vat_rate=line.vat_rate,
         )
         for line, amount, line_vat in zip(lines, gross, vat, strict=True)
     ]
