@@ -68,10 +68,13 @@ above the fields.{% endcomment %}
             <svg class="i" aria-hidden="true"><use href="#info"></use></svg>
             <div class="flash-body">{% if read_by %}{% blocktranslate with service=read_by %}Huismus las dit bonnetje met {{ service }}. Klopt alles?{% endblocktranslate %}{% else %}{% translate "Je AI-assistent vulde deze uitgave in. Klopt alles?" %}{% endif %}</div>
         </div>
-        {% elif waiting %}
-        <p class="small muted row" style="gap:var(--s-1)" data-bonnetje-bezig><span class="spinner" aria-hidden="true"></span>{% translate "Huismus leest dit bonnetje…" %}</p>
-        {% elif reason %}
-        <p class="small muted" data-bonnetje-reden>{% if tray_receipt.read_similar %}<a href="{% url 'expenses:edit' tray_receipt.read_similar.pk %}">{{ reason }}</a>{% else %}{{ reason }}{% endif %}</p>
+        {% elif waiting or reason %}
+        {% comment %}What Huismus did with this receipt, in the same notice as an expense's: never missed beside empty fields.{% endcomment %}
+        <div class="flash flash-info" id="nakijken">
+            <svg class="i" aria-hidden="true"><use href="#info"></use></svg>
+            {% if waiting %}<div class="flash-body row" style="gap:var(--s-1)" data-bonnetje-bezig><span class="spinner" aria-hidden="true"></span>{% translate "Huismus leest dit bonnetje…" %}</div>
+            {% else %}<div class="flash-body" data-bonnetje-reden>{% if tray_receipt.read_similar %}<a href="{% url 'expenses:edit' tray_receipt.read_similar.pk %}">{{ reason }}</a>{% else %}{{ reason }}{% endif %}</div>{% endif %}
+        </div>
         {% endif %}
         <form class="card card-pad stack" id="uitgave-form" method="post" style="gap:var(--s-5)">
             {% csrf_token %}
