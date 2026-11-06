@@ -9,7 +9,7 @@ from huismus.business.models import Settings
 from huismus.core.forms import EuroCentsField, HTML5DateInput
 
 from .lines import ExpenseLineInput
-from .models import Expense, ExpenseCategory, ExpenseLine
+from .models import Expense, ExpenseCategory, ExpenseLine, VatRate
 from .receipts import stored_receipt, validate_receipt
 
 
@@ -32,21 +32,45 @@ class ExpenseLineForm(forms.ModelForm):
 
     class Meta:
         model = ExpenseLine
-        fields = ["description", "category", "amount_cents", "vat_info_cents"]
+        fields = ["description", "category", "amount_cents", "vat_info_cents", "vat_rate"]
         widgets = {"description": forms.TextInput()}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["category"].empty_label = _("Geen categorie")
+        if Settings.load().kor_enabled:
+            # Under the KOR the rate is not asked; a stored one stays
+            # (line_inputs takes it from the line).
+            del self.fields["vat_rate"]
+            return
         # Without the KOR every line needs its VAT, € 0,00 included
-        # (decision of the owner, 2026-11-05). Still information only: the
-        # amount stays gross (CLAUDE.md, hard rule 7).
-        if not Settings.load().kor_enabled:
-            vat = self.fields["vat_info_cents"]
-            vat.required = True
-            vat.error_messages["required"] = _(
-                "Vul het btw-bedrag in. Geen btw betaald? Vul dan 0 in."
-            )
+        # (decision of the owner, 2026-11-05), and its rate, with no preset
+        # choice (SPEC.md M21). The amount stays gross (CLAUDE.md, hard
+        # rule 7); the VAT is what the user enters, never computed.
+        vat = self.fields["vat_info_cents"]
+        # Not "ter info" (#96). Its help is the note under the lines
+        # (expenses/_fields.html), once rather than under every line.
+        vat.label = _("btw")
+        vat.required = True
+        vat.error_messages["required"] = _("Vul het btw-bedrag in. Geen btw betaald? Vul dan 0 in.")
+        rate = self.fields["vat_rate"]
+        rate.required = True
+        rate.choices = [("", _("Kies…")), *VatRate.choices]
+        rate.error_messages["required"] = _("Kies het btw-tarief.")
+
+    def clean(self):
+        cleaned = super().clean()
+        vat = cleaned.get("vat_info_cents")
+        if cleaned.get("vat_rate") == VatRate.ZERO and vat:
+            self.add_error("vat_info_cents", _("Bij 0% of geen btw is het btw-bedrag € 0,00."))
+        return cleaned
+
+    def vat_rate(self) -> str:
+        """The rate to save: the one chosen, or under the KOR the one the
+        line already had."""
+        if "vat_rate" in self.fields:
+            return self.cleaned_data.get("vat_rate", "")
+        return self.instance.vat_rate if self.instance.pk else ""
 
 
 class BaseExpenseLineFormSet(forms.BaseInlineFormSet):
@@ -65,6 +89,7 @@ class BaseExpenseLineFormSet(forms.BaseInlineFormSet):
                 amount_cents=form.cleaned_data["amount_cents"],
                 vat_info_cents=form.cleaned_data.get("vat_info_cents"),
                 category=form.cleaned_data.get("category"),
+                vat_rate=form.vat_rate(),
             )
             for form in self.forms
             if form.cleaned_data and not form.cleaned_data.get("DELETE")

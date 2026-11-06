@@ -119,6 +119,7 @@ def _new_form(**extra):
         "lines-0-description": "Benzine",
         "lines-0-amount_cents": "45,10",
         "lines-0-vat_info_cents": "7,83",
+        "lines-0-vat_rate": "21",
         **extra,
     }
 

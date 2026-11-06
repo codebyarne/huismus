@@ -8,6 +8,20 @@ from huismus.core.models import TimestampedModel
 from huismus.core.templatetags.money import euros
 
 
+class VatRate(models.TextChoices):
+    """The VAT rate of an expense line (SPEC.md M21, part 2; product-owner
+    agent 2026-11-06, huismus-intern/besluiten.md). Reverse charge three
+    times, as the VAT return asks them apart. Empty on a line: entered under
+    the KOR or before rates were kept; it never counts as input VAT."""
+
+    HIGH = "21", "21%"
+    LOW = "9", "9%"
+    ZERO = "0", _("0% of geen btw")
+    REVERSE_NL = "reverse_nl", _("Btw verlegd: Nederland")
+    REVERSE_EU = "reverse_eu", _("Btw verlegd: ander EU-land")
+    REVERSE_NON_EU = "reverse_non_eu", _("Btw verlegd: buiten de EU")
+
+
 class ExpenseCategory(TimestampedModel):
     """SPEC.md section 4. No `archived` flag: `category` PROTECTs any
     ExpenseLine that references it, so a category actually in use simply
@@ -97,6 +111,10 @@ class ExpenseLine(TimestampedModel):
     # Gross, as on Expense (invariant 7).
     amount_cents = models.BigIntegerField(_("bedrag (cent)"))
     vat_info_cents = models.BigIntegerField(_("btw ter info (cent)"), null=True, blank=True)
+    # The rate the VAT above was charged at, as on the receipt. Required
+    # without the KOR (huismus/expenses/forms.py); never used to compute
+    # the VAT, which is always what the user entered.
+    vat_rate = models.CharField(_("btw-tarief"), max_length=20, choices=VatRate, blank=True)
     # PROTECT, as before on Expense: a category in use can't be deleted.
     category = models.ForeignKey(
         ExpenseCategory,

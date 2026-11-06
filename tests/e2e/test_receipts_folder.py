@@ -67,6 +67,7 @@ def test_set_up_a_folder_pick_up_now_and_make_an_expense(app, tmp_path):
     app.locator("[name='lines-0-description']").fill("Schroeven")
     app.locator("[name='lines-0-amount_cents']").fill("12,50")
     app.locator("[name=lines-0-vat_info_cents]").fill("0")
+    app.locator("[name=lines-0-vat_rate]").select_option("0")
     app.get_by_role("button", name="Opslaan").click()
 
     expect(app.locator("#toasts")).to_contain_text("Uitgave opgeslagen.")
@@ -101,6 +102,7 @@ def test_make_expenses_of_three_receipts_one_after_the_other(app, tmp_path):
         app.get_by_label("Leverancier").fill(supplier)
         app.locator("[name='lines-0-amount_cents']").fill("12,50")
         app.locator("[name=lines-0-vat_info_cents]").fill("0")
+        app.locator("[name=lines-0-vat_rate]").select_option("0")
         app.get_by_role("button", name="Opslaan").click()
 
     app.goto(app.base + "/uitgaven/bonnetjes/")
@@ -180,6 +182,7 @@ def test_without_the_kor_the_vat_must_be_filled_in(app):
     ).to_be_visible()
     assert not Expense.objects.exists()
     app.locator("[name=lines-0-vat_info_cents]").fill("0")
+    app.locator("[name=lines-0-vat_rate]").select_option("0")
     app.get_by_role("button", name="Opslaan").click()
     expect(app.locator("#toasts")).to_contain_text("Uitgave opgeslagen.")
 

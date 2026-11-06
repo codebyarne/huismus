@@ -5714,3 +5714,34 @@ msgstr ""
 
 msgid "De btw van een uitgegeven document is onveranderlijk."
 msgstr ""
+
+msgid "0% of geen btw"
+msgstr ""
+
+msgid "Btw verlegd: Nederland"
+msgstr ""
+
+msgid "Btw verlegd: ander EU-land"
+msgstr ""
+
+msgid "Btw verlegd: buiten de EU"
+msgstr ""
+
+msgid "Kies het btw-tarief."
+msgstr ""
+
+msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
+msgstr ""
+
+msgid ""
+"Vul het bruto bedrag in: wat je echt betaald hebt. Btw: zoals op het "
+"bonnetje. Staat er geen btw op, vul dan 0 in en kies 0% of geen btw."
+msgstr ""
+
+msgid "Btw-tarief onbekend"
+msgstr ""
+
+msgid ""
+"Huismus kent dit btw-tarief niet en importeert deze regels zonder tarief. "
+"Kies het tarief bij de uitgave."
+msgstr ""

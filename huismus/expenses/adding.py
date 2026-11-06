@@ -36,6 +36,7 @@ class Line:
     amount: str  # gross, in euros as typed: "42,35"
     vat_info: str | None  # None: the receipt shows no VAT
     category: ExpenseCategory | None
+    vat_rate: str | None = None  # a VatRate value; None: not given
 
 
 def add_expense(
@@ -65,6 +66,7 @@ def add_expense(
         data[f"lines-{index}-amount_cents"] = line.amount
         data[f"lines-{index}-vat_info_cents"] = "" if line.vat_info is None else line.vat_info
         data[f"lines-{index}-category"] = str(line.category.pk) if line.category else ""
+        data[f"lines-{index}-vat_rate"] = line.vat_rate or ""
     # The amount 0 lasts only until save_lines() sets the sum of the lines.
     # needs_review: "Nakijken" in Huismus until the user says it's right.
     expense = Expense(amount_cents=0, needs_review=True, source=source)

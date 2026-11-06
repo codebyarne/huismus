@@ -46,7 +46,7 @@ from huismus.core.templatetags.money import money
 
 from . import adding, ai_service
 from .ai_service import Config, ServiceError
-from .models import Expense, ExpenseCategory
+from .models import Expense, ExpenseCategory, VatRate
 
 # Expense.source of an expense Huismus made from a receipt it read.
 SOURCE = "bonnetjes-lezen"
@@ -183,6 +183,7 @@ Answer with one JSON object and nothing else:
   "lines": [
     {"description": "...", "amount": "gross, including VAT, e.g. 34.99",
      "vat": "the VAT on this line as the receipt shows it, e.g. 6.07, or null",
+     "vat_rate": "21" | "9" | "0" | "reverse_nl" | "reverse_eu" | "reverse_non_eu" | null,
      "category": "one of the categories below, or null"}
   ]
 }
@@ -192,6 +193,10 @@ Rules:
 - One line per VAT rate is enough. The lines' amounts add up to the total.
 - "vat": the VAT amount the receipt states for that line or rate. null when the
   receipt shows no VAT; 0 only when the receipt says 0.
+- "vat_rate": the VAT rate the receipt states for that line: "21", "9", "0" (0% or no
+  VAT), or reverse charged ("btw verlegd", "reverse charge") by a supplier in the
+  Netherlands ("reverse_nl"), another EU country ("reverse_eu") or outside the EU
+  ("reverse_non_eu"). null when the receipt doesn't say.
 - Amounts with a dot for decimals and no thousands separator.
 - kind "unreadable" when you can't read the total or the date; "more_than_one" when
   it holds more than one receipt; "not_a_receipt" when it is something else.
@@ -284,6 +289,12 @@ def _expense_from(data: dict, receipt: Attachment, categories, vat_required: boo
         if vat is None and (vat_required or raw.get("vat") is not None):
             # Not on the receipt while it must be, or not an amount.
             return Outcome(reason=NO_VAT)
+        rate = raw.get("vat_rate")
+        if rate not in VatRate.values:
+            if vat_required:
+                # Without the KOR the rate is needed too: never guessed.
+                return Outcome(reason=NO_VAT)
+            rate = None
         amounts.append(amount)
         lines.append(
             adding.Line(
@@ -291,6 +302,7 @@ def _expense_from(data: dict, receipt: Attachment, categories, vat_required: boo
                 amount=_euros(amount),
                 vat_info=None if vat is None else _euros(vat),
                 category=_category(raw.get("category"), categories),
+                vat_rate=rate,
             )
         )
     # A check of the model's answer against the total it read, not a total
