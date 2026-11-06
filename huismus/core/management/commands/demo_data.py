@@ -7,6 +7,7 @@ from django.core.management.base import BaseCommand, CommandError
 from huismus.contacts.models import Contact
 from huismus.core.demo_data import create_demo_data
 from huismus.core.demo_history import create_history
+from huismus.core.demo_receipts import add_receipts
 from huismus.core.site_data import create_site_data
 from huismus.documents.models import Document
 
@@ -56,6 +57,8 @@ class Command(BaseCommand):
             create_site_data()
         elif options["history"]:
             create_history()
+            # Something to show in Verwerken (huismus/core/demo_receipts.py).
+            add_receipts()
         else:
             create_demo_data()
         self.stdout.write(self.style.SUCCESS("Demogegevens aangemaakt."))
