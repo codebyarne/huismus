@@ -25,6 +25,14 @@ def settled(monkeypatch):
     monkeypatch.setattr(inbox, "SETTLE_SECONDS", 0)
 
 
+def close_toasts(app):
+    """A toast with a long folder name wraps (huismus.css, .toast) and can
+    cover "Nu ophalen" for its five seconds; a user closes it or waits."""
+    for close in app.locator("#toasts [data-dismiss]").all():
+        close.click()
+    expect(app.locator("#toasts .toast")).to_have_count(0)
+
+
 def test_set_up_a_folder_pick_up_now_and_make_an_expense(app, tmp_path):
     folder = tmp_path / "iCloud Drive" / "Huismus bonnetjes"
     folder.parent.mkdir()
@@ -41,6 +49,7 @@ def test_set_up_a_folder_pick_up_now_and_make_an_expense(app, tmp_path):
 
     (folder / "bouwmarkt.pdf").write_bytes(PDF)
     (folder / "bonnetje.docx").write_bytes(b"PK")
+    close_toasts(app)
     app.get_by_role("button", name="Nu ophalen").click()
     # The look runs in its own thread; the status asks again until done.
     expect(app.locator("#bonnetjes-gekeken")).to_contain_text("1 bonnetje opgehaald.")
@@ -171,8 +180,9 @@ def test_choose_webdav_and_pick_up_from_it(app, monkeypatch):
         assert "Huismus/Bonnetjes" in dav.folders
 
         dav.files["Huismus/Bonnetjes/bouwmarkt.pdf"] = PDF
+        close_toasts(app)
         app.get_by_role("button", name="Nu ophalen").click()
-        expect(app.locator("#bonnetjes-gekeken")).to_contain_text("1 nieuw bonnetje.")
+        expect(app.locator("#bonnetjes-gekeken")).to_contain_text("1 bonnetje opgehaald.")
         assert dav.files["Huismus/Bonnetjes/Opgehaald/bouwmarkt.pdf"] == PDF
         assert Attachment.objects.in_tray().count() == 1
     finally:

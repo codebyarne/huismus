@@ -539,12 +539,12 @@ def test_webdav_the_same_receipt_twice_is_only_moved(webdav):
 
 
 def test_webdav_a_file_that_is_no_receipt_stays(webdav):
-    webdav.files["Huismus/Bonnetjes/foto.heic"] = b"heic"
+    webdav.files["Huismus/Bonnetjes/bonnetje.docx"] = b"PK"
 
     result = inbox.fetch()
 
-    assert result.skipped == [{"name": "foto.heic", "reason": inbox.WRONG_TYPE}]
-    assert "Huismus/Bonnetjes/foto.heic" in webdav.files
+    assert result.skipped == [{"name": "bonnetje.docx", "reason": inbox.WRONG_TYPE}]
+    assert "Huismus/Bonnetjes/bonnetje.docx" in webdav.files
 
 
 def test_webdav_a_file_still_being_written_waits_for_the_next_look(webdav, monkeypatch):
