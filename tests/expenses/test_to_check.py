@@ -143,3 +143,9 @@ def test_saving_takes_the_mark_away_too(logged_in):
     assert response.url == reverse("expenses:edit", args=[expense.pk])
     expense.refresh_from_db()
     assert not expense.needs_review
+
+
+def test_an_empty_filter_says_nothing_was_found(logged_in):
+    _expense("Gamma", needs_review=True)
+    page = logged_in.get(reverse("expenses:list") + "?nakijken=1&q=praxis").content.decode()
+    assert "Niets gevonden" in page and "Filters wissen" in page

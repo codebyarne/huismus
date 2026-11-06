@@ -19,8 +19,11 @@
 {% if expense.needs_review %}
 {% comment %}An AI assistant filled it in (add_expense). "Klopt" submits the
 expense form below (form="uitgave-form"), so what the user just changed is
-saved with it. The hidden button before it stays the form's default, so
-Enter in a field still does what it did, not "Klopt".{% endcomment %}
+saved with it. A browser's Enter clicks the form's first submit button,
+which would now be "Klopt". On every expense that first button is "Regel
+toevoegen", so a hidden copy of it comes first here: Enter adds a line,
+as on any other expense (test: tests/e2e/test_to_check.py). app.js's Tab
+on the last line clicks this copy too; it does the same.{% endcomment %}
 <button type="submit" form="uitgave-form" name="regel_toevoegen" value="1" class="sr-only" tabindex="-1" aria-hidden="true" data-formset-add="lines"></button>
 <div class="flash flash-info" id="nakijken" style="margin-bottom:var(--s-5);align-items:center;flex-wrap:wrap">
     <svg class="i" aria-hidden="true" style="margin-top:0"><use href="#info"></use></svg>

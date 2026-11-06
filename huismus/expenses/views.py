@@ -46,9 +46,10 @@ def expense_list(request):
     ?nakijken=1 shows only what an AI assistant filled in, of every year."""
     this_year = timezone.localdate().year
     to_check = request.GET.get("nakijken") == "1"
-    year = None if request.GET.get("jaar") == "alle" else _int_param(request, "jaar", this_year)
-    if to_check and "jaar" not in request.GET:
+    if request.GET.get("jaar") == "alle" or (to_check and "jaar" not in request.GET):
         year = None
+    else:
+        year = _int_param(request, "jaar", this_year)
     category_pk = _int_param(request, "categorie")
     query = request.GET.get("q", "").strip()
     shown = max(_int_param(request, "toon", LIST_PAGE_SIZE), LIST_PAGE_SIZE)
@@ -175,6 +176,7 @@ def _expense_form_or_gone(request, expense):
             forms_valid.append(new_receipt_form.is_valid())
         if all(forms_valid):
             # Saving is checking it: "Nakijken" goes, and so with "Klopt".
+            # Not a form field: form.save() saves this same instance.
             instance.needs_review = False
             with transaction.atomic():
                 saved = form.save()
@@ -191,9 +193,9 @@ def _expense_form_or_gone(request, expense):
                     taken = Attachment.objects.in_tray().filter(pk=tray_receipt.pk)
                     if not taken.update(expense=saved):
                         raise TrayReceiptGone()
-            if expense is not None and "klopt" in request.POST:
+            if "klopt" in request.POST:
                 # "Klopt" in the notice saves the form too, so nothing the
-                # user just changed is lost; then on to the next one.
+                # user just changed is lost; then back to what's left to check.
                 messages.success(request, _("Uitgave nagekeken."))
                 url = reverse("expenses:list")
                 if Expense.objects.filter(needs_review=True).exists():
