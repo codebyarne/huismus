@@ -17,8 +17,9 @@ productvraag of een design gaat naar de `product-owner`-agent, niet naar de eige
 - Koppel de privé-repo `huismus-intern` (`CLAUDE.md`, "Privé: huismus-intern")
   en pull hem.
 - Lees `SPEC.md`, `huismus-intern/besluiten.md` en het plan in de opdracht.
-- Geen onderwerp meegekregen? Neem het bovenste open onderwerp uit
-  `huismus-intern/backlog.md` dat geen `(wacht: …)` heeft. Is er geen: meld dat en stop.
+- Geen onderwerp meegekregen? Neem het volgende issue uit de wachtrij
+  (`CLAUDE.md`, "Backlog: GitHub Issues"). Is er geen: meld dat en stop.
+- Lees het issue en zijn reacties: dat is de opdracht, naast `SPEC.md`.
 
 ## 2. Plan en spec
 
@@ -79,7 +80,9 @@ Alles moet slagen voordat je verder gaat:
   leg de flow voor aan de eigenaar volgens `CLAUDE.md`, "Flow voorleggen". De
   screenshots van `verify-e2e` op volgorde, met per stap één zin, telefoon en
   desktop, via SendUserFile; vraag of het zo live mag (zie 9). Niet mergen voor
-  hij ja zegt. Intussen: `(wacht: eigenaar)` in de backlog en stap 10.
+  hij ja zegt. Intussen: het label `wacht` op het issue, met "**Wacht op:** de
+  eigenaar keurt de flow", en stap 10.
+- Komt de PR uit een issue: `Closes #<nummer>` in de beschrijving.
 
 ## 7. Mergen en release
 
@@ -97,9 +100,11 @@ Alles moet slagen voordat je verder gaat:
 
 ## 8. Melden
 
-- Een regel in `huismus-intern/STATUS.md` en je onderwerp afgevinkt in
-  `huismus-intern/backlog.md` (naar "Klaar"): een commit in `huismus-intern`,
-  gepusht vóór stap 10. Niets daarvan in de PR van Huismus.
+- Een regel in `huismus-intern/STATUS.md`: een commit in `huismus-intern`,
+  gepusht vóór stap 10. Niets daarvan in de PR van Huismus. Het issue sluit
+  vanzelf met de merge (`Closes #…`); sluit het anders zelf, met de PR erbij.
+- Iets gevonden wat later moet? Een nieuw issue, openbaar geschreven
+  (`CLAUDE.md`, "Backlog: GitHub Issues").
 - Workflow gewijzigd (`CLAUDE.md`, `.claude/`, `scripts/verify.sh`, CI)?
   Werk ook `codebyarne/agentic-playbook` bij en zet `Playbook: …` in een commit
   (`CLAUDE.md`, "Playbook bijhouden").
@@ -121,10 +126,10 @@ afhangt.
 Een lange sessie wordt traag. Bouw daarom nooit een tweede onderwerp in deze
 sessie, maar geef het door aan een nieuwe:
 
-1. `git -C <huismus-intern> pull --rebase` en lees `huismus-intern/backlog.md`. Stop
-   zonder opvolger als er `PAUZE` staat, als er geen open onderwerp zonder
-   `(wacht: …)` is, of als je onderwerp nog niet op `main` staat (zie de
-   uitzondering hieronder).
+1. Kijk in de wachtrij (`CLAUDE.md`, "Backlog: GitHub Issues"). Stop zonder
+   opvolger als er een open issue met het label `pauze` is, als de wachtrij leeg
+   is, of als je onderwerp nog niet op `main` staat (zie de uitzondering
+   hieronder).
 2. Start één nieuwe cloudsessie met `create_session` (claude-code-remote):
    `source_url` `https://github.com/codebyarne/huismus`, titel
    `Mijlpaal: <onderwerp>`, en als `prompt` alleen `/mijlpaal <onderwerp>`.
@@ -137,7 +142,6 @@ Zonder `create_session` (een lokale sessie): noem het volgende onderwerp in
 je melding en start niets.
 
 Wacht je onderwerp op de eigenaar (stap 9) en hangt het volgende er niet van af, dan
-mag je de opvolger al starten: zet eerst `(wacht: eigenaar)` achter je onderwerp
-in `huismus-intern/backlog.md` (commit en push in `huismus-intern`), zodat de opvolger
-het overslaat. Na zijn antwoord bouw je je eigen onderwerp af (en haal je
-die markering weg), maar je start geen tweede opvolger.
+mag je de opvolger al starten: geef je issue eerst het label `wacht`, zodat de
+opvolger het overslaat. Na zijn antwoord bouw je je eigen onderwerp af (en haal je
+het label weg), maar je start geen tweede opvolger.

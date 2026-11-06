@@ -382,7 +382,7 @@ Collect **anonymised sample exports** (contacts, invoices per invoice/per line, 
 ## 11. Open source
 
 - License: **AGPL-3.0-or-later**, SPDX headers in source files.
-- The repository and its releases become public at the first release for other users (decided 2026-10-27, M11). Decided 2026-11-01: the public repository starts from a single commit without the earlier history, and the product decisions, backlog and milestone log live in the private repository `huismus-intern`. Downloads go through GitHub Releases.
+- The repository and its releases become public at the first release for other users (decided 2026-10-27, M11). Decided 2026-11-01: the public repository starts from a single commit without the earlier history, and the product decisions and milestone log live in the private repository `huismus-intern`. Since 2026-11-06 the backlog is public, in the repository's GitHub Issues. Downloads go through GitHub Releases.
 - Contributions are signed off under the **DCO** (`Signed-off-by:`, `CONTRIBUTING.md`; decided 2026-11-01), not a CLA.
 - `.env`, `data/`, `*.sqlite3` and real exports are gitignored. Fixtures and demo data are fictional.
 - Files: README (Dutch first, English second), CONTRIBUTING, SECURITY, CODE_OF_CONDUCT, issue templates including "my Moneybird export does not import" (asks for an anonymised header row only).
