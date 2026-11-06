@@ -73,6 +73,21 @@ class Attachment(TimestampedModel):
     kind = models.CharField(_("soort"), max_length=20, choices=ATTACHMENT_KIND_CHOICES)
     sha256 = models.CharField(_("sha256"), max_length=64, blank=True)
     source = models.CharField(_("bron"), max_length=50, blank=True)
+    # A receipt that Huismus read with the user's AI service (SPEC.md M20,
+    # part 3; expenses.reading): when, with which service, and, when it
+    # stayed in the tray, why. Set once the service answered, so a receipt
+    # is never sent (and paid for) twice.
+    read_at = models.DateTimeField(_("gelezen op"), null=True, blank=True)
+    read_by = models.CharField(_("gelezen met"), max_length=100, blank=True)
+    read_reason = models.CharField(_("reden niet gelezen"), max_length=20, blank=True)
+    read_similar = models.ForeignKey(
+        "expenses.Expense",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="+",
+        verbose_name=_("lijkt op"),
+    )
 
     objects = AttachmentQuerySet.as_manager()
 

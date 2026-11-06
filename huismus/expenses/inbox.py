@@ -54,6 +54,7 @@ from huismus.core.auto_backups import FolderError
 from huismus.core.backup import RECEIPTS_FOLDER_FILE_NAME, sample_data_in_use
 from huismus.core.models import Attachment
 
+from . import reading
 from .receipts import (
     MAX_RECEIPT_BYTES,
     RASTER_FORMATS,
@@ -484,6 +485,10 @@ def fetch_in_background() -> bool:
             logger.exception("Bonnetjes ophalen mislukt")
         finally:
             _fetch_lock.release()
+        # Then the new receipts are read (SPEC.md M20, part 3), with the
+        # look's lock free again, so "Bezig met ophalen…" doesn't stay up
+        # while a service reads.
+        reading.read_when_open()
 
     try:
         _start(work)
@@ -582,11 +587,14 @@ def new_receipts() -> int:
     status = load()
     if not status.seen_until or not is_on(status) or sample_data_in_use():
         return 0
-    return (
-        Attachment.objects.in_tray()
-        .filter(source=SOURCE, created_at__gt=datetime.fromisoformat(status.seen_until))
-        .count()
+    receipts = Attachment.objects.in_tray().filter(
+        source=SOURCE, created_at__gt=datetime.fromisoformat(status.seen_until)
     )
+    if reading.is_on() and not reading.load().failed:
+        # Huismus reads them: only those it left in the tray are new here;
+        # the others become "n nieuwe uitgaven om na te kijken".
+        receipts = receipts.filter(read_at__isnull=False)
+    return receipts.count()
 
 
 def seen() -> None:
@@ -602,7 +610,9 @@ def fetch_when_open() -> Result | None:
     """A look now, unless a backup is being restored: what expenses.watch
     starts when something new is in the folder."""
     with maintenance.gate.request() as open_:
-        return fetch() if open_ else None
+        result = fetch() if open_ else None
+    reading.read_when_open()
+    return result
 
 
 def fetch_if_due(at_start: bool = False) -> Result | None:
@@ -611,7 +621,11 @@ def fetch_if_due(at_start: bool = False) -> Result | None:
     with maintenance.gate.request() as open_:
         if not open_ or not (at_start or is_due()):
             return None
-        return fetch()
+        result = fetch()
+    # Also after a look that brought nothing: a receipt left waiting by a
+    # failing service is tried again (SPEC.md M20, part 3).
+    reading.read_when_open()
+    return result
 
 
 def start_thread() -> threading.Thread:
