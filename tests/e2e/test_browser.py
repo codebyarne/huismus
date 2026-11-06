@@ -1501,12 +1501,14 @@ def test_an_expense_gets_a_second_line_in_another_category(app):
     app.get_by_label("Leverancier").fill("Hosting BV")
     app.locator("[name=lines-0-amount_cents]").fill("12,10")
     app.locator("[name=lines-0-vat_info_cents]").fill("2,10")
+    app.locator("[name=lines-0-vat_rate]").select_option("21")
     app.locator("[name=lines-0-category]").select_option(label="Software")
 
     app.get_by_role("button", name="Regel toevoegen").click()
     app.locator("[name=lines-1-description]").fill("Trein naar klant")
     app.locator("[name=lines-1-amount_cents]").fill("8,00")
     app.locator("[name=lines-1-vat_info_cents]").fill("0")
+    app.locator("[name=lines-1-vat_rate]").select_option("0")
     app.locator("[name=lines-1-category]").select_option(label="Reiskosten")
     app.get_by_role("button", name="Opslaan").click()
 
@@ -1536,6 +1538,7 @@ def test_a_new_expense_gets_its_receipt_in_one_go(app, tmp_path):
     app.get_by_label("Leverancier").fill("Hosting BV")
     app.locator("[name=lines-0-amount_cents]").fill("12,10")
     app.locator("[name=lines-0-vat_info_cents]").fill("2,10")
+    app.locator("[name=lines-0-vat_rate]").select_option("21")
     app.set_input_files("input[name=receipt-file]", str(receipt))
     expect(app.get_by_text("bon-hosting.png")).to_be_visible()
     app.get_by_role("button", name="Opslaan").click()

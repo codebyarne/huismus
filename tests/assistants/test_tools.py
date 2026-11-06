@@ -368,9 +368,27 @@ def test_without_the_kor_an_expense_needs_its_vat(tool, business):
     _data, text, is_error = tool("add_expense", lines=[{"amount": "12,10"}])
     assert is_error
     assert "Vul het btw-bedrag in." in text
-    data, _text, is_error = tool("add_expense", lines=[{"amount": "12,10", "vat_info": 0}])
+    _data, text, is_error = tool("add_expense", lines=[{"amount": "12,10", "vat_info": 0}])
+    assert is_error
+    assert "Kies het btw-tarief." in text
+    data, _text, is_error = tool(
+        "add_expense", lines=[{"amount": "12,10", "vat_info": 0, "vat_rate": "0"}]
+    )
     assert not is_error
     assert Expense.objects.get(pk=data["id"]).amount_cents == 1210
+    assert data["lines"][0]["vat_rate"] == "0"
+
+
+def test_without_the_kor_the_rate_from_the_assistant_is_stored(tool, business):
+    """SPEC.md M21, part 2: as on the receipt, three kinds of reverse charge."""
+    business.kor_enabled = False
+    business.save()
+    data, text, is_error = tool(
+        "add_expense",
+        lines=[{"amount": "50,00", "vat_info": "0", "vat_rate": "reverse_eu"}],
+    )
+    assert not is_error, text
+    assert Expense.objects.get(pk=data["id"]).lines.get().vat_rate == "reverse_eu"
 
 
 def test_an_expense_with_lines_adds_them_up(tool, business):

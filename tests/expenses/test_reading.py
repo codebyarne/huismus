@@ -29,8 +29,20 @@ ANSWER = {
     "description": "Schroeven en verf",
     "total": "42.35",
     "lines": [
-        {"description": "Verf", "amount": "30.25", "vat": "5.25", "category": "Kantoor"},
-        {"description": "Schroeven", "amount": "12.10", "vat": "2.10", "category": None},
+        {
+            "description": "Verf",
+            "amount": "30.25",
+            "vat": "5.25",
+            "vat_rate": "21",
+            "category": "Kantoor",
+        },
+        {
+            "description": "Schroeven",
+            "amount": "12.10",
+            "vat": "2.10",
+            "vat_rate": "21",
+            "category": None,
+        },
     ],
 }
 
@@ -193,6 +205,38 @@ def test_a_vat_that_is_no_amount_leaves_the_receipt(service, kor):
     reading.read_waiting()
     receipt.refresh_from_db()
     assert receipt.read_reason == reading.NO_VAT
+
+
+def test_without_the_kor_the_rate_is_stored_as_read(service, kor):
+    """SPEC.md M21, part 2: the rate as on the receipt."""
+    kor(False)
+    _receipt()
+    service.answer(ANSWER)
+    reading.read_waiting()
+    expense = Expense.objects.get()
+    assert [line.vat_rate for line in expense.lines.all()] == ["21", "21"]
+
+
+@pytest.mark.parametrize("rate", [None, "21%", "6"])
+def test_without_the_kor_a_missing_or_unknown_rate_leaves_the_receipt(service, kor, rate):
+    """Never guessed: the receipt stays in the tray, as without VAT."""
+    kor(False)
+    receipt = _receipt()
+    lines = [{"description": "Verf", "amount": "42.35", "vat": "7.35", "vat_rate": rate}]
+    service.answer({**ANSWER, "lines": lines})
+    reading.read_waiting()
+    assert not Expense.objects.exists()
+    receipt.refresh_from_db()
+    assert receipt.read_reason == reading.NO_VAT
+
+
+def test_under_the_kor_the_rate_is_not_needed(service, kor):
+    kor(True)
+    _receipt()
+    lines = [{"description": "Verf", "amount": "42.35", "vat": None}]
+    service.answer({**ANSWER, "lines": lines})
+    reading.read_waiting()
+    assert Expense.objects.get().lines.get().vat_rate == ""
 
 
 def test_an_expense_like_it_already_there_leaves_the_receipt(service):

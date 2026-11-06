@@ -20,7 +20,7 @@ def _kor(on: bool):
     settings.save()
 
 
-def _formset(vat: str):
+def _formset(vat: str, rate: str = "21"):
     data = {
         "lines-TOTAL_FORMS": "1",
         "lines-INITIAL_FORMS": "0",
@@ -29,6 +29,7 @@ def _formset(vat: str):
         "lines-0-description": "Schroeven",
         "lines-0-amount_cents": "12,10",
         "lines-0-vat_info_cents": vat,
+        "lines-0-vat_rate": rate,
     }
     return ExpenseLineFormSet(data, instance=Expense(amount_cents=0), prefix="lines")
 
@@ -44,7 +45,7 @@ def test_with_the_kor_off_the_vat_is_required():
 
 def test_with_the_kor_off_zero_vat_is_fine():
     _kor(False)
-    assert _formset("0").is_valid()
+    assert _formset("0", rate="0").is_valid()
 
 
 def test_with_the_kor_off_the_amount_stays_gross():

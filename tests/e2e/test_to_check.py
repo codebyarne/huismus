@@ -17,7 +17,7 @@ pytestmark = pytest.mark.django_db(transaction=True)
 
 def _from_the_assistant(supplier, cents):
     return create_expense(
-        [ExpenseLineInput("", cents, 0, None)],
+        [ExpenseLineInput("", cents, 0, None, "0")],
         date=datetime.date.today(),
         supplier=supplier,
         needs_review=True,

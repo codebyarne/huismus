@@ -24,7 +24,7 @@ pytestmark = pytest.mark.django_db(transaction=True)
 
 def _to_check(supplier, day, name, content):
     expense = create_expense(
-        [ExpenseLineInput("", 1210, 0, None)],
+        [ExpenseLineInput("", 1210, 0, None, "0")],
         date=datetime.date(2026, 11, day),
         supplier=supplier,
         needs_review=True,
@@ -87,6 +87,7 @@ def test_process_a_stack_on_a_wide_screen(app):
     expect(app.locator("[name='lines-1-amount_cents']")).to_be_visible()
     app.locator("[name='lines-0-amount_cents']").fill("7,49")
     app.locator("[name='lines-0-vat_info_cents']").fill("1,30")
+    app.locator("[name='lines-0-vat_rate']").select_option("9")
     app.get_by_role("button", name="Opslaan").click()
 
     expect(app.locator("#toasts")).to_contain_text("Uitgave opgeslagen.")

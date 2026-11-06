@@ -67,7 +67,7 @@ from huismus.documents.quoting import QuoteError, send_quote
 from huismus.documents.totals import compute_totals
 from huismus.documents.vat import default_rate, editor_value
 from huismus.expenses import adding
-from huismus.expenses.models import Expense, ExpenseCategory
+from huismus.expenses.models import Expense, ExpenseCategory, VatRate
 from huismus.reports.year_overview import compute_year_overview
 
 from . import receipts
@@ -580,6 +580,7 @@ def add_expense(arguments):
             amount=str(line.get("amount", "")),
             vat_info=None if line.get("vat_info") is None else str(line["vat_info"]),
             category=_category(line.get("category"), categories),
+            vat_rate=None if line.get("vat_rate") is None else str(line["vat_rate"]),
         )
         for line in lines
     ]
@@ -606,6 +607,7 @@ def add_expense(arguments):
                 "description": line.description,
                 "amount": _amount(line.amount_cents),
                 "vat_info": None if line.vat_info_cents is None else _amount(line.vat_info_cents),
+                "vat_rate": line.vat_rate or None,
                 "category": line.category.name if line.category else None,
             }
             for line in saved.lines.select_related("category")
@@ -844,7 +846,8 @@ TOOLS = (
         "The receipts that wait for an expense: Huismus fetched them from the user's "
         "receipts folder. To process them: read each with read_receipt, then add_expense "
         "with its receipt_id. One receipt is one expense. vat_required is true when the "
-        "user doesn't use the KOR: each line then needs the VAT from the receipt.",
+        "user doesn't use the KOR: each line then needs the VAT and its rate from the "
+        "receipt.",
         {},
         (),
         list_receipts,
@@ -857,7 +860,8 @@ TOOLS = (
         f"text of a PDF's first {receipts.MAX_PAGES} pages. Read date, supplier, what was "
         "bought, the total paid (gross) and the VAT as the receipt shows it. "
         "Never guess an amount or VAT. "
-        "When vat_required is true and the VAT isn't on the receipt or can't be read, "
+        "When vat_required is true and the VAT or its rate isn't on the receipt or can't "
+        "be read, "
         "don't fill in 0: skip the receipt. Otherwise leave vat_info out when the receipt "
         "shows none. Skip it too when it isn't a receipt or holds more than one. Tell "
         "the user which you skipped and why; they stay in Huismus. Before adding, check "
@@ -896,6 +900,15 @@ TOOLS = (
                             "description": "The VAT on the receipt, for information "
                             "only. Required when the user doesn't use the KOR; 0 when "
                             "the receipt shows no VAT.",
+                        },
+                        "vat_rate": {
+                            "type": ["string", "null"],
+                            "enum": [*VatRate.values, None],
+                            "description": "The VAT rate on the receipt: 21, 9, 0 (0% or "
+                            "no VAT), or reverse charged by a supplier in the Netherlands "
+                            "(reverse_nl), another EU country (reverse_eu) or outside the "
+                            "EU (reverse_non_eu). Required when the user doesn't use the "
+                            "KOR; never guess it.",
                         },
                         "category": {
                             "type": "string",

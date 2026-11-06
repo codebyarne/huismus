@@ -6877,3 +6877,38 @@ msgstr "VAT per rate"
 
 msgid "De btw van een uitgegeven document is onveranderlijk."
 msgstr "The VAT of an issued document is immutable."
+
+msgid "0% of geen btw"
+msgstr "0% or no VAT"
+
+msgid "Btw verlegd: Nederland"
+msgstr "Reverse charge: Netherlands"
+
+msgid "Btw verlegd: ander EU-land"
+msgstr "Reverse charge: other EU country"
+
+msgid "Btw verlegd: buiten de EU"
+msgstr "Reverse charge: outside the EU"
+
+msgid "Kies het btw-tarief."
+msgstr "Choose the VAT rate."
+
+msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
+msgstr "With 0% or no VAT, the VAT amount is € 0.00."
+
+msgid ""
+"Vul het bruto bedrag in: wat je echt betaald hebt. Btw: zoals op het "
+"bonnetje. Staat er geen btw op, vul dan 0 in en kies 0% of geen btw."
+msgstr ""
+"Fill in the gross amount: what you actually paid. VAT: as on the receipt. No "
+"VAT on it? Enter 0 and choose 0% or no VAT."
+
+msgid "Btw-tarief onbekend"
+msgstr "VAT rate unknown"
+
+msgid ""
+"Huismus kent dit btw-tarief niet en importeert deze regels zonder tarief. "
+"Kies het tarief bij de uitgave."
+msgstr ""
+"Huismus doesn't know this VAT rate and imports these lines without a rate. "
+"Choose the rate on the expense."

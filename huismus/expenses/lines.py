@@ -25,6 +25,7 @@ class ExpenseLineInput:
     amount_cents: int  # gross
     vat_info_cents: int | None
     category: ExpenseCategory | None
+    vat_rate: str = ""  # a VatRate, or "" (see ExpenseLine.vat_rate)
 
 
 def expense_totals(lines) -> tuple[int, int | None]:
@@ -46,6 +47,7 @@ def save_lines(expense, lines: list[ExpenseLineInput]) -> None:
                 description=line.description,
                 amount_cents=line.amount_cents,
                 vat_info_cents=line.vat_info_cents,
+                vat_rate=line.vat_rate,
                 category=line.category,
             )
             for position, line in enumerate(lines)

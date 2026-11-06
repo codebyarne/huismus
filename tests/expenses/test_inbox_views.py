@@ -312,6 +312,7 @@ def _expense_post(**extra):
         "lines-0-description": "Benzine",
         "lines-0-amount_cents": "45,10",
         "lines-0-vat_info_cents": "0",
+        "lines-0-vat_rate": "0",
         **extra,
     }
 
