@@ -108,7 +108,7 @@ def test_on_it_shows_the_place_and_how_the_last_look_went(client, user, folder):
     assert 'id="bonnetjesmap-aan"' in content
     assert str(folder) in content
     assert "Laatst gekeken: vandaag" in content
-    assert "1 nieuw bonnetje." in content
+    assert "1 bonnetje opgehaald." in content
     assert "bonnetje.docx is niet opgehaald. Kies een PDF-, PNG-, JPG- of HEIC-bestand." in content
 
 

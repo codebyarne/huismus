@@ -4132,6 +4132,12 @@ msgstr ""
 msgid "Laatst gekeken: %(moment)s."
 msgstr ""
 
+#, python-format
+msgid "%(count)s bonnetje opgehaald."
+msgid_plural "%(count)s bonnetjes opgehaald."
+msgstr[0] "%(count)s bonnetje opgehaald."
+msgstr[1] "%(count)s bonnetjes opgehaald."
+
 msgid "Nog niet gekeken."
 msgstr ""
 

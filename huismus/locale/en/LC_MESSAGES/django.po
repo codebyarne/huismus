@@ -4423,6 +4423,12 @@ msgstr "Last worked: %(moment)s."
 msgid "Laatst gekeken: %(moment)s."
 msgstr "Last checked: %(moment)s."
 
+#, python-format
+msgid "%(count)s bonnetje opgehaald."
+msgid_plural "%(count)s bonnetjes opgehaald."
+msgstr[0] "%(count)s receipt picked up."
+msgstr[1] "%(count)s receipts picked up."
+
 msgid "Nog niet gekeken."
 msgstr "Not checked yet."
 
