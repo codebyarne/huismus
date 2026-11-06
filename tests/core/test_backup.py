@@ -289,6 +289,8 @@ def test_restoring_unpacks_inside_the_data_dir(settings, tmp_path):
         "secret-key",
         "smtp-password",
         "mcp-key",
+        "ai-service.json",
+        "ai-service-status.json",
         "cloud-backup.json",
         "cloud-backup-code",
         "backup-status.json",

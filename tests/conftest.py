@@ -97,6 +97,33 @@ def _no_receipts_folder():
     status.unlink(missing_ok=True)
 
 
+@pytest.fixture(autouse=True)
+def _no_ai_service():
+    """The AI service that reads receipts, with its key, is a file in
+    DATA_DIR too (expenses.ai_service): no test may read for the next."""
+    from django.conf import settings
+
+    from huismus.expenses import ai_service
+
+    def forget():
+        for path in Path(settings.DATA_DIR).glob(ai_service.FILE_PREFIX + "*"):
+            path.unlink(missing_ok=True)
+
+    forget()
+    yield
+    forget()
+
+
+@pytest.fixture
+def ai_fake():
+    """A stand-in AI service on this computer (tests/ai_fakes.py)."""
+    from tests.ai_fakes import FakeAIService
+
+    fake = FakeAIService()
+    yield fake
+    fake.close()
+
+
 @pytest.fixture
 def newest_migrations_after(transactional_db):
     """For a test that migrates the test database back and forth: afterwards,
