@@ -92,6 +92,46 @@ def test_a_known_document_with_two_lines_exactly():
     ]
 
 
+def test_each_line_gets_its_vat_rate_from_moneybird_s_rate_name():
+    """SPEC.md M21, part 2: 21/9/0 and Moneybird's two named kinds of
+    reverse charge are taken over; any other rate (here an old 6%) stays
+    empty, never guessed, and is named in the dry run."""
+    rates = {}
+    for year in range(2013, 2027):
+        try:
+            _files, header, lines = _expense_files(year)
+        except (FileNotFoundError, KeyError):
+            continue
+        for expense in parse_expenses(header, lines):
+            for line in expense.lines:
+                rates.setdefault((line.vat_rate, line.vat_rate_name), 0)
+                rates[(line.vat_rate, line.vat_rate_name)] += 1
+
+    assert ("21", "21% btw") in rates
+    assert ("reverse_eu", "Binnen EU 21% (btw verlegd)") in rates
+    assert ("reverse_non_eu", "Buiten EU 21% (btw verlegd)") in rates
+    assert ("", "6% btw") in rates
+
+
+@pytest.mark.parametrize(
+    ("rate", "name", "expected"),
+    [
+        (21, "21% btw", "21"),
+        (9, "9% btw", "9"),
+        (0, "0% btw", "0"),
+        (21, "Binnen EU 21% (btw verlegd)", "reverse_eu"),
+        (21, "Buiten EU 21% (btw verlegd)", "reverse_non_eu"),
+        (6, "6% btw", ""),
+        (21, "Iets anders", ""),
+        (None, None, ""),
+    ],
+)
+def test_a_vat_rate_is_read_only_when_moneybird_names_it_plainly(rate, name, expected):
+    from huismus.imports.expenses import vat_rate_from
+
+    assert vat_rate_from(rate, name) == expected
+
+
 def test_reverse_charged_vat_is_zero_as_moneybird_states_it():
     _files, header, lines = _expense_files(2014)
 

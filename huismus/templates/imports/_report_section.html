@@ -81,6 +81,12 @@
             <p class="small muted">{% translate "Deze categorieën uit Moneybird staan nog niet in Huismus. Huismus maakt ze aan, onderaan je lijst." %}</p>
         </div>
         {% endif %}
+        {% if r.unknown_vat_rates %}
+        <div class="stack" style="gap:8px"><h3>{% translate "Btw-tarief onbekend" %}</h3>
+            <p class="small">{{ r.unknown_vat_rates|join:", " }}</p>
+            <p class="small muted">{% translate "Huismus kent dit btw-tarief niet en importeert deze regels zonder tarief. Kies het tarief bij de uitgave." %}</p>
+        </div>
+        {% endif %}
         {% if r.payment_issues %}
         <div class="stack" style="gap:8px"><h3>{% translate "Betalingen om te controleren" %}</h3>
             <ul class="issue-list">{% for p in r.payment_issues %}<li><span>{{ p }}</span></li>{% endfor %}</ul>

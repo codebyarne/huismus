@@ -63,6 +63,22 @@ def test_a_document_becomes_one_gross_expense_with_its_lines():
     assert line.category.name == "Drukwerk"
 
 
+def test_each_line_keeps_its_vat_rate_and_an_unknown_one_is_named():
+    """SPEC.md M21, part 2: a rate Huismus doesn't know stays empty and the
+    dry run names it, with the document (hard rule 6)."""
+    parsed = _expense(
+        lines=[
+            ParsedExpenseLine("Visitekaartjes", 500, "Drukwerk", "21", "21% btw"),
+            ParsedExpenseLine("Oud tarief", 500, "Drukwerk", "", "6% btw"),
+        ]
+    )
+
+    report = import_expenses([parsed], {}, commit=True)
+
+    assert [line.vat_rate for line in Expense.objects.get().lines.all()] == ["21", ""]
+    assert report.unknown_vat_rates == ["F-42 (Drukkerij Voorbeeld): 6% btw"]
+
+
 def test_each_line_keeps_its_own_category_and_the_lines_add_up_to_what_was_paid():
     # huismus-intern/besluiten.md, 2026-11-02: the data model follows Moneybird.
     lines = [

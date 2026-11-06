@@ -51,6 +51,11 @@ class ParsedExpenseLine:
     subtotal_cents: int  # excluding VAT, in euros
     # Moneybird's category name ("categorie"), "" when the export has none.
     category: str = ""
+    # A huismus.expenses.models.VatRate, or "" when Moneybird's rate is
+    # not one Huismus knows (vat_rate_from); vat_rate_name is Moneybird's
+    # own name for it ("btw-tarief naam"), for the report.
+    vat_rate: str = ""
+    vat_rate_name: str = ""
 
 
 @dataclass(frozen=True)
@@ -105,6 +110,28 @@ def _required(row: dict, column: str, document: str):
     return value
 
 
+# Moneybird's own names for reverse charge ("btw-tarief naam"), as in its
+# exports: the VAT return asks for them apart (SPEC.md M21, part 2).
+_REVERSE_CHARGE_NAMES = {
+    "Binnen EU 21% (btw verlegd)": "reverse_eu",
+    "Buiten EU 21% (btw verlegd)": "reverse_non_eu",
+}
+
+
+def vat_rate_from(rate, name) -> str:
+    """The VAT rate of a line from Moneybird's "btw-tarief" and "btw-tarief
+    naam": 21, 9 or 0 when its name says exactly that, or one of its named
+    kinds of reverse charge. Anything else is "", never guessed (CLAUDE.md,
+    hard rule 6); the import names it in its report."""
+    name = to_str(name)
+    if name in _REVERSE_CHARGE_NAMES:
+        return _REVERSE_CHARGE_NAMES[name]
+    plain = {"21": "21", "9": "9", "0": "0"}.get(to_str(rate))
+    if plain and name == f"{plain}% btw":
+        return plain
+    return ""
+
+
 def _parse_lines(content: bytes) -> dict[str, list[ParsedExpenseLine]]:
     lines: dict[str, list[ParsedExpenseLine]] = {}
     for row in _rows(content, LINES_REQUIRED, _("de uitgaveregels")):
@@ -113,6 +140,8 @@ def _parse_lines(content: bytes) -> dict[str, list[ParsedExpenseLine]]:
                 description=to_str(row["omschrijving"]),
                 subtotal_cents=euros_to_cents(row["totaalprijs exclusief btw (EUR)"]),
                 category=to_str(row.get("categorie")),
+                vat_rate=vat_rate_from(row.get("btw-tarief"), row.get("btw-tarief naam")),
+                vat_rate_name=to_str(row.get("btw-tarief naam")),
             )
         )
     return lines
