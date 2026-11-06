@@ -23,12 +23,12 @@ refused, unknown model, busy, a server error) means the service did no
 work: the receipt waits for the next look, and the page shows the failure.
 """
 
+import datetime
 import json
 import logging
 import re
 import threading
 from dataclasses import asdict, dataclass
-from datetime import datetime
 from pathlib import Path
 
 from django.conf import settings
@@ -131,8 +131,21 @@ def waiting():
     return Attachment.objects.in_tray().filter(read_at__isnull=True)
 
 
-def reading() -> bool:
+def is_reading() -> bool:
     return _read_lock.locked()
+
+
+def active() -> bool:
+    """Huismus reads what waits: a service is on and not failing. Then a
+    receipt in the tray that it hasn't read yet will be read soon."""
+    return is_on() and not load().failed
+
+
+def still_new(receipts):
+    """Of these receipts in the tray, those that count as new on the
+    overview ("n nieuwe bonnetjes"): while Huismus reads, only the ones it
+    left with a reason; the others become expenses to check."""
+    return receipts.filter(read_at__isnull=False) if active() else receipts
 
 
 # -- "n nieuwe uitgaven om na te kijken" -------------------------------------------
@@ -146,7 +159,7 @@ def new_expenses() -> int:
     expenses = Expense.objects.filter(needs_review=True, source=SOURCE)
     seen_until = load().seen_until
     if seen_until:
-        expenses = expenses.filter(created_at__gt=datetime.fromisoformat(seen_until))
+        expenses = expenses.filter(created_at__gt=datetime.datetime.fromisoformat(seen_until))
     return expenses.count()
 
 
@@ -280,19 +293,20 @@ def _expense_from(data: dict, receipt: Attachment, categories, vat_required: boo
                 category=_category(raw.get("category"), categories),
             )
         )
+    # A check of the model's answer against the total it read, not a total
+    # that is stored: save_lines() computes that (expense_totals).
     if sum(amounts) != total:
         return Outcome(reason=NOT_ADDING_UP)
-    date = str(data.get("date") or "")
     try:
-        similar = Expense.objects.filter(date=date, amount_cents=total).first()
-    except Exception:
-        # Not a date: the form below says no too.
-        similar = None
+        date = datetime.date.fromisoformat(str(data.get("date") or ""))
+    except ValueError:
+        return Outcome(reason=UNREADABLE)
+    similar = Expense.objects.filter(date=date, amount_cents=total).first()
     if similar is not None:
         return Outcome(reason=SIMILAR, similar=similar)
     try:
         expense = adding.add_expense(
-            date=date,
+            date=date.isoformat(),
             supplier=str(data.get("supplier") or "")[:200],
             description=str(data.get("description") or "")[:200],
             lines=lines,
@@ -300,8 +314,8 @@ def _expense_from(data: dict, receipt: Attachment, categories, vat_required: boo
             source=SOURCE,
         )
     except adding.NotAdded:
-        # The form refused it (no date, or not a date), or the user made an
-        # expense of the receipt meanwhile: then Huismus's answer goes away.
+        # The form refused it, or the user made an expense of the receipt
+        # meanwhile: then Huismus's answer goes away.
         return Outcome(reason=UNREADABLE)
     return Outcome(expense=expense)
 
@@ -331,9 +345,9 @@ def read_one(receipt: Attachment, config: Config) -> Outcome | None:
                 outcome = Outcome(reason=UNREADABLE)
             else:
                 outcome = _expense_from(data, receipt, categories, vat_required)
-    # Only marks the receipt, wherever it is now: on an expense, or still
-    # in the tray.
-    Attachment.objects.filter(pk=receipt.pk).update(
+    # Marks the receipt: on the expense just made, or still in the tray.
+    # One the user put on an expense of their own meanwhile stays as it is.
+    Attachment.objects.filter(pk=receipt.pk, expense=outcome.expense).update(
         read_at=timezone.now(),
         read_by=ai_service.name(config),
         read_reason="" if outcome.expense else outcome.reason,
@@ -401,12 +415,6 @@ def read_by(expense: Expense) -> str:
         return ""
     receipt = expense.attachments.filter(kind="receipt").exclude(read_by="").first()
     return receipt.read_by if receipt else ""
-
-
-def is_waiting(receipt: Attachment) -> bool:
-    """Huismus will read this one: "Huismus leest dit bonnetje…" under it,
-    unless the service is failing (then the red line says why)."""
-    return receipt.read_at is None and is_on() and not load().failed
 
 
 def reason_sentence(receipt: Attachment) -> str:

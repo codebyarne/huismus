@@ -16,7 +16,6 @@ from django.utils.translation import get_language, gettext_lazy, ngettext
 from django.utils.translation import gettext as _
 
 from huismus.core import help
-from huismus.core.models import Attachment
 
 from . import ai_service, inbox, reading
 from .ai_service import Config, ServiceError
@@ -120,7 +119,8 @@ def _sentence(form: ReadingForm) -> str:
 
 
 def _waiting_sentence() -> str:
-    count = Attachment.objects.in_tray().count()
+    # The ones that will go to the service, not those already read.
+    count = reading.waiting().count()
     if not count:
         return ""
     return ngettext(

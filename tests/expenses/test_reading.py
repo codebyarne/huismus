@@ -231,7 +231,7 @@ def test_a_refused_key_sends_the_receipt_again_next_time(service):
     assert reading.failure_sentence() == (
         "127.0.0.1 weigert je sleutel. Kijk of je hem goed hebt overgenomen."
     )
-    assert not reading.is_waiting(receipt)
+    assert not reading.active()
 
     service.key = KEY
     service.answer(ANSWER)
@@ -292,6 +292,17 @@ def test_a_receipt_the_user_made_an_expense_of_meanwhile(service, monkeypatch):
     assert list(Expense.objects.all()) == [by_hand]
     receipt.refresh_from_db()
     assert receipt.expense == by_hand
+    assert receipt.read_at is None
+    assert receipt.read_reason == ""
+
+
+def test_nothing_while_a_backup_is_restored(service):
+    from huismus.core import maintenance
+
+    _receipt()
+    with maintenance.gate.exclusive(timeout=0):
+        assert reading.read_when_open() == 0
+    assert service.requests == []
 
 
 def test_a_receipt_taken_before_its_turn_is_skipped(service):
