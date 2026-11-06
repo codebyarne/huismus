@@ -186,15 +186,18 @@ def scene(film: Film) -> None:
     film.shoot(12)
     film.click(option, 14)
 
-    # 2. The line: first the description, then the numbers to its right.
+    # 2. The line, one row: first the description with the fields beside it,
+    # then the numbers up to the total.
     x, y, _, _ = film.box(description)
-    film.cam_to(film.view(x - 30, y - 50, 620, 150, margin=1.08), 26)
+    px, _, pw, _ = film.box(price)
+    film.cam_to(film.view(x - 30, y - 50, px + pw - x + 60, 150, margin=1.08), 26)
     film.point_to(description, 22, ox=0.2)
     film.shoot(24)
     film.click(description, 2)
     film.type("Website onderhoud oktober", 2)
     x, y, _, _ = film.box(quantity)
-    film.cam_to(film.view(x - 60, y - 70, 660, 140, margin=1.08), 18)
+    tx, _, tw, _ = film.box("#lines-0-totaal")
+    film.cam_to(film.view(x - 40, y - 60, tx + tw - x + 60, 140, margin=1.08), 18)
     film.point_to(quantity, 16)
     film.shoot(18)
     for field, text, travel in ((quantity, "12", 0), (unit, "uur", 8), (price, "85", 10)):
