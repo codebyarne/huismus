@@ -37,7 +37,7 @@ def _state(status: inbox.Status) -> dict:
         else [],
         "help_url": help.url("bonnetjes"),
         # Huismus reading the receipts (SPEC.md M20, part 3).
-        "reading_now": reading.reading(),
+        "reading_now": reading.is_reading(),
         "reading_failure": reading.failure_sentence(),
     }
 
@@ -126,6 +126,7 @@ def tray(request):
         return _fetch_now(request, "expenses:tray")
     # What the overview called new is seen now.
     inbox.seen()
+    reading_active = reading.active()
     return render(
         request,
         "expenses/tray.html",
@@ -134,7 +135,9 @@ def tray(request):
             "receipts": [
                 {
                     "receipt": receipt,
-                    "waiting": reading.is_waiting(receipt),
+                    # "Huismus leest dit bonnetje…"; not while the service
+                    # fails: then the red line says why.
+                    "waiting": receipt.read_at is None and reading_active,
                     "reason": reading.reason_sentence(receipt),
                 }
                 for receipt in Attachment.objects.in_tray()
@@ -152,7 +155,8 @@ def new_receipts_context() -> dict:
         "new_receipts": inbox.new_receipts(),
         # And "2 nieuwe uitgaven om na te kijken" (SPEC.md M20, part 3).
         "new_expenses": reading.new_expenses(),
-        "receipts_folder_on": inbox.is_on() or reading.is_on(),
+        # Whether the notice keeps asking every 30 seconds.
+        "keep_asking": inbox.is_on() or reading.is_on(),
     }
 
 

@@ -168,6 +168,10 @@ def test_the_sentence_counts_receipts_already_waiting(client_in):
         Attachment.objects.create(file=ContentFile(b"%PDF-1.4", name=name), kind="receipt")
     page = client_in.get(URL).content.decode()
     assert "Ook de 2 bonnetjes zonder uitgave die er nu zijn." in page
+    # One Huismus already read doesn't go again.
+    Attachment.objects.filter(file__endswith="a.pdf").update(read_at="2026-11-06T10:00:00Z")
+    page = client_in.get(URL).content.decode()
+    assert "Ook het bonnetje zonder uitgave dat er nu is." in page
 
 
 def test_test_connection_with_the_saved_settings(client_in, ai_fake):

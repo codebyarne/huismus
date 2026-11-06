@@ -590,11 +590,7 @@ def new_receipts() -> int:
     receipts = Attachment.objects.in_tray().filter(
         source=SOURCE, created_at__gt=datetime.fromisoformat(status.seen_until)
     )
-    if reading.is_on() and not reading.load().failed:
-        # Huismus reads them: only those it left in the tray are new here;
-        # the others become "n nieuwe uitgaven om na te kijken".
-        receipts = receipts.filter(read_at__isnull=False)
-    return receipts.count()
+    return reading.still_new(receipts).count()
 
 
 def seen() -> None:
