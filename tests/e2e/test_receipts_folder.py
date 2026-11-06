@@ -41,7 +41,7 @@ def test_set_up_a_folder_pick_up_now_and_make_an_expense(app, tmp_path):
     (folder / "bonnetje.docx").write_bytes(b"PK")
     app.get_by_role("button", name="Nu ophalen").click()
     # The look runs in its own thread; the status asks again until done.
-    expect(app.locator("#bonnetjes-gekeken")).to_contain_text("1 nieuw bonnetje.")
+    expect(app.locator("#bonnetjes-gekeken")).to_contain_text("1 bonnetje opgehaald.")
     expect(app.locator("#niet-opgehaald")).to_contain_text("bonnetje.docx is niet opgehaald.")
     assert (folder / "Opgehaald" / "bouwmarkt.pdf").exists()
 
@@ -101,7 +101,7 @@ def test_after_a_failure_a_look_that_works_turns_the_pill_green(app, tmp_path):
     (folder / "bon.pdf").write_bytes(PDF)
     app.get_by_role("button", name="Nu ophalen").click()
 
-    expect(app.locator("#bonnetjes-gekeken")).to_contain_text("1 nieuw bonnetje.")
+    expect(app.locator("#bonnetjes-gekeken")).to_contain_text("1 bonnetje opgehaald.")
     expect(app.locator("#bonnetjesmap-pill")).to_have_text("Aan")
 
 

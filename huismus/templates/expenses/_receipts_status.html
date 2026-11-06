@@ -6,7 +6,7 @@
     {% elif failure %}
     <p class="hint-banner is-bad" id="ophalen-mislukt"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% translate "Ophalen mislukt." %} {{ failure }}{% if status.last_check_at %} {% blocktranslate with moment=status.last_check_at|moment %}Laatst gelukt: {{ moment }}.{% endblocktranslate %}{% endif %}</span></p>
     {% elif on %}
-    <p class="small muted" id="bonnetjes-gekeken">{% if status.last_check_at %}{% blocktranslate with moment=status.last_check_at|moment %}Laatst gekeken: {{ moment }}.{% endblocktranslate %}{% if status.last_fetched %} {% blocktranslate count count=status.last_fetched %}{{ count }} nieuw bonnetje.{% plural %}{{ count }} nieuwe bonnetjes.{% endblocktranslate %}{% endif %}{% else %}{% translate "Nog niet gekeken." %}{% endif %}</p>
+    <p class="small muted" id="bonnetjes-gekeken">{% if status.last_check_at %}{% blocktranslate with moment=status.last_check_at|moment %}Laatst gekeken: {{ moment }}.{% endblocktranslate %}{% if status.last_fetched %} {% blocktranslate count count=status.last_fetched %}{{ count }} bonnetje opgehaald.{% plural %}{{ count }} bonnetjes opgehaald.{% endblocktranslate %}{% endif %}{% else %}{% translate "Nog niet gekeken." %}{% endif %}</p>
     {% endif %}
     {% if skipped and not fetching %}
     <div class="hint-banner is-warn" id="niet-opgehaald"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>
