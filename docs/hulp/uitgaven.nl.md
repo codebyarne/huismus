@@ -10,12 +10,14 @@ Klik bij **Uitgaven** op **Nieuwe uitgave**, of op het overzicht op
 regel het bedrag en een categorie.
 
 Vul het bruto bedrag in: wat je echt betaald hebt, inclusief eventuele btw.
-Wil je de btw erbij zien, vul die dan ook in. Dat is alleen ter informatie en
-telt nergens mee.
+Gebruik je de KOR, dan is de btw optioneel. Wil je hem erbij zien, vul hem dan
+ook in. Dat is alleen ter informatie en telt nergens mee.
 
-Gebruik je de KOR niet, dan vul je bij elke regel de btw in. Staat er
-geen btw op het bonnetje, vul dan 0 in. Het blijft ter informatie en
-telt nergens mee.
+Gebruik je de KOR niet, dan vul je bij elke regel de btw in zoals op het
+bonnetje, en kies je het btw-tarief: 21%, 9%, 0% of geen btw, of btw verlegd
+(Nederland, ander EU-land of buiten de EU). Staat er geen btw op het
+bonnetje, vul dan 0 in en kies 0% of geen btw. Huismus rekent de btw niet
+zelf uit: het bewaart wat jij invult.
 
 Betaalde je voor dingen uit verschillende categorieën in één keer, zoals een
 laptop en een tas? Gebruik dan **Regel toevoegen** en geef elke regel zijn
