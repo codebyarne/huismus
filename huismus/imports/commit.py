@@ -29,6 +29,7 @@ from huismus.documents.models import Document, DocumentLine, NumberSequence, Pay
 from huismus.documents.numbering import ensure_sequence_row, parse_number
 from huismus.documents.snapshots import business_snapshot, contact_snapshot
 from huismus.documents.totals import LineInput, compute_totals, line_total_cents
+from huismus.documents.vat_snapshot import store_vat_rows
 from huismus.expenses.lines import ExpenseLineInput, create_expense, split_gross
 from huismus.expenses.models import Expense, ExpenseCategory
 from huismus.imports.expenses import ParsedExpenseLine
@@ -320,6 +321,15 @@ def import_sales_invoices(
             document.subtotal_cents = parsed.stated_subtotal_cents
             document.tax_cents = parsed.stated_tax_cents
             document.total_cents = parsed.stated_total_cents
+            # Its VAT per rate, only when Moneybird's totals are those of
+            # its lines (huismus-intern/besluiten.md, 2026-11-06). Before
+            # the status below: once issued, the triggers refuse new rows.
+            store_vat_rows(
+                document,
+                document.lines.order_by("position"),
+                subtotal_cents=document.subtotal_cents,
+                tax_cents=document.tax_cents,
+            )
             document.status = "issued"
             document.save()
 

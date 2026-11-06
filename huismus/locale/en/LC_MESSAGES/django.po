@@ -6868,3 +6868,12 @@ msgstr ""
 
 #~ msgid "Toon actieve contacten"
 #~ msgstr "Show active contacts"
+
+msgid "omzet (cent)"
+msgstr "revenue (cents)"
+
+msgid "btw per tarief"
+msgstr "VAT per rate"
+
+msgid "De btw van een uitgegeven document is onveranderlijk."
+msgstr "The VAT of an issued document is immutable."

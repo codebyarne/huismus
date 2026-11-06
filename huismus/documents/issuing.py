@@ -23,6 +23,7 @@ from .numbering import NumberingError, number_for
 from .snapshots import business_snapshot, contact_snapshot
 from .totals import compute_totals
 from .vat import allowed_rates, lines_have_reverse_charge, reverse_charge_allowed
+from .vat_snapshot import store_vat_rows
 
 
 class IssueError(Exception):
@@ -160,6 +161,11 @@ def issue(document: Document) -> Document:
             if line.line_total_cents != cents:
                 line.line_total_cents = cents
                 line.save()
+        # The VAT per rate, as on the PDF, kept as it is now (decided by the
+        # owner on 2026-11-06); also while the document is still a draft.
+        store_vat_rows(
+            document, lines, subtotal_cents=totals.subtotal_cents, tax_cents=totals.tax_cents
+        )
 
         document.status = "issued"
         # Issued again after "Toch bewerken": nothing left to undo.

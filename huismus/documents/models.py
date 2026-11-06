@@ -385,6 +385,55 @@ class DocumentLine(TimestampedModel):
         super().delete(*args, **kwargs)
 
 
+class DocumentVatRow(TimestampedModel):
+    """The revenue and VAT of one rate on an issued invoice or credit note,
+    reverse charge apart, as on its PDF (decided by the owner on
+    2026-11-06, huismus-intern/besluiten.md, "Btw vastleggen: factuur per
+    tarief"). Written once, when the document is issued
+    (documents.vat_snapshot), from the one totals function; the VAT return
+    reads these. Immutable once its Document is issued, like its lines:
+    here and by SQLite triggers (migration 0016)."""
+
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name="vat_rows")
+    rate_bp = models.PositiveIntegerField(_("btw-tarief (basispunten)"))
+    reverse_charge = models.BooleanField(_("btw verlegd"), default=False)
+    # Without VAT. Positive on a credit note too, like its totals: what
+    # reads them counts a credit note negative by its kind.
+    revenue_cents = models.BigIntegerField(_("omzet (cent)"))
+    tax_cents = models.BigIntegerField(_("btw (cent)"))
+
+    class Meta:
+        verbose_name = _("btw per tarief")
+        verbose_name_plural = _("btw per tarief")
+        ordering = ["document", "rate_bp", "reverse_charge"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["document", "rate_bp", "reverse_charge"],
+                name="documents_vat_row_unique_rate",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.rate_bp} bp: € {euros(self.revenue_cents)} / € {euros(self.tax_cents)}"
+
+    def _document_is_issued(self):
+        return Document.objects.filter(pk=self.document_id, status="issued").exists()
+
+    def save(self, *args, **kwargs):
+        if self._document_is_issued():
+            raise ImmutableDocumentError(
+                str(_("De btw van een uitgegeven document is onveranderlijk."))
+            )
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        if self._document_is_issued():
+            raise ImmutableDocumentError(
+                str(_("De btw van een uitgegeven document is onveranderlijk."))
+            )
+        super().delete(*args, **kwargs)
+
+
 class Payment(TimestampedModel):
     """SPEC.md section 4. Not immutable itself — recording a payment or
     fixing a typo'd amount doesn't touch the invoice or its lines, so none

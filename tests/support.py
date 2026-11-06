@@ -15,6 +15,7 @@ _reopen_migration = importlib.import_module(
 _reverse_charge_migration = importlib.import_module(
     "huismus.documents.migrations.0015_reverse_charge"
 )
+_vat_rows_migration = importlib.import_module("huismus.documents.migrations.0016_vat_rows")
 _email_triggers_migration = importlib.import_module(
     "huismus.documents.migrations.0010_emaillog_append_only_triggers"
 )
@@ -39,7 +40,9 @@ def clean_up_issued_documents_for_flush():
         # several statements, and the DB-API's execute() only ever runs one.
         cursor.executescript(_triggers_migration.DROP_TRIGGERS)
         cursor.executescript(_email_triggers_migration.DROP_TRIGGERS)
+        cursor.executescript(_vat_rows_migration.DROP_TRIGGERS)
         cursor.execute("DELETE FROM documents_emaillog")
+        cursor.execute("DELETE FROM documents_documentvatrow")
         cursor.execute("DELETE FROM documents_payment")
         cursor.execute("DELETE FROM core_attachment WHERE document_id IS NOT NULL")
         cursor.execute("DELETE FROM documents_documentline")
@@ -52,3 +55,4 @@ def clean_up_issued_documents_for_flush():
             _reverse_charge_migration.DROP_TRIGGERS + _reverse_charge_migration.CREATE_TRIGGERS
         )
         cursor.executescript(_email_triggers_migration.CREATE_TRIGGERS)
+        cursor.executescript(_vat_rows_migration.CREATE_TRIGGERS)

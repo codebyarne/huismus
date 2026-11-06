@@ -90,6 +90,50 @@ def tax_rows(document, lines) -> list[tuple[int | None, int]]:
 
 
 @dataclass(frozen=True)
+class VatRow:
+    """Revenue and VAT of one rate on a document, reverse charge apart:
+    what an issued document stores (DocumentVatRow) and the VAT return
+    reads."""
+
+    rate_bp: int
+    reverse_charge: bool
+    revenue_cents: int
+    tax_cents: int
+
+
+def vat_rows(lines, *, subtotal_cents: int, tax_cents: int) -> list[VatRow] | None:
+    """Revenue and VAT per rate, with the reverse charge lines in a row of
+    their own, lowest rate first and reverse charge after plain 0%, from
+    compute_totals(): the VAT is still computed per rate group (invariant
+    3), never per line.
+
+    A reverse charge line has 0% (DocumentLine.reverse_charge), so it takes
+    no VAT from its group. None when the document's stored totals are not
+    those of its lines (an import with Moneybird's own totals, the one
+    "Btw" row of tax_rows()): Huismus doesn't guess a split that doesn't
+    add up to the totals shown (CLAUDE.md, hard rule 6). `subtotal_cents`
+    and `tax_cents`: the document's stored totals."""
+    lines = list(lines)
+    totals = compute_totals(lines)
+    if (totals.subtotal_cents, totals.tax_cents) != (subtotal_cents, tax_cents):
+        return None
+    revenue: dict[tuple[int, bool], int] = {}
+    for line, cents in zip(lines, totals.line_totals_cents, strict=True):
+        key = (line.tax_rate_bp, bool(line.reverse_charge))
+        revenue[key] = revenue.get(key, 0) + cents
+    tax_by_rate = dict(totals.tax_per_rate)
+    return [
+        VatRow(
+            rate_bp=rate_bp,
+            reverse_charge=reverse_charge,
+            revenue_cents=cents,
+            tax_cents=0 if reverse_charge else tax_by_rate[rate_bp],
+        )
+        for (rate_bp, reverse_charge), cents in sorted(revenue.items())
+    ]
+
+
+@dataclass(frozen=True)
 class RevenueByRate:
     # (rate in basis points, revenue in cents, tax in cents), lowest rate
     # first, without the reverse charge lines.
@@ -99,29 +143,17 @@ class RevenueByRate:
 
 def revenue_by_rate(document, lines) -> RevenueByRate | None:
     """Revenue and VAT per rate, and the revenue with VAT reverse charged,
-    for the export (SPEC.md M19), from compute_totals().
-
-    A reverse charge line has 0% (DocumentLine.reverse_charge), so it is
-    taken out of the 0% group; that group stays only for lines that are 0%
-    without reverse charge. None when the document's stored totals are not
-    those of its lines (an import with Moneybird's own totals, the one
-    "Btw" row of tax_rows()): a split that doesn't add up to the totals
-    shown would be worse than none."""
-    lines = list(lines)
-    totals = compute_totals(lines)
-    if (totals.subtotal_cents, totals.tax_cents) != (document.subtotal_cents, document.tax_cents):
+    for the export (SPEC.md M19), from vat_rows(). Reverse charge lines
+    count only in reverse_charge_cents, not also at 0%. None when
+    vat_rows() is None."""
+    rows = vat_rows(lines, subtotal_cents=document.subtotal_cents, tax_cents=document.tax_cents)
+    if rows is None:
         return None
-    reverse_charge_cents = sum(
-        cents
-        for line, cents in zip(lines, totals.line_totals_cents, strict=True)
-        if line.reverse_charge
+    return RevenueByRate(
+        per_rate=[
+            (row.rate_bp, row.revenue_cents, row.tax_cents)
+            for row in rows
+            if not row.reverse_charge
+        ],
+        reverse_charge_cents=sum(row.revenue_cents for row in rows if row.reverse_charge),
     )
-    plain_zero = any(line.tax_rate_bp == 0 and not line.reverse_charge for line in lines)
-    per_rate = [
-        (rate_bp, revenue - (reverse_charge_cents if rate_bp == 0 else 0), tax)
-        for (rate_bp, revenue), (_rate_bp, tax) in zip(
-            totals.subtotal_per_rate, totals.tax_per_rate, strict=True
-        )
-        if rate_bp != 0 or plain_zero
-    ]
-    return RevenueByRate(per_rate=per_rate, reverse_charge_cents=reverse_charge_cents)

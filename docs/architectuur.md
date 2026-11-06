@@ -22,6 +22,7 @@ flowchart TB
     subgraph documents
         Document["Document<br/>offerte · factuur · creditnota"]
         DocumentLine --> |document| Document
+        DocumentVatRow --> |document| Document
         Payment --> |document| Document
         EmailLog --> |document| Document
         Document --> |related_document| Document
@@ -138,7 +139,8 @@ Om te zien hoe de stukken samenwerken, de knop "Uitgeven" op een concept:
    `<pk>/uitgeven/` naar de view `document_issue` in `huismus/documents/views.py`.
 2. De view roept `issue()` aan in `huismus/documents/issuing.py`. Daar gebeurt alles
    in één transactie: de totalen uit `huismus/documents/totals.py`, het nummer uit
-   `huismus/documents/numbering.py`, de snapshots uit `huismus/documents/snapshots.py`, en
+   `huismus/documents/numbering.py`, de snapshots uit `huismus/documents/snapshots.py`, de
+   omzet en btw per tarief (`DocumentVatRow`, via `huismus/documents/vat_snapshot.py`), en
    de status wordt `issued`.
 3. Vanaf dan houden `Document.save()` en de SQLite-triggers elke wijziging
    tegen.
@@ -155,7 +157,7 @@ achtergrond, in `SPEC.md` sectie 5. Hier alleen waar je ze in de code vindt:
 | Regel | Waar |
 | --- | --- |
 | 1. Geld in centen | Velden `*_cents` (`BigIntegerField`), btw-tarieven in basispunten; weergeven met `huismus/core/templatetags/money.py`. |
-| 2. Uitgegeven is onveranderlijk | `Document.save()`/`delete()` en `DocumentLine` in `huismus/documents/models.py`, plus SQLite-triggers in `huismus/documents/migrations/0003_immutability_triggers.py` en `0008_document_reopened_at.py` (en `0010_emaillog_append_only_triggers.py` voor `EmailLog`; zoek op `TRIGGER` in `huismus/documents/migrations/`). De enige uitzondering: `huismus/documents/reopening.py` ("Toch bewerken"). |
+| 2. Uitgegeven is onveranderlijk | `Document.save()`/`delete()`, `DocumentLine` en `DocumentVatRow` (btw per tarief, vastgelegd bij uitgeven) in `huismus/documents/models.py`, plus SQLite-triggers in `huismus/documents/migrations/0003_immutability_triggers.py` en `0008_document_reopened_at.py`, `0016_vat_rows.py` (en `0010_emaillog_append_only_triggers.py` voor `EmailLog`; zoek op `TRIGGER` in `huismus/documents/migrations/`). De enige uitzondering: `huismus/documents/reopening.py` ("Toch bewerken"). |
 | 3. Nummers zonder gaten | `huismus/documents/numbering.py` (`allocate_number`, via `number_for`), op dit moment alleen aangeroepen vanuit `huismus/documents/issuing.py` (factuur, creditnota) en `huismus/documents/quoting.py` (offerte versturen), binnen de transactie die het document uitgeeft of verstuurt. |
 | 4. Eén totalenfunctie | `huismus/documents/totals.py` (`compute_totals`), voor scherm, pdf en import. |
 | 5. Snapshots | `huismus/documents/snapshots.py`, vastgelegd in `huismus/documents/issuing.py`. |

@@ -443,3 +443,30 @@ def test_a_scheduled_moneybird_invoice_becomes_a_draft_that_keeps_its_number():
     assert invoice.business_snapshot is None
     # Re-import: still nothing to change.
     assert import_sales_invoices(parsed, pdfs, commit=True).new == 0
+
+
+def test_an_imported_invoice_keeps_its_vat_per_rate_only_when_its_totals_add_up():
+    """Btw vastleggen (huismus-intern/besluiten.md, 2026-11-06): an imported
+    invoice whose stated totals are those of its lines gets its VAT per
+    rate stored like an issued one; one with Moneybird's own totals (here a
+    cent apart) gets none, Huismus doesn't guess a split (hard rule 6)."""
+    import_contacts(_parsed_2019_contacts(), commit=True)
+    parsed = _parsed_2019_invoices()
+
+    import_sales_invoices(parsed, {}, commit=True)
+
+    off_by_a_cent = Document.objects.get(number="430033")
+    assert not off_by_a_cent.vat_rows.exists()
+    adding_up = [
+        document
+        for document in Document.objects.filter(source="moneybird", kind="invoice")
+        if document.number != "430033"
+    ]
+    assert adding_up
+    for document in adding_up:
+        rows = list(document.vat_rows.all())
+        if not rows:
+            continue
+        assert sum(row.revenue_cents for row in rows) == document.subtotal_cents
+        assert sum(row.tax_cents for row in rows) == document.tax_cents
+    assert any(document.vat_rows.exists() for document in adding_up)

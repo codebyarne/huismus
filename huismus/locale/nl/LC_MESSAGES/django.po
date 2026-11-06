@@ -5705,3 +5705,12 @@ msgid ""
 "Heb je een Raspberry Pi, een NAS of een eigen server, dan kun je Huismus ook "
 "in Docker draaien. Dat is voor wie daar handig mee is."
 msgstr ""
+
+msgid "omzet (cent)"
+msgstr ""
+
+msgid "btw per tarief"
+msgstr ""
+
+msgid "De btw van een uitgegeven document is onveranderlijk."
+msgstr ""
