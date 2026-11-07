@@ -237,6 +237,60 @@ Bron: [Ik moet btw-aangifte doen - hoe vul ik die in?](https://www.belastingdien
 (Belastingdienst), [Toelichting bij de btw-aangifte (omzetbelasting) 2026](https://download.belastingdienst.nl/belastingdienst/docs/toelichting_bij_btw_aangifte_ob0731t63fd.pdf)
 (Belastingdienst, pdf, oktober 2026)
 
+### Rubrieken in detail (Toelichting 2026)
+
+Nagekeken op 7 november 2026 voor het btw-aangifterapport (SPEC.md M21, deel
+4). Letterlijk uit de Toelichting 2026 (pdf hierboven), met de bladzijde.
+
+- Titels zoals in de toelichting (blz. 11–15): 1a en 1b "Leveringen/diensten
+  belast met hoog of laag tarief"; 1e "Leveringen/diensten belast met 0% of
+  niet bij u belast"; 2a "Leveringen/diensten waarbij de btw naar u is
+  verlegd"; 3a "Leveringen naar landen buiten de EU (uitvoer)"; 3b "Leveringen
+  naar of diensten in landen binnen de EU"; 4a "Leveringen/diensten uit landen
+  buiten de EU"; 4b "Leveringen/diensten uit landen binnen de EU"; 5b
+  "Voorbelasting". Engels (blz. 36–39): 1e "Supplies/services taxed at 0% or
+  not taxed to you", 2a "Supplies/Services where the VAT has been reversed to
+  you", 3b "Supplies to or services in countries within the EU", 4a
+  "Supplies/services from countries outside the EU", 4b "Supplies/services
+  from countries within the EU", 5b "Input VAT".
+- 1e (blz. 12): "Vul hier de omzet in van goederen en diensten die u in
+  Nederland levert tegen het 0%-tarief of die niet bij u belast zijn." Onder
+  meer het 0%-tarief, "behalve export (vraag 3a) of intracommunautaire
+  leveringen (vraag 3b)", en "leveringen van goederen en diensten waarbij de
+  btw verlegd is naar een andere ondernemer".
+- 3b (blz. 13): "het bedrag [...] van de goederen en diensten die u hebt
+  geleverd naar en in andere landen binnen de EU", ook in de opgaaf ICP.
+  "Bij de intracommunautaire diensten gaat u uit van het tijdvak waarin deze
+  diensten worden geleverd. De factuurdatum is hierbij niet van belang."
+  Intracommunautaire diensten: "diensten die u hebt geleverd aan een
+  ondernemer in een ander EU-land."
+- Diensten aan een ondernemer buiten de EU: de toelichting noemt ze niet
+  apart. **Bron ontbreekt** voor de rubriek; de toelichting verwijst naar het
+  hulpmiddel "Btw bij diensten in en uit het buitenland" (blz. 14).
+- 4a en 4b (blz. 14–15): diensten afgenomen van een ondernemer buiten of
+  binnen de EU, "die de btw naar u heeft verlegd". "Vul in de linkerkolom de
+  waarde in [...]. In de rechterkolom vult u de btw in. U hoeft deze bedragen
+  niet te splitsen naar de verschillende btw-tarieven." Bij 4b: "Dit geldt
+  niet voor diensten aan onroerende zaken. Die vult u in bij vraag 2a."
+- 5b (blz. 15): "U doet dat in het aangiftetijdvak waarin die btw aan u in
+  rekening is gebracht." "De voorbelasting bestaat onder meer uit: btw die
+  andere ondernemers aan u in rekening hebben gebracht [en] btw die u moet
+  aangeven, omdat de btw naar u is verlegd", zoals bij 2a, 4a of 4b.
+- In welk tijdvak een gewone verkoopfactuur in Nederland meetelt (de
+  factuurdatum of iets anders): **Bron ontbreekt** in de nagekeken
+  toelichting.
+
+### Landen van de EU
+
+De 27 lidstaten volgens de EU zelf: België, Bulgarije, Cyprus, Denemarken,
+Duitsland, Estland, Finland, Frankrijk, Griekenland, Hongarije, Ierland,
+Italië, Kroatië, Letland, Litouwen, Luxemburg, Malta, Nederland, Oostenrijk,
+Polen, Portugal, Roemenië, Slovenië, Slowakije, Spanje, Tsjechië en Zweden.
+Bijzondere btw-gebieden (zoals Noord-Ierland) noemt die pagina niet.
+
+Bron: [EU-landen](https://european-union.europa.eu/principles-countries-history/eu-countries_nl)
+(Europese Unie)
+
 ## 5. Bewaarplicht
 
 - "U bent verplicht uw administratie 7 jaar te bewaren. Gegevens over
