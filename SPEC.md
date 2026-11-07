@@ -5,17 +5,15 @@
 
 ## 1. Purpose
 
-A self-hosted, minimal invoicing and light-admin tool for Dutch freelancers who:
+Full bookkeeping for Dutch freelancers (zzp'ers), on their own computer. Decided by the owner on 2026-11-07: Huismus grows from a minimal invoicing tool into a complete bookkeeping package that a large share of Dutch freelancers can use, with or without the **KOR** (kleineondernemersregeling) and with VAT (M18). What is in scope follows from what freelancers use in other packages today and from what keeps them from switching; many features are fine as long as Huismus stays easy to use (principle 7).
 
-- apply the **KOR** (kleineondernemersregeling, exemption from VAT administration), or charge VAT and want invoices, quotes and credit notes with VAT (M18; decided 2026-11-02),
-- send only a handful of quotes/invoices per year,
-- used to run their admin in **Moneybird** and now need to leave it (the free plan is gone).
+**Primary onboarding path: import everything from the package you leave, 1-to-1.** Moneybird first: its complete export imports for any user, to the cent. This is the reason the project exists and the hardest requirement. Rompslomp follows, then other packages and spreadsheets through one documented import format (issue #108). The first users to win over are freelancers leaving Moneybird or Rompslomp; then everyone who keeps their own books.
 
-**Primary onboarding path: import everything from Moneybird, 1-to-1, for any user.** This is the reason the project exists and the hardest requirement. Everything else is deliberately small.
+The books stay local: one installation per administration (desktop app or Docker). What cannot work locally (a live bank connection, a phone app, filing returns directly, payment links, Peppol) is out of scope until a separate decision (issue #64).
 
 ### Non-goals
 
-Bank reconciliation, payroll, multi-user or multi-tenant, hosted SaaS, e-commerce, time tracking.
+Payroll, multi-tenant hosting, a hosted SaaS version, e-commerce. A live bank connection is out of scope for now (a bank statement file is in, issue #77); so are the other features that need a central server (issue #64).
 
 ## 2. Principles
 
@@ -24,7 +22,8 @@ Bank reconciliation, payroll, multi-user or multi-tenant, hosted SaaS, e-commerc
 3. **The user owns the data.** One SQLite file plus one `data/` directory. Backup = copy them.
 4. **Dutch first, i18n from day one.** All UI strings go through gettext. `nl` is the default language, `en` second.
 5. **Import fidelity beats convenience.** Totals must match the source to the cent, or the import reports why.
-6. **Small.** One process (one container, or one desktop app, M11), no external services, no telemetry. Huismus makes only four kinds of outgoing request: the update check (M11; in Docker too since 2026-11-04, only to say so), which can be turned off; backups to the one cloud service the user linked (M15 step 2; decided 2026-10-30), which are off until linked, and through that same Dropbox or WebDAV link the receipts folder (on Dropbox also waiting there for a change), when the user chooses it (M20); "Hoe gebruik je Huismus?" (M13), sent only when the user presses Versturen after seeing everything that goes (decided 2026-11-02); and receipts to the AI service the user chose to read them (M20, part 3; decided by the owner 2026-11-06), which is off until the user sets one up with their own key.
+6. **Local and quiet.** One process (one container, or one desktop app, M11), no external services, no telemetry. Huismus makes only four kinds of outgoing request: the update check (M11; in Docker too since 2026-11-04, only to say so), which can be turned off; backups to the one cloud service the user linked (M15 step 2; decided 2026-10-30), which are off until linked, and through that same Dropbox or WebDAV link the receipts folder (on Dropbox also waiting there for a change), when the user chooses it (M20); "Hoe gebruik je Huismus?" (M13), sent only when the user presses Versturen after seeing everything that goes (decided 2026-11-02); and receipts to the AI service the user chose to read them (M20, part 3; decided by the owner 2026-11-06), which is off until the user sets one up with their own key.
+7. **Easy to use.** Replaced "Small" on 2026-11-07: Huismus may do a lot, but every screen stays simple, and what you do not use you do not see (with the KOR on, for example, no VAT fields). The hard rules in `CLAUDE.md` all stay.
 
 ## 3. Stack
 
@@ -405,7 +404,7 @@ Collect **anonymised sample exports** (contacts, invoices per invoice/per line, 
 
 ## 12. Later / out of scope for v1
 
-Recurring invoices, bank statement import (CAMT.053), UBL/Peppol export, payment reminders, multi-currency.
+UBL/Peppol export, multi-currency. Decided by the owner on 2026-11-07 and now in scope, each with its own issue: recurring invoices (#82), time tracking (#80, #81), bank statement import as a file (CAMT.053 or MT940, #77), payment reminders (#114), a profit and loss statement per year (#109), and importing from other packages (#108).
 
 ## 13. Open questions
 

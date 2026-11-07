@@ -4,7 +4,7 @@ Self-hosted invoicing for Dutch freelancers using the KOR, or charging VAT (SPEC
 
 ## Project in one paragraph
 
-Django + SQLite + HTMX app that runs in one Docker container on a Raspberry Pi. It creates quotes, invoices and credit notes as PDFs, tracks expenses, and, most importantly, imports a user's complete Moneybird export 1-to-1. AGPL-3.0-or-later. UI is Dutch first (gettext), English second.
+Django + SQLite + HTMX app that runs in one Docker container on a Raspberry Pi. Full bookkeeping for Dutch freelancers (since 2026-11-07, `SPEC.md` section 1): quotes, invoices and credit notes as PDFs, expenses with receipts, VAT and year reports, and, most importantly, a 1-to-1 import of everything from the package a user leaves (Moneybird first). AGPL-3.0-or-later. UI is Dutch first (gettext), English second.
 
 ## Commands
 
