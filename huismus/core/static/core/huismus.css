@@ -371,7 +371,9 @@ a:hover { color: var(--primary-hover); }
 .section-title { font-size: var(--fs-lg); margin-bottom: var(--s-3); }
 .divider { height: 1px; background: var(--border); border: 0; margin: var(--s-6) 0; }
 
-.table-wrap { container-type: inline-size; overflow: hidden; }
+/* A table wider than its card scrolls inside it, never cut off (the year
+   overview on a phone, 2026-11-07; tests/e2e/test_every_page.py). */
+.table-wrap { container-type: inline-size; overflow-x: auto; }
 .table { width: 100%; border-collapse: collapse; font-size: var(--fs-md); }
 .table th { text-align: left; font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--text-muted); padding: 11px 16px; border-bottom: 1px solid var(--border); white-space: nowrap; }
 .table td { padding: 13px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
