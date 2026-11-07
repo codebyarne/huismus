@@ -35,7 +35,8 @@ class Period:
     def parse(cls, text: str | None, *, today: date) -> "Period":
         for kind, pattern in _PATTERNS.items():
             match = pattern.match(text or "")
-            if match:
+            # Year 0 has no dates; it falls back like any other nonsense.
+            if match and int(match.group(1)) > 0:
                 number = int(match.group(2)) if kind != YEAR else 0
                 period = cls(kind, int(match.group(1)), number, today)
                 if period.first_day <= today:

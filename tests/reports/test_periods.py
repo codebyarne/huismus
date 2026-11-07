@@ -28,7 +28,10 @@ def test_a_period_is_read_from_its_text(text, kind, first, last):
     assert str(period) == text
 
 
-@pytest.mark.parametrize("text", ["", "2026-Q5", "2026-Q0", "2026-13", "2026-00", "x", "26", None])
+@pytest.mark.parametrize(
+    "text",
+    ["", "0000", "0000-Q1", "0000-01", "2026-Q5", "2026-Q0", "2026-13", "2026-00", "x", "26", None],
+)
 def test_anything_else_is_the_last_finished_quarter(text):
     assert str(Period.parse(text, today=date(2026, 11, 7))) == "2026-Q3"
 
