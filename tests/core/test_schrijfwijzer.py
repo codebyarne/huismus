@@ -48,9 +48,15 @@ FORBIDDEN = {
     ],
 }
 
-# Text a help page or the site's download page quotes from another program,
-# word for word. It's not ours to rewrite, so it doesn't count.
-QUOTED_FROM_ELSEWHERE = ['"Windows heeft uw pc beschermd"']
+# Text quoted word for word from elsewhere: a help page or the site's
+# download page quoting another program, and the VAT return's box titles
+# as the Belastingdienst writes them (huismus/reports/vat_return.py). It's
+# not ours to rewrite, so it doesn't count.
+QUOTED_FROM_ELSEWHERE = [
+    '"Windows heeft uw pc beschermd"',
+    "belast met 0% of niet bij u belast",
+    "waarbij de btw naar u is verlegd",
+]
 
 # One line of a .po entry: a keyword with a string, e.g. msgid "Opslaan" or
 # msgstr[1] "%(count)s invoices". A line with just a string continues it.
