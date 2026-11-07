@@ -78,7 +78,7 @@ def user_with_password():
 
 def _is_token(value) -> bool:
     token = settings.WINDOW_TOKEN
-    return bool(token) and bool(value) and secrets.compare_digest(value, token)
+    return bool(token) and bool(value) and secrets.compare_digest(value.encode(), token.encode())
 
 
 def _sign_in_without_password(request):

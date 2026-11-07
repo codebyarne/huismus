@@ -11,6 +11,7 @@ import pytest
 from huismus.expenses import ai_service
 from huismus.expenses.ai_service import Config, ServiceError
 from tests.ai_fakes import KEY
+from tests.redirect_fakes import Catcher, Redirector
 
 
 def _config(fake, **changes) -> Config:
@@ -175,3 +176,21 @@ def test_every_reason_has_a_sentence():
     ):
         sentence = ai_service.failure_sentence(reason, Config("mistral", "u", "m-1", "k"))
         assert sentence and "%(" not in sentence
+
+
+@pytest.mark.parametrize("status", [301, 302, 303, 307, 308])
+def test_a_redirect_is_not_followed_and_takes_no_key_along(status):
+    # urllib would follow it and copy "Authorization: Bearer <key>" to
+    # whatever the Location says: another host, or plain http://.
+    catcher = Catcher()
+    redirector = Redirector(status, catcher.url + "v1/chat/completions")
+    try:
+        config = Config("other", redirector.url + "v1", "nep-model", KEY)
+        with pytest.raises(ServiceError) as error:
+            ai_service.chat(config, [{"type": "text", "text": "x"}])
+        assert error.value.reason == ai_service.UNREACHABLE
+        assert catcher.requests == []
+        assert KEY not in str(error.value)
+    finally:
+        redirector.close()
+        catcher.close()

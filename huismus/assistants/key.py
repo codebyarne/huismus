@@ -54,7 +54,7 @@ def remove() -> None:
 
 def matches(value: str) -> bool:
     key = current()
-    return bool(key) and bool(value) and secrets.compare_digest(value, key)
+    return bool(key) and bool(value) and secrets.compare_digest(value.encode(), key.encode())
 
 
 def mark_used() -> None:
