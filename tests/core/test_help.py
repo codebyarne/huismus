@@ -114,6 +114,9 @@ def test_the_index_shows_the_groups_in_order_with_their_topics(client, django_us
         "Voor je boekhouder",
         "Installeren en bijwerken",
     ]
+    # h1 → h2 (group) → h3 (card), no level skipped.
+    assert page.count("<h3>") == len(help.TOPICS)
+    assert page.index("<h1>") < page.index('<h2 id="help-group-1">') < page.index("<h3>")
     # Each card after its own heading and before the next one.
     sections = page.split('<section class="help-group"')[1:]
     for section, group in zip(sections, help.groups(), strict=True):
