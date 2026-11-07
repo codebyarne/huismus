@@ -57,10 +57,19 @@ of 0% telt de btw die je invulde als voorbelasting en de rest als kosten. Bij
 btw verlegd en bij een regel zonder tarief telt het hele bedrag als kosten.
 Staat de KOR aan, dan zie je de kosten met btw, zoals altijd.
 
-## Wat Huismus niet doet
+## Btw-aangifte
 
-Huismus doet geen btw-aangifte. Wel kun je een export downloaden voor je
-boekhouder. Zie [Exporteren](exporteren.nl.md).
+Onder **Rapporten → Btw-aangifte** zie je per kwartaal, maand of jaar de omzet
+en btw uit je facturen en uitgaven, per rubriek, en wat je betaalt of
+terugkrijgt. Je neemt de bedragen zelf over in je aangifte; Huismus verstuurt
+niets.
+
+Huismus telt uitgegeven facturen en creditnota's, en uitgaveregels met een
+btw-tarief. Wat het niet kan meetellen, staat onderaan onder **Niet
+meegeteld**, met een link. Daar vul je het aan of neem je het zelf mee.
+
+Voor je boekhouder kun je ook een export downloaden. Zie
+[Exporteren](exporteren.nl.md).
 
 ## Een creditnota en een kopie
 

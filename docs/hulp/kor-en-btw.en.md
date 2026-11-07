@@ -58,10 +58,19 @@ VAT on your expenses apart, as **Input VAT**. It goes per line: at 21%, 9% or
 reverse charge, and on a line without a rate, the whole amount counts as
 costs. With the KOR on, you see the costs including VAT, as always.
 
-## What Huismus doesn't do
+## VAT return
 
-Huismus doesn't do VAT returns. You can download an export for your
-accountant, though. See [Exporting](exporteren.en.md).
+Under **Reports → VAT return** you see, per quarter, month or year, the
+revenue and VAT from your invoices and expenses, per box, and what you pay or
+get back. You copy the amounts into your return yourself; Huismus sends
+nothing.
+
+Huismus counts issued invoices and credit notes, and expense lines with a VAT
+rate. What it can't count is listed at the bottom under **Not counted**, with a
+link. There you fill it in or take it along yourself.
+
+You can also download an export for your accountant. See
+[Exporting](exporteren.en.md).
 
 ## A credit note and a copy
 
