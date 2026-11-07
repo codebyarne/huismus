@@ -101,3 +101,33 @@ def test_on_a_phone_every_table_fits_without_scrolling(app):
         "wraps => wraps.filter(w => w.scrollWidth > w.clientWidth).map(w => w.innerText)"
     )
     assert too_wide == []
+
+
+def test_the_csv_of_the_period_on_the_page(app):
+    # Issue #112: the same period as the page, and on a phone the button
+    # fits in the header next to the period choice.
+    _kor(False)
+    last_day = Period.last_finished_quarter(date.today()).last_day
+    create_expense([ExpenseLineInput("Laptop", 121000, 21000, None, VatRate.HIGH)], date=last_day)
+    app.set_viewport_size({"width": 390, "height": 844})
+
+    app.goto(app.base + "/rapporten/btw-aangifte/")
+    app.get_by_role("link", name="Maand", exact=True).click()
+    expect(app).to_have_url(re.compile(r"periode=\d{4}-\d{2}$"))
+    period = app.url.rsplit("=", 1)[1]
+
+    assert app.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
+    with app.expect_download() as download:
+        app.get_by_role("link", name="CSV downloaden").click()
+    assert download.value.suggested_filename == f"btw-aangifte-{period}.csv"
+    text = open(download.value.path(), encoding="utf-8-sig").read()
+    assert text.startswith("periode;rubriek;omschrijving;")
+    assert f"{period};5b;Voorbelasting;;;;210,00;" in text
+
+
+def test_with_the_kor_on_there_is_no_csv(app):
+    _kor(True)
+
+    app.goto(app.base + "/rapporten/btw-aangifte/")
+
+    expect(app.get_by_role("link", name="CSV downloaden")).to_have_count(0)
