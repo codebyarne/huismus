@@ -14,13 +14,7 @@
     </div>
 </div>
 
-<div class="flash flash-info">
-    <svg class="i" aria-hidden="true"><use href="#info"></use></svg>
-    <div class="flash-body">
-        <strong>{% translate "Waarom vraagt je computer of je de app vertrouwt?" %}</strong>
-        <span class="small">{% translate "Huismus is een hobbyproject zonder betaalde handtekening van Apple of Microsoft. Daarom vraagt je computer de eerste keer of je de app vertrouwt. Daarna niet meer." %}</span>
-    </div>
-</div>
+{% include "site/_trust_note.html" %}
 
 {% if platform == "mac" %}{% include "site/_first_open_mac.html" %}{% else %}{% include "site/_first_open_windows.html" %}{% endif %}
 

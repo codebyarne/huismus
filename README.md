@@ -1,9 +1,11 @@
 # Huismus
 
-Huismus maakt je offertes, facturen en creditnota's als pdf en houdt je
-uitgaven bij. Het is voor Nederlandse zzp'ers met de KOR, of met btw: dan
-kies je per factuurregel 0, 9 of 21%. Kom je van Moneybird, dan neem je je
-hele export mee.
+Huismus is boekhouding voor Nederlandse zzp'ers, met of zonder KOR. Je maakt
+er offertes, facturen en creditnota's mee als pdf, en je legt je uitgaven vast
+met het bonnetje erbij, ook vanuit een map die meesynchroniseert met je
+telefoon. Reken je btw, dan zie je per kwartaal de bedragen voor je
+btw-aangifte. Kom je van Moneybird, dan neem je al je jaren mee. Meer op
+[huismus.arnekrijnsen.com](https://huismus.arnekrijnsen.com).
 
 Huismus draait bij jou: als app op je Mac of Windows-pc, of in één
 Docker-container op een Raspberry Pi, een NAS of een andere server. Je

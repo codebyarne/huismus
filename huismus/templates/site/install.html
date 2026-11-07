@@ -15,13 +15,7 @@
 
 {% include "site/_downloads.html" %}
 
-<div class="flash flash-info">
-    <svg class="i" aria-hidden="true"><use href="#info"></use></svg>
-    <div class="flash-body">
-        <strong>{% translate "Waarom vraagt je computer of je de app vertrouwt?" %}</strong>
-        <span class="small">{% translate "Huismus is een hobbyproject zonder betaalde handtekening van Apple of Microsoft. Daarom vraagt je computer de eerste keer of je de app vertrouwt. Daarna niet meer." %}</span>
-    </div>
-</div>
+{% include "site/_trust_note.html" %}
 
 {% include "site/_first_open_mac.html" %}
 
@@ -34,13 +28,14 @@
         <li>{% translate "Kom je van Moneybird? Importeer je hele administratie in één keer." %}</li>
         <li>{% blocktranslate %}Eerst rondkijken? Kies <strong>Probeer met nepdata</strong>: Huismus vult zich met verzonnen facturen, die je er met één knop weer uithaalt.{% endblocktranslate %}</li>
         <li>{% translate "Kies een map voor je back-ups, bijvoorbeeld in iCloud Drive of OneDrive." %}</li>
+        <li>{% translate "Bonnetjes vanaf je telefoon? Kies een bonnetjesmap die meesynchroniseert." %}</li>
     </ul>
     <p class="small"><a href="{{ help.beginnen }}">{% translate "Aan de slag" %} →</a> · <a href="{{ help.desktop_app }}">{% translate "Meer over de desktop-app" %} →</a></p>
 </section>
 
 <section class="card card-pad stack">
     <h2>{% translate "Liever zelf draaien op een server?" %}</h2>
-    <p class="muted">{% translate "Heb je een Raspberry Pi, een NAS of een eigen server, dan kun je Huismus ook in Docker draaien. Dat is voor wie daar handig mee is." %}</p>
-    <p><a href="{{ repository }}#met-docker">{% translate "Installeren met Docker" %} →</a></p>
+    <p class="muted">{% translate "Heb je een Raspberry Pi, een NAS, een eigen server of een VPS, dan kun je Huismus ook in Docker draaien. Dat is voor wie daar handig mee is." %}</p>
+    <p><a href="{{ help.docker }}">{% translate "Installeren met Docker" %} →</a> · <a href="{{ help.vps }}">{% translate "Op een VPS" %} →</a></p>
 </section>
 {% endblock %}
