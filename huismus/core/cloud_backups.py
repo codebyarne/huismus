@@ -45,7 +45,7 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 from pyrage import DecryptError, passphrase
 
-from . import maintenance
+from . import maintenance, no_redirects
 from .backup import CLOUD_FILE_PREFIX, BackupError, create_backup, sample_data_in_use
 from .private_files import write_owner_only
 
@@ -293,11 +293,15 @@ def decrypt(data: bytes, recovery_code: str) -> bytes:
 
 def _open(request: urllib.request.Request, timeout: float = TIMEOUT) -> tuple[int, bytes]:
     """One HTTP request; the status and body, also for an error status. The
-    one place this module goes on the network, so tests replace it."""
+    one place this module goes on the network, so tests replace it. A
+    redirect counts as unreachable: following it would send the password or
+    token along (core.no_redirects)."""
     try:
-        with urllib.request.urlopen(request, timeout=timeout) as response:
+        with no_redirects.urlopen(request, timeout=timeout) as response:
             return response.status, response.read()
     except urllib.error.HTTPError as error:
+        if no_redirects.is_redirect(error.code):
+            raise CloudError(UNREACHABLE, f"redirect {error.code}") from error
         return error.code, error.read()
     except (urllib.error.URLError, TimeoutError, OSError) as error:
         raise CloudError(UNREACHABLE, str(error)) from error
