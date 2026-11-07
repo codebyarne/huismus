@@ -44,5 +44,6 @@ At the top of the list you search by supplier or description, and filter by
 year and category.
 
 **Reports → Year overview** shows your revenue, your costs and the difference
-for each year, also per quarter. You can download a CSV there too, or an
-export with everything in it. See [Exporting](exporteren.en.md).
+for each year, also per quarter. If you don't use the KOR, those are your
+costs excluding VAT, with the input VAT apart (see [KOR and VAT](kor-en-btw.en.md)).
+You can download a CSV there too, or an export with everything in it. See [Exporting](exporteren.en.md).

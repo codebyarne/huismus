@@ -47,11 +47,20 @@ Je omzet in Huismus is altijd zonder btw: op het overzicht, op het
 jaaroverzicht en bij de KOR-grens. Wat openstaat en wat betaald is, is met
 btw, want dat is wat je klant betaalt.
 
+## Kosten en voorbelasting
+
+Een uitgave bewaart Huismus altijd met het bedrag dat je betaald hebt.
+
+Staat de KOR uit, dan toont het jaaroverzicht je kosten zonder btw en de btw
+van je uitgaven apart, als **Voorbelasting**. Dat gaat per regel: bij 21%, 9%
+of 0% telt de btw die je invulde als voorbelasting en de rest als kosten. Bij
+btw verlegd en bij een regel zonder tarief telt het hele bedrag als kosten.
+Staat de KOR aan, dan zie je de kosten met btw, zoals altijd.
+
 ## Wat Huismus niet doet
 
-Huismus doet geen btw-aangifte en houdt geen voorbelasting op je uitgaven
-bij. Uitgaven zijn altijd het bedrag dat je betaald hebt. Wel kun je een
-export downloaden voor je boekhouder. Zie [Exporteren](exporteren.nl.md).
+Huismus doet geen btw-aangifte. Wel kun je een export downloaden voor je
+boekhouder. Zie [Exporteren](exporteren.nl.md).
 
 ## Een creditnota en een kopie
 

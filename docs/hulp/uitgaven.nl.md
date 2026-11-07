@@ -45,5 +45,6 @@ Bovenaan de lijst zoek je op leverancier of omschrijving, en filter je op
 jaar en categorie.
 
 Onder **Rapporten → Jaaroverzicht** staan per jaar je omzet, je kosten en het
-verschil, ook per kwartaal. Daar download je ook een CSV, of een
-export met alles erbij. Zie [Exporteren](exporteren.nl.md).
+verschil, ook per kwartaal. Gebruik je de KOR niet, dan zijn dat je kosten
+zonder btw, met de voorbelasting apart (zie [KOR en btw](kor-en-btw.nl.md)).
+Daar download je ook een CSV, of een export met alles erbij. Zie [Exporteren](exporteren.nl.md).

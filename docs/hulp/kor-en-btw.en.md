@@ -48,10 +48,19 @@ Revenue in Huismus is always without VAT: on the overview, on the year
 overview and for the KOR limit. What's open and what's been paid includes
 VAT, because that's what your customer pays.
 
+## Costs and input VAT
+
+Huismus always keeps an expense with the amount you paid.
+
+With the KOR off, the year overview shows your costs excluding VAT, and the
+VAT on your expenses apart, as **Input VAT**. It goes per line: at 21%, 9% or
+0% the VAT you filled in counts as input VAT and the rest as costs. With
+reverse charge, and on a line without a rate, the whole amount counts as
+costs. With the KOR on, you see the costs including VAT, as always.
+
 ## What Huismus doesn't do
 
-Huismus doesn't do VAT returns and doesn't track input VAT on your expenses.
-Expenses are always the amount you paid. You can download an export for your
+Huismus doesn't do VAT returns. You can download an export for your
 accountant, though. See [Exporting](exporteren.en.md).
 
 ## A credit note and a copy
