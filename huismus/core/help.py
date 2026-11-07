@@ -69,7 +69,9 @@ TOPICS = tuple(slug for group in GROUPS for slug in group.topics)
 
 
 def groups(shown: tuple[str, ...] = TOPICS) -> list[Group]:
-    """The groups for a list of `shown` topics, without the empty ones."""
+    """The groups with only the `shown` topics; a group left without any is
+    dropped. The app shows every topic; the site passes core.site.TOPICS,
+    which leaves out Feedback geven."""
     kept = (Group(g.title, tuple(s for s in g.topics if s in shown)) for g in GROUPS)
     return [group for group in kept if group.topics]
 
