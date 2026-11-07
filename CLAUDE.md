@@ -108,7 +108,12 @@ Adres van de Pi: `huismus-intern/werkwijze.md`.
 Releases gaan **één keer per week, op woensdag** (besluit 2026-11-04): Claude
 maakt dan zelf een release van wat er die week op `main` kwam (het laatste cijfer
 omhoog, 0.1.x) en meldt welke versie klaarstaat en wat erin zit, in gewone taal.
-Eerst: `verify-e2e` op die `main`, en de WebKit- en Firefox-jobs op `main` groen.
+Eerst: `verify-e2e` op die `main`, de WebKit- en Firefox-jobs op `main` groen, en
+`review-veiligheid` over alles sinds de vorige release: een bevinding met ernst
+hoog of middel houdt de release tegen tot hij opgelost is, een lage wordt een
+issue. De release zelf stopt ook: de job `security` in `release.yml` (bekende
+kwetsbaarheden in de pakketten van `uv.lock`, en Django's `check --deploy`)
+moet groen zijn voordat er een image of app online komt.
 De release-PR (versie in `pyproject.toml`) zet bovenaan `docs/hulp/nieuw.nl.md` en
 `nieuw.en.md` wat de gebruiker er nu mee kan, volgens `docs/schrijfwijzer.md`:
 wat je ziet of doet, niet hoe het gebouwd is; interne wijzigingen (tests, CI) laat
@@ -277,7 +282,7 @@ De repo is openbaar. Wat privé is, staat in de privé-repo
 
 ## Reviewers
 
-Vijf subagents in `.claude/agents/`, elk met precies één opdracht:
+Zes subagents in `.claude/agents/`, elk met precies één opdracht:
 
 - `review-invarianten` — toetst een wijziging aan de zeven harde regels
   hierboven. Gebruik deze bij alles wat domeinlogica raakt.
@@ -288,6 +293,9 @@ Vijf subagents in `.claude/agents/`, elk met precies één opdracht:
 - `verify-e2e` — gebruikt de app via Playwright zoals een gebruiker, op
   `scripts/demo-server.sh`, en levert screenshots. Groene tests zijn niet
   genoeg voor iets wat een gebruiker ziet: draai deze voordat je "klaar" zegt.
+- `review-veiligheid` — toetst alles sinds de vorige release op veiligheid
+  (geheimen, verbindingen naar buiten, ingangen zonder sessie, wat de gebruiker
+  inleest). Bij elke release, zie Releases.
 - `product-owner` — neemt productbeslissingen en keurt designs namens de eigenaar,
   binnen `SPEC.md` en eerdere besluiten, en legt elk besluit vast in
   `huismus-intern/besluiten.md`. Zie "Autonoom werken".

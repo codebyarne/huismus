@@ -90,7 +90,9 @@ Alles moet slagen voordat je verder gaat:
 - CI groen (op een PR alleen `verify (chromium)`), geen conflict, geen open vraag van
   de eigenaar, en bij een grote wijziging met UI de flow goedgekeurd → zelf mergen met rebase (`CLAUDE.md`, "Mergen").
 - Een merge rolt niets uit (`CLAUDE.md`, "Releases"). Wacht tot CI op `main` groen is
-  (ook WebKit en Firefox, als die draaien), en maak dan een release volgens
+  (ook WebKit en Firefox, als die draaien), draai `review-veiligheid` over alles
+  sinds de vorige release (hoog of middel: eerst oplossen; laag: een issue), en maak
+  dan een release volgens
   `docs/desktop.md`, "Een release maken": een PR `chore(release): X.Y.Z` die alleen
   de versie in `pyproject.toml` (en `uv.lock`) een patch ophoogt, mergen als CI groen
   is, en daarna die commit taggen met `vX.Y.Z` en de tag pushen.

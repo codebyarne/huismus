@@ -69,7 +69,7 @@ def test_only_the_publish_job_may_write_releases():
 
 
 def test_the_release_waits_for_both_apps():
-    assert "needs: [macos-app, windows-app]" in PUBLISH_JOB
+    assert "needs: [security, macos-app, windows-app]" in PUBLISH_JOB
 
 
 def test_the_tag_must_match_the_version_inside_the_app():
