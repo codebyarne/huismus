@@ -384,7 +384,8 @@ def get_vat_return(arguments):
         "lines_missing": [
             {
                 "expense_id": line.expense_id,
-                "supplier": line.expense.supplier or line.expense.description,
+                # As named on the page.
+                "supplier": line.expense.supplier or line.expense.description or _("Uitgave"),
                 "date": _date(line.expense.date),
                 "description": line.description,
                 "amount": _amount(line.amount_cents),
@@ -413,10 +414,12 @@ def get_vat_return(arguments):
     data["to_get_back" if report.balance_cents < 0 else "to_pay"] = _amount(
         report.balance_abs_cents
     )
+    # In the order of the page, which is that of NOT_COUNTED_TITLES; items
+    # has a key for each of its kinds.
     data["not_counted"] = [
-        {"kind": kind, "title": str(NOT_COUNTED_TITLES[kind]), "items": found}
-        for kind, found in items.items()
-        if found
+        {"kind": kind, "title": str(title), "items": items[kind]}
+        for kind, title in NOT_COUNTED_TITLES.items()
+        if items[kind]
     ]
     return data
 

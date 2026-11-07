@@ -138,3 +138,15 @@ def test_it_only_reads(tool):
 
     assert definition["annotations"]["readOnlyHint"] is True
     assert definition["annotations"]["destructiveHint"] is False
+
+
+def test_an_empty_period_has_the_boxes_with_zeros(tool):
+    _settings(kor=False)
+
+    data, _text, _error = tool("get_vat_return", period="2025-07")
+
+    assert data["period"] == "2025-07"
+    assert len(data["boxes"]) == 7
+    assert all(box["revenue"] == box["vat"] == "€ 0,00" for box in data["boxes"])
+    assert data["to_pay"] == "€ 0,00"
+    assert data["not_counted"] == []

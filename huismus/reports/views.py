@@ -12,9 +12,10 @@ from huismus.core.csv_files import Amount, csv_response
 from huismus.documents.models import Document
 from huismus.expenses.models import Expense
 
-from . import vat_return_csv as vat_return_rows
 from .periods import MONTH, QUARTER, YEAR, Period
 from .vat_return import KOR_NOTE, NOT_COUNTED_TITLES, compute_vat_return
+from .vat_return_csv import header as vat_return_header
+from .vat_return_csv import rows as vat_return_rows
 from .year_overview import CHART_STEPS, chart_step, compute_year_overview
 
 
@@ -151,6 +152,4 @@ def vat_return_csv(request):
     report = compute_vat_return(period)
     if report.kor_on:
         return redirect(f"{reverse('reports:vat_return')}?periode={period}")
-    return csv_response(
-        f"btw-aangifte-{period}.csv", vat_return_rows.header(), vat_return_rows.rows(report)
-    )
+    return csv_response(f"btw-aangifte-{period}.csv", vat_return_header(), vat_return_rows(report))
