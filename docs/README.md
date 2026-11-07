@@ -26,15 +26,26 @@ de app, maak ze dan opnieuw en commit ze:
 ./scripts/site-beelden.sh
 ```
 
-Een promofilmpje (16 seconden in een lus, 1920×1080 mp4, voor LinkedIn en
-dergelijke): een nieuwe factuur krijgt een klant en een regel, en wordt
-uitgegeven. Van dezelfde verzonnen administratie, met een camera die in- en
-uitzoomt en een klik- of toetsgeluid bij elke klik en toets (CC0, van Kenney). Komt in `~/Downloads`,
-niet in de repo. Muziek eronder is optioneel (let op de licentie):
+Promofilmpjes (rond de twintig seconden in een lus, 1920×1080 mp4, voor
+LinkedIn en dergelijke), van dezelfde verzonnen administratie, met een camera
+die in- en uitzoomt en een klik- of toetsgeluid bij elke klik en toets (CC0,
+van Kenney). Ze komen in `~/Downloads`, niet in de repo.
+
+- `factuur`: een nieuwe factuur krijgt een klant en een regel, en wordt uitgegeven.
+- `bonnetjes`: Huismus heeft drie (verzonnen) foto's van bonnetjes uit de
+  bonnetjesmap gehaald en gelezen met de AI-dienst van de gebruiker
+  (Instellingen → Bonnetjes lezen). Het Overzicht meldt "3 nieuwe uitgaven om
+  na te kijken", en in Verwerken zeg je bij elk, met het bonnetje groot naast
+  de velden, "Klopt". Alleen wat in Huismus gebeurt: de foto onderweg is een
+  andere app. Huismus leest echt; alleen de dienst is nep, een klein
+  servertje in het script, dus er gaat niets naar buiten.
+
+Muziek eronder is optioneel (let op de licentie):
 
 ```
-./scripts/promo-film.sh
-./scripts/promo-film.sh ~/Downloads/huismus-factuur.mp4 muziek.mp3
+./scripts/promo-film.sh factuur
+./scripts/promo-film.sh bonnetjes
+./scripts/promo-film.sh bonnetjes ~/Downloads/huismus-bonnetjes.mp4 muziek.mp3
 ```
 
 Zelf bekijken:
