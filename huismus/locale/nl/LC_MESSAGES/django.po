@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-07 14:07+0100\n"
+"POT-Creation-Date: 2026-11-07 16:13+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -29,6 +29,9 @@ msgid ""
 msgstr ""
 
 msgid "Dit document bestaat niet in Huismus, of past niet bij deze actie."
+msgstr ""
+
+msgid "Uitgave"
 msgstr ""
 
 msgid "Huismus kan dit bonnetje niet lezen. Maak de uitgave in Huismus."
@@ -2052,9 +2055,6 @@ msgid "nakijken"
 msgstr ""
 
 msgid "uitgaven"
-msgstr ""
-
-msgid "Uitgave"
 msgstr ""
 
 msgid "uitgaveregel"
@@ -5421,17 +5421,29 @@ msgstr ""
 msgid "Klik op <strong>Toch uitvoeren</strong>."
 msgstr ""
 
-msgid ""
-"Offertes, facturen en uitgaven voor zzp’ers, met of zonder KOR. Een gratis "
-"app voor Mac en Windows, en je administratie blijft op je eigen computer."
-msgstr ""
-
-msgid "Huismus: je facturen, op je eigen computer"
+msgid "Waarom vraagt je computer of je de app vertrouwt?"
 msgstr ""
 
 msgid ""
-"Offertes, facturen en uitgaven voor zzp’ers, met of zonder KOR. Gratis en "
-"open source."
+"Dat vraagt hij alleen de eerste keer. Hieronder staat hoe je Huismus dan "
+"toch opent."
+msgstr ""
+
+msgid "Huismus heeft geen betaalde handtekening van Apple of Microsoft."
+msgstr ""
+
+msgid ""
+"Boekhouden voor zzp’ers, met of zonder KOR: facturen, bonnetjes en je btw-"
+"aangifte. Neem al je jaren mee uit Moneybird. Gratis, en je administratie "
+"blijft op je eigen computer."
+msgstr ""
+
+msgid "Huismus: je boekhouding op je eigen computer"
+msgstr ""
+
+msgid ""
+"Boekhouden voor zzp’ers, met of zonder KOR: facturen, bonnetjes en je btw-"
+"aangifte. Gratis en open source."
 msgstr ""
 
 msgid "Rondleiding"
@@ -5445,8 +5457,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Huismus is gratis en open source, onder de <a href=\"%(repository)s/blob/"
-"main/LICENSE\">AGPL-3.0</a>. Een hobbyproject, gemaakt in Nederland."
+"Gratis en open source, gemaakt in Nederland. Huismus valt onder de <a "
+"href=\"%(repository)s/blob/main/LICENSE\">AGPL-3.0</a>."
 msgstr ""
 
 msgid "Deze site telt bezoeken met GoatCounter, zonder cookies."
@@ -5626,15 +5638,6 @@ msgid ""
 "Begint hij niet vanzelf? <a href=\"%(file_url)s\">Download hem dan hier</a>."
 msgstr ""
 
-msgid "Waarom vraagt je computer of je de app vertrouwt?"
-msgstr ""
-
-msgid ""
-"Huismus is een hobbyproject zonder betaalde handtekening van Apple of "
-"Microsoft. Daarom vraagt je computer de eerste keer of je de app vertrouwt. "
-"Daarna niet meer."
-msgstr ""
-
 msgid "Daarna"
 msgstr ""
 
@@ -5655,12 +5658,13 @@ msgstr ""
 msgid "Voor zzp’ers, met of zonder KOR"
 msgstr ""
 
-msgid "Je facturen, op je eigen computer"
+msgid "Je boekhouding op je eigen computer"
 msgstr ""
 
 msgid ""
-"Huismus is een gratis app voor offertes, facturen en uitgaven. Geen "
-"abonnement en geen account: je administratie staat gewoon op je Mac of pc."
+"Huismus is een gratis app voor je facturen, offertes, bonnetjes en btw-"
+"aangifte. Geen abonnement en geen account: je administratie staat gewoon op "
+"je Mac of pc."
 msgstr ""
 
 msgid ""
@@ -5683,18 +5687,20 @@ msgid "Op je eigen computer"
 msgstr ""
 
 msgid ""
-"Er is geen Huismus-server. Je administratie gaat nergens heen, behalve naar "
-"je eigen back-upmap. Huismus kijkt alleen of er een nieuwe versie is, en dat "
-"kun je uitzetten."
+"Er is geen Huismus-server en geen account. Je gegevens gaan alleen ergens "
+"heen als jij dat aanzet: je back-up naar je eigen cloud, een factuur via je "
+"eigen mail, je bonnetjes naar een AI-dienst die jij kiest. Verder kijkt "
+"Huismus alleen of er een nieuwe versie is, en ook dat kun je uitzetten."
 msgstr ""
 
 msgid "Met of zonder KOR"
 msgstr ""
 
-#, python-format
 msgid ""
-"Gebruik je de KOR, dan zet Huismus jouw KOR-tekst op elke factuur. Reken je "
-"btw, dan kies je per regel 0, 9 of 21%%."
+"Met de KOR zet Huismus jouw KOR-tekst op elke factuur en zie je hoe ver je "
+"van je grens bent. Zonder de KOR zet je btw op je facturen, ook verlegd, en "
+"leg je de btw van elk bonnetje vast. Per kwartaal zie je de bedragen per "
+"rubriek, klaar om over te nemen."
 msgstr ""
 
 msgid "Zo werkt Huismus"
@@ -5751,11 +5757,17 @@ msgid "Bonnetjes bij je uitgaven"
 msgstr ""
 
 msgid ""
-"Leg je kosten vast met het bonnetje erbij, als foto of pdf. Je vult in wat "
-"je echt betaald hebt, en kiest een categorie."
+"Zet een foto van een bonnetje in een map die meesynchroniseert, ook vanaf je "
+"telefoon. Huismus haalt hem op en kan hem laten lezen door een AI-dienst die "
+"jij kiest."
 msgstr ""
 
-msgid "Meer over uitgaven"
+msgid ""
+"Bij <strong>Verwerken</strong> zie je het bonnetje groot naast de velden, en "
+"kijk jij na. Zonder de KOR vul je ook de btw en het tarief in."
+msgstr ""
+
+msgid "Meer over bonnetjes"
 msgstr ""
 
 msgid "De lijst met uitgaven, met datum, leverancier, categorie en bedrag."
@@ -5765,8 +5777,9 @@ msgid "Je jaar op één scherm"
 msgstr ""
 
 msgid ""
-"Omzet, kosten en winst, ook per kwartaal. Voor je boekhouder download je "
-"alles als CSV, met de pdf's en bonnetjes erbij."
+"Omzet, kosten en winst, ook per kwartaal. Reken je btw, dan zie je bij Btw-"
+"aangifte per kwartaal de bedragen per rubriek. Voor je boekhouder download "
+"je alles als CSV, met de pdf's en bonnetjes erbij."
 msgstr ""
 
 msgid "Meer over exporteren"
@@ -5826,8 +5839,9 @@ msgid "Elke dag een back-up"
 msgstr ""
 
 msgid ""
-"Kies een map, bijvoorbeeld in iCloud Drive of OneDrive, of koppel Dropbox. "
-"Huismus zet er elke dag een back-up in, zolang hij open staat."
+"Kies een map, bijvoorbeeld in iCloud Drive of OneDrive, of koppel Dropbox of "
+"WebDAV, zoals Nextcloud. Huismus zet er elke dag een back-up in, zolang hij "
+"open staat."
 msgstr ""
 
 msgid "Meer over back-ups"
@@ -5868,7 +5882,7 @@ msgstr ""
 msgid "Je administratie staat op je eigen computer."
 msgstr ""
 
-msgid "Een nieuwe versie installeer je met één klik."
+msgid "De app werkt zichzelf bij."
 msgstr ""
 
 msgid "Naar de download"
@@ -5887,6 +5901,9 @@ msgid ""
 msgstr ""
 
 msgid "Installeren met Docker"
+msgstr ""
+
+msgid "Op een VPS"
 msgstr ""
 
 msgid "Op je telefoon"
@@ -5929,6 +5946,10 @@ msgid ""
 "Kies een map voor je back-ups, bijvoorbeeld in iCloud Drive of OneDrive."
 msgstr ""
 
+msgid ""
+"Bonnetjes vanaf je telefoon? Kies een bonnetjesmap die meesynchroniseert."
+msgstr ""
+
 msgid "Meer over de desktop-app"
 msgstr ""
 
@@ -5936,6 +5957,6 @@ msgid "Liever zelf draaien op een server?"
 msgstr ""
 
 msgid ""
-"Heb je een Raspberry Pi, een NAS of een eigen server, dan kun je Huismus ook "
-"in Docker draaien. Dat is voor wie daar handig mee is."
+"Heb je een Raspberry Pi, een NAS, een eigen server of een VPS, dan kun je "
+"Huismus ook in Docker draaien. Dat is voor wie daar handig mee is."
 msgstr ""
