@@ -177,7 +177,7 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
                             for s in group.topics
                         ],
                     )
-                    for group in help.groups(TOPICS)
+                    for group in help.groups(shown=TOPICS)
                 ],
             },
         ),
