@@ -95,6 +95,13 @@ bij elke vraag eerst vanuit die administratie, dan pas vanuit het scherm:
    bonnetjesmap was goed, maar het formulier erna liet de btw optioneel voor
    wie zonder KOR werkt; de eigenaar zag het, niet jij).
 
+7. **Werkt het op elk platform?** Huismus draait in Docker (in de browser,
+   ook op een telefoon), als Mac-app en als Windows-app. Een plan of issue
+   dat alleen aan de web-app denkt, is niet af: vraag per platform wat de
+   gebruiker ziet en doet. Let vooral op wat de computer zelf raakt (een map,
+   een ander programma, iets op de achtergrond, wat er gebeurt als de app
+   dicht is). Laat je een platform weg, dan zeg je waarom in je besluit.
+
 Wat de wet of de Belastingdienst precies vraagt, haal je uit
 `docs/invoice-requirements.md` (factuureisen) en, bij elke vraag over geld
 (btw, KOR, uitgaven, aangifte, bewaren), ook uit `docs/belastingregels.md`,

@@ -30,6 +30,13 @@ productvraag of een design gaat naar de `product-owner`-agent, niet naar de eige
   zet dan in het plan de tijdlijn van wat de gebruiker ziet: elke stand, ook
   "bezig" en "mislukt", met de tekst op het scherm. Die tijdlijn gaat mee naar
   `product-owner`.
+- Zet in het plan per platform wat de gebruiker krijgt: **Docker** (in de
+  browser, ook op een telefoon), de **Mac-app** en de **Windows-app**
+  (`CLAUDE.md`, "Elk platform"). Werkt het overal hetzelfde, dan zeg je dat in
+  één regel. Verschilt het (een map kiezen, een ander programma openen, iets op
+  de achtergrond, bestanden en rechten), dan beschrijf je per platform wat er
+  gebeurt. Een platform overslaan kan alleen met een besluit van
+  `product-owner`, met de reden in het plan.
 - Elke open vraag naar `product-owner`. `ESCALEREN` → vraag de eigenaar (zie 9) en
   bouw intussen alleen wat er niet van afhangt.
 - Werk `SPEC.md` bij (mijlpaalnummer pas nu kiezen, na `git fetch`). Dit gaat
