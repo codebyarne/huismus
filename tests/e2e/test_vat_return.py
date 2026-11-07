@@ -63,3 +63,19 @@ def test_with_the_kor_on_there_is_a_notice_and_a_way_to_its_settings(app):
     expect(app.locator("#rubrieken")).to_have_count(0)
     app.get_by_role("link", name="KOR-instellingen →").click()
     expect(app).to_have_url(re.compile(r"/instellingen/kor/$"))
+
+
+def test_on_a_phone_the_vat_column_fits_without_scrolling_the_table(app):
+    # Found by hand: the long box titles pushed "Btw" out of the card at 390 px.
+    _kor(False)
+    create_expense(
+        [ExpenseLineInput("Hosting", 1250000, 262500, None, VatRate.REVERSE_EU)],
+        date=Period.last_finished_quarter(date.today()).last_day,
+    )
+    app.set_viewport_size({"width": 390, "height": 844})
+
+    app.goto(app.base + "/rapporten/btw-aangifte/")
+
+    wrap = app.locator("#rubrieken").locator("xpath=..")
+    assert wrap.evaluate("el => el.scrollWidth <= el.clientWidth")
+    expect(app.locator("#rubrieken")).to_contain_text("2.625,00")
