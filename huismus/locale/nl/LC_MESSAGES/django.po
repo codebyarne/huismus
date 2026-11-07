@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-07 12:38+0100\n"
+"POT-Creation-Date: 2026-11-07 14:07+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -119,6 +119,9 @@ msgid "Klanten zoeken"
 msgstr ""
 
 msgid "Uitgaven bekijken"
+msgstr ""
+
+msgid "Btw-aangifte bekijken"
 msgstr ""
 
 msgid "Bonnetjes zonder uitgave bekijken"
@@ -1943,6 +1946,7 @@ msgstr ""
 msgid "Kies het btw-tarief."
 msgstr ""
 
+#, python-format
 msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
 msgstr ""
 
@@ -2019,6 +2023,7 @@ msgstr ""
 msgid "Bonnetje verwijderd."
 msgstr ""
 
+#, python-format
 msgid "0% of geen btw"
 msgstr ""
 
@@ -2582,6 +2587,7 @@ msgstr ""
 msgid "Leveringen/diensten belast met laag tarief"
 msgstr ""
 
+#, python-format
 msgid "Leveringen/diensten belast met 0% of niet bij u belast"
 msgstr ""
 
@@ -2597,10 +2603,61 @@ msgstr ""
 msgid "Leveringen/diensten uit landen binnen de EU"
 msgstr ""
 
-msgid "kwartaal"
+msgid "Facturen zonder btw per tarief"
+msgstr ""
+
+msgid "Facturen met een ander tarief"
+msgstr ""
+
+msgid "Btw verlegd, klant buiten de EU of zonder land"
+msgstr ""
+
+msgid "Facturen met KOR-tekst"
+msgstr ""
+
+msgid "Terug in concept"
+msgstr ""
+
+msgid "Uitgaveregels zonder btw-tarief of btw"
+msgstr ""
+
+msgid ""
+"De KOR staat aan. Dan telt Huismus geen btw, dus dit rapport heeft geen "
+"bedragen. Staat de KOR uit, dan zie je hier per rubriek de omzet en btw uit "
+"je facturen en uitgaven."
+msgstr ""
+
+msgid "periode"
+msgstr ""
+
+msgid "rubriek"
 msgstr ""
 
 msgid "omzet"
+msgstr ""
+
+msgid "Verschuldigde btw"
+msgstr ""
+
+msgid "Voorbelasting"
+msgstr ""
+
+msgid "waarvan verlegd"
+msgstr ""
+
+msgid "Terug te krijgen"
+msgstr ""
+
+msgid "Te betalen"
+msgstr ""
+
+msgid "niet meegeteld"
+msgstr ""
+
+msgid "land onbekend"
+msgstr ""
+
+msgid "kwartaal"
 msgstr ""
 
 msgid "kosten zonder btw"
@@ -5157,9 +5214,6 @@ msgstr ""
 msgid "Omzet"
 msgstr ""
 
-msgid "land onbekend"
-msgstr ""
-
 msgid "Jaaroverzicht"
 msgstr ""
 
@@ -5178,10 +5232,7 @@ msgstr ""
 msgid "Volgende periode"
 msgstr ""
 
-msgid ""
-"De KOR staat aan. Dan telt Huismus geen btw, dus dit rapport heeft geen "
-"bedragen. Staat de KOR uit, dan zie je hier per rubriek de omzet en btw uit "
-"je facturen en uitgaven."
+msgid "CSV downloaden"
 msgstr ""
 
 msgid "KOR-instellingen"
@@ -5203,20 +5254,8 @@ msgstr ""
 msgid "Rubriek"
 msgstr ""
 
-msgid "Verschuldigde btw"
-msgstr ""
-
-msgid "Voorbelasting"
-msgstr ""
-
 #, python-format
 msgid "waarvan verlegd: %(amount)s"
-msgstr ""
-
-msgid "Terug te krijgen"
-msgstr ""
-
-msgid "Te betalen"
 msgstr ""
 
 msgid ""
@@ -5228,22 +5267,13 @@ msgstr ""
 msgid "Niet meegeteld"
 msgstr ""
 
-msgid "Facturen zonder btw per tarief"
-msgstr ""
-
 msgid ""
 "Bij deze geïmporteerde facturen past Moneybirds totaal niet bij de regels. "
 "Dit zijn de bedragen uit Moneybird."
 msgstr ""
 
-msgid "Facturen met een ander tarief"
-msgstr ""
-
 #, python-format
 msgid "Huismus telt alleen 21%%, 9%% en 0%%."
-msgstr ""
-
-msgid "Btw verlegd, klant buiten de EU of zonder land"
 msgstr ""
 
 msgid ""
@@ -5251,20 +5281,11 @@ msgid ""
 "een ander EU-land zit."
 msgstr ""
 
-msgid "Facturen met KOR-tekst"
-msgstr ""
-
 msgid "Op deze facturen staat de KOR-tekst."
-msgstr ""
-
-msgid "Terug in concept"
 msgstr ""
 
 msgid ""
 "Je zette deze facturen terug in concept. Geef ze weer uit, dan tellen ze mee."
-msgstr ""
-
-msgid "Uitgaveregels zonder btw-tarief of btw"
 msgstr ""
 
 msgid "Vul het tarief en de btw aan in de uitgave, dan tellen ze mee."
@@ -5274,9 +5295,6 @@ msgid "Vorig jaar"
 msgstr ""
 
 msgid "Volgend jaar"
-msgstr ""
-
-msgid "CSV downloaden"
 msgstr ""
 
 #, python-format
