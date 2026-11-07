@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 21:58+0100\n"
+"POT-Creation-Date: 2026-11-07 07:03+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1122,6 +1122,9 @@ msgstr "VAT rate (%)"
 msgid "btw verlegd"
 msgstr "reverse charge"
 
+msgid "btw ter info"
+msgstr "VAT for information"
+
 msgid "uitgavenummer"
 msgstr "expense number"
 
@@ -1131,11 +1134,11 @@ msgstr "supplier"
 msgid "bedrag (bruto)"
 msgstr "amount (gross)"
 
-msgid "btw ter info"
-msgstr "VAT for information"
-
 msgid "bonnetjes"
 msgstr "receipts"
+
+msgid "btw-tarief"
+msgstr "VAT rate"
 
 msgid "categorie"
 msgstr "category"
@@ -1781,6 +1784,15 @@ msgstr "document lines"
 msgid "Regels van een uitgegeven document zijn onveranderlijk."
 msgstr "Lines of an issued document are immutable."
 
+msgid "omzet (cent)"
+msgstr "revenue (cents)"
+
+msgid "btw per tarief"
+msgstr "VAT per rate"
+
+msgid "De btw van een uitgegeven document is onveranderlijk."
+msgstr "The VAT of an issued document is immutable."
+
 msgid "betaald op"
 msgstr "paid on"
 
@@ -2007,6 +2019,12 @@ msgstr "No category"
 msgid "Vul het btw-bedrag in. Geen btw betaald? Vul dan 0 in."
 msgstr "Fill in the VAT amount. No VAT paid? Then fill in 0."
 
+msgid "Kies het btw-tarief."
+msgstr "Choose the VAT rate."
+
+msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
+msgstr "With 0% or no VAT, the VAT amount is € 0.00."
+
 msgid "Kies eerst een bonnetje."
 msgstr "Choose a receipt first."
 
@@ -2081,6 +2099,18 @@ msgstr "Saved. Huismus picks up new receipts from %(place)s by itself."
 msgid "Bonnetje verwijderd."
 msgstr "Receipt deleted."
 
+msgid "0% of geen btw"
+msgstr "0% or no VAT"
+
+msgid "Btw verlegd: Nederland"
+msgstr "Reverse charge: Netherlands"
+
+msgid "Btw verlegd: ander EU-land"
+msgstr "Reverse charge: other EU country"
+
+msgid "Btw verlegd: buiten de EU"
+msgstr "Reverse charge: outside the EU"
+
 msgid "sorteervolgorde"
 msgstr "sort order"
 
@@ -2128,6 +2158,9 @@ msgstr "Not read: the amounts don't add up to the total."
 
 msgid "Niet gelezen: de btw staat er niet bij."
 msgstr "Not read: the VAT isn't on it."
+
+msgid "Niet gelezen: het btw-tarief staat er niet bij."
+msgstr "Not read: the VAT rate isn't on it."
 
 msgid "Niet gelezen: lijkt op een uitgave die er al was."
 msgstr "Not read: looks like an expense that was already there."
@@ -2614,9 +2647,6 @@ msgstr "discount per line"
 msgid "prijs"
 msgstr "price"
 
-msgid "btw-tarief"
-msgstr "VAT rate"
-
 msgid "en"
 msgstr "and"
 
@@ -2701,17 +2731,63 @@ msgstr[1] "%(count)s expenses"
 msgid "Import geannuleerd. Er is niets opgeslagen."
 msgstr "Import cancelled. Nothing was saved."
 
+msgid "Leveringen/diensten belast met hoog tarief"
+msgstr "Supplies/services subject to the high VAT rate"
+
+msgid "Leveringen/diensten belast met laag tarief"
+msgstr "Supplies/services subject to the low VAT rate"
+
+msgid "Leveringen/diensten belast met 0% of niet bij u belast"
+msgstr "Supplies/services taxed at 0% or not taxed to you"
+
+msgid "Leveringen/diensten waarbij de btw naar u is verlegd"
+msgstr "Supplies/services where the VAT has been reversed to you"
+
+msgid "Leveringen naar of diensten in landen binnen de EU"
+msgstr "Supplies to or services in countries within the EU"
+
+msgid "Leveringen/diensten uit landen buiten de EU"
+msgstr "Supplies/services from countries outside the EU"
+
+msgid "Leveringen/diensten uit landen binnen de EU"
+msgstr "Supplies/services from countries within the EU"
+
 msgid "kwartaal"
 msgstr "quarter"
 
 msgid "omzet"
 msgstr "revenue"
 
-msgid "kosten"
-msgstr "costs"
+msgid "kosten zonder btw"
+msgstr "costs excluding VAT"
+
+msgid "voorbelasting"
+msgstr "input VAT"
 
 msgid "winst"
 msgstr "profit"
+
+msgid "kosten"
+msgstr "costs"
+
+#, python-format
+msgid "%(quarter)se kwartaal %(year)s"
+msgstr "Q%(quarter)s %(year)s"
+
+msgid "Kwartaal"
+msgstr "Quarter"
+
+msgid "Maand"
+msgstr "Month"
+
+msgid "Jaar"
+msgstr "Year"
+
+msgid "Kosten zonder btw"
+msgstr "Costs excluding VAT"
+
+msgid "Kosten"
+msgstr "Costs"
 
 msgid "Zonder categorie"
 msgstr "No category"
@@ -3762,6 +3838,10 @@ msgid "Omzet %(year)s"
 msgstr "Revenue %(year)s"
 
 #, python-format
+msgid "Kosten zonder btw %(costs)s"
+msgstr "Costs excluding VAT %(costs)s"
+
+#, python-format
 msgid "Kosten %(costs)s"
 msgstr "Costs %(costs)s"
 
@@ -4499,9 +4579,6 @@ msgstr "Search invoices"
 msgid "Zoek op nummer of klant"
 msgstr "Search by number or customer"
 
-msgid "Jaar"
-msgstr "Year"
-
 msgid "Alle jaren"
 msgstr "All years"
 
@@ -4602,6 +4679,14 @@ msgstr "Log in"
 
 msgid "Regels"
 msgstr "Lines"
+
+#, python-format
+msgid ""
+"Vul het bruto bedrag in: wat je echt betaald hebt. Btw: zoals op het "
+"bonnetje. Staat er geen btw op, vul dan 0 in en kies 0%% of geen btw."
+msgstr ""
+"Fill in the gross amount: what you actually paid. VAT: as on the receipt. No "
+"VAT on it? Enter 0 and choose 0%% or no VAT."
 
 msgid ""
 "Vul het bruto bedrag in: wat je echt betaald hebt. Het btw-bedrag is alleen "
@@ -5108,6 +5193,16 @@ msgstr ""
 "These categories from Moneybird aren't in Huismus yet. Huismus creates them, "
 "at the bottom of your list."
 
+msgid "Btw-tarief onbekend"
+msgstr "VAT rate unknown"
+
+msgid ""
+"Huismus kent dit btw-tarief niet en importeert deze regels zonder tarief. "
+"Kies het tarief bij de uitgave."
+msgstr ""
+"Huismus doesn't know this VAT rate and imports these lines without a rate. "
+"Choose the rate on the expense."
+
 msgid "Betalingen om te controleren"
 msgstr "Payments to review"
 
@@ -5422,8 +5517,142 @@ msgstr "Open"
 msgid "Draait op je eigen netwerk"
 msgstr "Runs on your own network"
 
+msgid "Tarief"
+msgstr "Rate"
+
+msgid "Land"
+msgstr "Country"
+
+msgid "Omzet"
+msgstr "Revenue"
+
+msgid "onbekend"
+msgstr "unknown"
+
 msgid "Jaaroverzicht"
 msgstr "Year overview"
+
+msgid "Btw-aangifte"
+msgstr "VAT return"
+
+msgid "Soort periode"
+msgstr "Kind of period"
+
+msgid "Periode"
+msgstr "Period"
+
+msgid "Vorige periode"
+msgstr "Previous period"
+
+msgid "Volgende periode"
+msgstr "Next period"
+
+msgid "De omzet en btw uit je facturen en uitgaven, per rubriek."
+msgstr "Revenue and VAT from your invoices and expenses, per box."
+
+msgid ""
+"De KOR staat aan. Dit rapport telt facturen zonder KOR-tekst en "
+"uitgaveregels met een btw-tarief."
+msgstr ""
+"The KOR is on. This report counts invoices without the KOR text and expense "
+"lines with a VAT rate."
+
+#, python-format
+msgid "%(count)s factuur met KOR-tekst."
+msgid_plural "%(count)s facturen met KOR-tekst."
+msgstr[0] "%(count)s invoice with the KOR text."
+msgstr[1] "%(count)s invoices with the KOR text."
+
+#, python-format
+msgid "%(count)s uitgaveregel zonder btw-tarief."
+msgid_plural "%(count)s uitgaveregels zonder btw-tarief."
+msgstr[0] "%(count)s expense line without a VAT rate."
+msgstr[1] "%(count)s expense lines without a VAT rate."
+
+#, python-format
+msgid "Niet meegeteld: %(count)s."
+msgstr "Not counted: %(count)s."
+
+msgid "Bekijk wat en waarom"
+msgstr "See what and why"
+
+msgid "Geen facturen of uitgaven in deze periode."
+msgstr "No invoices or expenses in this period."
+
+msgid "Rubriek"
+msgstr "Box"
+
+msgid "Verschuldigde btw"
+msgstr "VAT payable"
+
+msgid "Voorbelasting"
+msgstr "Input VAT"
+
+#, python-format
+msgid "waarvan verlegd: %(amount)s"
+msgstr "of which reverse charged: %(amount)s"
+
+msgid "Terug te krijgen"
+msgstr "To get back"
+
+msgid "Te betalen"
+msgstr "To pay"
+
+msgid ""
+"Huismus telt uitgegeven facturen en creditnota's op hun factuurdatum, en "
+"uitgaven op de datum van het bonnetje."
+msgstr ""
+"Huismus counts issued invoices and credit notes by their invoice date, and "
+"expenses by the date on the receipt."
+
+msgid "Niet meegeteld"
+msgstr "Not counted"
+
+msgid "Facturen zonder btw per tarief"
+msgstr "Invoices without VAT per rate"
+
+msgid ""
+"Bij deze geïmporteerde facturen past Moneybirds totaal niet bij de regels. "
+"Dit zijn de bedragen uit Moneybird."
+msgstr ""
+"For these imported invoices, Moneybird's total doesn't match the lines. "
+"These are Moneybird's amounts."
+
+msgid "Facturen met een ander tarief"
+msgstr "Invoices with another rate"
+
+#, python-format
+msgid "Huismus telt alleen 21%%, 9%% en 0%%."
+msgstr "Huismus only counts 21%%, 9%% and 0%%."
+
+msgid "Btw verlegd, klant buiten de EU of zonder land"
+msgstr "Reverse charged, customer outside the EU or without a country"
+
+msgid ""
+"Huismus zet btw verlegd alleen in een rubriek als de klant in Nederland of "
+"een ander EU-land zit."
+msgstr ""
+"Huismus only puts reverse charged revenue in a box when the customer is in "
+"the Netherlands or another EU country."
+
+msgid "Facturen met KOR-tekst"
+msgstr "Invoices with the KOR text"
+
+msgid "Op deze facturen staat de KOR-tekst."
+msgstr "These invoices carry the KOR text."
+
+msgid "Terug in concept"
+msgstr "Back in draft"
+
+msgid ""
+"Je zette deze facturen terug in concept. Geef ze weer uit, dan tellen ze mee."
+msgstr "You put these invoices back in draft. Issue them again and they count."
+
+msgid "Uitgaveregels zonder btw-tarief of btw"
+msgstr "Expense lines without a VAT rate or VAT"
+
+msgid "Vul het tarief en de btw aan in de uitgave, dan tellen ze mee."
+msgstr "Add the rate and the VAT in the expense and they count."
 
 msgid "Vorig jaar"
 msgstr "Previous year"
@@ -5434,17 +5663,15 @@ msgstr "Next year"
 msgid "CSV downloaden"
 msgstr "Download CSV"
 
-msgid "Omzet"
-msgstr "Revenue"
-
 #, python-format
 msgid "%(count)s creditnota"
 msgid_plural "%(count)s creditnota's"
 msgstr[0] "%(count)s credit note"
 msgstr[1] "%(count)s credit notes"
 
-msgid "Kosten"
-msgstr "Costs"
+#, python-format
+msgid "Voorbelasting %(amount)s"
+msgstr "Input VAT %(amount)s"
 
 msgid "Winst"
 msgstr "Profit"
@@ -5474,9 +5701,6 @@ msgstr "Revenue Q%(q)s: %(amount)s"
 msgid "Kosten Q%(q)s: %(amount)s"
 msgstr "Costs Q%(q)s: %(amount)s"
 
-msgid "Kwartaal"
-msgstr "Quarter"
-
 msgid "jan–mrt"
 msgstr "Jan–Mar"
 
@@ -5489,11 +5713,24 @@ msgstr "Jul–Sep"
 msgid "okt–dec"
 msgstr "Oct–Dec"
 
+msgid "Kosten zonder btw per categorie"
+msgstr "Costs excluding VAT by category"
+
 msgid "Kosten per categorie"
 msgstr "Costs per category"
 
 msgid "Je hebt dit jaar geen uitgaven."
 msgstr "You have no expenses this year."
+
+#, python-format
+msgid ""
+"Huismus telt omzet zonder btw, op de factuurdatum, niet op de dag dat er "
+"betaald is. Kosten zijn zonder de btw die je bij een uitgave invulde, bij "
+"21, 9 of 0%%. Bij btw verlegd of zonder tarief is het wat je betaald hebt."
+msgstr ""
+"Huismus counts revenue without VAT, on the invoice date, not on the day it "
+"was paid. Costs are without the VAT you filled in on an expense, at 21, 9 or "
+"0%%. With reverse charge or without a rate, they are what you paid."
 
 msgid ""
 "Huismus telt omzet zonder btw, op de factuurdatum, niet op de dag dat er "
@@ -6264,9 +6501,6 @@ msgstr ""
 #~ msgid "contacten"
 #~ msgstr "customers"
 
-#~ msgid "Bekijk wat er gaat"
-#~ msgstr "See what goes"
-
 #~ msgid "KOR-vermeldingstekst ontbreekt in de instellingen."
 #~ msgstr "KOR notice text is missing in Settings."
 
@@ -6354,12 +6588,6 @@ msgstr ""
 #, python-format
 #~ msgid "Categorie: %(name)s."
 #~ msgstr "Category: %(name)s."
-
-#, python-format
-#~ msgid "%(count)s uitgave geïmporteerd"
-#~ msgid_plural "%(count)s uitgaven geïmporteerd"
-#~ msgstr[0] "%(count)s expense imported"
-#~ msgstr[1] "%(count)s expenses imported"
 
 #, python-format
 #~ msgid "%(count)s nieuwe uitgave"
@@ -6679,9 +6907,6 @@ msgstr ""
 #~ msgid "Alleen verzonden offertes kunnen als verlopen worden gemarkeerd."
 #~ msgstr "Only sent quotes can be marked as expired."
 
-#~ msgid "Alleen uitgegeven facturen en creditnota's kunnen worden heropend."
-#~ msgstr "Only issued invoices and credit notes can be reopened."
-
 #~ msgid "Betaling kon niet worden opgeslagen. Controleer de invoer."
 #~ msgstr "The payment could not be saved. Check your input."
 
@@ -6851,9 +7076,6 @@ msgstr ""
 #~ msgid "Terug naar facturen"
 #~ msgstr "Back to invoices"
 
-#~ msgid "Terug naar categorieën"
-#~ msgstr "Back to categories"
-
 #~ msgid "Uitgavecategorieën"
 #~ msgstr "Expense categories"
 
@@ -6863,87 +7085,5 @@ msgstr ""
 #~ msgid "Categorieën beheren"
 #~ msgstr "Manage categories"
 
-#~ msgid "Terug naar contacten"
-#~ msgstr "Back to contacts"
-
 #~ msgid "Toon actieve contacten"
 #~ msgstr "Show active contacts"
-
-msgid "omzet (cent)"
-msgstr "revenue (cents)"
-
-msgid "btw per tarief"
-msgstr "VAT per rate"
-
-msgid "De btw van een uitgegeven document is onveranderlijk."
-msgstr "The VAT of an issued document is immutable."
-
-msgid "0% of geen btw"
-msgstr "0% or no VAT"
-
-msgid "Btw verlegd: Nederland"
-msgstr "Reverse charge: Netherlands"
-
-msgid "Btw verlegd: ander EU-land"
-msgstr "Reverse charge: other EU country"
-
-msgid "Btw verlegd: buiten de EU"
-msgstr "Reverse charge: outside the EU"
-
-msgid "Kies het btw-tarief."
-msgstr "Choose the VAT rate."
-
-msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
-msgstr "With 0% or no VAT, the VAT amount is € 0.00."
-
-msgid ""
-"Vul het bruto bedrag in: wat je echt betaald hebt. Btw: zoals op het "
-"bonnetje. Staat er geen btw op, vul dan 0 in en kies 0%% of geen btw."
-msgstr ""
-"Fill in the gross amount: what you actually paid. VAT: as on the receipt. No "
-"VAT on it? Enter 0 and choose 0%% or no VAT."
-
-msgid "Btw-tarief onbekend"
-msgstr "VAT rate unknown"
-
-msgid ""
-"Huismus kent dit btw-tarief niet en importeert deze regels zonder tarief. "
-"Kies het tarief bij de uitgave."
-msgstr ""
-"Huismus doesn't know this VAT rate and imports these lines without a rate. "
-"Choose the rate on the expense."
-
-msgid "Niet gelezen: het btw-tarief staat er niet bij."
-msgstr "Not read: the VAT rate isn't on it."
-
-msgid "kosten zonder btw"
-msgstr "costs excluding VAT"
-
-msgid "voorbelasting"
-msgstr "input VAT"
-
-#, python-format
-msgid "Kosten zonder btw %(costs)s"
-msgstr "Costs excluding VAT %(costs)s"
-
-msgid "Kosten zonder btw"
-msgstr "Costs excluding VAT"
-
-#, python-format
-msgid "Voorbelasting %(amount)s"
-msgstr "Input VAT %(amount)s"
-
-msgid "Voorbelasting"
-msgstr "Input VAT"
-
-msgid "Kosten zonder btw per categorie"
-msgstr "Costs excluding VAT by category"
-
-msgid ""
-"Huismus telt omzet zonder btw, op de factuurdatum, niet op de dag dat er "
-"betaald is. Kosten zijn zonder de btw die je bij een uitgave invulde, bij 21, "
-"9 of 0%%. Bij btw verlegd of zonder tarief is het wat je betaald hebt."
-msgstr ""
-"Huismus counts revenue without VAT, on the invoice date, not on the day it "
-"was paid. Costs are without the VAT you filled in on an expense, at 21, 9 or "
-"0%%. With reverse charge or without a rate, they are what you paid."

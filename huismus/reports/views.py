@@ -3,6 +3,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.utils import timezone
+from django.utils.formats import date_format
 from django.utils.translation import gettext_lazy as _
 
 from huismus.business.kor_limit import kor_limit_status
@@ -10,6 +11,8 @@ from huismus.core.csv_files import Amount, csv_response
 from huismus.documents.models import Document
 from huismus.expenses.models import Expense
 
+from .periods import MONTH, QUARTER, YEAR, Period
+from .vat_return import compute_vat_return
 from .year_overview import CHART_STEPS, chart_step, compute_year_overview
 
 
@@ -106,3 +109,31 @@ def year_overview_csv(request):
             for label, totals in lines
         ]
     return csv_response(f"jaaroverzicht-{year}.csv", header, rows)
+
+
+def _period_name(period: Period) -> str:
+    if period.kind == QUARTER:
+        return _("%(quarter)se kwartaal %(year)s") % {"quarter": period.number, "year": period.year}
+    if period.kind == MONTH:
+        return date_format(period.first_day, "F Y")
+    return str(period.year)
+
+
+@login_required
+def vat_return(request):
+    period = Period.parse(request.GET.get("periode"), today=timezone.localdate())
+    report = compute_vat_return(period)
+    return render(
+        request,
+        "reports/vat_return.html",
+        {
+            "report": report,
+            "period": period,
+            "period_name": _period_name(period),
+            "kinds": [
+                (period.as_kind(QUARTER), _("Kwartaal")),
+                (period.as_kind(MONTH), _("Maand")),
+                (period.as_kind(YEAR), _("Jaar")),
+            ],
+        },
+    )

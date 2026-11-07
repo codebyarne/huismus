@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 21:58+0100\n"
+"POT-Creation-Date: 2026-11-07 07:03+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1077,6 +1077,9 @@ msgstr ""
 msgid "btw verlegd"
 msgstr ""
 
+msgid "btw ter info"
+msgstr ""
+
 msgid "uitgavenummer"
 msgstr ""
 
@@ -1086,10 +1089,10 @@ msgstr ""
 msgid "bedrag (bruto)"
 msgstr ""
 
-msgid "btw ter info"
+msgid "bonnetjes"
 msgstr ""
 
-msgid "bonnetjes"
+msgid "btw-tarief"
 msgstr ""
 
 msgid "categorie"
@@ -1711,6 +1714,15 @@ msgstr ""
 msgid "Regels van een uitgegeven document zijn onveranderlijk."
 msgstr ""
 
+msgid "omzet (cent)"
+msgstr ""
+
+msgid "btw per tarief"
+msgstr ""
+
+msgid "De btw van een uitgegeven document is onveranderlijk."
+msgstr ""
+
 msgid "betaald op"
 msgstr ""
 
@@ -1926,6 +1938,12 @@ msgstr ""
 msgid "Vul het btw-bedrag in. Geen btw betaald? Vul dan 0 in."
 msgstr ""
 
+msgid "Kies het btw-tarief."
+msgstr ""
+
+msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
+msgstr ""
+
 msgid "Kies eerst een bonnetje."
 msgstr ""
 
@@ -1999,6 +2017,18 @@ msgstr ""
 msgid "Bonnetje verwijderd."
 msgstr ""
 
+msgid "0% of geen btw"
+msgstr ""
+
+msgid "Btw verlegd: Nederland"
+msgstr ""
+
+msgid "Btw verlegd: ander EU-land"
+msgstr ""
+
+msgid "Btw verlegd: buiten de EU"
+msgstr ""
+
 msgid "sorteervolgorde"
 msgstr ""
 
@@ -2045,6 +2075,9 @@ msgid "Niet gelezen: de bedragen tellen niet op tot het totaal."
 msgstr ""
 
 msgid "Niet gelezen: de btw staat er niet bij."
+msgstr ""
+
+msgid "Niet gelezen: het btw-tarief staat er niet bij."
 msgstr ""
 
 msgid "Niet gelezen: lijkt op een uitgave die er al was."
@@ -2470,9 +2503,6 @@ msgstr ""
 msgid "prijs"
 msgstr ""
 
-msgid "btw-tarief"
-msgstr ""
-
 msgid "en"
 msgstr ""
 
@@ -2544,16 +2574,62 @@ msgstr[1] ""
 msgid "Import geannuleerd. Er is niets opgeslagen."
 msgstr ""
 
+msgid "Leveringen/diensten belast met hoog tarief"
+msgstr ""
+
+msgid "Leveringen/diensten belast met laag tarief"
+msgstr ""
+
+msgid "Leveringen/diensten belast met 0% of niet bij u belast"
+msgstr ""
+
+msgid "Leveringen/diensten waarbij de btw naar u is verlegd"
+msgstr ""
+
+msgid "Leveringen naar of diensten in landen binnen de EU"
+msgstr ""
+
+msgid "Leveringen/diensten uit landen buiten de EU"
+msgstr ""
+
+msgid "Leveringen/diensten uit landen binnen de EU"
+msgstr ""
+
 msgid "kwartaal"
 msgstr ""
 
 msgid "omzet"
 msgstr ""
 
-msgid "kosten"
+msgid "kosten zonder btw"
+msgstr ""
+
+msgid "voorbelasting"
 msgstr ""
 
 msgid "winst"
+msgstr ""
+
+msgid "kosten"
+msgstr ""
+
+#, python-format
+msgid "%(quarter)se kwartaal %(year)s"
+msgstr ""
+
+msgid "Kwartaal"
+msgstr ""
+
+msgid "Maand"
+msgstr ""
+
+msgid "Jaar"
+msgstr ""
+
+msgid "Kosten zonder btw"
+msgstr ""
+
+msgid "Kosten"
 msgstr ""
 
 msgid "Zonder categorie"
@@ -3519,6 +3595,10 @@ msgid "Omzet %(year)s"
 msgstr ""
 
 #, python-format
+msgid "Kosten zonder btw %(costs)s"
+msgstr ""
+
+#, python-format
 msgid "Kosten %(costs)s"
 msgstr ""
 
@@ -4202,9 +4282,6 @@ msgstr ""
 msgid "Zoek op nummer of klant"
 msgstr ""
 
-msgid "Jaar"
-msgstr ""
-
 msgid "Alle jaren"
 msgstr ""
 
@@ -4299,6 +4376,12 @@ msgid "Naar inloggen"
 msgstr ""
 
 msgid "Regels"
+msgstr ""
+
+#, python-format
+msgid ""
+"Vul het bruto bedrag in: wat je echt betaald hebt. Btw: zoals op het "
+"bonnetje. Staat er geen btw op, vul dan 0 in en kies 0%% of geen btw."
 msgstr ""
 
 msgid ""
@@ -4772,6 +4855,14 @@ msgid ""
 "aan, onderaan je lijst."
 msgstr ""
 
+msgid "Btw-tarief onbekend"
+msgstr ""
+
+msgid ""
+"Huismus kent dit btw-tarief niet en importeert deze regels zonder tarief. "
+"Kies het tarief bij de uitgave."
+msgstr ""
+
 msgid "Betalingen om te controleren"
 msgstr ""
 
@@ -5056,7 +5147,133 @@ msgstr ""
 msgid "Draait op je eigen netwerk"
 msgstr ""
 
+msgid "Tarief"
+msgstr ""
+
+msgid "Land"
+msgstr ""
+
+msgid "Omzet"
+msgstr ""
+
+msgid "onbekend"
+msgstr ""
+
 msgid "Jaaroverzicht"
+msgstr ""
+
+msgid "Btw-aangifte"
+msgstr ""
+
+msgid "Soort periode"
+msgstr ""
+
+msgid "Periode"
+msgstr ""
+
+msgid "Vorige periode"
+msgstr ""
+
+msgid "Volgende periode"
+msgstr ""
+
+msgid "De omzet en btw uit je facturen en uitgaven, per rubriek."
+msgstr ""
+
+msgid ""
+"De KOR staat aan. Dit rapport telt facturen zonder KOR-tekst en "
+"uitgaveregels met een btw-tarief."
+msgstr ""
+
+#, python-format
+msgid "%(count)s factuur met KOR-tekst."
+msgid_plural "%(count)s facturen met KOR-tekst."
+msgstr[0] ""
+msgstr[1] ""
+
+#, python-format
+msgid "%(count)s uitgaveregel zonder btw-tarief."
+msgid_plural "%(count)s uitgaveregels zonder btw-tarief."
+msgstr[0] ""
+msgstr[1] ""
+
+#, python-format
+msgid "Niet meegeteld: %(count)s."
+msgstr ""
+
+msgid "Bekijk wat en waarom"
+msgstr ""
+
+msgid "Geen facturen of uitgaven in deze periode."
+msgstr ""
+
+msgid "Rubriek"
+msgstr ""
+
+msgid "Verschuldigde btw"
+msgstr ""
+
+msgid "Voorbelasting"
+msgstr ""
+
+#, python-format
+msgid "waarvan verlegd: %(amount)s"
+msgstr ""
+
+msgid "Terug te krijgen"
+msgstr ""
+
+msgid "Te betalen"
+msgstr ""
+
+msgid ""
+"Huismus telt uitgegeven facturen en creditnota's op hun factuurdatum, en "
+"uitgaven op de datum van het bonnetje."
+msgstr ""
+
+msgid "Niet meegeteld"
+msgstr ""
+
+msgid "Facturen zonder btw per tarief"
+msgstr ""
+
+msgid ""
+"Bij deze geïmporteerde facturen past Moneybirds totaal niet bij de regels. "
+"Dit zijn de bedragen uit Moneybird."
+msgstr ""
+
+msgid "Facturen met een ander tarief"
+msgstr ""
+
+#, python-format
+msgid "Huismus telt alleen 21%%, 9%% en 0%%."
+msgstr ""
+
+msgid "Btw verlegd, klant buiten de EU of zonder land"
+msgstr ""
+
+msgid ""
+"Huismus zet btw verlegd alleen in een rubriek als de klant in Nederland of "
+"een ander EU-land zit."
+msgstr ""
+
+msgid "Facturen met KOR-tekst"
+msgstr ""
+
+msgid "Op deze facturen staat de KOR-tekst."
+msgstr ""
+
+msgid "Terug in concept"
+msgstr ""
+
+msgid ""
+"Je zette deze facturen terug in concept. Geef ze weer uit, dan tellen ze mee."
+msgstr ""
+
+msgid "Uitgaveregels zonder btw-tarief of btw"
+msgstr ""
+
+msgid "Vul het tarief en de btw aan in de uitgave, dan tellen ze mee."
 msgstr ""
 
 msgid "Vorig jaar"
@@ -5068,16 +5285,14 @@ msgstr ""
 msgid "CSV downloaden"
 msgstr ""
 
-msgid "Omzet"
-msgstr ""
-
 #, python-format
 msgid "%(count)s creditnota"
 msgid_plural "%(count)s creditnota's"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Kosten"
+#, python-format
+msgid "Voorbelasting %(amount)s"
 msgstr ""
 
 msgid "Winst"
@@ -5108,9 +5323,6 @@ msgstr ""
 msgid "Kosten Q%(q)s: %(amount)s"
 msgstr ""
 
-msgid "Kwartaal"
-msgstr ""
-
 msgid "jan–mrt"
 msgstr ""
 
@@ -5123,10 +5335,20 @@ msgstr ""
 msgid "okt–dec"
 msgstr ""
 
+msgid "Kosten zonder btw per categorie"
+msgstr ""
+
 msgid "Kosten per categorie"
 msgstr ""
 
 msgid "Je hebt dit jaar geen uitgaven."
+msgstr ""
+
+#, python-format
+msgid ""
+"Huismus telt omzet zonder btw, op de factuurdatum, niet op de dag dat er "
+"betaald is. Kosten zijn zonder de btw die je bij een uitgave invulde, bij "
+"21, 9 of 0%%. Bij btw verlegd of zonder tarief is het wat je betaald hebt."
 msgstr ""
 
 msgid ""
@@ -5704,76 +5926,4 @@ msgstr ""
 msgid ""
 "Heb je een Raspberry Pi, een NAS of een eigen server, dan kun je Huismus ook "
 "in Docker draaien. Dat is voor wie daar handig mee is."
-msgstr ""
-
-msgid "omzet (cent)"
-msgstr ""
-
-msgid "btw per tarief"
-msgstr ""
-
-msgid "De btw van een uitgegeven document is onveranderlijk."
-msgstr ""
-
-msgid "0% of geen btw"
-msgstr ""
-
-msgid "Btw verlegd: Nederland"
-msgstr ""
-
-msgid "Btw verlegd: ander EU-land"
-msgstr ""
-
-msgid "Btw verlegd: buiten de EU"
-msgstr ""
-
-msgid "Kies het btw-tarief."
-msgstr ""
-
-msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
-msgstr ""
-
-msgid ""
-"Vul het bruto bedrag in: wat je echt betaald hebt. Btw: zoals op het "
-"bonnetje. Staat er geen btw op, vul dan 0 in en kies 0%% of geen btw."
-msgstr ""
-
-msgid "Btw-tarief onbekend"
-msgstr ""
-
-msgid ""
-"Huismus kent dit btw-tarief niet en importeert deze regels zonder tarief. "
-"Kies het tarief bij de uitgave."
-msgstr ""
-
-msgid "Niet gelezen: het btw-tarief staat er niet bij."
-msgstr ""
-
-msgid "kosten zonder btw"
-msgstr ""
-
-msgid "voorbelasting"
-msgstr ""
-
-#, python-format
-msgid "Kosten zonder btw %(costs)s"
-msgstr ""
-
-msgid "Kosten zonder btw"
-msgstr ""
-
-#, python-format
-msgid "Voorbelasting %(amount)s"
-msgstr ""
-
-msgid "Voorbelasting"
-msgstr ""
-
-msgid "Kosten zonder btw per categorie"
-msgstr ""
-
-msgid ""
-"Huismus telt omzet zonder btw, op de factuurdatum, niet op de dag dat er "
-"betaald is. Kosten zijn zonder de btw die je bij een uitgave invulde, bij 21, "
-"9 of 0%%. Bij btw verlegd of zonder tarief is het wat je betaald hebt."
 msgstr ""

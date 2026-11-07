@@ -19,6 +19,8 @@
     </div>
 </div>
 
+{% include "reports/_tabs.html" with current="year_overview" %}
+
 <div class="grid-3" style="margin-bottom:var(--s-5)">
     <div class="card kpi"><span class="kpi-label"><i class="legend-dot"></i>{% translate "Omzet" %}</span><span class="kpi-value">{{ overview.revenue_cents|money }}</span><span class="kpi-sub">{% blocktranslate count count=invoice_count %}{{ count }} factuur{% plural %}{{ count }} facturen{% endblocktranslate %}{% if credit_note_count %}, {% blocktranslate count count=credit_note_count %}{{ count }} creditnota{% plural %}{{ count }} creditnota's{% endblocktranslate %}{% endif %}</span></div>
     {% comment %}Without the KOR: costs without VAT, input VAT apart (SPEC.md M21, part 3).{% endcomment %}

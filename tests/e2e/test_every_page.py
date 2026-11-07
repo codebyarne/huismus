@@ -88,6 +88,10 @@ def _pages():
             for receipt in Attachment.objects.in_tray()
         ),
         "/rapporten/jaaroverzicht/",
+        # The VAT return (SPEC.md M21, part 4): a year of the history, with
+        # imports and lines without a rate under "Niet meegeteld".
+        "/rapporten/btw-aangifte/",
+        "/rapporten/btw-aangifte/?periode=2025",
         "/uitgaven/categorieen/",
         f"/uitgaven/categorieen/?bewerk={_first(ExpenseCategory.objects, 'category').pk}",
         f"/uitgaven/categorieen/{_first(ExpenseCategory.objects, 'category').pk}/",

@@ -1,0 +1,11 @@
+{% load i18n money documents_tags %}<div class="table-wrap"><table class="table">
+    <thead><tr><th>{% translate "Nummer" %}</th><th>{% translate "Datum" %}</th>{% if show_rate %}<th class="r">{% translate "Tarief" %}</th>{% endif %}{% if show_country %}<th>{% translate "Land" %}</th>{% endif %}<th class="r">{% translate "Omzet" %}</th><th class="r">{% translate "Btw" %}</th></tr></thead>
+    <tbody>{% for row in rows %}<tr>
+        <td><a href="{% url 'documents:edit' row.document.pk %}">{{ row.number }}</a></td>
+        <td>{{ row.issue_date|date:"j M Y" }}</td>
+        {% if show_rate %}<td class="r">{{ row.rate_bp|tax_percent }}%</td>{% endif %}
+        {% if show_country %}<td>{{ row.country|default:_("onbekend") }}</td>{% endif %}
+        <td class="r amount">{{ row.revenue_cents|money }}</td>
+        <td class="r amount">{{ row.tax_cents|money }}</td>
+    </tr>{% endfor %}</tbody>
+</table></div>

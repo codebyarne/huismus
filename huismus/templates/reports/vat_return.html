@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load i18n money %}
+
+{% block title %}{% translate "Btw-aangifte" %} {{ period_name }} — Huismus{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles"><span class="small muted">{% translate "Rapporten" %}</span><h1>{% translate "Btw-aangifte" %} {{ period_name }}</h1></div>
+    <div class="actions">
+        <nav class="year-nav" aria-label="{% translate 'Soort periode' %}">
+            {% for choice, label in kinds %}<a href="?periode={{ choice }}"{% if choice.kind == period.kind %} aria-current="page"{% endif %}>{{ label }}</a>{% endfor %}
+        </nav>
+        <nav class="year-nav" aria-label="{% translate 'Periode' %}">
+            <a href="?periode={{ period.previous }}" aria-label="{% translate 'Vorige periode' %}"><svg class="i i-sm" aria-hidden="true"><use href="#chevron-left"></use></svg></a>
+            <a href="?periode={{ period }}" aria-current="page">{{ period_name }}</a>
+            {% if period.next %}<a href="?periode={{ period.next }}" aria-label="{% translate 'Volgende periode' %}"><svg class="i i-sm" aria-hidden="true"><use href="#chevron-right"></use></svg></a>{% endif %}
+        </nav>
+    </div>
+</div>
+
+{% include "reports/_tabs.html" with current="vat_return" %}
+
+<p class="muted" style="margin-bottom:var(--s-4)">{% translate "De omzet en btw uit je facturen en uitgaven, per rubriek." %}</p>
+
+{% if report.kor_on %}
+<p class="hint-banner is-info" id="kor-aan" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{% translate "De KOR staat aan. Dit rapport telt facturen zonder KOR-tekst en uitgaveregels met een btw-tarief." %}{% if report.kor_documents %} {% blocktranslate count count=report.kor_documents|length %}{{ count }} factuur met KOR-tekst.{% plural %}{{ count }} facturen met KOR-tekst.{% endblocktranslate %}{% endif %}{% if report.lines_missing %} {% blocktranslate count count=report.lines_missing|length %}{{ count }} uitgaveregel zonder btw-tarief.{% plural %}{{ count }} uitgaveregels zonder btw-tarief.{% endblocktranslate %}{% endif %}</span></p>
+{% endif %}
+
+{% if report.not_counted %}
+<a class="hint-banner is-warn" href="#niet-meegeteld" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% blocktranslate with count=report.not_counted %}Niet meegeteld: {{ count }}.{% endblocktranslate %}</span><span class="spacer"></span><span>{% translate "Bekijk wat en waarom" %} →</span></a>
+{% endif %}
+
+<section class="card" style="margin-bottom:var(--s-5)">
+    {% if report.is_empty %}<p class="muted card-pad" style="padding-bottom:0">{% translate "Geen facturen of uitgaven in deze periode." %}</p>{% endif %}
+    <div class="table-wrap">
+        <table class="table" id="rubrieken">
+            <thead><tr><th>{% translate "Rubriek" %}</th><th class="r">{% translate "Omzet" %}</th><th class="r">{% translate "Btw" %}</th></tr></thead>
+            <tbody>
+                {% for box in report.boxes %}
+                <tr><td><strong>{{ box.code }}</strong> {{ box.label }}</td><td class="r amount">{{ box.revenue_cents|money }}</td><td class="r amount">{{ box.tax_cents|money }}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="card" style="margin-bottom:var(--s-5)">
+    <div class="table-wrap">
+        <table class="table" id="uitkomst">
+            <tbody>
+                <tr><td><strong>5a</strong> {% translate "Verschuldigde btw" %}</td><td class="r amount">{{ report.owed_cents|money }}</td></tr>
+                <tr><td><strong>5b</strong> {% translate "Voorbelasting" %}{% if report.reverse_charged_input_vat_cents %}<br><span class="muted small">{% blocktranslate with amount=report.reverse_charged_input_vat_cents|money %}waarvan verlegd: {{ amount }}{% endblocktranslate %}</span>{% endif %}</td><td class="r amount">{{ report.input_vat_cents|money }}</td></tr>
+            </tbody>
+            <tfoot><tr><td>{% if report.balance_cents < 0 %}{% translate "Terug te krijgen" %}{% else %}{% translate "Te betalen" %}{% endif %}</td><td class="r amount">{{ report.balance_abs_cents|money }}</td></tr></tfoot>
+        </table>
+    </div>
+</section>
+
+<p class="muted small" style="margin-bottom:var(--s-6)">{% translate "Huismus telt uitgegeven facturen en creditnota's op hun factuurdatum, en uitgaven op de datum van het bonnetje." %}</p>
+
+{% if report.not_counted %}
+<h2 id="niet-meegeteld" style="margin-bottom:var(--s-4)">{% translate "Niet meegeteld" %}</h2>
+
+{% if report.without_rows %}
+<section class="card" id="zonder-btw-per-tarief" style="margin-bottom:var(--s-5)">
+    <div class="card-pad"><h3>{% translate "Facturen zonder btw per tarief" %}</h3><p class="muted small">{% translate "Bij deze geïmporteerde facturen past Moneybirds totaal niet bij de regels. Dit zijn de bedragen uit Moneybird." %}</p></div>
+    {% include "reports/_document_amounts.html" with rows=report.without_rows %}
+</section>
+{% endif %}
+
+{% if report.other_rates %}
+<section class="card" id="ander-tarief" style="margin-bottom:var(--s-5)">
+    <div class="card-pad"><h3>{% translate "Facturen met een ander tarief" %}</h3><p class="muted small">{% translate "Huismus telt alleen 21%, 9% en 0%." %}</p></div>
+    {% include "reports/_document_amounts.html" with rows=report.other_rates show_rate=True %}
+</section>
+{% endif %}
+
+{% if report.reverse_charge_elsewhere %}
+<section class="card" id="verlegd-buiten-eu" style="margin-bottom:var(--s-5)">
+    <div class="card-pad"><h3>{% translate "Btw verlegd, klant buiten de EU of zonder land" %}</h3><p class="muted small">{% translate "Huismus zet btw verlegd alleen in een rubriek als de klant in Nederland of een ander EU-land zit." %}</p></div>
+    {% include "reports/_document_amounts.html" with rows=report.reverse_charge_elsewhere show_country=True %}
+</section>
+{% endif %}
+
+{% if report.kor_documents and not report.kor_on %}
+<section class="card" id="kor-tekst" style="margin-bottom:var(--s-5)">
+    <div class="card-pad"><h3>{% translate "Facturen met KOR-tekst" %}</h3><p class="muted small">{% translate "Op deze facturen staat de KOR-tekst." %}</p></div>
+    {% include "reports/_document_amounts.html" with rows=report.kor_documents %}
+</section>
+{% endif %}
+
+{% if report.back_in_draft %}
+<section class="card" id="terug-in-concept" style="margin-bottom:var(--s-5)">
+    <div class="card-pad"><h3>{% translate "Terug in concept" %}</h3><p class="muted small">{% translate "Je zette deze facturen terug in concept. Geef ze weer uit, dan tellen ze mee." %}</p></div>
+    <div class="table-wrap"><table class="table">
+        <thead><tr><th>{% translate "Nummer" %}</th><th>{% translate "Datum" %}</th></tr></thead>
+        <tbody>{% for document in report.back_in_draft %}<tr><td><a href="{% url 'documents:edit' document.pk %}">{{ document.number }}</a></td><td>{{ document.issue_date|date:"j M Y" }}</td></tr>{% endfor %}</tbody>
+    </table></div>
+</section>
+{% endif %}
+
+{% if report.lines_missing and not report.kor_on %}
+<section class="card" id="regels-zonder-tarief" style="margin-bottom:var(--s-5)">
+    <div class="card-pad"><h3>{% translate "Uitgaveregels zonder btw-tarief of btw" %}</h3><p class="muted small">{% translate "Vul het tarief en de btw aan in de uitgave, dan tellen ze mee." %}</p></div>
+    <div class="table-wrap"><table class="table">
+        <thead><tr><th>{% translate "Datum" %}</th><th>{% translate "Uitgave" %}</th><th class="r">{% translate "Bedrag" %}</th></tr></thead>
+        <tbody>{% for line in report.lines_missing %}<tr><td>{{ line.expense.date|date:"j M Y" }}</td><td><a href="{% url 'expenses:edit' line.expense_id %}">{{ line.expense.supplier|default:line.expense.description|default:_("Uitgave") }}</a>{% if line.description %}<br><span class="muted small">{{ line.description }}</span>{% endif %}</td><td class="r amount">{{ line.amount_cents|money }}</td></tr>{% endfor %}</tbody>
+    </table></div>
+</section>
+{% endif %}
+{% endif %}
+{% endblock %}
