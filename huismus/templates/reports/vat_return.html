@@ -20,18 +20,17 @@
 
 {% include "reports/_tabs.html" with current="vat_return" %}
 
-<p class="muted" style="margin-bottom:var(--s-4)">{% translate "De omzet en btw uit je facturen en uitgaven, per rubriek." %}</p>
-
 {% if report.kor_on %}
-<p class="hint-banner is-info" id="kor-aan" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{% translate "De KOR staat aan. Dit rapport telt facturen zonder KOR-tekst en uitgaveregels met een btw-tarief." %}{% if report.kor_documents %} {% blocktranslate count count=report.kor_documents|length %}{{ count }} factuur met KOR-tekst.{% plural %}{{ count }} facturen met KOR-tekst.{% endblocktranslate %}{% endif %}{% if report.lines_missing %} {% blocktranslate count count=report.lines_missing|length %}{{ count }} uitgaveregel zonder btw-tarief.{% plural %}{{ count }} uitgaveregels zonder btw-tarief.{% endblocktranslate %}{% endif %}</span></p>
-{% endif %}
+<p class="hint-banner is-info" id="kor-aan"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{% translate "De KOR staat aan. Dan telt Huismus geen btw, dus dit rapport heeft geen bedragen. Staat de KOR uit, dan zie je hier per rubriek de omzet en btw uit je facturen en uitgaven." %}</span><span class="spacer"></span><a href="{% url 'business:topic' 'kor' %}">{% translate "KOR-instellingen" %} →</a></p>
+{% else %}
+<p class="muted" style="margin-bottom:var(--s-4)">{% translate "De omzet en btw uit je facturen en uitgaven, per rubriek." %}</p>
 
 {% if report.not_counted %}
 <a class="hint-banner is-warn" href="#niet-meegeteld" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% blocktranslate with count=report.not_counted %}Niet meegeteld: {{ count }}.{% endblocktranslate %}</span><span class="spacer"></span><span>{% translate "Bekijk wat en waarom" %} →</span></a>
 {% endif %}
 
+{% if report.is_empty %}<p class="muted" style="margin-bottom:var(--s-4)">{% translate "Geen facturen of uitgaven in deze periode." %}</p>{% endif %}
 <section class="card" style="margin-bottom:var(--s-5)">
-    {% if report.is_empty %}<p class="muted card-pad" style="padding-bottom:0">{% translate "Geen facturen of uitgaven in deze periode." %}</p>{% endif %}
     <div class="table-wrap">
         <table class="table" id="rubrieken">
             <thead><tr><th>{% translate "Rubriek" %}</th><th class="r">{% translate "Omzet" %}</th><th class="r">{% translate "Btw" %}</th></tr></thead>
@@ -82,7 +81,7 @@
 </section>
 {% endif %}
 
-{% if report.kor_documents and not report.kor_on %}
+{% if report.kor_documents %}
 <section class="card" id="kor-tekst" style="margin-bottom:var(--s-5)">
     <div class="card-pad"><h3>{% translate "Facturen met KOR-tekst" %}</h3><p class="muted small">{% translate "Op deze facturen staat de KOR-tekst." %}</p></div>
     {% include "reports/_document_amounts.html" with rows=report.kor_documents %}
@@ -94,19 +93,20 @@
     <div class="card-pad"><h3>{% translate "Terug in concept" %}</h3><p class="muted small">{% translate "Je zette deze facturen terug in concept. Geef ze weer uit, dan tellen ze mee." %}</p></div>
     <div class="table-wrap"><table class="table">
         <thead><tr><th>{% translate "Nummer" %}</th><th>{% translate "Datum" %}</th></tr></thead>
-        <tbody>{% for document in report.back_in_draft %}<tr><td><a href="{% url 'documents:edit' document.pk %}">{{ document.number }}</a></td><td>{{ document.issue_date|date:"j M Y" }}</td></tr>{% endfor %}</tbody>
+        <tbody>{% for document in report.back_in_draft %}<tr><td class="num"><a href="{% url 'documents:edit' document.pk %}">{{ document.number }}</a></td><td class="num">{{ document.issue_date|date:"j M Y" }}</td></tr>{% endfor %}</tbody>
     </table></div>
 </section>
 {% endif %}
 
-{% if report.lines_missing and not report.kor_on %}
+{% if report.lines_missing %}
 <section class="card" id="regels-zonder-tarief" style="margin-bottom:var(--s-5)">
     <div class="card-pad"><h3>{% translate "Uitgaveregels zonder btw-tarief of btw" %}</h3><p class="muted small">{% translate "Vul het tarief en de btw aan in de uitgave, dan tellen ze mee." %}</p></div>
     <div class="table-wrap"><table class="table">
         <thead><tr><th>{% translate "Datum" %}</th><th>{% translate "Uitgave" %}</th><th class="r">{% translate "Bedrag" %}</th></tr></thead>
-        <tbody>{% for line in report.lines_missing %}<tr><td>{{ line.expense.date|date:"j M Y" }}</td><td><a href="{% url 'expenses:edit' line.expense_id %}">{{ line.expense.supplier|default:line.expense.description|default:_("Uitgave") }}</a>{% if line.description %}<br><span class="muted small">{{ line.description }}</span>{% endif %}</td><td class="r amount">{{ line.amount_cents|money }}</td></tr>{% endfor %}</tbody>
+        <tbody>{% for line in report.lines_missing %}<tr><td class="num">{{ line.expense.date|date:"j M Y" }}</td><td><a href="{% url 'expenses:edit' line.expense_id %}">{{ line.expense.supplier|default:line.expense.description|default:_("Uitgave") }}</a>{% if line.description %}<br><span class="muted small">{{ line.description }}</span>{% endif %}</td><td class="r amount">{{ line.amount_cents|money }}</td></tr>{% endfor %}</tbody>
     </table></div>
 </section>
+{% endif %}
 {% endif %}
 {% endif %}
 {% endblock %}

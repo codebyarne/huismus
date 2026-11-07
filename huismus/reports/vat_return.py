@@ -124,18 +124,15 @@ class VatReturn:
 
     @property
     def not_counted(self) -> int:
-        """How many things the warning at the top names. Under the KOR,
-        invoices with the KOR text and lines without a rate are what you'd
-        expect: the page gives their number, not a warning."""
-        count = (
+        """How many things "Niet meegeteld" names."""
+        return (
             len(self.without_rows)
             + len(self.other_rates)
             + len(self.reverse_charge_elsewhere)
+            + len(self.kor_documents)
             + len(self.back_in_draft)
+            + len(self.lines_missing)
         )
-        if not self.kor_on:
-            count += len(self.kor_documents) + len(self.lines_missing)
-        return count
 
 
 def compute_vat_return(period: Period) -> VatReturn:
@@ -183,8 +180,13 @@ def compute_vat_return(period: Period) -> VatReturn:
 
     input_vat = reverse_charged = 0
     lines_missing = []
+    kor_on = Settings.load().kor_enabled
+    # Under the KOR the VAT on expenses counts nowhere (CLAUDE.md, hard
+    # rule 7): no lines are read. The page then shows no figures at all.
     lines = (
-        ExpenseLine.objects.filter(
+        ExpenseLine.objects.none()
+        if kor_on
+        else ExpenseLine.objects.filter(
             expense__date__gte=period.first_day, expense__date__lte=period.last_day
         )
         .select_related("expense")
@@ -205,7 +207,7 @@ def compute_vat_return(period: Period) -> VatReturn:
 
     return VatReturn(
         period=period,
-        kor_on=Settings.load().kor_enabled,
+        kor_on=kor_on,
         boxes=[boxes[code] for code in BOX_ORDER],
         input_vat_cents=input_vat + reverse_charged,
         reverse_charged_input_vat_cents=reverse_charged,

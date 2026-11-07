@@ -68,16 +68,25 @@ def test_lines_without_a_rate_are_listed_with_a_link(logged_in):
     assert reverse("expenses:edit", args=[expense.pk]) in html
 
 
-def test_with_the_kor_on_it_says_so_and_counts_instead_of_listing(logged_in):
+def test_with_the_kor_on_it_says_so_and_shows_no_figures(logged_in):
     _kor(True)
-    create_expense([ExpenseLineInput("Pen", 300, None, None, "")], date=date(2025, 5, 2))
+    create_expense([ExpenseLineInput("Pen", 1210, 210, None, VatRate.HIGH)], date=date(2025, 5, 2))
 
     html = logged_in.get(reverse("reports:vat_return"), {"periode": "2025"}).content.decode()
 
     assert 'id="kor-aan"' in html
-    assert "1 uitgaveregel zonder btw-tarief." in html
-    assert 'id="regels-zonder-tarief"' not in html
+    assert reverse("business:topic", args=["kor"]) in html
+    assert 'id="rubrieken"' not in html
     assert 'id="niet-meegeteld"' not in html
+
+
+def test_an_empty_period_says_so_above_the_zeros(logged_in):
+    _kor(False)
+
+    html = logged_in.get(reverse("reports:vat_return"), {"periode": "2016-Q1"}).content.decode()
+
+    assert "Geen facturen of uitgaven in deze periode." in html
+    assert 'id="rubrieken"' in html
 
 
 def test_the_period_kinds_link_to_each_other(logged_in):
