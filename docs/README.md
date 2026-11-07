@@ -6,7 +6,8 @@
 taal (`<onderwerp>.nl.md`, `<onderwerp>.en.md`). Huismus toont dezelfde
 bestanden in de app onder **Hulp** (`huismus/core/help.py`), zodat de uitleg hoort
 bij de versie die iemand draait. Een nieuw onderwerp: beide bestanden, met
-een `# Titel` op de eerste regel, en de naam in `TOPICS` in `huismus/core/help.py`.
+een `# Titel` op de eerste regel, en de naam in een groep in `GROUPS` in `huismus/core/help.py`
+(die bepaalt de kopjes en de volgorde op **Hulp**, in de app en op de site).
 Geen verwijzingen naar SPEC.md, broncode of GitHub, en geen tekst over wet of
 belasting (`CLAUDE.md`); een link naar een ander onderwerp schrijf je als
 `back-ups.nl.md#kopje`. `tests/core/test_help.py` controleert dat.

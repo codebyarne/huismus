@@ -7,6 +7,7 @@ from html.parser import HTMLParser
 
 import pytest
 from django.core.management import CommandError, call_command
+from django.utils import translation
 
 from huismus.core import help, site
 
@@ -124,6 +125,19 @@ def test_the_english_pages_are_in_english(out):
     assert "Download voor Mac" not in html
     help_page = (out / "en" / "help" / "back-ups" / "index.html").read_text(encoding="utf-8")
     assert "<h1>Backups</h1>" in help_page
+
+
+@pytest.mark.parametrize("language", help.LANGUAGES)
+def test_the_help_index_has_the_same_groups_as_the_app_without_feedback(out, language):
+    html = (out / site.help_url(language).strip("/") / "index.html").read_text(encoding="utf-8")
+    with translation.override(language):
+        titles = [str(group.title) for group in help.groups(site.TOPICS)]
+    assert re.findall(r'<h2 id="help-group-\d+">([^<]+)</h2>', html) == titles
+    assert site.help_url(language, help.FEEDBACK) not in html
+    sections = html.split('<section class="help-group"')[1:]
+    for section, group in zip(sections, help.groups(site.TOPICS), strict=True):
+        for slug in group.topics:
+            assert f'href="{site.help_url(language, slug)}"' in section
 
 
 def test_without_a_counter_code_the_site_counts_nothing(out):

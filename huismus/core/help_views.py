@@ -11,8 +11,11 @@ from . import feedback_views, help
 
 @login_required
 def index(request):
-    topics = [(slug, help.title(slug), help.summary(slug)) for slug in help.TOPICS]
-    return render(request, "core/help_index.html", {"topics": topics})
+    groups = [
+        (group.title, [(slug, help.title(slug), help.summary(slug)) for slug in group.topics])
+        for group in help.groups()
+    ]
+    return render(request, "core/help_index.html", {"groups": groups})
 
 
 @login_required

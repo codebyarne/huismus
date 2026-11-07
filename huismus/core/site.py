@@ -165,9 +165,19 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
             {
                 "nav": "help",
                 "switch_url": help_url(other),
-                "topics": [
-                    (help_url(language, s), help.title(s, language), help.summary(s, language))
-                    for s in TOPICS
+                "groups": [
+                    (
+                        group.title,
+                        [
+                            (
+                                help_url(language, s),
+                                help.title(s, language),
+                                help.summary(s, language),
+                            )
+                            for s in group.topics
+                        ],
+                    )
+                    for group in help.groups(TOPICS)
                 ],
             },
         ),

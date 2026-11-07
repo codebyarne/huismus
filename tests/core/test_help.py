@@ -89,6 +89,42 @@ def test_the_index_lists_every_topic_in_the_users_language(client, django_user_m
     assert "Backups" in page and "Uitleg bij" not in page
 
 
+def test_every_topic_is_in_exactly_one_group():
+    """One list for the app and the site (issue #130): a topic outside a group
+    would be missing from /hulp/, one in two groups would show twice."""
+    in_groups = [slug for group in help.GROUPS for slug in group.topics]
+    assert sorted(in_groups) == sorted(set(in_groups)) == sorted(help.TOPICS)
+
+
+def test_a_group_without_topics_is_left_out():
+    shown = help.groups(("moneybird", "docker"))
+    assert [g.topics for g in shown] == [("moneybird",), ("docker",)]
+    assert all(g.topics for g in help.groups())
+
+
+def test_the_index_shows_the_groups_in_order_with_their_topics(client, django_user_model):
+    client.force_login(django_user_model.objects.create_user("eigenaar", password="x" * 12))
+
+    page = client.get(reverse("help:index")).content.decode()
+    headings = re.findall(r'<h2 id="help-group-\d+">([^<]+)</h2>', page)
+    assert headings == [
+        "Beginnen",
+        "Overstappen",
+        "Het hele jaar",
+        "Voor je boekhouder",
+        "Installeren en bijwerken",
+    ]
+    # Each card after its own heading and before the next one.
+    sections = page.split('<section class="help-group"')[1:]
+    for section, group in zip(sections, help.groups(), strict=True):
+        for slug in group.topics:
+            assert reverse("help:page", args=[slug]) in section
+
+    client.cookies["django_language"] = "en"
+    page = client.get(reverse("help:index")).content.decode()
+    assert ">First steps</h2>" in page and ">Throughout the year</h2>" in page
+
+
 def test_a_page_shows_the_markdown_with_ids_on_its_headings(client, django_user_model):
     client.force_login(django_user_model.objects.create_user("eigenaar", password="x" * 12))
 

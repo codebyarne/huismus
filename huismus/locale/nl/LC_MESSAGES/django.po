@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-07 16:15+0100\n"
+"POT-Creation-Date: 2026-11-07 16:37+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1234,6 +1234,24 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "Vul een bedrag in, zoals 1.250,00."
+msgstr ""
+
+msgid "Beginnen"
+msgstr ""
+
+msgid "Overstappen"
+msgstr ""
+
+msgid "Het hele jaar"
+msgstr ""
+
+msgid "Voor je boekhouder"
+msgstr ""
+
+msgid "Installeren en bijwerken"
+msgstr ""
+
+msgid "Wat Huismus (nog) niet doet"
 msgstr ""
 
 msgid "Huismus zet een back-up terug. Even geduld…"
@@ -5814,9 +5832,6 @@ msgstr ""
 msgid ""
 "De pagina AI-assistenten in de instellingen, met de knop om Claude te "
 "koppelen."
-msgstr ""
-
-msgid "Overstappen"
 msgstr ""
 
 msgid "Neem je administratie mee"
