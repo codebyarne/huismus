@@ -14,6 +14,7 @@ from django.utils import timezone
 from huismus.core import auto_backups, cloud_backups
 from huismus.core.backup import BEFORE_SAMPLE_DATA_FILE_NAME, archive_created_at, create_backup
 from tests.cloud_fakes import ADDRESS, PASSWORD, USERNAME, FakeDropbox, FakeWebDAV
+from tests.redirect_fakes import Catcher, Redirector
 
 pytestmark = pytest.mark.django_db
 
@@ -116,6 +117,47 @@ def test_webdav_says_why_it_fails(dav):
     assert refused.value.reason == cloud_backups.REFUSED
     assert nothing_there.value.reason == cloud_backups.NOT_WEBDAV
     assert unreachable.value.reason == cloud_backups.UNREACHABLE
+
+
+@pytest.fixture
+def redirected():
+    """A server that sends everything on to a catcher (302, the one urllib
+    follows for GET and POST); a password or token sent along would show up
+    in the catcher's list."""
+    catcher = Catcher()
+    redirector = Redirector(302, catcher.url)
+    yield redirector, catcher
+    redirector.close()
+    catcher.close()
+
+
+def test_webdav_follows_no_redirect_and_sends_no_password_elsewhere(redirected):
+    redirector, catcher = redirected
+    webdav = cloud_backups.WebDAV(redirector.url, USERNAME, PASSWORD)
+
+    # Before: a 3xx counted as success for check(), and a download followed
+    # it, Basic password and all.
+    with pytest.raises(cloud_backups.CloudError) as check:
+        webdav.check()
+    with pytest.raises(cloud_backups.CloudError) as download:
+        webdav.download("huismus.tar.gz.age")
+
+    assert check.value.reason == cloud_backups.UNREACHABLE
+    assert download.value.reason == cloud_backups.UNREACHABLE
+    assert catcher.requests == []
+
+
+def test_dropbox_follows_no_redirect_and_sends_no_token_elsewhere(redirected, monkeypatch):
+    redirector, catcher = redirected
+    monkeypatch.setattr(cloud_backups.Dropbox, "API", redirector.url)
+    dropbox = cloud_backups.Dropbox("refresh-token")
+    dropbox._access_token = "toegangs-token"
+
+    with pytest.raises(cloud_backups.CloudError) as error:
+        dropbox.list()
+
+    assert error.value.reason == cloud_backups.UNREACHABLE
+    assert catcher.requests == []
 
 
 def test_upload_encrypts_a_backup_huismus_can_restore(linked_dav, data_dir, tmp_path):

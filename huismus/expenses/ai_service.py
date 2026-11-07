@@ -30,6 +30,7 @@ from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 from PIL import Image, ImageDraw
 
+from huismus.core import no_redirects
 from huismus.core.private_files import write_owner_only
 
 logger = logging.getLogger("huismus.receipts")
@@ -181,11 +182,15 @@ class ServiceError(Exception):
 
 def _open(request: urllib.request.Request, timeout: float) -> tuple[int, bytes]:
     """One HTTP request; the status and body, also for an error status.
-    The one place this module goes on the network."""
+    The one place this module goes on the network. A redirect counts as
+    an address that doesn't answer: following it would send the key along
+    (core.no_redirects)."""
     try:
-        with urllib.request.urlopen(request, timeout=timeout) as response:
+        with no_redirects.urlopen(request, timeout=timeout) as response:
             return response.status, response.read()
     except urllib.error.HTTPError as error:
+        if no_redirects.is_redirect(error.code):
+            raise ServiceError(UNREACHABLE, f"redirect {error.code}") from error
         return error.code, error.read()
     except TimeoutError as error:
         # Sent, and no answer in time: the service may have done the work.
