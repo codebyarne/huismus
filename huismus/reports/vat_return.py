@@ -14,12 +14,15 @@ computes a VAT amount, and the stored gross amounts stay as they are
 (CLAUDE.md, hard rule 7).
 
 Which box takes what is in docs/belastingregels.md, "Rubrieken in detail";
-the owner approved that mapping (escalation list 1).
+the owner approved that mapping (escalation list 1). Documents count on
+their invoice date, except a 3b row: it counts on the delivery date when
+the document has one (issue #113).
 """
 
 from dataclasses import dataclass, field
 from datetime import date
 
+from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 from huismus.business.models import Settings
@@ -137,38 +140,66 @@ class VatReturn:
         )
 
 
+def _in(period: Period, day: date) -> bool:
+    return period.first_day <= day <= period.last_day
+
+
 def compute_vat_return(period: Period) -> VatReturn:
     boxes = {code: Box(code) for code in BOX_ORDER}
-    dates = {"issue_date__gte": period.first_day, "issue_date__lte": period.last_day}
-    documents = Document.objects.filter(kind__in=("invoice", "credit_note"), **dates)
+    sales = Document.objects.filter(kind__in=("invoice", "credit_note"))
+    invoiced = Q(issue_date__gte=period.first_day, issue_date__lte=period.last_day)
+    # A 3b row counts in the period of its delivery date when there is one
+    # (issue #113; docs/belastingregels.md, "Rubrieken in detail", 3b), so
+    # a document invoiced in another period can still have a row here.
+    delivered = Q(delivery_date__gte=period.first_day, delivery_date__lte=period.last_day)
     issued = (
-        documents.filter(status="issued")
+        sales.filter(invoiced | delivered, status="issued")
         .prefetch_related("vat_rows")
         .order_by("issue_date", "number")
     )
 
+    # Whether the period has anything of its own: a document invoiced in
+    # it, or a 3b row delivered in it.
+    found_any = False
     without_rows, other_rates, elsewhere, kor_documents = [], [], [], []
     for document in issued:
         sign = -1 if document.kind == "credit_note" else 1
+        invoiced_here = _in(period, document.issue_date)
+        found_any |= invoiced_here
         if document.kor_text_snapshot:
-            kor_documents.append(
-                DocumentAmount(document, sign * document.subtotal_cents, sign * document.tax_cents)
-            )
+            if invoiced_here:
+                kor_documents.append(
+                    DocumentAmount(
+                        document, sign * document.subtotal_cents, sign * document.tax_cents
+                    )
+                )
             continue
         rows = list(document.vat_rows.all())
         if not rows:
-            without_rows.append(
-                DocumentAmount(document, sign * document.subtotal_cents, sign * document.tax_cents)
-            )
+            if invoiced_here:
+                without_rows.append(
+                    DocumentAmount(
+                        document, sign * document.subtotal_cents, sign * document.tax_cents
+                    )
+                )
             continue
         country = ((document.contact_snapshot or {}).get("country") or "").strip().upper()
         for row in rows:
             revenue, tax = sign * row.revenue_cents, sign * row.tax_cents
+            if row.reverse_charge and country in EU_COUNTRIES and country != "NL":
+                # 3b: the date that counts is the delivery date, and
+                # without one the invoice date.
+                if _in(period, document.delivery_date or document.issue_date):
+                    boxes["3b"].revenue_cents += revenue
+                    boxes["3b"].tax_cents += tax
+                    found_any = True
+                continue
+            # Every other row counts on the invoice date.
+            if not invoiced_here:
+                continue
             if row.reverse_charge:
                 if country == "NL":
                     box = boxes["1e"]
-                elif country in EU_COUNTRIES:
-                    box = boxes["3b"]
                 else:
                     elsewhere.append(DocumentAmount(document, revenue, tax, country=country))
                     continue
@@ -213,13 +244,15 @@ def compute_vat_return(period: Period) -> VatReturn:
         boxes=[boxes[code] for code in BOX_ORDER],
         input_vat_cents=input_vat + reverse_charged,
         reverse_charged_input_vat_cents=reverse_charged,
-        is_empty=not issued and not lines,
+        is_empty=not found_any and not lines,
         without_rows=without_rows,
         other_rates=other_rates,
         reverse_charge_elsewhere=elsewhere,
         kor_documents=kor_documents,
         back_in_draft=list(
-            documents.filter(status="draft").exclude(number="").order_by("issue_date", "number")
+            sales.filter(invoiced, status="draft")
+            .exclude(number="")
+            .order_by("issue_date", "number")
         ),
         lines_missing=lines_missing,
     )

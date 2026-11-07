@@ -65,8 +65,10 @@ revenue and VAT from your invoices and expenses, per box, and what you pay or
 get back. You copy the amounts into your return yourself; Huismus sends
 nothing.
 
-Huismus counts issued invoices and credit notes, and expense lines with a VAT
-rate. What it can't count is listed at the bottom under **Not counted**, with a
+Huismus counts issued invoices and credit notes on their invoice date, and
+expense lines with a VAT rate on the date of the receipt. A service to a
+business in another EU country (box 3b) counts on the delivery date, if you
+filled one in on the invoice. What it can't count is listed at the bottom under **Not counted**, with a
 link. There you fill it in or take it along yourself.
 
 You can also download an export for your accountant. See
