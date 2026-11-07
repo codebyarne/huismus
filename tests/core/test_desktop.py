@@ -46,6 +46,12 @@ def test_an_empty_token_never_matches(client, settings):
     assert _start(client, token="").status_code == 403
 
 
+def test_a_token_with_other_characters_is_refused_not_an_error(client, desktop):
+    # compare_digest raises TypeError on a non-ASCII str: a 500, not a 403.
+    assert _start(client, token="tökén").status_code == 403
+    assert client.get("/", HTTP_COOKIE=f"{COOKIE}=tökén").status_code == 403
+
+
 def test_the_token_becomes_a_cookie_and_leaves_the_address(client, desktop):
     response = _start(client)
 
