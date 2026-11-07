@@ -47,7 +47,7 @@ GROUPS = (
         # What each weekly release brings; written on release day (CLAUDE.md, Releases).
         ("beginnen", "nieuw", FEEDBACK),
     ),
-    Group(_("Overstappen"), ("moneybird",)),
+    Group(_("Overstappen"), ("overstappen", "moneybird")),
     Group(
         _("Het hele jaar"),
         (

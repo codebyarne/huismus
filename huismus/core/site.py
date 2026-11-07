@@ -42,6 +42,8 @@ DOMAIN = "huismus.arnekrijnsen.com"
 REPOSITORY = "https://github.com/codebyarne/huismus"
 # "Feedback geven" asks you to fill in the form below it, which only the app has.
 TOPICS = tuple(slug for slug in help.TOPICS if slug != help.FEEDBACK)
+# The help page for people coming from another package, in the menu.
+SWITCHING = "overstappen"
 
 # The file the download buttons point at, the same name in every release
 # (release.yml uploads a copy under it), so "latest" always has it.
@@ -186,7 +188,12 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
         page = help.render(slug, language, link=lambda s, a: help_url(language, s, a))
         pages[help_url(language, slug)] = (
             "site/help_page.html",
-            {"nav": "help", "switch_url": help_url(other, slug), "page": page},
+            {
+                # Overstappen has its own place in the menu (issue #130).
+                "nav": "switching" if slug == SWITCHING else "help",
+                "switch_url": help_url(other, slug),
+                "page": page,
+            },
         )
     return pages
 
@@ -224,6 +231,7 @@ def build(out: Path) -> list[str]:
                         "windows_url": download_page_url(language, "windows"),
                         "home_url": home_url(language),
                         "help_index_url": help_url(language),
+                        "switching_url": help_url(language, SWITCHING),
                         "install_url": install_url(language),
                         "contribute_url": contribute_url(language),
                     },
@@ -244,6 +252,7 @@ def build(out: Path) -> list[str]:
                     "windows_url": download_page_url("nl", "windows"),
                     "home_url": "/",
                     "help_index_url": "/hulp/",
+                    "switching_url": help_url("nl", SWITCHING),
                     "install_url": install_url("nl"),
                     "contribute_url": contribute_url("nl"),
                 },

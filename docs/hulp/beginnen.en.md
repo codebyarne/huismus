@@ -26,7 +26,8 @@ You can skip a step and come back later. Everything is also under
 Coming from Moneybird? Click **Import from Moneybird** and bring all your
 customers, invoices, quotes and expenses along in one go. Huismus does a trial
 run first and only saves anything when you choose to. How it works is in
-[Moving from Moneybird](moneybird.en.md).
+[Moving from Moneybird](moneybird.en.md). Only cancel Moneybird once
+everything is in Huismus: see [Switching to Huismus](overstappen.en.md).
 
 ## Look around first
 

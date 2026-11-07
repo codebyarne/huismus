@@ -27,7 +27,8 @@ Je kunt een stap overslaan en later terugkomen. Alles staat daarna ook onder
 Kom je van Moneybird? Klik dan op **Importeren uit Moneybird** en neem in één
 keer al je klanten, facturen, offertes en uitgaven mee. Huismus doet eerst
 een proefdraai en slaat pas iets op als jij dat kiest. Hoe het werkt staat in
-[Overstappen uit Moneybird](moneybird.nl.md).
+[Overstappen uit Moneybird](moneybird.nl.md). Zeg Moneybird pas op als alles
+in Huismus staat: zie [Overstappen](overstappen.nl.md).
 
 ## Eerst rondkijken
 

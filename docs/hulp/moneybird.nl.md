@@ -5,6 +5,10 @@ offertes en uitgaven één op één mee naar Huismus. Ook de pdf's en bonnetjes
 gaan mee. Huismus doet eerst een proefdraai en slaat pas iets op als jij dat
 kiest.
 
+Zeg Moneybird pas op als alles in Huismus staat. Je oude jaren staan dan op je
+eigen computer, zonder abonnement. Waar je verder op let, staat in
+[Overstappen](overstappen.nl.md).
+
 ## Je gegevens uit Moneybird halen
 
 1. Log in bij Moneybird en open de administratie die je wilt verhuizen.
@@ -52,3 +56,10 @@ Moneybird.
 
 Importeer je dezelfde export nog eens, dan verandert er niets: wat al bestaat,
 slaat Huismus over. Een nieuwer jaar erbij importeren kan dus altijd.
+
+## Daarna opzeggen
+
+Staat alles in Huismus en klopt het? Dan kun je Moneybird opzeggen. Je oude
+jaren, de pdf's en je bonnetjes blijven in Huismus en in je back-ups, ook
+zonder abonnement. Kijk eerst na wat er in [Overstappen](overstappen.nl.md#zo-stap-je-over)
+staat, en zorg dat je een back-up hebt.
