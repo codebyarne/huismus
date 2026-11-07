@@ -5748,3 +5748,26 @@ msgstr ""
 
 msgid "Niet gelezen: het btw-tarief staat er niet bij."
 msgstr ""
+
+msgid "kosten zonder btw"
+msgstr ""
+
+msgid "voorbelasting"
+msgstr ""
+
+#, python-format
+msgid "Kosten zonder btw %(costs)s"
+msgstr ""
+
+msgid "Kosten zonder btw"
+msgstr ""
+
+#, python-format
+msgid "Voorbelasting %(amount)s"
+msgstr ""
+
+msgid "Voorbelasting"
+msgstr ""
+
+msgid "Kosten zonder btw per categorie"
+msgstr ""

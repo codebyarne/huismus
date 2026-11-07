@@ -60,9 +60,10 @@ def test_year_overview_csv_download(client):
     # and a decimal comma, so Dutch Excel opens it.
     assert response.content.startswith("\ufeff".encode())
     lines = response.content.decode("utf-8-sig").splitlines()
-    assert lines[0] == "kwartaal;omzet;kosten;winst"
-    assert lines[1] == "Q1;0,00;10,00;-10,00"
-    assert lines[-1] == "totaal;0,00;10,00;-10,00"
+    # The KOR is off by default: costs without VAT, input VAT apart (M21).
+    assert lines[0] == "kwartaal;omzet;kosten zonder btw;voorbelasting;winst"
+    assert lines[1] == "Q1;0,00;10,00;0,00;-10,00"
+    assert lines[-1] == "totaal;0,00;10,00;0,00;-10,00"
 
 
 def _kor_on(*, limit_cents=1_000_000, warning_percent=80):

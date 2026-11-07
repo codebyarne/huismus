@@ -9,6 +9,12 @@ Revenue is without VAT, the stored `subtotal_cents` of each document
 (SPEC.md M18): the VAT on an invoice isn't the business's own money.
 Under the KOR the VAT is 0, so nothing changes there.
 
+Costs are gross, what was paid (CLAUDE.md, hard rule 7). With the KOR
+off they are read without VAT and the input VAT is apart (SPEC.md M21,
+part 3; product-owner agent 2026-11-07): per expense line at 21, 9 or 0%,
+costs = gross - VAT and input VAT = VAT; a reverse charged line or one
+without a rate stays gross. Stored amounts are never changed, only read.
+
 Revenue counts on `Document.issue_date` (accrual), not a payment date
 (cash) — the same date every other part of this app already treats as
 authoritative for a document (numbering, snapshots, PDF dates), not a
@@ -20,19 +26,26 @@ cash-basis view instead.
 
 from dataclasses import dataclass, field
 
-from django.db.models import Sum
+from django.db.models import Q, Sum
 from django.db.models.functions import ExtractQuarter
 from django.utils.translation import gettext_lazy as _
 
+from huismus.business.models import Settings
 from huismus.documents.models import Document
-from huismus.expenses.models import Expense, ExpenseLine
+from huismus.expenses.models import Expense, ExpenseLine, VatRate
+
+# The rates whose VAT is in what was paid, and so is input VAT without the
+# KOR. Reverse charge isn't: the supplier charged none.
+INPUT_VAT_RATES = (VatRate.HIGH, VatRate.LOW, VatRate.ZERO)
 
 
 @dataclass
 class QuarterTotals:
     quarter: int
     revenue_cents: int = 0
+    # Without VAT when the KOR is off (input_vat_cents apart), else gross.
     expenses_cents: int = 0
+    input_vat_cents: int = 0
 
     @property
     def profit_cents(self) -> int:
@@ -50,6 +63,9 @@ class YearOverview:
     year: int
     revenue_cents: int = 0
     expenses_cents: int = 0
+    input_vat_cents: int = 0
+    # The KOR is off: costs are without VAT and input VAT is shown.
+    shows_input_vat: bool = False
     quarters: list[QuarterTotals] = field(default_factory=list)
     by_category: list[CategoryTotal] = field(default_factory=list)
 
@@ -81,6 +97,15 @@ def compute_year_overview(year: int) -> YearOverview:
     expense_totals = _totals_by_quarter(
         Expense.objects.filter(date__year=year), "date", "amount_cents"
     )
+    shows_input_vat = not Settings.load().kor_enabled
+    input_vat_lines = ExpenseLine.objects.filter(
+        expense__date__year=year, vat_rate__in=INPUT_VAT_RATES
+    )
+    input_vat = (
+        _totals_by_quarter(input_vat_lines, "expense__date", "vat_info_cents")
+        if shows_input_vat
+        else {}
+    )
 
     quarters = [
         QuarterTotals(
@@ -90,7 +115,8 @@ def compute_year_overview(year: int) -> YearOverview:
             # treats a credit note as crediting an invoice, not billing
             # against it).
             revenue_cents=invoice_totals.get(q, 0) - credit_note_totals.get(q, 0),
-            expenses_cents=expense_totals.get(q, 0),
+            expenses_cents=expense_totals.get(q, 0) - input_vat.get(q, 0),
+            input_vat_cents=input_vat.get(q, 0),
         )
         for q in range(1, 5)
     ]
@@ -99,7 +125,14 @@ def compute_year_overview(year: int) -> YearOverview:
     by_category_qs = (
         ExpenseLine.objects.filter(expense__date__year=year)
         .values("category__name")
-        .annotate(total=Sum("amount_cents"))
+        .annotate(
+            total=Sum("amount_cents")
+            - (
+                Sum("vat_info_cents", filter=Q(vat_rate__in=INPUT_VAT_RATES), default=0)
+                if shows_input_vat
+                else 0
+            )
+        )
         .order_by("-total")
     )
     by_category = [
@@ -114,6 +147,8 @@ def compute_year_overview(year: int) -> YearOverview:
         year=year,
         revenue_cents=sum(q.revenue_cents for q in quarters),
         expenses_cents=sum(q.expenses_cents for q in quarters),
+        input_vat_cents=sum(q.input_vat_cents for q in quarters),
+        shows_input_vat=shows_input_vat,
         quarters=quarters,
         by_category=by_category,
     )

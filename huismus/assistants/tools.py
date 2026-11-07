@@ -320,10 +320,15 @@ def search_contacts(arguments):
 def list_expenses(arguments):
     year = arguments.get("year") or timezone.localdate().year
     expenses = Expense.objects.filter(date__year=year).prefetch_related("lines__category")
+    overview = compute_year_overview(year)
+    input_vat = {"input_vat": _amount(overview.input_vat_cents)} if overview.shows_input_vat else {}
     return {
         "year": year,
-        # The year overview's own total (invariant 7: gross amounts).
-        "total": _amount(compute_year_overview(year).expenses_cents),
+        # The year overview's own total: gross under the KOR, without VAT
+        # and with the input VAT apart without it (SPEC.md M21, part 3).
+        "total": _amount(overview.expenses_cents),
+        "total_without_vat": overview.shows_input_vat,
+        **input_vat,
         "expenses": [
             {
                 "date": _date(expense.date),
@@ -834,7 +839,8 @@ TOOLS = (
         "list_expenses",
         gettext_lazy("Uitgaven bekijken"),
         "read",
-        "The expenses of a year (gross amounts) and their total.",
+        "The expenses of a year (gross amounts) and the year's costs in total: gross, "
+        "or without VAT when total_without_vat is true, with input_vat apart.",
         _YEAR,
         (),
         list_expenses,
