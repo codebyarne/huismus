@@ -22,7 +22,39 @@ permissions:
   contents: read
 
 jobs:
+  security:
+    # Before anything goes out (CLAUDE.md, "Releases"): no known
+    # vulnerability in the locked dependencies (pip-audit, against uv.lock
+    # through `uv export`), and Django's deployment check with Docker's
+    # settings, where any warning fails. Huismus runs in the user's own home
+    # or tailnet, so the three warnings for a site on the open internet are
+    # silenced in huismus/config/settings.py, each with its reason.
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v3
+        with:
+          version: "0.12.18"
+
+      - name: No known vulnerabilities in the dependencies
+        run: |
+          uv export --frozen --no-hashes --no-emit-project --format requirements-txt > "$RUNNER_TEMP/requirements.txt"
+          uvx pip-audit==2.10.1 -r "$RUNNER_TEMP/requirements.txt" --disable-pip --no-deps
+
+      - name: Django's deployment check, with Docker's settings
+        env:
+          SECRET_KEY: release-security-check-only-0123456789abcdefghijklmnopqrstuvwxyz
+          DEBUG: "false"
+          ALLOWED_HOSTS: huismus.example
+        run: |
+          uv python install
+          uv sync --locked --no-dev
+          HUISMUS_DATA_DIR="$RUNNER_TEMP/huismus-check" uv run python manage.py check --deploy --fail-level WARNING
+
   build-and-push:
+    needs: security
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
@@ -175,9 +207,10 @@ jobs:
           if-no-files-found: error
 
   publish:
-    # Only once both apps are built and checked: never half a release.
+    # Only once both apps are built and checked, and the security job is
+    # green: never half a release.
     if: github.event_name == 'push'
-    needs: [macos-app, windows-app]
+    needs: [security, macos-app, windows-app]
     runs-on: ubuntu-latest
     permissions:
       contents: write

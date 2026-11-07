@@ -210,3 +210,11 @@ if not DEBUG and not DESKTOP:
     # an app used daily a day is enough. No includeSubDomains or preload:
     # the host (e.g. a *.ts.net name) is not ours to decide for.
     SECURE_HSTS_SECONDS = 60 * 60 * 24
+
+# Django's deployment check (`check --deploy`) runs at every release and must
+# find nothing (.github/workflows/release.yml, job security). These three are
+# for a site on the open internet, which Huismus never is (SPEC.md 9):
+# W005 and W021, includeSubDomains and preload, are not ours to decide for
+# the host (see HSTS above); W008, redirecting to HTTPS, is the reverse
+# proxy's job, and a home network without HTTPS must still work.
+SILENCED_SYSTEM_CHECKS = ["security.W005", "security.W008", "security.W021"]

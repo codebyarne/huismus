@@ -265,14 +265,18 @@ het Docker-image:
    origin v1.4.0`). Wijkt de tag af van `pyproject.toml`, dan stopt de bouw:
    de bijgewerkte app zou zichzelf anders als oud zien en dezelfde update
    steeds opnieuw aanbieden.
-3. Op een Apple Silicon-runner (`macos-14`) installeert de job Pango uit
+3. Eerst de job `security`: `pip-audit` zoekt bekende kwetsbaarheden in de
+   pakketten van `uv.lock`, en `manage.py check --deploy` draait met de
+   instellingen van Docker, waar elke waarschuwing de release stopt. Het
+   Docker-image en de publicatie wachten op deze job.
+4. Op een Apple Silicon-runner (`macos-14`) installeert de job Pango uit
    Homebrew, draait `scripts/build-mac.sh` en daarna `Huismus --check` op een
    lege administratie. Faalt die controle, dan komt er niets online.
-4. Op een Windows-runner (`windows-2022`) installeert de job Pango uit MSYS2
+5. Op een Windows-runner (`windows-2022`) installeert de job Pango uit MSYS2
    en Inno Setup, draait `scripts/build-windows.sh`, installeert de installer
    stil en draait `Huismus.exe --check` op de geïnstalleerde app, op een lege
    administratie.
-5. Pas als beide gelukt zijn, zet de job `publish` `Huismus-<versie>-macos.dmg`
+6. Pas als beide gelukt zijn en `security` groen is, zet de job `publish` `Huismus-<versie>-macos.dmg`
    en `Huismus-<versie>-windows.exe` op de GitHub-release van de tag.
    Bestaat die release nog niet, dan maakt hij hem als concept (met de
    release-notities die GitHub uit de PR-titels maakt), voegt de bestanden
