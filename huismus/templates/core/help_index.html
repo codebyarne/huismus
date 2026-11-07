@@ -13,14 +13,19 @@
 </div>
 
 {% comment %}The cards of the settings overview: a topic per card, on a phone a compact list without the intro, so named after the topic alone (huismus-intern/besluiten.md, 2026-10-31).{% endcomment %}
-<ul class="settings-topics">
-    {% for slug, title, summary in topics %}
-    <li>
-        <a class="card card-pad" href="{% url 'help:page' slug %}" aria-label="{{ title }}">
-            <h2>{{ title }}</h2>
-            <span class="small muted topic-intro">{{ summary }}</span>
-        </a>
-    </li>
-    {% endfor %}
-</ul>
+{% for group_title, topics in groups %}
+<section class="help-group" aria-labelledby="help-group-{{ forloop.counter }}">
+    <h2 id="help-group-{{ forloop.counter }}">{{ group_title }}</h2>
+    <ul class="settings-topics">
+        {% for slug, title, summary in topics %}
+        <li>
+            <a class="card card-pad" href="{% url 'help:page' slug %}" aria-label="{{ title }}">
+                <h3>{{ title }}</h3>
+                <span class="small muted topic-intro">{{ summary }}</span>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endfor %}
 {% endblock %}

@@ -953,6 +953,9 @@ a:hover { color: var(--primary-hover); }
 .settings-topics .card:hover { border-color: var(--border-strong); }
 .settings-topics .topic-head { justify-content: space-between; flex-wrap: wrap; row-gap: var(--s-1); }
 .settings-topics h2 { font-size: var(--fs-md); }
+/* Hulp: dezelfde kaarten onder een kopje per groep (issue #130). */
+.help-group > h2 { margin-bottom: var(--s-3); }
+.help-group + .help-group { margin-top: var(--s-6); }
 @media (max-width: 980px) { .settings-topics { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 760px) {
   .settings-topics { grid-template-columns: 1fr; gap: var(--s-2); }

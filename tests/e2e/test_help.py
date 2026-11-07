@@ -18,7 +18,8 @@ def test_help_from_the_sidebar(app):
     app.locator(".sidebar").get_by_role("link", name="Hulp").click()
 
     expect(app.locator("h1")).to_have_text("Hulp")
-    app.locator("main").get_by_role("link", name="Mailen", exact=True).click()
+    group = app.locator(".help-group", has=app.get_by_role("heading", name="Het hele jaar"))
+    group.get_by_role("link", name="Mailen", exact=True).click()
     expect(app.locator("h1")).to_have_text("Mailen")
     expect(app.get_by_role("heading", name="Gmail")).to_be_visible()
 

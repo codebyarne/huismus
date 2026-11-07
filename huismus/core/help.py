@@ -22,32 +22,57 @@ import markdown
 from django.conf import settings
 from django.urls import reverse
 from django.utils.translation import get_language
+from django.utils.translation import gettext_lazy as _
 
 HELP_DIR = settings.BASE_DIR / "docs" / "hulp"
 LANGUAGES = ("nl", "en")
-# The order of the list on /hulp/.
 # "Feedback geven" also shows the card Hoe gebruik je Huismus? (core.feedback_views).
 FEEDBACK = "feedback"
-TOPICS = (
-    "beginnen",
-    "facturen",
-    "offertes",
-    "uitgaven",
-    "bonnetjes",
-    "kor-en-btw",
-    "moneybird",
-    "back-ups",
-    "exporteren",
-    "mailen",
-    "ai-assistenten",
-    "desktop-app",
-    "docker",
-    "vps",
-    "telefoon",
-    # What each weekly release brings; written on release day (CLAUDE.md, Releases).
-    "nieuw",
-    FEEDBACK,
+
+
+@dataclass(frozen=True)
+class Group:
+    """A heading on /hulp/ with its topics, in the app and on the site
+    (issue #130; huismus-intern/besluiten.md, 2026-11-07)."""
+
+    title: str
+    topics: tuple[str, ...]
+
+
+# The order of the list on /hulp/. A group without topics (on the site: with
+# only Feedback geven) isn't shown, so a group can wait here for its pages.
+GROUPS = (
+    Group(
+        _("Beginnen"),
+        # What each weekly release brings; written on release day (CLAUDE.md, Releases).
+        ("beginnen", "nieuw", FEEDBACK),
+    ),
+    Group(_("Overstappen"), ("moneybird",)),
+    Group(
+        _("Het hele jaar"),
+        (
+            "facturen",
+            "offertes",
+            "mailen",
+            "uitgaven",
+            "bonnetjes",
+            "kor-en-btw",
+            "back-ups",
+            "ai-assistenten",
+        ),
+    ),
+    Group(_("Voor je boekhouder"), ("exporteren",)),
+    Group(_("Installeren en bijwerken"), ("desktop-app", "docker", "vps", "telefoon")),
+    Group(_("Wat Huismus (nog) niet doet"), ()),
 )
+TOPICS = tuple(slug for group in GROUPS for slug in group.topics)
+
+
+def groups(shown: tuple[str, ...] = TOPICS) -> list[Group]:
+    """The groups for a list of `shown` topics, without the empty ones."""
+    kept = (Group(g.title, tuple(s for s in g.topics if s in shown)) for g in GROUPS)
+    return [group for group in kept if group.topics]
+
 
 _HELP_LINK = re.compile(r"^(?P<slug>[a-z0-9-]+)\.(?:nl|en)\.md(?P<anchor>#.*)?$")
 
