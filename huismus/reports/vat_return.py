@@ -66,8 +66,10 @@ class Box:
     tax_cents: int = 0
 
     @property
-    def label(self):
-        return BOX_LABELS[self.code]
+    def label(self) -> str:
+        # A zero-width space after each slash: on a phone the title may
+        # break there, so it stays on the line of its code.
+        return str(BOX_LABELS[self.code]).replace("/", "/\u200b")
 
 
 @dataclass

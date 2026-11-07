@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% load i18n money %}
 
-{% block title %}{% translate "Btw-aangifte" %} {{ period_name }} — Huismus{% endblock %}
+{% block title %}{% translate "Btw-aangifte" %}{% if not report.kor_on %} {{ period_name }}{% endif %} — Huismus{% endblock %}
 
 {% block content %}
 <div class="page-head">
-    <div class="titles"><span class="small muted">{% translate "Rapporten" %}</span><h1>{% translate "Btw-aangifte" %} {{ period_name }}</h1></div>
-    <div class="actions">
+    <div class="titles"><span class="small muted">{% translate "Rapporten" %}</span><h1>{% translate "Btw-aangifte" %}{% if not report.kor_on %} {{ period_name }}{% endif %}</h1></div>
+    {% comment %}With the KOR on every period shows the same notice: no period choice.{% endcomment %}
+    {% if not report.kor_on %}<div class="actions">
         <nav class="year-nav" aria-label="{% translate 'Soort periode' %}">
             {% for choice, label in kinds %}<a href="?periode={{ choice }}"{% if choice.kind == period.kind %} aria-current="page"{% endif %}>{{ label }}</a>{% endfor %}
         </nav>
@@ -15,7 +16,7 @@
             <a href="?periode={{ period }}" aria-current="page">{{ period_name }}</a>
             {% if period.next %}<a href="?periode={{ period.next }}" aria-label="{% translate 'Volgende periode' %}"><svg class="i i-sm" aria-hidden="true"><use href="#chevron-right"></use></svg></a>{% endif %}
         </nav>
-    </div>
+    </div>{% endif %}
 </div>
 
 {% include "reports/_tabs.html" with current="vat_return" %}
@@ -84,7 +85,7 @@
 {% if report.kor_documents %}
 <section class="card" id="kor-tekst" style="margin-bottom:var(--s-5)">
     <div class="card-pad"><h3>{% translate "Facturen met KOR-tekst" %}</h3><p class="muted small">{% translate "Op deze facturen staat de KOR-tekst." %}</p></div>
-    {% include "reports/_document_amounts.html" with rows=report.kor_documents %}
+    {% include "reports/_document_amounts.html" with rows=report.kor_documents hide_tax=True %}
 </section>
 {% endif %}
 

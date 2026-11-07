@@ -78,6 +78,9 @@ def test_with_the_kor_on_it_says_so_and_shows_no_figures(logged_in):
     assert reverse("business:topic", args=["kor"]) in html
     assert 'id="rubrieken"' not in html
     assert 'id="niet-meegeteld"' not in html
+    # Every period would show the same notice: no period choice.
+    assert "Vorige periode" not in html
+    assert "<h1>Btw-aangifte</h1>" in html
 
 
 def test_an_empty_period_says_so_above_the_zeros(logged_in):
