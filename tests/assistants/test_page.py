@@ -29,6 +29,14 @@ def test_not_connected_shows_koppelen_and_no_key(admin_client):
     assert places == sorted(places)
 
 
+def test_the_page_points_to_where_your_own_ai_key_goes(admin_client):
+    # This page makes a key for an assistant; the key of your own AI service
+    # goes on Bonnetjes lezen met AI (BUGS-BY-HAND.md, 2026-11-07).
+    page = admin_client.get(URL).content.decode()
+    assert 'id="eigen-ai-dienst"' in page
+    assert 'href="/instellingen/bonnetjes-lezen/"' in page
+
+
 def test_koppelen_makes_a_key_hidden_until_shown_with_the_address(admin_client):
     response = admin_client.post(URL, {"action": "connect"})
     assert response.status_code == 302

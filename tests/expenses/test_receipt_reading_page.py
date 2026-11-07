@@ -195,5 +195,5 @@ def test_turn_off_forgets_service_and_key(client_in, ai_fake):
 def test_english(client_in, ai_fake):
     client_in.cookies["django_language"] = "en"
     page = client_in.get(URL).content.decode()
-    assert "Receipt reading" in page
+    assert "Reading receipts with AI" in page
     assert "Choose a service" in page

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n forms %}
 
-{% block title %}{% translate "Bonnetjes lezen" %} — {% translate "Instellingen" %} — Huismus{% endblock %}
+{% block title %}{% translate "Bonnetjes lezen met AI" %} — {% translate "Instellingen" %} — Huismus{% endblock %}
 {% block content_class %}content-narrow{% endblock %}
 
 {% block content %}
@@ -9,7 +9,7 @@
 <div class="page-head">
     <div class="titles">
         <a class="small" href="{% url 'business:overview' %}">← {% translate "Instellingen" %}</a>
-        <h1>{% translate "Bonnetjes lezen" %}</h1>
+        <h1>{% translate "Bonnetjes lezen met AI" %}</h1>
         <p class="lede">{% translate "Huismus stuurt elk bonnetje uit je bonnetjesmap naar een AI-dienst die jij kiest, en maakt er een uitgave van. Jij kijkt hem na met Klopt." %}{% if help_url %} <a href="{{ help_url }}">{% translate "Zo werkt het" %} →</a>{% endif %}</p>
     </div>
 </div>

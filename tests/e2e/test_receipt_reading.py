@@ -22,8 +22,8 @@ pytestmark = pytest.mark.django_db(transaction=True)
 
 def test_choose_a_service_save_and_turn_off(app, ai_fake):
     app.goto(app.base + "/instellingen/")
-    app.get_by_role("link", name="Bonnetjes lezen").click()
-    expect(app.locator("h1")).to_have_text("Bonnetjes lezen")
+    app.get_by_role("link", name="Bonnetjes lezen met AI").click()
+    expect(app.locator("h1")).to_have_text("Bonnetjes lezen met AI")
 
     # A known service puts its address and model in the fields.
     mistral = ai_service.PROVIDERS["mistral"]

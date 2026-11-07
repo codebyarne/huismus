@@ -105,7 +105,7 @@ doet hij met een AI-dienst die jij kiest, met je eigen sleutel. Elk bonnetje
 dat binnenkomt, wordt dan vanzelf een uitgave met **Nakijken**. Jij kijkt
 hem na en klikt op **Klopt**.
 
-Ga naar **Instellingen → Bonnetjes lezen** en kies een dienst:
+Ga naar **Instellingen → Bonnetjes lezen met AI** en kies een dienst:
 
 - **Anthropic (Claude), Google Gemini, Mistral of OpenAI.** Maak op de site
   van de dienst een account en een API-sleutel. Huismus vult het adres en een

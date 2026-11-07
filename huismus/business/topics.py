@@ -235,8 +235,11 @@ def _receipt_reading_card(ok, off) -> dict:
         line = _("Met %(service)s") % {"service": ai_service.name()}
         pill = (pgettext_lazy("setting", "Aan"), ok)
     return {
-        "title": _("Bonnetjes lezen"),
-        "intro": _("Huismus maakt van elk nieuw bonnetje een uitgave om na te kijken."),
+        "title": _("Bonnetjes lezen met AI"),
+        "intro": _(
+            "Met je eigen AI-dienst en API-sleutel maakt Huismus van elk nieuw bonnetje "
+            "een uitgave om na te kijken."
+        ),
         "slug": "bonnetjes-lezen",
         "url": reverse("business:receipt_reading"),
         "line": line,
