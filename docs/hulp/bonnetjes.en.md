@@ -105,7 +105,7 @@ does that with an AI service you choose, with your own key. Every receipt
 that comes in then becomes an expense marked **To check**. You check it and
 click **Looks right**.
 
-Go to **Settings → Receipt reading** and choose a service:
+Go to **Settings → Reading receipts with AI** and choose a service:
 
 - **Anthropic (Claude), Google Gemini, Mistral or OpenAI.** Create an account
   and an API key on the service's site. Huismus fills in the address and a

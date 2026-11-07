@@ -54,6 +54,14 @@ def test_the_card_comes_right_after_bonnetjesmap(client_in):
     assert "Nog geen dienst gekozen" in _card(client_in)
 
 
+def test_the_card_says_it_is_where_your_own_ai_key_goes(client_in):
+    # Arne looked for "een API-sleutel van een LLM-dienst" and did not find
+    # it under the name Bonnetjes lezen (BUGS-BY-HAND.md, 2026-11-07).
+    card = _card(client_in)
+    assert "Bonnetjes lezen met AI" in card
+    assert "API-sleutel" in card
+
+
 def test_the_card_names_the_service(client_in, service):
     assert "Met 127.0.0.1" in _card(client_in)
 

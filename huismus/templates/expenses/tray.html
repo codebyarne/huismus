@@ -28,7 +28,7 @@
 <div id="bonnetjes-lijst">
 {% comment %}Inside the list, so it goes along with each refresh while a look or reading runs.{% endcomment %}
 {% if reading_failure %}
-<p class="hint-banner is-bad" id="lezen-mislukt" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% blocktranslate with reason=reading_failure trimmed %}Huismus kon je bonnetjes niet lezen. {{ reason }} Ze wachten hier tot het weer lukt.{% endblocktranslate %} <a href="{% url 'business:receipt_reading' %}">{% translate "Bonnetjes lezen" %} →</a></span></p>
+<p class="hint-banner is-bad" id="lezen-mislukt" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% blocktranslate with reason=reading_failure trimmed %}Huismus kon je bonnetjes niet lezen. {{ reason }} Ze wachten hier tot het weer lukt.{% endblocktranslate %} <a href="{% url 'business:receipt_reading' %}">{% translate "Bonnetjes lezen met AI" %} →</a></span></p>
 {% endif %}
 {% if receipts %}
 <section class="card card-pad">

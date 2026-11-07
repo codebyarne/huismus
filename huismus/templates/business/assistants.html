@@ -14,6 +14,9 @@
     </div>
 </div>
 
+{% comment %}This page makes a key for an assistant. The key of the user's own AI service goes elsewhere; say where, since that is the key people come looking for here (BUGS-BY-HAND.md, 2026-11-07).{% endcomment %}
+<p class="hint-banner is-info" id="eigen-ai-dienst" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#paperclip"></use></svg><span>{% translate "Zoek je de plek voor de API-sleutel van je eigen AI-dienst? Daarmee leest Huismus zelf je bonnetjes." %} <a href="{% url 'business:receipt_reading' %}">{% translate "Bonnetjes lezen met AI" %} →</a></span></p>
+
 {% if desktop %}
 {% comment %}The desktop app: Claude first, with one button; the rest folded away for technical users (huismus-intern/besluiten.md, 2026-11-02).{% endcomment %}
 <section class="card settings-section" id="claude">
