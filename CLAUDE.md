@@ -257,10 +257,27 @@ Iedereen kan meelezen en met een GitHub-account een issue of reactie plaatsen.
 - **Stoppen:** een open issue met het label `pauze` (titel "PAUZE") stopt de keten
   van `/mijlpaal`. Sluiten zet hem weer aan.
 - **Afronden:** de PR die het live zet, zegt `Closes #<nummer>`.
+- **Elk platform:** een issue zegt wat de gebruiker krijgt in Docker, in de
+  Mac-app en in de Windows-app, of in één regel dat het overal hetzelfde
+  werkt. Zie "Elk platform" hieronder.
 - **Schrijven:** een issue is openbaar, dus volgens "Wat er niet in deze repo
   hoort" hieronder: geen namen, geen echte gegevens, geen adressen van apparaten,
   geen verwijzing naar de inhoud van `huismus-intern`. Het waarom van een besluit
   blijft in `huismus-intern/besluiten.md`; het issue zegt wat er gebouwd wordt.
+
+## Elk platform
+
+Huismus draait op drie manieren: in Docker (in de browser, ook op een telefoon),
+als Mac-app en als Windows-app (besluit eigenaar 2026-11-07). Een feature is voor
+alle drie, niet alleen voor de web-app. Daarom zegt elk issue en elk plan per
+platform wat de gebruiker krijgt (`/mijlpaal` stap 2), keurt de
+`product-owner`-agent een plan pas als dat klopt, en markeert `review-spec` een
+platform dat het plan belooft en de wijziging niet doet. Een platform overslaan
+mag alleen met een besluit van de PO-agent, met de reden.
+
+Testen per platform: de browsertests en `verify-e2e` draaien op de web-app. De
+Mac- en Windows-app worden bij elke release gebouwd en gecontroleerd
+(`release.yml`); dat is genoeg, niet bij elke feature apart.
 
 ## Privé: huismus-intern
 

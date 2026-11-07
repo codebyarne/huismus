@@ -19,6 +19,9 @@ en alleen dat?**
 - Iets uit de spec of het plan dat de wijziging niet mogelijk maakt
 - Een randgeval dat de spec noemt zonder afhandeling of test
 - Gedrag waar de spec niet om vraagt, of iets uit de non-goals
+- Een platform (Docker, de Mac-app, de Windows-app) waarvoor het plan iets
+  belooft dat de wijziging niet doet, of dat het plan niet noemt terwijl de
+  wijziging er anders werkt (`CLAUDE.md`, "Elk platform")
 - Een beslissing over iets dat in sectie 13 nog open staat
 - Een wijziging in de spec zelf die niet bij de code past, of andersom
   (`CLAUDE.md`: als code en spec het oneens zijn, stop en vraag)
