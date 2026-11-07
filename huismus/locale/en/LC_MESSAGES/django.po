@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-07 07:20+0100\n"
+"POT-Creation-Date: 2026-11-07 07:46+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -5517,17 +5517,11 @@ msgstr "Open"
 msgid "Draait op je eigen netwerk"
 msgstr "Runs on your own network"
 
-msgid "Tarief"
-msgstr "Rate"
-
-msgid "Land"
-msgstr "Country"
-
 msgid "Omzet"
 msgstr "Revenue"
 
-msgid "onbekend"
-msgstr "unknown"
+msgid "land onbekend"
+msgstr "country unknown"
 
 msgid "Jaaroverzicht"
 msgstr "Year overview"
@@ -6429,6 +6423,12 @@ msgid ""
 msgstr ""
 "If you have a Raspberry Pi, a NAS or a server of your own, you can also run "
 "Huismus in Docker. That's for people who are handy with that."
+
+#~ msgid "Tarief"
+#~ msgstr "Rate"
+
+#~ msgid "Land"
+#~ msgstr "Country"
 
 #~ msgid ""
 #~ "De KOR staat aan. Dit rapport telt facturen zonder KOR-tekst en "

@@ -22,7 +22,7 @@
 {% include "reports/_tabs.html" with current="vat_return" %}
 
 {% if report.kor_on %}
-<p class="hint-banner is-info" id="kor-aan"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{% translate "De KOR staat aan. Dan telt Huismus geen btw, dus dit rapport heeft geen bedragen. Staat de KOR uit, dan zie je hier per rubriek de omzet en btw uit je facturen en uitgaven." %}</span><span class="spacer"></span><a class="num" href="{% url 'business:topic' 'kor' %}">{% translate "KOR-instellingen" %} →</a></p>
+<p class="hint-banner is-info" id="kor-aan"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{% translate "De KOR staat aan. Dan telt Huismus geen btw, dus dit rapport heeft geen bedragen. Staat de KOR uit, dan zie je hier per rubriek de omzet en btw uit je facturen en uitgaven." %} <a class="num" href="{% url 'business:topic' 'kor' %}">{% translate "KOR-instellingen" %} →</a></span></p>
 {% else %}
 <p class="muted" style="margin-bottom:var(--s-4)">{% translate "De omzet en btw uit je facturen en uitgaven, per rubriek." %}</p>
 
@@ -103,8 +103,8 @@
 <section class="card" id="regels-zonder-tarief" style="margin-bottom:var(--s-5)">
     <div class="card-pad"><h3>{% translate "Uitgaveregels zonder btw-tarief of btw" %}</h3><p class="muted small">{% translate "Vul het tarief en de btw aan in de uitgave, dan tellen ze mee." %}</p></div>
     <div class="table-wrap"><table class="table">
-        <thead><tr><th>{% translate "Datum" %}</th><th>{% translate "Uitgave" %}</th><th class="r">{% translate "Bedrag" %}</th></tr></thead>
-        <tbody>{% for line in report.lines_missing %}<tr><td class="num">{{ line.expense.date|date:"j b Y" }}</td><td><a href="{% url 'expenses:edit' line.expense_id %}">{{ line.expense.supplier|default:line.expense.description|default:_("Uitgave") }}</a>{% if line.description %}<br><span class="muted small">{{ line.description }}</span>{% endif %}</td><td class="r amount">{{ line.amount_cents|money }}</td></tr>{% endfor %}</tbody>
+        <thead><tr><th>{% translate "Uitgave" %}</th><th class="r">{% translate "Bedrag" %}</th></tr></thead>
+        <tbody>{% for line in report.lines_missing %}<tr><td><a href="{% url 'expenses:edit' line.expense_id %}">{{ line.expense.supplier|default:line.expense.description|default:_("Uitgave") }}</a><br><span class="muted small">{{ line.expense.date|date:"j b Y" }}{% if line.description %} · {{ line.description }}{% endif %}</span></td><td class="r amount">{{ line.amount_cents|money }}</td></tr>{% endfor %}</tbody>
     </table></div>
 </section>
 {% endif %}
