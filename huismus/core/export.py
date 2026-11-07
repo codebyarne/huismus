@@ -27,6 +27,7 @@ from django.db.models import Prefetch, Q
 from django.utils.translation import gettext as _
 from django.utils.translation import pgettext
 
+from huismus.business.models import Settings
 from huismus.contacts.models import Contact
 from huismus.documents.models import Document
 from huismus.documents.pdf import render_pdf
@@ -342,6 +343,8 @@ def _expenses(year):
     expenses = list(expenses)
     for expense in expenses:
         expense.receipts = [a for a in expense.all_attachments if a.kind == "receipt"]
+    # As on the expense page: "ter info" only under the KOR (SPEC.md M21).
+    vat_label = _("btw ter info") if Settings.load().kor_enabled else _("btw")
 
     header = [
         _("uitgavenummer"),
@@ -349,7 +352,7 @@ def _expenses(year):
         _("leverancier"),
         _("omschrijving"),
         _("bedrag (bruto)"),
-        _("btw ter info"),
+        vat_label,
         _("bonnetjes"),
     ]
     table = (
@@ -369,7 +372,8 @@ def _expenses(year):
         _("positie"),
         _("omschrijving"),
         _("bedrag (bruto)"),
-        _("btw ter info"),
+        vat_label,
+        _("btw-tarief"),
         _("categorie"),
     ]
     line_table = (
@@ -379,6 +383,8 @@ def _expenses(year):
             line.description,
             Amount(line.amount_cents),
             None if line.vat_info_cents is None else Amount(line.vat_info_cents),
+            # The name as in the choice on the page, in the screen's language.
+            line.get_vat_rate_display() if line.vat_rate else "",
             line.category.name if line.category else "",
         ]
         for expense in expenses
