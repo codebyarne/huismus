@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-07 07:03+0100\n"
+"POT-Creation-Date: 2026-11-07 07:20+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -5177,25 +5177,17 @@ msgstr ""
 msgid "Volgende periode"
 msgstr ""
 
+msgid ""
+"De KOR staat aan. Dan telt Huismus geen btw, dus dit rapport heeft geen "
+"bedragen. Staat de KOR uit, dan zie je hier per rubriek de omzet en btw uit "
+"je facturen en uitgaven."
+msgstr ""
+
+msgid "KOR-instellingen"
+msgstr ""
+
 msgid "De omzet en btw uit je facturen en uitgaven, per rubriek."
 msgstr ""
-
-msgid ""
-"De KOR staat aan. Dit rapport telt facturen zonder KOR-tekst en "
-"uitgaveregels met een btw-tarief."
-msgstr ""
-
-#, python-format
-msgid "%(count)s factuur met KOR-tekst."
-msgid_plural "%(count)s facturen met KOR-tekst."
-msgstr[0] ""
-msgstr[1] ""
-
-#, python-format
-msgid "%(count)s uitgaveregel zonder btw-tarief."
-msgid_plural "%(count)s uitgaveregels zonder btw-tarief."
-msgstr[0] ""
-msgstr[1] ""
 
 #, python-format
 msgid "Niet meegeteld: %(count)s."

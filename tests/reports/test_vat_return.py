@@ -264,20 +264,19 @@ def test_only_the_period_counts():
     assert compute_vat_return(Period.parse("2026-06", today=TODAY)).input_vat_cents == 210
 
 
-def test_with_the_kor_on_the_figures_stay_and_the_lists_become_counts():
+def test_with_the_kor_on_expense_vat_counts_nowhere():
+    # CLAUDE.md, hard rule 7: under the KOR no expense line is read. The
+    # page shows only a notice then (decided by the owner, 2026-11-07).
     _settings(kor=True)
-    _invoice(date(2026, 7, 1), (10000, 0, False))
     _expense(date(2026, 7, 2), (3000, 500, ""))
-    _expense(date(2026, 7, 3), (1210, 210, VatRate.HIGH))
+    _expense(date(2026, 7, 3), (1210, 210, VatRate.HIGH), (10000, 2100, VatRate.REVERSE_NL))
 
     report = compute_vat_return(Q3)
 
     assert report.kor_on
-    assert report.input_vat_cents == 210
-    assert len(report.kor_documents) == 1
-    assert len(report.lines_missing) == 1
-    # Not a warning under the KOR: there they are what you'd expect.
-    assert report.not_counted == 0
+    assert report.input_vat_cents == 0
+    assert _amounts(report, "2a") == (0, 0)
+    assert report.lines_missing == []
 
 
 def test_the_boxes_are_in_the_order_of_the_return():
