@@ -25,6 +25,7 @@
 <header class="site-head">
     <a class="brand" href="{{ home_url }}"><svg class="mark" width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17C4 11.5 8.5 9.3 13.6 10c4.6.7 6.4 5.2 3 8.4-3 2.7-9.6 2.8-12.6-1.4Z" fill="var(--primary)"/><path d="M4.2 17 1 21.4l6-1.8Z" fill="var(--primary)"/><circle cx="15.4" cy="8.6" r="4.4" fill="var(--primary)"/><path d="M19.4 7.6 22.6 8.8l-3.2 1.1Z" fill="var(--accent)"/></svg>Huismus</a>
     <nav class="site-nav" aria-label="{% translate 'Hoofdmenu' %}">
+        <a href="{{ switching_url }}"{% if nav == "switching" %} aria-current="page"{% endif %}>{% translate "Overstappen" %}</a>
         <a href="{{ home_url }}#rondleiding"{% if nav == "home" %} aria-current="page"{% endif %}>{% translate "Rondleiding" %}</a>
         <a href="{{ help_index_url }}"{% if nav == "help" %} aria-current="page"{% endif %}>{% translate "Hulp" %}</a>
         <a href="{{ contribute_url }}"{% if nav == "contribute" %} aria-current="page"{% endif %}>{% translate "Meebouwen" %}</a>

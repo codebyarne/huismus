@@ -178,3 +178,27 @@ def test_a_folder_that_is_not_a_site_is_never_emptied(tmp_path):
 def test_the_mac_steps_link_to_privacy_and_security(out, language):
     for address in (site.install_url(language), site.download_page_url(language, "mac")):
         assert site.MAC_PRIVACY_SETTINGS in _read(out, address).links, address
+
+
+@pytest.mark.parametrize("language", help.LANGUAGES)
+def test_overstappen_is_in_the_menu_and_linked_from_install_and_download(out, language):
+    """Issue #130: someone coming from another package finds the page from
+    the menu on every page, and from what to do after installing."""
+    switching = site.help_url(language, site.SWITCHING)
+    assert (out / switching.strip("/") / "index.html").exists()
+    for address in (
+        site.home_url(language),
+        site.help_url(language),
+        site.install_url(language),
+        *(site.download_page_url(language, name) for name in site.PLATFORMS),
+    ):
+        assert switching in _read(out, address).links, address
+    html = (out / switching.strip("/") / "index.html").read_text(encoding="utf-8")
+    assert f'<a href="{switching}" aria-current="page">' in html
+
+
+@pytest.mark.parametrize("language", help.LANGUAGES)
+def test_aan_de_slag_and_moneybird_link_to_overstappen(out, language):
+    switching = site.help_url(language, site.SWITCHING)
+    for slug in ("beginnen", "moneybird"):
+        assert switching in _read(out, site.help_url(language, slug)).links, slug

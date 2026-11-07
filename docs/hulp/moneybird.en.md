@@ -4,6 +4,10 @@ Are your records in Moneybird? Then you bring your customers, invoices, quotes
 and expenses over to Huismus one to one. The PDFs and receipts come along too.
 Huismus does a trial run first and only saves anything when you choose to.
 
+Only cancel Moneybird once everything is in Huismus. Your old years are then
+on your own computer, with no subscription. What else to look out for is in
+[Switching to Huismus](overstappen.en.md).
+
 ## Getting your data out of Moneybird
 
 1. Log in to Moneybird and open the administration you want to move.
@@ -50,3 +54,11 @@ Then everything is in Huismus, with the numbers as they were in Moneybird.
 
 If you import the same export again, nothing changes: Huismus skips what
 already exists. So you can always import a newer year later.
+
+## Cancelling afterwards
+
+Is everything in Huismus, and does it add up? Then you can cancel Moneybird.
+Your old years, the PDFs and your receipts stay in Huismus and in your
+backups, with no subscription. First go through the steps in
+[Switching to Huismus](overstappen.en.md#how-to-switch), and make sure you
+have a backup.

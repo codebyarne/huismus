@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-07 16:37+0100\n"
+"POT-Creation-Date: 2026-11-07 17:05+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -5659,9 +5659,11 @@ msgstr ""
 msgid "Daarna"
 msgstr ""
 
+#, python-format
 msgid ""
 "Begin je nieuw? Vul in vier stappen je bedrijfsgegevens in. Kom je van "
-"Moneybird? Importeer je hele administratie in één keer."
+"Moneybird? Importeer je hele administratie in één keer, en zeg pas op als "
+"alles klopt. Zie <a href=\"%(switching_url)s\">Overstappen</a>."
 msgstr ""
 
 msgid "Aan de slag"
@@ -5950,7 +5952,10 @@ msgstr ""
 msgid "Begin je nieuw? Vul in vier stappen je bedrijfsgegevens in."
 msgstr ""
 
-msgid "Kom je van Moneybird? Importeer je hele administratie in één keer."
+#, python-format
+msgid ""
+"Kom je van Moneybird? Importeer je hele administratie in één keer, en zeg "
+"pas op als alles klopt. Zie <a href=\"%(switching_url)s\">Overstappen</a>."
 msgstr ""
 
 msgid ""
