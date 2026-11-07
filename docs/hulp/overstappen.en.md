@@ -80,7 +80,4 @@ with your backups, and start fresh in Huismus.
 
 After the import from Moneybird, Huismus keeps your old years, the Moneybird
 PDF with every invoice, your receipts and your original export. All of it goes
-into your [backups](back-ups.en.md). How long to keep your records is
-explained by the
-[Belastingdienst](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/administratie_bijhouden/administratie_bewaren/)
-(in Dutch).
+into your [backups](back-ups.en.md).

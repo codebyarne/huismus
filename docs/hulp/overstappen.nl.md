@@ -78,6 +78,4 @@ bestanden dan bij je back-ups, en begin in Huismus nieuw.
 
 Na de import uit Moneybird bewaart Huismus je oude jaren, de pdf uit Moneybird
 bij elke factuur, je bonnetjes en je originele export. Dat gaat allemaal mee
-in je [back-ups](back-ups.nl.md). Hoe lang je je administratie bewaart, lees
-je bij de
-[Belastingdienst](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/administratie_bijhouden/administratie_bewaren/).
+in je [back-ups](back-ups.nl.md).
