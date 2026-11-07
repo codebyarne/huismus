@@ -57,12 +57,12 @@ def rows(report: VatReturn) -> list[list]:
 
     def document(title, item, *, tax=True):
         return row(
-            not_counted,
-            title,
-            item.number,
-            item.issue_date,
-            Amount(item.revenue_cents),
-            Amount(item.tax_cents) if tax else None,
+            box=not_counted,
+            description=title,
+            number=item.number,
+            day=item.issue_date,
+            revenue=Amount(item.revenue_cents),
+            tax=Amount(item.tax_cents) if tax else None,
         )
 
     for item in report.without_rows:
@@ -76,18 +76,23 @@ def rows(report: VatReturn) -> list[list]:
     for item in report.kor_documents:
         result.append(document(titles["kor_documents"], item, tax=False))
     for draft in report.back_in_draft:
-        result.append(row(not_counted, titles["back_in_draft"], draft.number, draft.issue_date))
-    for line in report.lines_missing:
-        expense = line.expense
-        what = ", ".join(
-            part
-            for part in (expense.supplier or expense.description or _("Uitgave"), line.description)
-            if part
-        )
         result.append(
             row(
-                not_counted,
-                f"{titles['lines_missing']}: {what}",
+                box=not_counted,
+                description=titles["back_in_draft"],
+                number=draft.number,
+                day=draft.issue_date,
+            )
+        )
+    for line in report.lines_missing:
+        expense = line.expense
+        what = expense.supplier or expense.description or _("Uitgave")
+        if line.description:
+            what += f", {line.description}"
+        result.append(
+            row(
+                box=not_counted,
+                description=f"{titles['lines_missing']}: {what}",
                 day=expense.date,
                 amount=Amount(line.amount_cents),
             )
