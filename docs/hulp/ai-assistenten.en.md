@@ -9,7 +9,8 @@ you only connect it.
 
 - **Read:** the overview (revenue this year, your KOR limit, what's open
   and what's overdue), find and open invoices, credit notes and quotes,
-  find customers, and expenses per year. It can't read settings, PDFs,
+  find customers, expenses per year, and the VAT return of a quarter, month
+  or year, with what isn't counted. It can't read settings, PDFs,
   mail texts or the mail log.
 - **Make drafts:** make and change a draft invoice or quote, and a draft
   credit note for an issued invoice. If the customer isn't in Huismus yet,

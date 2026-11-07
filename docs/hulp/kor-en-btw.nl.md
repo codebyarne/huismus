@@ -70,6 +70,11 @@ een ondernemer in een ander EU-land (rubriek 3b) telt op de leverdatum, als je
 die op de factuur invulde. Wat het niet kan meetellen, staat onderaan onder **Niet
 meegeteld**, met een link. Daar vul je het aan of neem je het zelf mee.
 
+Met **CSV downloaden** krijg je hetzelfde als bestand voor Excel of Numbers:
+de rubrieken, wat je betaalt of terugkrijgt, en wat niet meegeteld is. Een
+[AI-assistent](ai-assistenten.nl.md) kan het rapport ook lezen. Staat de KOR
+aan, dan heeft het rapport geen bedragen en is er geen CSV.
+
 Voor je boekhouder kun je ook een export downloaden. Zie
 [Exporteren](exporteren.nl.md).
 

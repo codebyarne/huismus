@@ -9,7 +9,8 @@ de app van de assistent. In Huismus koppel je hem alleen.
 
 - **Lezen:** het overzicht (omzet dit jaar, je KOR-grens, wat openstaat en
   wat te laat is), facturen, creditnota's en offertes zoeken en openen,
-  klanten zoeken en de uitgaven per jaar. Instellingen, pdf's, mailteksten
+  klanten zoeken, de uitgaven per jaar en de btw-aangifte van een kwartaal,
+  maand of jaar, met wat niet meegeteld is. Instellingen, pdf's, mailteksten
   en het maillog kan hij niet lezen.
 - **Concepten maken:** een concept voor een factuur of offerte maken en
   wijzigen, en een concept voor een creditnota bij een uitgegeven factuur.

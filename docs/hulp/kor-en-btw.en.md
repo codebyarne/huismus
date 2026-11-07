@@ -71,6 +71,11 @@ business in another EU country (box 3b) counts on the delivery date, if you
 filled one in on the invoice. What it can't count is listed at the bottom under **Not counted**, with a
 link. There you fill it in or take it along yourself.
 
+With **Download CSV** you get the same as a file for Excel or Numbers: the
+boxes, what you pay or get back, and what isn't counted. An
+[AI assistant](ai-assistenten.en.md) can read the report too. With the KOR
+on, the report has no amounts and there is no CSV.
+
 You can also download an export for your accountant. See
 [Exporting](exporteren.en.md).
 
