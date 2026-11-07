@@ -6938,3 +6938,12 @@ msgstr "Input VAT"
 
 msgid "Kosten zonder btw per categorie"
 msgstr "Costs excluding VAT by category"
+
+msgid ""
+"Huismus telt omzet zonder btw, op de factuurdatum, niet op de dag dat er "
+"betaald is. Kosten zijn zonder de btw die je bij een uitgave invulde, bij 21, "
+"9 of 0%%. Bij btw verlegd of zonder tarief is het wat je betaald hebt."
+msgstr ""
+"Huismus counts revenue without VAT, on the invoice date, not on the day it "
+"was paid. Costs are without the VAT you filled in on an expense, at 21, 9 or "
+"0%%. With reverse charge or without a rate, they are what you paid."

@@ -124,6 +124,7 @@ def test_the_page_shows_costs_without_vat_and_input_vat(client, year):
     assert "Kosten zonder btw" in content
     assert "Voorbelasting €\u00a021,90" in content
     assert "Kosten zonder btw per categorie" in content
+    assert "Kosten zijn bruto" not in content
 
 
 def test_with_the_kor_the_page_is_as_before(client, year):
@@ -172,3 +173,19 @@ def test_the_overview_card_follows(client, year):
     _kor(False)
     _login(client)
     assert "Kosten zonder btw" in client.get(reverse("home")).content.decode()
+
+
+def test_the_ai_connection_follows(year):
+    from huismus.assistants.tools import list_expenses
+
+    _kor(False)
+    data = list_expenses({"year": 2026})
+    assert (data["total"], data["total_without_vat"], data["input_vat"]) == (
+        "€ 414,20",
+        True,
+        "€ 21,90",
+    )
+    _kor(True)
+    data = list_expenses({"year": 2026})
+    assert (data["total"], data["total_without_vat"]) == ("€ 436,10", False)
+    assert "input_vat" not in data

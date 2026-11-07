@@ -321,14 +321,12 @@ def list_expenses(arguments):
     year = arguments.get("year") or timezone.localdate().year
     expenses = Expense.objects.filter(date__year=year).prefetch_related("lines__category")
     overview = compute_year_overview(year)
-    input_vat = {"input_vat": _amount(overview.input_vat_cents)} if overview.shows_input_vat else {}
-    return {
+    result = {
         "year": year,
         # The year overview's own total: gross under the KOR, without VAT
         # and with the input VAT apart without it (SPEC.md M21, part 3).
         "total": _amount(overview.expenses_cents),
         "total_without_vat": overview.shows_input_vat,
-        **input_vat,
         "expenses": [
             {
                 "date": _date(expense.date),
@@ -342,6 +340,9 @@ def list_expenses(arguments):
         # The names add_expense accepts.
         "categories": [category.name for category in ExpenseCategory.objects.all()],
     }
+    if overview.shows_input_vat:
+        result["input_vat"] = _amount(overview.input_vat_cents)
+    return result
 
 
 # --- Receipts without an expense (SPEC.md M20, part 2) ---

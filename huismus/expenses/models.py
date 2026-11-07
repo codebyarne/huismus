@@ -46,15 +46,17 @@ class Expense(TimestampedModel):
     date = models.DateField(_("datum"))
     supplier = models.CharField(_("leverancier"), max_length=200, blank=True)
     description = models.TextField(_("omschrijving"), blank=True)
-    # Gross amount actually paid (invariant 7): under the KOR there is no
-    # input VAT deduction, so this is the only amount that ever counts
-    # toward the year overview's expense total — never reduced by
-    # vat_info_cents below. The sum of the lines (ExpenseLine), stored
-    # here by huismus/expenses/lines.py, the one place that writes it.
+    # Gross amount actually paid (invariant 7), always stored as such and
+    # never changed by anything that reads it. Under the KOR it is what the
+    # year overview counts; without the KOR the year overview reads the
+    # costs per line without their VAT (huismus/reports/year_overview.py,
+    # SPEC.md M21). The sum of the lines (ExpenseLine), stored here by
+    # huismus/expenses/lines.py, the one place that writes it.
     amount_cents = models.BigIntegerField(_("bedrag (cent)"))
-    # Informational only, e.g. copied from a receipt for the user's own
-    # records — never subtracted from amount_cents anywhere (invariant 7).
-    # The sum of the lines' VAT, or empty when no line has any.
+    # The VAT as on the receipt: under the KOR for information only;
+    # without it the input VAT of the lines that have a rate (SPEC.md M21).
+    # Never subtracted from what is stored (invariant 7). The sum of the
+    # lines' VAT, or empty when no line has any.
     vat_info_cents = models.BigIntegerField(_("btw ter info (cent)"), null=True, blank=True)
 
     # Set only for expenses that came in through an import; blank for
