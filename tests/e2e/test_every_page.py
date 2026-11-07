@@ -274,9 +274,9 @@ def _problems_on(page, path, language, dutch, data):
     )
     if overflow > 1:
         problems.append(f"scrolt {overflow}px opzij")
-    # A table hides what sticks out (.table-wrap has overflow: hidden), so a
-    # button wider than its cell doesn't scroll the page: it is cut off, or only
-    # shows by luck in the row's padding (w-min in the stacked view, 2026-10-30).
+    # A button wider than its cell doesn't scroll the page: it sticks into the
+    # next cell, or only shows by luck in the row's padding (w-min in the
+    # stacked view, 2026-10-30).
     sticking_out = page.evaluate(
         """() => [...document.querySelectorAll(
             '.table td :is(.btn, .input, .pill, select, textarea)'
@@ -289,6 +289,18 @@ def _problems_on(page, path, language, dutch, data):
     )
     if sticking_out:
         problems.append(f"steekt buiten de tabelcel: {sorted(set(sticking_out))}")
+    # A table wider than its card was cut off by overflow: hidden: on the year
+    # overview "Winst" and "Voorbelasting" were gone at 390px (2026-11-07).
+    # It must be in a .table-wrap that scrolls.
+    clipped = page.evaluate(
+        """() => [...document.querySelectorAll('.table-wrap')].filter(wrap => {
+            const table = wrap.querySelector('.table');
+            return table && getComputedStyle(wrap).overflowX === 'hidden'
+                && table.scrollWidth > wrap.clientWidth + 1;
+        }).map(wrap => wrap.textContent.trim().slice(0, 40))"""
+    )
+    if clipped:
+        problems.append(f"tabel rechts afgeknipt: {clipped}")
     # The footer promised "/ zoeken" on every page, where "/" did nothing
     # (feedback 2026-10-31): a shortcut hint only where the shortcut works.
     hints_search = page.locator(".shortcut-hint .kbd", has_text="/").count() > 0
