@@ -64,8 +64,10 @@ en btw uit je facturen en uitgaven, per rubriek, en wat je betaalt of
 terugkrijgt. Je neemt de bedragen zelf over in je aangifte; Huismus verstuurt
 niets.
 
-Huismus telt uitgegeven facturen en creditnota's, en uitgaveregels met een
-btw-tarief. Wat het niet kan meetellen, staat onderaan onder **Niet
+Huismus telt uitgegeven facturen en creditnota's op hun factuurdatum, en
+uitgaveregels met een btw-tarief op de datum van het bonnetje. Een dienst aan
+een ondernemer in een ander EU-land (rubriek 3b) telt op de leverdatum, als je
+die op de factuur invulde. Wat het niet kan meetellen, staat onderaan onder **Niet
 meegeteld**, met een link. Daar vul je het aan of neem je het zelf mee.
 
 Voor je boekhouder kun je ook een export downloaden. Zie

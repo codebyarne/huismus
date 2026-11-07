@@ -53,12 +53,13 @@ def kor_off():
     _settings(kor=False)
 
 
-def _invoice(day, *lines, country="NL"):
+def _invoice(day, *lines, country="NL", delivered=None):
     """lines: (unit_price_cents, rate_bp, reverse_charge). Issued."""
     document = Document.objects.create(
         kind="invoice",
         status="draft",
         issue_date=day,
+        delivery_date=delivered,
         contact=Contact.objects.create(company_name="Klant BV", country=country),
     )
     for position, (price, rate, reverse_charge) in enumerate(lines):
@@ -202,6 +203,79 @@ def test_reverse_charge_is_split_by_the_customers_country():
         ("US", 4000),
         ("", 8000),
     ]
+
+
+def test_3b_counts_in_the_period_of_the_delivery_date():
+    """Issue #113: for services to a business in another EU country, the
+    period of delivery counts, not the invoice date (docs/belastingregels.md,
+    "Rubrieken in detail", 3b). The rest of the invoice keeps its invoice
+    date."""
+    # Delivered in Q3, invoiced in Q4: its 3b row counts in Q3.
+    _invoice(
+        date(2026, 10, 2),
+        (2000, 0, True),
+        (1000, 2100, False),
+        country="DE",
+        delivered=date(2026, 9, 30),
+    )
+    # Invoiced in Q3, delivered in Q2: its 3b row counts in Q2, not Q3.
+    _invoice(date(2026, 7, 1), (4000, 0, True), country="BE", delivered=date(2026, 6, 30))
+    # Invoiced and delivered in Q3: counts in Q3.
+    _invoice(date(2026, 7, 1), (8000, 0, True), country="FR", delivered=date(2026, 8, 1))
+    # No delivery date: the invoice date counts.
+    _invoice(date(2026, 7, 1), (16000, 0, True), country="IT")
+
+    report = compute_vat_return(Q3)
+
+    assert _amounts(report, "3b") == (2000 + 8000 + 16000, 0)
+    assert _amounts(report, "1a") == (0, 0)
+    assert not report.is_empty
+    q2 = compute_vat_return(Period.parse("2026-Q2", today=TODAY))
+    assert _amounts(q2, "3b") == (4000, 0)
+    q4 = compute_vat_return(Period.parse("2026-Q4", today=date(2027, 1, 2)))
+    assert _amounts(q4, "3b") == (0, 0)
+    assert _amounts(q4, "1a") == (1000, 210)
+
+
+def test_only_3b_follows_the_delivery_date():
+    """Reverse charged in the Netherlands (1e) and outside the EU keep the
+    invoice date."""
+    _invoice(date(2026, 10, 2), (1000, 0, True), country="NL", delivered=date(2026, 9, 1))
+    _invoice(date(2026, 10, 2), (2000, 0, True), country="US", delivered=date(2026, 9, 1))
+
+    report = compute_vat_return(Q3)
+
+    assert _amounts(report, "1e") == (0, 0)
+    assert report.reverse_charge_elsewhere == []
+    assert report.is_empty
+
+
+def test_an_invoice_whose_3b_rows_count_elsewhere_still_makes_the_period_not_empty():
+    """The page shows its boxes (at zero) rather than "nothing in this
+    period": an invoice was issued in it."""
+    _invoice(date(2026, 7, 1), (2000, 0, True), country="DE", delivered=date(2026, 6, 30))
+
+    report = compute_vat_return(Q3)
+
+    assert _amounts(report, "3b") == (0, 0)
+    assert not report.is_empty
+
+
+def test_a_3b_credit_note_counts_on_its_own_delivery_date():
+    """Invoiced and delivered in Q2; the credit note is issued in Q4 for a
+    delivery in Q3, so it counts negative in Q3 and leaves Q2 alone."""
+    invoice = _invoice(
+        date(2026, 6, 20), (2000, 0, True), country="DE", delivered=date(2026, 6, 15)
+    )
+    credit_note = create_credit_note(Document.objects.with_payment_totals().get(pk=invoice.pk))
+    credit_note.issue_date = date(2026, 10, 5)
+    credit_note.delivery_date = date(2026, 9, 15)
+    credit_note.save()
+    issue(credit_note)
+
+    q2 = compute_vat_return(Period.parse("2026-Q2", today=TODAY))
+    assert _amounts(q2, "3b") == (2000, 0)
+    assert _amounts(compute_vat_return(Q3), "3b") == (-2000, 0)
 
 
 def test_an_invoice_with_the_kor_text_is_named_not_counted():

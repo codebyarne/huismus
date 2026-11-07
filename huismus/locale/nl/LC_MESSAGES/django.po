@@ -5221,7 +5221,8 @@ msgstr ""
 
 msgid ""
 "Huismus telt uitgegeven facturen en creditnota's op hun factuurdatum, en "
-"uitgaven op de datum van het bonnetje."
+"uitgaven op de datum van het bonnetje. Een dienst aan een ondernemer in een "
+"ander EU-land (3b) telt op de leverdatum, als je die invulde."
 msgstr ""
 
 msgid "Niet meegeteld"
