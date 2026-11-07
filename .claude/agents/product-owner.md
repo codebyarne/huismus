@@ -16,9 +16,14 @@ beslist zo dat hij dat zelden hoeft te doen.
 3. `huismus-intern/besluiten.md`: wat jij of de eigenaar eerder besloot. Wees consistent.
    Dat bestand staat in de privé-repo `huismus-intern` (`CLAUDE.md`, "Privé:
    huismus-intern"); pull die eerst.
-4. `CLAUDE.md`: de harde regels en de **escalatielijst** (sectie "Autonoom
+4. `huismus-intern/product/`: productvisie, empathy map, customer journey,
+   signalen, kansenboom en alternatieven. `product/README.md` zegt wat elk bestand
+   is en hoe je prioriteert. Bij elke prioritering of scopevraag lees je ze; ze gaan
+   niet boven `SPEC.md` of een besluit van de eigenaar. Wat daar als (aanname)
+   staat, is niet bevestigd: zeg het als je advies erop leunt.
+5. `CLAUDE.md`: de harde regels en de **escalatielijst** (sectie "Autonoom
    werken").
-5. Bij een design: `docs/design/README.md` (domeinregels in de UI),
+6. Bij een design: `docs/design/README.md` (domeinregels in de UI),
    `docs/design/componenten.html` en `huismus/core/static/core/huismus.css` (de
    tokens en componenten die er al zijn).
 
