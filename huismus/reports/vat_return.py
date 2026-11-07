@@ -61,6 +61,23 @@ BOX_LABELS = {
     "4b": _("Leveringen/diensten uit landen binnen de EU"),
 }
 
+# The headings of "Niet meegeteld" on the page, per list of VatReturn:
+# the CSV and the AI connection name them the same way (issue #112).
+NOT_COUNTED_TITLES = {
+    "without_rows": _("Facturen zonder btw per tarief"),
+    "other_rates": _("Facturen met een ander tarief"),
+    "reverse_charge_elsewhere": _("Btw verlegd, klant buiten de EU of zonder land"),
+    "kor_documents": _("Facturen met KOR-tekst"),
+    "back_in_draft": _("Terug in concept"),
+    "lines_missing": _("Uitgaveregels zonder btw-tarief of btw"),
+}
+# What the page says instead of figures while the KOR is on.
+KOR_NOTE = _(
+    "De KOR staat aan. Dan telt Huismus geen btw, dus dit rapport heeft geen bedragen. "
+    "Staat de KOR uit, dan zie je hier per rubriek de omzet en btw uit je facturen en "
+    "uitgaven."
+)
+
 
 @dataclass
 class Box:
@@ -69,10 +86,16 @@ class Box:
     tax_cents: int = 0
 
     @property
+    def title(self) -> str:
+        """The box's title as the Belastingdienst writes it: for the CSV
+        and the AI connection."""
+        return str(BOX_LABELS[self.code])
+
+    @property
     def label(self) -> str:
         # A zero-width space after each slash: on a phone the title may
         # break there, so it stays on the line of its code.
-        return str(BOX_LABELS[self.code]).replace("/", "/\u200b")
+        return self.title.replace("/", "/\u200b")
 
 
 @dataclass

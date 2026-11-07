@@ -1,7 +1,8 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.formats import date_format
 from django.utils.translation import gettext_lazy as _
@@ -11,8 +12,9 @@ from huismus.core.csv_files import Amount, csv_response
 from huismus.documents.models import Document
 from huismus.expenses.models import Expense
 
+from . import vat_return_csv as vat_return_rows
 from .periods import MONTH, QUARTER, YEAR, Period
-from .vat_return import compute_vat_return
+from .vat_return import KOR_NOTE, NOT_COUNTED_TITLES, compute_vat_return
 from .year_overview import CHART_STEPS, chart_step, compute_year_overview
 
 
@@ -130,10 +132,25 @@ def vat_return(request):
             "report": report,
             "period": period,
             "period_name": _period_name(period),
+            "kor_note": KOR_NOTE,
+            "titles": NOT_COUNTED_TITLES,
             "kinds": [
                 (period.as_kind(QUARTER), _("Kwartaal")),
                 (period.as_kind(MONTH), _("Maand")),
                 (period.as_kind(YEAR), _("Jaar")),
             ],
         },
+    )
+
+
+@login_required
+def vat_return_csv(request):
+    """The page as a CSV (SPEC.md M21, part 5). With the KOR on the page has
+    no figures and no button; this address then leads back to it."""
+    period = Period.parse(request.GET.get("periode"), today=timezone.localdate())
+    report = compute_vat_return(period)
+    if report.kor_on:
+        return redirect(f"{reverse('reports:vat_return')}?periode={period}")
+    return csv_response(
+        f"btw-aangifte-{period}.csv", vat_return_rows.header(), vat_return_rows.rows(report)
     )

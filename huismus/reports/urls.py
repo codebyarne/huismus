@@ -13,4 +13,5 @@ urlpatterns = [
     path("jaaroverzicht/", views.year_overview, name="year_overview"),
     path("btw-aangifte/", views.vat_return, name="vat_return"),
     path("jaaroverzicht/csv/", views.year_overview_csv, name="year_overview_csv"),
+    path("btw-aangifte/csv/", views.vat_return_csv, name="vat_return_csv"),
 ]
