@@ -1,10 +1,7 @@
-{% load i18n money documents_tags %}<div class="table-wrap"><table class="table">
-    <thead><tr><th>{% translate "Nummer" %}</th><th>{% translate "Datum" %}</th>{% if show_rate %}<th class="r">{% translate "Tarief" %}</th>{% endif %}{% if show_country %}<th>{% translate "Land" %}</th>{% endif %}<th class="r">{% translate "Omzet" %}</th>{% if not hide_tax %}<th class="r">{% translate "Btw" %}</th>{% endif %}</tr></thead>
+{% load i18n money documents_tags %}{% comment %}Narrow enough for a phone: the date, and the rate or country, under the number.{% endcomment %}<div class="table-wrap"><table class="table">
+    <thead><tr><th>{% translate "Factuur" %}</th><th class="r">{% translate "Omzet" %}</th>{% if not hide_tax %}<th class="r">{% translate "Btw" %}</th>{% endif %}</tr></thead>
     <tbody>{% for row in rows %}<tr>
-        <td class="num"><a href="{% url 'documents:edit' row.document.pk %}">{{ row.number }}</a></td>
-        <td class="num">{{ row.issue_date|date:"j b Y" }}</td>
-        {% if show_rate %}<td class="r">{{ row.rate_bp|tax_percent }}%</td>{% endif %}
-        {% if show_country %}<td>{{ row.country|default:_("onbekend") }}</td>{% endif %}
+        <td style="overflow-wrap:anywhere"><a href="{% url 'documents:edit' row.document.pk %}">{{ row.number }}</a><br><span class="muted small">{{ row.issue_date|date:"j b Y" }}{% if show_rate %} · {{ row.rate_bp|tax_percent }}%{% endif %}{% if show_country %} · {{ row.country|default:_("land onbekend") }}{% endif %}</span></td>
         <td class="r amount">{{ row.revenue_cents|money }}</td>
         {% if not hide_tax %}<td class="r amount">{{ row.tax_cents|money }}</td>{% endif %}
     </tr>{% endfor %}</tbody>
