@@ -265,8 +265,14 @@ Nagekeken op 7 november 2026 voor het btw-aangifterapport (SPEC.md M21, deel
   Intracommunautaire diensten: "diensten die u hebt geleverd aan een
   ondernemer in een ander EU-land."
 - Diensten aan een ondernemer buiten de EU: de toelichting noemt ze niet
-  apart. **Bron ontbreekt** voor de rubriek; de toelichting verwijst naar het
-  hulpmiddel "Btw bij diensten in en uit het buitenland" (blz. 14).
+  apart; ze verwijst naar het hulpmiddel "Btw bij diensten in en uit het
+  buitenland" (blz. 14). Ondernemersplein: "Deze diensten zijn meestal belast
+  in het land van de afnemer van de dienst." En bij een afnemer buiten de EU:
+  "U zet geen btw op de factuur. En u geeft deze dienst niet aan in uw
+  Nederlandse btw-aangifte." Een rubriek (1e, 3a of 3b) noemen de nagekeken
+  pagina's hiervoor niet; 3a gaat over uitvoer van goederen.
+  Bron: [Btw bij diensten in het buitenland](https://ondernemersplein.overheid.nl/internationaal-ondernemen/douane-en-belastingen/btw-bij-diensten-in-het-buitenland/)
+  (Ondernemersplein, nagekeken 7 november 2026).
 - 4a en 4b (blz. 14–15): diensten afgenomen van een ondernemer buiten of
   binnen de EU, "die de btw naar u heeft verlegd". "Vul in de linkerkolom de
   waarde in [...]. In de rechterkolom vult u de btw in. U hoeft deze bedragen
