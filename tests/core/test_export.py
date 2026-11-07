@@ -333,7 +333,7 @@ def test_expenses_their_lines_and_receipts():
     category = ExpenseCategory.objects.create(name="Kantoor")
     expense = create_expense(
         [
-            ExpenseLineInput("Papier", 1210, 210, category),
+            ExpenseLineInput("Papier", 1210, 210, category, "21"),
             ExpenseLineInput("Pennen", 500, None, None),
         ],
         date="2025-01-15",
@@ -349,13 +349,27 @@ def test_expenses_their_lines_and_receipts():
 
     assert row["leverancier"] == "Kantoorwinkel"
     assert row["bedrag (bruto)"] == "17,10"
-    assert row["btw ter info"] == "2,10"
+    # The KOR is off by default: "btw", as on the page (SPEC.md M21).
+    assert row["btw"] == "2,10"
     assert row["bonnetjes"] == f"{expense.pk}-bon.png"
     assert archive.read(f"bonnetjes/{expense.pk}-bon.png") == b"bon"
-    assert [(r["omschrijving"], r["bedrag (bruto)"], r["categorie"]) for r in lines] == [
-        ("Papier", "12,10", "Kantoor"),
-        ("Pennen", "5,00", ""),
+    assert [
+        (r["omschrijving"], r["bedrag (bruto)"], r["btw-tarief"], r["categorie"]) for r in lines
+    ] == [
+        ("Papier", "12,10", "21%", "Kantoor"),
+        ("Pennen", "5,00", "", ""),
     ]
+
+
+def test_under_the_kor_the_vat_column_says_for_information():
+    from huismus.business.models import Settings
+
+    settings = Settings.load()
+    settings.kor_enabled = True
+    settings.save()
+    create_expense([ExpenseLineInput("Papier", 1210, 210, None)], date="2025-01-15")
+
+    assert "btw ter info" in _rows(_zip(), "uitgaveregels.csv")[0]
 
 
 def test_years_to_choose_are_the_years_with_something_in_them_newest_first():
