@@ -6915,3 +6915,26 @@ msgstr ""
 
 msgid "Niet gelezen: het btw-tarief staat er niet bij."
 msgstr "Not read: the VAT rate isn't on it."
+
+msgid "kosten zonder btw"
+msgstr "costs excluding VAT"
+
+msgid "voorbelasting"
+msgstr "input VAT"
+
+#, python-format
+msgid "Kosten zonder btw %(costs)s"
+msgstr "Costs excluding VAT %(costs)s"
+
+msgid "Kosten zonder btw"
+msgstr "Costs excluding VAT"
+
+#, python-format
+msgid "Voorbelasting %(amount)s"
+msgstr "Input VAT %(amount)s"
+
+msgid "Voorbelasting"
+msgstr "Input VAT"
+
+msgid "Kosten zonder btw per categorie"
+msgstr "Costs excluding VAT by category"

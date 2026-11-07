@@ -96,7 +96,7 @@
     <div class="card kpi">
         <span class="kpi-label">{% blocktranslate %}Omzet {{ year }}{% endblocktranslate %}</span>
         <span class="kpi-value">{{ overview.revenue_cents|money }}</span>
-        <span class="kpi-sub">{% blocktranslate with costs=overview.expenses_cents|money %}Kosten {{ costs }}{% endblocktranslate %}</span>
+        <span class="kpi-sub">{% if overview.shows_input_vat %}{% blocktranslate with costs=overview.expenses_cents|money %}Kosten zonder btw {{ costs }}{% endblocktranslate %}{% else %}{% blocktranslate with costs=overview.expenses_cents|money %}Kosten {{ costs }}{% endblocktranslate %}{% endif %}</span>
         {% if kor_limit %}
         <span class="progress{% if kor_limit.level == 'near' %} is-warn{% elif kor_limit.level == 'over' %} is-bad{% endif %}" style="margin-top:var(--s-2)" aria-hidden="true"><span style="width:{{ kor_limit.bar_percent }}%"></span></span>
         <span class="kpi-sub">{% blocktranslate with percent=kor_limit.percent %}{{ percent }}% van je KOR-grens{% endblocktranslate %}</span>
