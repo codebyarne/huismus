@@ -78,27 +78,31 @@ def year_overview(request):
 def year_overview_csv(request):
     year = _requested_year(request)
     overview = compute_year_overview(year)
+    lines = [(f"Q{quarter.quarter}", quarter) for quarter in overview.quarters]
+    lines.append((_("totaal"), overview))
     # Without the KOR: costs without VAT and a column with the input VAT,
     # as on the page (SPEC.md M21, part 3).
-    split = overview.shows_input_vat
-
-    def row(label, totals):
-        input_vat = [Amount(totals.input_vat_cents)] if split else []
-        return [
-            label,
-            Amount(totals.revenue_cents),
-            Amount(totals.expenses_cents),
-            *input_vat,
-            Amount(totals.profit_cents),
+    if overview.shows_input_vat:
+        header = [_("kwartaal"), _("omzet"), _("kosten zonder btw"), _("voorbelasting"), _("winst")]
+        rows = [
+            [
+                label,
+                Amount(totals.revenue_cents),
+                Amount(totals.expenses_cents),
+                Amount(totals.input_vat_cents),
+                Amount(totals.profit_cents),
+            ]
+            for label, totals in lines
         ]
-
-    rows = [row(f"Q{quarter.quarter}", quarter) for quarter in overview.quarters]
-    rows.append(row(_("totaal"), overview))
-    header = [
-        _("kwartaal"),
-        _("omzet"),
-        _("kosten zonder btw") if split else _("kosten"),
-        *([_("voorbelasting")] if split else []),
-        _("winst"),
-    ]
+    else:
+        header = [_("kwartaal"), _("omzet"), _("kosten"), _("winst")]
+        rows = [
+            [
+                label,
+                Amount(totals.revenue_cents),
+                Amount(totals.expenses_cents),
+                Amount(totals.profit_cents),
+            ]
+            for label, totals in lines
+        ]
     return csv_response(f"jaaroverzicht-{year}.csv", header, rows)

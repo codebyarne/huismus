@@ -5771,3 +5771,9 @@ msgstr ""
 
 msgid "Kosten zonder btw per categorie"
 msgstr ""
+
+msgid ""
+"Huismus telt omzet zonder btw, op de factuurdatum, niet op de dag dat er "
+"betaald is. Kosten zijn zonder de btw die je bij een uitgave invulde, bij 21, "
+"9 of 0%%. Bij btw verlegd of zonder tarief is het wat je betaald hebt."
+msgstr ""

@@ -26,7 +26,7 @@ cash-basis view instead.
 
 from dataclasses import dataclass, field
 
-from django.db.models import Q, Sum
+from django.db.models import Sum
 from django.db.models.functions import ExtractQuarter
 from django.utils.translation import gettext_lazy as _
 
@@ -35,7 +35,9 @@ from huismus.documents.models import Document
 from huismus.expenses.models import Expense, ExpenseLine, VatRate
 
 # The rates whose VAT is in what was paid, and so is input VAT without the
-# KOR. Reverse charge isn't: the supplier charged none.
+# KOR. Reverse charge isn't: the supplier charged none. A line with one of
+# these rates and no VAT amount (a foreign-currency import has none) adds
+# no input VAT: its costs stay gross.
 INPUT_VAT_RATES = (VatRate.HIGH, VatRate.LOW, VatRate.ZERO)
 
 
@@ -73,6 +75,11 @@ class YearOverview:
     def profit_cents(self) -> int:
         return self.revenue_cents - self.expenses_cents
 
+    @property
+    def costs_label(self):
+        """What the costs are called on the page: the one place that says."""
+        return _("Kosten zonder btw") if self.shows_input_vat else _("Kosten")
+
 
 def _totals_by_quarter(queryset, date_field: str, amount_field: str) -> dict[int, int]:
     rows = (
@@ -81,6 +88,11 @@ def _totals_by_quarter(queryset, date_field: str, amount_field: str) -> dict[int
         .annotate(total=Sum(amount_field))
     )
     return {row["quarter"]: row["total"] or 0 for row in rows}
+
+
+def _totals_by_category(lines, amount_field: str = "amount_cents") -> dict[str | None, int]:
+    rows = lines.values("category__name").annotate(total=Sum(amount_field))
+    return {row["category__name"]: row["total"] or 0 for row in rows}
 
 
 def compute_year_overview(year: int) -> YearOverview:
@@ -121,27 +133,22 @@ def compute_year_overview(year: int) -> YearOverview:
         for q in range(1, 5)
     ]
 
-    # Per line: an expense can have lines in more than one category.
-    by_category_qs = (
-        ExpenseLine.objects.filter(expense__date__year=year)
-        .values("category__name")
-        .annotate(
-            total=Sum("amount_cents")
-            - (
-                Sum("vat_info_cents", filter=Q(vat_rate__in=INPUT_VAT_RATES), default=0)
-                if shows_input_vat
-                else 0
-            )
-        )
-        .order_by("-total")
+    # Per line: an expense can have lines in more than one category. Gross
+    # per category, then without the KOR minus its input VAT, as above.
+    gross_by_category = _totals_by_category(ExpenseLine.objects.filter(expense__date__year=year))
+    input_vat_by_category = (
+        _totals_by_category(input_vat_lines, "vat_info_cents") if shows_input_vat else {}
     )
-    by_category = [
-        CategoryTotal(
-            name=row["category__name"] or str(_("Zonder categorie")),
-            amount_cents=row["total"] or 0,
-        )
-        for row in by_category_qs
-    ]
+    by_category = sorted(
+        (
+            CategoryTotal(
+                name=name or str(_("Zonder categorie")),
+                amount_cents=gross - input_vat_by_category.get(name, 0),
+            )
+            for name, gross in gross_by_category.items()
+        ),
+        key=lambda category: -category.amount_cents,
+    )
 
     return YearOverview(
         year=year,
