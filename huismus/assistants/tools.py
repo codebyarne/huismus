@@ -65,9 +65,11 @@ from huismus.documents.mailing import (
 from huismus.documents.models import Document
 from huismus.documents.quoting import QuoteError, send_quote
 from huismus.documents.totals import compute_totals
-from huismus.documents.vat import default_rate, editor_value
+from huismus.documents.vat import default_rate, editor_value, rate_label
 from huismus.expenses import adding
 from huismus.expenses.models import Expense, ExpenseCategory, VatRate
+from huismus.reports.periods import Period
+from huismus.reports.vat_return import KOR_NOTE, NOT_COUNTED_TITLES, compute_vat_return
 from huismus.reports.year_overview import compute_year_overview
 
 from . import receipts
@@ -343,6 +345,80 @@ def list_expenses(arguments):
     if overview.shows_input_vat:
         result["input_vat"] = _amount(overview.input_vat_cents)
     return result
+
+
+def get_vat_return(arguments):
+    """The VAT return page (SPEC.md M21, part 5): the same boxes and the
+    same "Niet meegeteld", from compute_vat_return(). Under the KOR only
+    the page's notice, as the page has no figures then."""
+    period = Period.parse(arguments.get("period"), today=timezone.localdate())
+    report = compute_vat_return(period)
+    if report.kor_on:
+        return {"kor": True, "note": str(KOR_NOTE)}
+
+    def document(item, *, vat=True, **extra):
+        found = {
+            "id": item.document.pk,
+            "number": item.number,
+            "date": _date(item.issue_date),
+            "revenue": _amount(item.revenue_cents),
+        }
+        if vat:
+            found["vat"] = _amount(item.tax_cents)
+        return {**found, **extra}
+
+    items = {
+        "without_rows": [document(item) for item in report.without_rows],
+        "other_rates": [
+            document(item, rate=rate_label(item.rate_bp)) for item in report.other_rates
+        ],
+        "reverse_charge_elsewhere": [
+            document(item, country=item.country or None) for item in report.reverse_charge_elsewhere
+        ],
+        # As on the page: no VAT, under the KOR it is always 0.
+        "kor_documents": [document(item, vat=False) for item in report.kor_documents],
+        "back_in_draft": [
+            {"id": draft.pk, "number": draft.number, "date": _date(draft.issue_date)}
+            for draft in report.back_in_draft
+        ],
+        "lines_missing": [
+            {
+                "expense_id": line.expense_id,
+                "supplier": line.expense.supplier or line.expense.description,
+                "date": _date(line.expense.date),
+                "description": line.description,
+                "amount": _amount(line.amount_cents),
+            }
+            for line in report.lines_missing
+        ],
+    }
+    data = {
+        "period": str(period),
+        "first_day": _date(period.first_day),
+        "last_day": _date(period.last_day),
+        "boxes": [
+            {
+                "box": box.code,
+                "title": box.title,
+                "revenue": _amount(box.revenue_cents),
+                "vat": _amount(box.tax_cents),
+            }
+            for box in report.boxes
+        ],
+        "5a": _amount(report.owed_cents),
+        "5b": _amount(report.input_vat_cents),
+    }
+    if report.reverse_charged_input_vat_cents:
+        data["5b_reverse_charged"] = _amount(report.reverse_charged_input_vat_cents)
+    data["to_get_back" if report.balance_cents < 0 else "to_pay"] = _amount(
+        report.balance_abs_cents
+    )
+    data["not_counted"] = [
+        {"kind": kind, "title": str(NOT_COUNTED_TITLES[kind]), "items": found}
+        for kind, found in items.items()
+        if found
+    ]
+    return data
 
 
 # --- Receipts without an expense (SPEC.md M20, part 2) ---
@@ -845,6 +921,29 @@ TOOLS = (
         _YEAR,
         (),
         list_expenses,
+    ),
+    Tool(
+        "get_vat_return",
+        gettext_lazy("Btw-aangifte bekijken"),
+        "read",
+        "The VAT return report of a period, as on Huismus's page Rapporten > Btw-aangifte: "
+        "revenue and VAT per box, 5a, 5b (with the reverse charged part apart), and to_pay "
+        "or to_get_back. period is a quarter (2026-Q3), a month (2026-07) or a year (2026); "
+        "default, and for a period that hasn't begun, the last finished quarter: check "
+        "period in the answer. Pass the boxes on as they are: don't move amounts between "
+        "boxes or fill in boxes Huismus doesn't give. not_counted lists what Huismus could "
+        "not put in a box; always tell the user when it isn't empty (documents open with "
+        "get_document, expenses are in list_expenses). Huismus files nothing: the user "
+        "copies the amounts into their return. With the KOR on there are no figures, only "
+        "note.",
+        {
+            "period": {
+                "type": "string",
+                "description": "2026-Q3, 2026-07 or 2026; default: the last finished quarter.",
+            }
+        },
+        (),
+        get_vat_return,
     ),
     Tool(
         "list_receipts",
