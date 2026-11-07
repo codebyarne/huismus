@@ -8,8 +8,9 @@ from . import views
 app_name = "reports"
 
 urlpatterns = [
-    # "Rapporten" in the menu: for now the year overview is the only report.
+    # "Rapporten" in the menu opens the year overview; tabs lead to the others.
     path("", RedirectView.as_view(pattern_name="reports:year_overview"), name="index"),
     path("jaaroverzicht/", views.year_overview, name="year_overview"),
+    path("btw-aangifte/", views.vat_return, name="vat_return"),
     path("jaaroverzicht/csv/", views.year_overview_csv, name="year_overview_csv"),
 ]
