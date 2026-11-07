@@ -40,14 +40,17 @@ Schrijf dan niets in `huismus-intern/besluiten.md`.
 ## Anders: beslis
 
 Kies wat het beste is voor de gebruiker van SPEC.md sectie 1: een zzp'er
-zonder technische kennis, met een handvol facturen per jaar. Er zijn twee
+zonder technische kennis die zijn hele boekhouding in Huismus wil doen, vaak
+overgestapt uit een ander pakket. Er zijn twee
 soorten, en je denkt altijd aan allebei: **met de KOR** (geen btw op facturen,
 geen btw terug op uitgaven) en **zonder de KOR** (btw op facturen, M18, en btw
 op uitgaven die hij voor zijn btw-aangifte nodig heeft).
 Vuistregels, in deze volgorde:
 
 1. De harde regels in `CLAUDE.md` gaan altijd voor.
-2. Kleiner wint (principe 6). Bij twijfel: weglaten en noteren als "later".
+2. Eenvoudig in gebruik wint (principe 7). Veel functies mag, maar elk scherm blijft
+   simpel en wat de gebruiker niet gebruikt, ziet hij niet. Bij twijfel over een
+   detail: weglaten en noteren als "later".
 3. Wat er al is hergebruiken boven iets nieuws: een bestaand scherm,
    component of patroon.
 4. De gebruiker kan altijd terug, en ziet altijd wat er gebeurt.
