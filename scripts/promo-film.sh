@@ -4,7 +4,7 @@
 # een lus spelen (1920x1080 mp4, voor LinkedIn en dergelijke). Draai dit als
 # een scherm in het filmpje er anders uit is gaan zien. Duurt een paar minuten.
 #
-#   ./scripts/promo-film.sh bonnetjes    # bonnetjes in je cloudmap, Huismus leest ze, jij kijkt na
+#   ./scripts/promo-film.sh bonnetjes    # bonnetjes naar je cloudmap, Huismus leest ze, jij zegt Klopt
 #   ./scripts/promo-film.sh factuur      # een factuur maken en uitgeven
 #   ./scripts/promo-film.sh factuur ergens/anders.mp4 muziek.mp3
 #
@@ -35,6 +35,12 @@ uv run --with imageio-ffmpeg python scripts/promo_film.py opname "$remotion/publ
 # Remotion's own browser does not start everywhere; Playwright's does.
 chromium=$(find "$HOME/Library/Caches/ms-playwright" "$HOME/.cache/ms-playwright" \
     -path '*chromium_headless_shell-*' -name chrome-headless-shell -type f 2>/dev/null | sort | tail -1 || true)
-(cd "$remotion" && npx remotion render src/index.ts bonnetjes "$out" \
-    --codec=h264 --crf=18 --log=error ${chromium:+--browser-executable="$chromium"})
+mix="$(mktemp -d)/film.mp4"
+(cd "$remotion" && npx remotion render src/index.ts bonnetjes "$mix" \
+    --codec=h264 --crf=16 --pixel-format=yuv420p --color-space=bt709 --audio-bitrate=192k --log=error ${chromium:+--browser-executable="$chromium"})
+# Even loud as other clips in a feed, without touching the picture.
+ffmpeg=$(uv run --with imageio-ffmpeg python -c "import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())")
+"$ffmpeg" -hide_banner -y -loglevel error -i "$mix" -c:v copy \
+    -af loudnorm=I=-15:TP=-1.5:LRA=9 -ar 48000 -c:a aac -b:a 192k -movflags +faststart "$out"
+rm -rf "$(dirname "$mix")"
 echo "$out"

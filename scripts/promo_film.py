@@ -31,6 +31,7 @@ import base64
 import http.server
 import io
 import json
+import math
 import os
 import random
 import subprocess
@@ -520,8 +521,12 @@ PROCESS_BOXES = {
     "counter": "#verwerken-teller",
     "photo": ".process-img",
     "notice": "#nakijken",
+    "date": "#id_date",
     "supplier": "#id_supplier",
+    "description": "#id_description",
+    "line": "[name=lines-0-description]",
     "category": "[name=lines-0-category]",
+    "total": "strong.amount",
     "amount": "[name=lines-0-amount_cents]",
     "vat": "[name=lines-0-vat_info_cents]",
     "form": "#uitgave-form",
@@ -531,6 +536,8 @@ DONE_BOXES = {"empty": "#niets-te-verwerken", "toast": ".toast"}
 # The photo is RECEIPTS' paper (760x1000, turned 3 degrees, so 811x1038)
 # pasted at (160, 120) on a 1100x1300 table: where its TOTAAL line lands.
 PHOTO_W, PHOTO_H, PAPER_TOP, PAPER_H = 1100, 1300, 120 + (1038 - 1000) / 2, 1000
+# 3x, so the editor can move in close without the text going soft.
+CAPTURE_SCALE = 3
 
 
 def _boxes(page: Page, selectors: dict[str, str]) -> dict[str, list[float]]:
@@ -567,6 +574,8 @@ def capture_receipts(page: Page, url: str, out: Path) -> None:
                 "supplier": receipt.supplier,
                 "total": receipt.total,
                 "category": receipt.category,
+                "vat": receipt.vat,
+                "paperTotalAt": round(total_at, 4),
                 "totalAt": round((PAPER_TOP + total_at * PAPER_H) / PHOTO_H, 4),
             }
         )
@@ -598,13 +607,100 @@ def capture_receipts(page: Page, url: str, out: Path) -> None:
     done = {"file": "klaar.png", "boxes": _boxes(page, DONE_BOXES)}
 
     data = {
-        "viewport": {"width": VW, "height": page.viewport_size["height"], "scale": SCALE},
+        "viewport": {"width": VW, "height": page.viewport_size["height"], "scale": CAPTURE_SCALE},
         "receipts": shown,
         "overview": overview,
         "items": items,
         "done": done,
     }
     (out / "opname.json").write_text(json.dumps(data, indent=2, ensure_ascii=False))
+    score(out)
+
+
+# -- The receipts film's music ------------------------------------------------------
+#
+# Made here, note by note, so no licence to mind: 120 beats a minute, which is
+# 15 frames a beat at 30 fps, so that the edit (Bonnetjes.tsx) can cut on it.
+
+BEAT_SECONDS = 0.5
+SCORE_RATE = 48_000
+# Beat, MIDI notes: the chords under the film's scenes.
+CHORDS = [
+    (0, [45, 57, 64]),  # Am: bonnetjes overtypen?
+    (6, [41, 53, 60]),  # F: naar je cloudmap
+    (11, [48, 55, 64]),  # C: Huismus leest
+    (15, [43, 55, 62]),  # G
+    (19, [45, 57, 64]),  # Am
+    (21, [41, 53, 60]),  # F: Klopt, Klopt, Klopt
+    (25, [43, 55, 62]),  # G
+    (28, [48, 55, 64]),  # C: klaar
+    (31, [41, 53, 60]),  # F: het slot
+    (33, [43, 55, 62]),  # G
+    (35, [48, 55, 64]),  # C
+]
+END_BEAT = 40
+
+
+def _pluck(track: list[float], beat: float, midi: int, seconds: float, loudness: float) -> None:
+    """A soft marimba-like note added to `track`."""
+    start = int(beat * BEAT_SECONDS * SCORE_RATE)
+    frequency = 440 * 2 ** ((midi - 69) / 12)
+    step = 2 * math.pi * frequency / SCORE_RATE
+    for i in range(min(int(seconds * SCORE_RATE), len(track) - start)):
+        t = i / SCORE_RATE
+        attack = min(t / 0.004, 1)
+        body = math.sin(step * i) * math.exp(-t * 3.2)
+        bar = 0.25 * math.sin(4 * step * i) * math.exp(-t * 16)
+        track[start + i] += loudness * attack * (body + bar)
+
+
+def _write_wav(path: Path, track: list[float], peak: float) -> None:
+    """16-bit mono, scaled so its loudest sample is `peak` (1 = full scale)."""
+    scale = peak / max(abs(v) for v in track)
+    with wave.open(str(path), "wb") as file:
+        file.setnchannels(1)
+        file.setsampwidth(2)
+        file.setframerate(SCORE_RATE)
+        file.writeframes(array.array("h", (int(v * scale * 32767) for v in track)).tobytes())
+
+
+def score(out: Path) -> None:
+    """muziek.wav, and the two effects the edit uses: woesj.wav and pop.wav."""
+    track = [0.0] * int((END_BEAT + 4) * BEAT_SECONDS * SCORE_RATE)
+    for number, (beat, notes) in enumerate(CHORDS):
+        until = CHORDS[number + 1][0] if number + 1 < len(CHORDS) else END_BEAT
+        root, *rest = notes
+        _pluck(track, beat, root - 12, 2.2, 0.5)
+        # Sparse while it's the problem, then a running figure; every half
+        # beat from the moment Huismus starts reading.
+        step = 2 if beat < 6 else 1 if beat < 11 else 0.5
+        pattern = [*rest, rest[0] + 12, rest[1] + 12]
+        at_beat, index = float(beat), 0
+        while at_beat < until:
+            _pluck(
+                track, at_beat, pattern[index % len(pattern)], 0.9, 0.28 if step == 0.5 else 0.34
+            )
+            at_beat += step
+            index += 1
+    # The sparrow flies off: a run up the scale, then the last chord rings.
+    for i, midi in enumerate((72, 74, 76, 79, 81, 84, 88)):
+        _pluck(track, 36 + i * 0.25, midi, 1.2, 0.3)
+    for midi in (36, 48, 55, 64, 72):
+        _pluck(track, 38, midi, 2.0, 0.34)
+    _write_wav(out / "muziek.wav", track, 0.6)
+
+    rng = random.Random(3)
+    woosh = [0.0] * int(0.4 * SCORE_RATE)
+    low = 0.0
+    for i in range(len(woosh)):
+        t = i / len(woosh)
+        low += (rng.uniform(-1, 1) - low) * (0.02 + 0.2 * math.sin(math.pi * t))
+        woosh[i] = low * math.sin(math.pi * t) ** 2
+    _write_wav(out / "woesj.wav", woosh, 0.5)
+
+    pop = [0.0] * int(0.25 * SCORE_RATE)
+    _pluck(pop, 0, 91, 0.25, 1)
+    _write_wav(out / "pop.wav", pop, 0.5)
 
 
 RATE = 48_000
@@ -724,7 +820,7 @@ def main(name: str, out: Path, music: Path | None) -> None:
             browser = playwright.chromium.launch(args=["--lang=nl-NL"])
             context = browser.new_context(
                 viewport={"width": VW, "height": height},
-                device_scale_factor=SCALE,
+                device_scale_factor=CAPTURE_SCALE if capture else SCALE,
                 locale="nl-NL",
                 timezone_id="Europe/Amsterdam",
                 reduced_motion="reduce",
