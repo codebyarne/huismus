@@ -532,7 +532,7 @@ PROCESS_BOXES = {
     "form": "#uitgave-form",
     "klopt": "button[name=klopt]",
 }
-DONE_BOXES = {"empty": "#niets-te-verwerken", "toast": ".toast"}
+DONE_BOXES = {"empty": "#niets-te-verwerken", "toast": ".toast", "mus": ".empty-art svg"}
 # The photo is RECEIPTS' paper (760x1000, turned 3 degrees, so 811x1038)
 # pasted at (160, 120) on a 1100x1300 table: where its TOTAAL line lands.
 PHOTO_W, PHOTO_H, PAPER_TOP, PAPER_H = 1100, 1300, 120 + (1038 - 1000) / 2, 1000
@@ -627,18 +627,21 @@ SCORE_RATE = 48_000
 # Beat, MIDI notes: the chords under the film's scenes.
 CHORDS = [
     (0, [45, 57, 64]),  # Am: bonnetjes overtypen?
-    (6, [41, 53, 60]),  # F: naar je cloudmap
-    (11, [48, 55, 64]),  # C: Huismus leest
-    (15, [43, 55, 62]),  # G
-    (19, [45, 57, 64]),  # Am
-    (21, [41, 53, 60]),  # F: Klopt, Klopt, Klopt
-    (25, [43, 55, 62]),  # G
-    (28, [48, 55, 64]),  # C: klaar
-    (31, [41, 53, 60]),  # F: het slot
-    (33, [43, 55, 62]),  # G
-    (35, [48, 55, 64]),  # C
+    (5, [41, 53, 60]),  # F: naar je cloudmap
+    (11, [48, 55, 64]),  # C: Huismus haalt ze op
+    (17, [43, 55, 62]),  # G: de AI leest
+    (21, [45, 57, 64]),  # Am
+    (25, [41, 53, 60]),  # F: de velden vullen zich
+    (29, [43, 55, 62]),  # G
+    (33, [45, 57, 64]),  # Am: Klopt, Klopt, Klopt
+    (36, [41, 53, 60]),  # F
+    (39, [43, 55, 62]),  # G
+    (43, [48, 55, 64]),  # C: klaar
+    (48, [41, 53, 60]),  # F: het scherm valt weg, het slot
+    (52, [43, 55, 62]),  # G
+    (56, [48, 55, 64]),  # C: de mus vliegt weg
 ]
-END_BEAT = 40
+END_BEAT = 60
 
 
 def _pluck(track: list[float], beat: float, midi: int, seconds: float, loudness: float) -> None:
@@ -673,7 +676,7 @@ def score(out: Path) -> None:
         _pluck(track, beat, root - 12, 2.2, 0.5)
         # Sparse while it's the problem, then a running figure; every half
         # beat from the moment Huismus starts reading.
-        step = 2 if beat < 6 else 1 if beat < 11 else 0.5
+        step = 2 if beat < 5 else 1 if beat < 11 else 0.5
         pattern = [*rest, rest[0] + 12, rest[1] + 12]
         at_beat, index = float(beat), 0
         while at_beat < until:
@@ -684,9 +687,9 @@ def score(out: Path) -> None:
             index += 1
     # The sparrow flies off: a run up the scale, then the last chord rings.
     for i, midi in enumerate((72, 74, 76, 79, 81, 84, 88)):
-        _pluck(track, 36 + i * 0.25, midi, 1.2, 0.3)
+        _pluck(track, 56.5 + i * 0.25, midi, 1.2, 0.3)
     for midi in (36, 48, 55, 64, 72):
-        _pluck(track, 38, midi, 2.0, 0.34)
+        _pluck(track, 58.5, midi, 2.0, 0.34)
     _write_wav(out / "muziek.wav", track, 0.6)
 
     rng = random.Random(3)

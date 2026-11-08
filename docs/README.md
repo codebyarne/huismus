@@ -30,7 +30,7 @@ Promofilmpjes (rond de twintig seconden in een lus, 1920×1080 mp4, voor
 LinkedIn en dergelijke), van dezelfde verzonnen administratie. Ze komen in
 `~/Downloads`, niet in de repo.
 
-- `bonnetjes` (20 s): drie bonnetjes, foto's in je eigen cloudmap, en dan de
+- `bonnetjes` (30 s): drie bonnetjes, foto's in je eigen cloudmap, en dan de
   echte schermen: het Overzicht met zijn melding, Verwerken waarin de waarden
   van het bonnetje naar de velden gaan en jij drie keer Klopt zegt, en "Niets
   meer te verwerken". Daarna vliegt het vogeltje weg. `scripts/promo_film.py
