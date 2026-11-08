@@ -45,3 +45,7 @@ huismus/locale/*/LC_MESSAGES/*.mo
 /build/
 /dist/
 _site/
+
+# Promofilm (scripts/promo/film/): Remotion's pakketten en de opgenomen schermen
+scripts/promo/film/node_modules/
+scripts/promo/film/public/opname/

@@ -1,30 +1,24 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""Films a short promo clip of Huismus, run by scripts/promo-film.sh:
+"""Promo clips of Huismus, run by scripts/promo-film.sh:
 
-    promo_film.py <factuur|bonnetjes> <file.mp4> [music]
-
-Clips of about twenty seconds that loop, for LinkedIn and the like:
+    promo_film.py factuur <file.mp4> [music]
+    promo_film.py opname <folder>
 
 - factuur: a new invoice gets a customer and a line, Huismus adds it up, and
-  it is issued.
-- bonnetjes: Huismus has fetched a day's photos of receipts from the receipts
-  folder and read them with the user's AI service (here a fake one on this
-  computer); the overview says so, and in Verwerken the user checks each
-  one, the receipt large beside the fields, with Klopt: the first calmly,
-  the others quicker. Only what happens in Huismus: the photo on the road
-  is another app.
-
-The browser plays the scene frame by frame, not in real time: before every
-frame Huismus gets all the time it needs, so the clip never stutters. A
-virtual camera then crops each 2x screenshot and scales it to 1920x1080; it
-glides between close-ups (`Film.cam_to`) without ever scaling a pixel up much,
-so text stays sharp. A drawn mouse pointer shows where the clicks go, since a
-headless browser has none.
-
-Every click and key sounds, with the CC0 recordings in scripts/promo/geluiden/.
-Music is optional: any audio file, mixed in under the clicks. Mind its licence
-before you post the clip.
+  it is issued. Filmed here, with a camera over the browser: the browser
+  plays the scene frame by frame, not in real time, so the clip never
+  stutters, and a virtual camera crops each 2x screenshot to 1920x1080,
+  gliding between close-ups (`Film.cam_to`). A drawn pointer shows the
+  clicks; every click and key sounds (CC0, scripts/promo/film/public/geluiden/).
+  Music is optional: any audio file, mixed in under the clicks. Mind its
+  licence before you post the clip.
+- opname: the screens of the receipts clip, which Remotion edits
+  (scripts/promo/film/): Huismus has fetched a day's photos of receipts from
+  the receipts folder and read them with the user's AI service; the
+  overview says so, and Verwerken shows each one. The screenshots, the
+  receipts and opname.json (where things are on the screens) go into
+  `folder`.
 
 The server, the made-up administration and the login are those of
 scripts/site_beelden.py. Huismus really reads the receipts, through the
@@ -353,8 +347,9 @@ RECEIPTS = [
 ]
 
 
-def receipt_photo(receipt: Receipt, day: date) -> bytes:
-    """A made-up till receipt on a table, as a phone photographs it (JPEG)."""
+def receipt_paper(receipt: Receipt, day: date) -> tuple[Image.Image, float]:
+    """The till receipt itself (RGB, its torn-off edge black), and how far
+    down the TOTAAL line sits, as a fraction of its height."""
     try:
         font = lambda size, bold=False: ImageFont.truetype(  # noqa: E731
             "/System/Library/Fonts/Menlo.ttc", size, index=int(bold)
@@ -389,6 +384,7 @@ def receipt_photo(receipt: Receipt, day: date) -> bytes:
     for item, price in receipt.items:
         row(item, price)
     centred("-" * 38)
+    total_at = (y + 19) / height
     row("TOTAAL", receipt.total, 38, True)
     row("Pin", receipt.total)
     row("waarvan 21% btw", receipt.vat, 24)
@@ -399,6 +395,12 @@ def receipt_photo(receipt: Receipt, day: date) -> bytes:
     centred("Bedankt en tot ziens!", 28)
     for x in range(0, width, 20):  # the torn-off bottom edge
         draw.polygon([(x, height), (x + 10, height - 14), (x + 20, height)], fill=(0, 0, 0))
+    return paper, total_at
+
+
+def receipt_photo(receipt: Receipt, day: date) -> bytes:
+    """The receipt on a table, as a phone photographs it (JPEG)."""
+    paper, _ = receipt_paper(receipt, day)
     paper = paper.rotate(-3, expand=True, fillcolor=(0, 0, 0), resample=Image.BICUBIC)
     mask = paper.convert("L").point(lambda v: 255 if v > 10 else 0)
     table = Image.new("RGB", (1100, 1300), (120, 112, 104))
@@ -505,70 +507,110 @@ def prepare_receipts(env: dict, work: Path) -> FakeService:
     return service
 
 
-def receipts(film: Film, url: str, _service: FakeService) -> None:
-    """Only what happens in Huismus: the photos on the road are another app,
-    and the post with the clip tells that part. Huismus has already fetched
-    and read them; the user checks what it made of them."""
-    page = film.page
+# -- The receipts film, edited in Remotion ------------------------------------------
+#
+# The "bonnetjes" film is no longer filmed with a camera over the browser:
+# this part only takes the screens, and Remotion (scripts/promo/film/) edits
+# them into the clip, in Huismus's own colours, with titles and moves.
 
-    # 1. The overview says what Huismus made of today's receipts.
+# Where things are on a screen, as Remotion needs them: name → selector.
+OVERVIEW_BOXES = {"banner": "#nieuwe-uitgaven", "title": "h1"}
+PROCESS_BOXES = {
+    "head": ".page-head",
+    "counter": "#verwerken-teller",
+    "photo": ".process-img",
+    "notice": "#nakijken",
+    "supplier": "#id_supplier",
+    "category": "[name=lines-0-category]",
+    "amount": "[name=lines-0-amount_cents]",
+    "vat": "[name=lines-0-vat_info_cents]",
+    "form": "#uitgave-form",
+    "klopt": "button[name=klopt]",
+}
+DONE_BOXES = {"empty": "#niets-te-verwerken", "toast": ".toast"}
+# The photo is RECEIPTS' paper (760x1000, turned 3 degrees, so 811x1038)
+# pasted at (160, 120) on a 1100x1300 table: where its TOTAAL line lands.
+PHOTO_W, PHOTO_H, PAPER_TOP, PAPER_H = 1100, 1300, 120 + (1038 - 1000) / 2, 1000
+
+
+def _boxes(page: Page, selectors: dict[str, str]) -> dict[str, list[float]]:
+    out = {}
+    for name, selector in selectors.items():
+        b = page.locator(selector).first.bounding_box()
+        out[name] = [round(b[k], 1) for k in ("x", "y", "width", "height")]
+    return out
+
+
+def _still(page: Page, path: Path, keep_toasts: bool = False) -> None:
+    if not keep_toasts:
+        page.evaluate("document.querySelectorAll('.toast').forEach(t => t.remove())")
+    page.screenshot(path=path, caret="initial")
+
+
+def capture_receipts(page: Page, url: str, out: Path) -> None:
+    """The screens of the receipts film, and opname.json with where things
+    are on them, into `out` (scripts/promo/film/public/opname/)."""
+    out.mkdir(parents=True, exist_ok=True)
+    for old in out.glob("*"):
+        old.unlink()
+    today = date.today()
+    shown = []
+    for number, receipt in enumerate(RECEIPTS):
+        paper, total_at = receipt_paper(receipt, today)
+        # The torn-off edge was black for the photo; here it is see-through.
+        alpha = paper.convert("L").point(lambda v: 255 if v > 10 else 0)
+        paper.putalpha(alpha)
+        paper.save(out / f"bon-{number}.png")
+        shown.append(
+            {
+                "file": f"bon-{number}.png",
+                "supplier": receipt.supplier,
+                "total": receipt.total,
+                "category": receipt.category,
+                "totalAt": round((PAPER_TOP + total_at * PAPER_H) / PHOTO_H, 4),
+            }
+        )
+
     page.goto(f"{url}/")
     page.wait_for_load_state("networkidle")
-    notice = "#nieuwe-uitgaven"
-    x, y, w, h = film.box(notice)
-    _, hy, _, _ = film.box("h1")
-    film.camera = Move.still(film.view(x - 20, hy - 40, w + 40, y + h + 260 - hy, margin=1.0))
-    film.pointer = Move.still((x + w * 0.6, y + 230))
-    film.shoot(45)
-    film.cam_to(film.view(x - 20, y - 80, w + 40, h + 160, margin=1.0), 28)
-    film.point_to(notice, 28, ox=0.9)
-    film.shoot(50)
-    film.click(notice, 2, navigates=True)
+    _still(page, out / "overzicht.png")
+    overview = {"file": "overzicht.png", "boxes": _boxes(page, OVERVIEW_BOXES)}
+    page.locator(OVERVIEW_BOXES["banner"]).click()
+    page.wait_for_selector(".process-img")
 
-    # 2. Verwerken, one at a time: the receipt large beside what Huismus
-    # read from it, and Klopt goes on to the next one. The first calmly.
+    items = []
     for number in range(len(RECEIPTS)):
-        check(film, calm=number == 0)
+        page.wait_for_load_state("networkidle")
+        supplier = page.locator("#id_supplier").input_value()
+        receipt = next(r for r in shown if r["supplier"] == supplier)
+        _still(page, out / f"verwerken-{number}.png")
+        items.append(
+            {
+                "file": f"verwerken-{number}.png",
+                "receipt": receipt,
+                "boxes": _boxes(page, PROCESS_BOXES),
+            }
+        )
+        with page.expect_navigation():
+            page.locator(PROCESS_BOXES["klopt"]).click()
+    page.wait_for_selector("#niets-te-verwerken")
+    _still(page, out / "klaar.png", keep_toasts=True)
+    done = {"file": "klaar.png", "boxes": _boxes(page, DONE_BOXES)}
 
-    # 3. All done: the whole app, "Niets meer te verwerken." and the toast.
-    film.pointer = Move.still(film.pointer.at(film.frame))
-    film.cam_to(WHOLE_WINDOW, 30)
-    film.shoot(80)
-
-
-def check(film: Film, calm: bool) -> None:
-    """One expense in Verwerken: the photo, what Huismus read, and Klopt.
-    The page is taller than a 16:9 shot of its width, so the camera starts
-    at the top (Verwerken, "1 van 3", the photo, who it was from) and ends at
-    the bottom (the amounts and Klopt)."""
-    _, y, _, _ = film.box(".page-head")
-    px, py, pw, ph = film.box(".process")
-    height = pw * 0.6
-    top = film.view(px - 20, y - 20, pw + 40, height, margin=1.0)
-    bottom = film.view(px - 20, py + ph + 20 - height, pw + 40, height, margin=1.0)
-    film.cam_to(top, 26 if calm else 20)
-    film.shoot(60 if calm else 40)
-    if calm:
-        # The total on the photo, then the same amount in the fields.
-        ix, iy, iw, ih = film.box(".process-img")
-        film.cam_to(film.view(ix, iy + ih * 0.2, iw, ih * 0.45, margin=1.15), 36)
-        film.shoot(60)
-        fx, _, fw, _ = film.box("#uitgave-form")
-        _, ay, _, _ = film.box("[name=lines-0-amount_cents]")
-        _, vy, _, vh = film.box("[name=lines-0-vat_info_cents]")
-        film.cam_to(film.view(fx - 20, ay - 60, fw + 40, vy + vh + 30 - ay, margin=1.15), 36)
-        film.shoot(70)
-    film.cam_to(bottom, 30 if calm else 22)
-    klopt = "button[name=klopt]"
-    film.point_to(klopt, 34 if calm else 24)
-    film.shoot(48 if calm else 32)
-    film.click(klopt, 2, navigates=True)
+    data = {
+        "viewport": {"width": VW, "height": page.viewport_size["height"], "scale": SCALE},
+        "receipts": shown,
+        "overview": overview,
+        "items": items,
+        "done": done,
+    }
+    (out / "opname.json").write_text(json.dumps(data, indent=2, ensure_ascii=False))
 
 
 RATE = 48_000
 
 
-SOUNDS = STAGE / "geluiden"
+SOUNDS = STAGE / "film" / "public" / "geluiden"
 # Kenney's Interface Sounds (CC0, see geluiden/LICENSE-Kenney.txt): a real
 # mouse click, and four very short clicks that, softer, sound like keys.
 CLICK = "click_001.ogg"
@@ -653,13 +695,14 @@ FILMS = {
     # name: (the scene, what it needs set up before the server starts,
     # the window's height)
     "factuur": (invoice, None, 1120),
-    # Verwerken, the receipt beside the fields, fits without scrolling.
-    "bonnetjes": (receipts, prepare_receipts, 1240),
 }
 
 
 def main(name: str, out: Path, music: Path | None) -> None:
-    scene, prepare, height = FILMS[name]
+    """Films `name`, or with name "opname" takes the receipts film's
+    screens into the folder `out`."""
+    capture = name == "opname"
+    scene, prepare, height = (None, prepare_receipts, 1240) if capture else FILMS[name]
     with tempfile.TemporaryDirectory() as work, sync_playwright() as playwright:
         work = Path(work)
         administration, _, releases = _prepare(work)
@@ -689,13 +732,19 @@ def main(name: str, out: Path, music: Path | None) -> None:
                 # pointer is laid over it for the film alone.
                 bypass_csp=True,
             )
-            context.add_init_script(f"addEventListener('DOMContentLoaded', () => {POINTER})")
+            if not capture:
+                context.add_init_script(f"addEventListener('DOMContentLoaded', () => {POINTER})")
             # Pages run on the film's time, not the clock on the wall: filming a
             # frame takes far longer than 1/FPS of a second (Film.shoot).
             context.clock.install()
             context.clock.pause_at(datetime.now())
             page = context.new_page()
             page.goto(f"{url}/desktop/start/?token={TOKEN}")
+            if capture:
+                capture_receipts(page, url, out)
+                browser.close()
+                print(f"{out}: schermen voor de film", flush=True)
+                return
             film = Film(page, frames, height)
             scene(film, url, setup)
             browser.close()
@@ -706,7 +755,7 @@ def main(name: str, out: Path, music: Path | None) -> None:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 3 or sys.argv[1] not in FILMS:
-        sys.exit(f"promo_film.py <{'|'.join(FILMS)}> <file.mp4> [music]")
+    if len(sys.argv) < 3 or sys.argv[1] not in [*FILMS, "opname"]:
+        sys.exit(f"promo_film.py <{'|'.join(FILMS)}> <file.mp4> [music]  |  opname <map>")
     music = Path(sys.argv[3]).resolve() if len(sys.argv) > 3 else None
     main(sys.argv[1], Path(sys.argv[2]).resolve(), music)
