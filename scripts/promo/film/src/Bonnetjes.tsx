@@ -5,10 +5,10 @@
  * cloud folder; then the real Verwerken screen, its fields filling in from
  * the receipt; then Klopt, Klopt, Klopt, and the sparrow flies off.
  *
- * The real Verwerken screen comes from Huismus on made-up data
- * (scripts/promo_film.py, public/opname/). On a phone a whole screen is
- * unreadable, so the film then moves in to a close-up of that same screen,
- * drawn large in Huismus's own look: the receipt, three fields, Klopt.
+ * Every screen is real: scripts/promo_film.py takes them from Huismus on
+ * made-up data (public/opname/, with opname.json saying where things are).
+ * Fields "fill in" by uncovering the real pixels. A sentence stands beside
+ * the screen, never on it, and big chips carry the values for a phone.
  * Everything is cut on the music: 120 bpm, so one beat is 15 frames. Copy is
  * sized for a phone: at 390 px wide a 1920 px film shows at a fifth.
  */
@@ -91,12 +91,10 @@ const ROUTE: Stop[] = [
   { f: b(6), x: 1330, y: 112, flying: false, size: 130 },
   { f: b(7.5), x: 1640, y: 266, flying: true, size: 120 }, // on top of the folder
   { f: b(10.3), x: 1640, y: 266, flying: false, size: 120 },
-  { f: b(11.2), x: 2200, y: -120, flying: true, size: 110 }, // out, past the real screen
-  { f: b(12.6), x: 2200, y: -120, flying: false, size: 110 },
-  { f: b(14), x: 1660, y: 26, flying: true, size: 110 }, // on top of the close-up
-  { f: b(28), x: 1660, y: 26, flying: false, size: 110 },
-  { f: b(29), x: 900, y: 262, flying: true, size: 130 }, // above "Drie bonnetjes"
-  { f: b(31), x: 900, y: 262, flying: false, size: 130 },
+  { f: b(11.2), x: 2200, y: -160, flying: true, size: 110 }, // out, past the real screen
+  { f: b(12.6), x: -200, y: -160, flying: false, size: 110 }, // round, unseen
+  { f: b(14), x: 70, y: 176, flying: true, size: 110 }, // above the sentence
+  { f: b(31), x: 70, y: 176, flying: false, size: 110 },
   { f: b(32.5), x: PERCH_END.x, y: PERCH_END.y, flying: true, size: 150 }, // above the name
   { f: b(35.5), x: PERCH_END.x, y: PERCH_END.y, flying: false, size: 150 },
   { f: b(38), x: 2150, y: -260, flying: true, size: 100 }, // and away
@@ -144,10 +142,11 @@ const Title: React.FC<{
   width?: number;
   top?: number;
   center?: boolean;
-}> = ({ lines, to, size = 118, width = 1020, top = 300, center = false }) => {
+  left?: number;
+}> = ({ lines, to, size = 118, width = 1020, top = 300, center = false, left = 96 }) => {
   const frame = useCurrentFrame();
   return (
-    <div style={{ position: "absolute", left: center ? 0 : 96, top, width: center ? 1920 : width, textAlign: center ? "center" : "left" }}>
+    <div style={{ position: "absolute", left: center ? 0 : left, top, width: center ? 1920 : width, textAlign: center ? "center" : "left" }}>
       {lines.map((line) => {
         const opacity = Math.min(at(frame, [line.from, line.from + 7], [0, 1]), at(frame, [to - 5, to], [1, 0]));
         const y = at(frame, [line.from, line.from + 14], [36, 0]);
@@ -252,37 +251,23 @@ const FolderCard: React.FC = () => {
   );
 };
 
-// -- The real screen, then the close-up -----------------------------------------------
+// -- The real screens ----------------------------------------------------------------
 
 const W = data.viewport.width;
 const H = data.viewport.height;
 const items = data.items;
 const first = items[0];
+const photo = first.boxes.photo;
 const CLOSE_IN = b(13);
 
-/** A field's contents hidden: Huismus has not read this receipt yet. */
-const Blank: React.FC<{ box: Box; right?: number }> = ({ box, right = 0 }) => (
-  <div
-    style={{
-      position: "absolute",
-      left: box[0] + 2,
-      top: box[1] + 2,
-      width: box[2] - 4 - right,
-      height: box[3] - 4,
-      borderRadius: 7,
-      background: C.surface,
-    }}
-  />
-);
-
-/** The real Verwerken, whole and uncropped, beside a sentence. */
-const RealScreen: React.FC = () => {
+/** The real Overzicht, whole, with its notice: the receipts have arrived. */
+const Overview: React.FC = () => {
   const frame = useCurrentFrame();
   if (frame < SCENE.read - 2 || frame > CLOSE_IN + 4) return null;
   const s = at(frame, [SCENE.read - 2, SCENE.read + 10], [0.68, 0.72]);
   const opacity = Math.min(at(frame, [SCENE.read - 2, SCENE.read + 5], [0, 1]), at(frame, [CLOSE_IN - 3, CLOSE_IN + 4], [1, 0]));
-  const boxes = first.boxes;
-  const fields: (keyof typeof boxes)[] = ["date", "supplier", "description", "line", "amount", "vat"];
+  const [x, y, w, h] = data.overview.boxes.banner;
+  const ring = between(frame, SCENE.read + 10, CLOSE_IN + 4, 8);
   return (
     <AbsoluteFill style={{ opacity }}>
       <div
@@ -300,20 +285,18 @@ const RealScreen: React.FC = () => {
           background: C.bg,
         }}
       >
-        <Img src={opname(first.file)} style={{ position: "absolute", left: 0, top: 0, width: W, height: H }} />
-        {fields.map((key) => (
-          <Blank key={key} box={boxes[key]} />
-        ))}
-        <Blank box={boxes.category} right={40} />
-        <Blank box={[boxes.total[0] - 8, boxes.total[1] - 5, boxes.total[2] + 16, boxes.total[3] + 10]} />
+        <Img src={opname(data.overview.file)} style={{ position: "absolute", left: 0, top: 0, width: W, height: H }} />
         <div
           style={{
             position: "absolute",
-            left: boxes.notice[0] - 2,
-            top: boxes.notice[1] - 2,
-            width: boxes.notice[2] + 4,
-            height: boxes.notice[3] + 4,
-            background: C.bg,
+            left: x - 7,
+            top: y - 7,
+            width: w + 14,
+            height: h + 14,
+            borderRadius: 16,
+            border: `5px solid ${C.accent}`,
+            boxShadow: `0 0 0 9px ${C.accentSoft}`,
+            opacity: ring,
           }}
         />
       </div>
@@ -321,254 +304,245 @@ const RealScreen: React.FC = () => {
   );
 };
 
-// The close-up's layout, in film pixels.
-const PAPER = { x: 76, y: 150, w: 688, h: 905 };
-const RECEIPT_CARD = { x: 70, y: 130, w: 700, h: 860 };
-const FORM_CARD = { x: 810, y: 130, w: 1040, h: 860 };
-const ROW_X = FORM_CARD.x + 52;
-const ROW_W = FORM_CARD.w - 104;
-const rowTop = (i: number) => 372 + 152 * i;
-const BOX_H = 92;
+// Verwerken without its menu: the real page from here on to the right.
+const PAGE_LEFT = 280;
+// Two calm framings, each leaving a column free on the left for a sentence.
+const framing = (left: number, s: number, top: number) => ({
+  x: PAGE_LEFT + (960 - left) / s,
+  y: top + 540 / s,
+  s,
+});
+const READING = framing(443, 1.3, 106);
+const CHECKING = framing(852, 0.94, 18);
 
-// Klopt: on the beat. Each receipt leaves to the left, the next comes in.
-const KLOPT = [b(23), b(25), b(27)];
-const SWIPE = 10;
-// When Huismus has finished reading the first receipt, its values land.
-const READ = { supplier: b(16), amount: b(17.5), vat: b(19) };
-const FLIGHT = 13;
-const LOOKS_RIGHT = b(20.5); // the status line changes to "Klopt alles?"
-
-const rowsOf = (item: (typeof items)[number]) => [
-  { key: "supplier" as const, label: "Leverancier", value: item.receipt.supplier, y: 0.11 },
-  { key: "amount" as const, label: "Bedrag", value: `€ ${item.receipt.total}`, y: item.receipt.paperTotalAt },
-  { key: "vat" as const, label: "Btw ter info", value: `€ ${item.receipt.vat}`, y: item.receipt.paperTotalAt + 0.098 },
+type Cam = { f: number; x: number; y: number; s: number };
+const CAMERA: Cam[] = [
+  { f: CLOSE_IN, ...READING },
+  { f: b(21), ...READING },
+  { f: b(22.25), ...CHECKING },
+  { f: SCENE.end, ...CHECKING },
 ];
+const camera = (frame: number) => {
+  const f = CAMERA.map((k) => k.f);
+  return {
+    x: at(frame, f, CAMERA.map((k) => k.x)),
+    y: at(frame, f, CAMERA.map((k) => k.y)),
+    s: at(frame, f, CAMERA.map((k) => k.s)),
+  };
+};
 
-const Close: React.FC<{ index: number }> = ({ index }) => {
+// Klopt: on the beat. Each receipt's card leaves, the next is underneath.
+const KLOPT = [b(23), b(25), b(27)];
+const SWIPE = 12;
+const FLIGHT = 13;
+const total = first.receipt.totalAt;
+// Each value lifts off the receipt and lands in its field; `y` is where on
+// the photo it comes from. The fields in `also` uncover at the same moment.
+const VALUES = [
+  { key: "supplier", text: first.receipt.supplier, from: b(16), y: 0.17, also: ["date", "description", "line"] },
+  { key: "amount", text: `€ ${first.receipt.total}`, from: b(17.5), y: total, also: ["category", "total"] },
+  { key: "vat", text: `btw € ${first.receipt.vat}`, from: b(19), y: total + 0.075, also: [] as string[] },
+] as const;
+const NOTICE_SHOWS = b(20.25);
+
+const coverBox = (key: keyof typeof first.boxes): Box => {
+  const [x, y, w, h] = first.boxes[key];
+  // "Totaal" is plain text, not an input; a select keeps its arrow.
+  if (key === "total") return [x - 8, y - 5, w + 16, h + 10];
+  if (key === "category") return [x, y, w - 40, h];
+  return [x, y, w, h];
+};
+
+/** A field's real contents, hidden until the value arrives, then wiped open. */
+const FieldCover: React.FC<{ box: Box; from: number }> = ({ box, from }) => {
   const frame = useCurrentFrame();
-  const item = items[index];
-  const isFirst = index === 0;
-  const enter = isFirst ? CLOSE_IN : KLOPT[index - 1] + 3;
-  const leave = KLOPT[index] + 3;
-  if (frame < enter - 1 || frame > leave + SWIPE + 1) return null;
-  const inT = isFirst ? 0 : at(frame, [enter, enter + SWIPE], [1, 0]);
-  const outT = at(frame, [leave, leave + SWIPE], [0, 1]);
-  const appear = isFirst ? at(frame, [enter, enter + 8], [0, 1]) : 1;
-  const scale = isFirst ? at(frame, [enter, enter + 12], [0.96, 1]) : 1;
-  const x = inT * 2100 - outT * 2300;
-  const rotate = inT * 5 - outT * 6;
-  const reading = isFirst && frame < LOOKS_RIGHT;
-  const scan = isFirst
-    ? interpolate(frame, [b(13.75), b(15.75)], [0.06, 0.62], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })
-    : 0;
-  const scanOn = isFirst ? between(frame, b(13.75), b(15.9), 5) : 0;
-  const glow = between(frame, KLOPT[index] - b(1), KLOPT[index] + 3, 5);
-  const t = frame - KLOPT[index];
-  const ripple = interpolate(t, [0, 16], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const pressed = t >= 0 && t < 5;
+  const [x, y, w, h] = box;
+  const wipe = at(frame, [from, from + 9], [0, 100]);
   return (
-    <AbsoluteFill style={{ opacity: appear, transform: `translateX(${x}px) rotate(${rotate}deg) scale(${scale})` }}>
+    <div
+      style={{
+        position: "absolute",
+        left: x + 2,
+        top: y + 2,
+        width: w - 4,
+        height: h - 4,
+        borderRadius: 7,
+        background: C.surface,
+        clipPath: `inset(0 0 0 ${wipe}%)`,
+      }}
+    />
+  );
+};
+
+const PageImage: React.FC<{ file: string }> = ({ file }) => (
+  <Img src={opname(file)} style={{ position: "absolute", left: 0, top: 0, width: W, height: H }} />
+);
+
+const SwipedCard: React.FC<{ file: string; at: number }> = ({ file, at: when }) => {
+  const frame = useCurrentFrame();
+  const go = interpolate(frame - when - 3, [0, SWIPE], [0, 1], {
+    easing: EASE,
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  if (frame < when || go >= 1) return null;
+  const x = first.boxes.head[0] - 8;
+  const y = first.boxes.notice[1] - 8;
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: x,
+        top: y,
+        width: W - x,
+        height: H - y,
+        overflow: "hidden",
+        transform: `translateX(${go * 1300}px)`,
+        background: C.bg,
+      }}
+    >
+      <Img src={opname(file)} style={{ position: "absolute", left: -x, top: -y, width: W, height: H }} />
+    </div>
+  );
+};
+
+const KloptPress: React.FC<{ box: Box; at: number }> = ({ box, at: when }) => {
+  const frame = useCurrentFrame();
+  const [x, y, w, h] = box;
+  const t = frame - when;
+  if (frame > when + 16 || frame < when - b(1)) return null;
+  const glow = between(frame, when - b(1), when + 3, 5);
+  const ripple = interpolate(t, [0, 16], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  return (
+    <>
       <div
         style={{
           position: "absolute",
-          left: RECEIPT_CARD.x,
-          top: RECEIPT_CARD.y,
-          width: RECEIPT_CARD.w,
-          height: RECEIPT_CARD.h,
-          background: C.surface3,
-          borderRadius: 28,
-          boxShadow: SHADOW,
-          overflow: "hidden",
-        }}
-      >
-        <Img
-          src={opname(item.receipt.file)}
-          style={{
-            position: "absolute",
-            left: PAPER.x - RECEIPT_CARD.x,
-            top: PAPER.y - RECEIPT_CARD.y,
-            width: PAPER.w,
-            height: PAPER.h,
-            filter: "drop-shadow(0 14px 22px rgba(60,45,30,.25))",
-          }}
-        />
-        {isFirst &&
-          rowsOf(item).map((row) => (
-            <div
-              key={row.key}
-              style={{
-                position: "absolute",
-                left: 24,
-                width: RECEIPT_CARD.w - 48,
-                top: PAPER.y - RECEIPT_CARD.y + PAPER.h * row.y - 28,
-                height: 56,
-                borderRadius: 10,
-                background: C.accent,
-                mixBlendMode: "multiply",
-                opacity: 0.45 * between(frame, READ[row.key] - 4, READ[row.key] + FLIGHT, 4),
-              }}
-            />
-          ))}
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            top: PAPER.y - RECEIPT_CARD.y + PAPER.h * scan - 110,
-            width: RECEIPT_CARD.w,
-            height: 110,
-            background: `linear-gradient(to bottom, transparent, ${C.accent}66)`,
-            borderBottom: `6px solid ${C.accent}`,
-            boxShadow: `0 6px 24px ${C.accent}`,
-            opacity: scanOn,
-          }}
-        />
-      </div>
-      <div
-        style={{
-          position: "absolute",
-          left: FORM_CARD.x,
-          top: FORM_CARD.y,
-          width: FORM_CARD.w,
-          height: FORM_CARD.h,
-          background: C.surface,
-          borderRadius: 28,
-          boxShadow: SHADOW,
+          left: x - 8,
+          top: y - 8,
+          width: w + 16,
+          height: h + 16,
+          borderRadius: 14,
+          border: `5px solid ${C.accent}`,
+          opacity: glow,
         }}
       />
-      <div style={{ position: "absolute", left: ROW_X, top: 166, display: "flex", alignItems: "center", gap: 26 }}>
-        <span style={{ fontSize: 76, fontWeight: 800, letterSpacing: -2, color: C.text }}>Verwerken</span>
-        <span
-          style={{
-            padding: "8px 26px",
-            borderRadius: 999,
-            background: C.surface2,
-            fontSize: 50,
-            fontWeight: 700,
-            color: C.muted,
-          }}
-        >
-          {index + 1} van {items.length}
-        </span>
-      </div>
-      <div
-        style={{
-          position: "absolute",
-          left: ROW_X,
-          top: 276,
-          width: ROW_W,
-          height: 78,
-          display: "flex",
-          alignItems: "center",
-          gap: 20,
-          fontSize: 54,
-          fontWeight: 700,
-          letterSpacing: -1,
-          color: C.primary,
-        }}
-      >
-        {reading ? (
-          <div
-            style={{
-              width: 44,
-              height: 44,
-              borderRadius: "50%",
-              border: `6px solid ${C.primarySoft}`,
-              borderTopColor: C.primary,
-              transform: `rotate(${frame * 12}deg)`,
-            }}
-          />
-        ) : (
-          <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="2.6">
-            <path d="m5 12.5 4.5 4.5L19 7.5" />
-          </svg>
-        )}
-        {reading ? "Jouw eigen AI leest hem…" : "Klopt alles?"}
-      </div>
-      {rowsOf(item).map((row, i) => {
-        const landsAt = READ[row.key] + FLIGHT - 1;
-        const shown = !isFirst || frame >= landsAt;
-        const lit = isFirst && frame >= landsAt && frame < landsAt + 8;
-        return (
-          <div key={row.key}>
-            <div style={{ position: "absolute", left: ROW_X, top: rowTop(i), fontSize: 38, fontWeight: 650, color: C.muted }}>
-              {row.label}
-            </div>
-            <div
-              style={{
-                position: "absolute",
-                left: ROW_X,
-                top: rowTop(i) + 48,
-                width: ROW_W,
-                height: BOX_H,
-                boxSizing: "border-box",
-                padding: "0 30px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: row.key === "supplier" ? "flex-start" : "flex-end",
-                background: C.surface,
-                border: `3px solid ${lit ? C.accent : C.surface3}`,
-                borderRadius: 18,
-                fontSize: 58,
-                fontWeight: 750,
-                letterSpacing: -1,
-                color: C.text,
-              }}
-            >
-              <span style={{ opacity: shown ? 1 : 0 }}>{row.value}</span>
-            </div>
-          </div>
-        );
-      })}
-      <div
-        style={{
-          position: "absolute",
-          left: FORM_CARD.x + FORM_CARD.w - 52 - 300,
-          top: FORM_CARD.y + FORM_CARD.h - 40 - 108,
-          width: 300,
-          height: 108,
-          borderRadius: 22,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: C.primary,
-          color: C.surface,
-          fontSize: 62,
-          fontWeight: 800,
-          letterSpacing: -1,
-          transform: `scale(${pressed ? 0.94 : 1})`,
-          boxShadow: `0 0 0 ${glow * 12}px ${C.accent}`,
-        }}
-      >
-        Klopt
-      </div>
-      {t >= 0 && t < 16 && (
+      {t >= 0 && (
         <div
           style={{
             position: "absolute",
-            left: FORM_CARD.x + FORM_CARD.w - 52 - 150 - 40 - 130 * ripple,
-            top: FORM_CARD.y + FORM_CARD.h - 40 - 54 - 40 - 130 * ripple,
-            width: 80 + 260 * ripple,
-            height: 80 + 260 * ripple,
+            left: x + w / 2 - 15 - 80 * ripple,
+            top: y + h / 2 - 15 - 80 * ripple,
+            width: 30 + 160 * ripple,
+            height: 30 + 160 * ripple,
             borderRadius: "50%",
-            border: `6px solid ${C.primary}`,
+            border: `4px solid ${C.primary}`,
             opacity: 1 - ripple,
           }}
         />
       )}
+    </>
+  );
+};
+
+/** The real Verwerken, and then the real "Niets meer te verwerken". */
+const Verwerken: React.FC = () => {
+  const frame = useCurrentFrame();
+  const leave = at(frame, [SCENE.end - 4, SCENE.end + 4], [0, 1]);
+  if (frame < CLOSE_IN - 3 || leave >= 1) return null;
+  const cam = camera(frame);
+  const appear = at(frame, [CLOSE_IN - 3, CLOSE_IN + 5], [0, 1]);
+  const baseIndex = KLOPT.filter((when) => frame >= when).length;
+  const base = baseIndex < items.length ? items[baseIndex].file : data.done.file;
+  const scanFrom = b(13.75);
+  const scanTo = b(15.75);
+  const scan = interpolate(frame, [scanFrom, scanTo], [0.08, 0.62], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const notice = first.boxes.notice;
+  return (
+    <AbsoluteFill style={{ opacity: appear * (1 - leave) }}>
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          width: W,
+          height: H,
+          transformOrigin: "0 0",
+          transform: `translate(960px, 540px) scale(${cam.s}) translate(${-cam.x}px, ${-cam.y}px)`,
+          clipPath: `inset(0 0 0 ${PAGE_LEFT}px round 22px)`,
+        }}
+      >
+        <PageImage file={base} />
+        {items.map((item, i) => (
+          <SwipedCard key={item.file} file={item.file} at={KLOPT[i]} />
+        ))}
+        {frame < SCENE.check &&
+          VALUES.flatMap((value) => {
+            const from = value.from + FLIGHT - 2;
+            return [value.key, ...value.also].map((key) => (
+              <FieldCover key={key} box={coverBox(key as keyof typeof first.boxes)} from={from} />
+            ));
+          })}
+        {frame < NOTICE_SHOWS + 12 && (
+          <div
+            style={{
+              position: "absolute",
+              left: notice[0] - 2,
+              top: notice[1] - 2,
+              width: notice[2] + 4,
+              height: notice[3] + 4,
+              background: C.bg,
+              opacity: at(frame, [NOTICE_SHOWS, NOTICE_SHOWS + 12], [1, 0]),
+            }}
+          />
+        )}
+        <div style={{ opacity: between(frame, scanFrom - 5, scanTo + 5, 5) }}>
+          <div
+            style={{
+              position: "absolute",
+              left: photo[0],
+              top: photo[1] + photo[3] * scan - 70,
+              width: photo[2],
+              height: 70,
+              background: `linear-gradient(to bottom, transparent, ${C.accent}66)`,
+              borderBottom: `4px solid ${C.accent}`,
+            }}
+          />
+        </div>
+        {frame < SCENE.check &&
+          VALUES.map((value) => (
+            <div
+              key={value.key}
+              style={{
+                position: "absolute",
+                left: photo[0] + photo[2] * 0.17,
+                top: photo[1] + photo[3] * value.y - 17,
+                width: photo[2] * 0.68,
+                height: 34,
+                borderRadius: 6,
+                background: C.accent,
+                mixBlendMode: "multiply",
+                opacity: 0.5 * between(frame, value.from - 4, value.from + FLIGHT, 4),
+              }}
+            />
+          ))}
+        {items.map((item, i) => (
+          <KloptPress key={item.file} box={item.boxes.klopt} at={KLOPT[i]} />
+        ))}
+      </div>
     </AbsoluteFill>
   );
 };
 
-/** A value lifts off the receipt and lands in its field, at the size it has there. */
-const ValueChip: React.FC<{ row: ReturnType<typeof rowsOf>[number]; index: number }> = ({ row, index }) => {
+const ValueChip: React.FC<{ value: (typeof VALUES)[number] }> = ({ value }) => {
   const frame = useCurrentFrame();
-  const from = READ[row.key];
+  const from = value.from;
   if (frame < from - 5 || frame > from + FLIGHT + 3) return null;
-  const startX = PAPER.x + PAPER.w / 2;
-  const startY = PAPER.y + PAPER.h * row.y;
-  const right = row.key !== "supplier";
-  const endX = right ? ROW_X + ROW_W - 170 : ROW_X + 260;
-  const endY = rowTop(index) + 48 + BOX_H / 2;
+  const cam = camera(frame);
+  const toScreen = (x: number, y: number) => ({ x: 960 + (x - cam.x) * cam.s, y: 540 + (y - cam.y) * cam.s });
+  const field = first.boxes[value.key];
+  const start = toScreen(photo[0] + photo[2] / 2, photo[1] + photo[3] * value.y);
+  const end = toScreen(field[0] + field[2] * 0.5, field[1] + field[3] / 2);
   const lift = at(frame, [from - 5, from], [0, 1]);
   const go = at(frame, [from, from + FLIGHT], [0, 1]);
   const fade = at(frame, [from + FLIGHT - 1, from + FLIGHT + 3], [1, 0]);
@@ -576,13 +550,13 @@ const ValueChip: React.FC<{ row: ReturnType<typeof rowsOf>[number]; index: numbe
     <div
       style={{
         position: "absolute",
-        left: interpolate(go, [0, 1], [startX, endX]),
-        top: interpolate(Math.min(go * 2, 1), [0, 1], [startY, endY]),
+        left: interpolate(go, [0, 1], [start.x, end.x]),
+        top: interpolate(go, [0, 1], [start.y, end.y]),
         transform: `translate(-50%, -50%) scale(${lift})`,
-        padding: "10px 30px",
+        padding: "12px 32px",
         background: C.accent,
         color: C.text,
-        fontSize: 58,
+        fontSize: 64,
         fontWeight: 800,
         letterSpacing: -1,
         borderRadius: 18,
@@ -591,7 +565,7 @@ const ValueChip: React.FC<{ row: ReturnType<typeof rowsOf>[number]; index: numbe
         opacity: fade,
       }}
     >
-      {row.value}
+      {value.text}
     </div>
   );
 };
@@ -731,22 +705,41 @@ export const Bonnetjes: React.FC = () => {
           <Pile />
         </>
       )}
-      <RealScreen />
-      {items.map((item, i) => (
-        <Close key={item.file} index={i} />
-      ))}
-      {rowsOf(first).map((row, i) => (
-        <ValueChip key={row.key} row={row} index={i} />
+      <Overview />
+      <Verwerken />
+      {VALUES.map((value) => (
+        <ValueChip key={value.key} value={value} />
       ))}
       <Title
         lines={[
-          { text: "Drie bonnetjes.", from: SCENE.done - 3 },
+          { text: "Jouw", from: CLOSE_IN },
+          { text: "eigen AI", from: CLOSE_IN },
+          { text: "leest ze.", from: CLOSE_IN, blue: true },
+        ]}
+        to={SCENE.check + 2}
+        width={380}
+        size={92}
+        left={52}
+      />
+      <Title
+        lines={[
+          { text: "Jij zegt", from: SCENE.check + 2 },
+          { text: "alleen: Klopt.", from: SCENE.check + 2, blue: true },
+        ]}
+        to={SCENE.done}
+        width={760}
+        size={104}
+        left={64}
+      />
+      <Title
+        lines={[
+          { text: "Drie bonnetjes.", from: SCENE.done },
           { text: "Klaar.", from: SCENE.done, blue: true },
         ]}
         to={SCENE.end}
-        center
-        top={400}
-        size={150}
+        width={760}
+        size={104}
+        left={64}
       />
       {frame >= SCENE.end && <EndCard />}
       <Bird />
@@ -754,8 +747,8 @@ export const Bonnetjes: React.FC = () => {
       {PILE.map((p) => (
         <Sfx key={p.land} file="geluiden/click_002.ogg" at={p.land + 8} volume={0.5} />
       ))}
-      {Object.values(READ).map((when) => (
-        <Sfx key={when} file="opname/pop.wav" at={when + FLIGHT - 2} volume={0.5} />
+      {VALUES.map((value) => (
+        <Sfx key={value.key} file="opname/pop.wav" at={value.from + FLIGHT - 2} volume={0.5} />
       ))}
       {KLOPT.map((when) => (
         <React.Fragment key={when}>

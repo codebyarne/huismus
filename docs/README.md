@@ -30,15 +30,16 @@ Promofilmpjes (rond de twintig seconden in een lus, 1920×1080 mp4, voor
 LinkedIn en dergelijke), van dezelfde verzonnen administratie. Ze komen in
 `~/Downloads`, niet in de repo.
 
-- `bonnetjes` (20 s): drie bonnetjes, foto's in je eigen cloudmap, het echte
-  scherm Verwerken, en dan een grote versie daarvan waarin de waarden van het
-  bonnetje naar de velden gaan en jij drie keer Klopt zegt. Daarna vliegt het
-  vogeltje weg. `scripts/promo_film.py opname` neemt de schermen op uit
-  Huismus (de AI-dienst is een nepservertje in het script, er gaat niets naar
-  buiten) en maakt de muziek, noot voor noot, dus zonder licentie.
-  [Remotion](https://www.remotion.dev/) in `scripts/promo/film/` monteert
-  alles op de maat (120 bpm, 15 beeldjes per tel). Remotion draait op Node en
-  hoort niet bij de app; de eerste keer installeert `npm` het in die map.
+- `bonnetjes` (20 s): drie bonnetjes, foto's in je eigen cloudmap, en dan de
+  echte schermen: het Overzicht met zijn melding, Verwerken waarin de waarden
+  van het bonnetje naar de velden gaan en jij drie keer Klopt zegt, en "Niets
+  meer te verwerken". Daarna vliegt het vogeltje weg. `scripts/promo_film.py
+  opname` neemt de schermen op uit Huismus (de AI-dienst is een nepservertje
+  in het script, er gaat niets naar buiten) en maakt de muziek, noot voor
+  noot, dus zonder licentie. [Remotion](https://www.remotion.dev/) in
+  `scripts/promo/film/` monteert alles op de maat (120 bpm, 15 beeldjes per
+  tel). Remotion draait op Node en hoort niet bij de app; de eerste keer
+  installeert `npm` het in die map.
 - `factuur` (18 s): een nieuwe factuur krijgt een klant en een regel, en
   wordt uitgegeven. Gefilmd met een camera die in- en uitzoomt en een klik-
   of toetsgeluid bij elke klik en toets (CC0, van Kenney).
