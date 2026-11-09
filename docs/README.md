@@ -30,16 +30,14 @@ Promofilmpjes (rond de twintig seconden in een lus, 1920×1080 mp4, voor
 LinkedIn en dergelijke), van dezelfde verzonnen administratie. Ze komen in
 `~/Downloads`, niet in de repo.
 
-- `bonnetjes` (30 s): drie bonnetjes, foto's in je eigen cloudmap, en dan de
-  echte schermen: het Overzicht met zijn melding, Verwerken waarin de waarden
-  van het bonnetje naar de velden gaan en jij drie keer Klopt zegt, en "Niets
-  meer te verwerken". Daarna vliegt het vogeltje weg. `scripts/promo_film.py
-  opname` neemt de schermen op uit Huismus (de AI-dienst is een nepservertje
-  in het script, er gaat niets naar buiten) en maakt de muziek, noot voor
-  noot, dus zonder licentie. [Remotion](https://www.remotion.dev/) in
-  `scripts/promo/film/` monteert alles op de maat (120 bpm, 15 beeldjes per
-  tel). Remotion draait op Node en hoort niet bij de app; de eerste keer
-  installeert `npm` het in die map.
+- `bonnetjes` (27 s): een dag vol bonnetjes gaat naar je eigen cloudmap,
+  Huismus leest ze met je eigen AI, en jij kijkt ze na in Verwerken. Daarna
+  het vogeltje dat wegvliegt. De schermen zijn echt: `scripts/promo_film.py
+  opname` neemt ze op uit Huismus (de AI-dienst is een nepservertje in het
+  script, er gaat niets naar buiten). [Remotion](https://www.remotion.dev/)
+  in `scripts/promo/film/` monteert ze, met titels en bewegingen in de
+  kleuren van Huismus. Remotion draait op Node en hoort niet bij de app; de
+  eerste keer installeert `npm` het in die map.
 - `factuur` (18 s): een nieuwe factuur krijgt een klant en een regel, en
   wordt uitgegeven. Gefilmd met een camera die in- en uitzoomt en een klik-
   of toetsgeluid bij elke klik en toets (CC0, van Kenney).
