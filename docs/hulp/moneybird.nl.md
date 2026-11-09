@@ -5,6 +5,8 @@ offertes en uitgaven één op één mee naar Huismus. Ook de pdf's en bonnetjes
 gaan mee. Huismus doet eerst een proefdraai en slaat pas iets op als jij dat
 kiest.
 
+Huismus is een onafhankelijk project en hoort niet bij Moneybird.
+
 ## Je gegevens uit Moneybird halen
 
 1. Log in bij Moneybird en open de administratie die je wilt verhuizen.

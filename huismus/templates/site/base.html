@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Huismus{% endblock %}</title>
-    <meta name="description" content="{% translate 'Boekhouden voor zzp’ers, met of zonder KOR: facturen, bonnetjes en je btw-aangifte. Neem al je jaren mee uit Moneybird. Gratis, en je administratie blijft op je eigen computer.' %}">
+    <meta name="description" content="{% translate 'Boekhouden voor zzp’ers, met of zonder KOR: facturen, bonnetjes en je btw-aangifte. Neem al je jaren mee uit je oude pakket. Gratis, en je administratie blijft op je eigen computer.' %}">
     <meta property="og:title" content="{% translate 'Huismus: je boekhouding op je eigen computer' %}">
     <meta property="og:description" content="{% translate 'Boekhouden voor zzp’ers, met of zonder KOR: facturen, bonnetjes en je btw-aangifte. Gratis en open source.' %}">
     <meta property="og:image" content="https://{{ domain }}/delen.{{ language }}.png">
@@ -46,6 +46,7 @@
 </main>
 <footer class="site-foot small muted">
     <p>{% blocktranslate %}Gratis en open source, gemaakt in Nederland. Huismus valt onder de <a href="{{ repository }}/blob/main/LICENSE">AGPL-3.0</a>.{% endblocktranslate %}</p>
+    <p>{% translate "Huismus is een onafhankelijk project en hoort niet bij Moneybird." %}</p>
     {% if counter %}<p>{% translate "Deze site telt bezoeken met GoatCounter, zonder cookies." %}</p>{% endif %}
     <p><a href="{{ install_url }}">{% translate "Installeren" %}</a> · <a href="{{ help_index_url }}">{% translate "Hulp" %}</a> · <a href="{{ contribute_url }}">{% translate "Meebouwen" %}</a> · <a href="{{ repository }}">{% translate "Broncode" %}</a> · <a href="{{ repository }}/releases">{% translate "Alle versies" %}</a></p>
 </footer>

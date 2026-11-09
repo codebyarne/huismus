@@ -7,6 +7,8 @@ telefoon. Reken je btw, dan zie je per kwartaal de bedragen voor je
 btw-aangifte. Kom je van Moneybird, dan neem je al je jaren mee. Meer op
 [huismus.arnekrijnsen.com](https://huismus.arnekrijnsen.com).
 
+Huismus is een onafhankelijk project en hoort niet bij Moneybird.
+
 Huismus draait bij jou: als app op je Mac of Windows-pc, of in één
 Docker-container op een Raspberry Pi, een NAS of een andere server. Je
 administratie staat op dat apparaat, in een SQLite-database.
@@ -201,7 +203,8 @@ versie zit.
 Huismus makes your quotes, invoices and credit notes as PDFs and keeps track
 of your expenses. It's for Dutch freelancers under the KOR scheme, or
 charging VAT: then you choose 0, 9 or 21% per invoice line. Coming from
-Moneybird? Bring your whole export along.
+Moneybird? Bring your whole export along. Huismus is an independent project,
+not affiliated with Moneybird.
 
 Huismus runs on your own device: as an app on your Mac or Windows PC, or in
 one Docker container on a Raspberry Pi, a NAS or another server. Your

@@ -4,6 +4,8 @@ Are your records in Moneybird? Then you bring your customers, invoices, quotes
 and expenses over to Huismus one to one. The PDFs and receipts come along too.
 Huismus does a trial run first and only saves anything when you choose to.
 
+Huismus is an independent project, not affiliated with Moneybird.
+
 ## Getting your data out of Moneybird
 
 1. Log in to Moneybird and open the administration you want to move.
