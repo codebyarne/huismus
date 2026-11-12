@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""The Huismus site (huismus.arnekrijnsen.com): static pages on GitHub Pages.
+"""The Huismus site (mijnhuismus.nl): static pages on GitHub Pages.
 
 Built at every release from the files of that release (huismus-intern/besluiten.md,
 2026-10-30), so the site always belongs to the version you download: a tour of
@@ -38,7 +38,7 @@ from PIL import Image
 
 from . import help, updates
 
-DOMAIN = "huismus.arnekrijnsen.com"
+DOMAIN = "mijnhuismus.nl"
 REPOSITORY = "https://github.com/codebyarne/huismus"
 # "Feedback geven" asks you to fill in the form below it, which only the app has.
 TOPICS = tuple(slug for slug in help.TOPICS if slug != help.FEEDBACK)

@@ -1,6 +1,6 @@
 name: Site
 
-# The Huismus site (huismus.arnekrijnsen.com) on GitHub Pages: the download
+# The Huismus site (mijnhuismus.nl) on GitHub Pages: the download
 # page and the help, built from the files of the release (huismus/core/site.py,
 # huismus-intern/besluiten.md, 2026-10-30). After every release that put both
 # apps online, so the download buttons point at files that exist. Not on
