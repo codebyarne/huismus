@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import render
 
-from . import feedback_views, help
+from . import feedback_views, help, updates
 
 
 @login_required
@@ -24,4 +24,7 @@ def page(request, slug):
         raise Http404
     if slug == help.FEEDBACK:
         return feedback_views.render_help_page(request)
+    if slug == help.WHATS_NEW:
+        # Read: the overview's "Huismus is bijgewerkt" has done its job.
+        updates.seen()
     return render(request, "core/help_page.html", {"page": help.render(slug)})

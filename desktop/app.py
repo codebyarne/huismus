@@ -389,7 +389,8 @@ def _failed_update(pending) -> dict:
 
 
 def _updated_if_pending():
-    """The migrations ran: the update is done, and the overview says so."""
+    """The migrations ran: the update is done, or the overview says it
+    didn't get installed."""
     from huismus.core import updates
 
     pending = updates.load_status().pending
@@ -399,7 +400,10 @@ def _updated_if_pending():
     # again (desktop/updater.py), or the previous version was reinstalled.
     # Either way the downloaded file is gone (the script removes it).
     if pending["to_version"] == updates.current_version():
-        updates.update_status(pending={}, downloaded={}, just_updated=pending["to_version"])
+        # The overview says so until it's seen: the running version is newer
+        # than the last one seen (core.updates.updated_to). Not after
+        # reinstalling a version already seen.
+        updates.update_status(pending={}, downloaded={})
     else:
         updates.update_status(
             pending={},

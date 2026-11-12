@@ -59,6 +59,19 @@
 </a>
 {% endif %}
 {% if backup_warning and backup_warning.level != "bad" %}{% include "core/_backup_banner.html" %}{% endif %}
+{% if updated_to %}
+{% comment %}Once after a new version, until closed or "Wat is er nieuw" is opened (core.updates.updated_to; huismus-intern/besluiten.md, 2026-11-12). Not a link as a whole: it has a close button. Without JS the button posts and comes back here.{% endcomment %}
+<div class="hint-banner is-info" id="bijgewerkt" style="margin-bottom:var(--s-4)">
+    <svg class="i" aria-hidden="true"><use href="#check-circle"></use></svg>
+    <span>{% blocktranslate with version=updated_to %}Huismus is bijgewerkt naar {{ version }}.{% endblocktranslate %}</span>
+    <span class="spacer"></span>
+    <a href="{% url 'help:page' 'nieuw' %}">{% translate "Wat is er nieuw" %} →</a>
+    <form method="post" action="{% url 'updated_seen' %}" hx-post="{% url 'updated_seen' %}" hx-target="#bijgewerkt" hx-swap="outerHTML">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-ghost btn-sm btn-icon" aria-label="{% translate 'Sluiten' %}"><svg class="i i-sm" aria-hidden="true"><use href="#x"></use></svg></button>
+    </form>
+</div>
+{% endif %}
 {% include "expenses/_new_receipts.html" %}
 {% if new_release %}
 {% comment %}The desktop app only (SPEC.md M11): below red and amber, not dismissable.{% endcomment %}

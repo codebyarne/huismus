@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 21:32+0100\n"
+"POT-Creation-Date: 2026-11-12 22:03+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1501,10 +1501,6 @@ msgstr "Good afternoon"
 
 msgid "Goedenavond"
 msgstr "Good evening"
-
-#, python-format
-msgid "Bijgewerkt naar %(version)s."
-msgstr "Updated to %(version)s."
 
 #, python-format
 msgid ""
@@ -3885,6 +3881,13 @@ msgstr ""
 
 msgid "Naar het jaaroverzicht"
 msgstr "To the year overview"
+
+#, python-format
+msgid "Huismus is bijgewerkt naar %(version)s."
+msgstr "Huismus was updated to %(version)s."
+
+msgid "Wat is er nieuw"
+msgstr "What's new"
 
 #, python-format
 msgid ""

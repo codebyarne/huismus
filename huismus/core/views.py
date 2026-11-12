@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.templatetags.static import static
 from django.utils import timezone
@@ -84,6 +84,7 @@ def home(request):
     invoices and quotes waiting for an answer. Until there are contacts or
     documents, a welcome with the Moneybird import and a checklist."""
     first_time = sample_data.is_empty()
+    updated_to = _updated_to(first_time)
     if first_time:
         steps = onboarding_steps()
         return render(
@@ -122,33 +123,54 @@ def home(request):
             ],
             **_backup_context(now),
             **_update_notices(request),
+            "updated_to": updated_to,
             **new_receipts_context(),
         },
     )
 
 
+def _updated_to(first_time: bool) -> str:
+    """The version "Huismus is bijgewerkt naar …" names, or "". Nothing was
+    updated for a new administration or the sample data: for them the
+    overview marks the running version seen, so the notice is only for an
+    administration that was there before (huismus-intern/besluiten.md,
+    2026-11-12). A GET that writes, on purpose: like the toasts, the
+    overview is where a notice is used up."""
+    if first_time or sample_data.in_use():
+        updates.seen()
+        return ""
+    return updates.updated_to()
+
+
 def _update_notices(request) -> dict:
     """The new-version banner (M11, huismus/core/updates.py), also in Docker.
-    In the desktop app also, once, the toast after an update's first start:
-    shown now, so cleared now (desktop/app.py sets it)."""
+    In the desktop app also,
+    once, the toast after an update that didn't get installed: shown now, so
+    cleared now (desktop/app.py sets it)."""
     status = updates.load_status()
-    if status.just_updated:
-        messages.success(
-            request, _("Bijgewerkt naar %(version)s.") % {"version": status.just_updated}
-        )
     if status.not_installed:
         messages.error(
             request,
             _("Bijwerken naar %(version)s is niet gelukt. Je gebruikt nog versie %(current)s.")
             % {"version": status.not_installed, "current": updates.current_version()},
         )
-    if status.just_updated or status.not_installed:
-        updates.update_status(just_updated="", not_installed="")
+        updates.update_status(not_installed="")
     return {
         "new_release": updates.available(),
         "release_waiting": updates.waiting(),
         "release_downloading": updates.downloading(),
     }
+
+
+@login_required
+@require_POST
+def updated_seen(request):
+    """The close button of "Huismus is bijgewerkt" on the overview. With
+    HTMX only the notice goes; without JS, back to the overview."""
+    updates.seen()
+    if request.headers.get("HX-Request"):
+        return HttpResponse()
+    return redirect("home")
 
 
 def _backup_context(now) -> dict:

@@ -718,6 +718,9 @@ a:hover { color: var(--primary-hover); }
 .hint-banner.is-bad { --hb-line: var(--bad); --hb-ink: var(--bad); }
 /* Information that isn't a task, like a new version (desktop app). */
 .hint-banner.is-info { --hb-line: var(--primary); --hb-ink: var(--primary-ink); }
+/* A notice with a close button ("Huismus is bijgewerkt") is a div, not a link. */
+div.hint-banner:hover { border-color: var(--border); }
+.hint-banner > form { display: flex; margin: -6px calc(-1 * var(--s-2)) -6px 0; }
 
 .checklist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
 .checklist li { display: flex; align-items: center; gap: var(--s-3); padding: 12px 0; border-top: 1px solid var(--border); }
@@ -1006,6 +1009,8 @@ a:hover { color: var(--primary-hover); }
   .hint-banner .spacer { display: none; }
   .hint-banner > .spacer ~ span:not(.spacer) { flex-basis: 100%; padding-left: calc(18px + var(--s-3)); }
   .hint-banner > .i + span { flex: 1 1 0; min-width: 0; }
+  /* The close button stays beside the first line, the link goes below. */
+  .hint-banner > .spacer ~ a { order: 1; flex-basis: 100%; padding-left: calc(18px + var(--s-3)); }
 }
 
 /* Grote schermen: het ontwerp is gemaakt voor een laptop (± 1440 px). Daarboven
