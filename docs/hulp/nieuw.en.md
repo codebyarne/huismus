@@ -3,6 +3,8 @@
 A new version of Huismus comes out about every two weeks. Here you read, per
 version, what you can do with it now. The newest is at the top.
 
+After a new version, a notice on the overview points you here.
+
 ## 0.1.3, 4 November 2026
 
 - **Choose the receipt right away for a new expense.** You no longer have to

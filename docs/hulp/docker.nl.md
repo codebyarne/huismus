@@ -89,7 +89,8 @@ docker compose up -d
 ```
 
 Compose haalt de nieuwste image van je versie op en vervangt de container.
-Je gegevens en back-ups blijven staan.
+Je gegevens en back-ups blijven staan. Op het overzicht staat daarna
+"Huismus is bijgewerkt naar …", met een link naar [Wat is er nieuw](nieuw.nl.md).
 
 Naar een nieuwe versie, zoals van 0.1 naar 0.2? Verander de regel `image`
 in `compose.yaml` in `ghcr.io/codebyarne/huismus:0.2` en doe dan hetzelfde.

@@ -70,7 +70,8 @@ controleert hem. Zolang dat duurt, zegt het overzicht "Huismus … is gevonden
 en wordt gedownload"; daarna "Huismus … staat klaar". Je hoeft
 niets te doen: de volgende keer dat je Huismus opent, maakt hij eerst een
 back-up, installeert de nieuwe versie en opent vanzelf weer. Dat duurt
-ongeveer een minuut. Op het overzicht staat daarna "Bijgewerkt naar …".
+ongeveer een minuut. Op het overzicht staat daarna "Huismus is bijgewerkt
+naar …", met een link naar [Wat is er nieuw](nieuw.nl.md).
 Terwijl je werkt, wordt Huismus nooit bijgewerkt.
 
 Wil je niet wachten? Kies dan bij **Instellingen → Updates** **Nu zoeken**,

@@ -89,7 +89,8 @@ docker compose up -d
 ```
 
 Compose fetches the newest image of your version and replaces the
-container. Your data and backups stay where they are.
+container. Your data and backups stay where they are. The overview then
+says "Huismus was updated to …", with a link to [What's new](nieuw.en.md).
 
 Moving to a new version, like from 0.1 to 0.2? Change the `image` line in
 `compose.yaml` to `ghcr.io/codebyarne/huismus:0.2` and do the same.

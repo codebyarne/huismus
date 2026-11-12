@@ -3,6 +3,8 @@
 Ongeveer elke twee weken komt er een nieuwe versie van Huismus. Hier lees je per versie
 wat je er nu mee kunt. De nieuwste staat bovenaan.
 
+Na een nieuwe versie wijst een melding op het overzicht je hierheen.
+
 ## 0.1.3, 4 november 2026
 
 - **Kies het bonnetje meteen bij een nieuwe uitgave.** Je hoeft de uitgave niet

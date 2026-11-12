@@ -143,7 +143,9 @@ Installeren gaat zo:
    zonder vensters of vragen (`/VERYSILENT`) en opent Huismus weer.
 
 De nieuwe versie draait bij het starten de migraties. Lukt dat, dan zegt het
-overzicht "Bijgewerkt naar 1.4.0." Lukt het niet, dan toont het venster
+overzicht "Huismus is bijgewerkt naar 1.4.0." met een link naar Wat is er
+nieuw, tot je die sluit of volgt (in Docker net zo, `core.updates.updated_to`).
+Lukt het niet, dan toont het venster
 "Bijwerken is niet gelukt" met "Back-up terugzetten", "Logbestand bewaren" en
 een link naar de vorige versie. Na terugzetten start de server niet: deze
 versie zou dezelfde migratie weer proberen. Installeer dan de vorige versie.
