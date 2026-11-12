@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  What the Mac app may do under the hardened runtime, which notarization
+  requires (scripts/build-mac.sh). Python's ctypes and cffi (WeasyPrint)
+  write small pieces of code into memory, and the app loads Pango and its
+  libraries from Homebrew, which carry their own signature until we sign them.
+-->
+<plist version="1.0">
+<dict>
+    <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+    <true/>
+    <key>com.apple.security.cs.disable-library-validation</key>
+    <true/>
+</dict>
+</plist>

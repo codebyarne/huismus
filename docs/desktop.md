@@ -218,11 +218,40 @@ uv run --group desktop python -m desktop
 
 ## De eerste keer openen
 
-De app en de installer zijn niet ondertekend (besluit van 2026-10-27: een
-hobbyproject), alleen ad hoc. Wat een gebruiker de eerste keer ziet en
-kiest ("Toch openen", SmartScreen) staat in
+De Windows-installer is niet ondertekend (besluit van 2026-10-27: een
+hobbyproject). De Mac-app wordt ondertekend met een Developer ID en door Apple
+genotariseerd (besluit van 2026-11-12), zodra de geheimen daarvoor in GitHub
+staan; tot dan is hij alleen ad hoc ondertekend. Wat een gebruiker de eerste
+keer ziet en kiest ("Toch openen", SmartScreen) staat in
 [`docs/hulp/desktop-app.nl.md`](hulp/desktop-app.nl.md). Een app die je zelf
 bouwde heeft dat niet nodig.
+
+### Ondertekenen op de Mac
+
+Wat er nodig is, één keer, door de eigenaar van het Apple Developer-account:
+
+1. Lid worden van het Apple Developer Program, als particulier (€ 99 per
+   jaar), het snelst met de app Apple Developer op de Mac.
+2. `./scripts/mac-ondertekenen.sh` draaien. Het maakt een sleutel en een
+   aanvraag voor een Developer ID Application-certificaat, laat je dat en een
+   App Store Connect-sleutel (toegang Developer) bij Apple downloaden, en zet
+   ze als geheimen in GitHub: `MACOS_CERTIFICATE`,
+   `MACOS_CERTIFICATE_PASSWORD`, `APPLE_API_KEY`, `APPLE_API_KEY_ID` en
+   `APPLE_API_ISSUER`. Er blijft niets van op de Mac.
+
+Daarna doet `release.yml` het zelf: het zet het certificaat in een eigen
+sleutelhanger, `scripts/build-mac.sh` ondertekent elke bibliotheek en de app
+met hardened runtime (`desktop/entitlements.plist`), en
+`scripts/notarize-mac.sh` laat Apple eerst de app en dan de `.dmg`
+notariseren en hecht het bewijs aan beide. Keurt Apple iets af, dan stopt de
+release met Apple's logboek erbij.
+
+De hardened runtime probeer je zonder Developer ID uit met
+`HUISMUS_SIGN_IDENTITY=- ./scripts/build-mac.sh`: ad hoc, maar verder zoals de
+release het doet.
+
+Verloopt het certificaat (na vijf jaar) of het lidmaatschap, draai het script
+dan opnieuw. Apps die al zijn uitgebracht blijven openen.
 
 ## Hoe het gebouwd is
 
@@ -247,9 +276,10 @@ gebruikt:
   (`desktop/huismus.iss`): per gebruiker, Nederlands of Engels zoals Windows.
 - **De WSGI-server uit de standaardbibliotheek**, een thread per verzoek
   (`desktop/server.py`), zonder gunicorn: het venster is de enige bezoeker.
-- **Ad hoc ondertekend**, zonder hardened runtime (`scripts/build-mac.sh`):
+- **Ondertekend** met de Developer ID uit `release.yml`, met hardened runtime;
+  zonder die ID ad hoc en zonder hardened runtime (`scripts/build-mac.sh`):
   daarmee laadt macOS alleen bibliotheken van hetzelfde team, en ad hoc heeft
-  geen team.
+  geen team. Zie "Ondertekenen op de Mac".
 
 Bekend en nog niet gedaan: Intel-Macs, macOS ouder dan 14, Windows op ARM
 als eigen versie, en de downloadpagina.

@@ -3,7 +3,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
 # Builds the macOS desktop app (SPEC.md M11): dist/Huismus.app and
-# dist/Huismus.dmg, ad-hoc signed, for the architecture of this Mac.
+# dist/Huismus.dmg for the architecture of this Mac: ad hoc signed, or with
+# the Developer ID in HUISMUS_SIGN_IDENTITY (release.yml).
 # Needs Pango from Homebrew (`brew install pango`), which goes inside the app.
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -50,10 +51,29 @@ if [ "${sdk%%.*}" -lt "${minimum%%.*}" ]; then
     exit 1
 fi
 
-# Ad hoc, without an Apple Developer ID (decided 2026-10-27): Apple Silicon
-# starts nothing unsigned. Without --options runtime: the hardened runtime
-# only loads libraries signed by the same team, and ad hoc has no team.
-codesign --force --deep --sign - dist/Huismus.app
+if [ -z "${HUISMUS_SIGN_IDENTITY:-}" ]; then
+    # Ad hoc, without an Apple Developer ID: Apple Silicon starts nothing
+    # unsigned. Without --options runtime: the hardened runtime only loads
+    # libraries signed by the same team, and ad hoc has no team.
+    codesign --force --deep --sign - dist/Huismus.app
+else
+    # With the Developer ID from release.yml (decided 2026-11-12), for
+    # notarization (scripts/notarize-mac.sh): every library and program in
+    # the app on its own, innermost first, then the app itself. "-" signs ad
+    # hoc the same way, to try the hardened runtime on a Mac without the ID.
+    sign=(codesign --force --sign "$HUISMUS_SIGN_IDENTITY" --options runtime
+        --entitlements desktop/entitlements.plist)
+    if [ "$HUISMUS_SIGN_IDENTITY" != "-" ]; then
+        sign+=(--timestamp)
+    fi
+    find dist/Huismus.app/Contents -type f -print0 | while IFS= read -r -d '' file; do
+        if file -b "$file" | grep -q "Mach-O"; then
+            "${sign[@]}" "$file"
+        fi
+    done
+    "${sign[@]}" dist/Huismus.app
+    codesign --verify --strict --verbose=2 dist/Huismus.app
+fi
 
 # The app on its own, with a PDF, as the release does (release.yml): a
 # library that only clashes inside the app shows here, not in the tests.
