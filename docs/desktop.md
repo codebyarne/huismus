@@ -218,8 +218,9 @@ uv run --group desktop python -m desktop
 
 ## De eerste keer openen
 
-De Windows-installer is niet ondertekend (besluit van 2026-10-27: een
-hobbyproject). De Mac-app wordt ondertekend met een Developer ID en door Apple
+De Windows-installer wordt gratis ondertekend via SignPath Foundation
+(besluit van 2026-11-12), zodra die het project heeft aangenomen; tot dan is
+hij niet ondertekend. De Mac-app wordt ondertekend met een Developer ID en door Apple
 genotariseerd (besluit van 2026-11-12), zodra de geheimen daarvoor in GitHub
 staan; tot dan is hij alleen ad hoc ondertekend. Wat een gebruiker de eerste
 keer ziet en kiest ("Toch openen", SmartScreen) staat in
