@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-07 16:37+0100\n"
+"POT-Creation-Date: 2026-11-12 20:12+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2050,7 +2050,6 @@ msgstr "Fill in the VAT amount. No VAT paid? Then fill in 0."
 msgid "Kies het btw-tarief."
 msgstr "Choose the VAT rate."
 
-#, python-format
 msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
 msgstr "With 0% or no VAT, the VAT amount is € 0.00."
 
@@ -2128,7 +2127,6 @@ msgstr "Saved. Huismus picks up new receipts from %(place)s by itself."
 msgid "Bonnetje verwijderd."
 msgstr "Receipt deleted."
 
-#, python-format
 msgid "0% of geen btw"
 msgstr "0% or no VAT"
 
@@ -2764,7 +2762,6 @@ msgstr "Supplies/services subject to the high VAT rate"
 msgid "Leveringen/diensten belast met laag tarief"
 msgstr "Supplies/services subject to the low VAT rate"
 
-#, python-format
 msgid "Leveringen/diensten belast met 0% of niet bij u belast"
 msgstr "Supplies/services taxed at 0% or not taxed to you"
 
@@ -5885,6 +5882,16 @@ msgstr ""
 msgid "Deze site telt bezoeken met GoatCounter, zonder cookies."
 msgstr "This site counts visits with GoatCounter, without cookies."
 
+#, python-format
+msgid ""
+"Gratis ondertekening van de Windows-versie door SignPath.io, certificaat van "
+"SignPath Foundation. <a href=\"%(contribute_url)s#ondertekening\">Hoe we "
+"ondertekenen</a>"
+msgstr ""
+"Free code signing provided by SignPath.io, certificate by SignPath "
+"Foundation. <a href=\"%(contribute_url)s#ondertekening\">Code signing "
+"policy</a>"
+
 msgid "Installeren"
 msgstr "Install"
 
@@ -6061,6 +6068,50 @@ msgid ""
 msgstr ""
 "<strong>No real data:</strong> never a real invoice, IBAN or export in the "
 "repo, a test or an issue."
+
+msgid "Ondertekening"
+msgstr "Code signing"
+
+msgid ""
+"Gratis ondertekening van de Windows-versie door SignPath.io, certificaat van "
+"SignPath Foundation."
+msgstr ""
+"Free code signing provided by SignPath.io, certificate by SignPath "
+"Foundation."
+
+msgid ""
+"<strong>Gebouwd uit deze broncode:</strong> elke versie wordt in GitHub "
+"Actions gebouwd uit de code op GitHub. Pas daarna wordt hij ondertekend."
+msgstr ""
+"<strong>Built from this source code:</strong> every version is built in "
+"GitHub Actions from the code on GitHub. Only then is it signed."
+
+#, python-format
+msgid ""
+"<strong>Auteurs en reviewers:</strong> <a href=\"%(repository)s/graphs/"
+"contributors\">iedereen die meebouwt</a>. Elke wijziging komt binnen via een "
+"pull request."
+msgstr ""
+"<strong>Committers and reviewers:</strong> <a href=\"%(repository)s/graphs/"
+"contributors\">everyone who contributes</a>. Every change comes in through a "
+"pull request."
+
+msgid ""
+"<strong>Goedkeuring:</strong> de beheerder van de repository, <a "
+"href=\"https://github.com/codebyarne\">codebyarne</a>, keurt elke "
+"ondertekening met de hand goed."
+msgstr ""
+"<strong>Approvers:</strong> the repository's maintainer, <a href=\"https://"
+"github.com/codebyarne\">codebyarne</a>, approves every signing by hand."
+
+msgid ""
+"<strong>Privacy:</strong> Huismus stuurt niets naar andere systemen, tenzij "
+"jij erom vraagt. De enige uitzondering: eens per dag kijkt het of er een "
+"nieuwe versie is. Dat zet je uit bij Instellingen → Updates."
+msgstr ""
+"<strong>Privacy:</strong> This program will not transfer any information to "
+"other networked systems unless you ask it to. The one exception: once a day "
+"it checks for a new version. You turn that off in Settings → Updates."
 
 msgid "Afspraken"
 msgstr "Agreements"
@@ -7078,9 +7129,6 @@ msgstr ""
 
 #~ msgid "Betaling"
 #~ msgstr "Payment"
-
-#~ msgid "Verrekening"
-#~ msgstr "Settlement"
 
 #~ msgid "Secties"
 #~ msgstr "Sections"
