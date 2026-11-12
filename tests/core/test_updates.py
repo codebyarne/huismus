@@ -486,3 +486,30 @@ def test_the_daily_look_checks_once_and_waits(docker):
         updates.look_every_hour()
 
     check_if_due.assert_called_once_with()
+
+
+# -- "Huismus is bijgewerkt" (issue #149) --------------------------------------
+
+
+def test_the_running_version_is_new_until_it_is_seen(data_dir):
+    with patch("huismus.core.updates.current_version", return_value="1.4.0"):
+        updates.update_status(seen_version="1.3.0")
+        assert updates.updated_to() == "1.4.0"
+        updates.seen()
+        assert updates.updated_to() == ""
+        assert updates.load_status().seen_version == "1.4.0"
+
+
+def test_without_a_seen_version_the_running_one_is_new(data_dir):
+    # An administration from before the notice; a new one is marked seen by
+    # the overview's welcome (core.views.home).
+    with patch("huismus.core.updates.current_version", return_value="1.4.0"):
+        assert updates.updated_to() == "1.4.0"
+
+
+def test_an_older_version_put_back_is_nothing_new(data_dir):
+    with patch("huismus.core.updates.current_version", return_value="1.3.0"):
+        updates.update_status(seen_version="1.4.0")
+        assert updates.updated_to() == ""
+        # So the next one after it says so again.
+        assert updates.load_status().seen_version == "1.3.0"

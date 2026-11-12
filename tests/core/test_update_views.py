@@ -228,10 +228,76 @@ def test_a_failed_update_says_why_on_the_updates_page(desktop, code, sentence):
     assert 'id="bijwerken-mislukt"' in page and sentence in page
 
 
-def test_after_an_update_the_overview_says_so_once(desktop):
-    updates.update_status(just_updated="1.4.0")
-    assert "Bijgewerkt naar 1.4.0." in _overview(desktop)
-    assert "Bijgewerkt naar 1.4.0." not in _overview(desktop)
+# -- "Huismus is bijgewerkt" (issue #149; huismus-intern/besluiten.md, 2026-11-12)
+
+UPDATED = "Huismus is bijgewerkt naar 1.3.0."
+
+
+@pytest.fixture(params=["desktop", "docker"])
+def updated(request, settings):
+    """An administration that ran 1.2.0 and now runs 1.3.0, in the app or
+    in Docker."""
+    client = request.getfixturevalue(request.param)
+    updates.update_status(seen_version="1.2.0")
+    return client
+
+
+def test_after_an_update_the_overview_says_so_until_closed(updated):
+    page = _overview(updated)
+    assert UPDATED in page and 'href="/hulp/nieuw/"' in page
+    assert UPDATED in _overview(updated)
+
+    response = updated.post(reverse("updated_seen"))
+
+    assert response.status_code == 302 and response.url == reverse("home")
+    assert UPDATED not in _overview(updated)
+
+
+def test_closing_with_htmx_removes_only_the_notice(updated):
+    response = updated.post(reverse("updated_seen"), headers={"HX-Request": "true"})
+    assert response.status_code == 200 and response.content == b""
+    assert updates.load_status().seen_version == "1.3.0"
+
+
+def test_reading_whats_new_counts_as_seen(updated):
+    updated.get(reverse("help:page", args=["beginnen"]))
+    assert UPDATED in _overview(updated)
+    updated.get(reverse("help:page", args=["nieuw"]))
+    assert UPDATED not in _overview(updated)
+
+
+def test_also_in_docker_while_looking_is_off(docker):
+    updates.update_status(seen_version="1.2.0", enabled=False)
+    assert UPDATED in _overview(docker)
+
+
+def test_an_administration_from_before_the_notice_gets_it_once(docker):
+    assert UPDATED in _overview(docker)
+    docker.post(reverse("updated_seen"))
+    assert UPDATED not in _overview(docker)
+
+
+def test_a_new_installation_gets_no_notice(docker):
+    # The welcome, with nothing in it yet: nothing was updated.
+    page = docker.get("/").content.decode()
+    assert "Welkom bij Huismus" in page and UPDATED not in page
+    assert UPDATED not in _overview(docker)
+
+
+def test_the_sample_data_gets_no_notice(docker):
+    with patch("huismus.core.sample_data.in_use", return_value=True):
+        assert UPDATED not in _overview(docker)
+    assert UPDATED not in _overview(docker)
+
+
+def test_the_notice_comes_again_with_the_next_version(updated):
+    updated.post(reverse("updated_seen"))
+    with patch("huismus.core.updates.current_version", return_value="1.4.0"):
+        assert "Huismus is bijgewerkt naar 1.4.0." in _overview(updated)
+
+
+def test_closing_needs_a_post(updated):
+    assert updated.get(reverse("updated_seen")).status_code == 405
 
 
 def test_an_update_that_didnt_get_installed_is_said_once(desktop):

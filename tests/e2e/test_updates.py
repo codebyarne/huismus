@@ -68,3 +68,47 @@ def test_on_a_phone_the_new_version_is_in_sight_without_scrolling(app, history, 
     assert notices.count() >= 2
     for box in (notices.nth(i).bounding_box() for i in range(notices.count())):
         assert box["y"] < first_figure["y"]
+
+
+@pytest.mark.parametrize("width", [360, 1440])
+def test_after_an_update_the_notice_goes_once_closed(
+    app, history, settings, tmp_path, monkeypatch, width
+):
+    """ "Huismus is bijgewerkt" (issue #149): the close button takes away
+    only the notice, and it stays away; on a phone the button stays beside
+    the text and the link goes below it."""
+    from huismus.core import updates
+
+    settings.DATA_DIR = tmp_path
+    # A long version number on the narrowest phone.
+    monkeypatch.setattr(updates, "current_version", lambda: "10.12.13")
+    updates.update_status(seen_version="0.0.1")
+    app.set_viewport_size({"width": width, "height": 844})
+    app.goto(app.base + "/")
+
+    notice = app.locator("#bijgewerkt")
+    expect(notice).to_contain_text("Huismus is bijgewerkt naar 10.12.13.")
+    expect(notice).to_be_in_viewport()
+    close = notice.get_by_role("button", name="Sluiten")
+    link = notice.get_by_role("link", name="Wat is er nieuw")
+    box, close_box, link_box = (x.bounding_box() for x in (notice, close, link))
+    assert close_box["x"] + close_box["width"] <= box["x"] + box["width"]
+    assert close_box["y"] < link_box["y"] if width == 360 else close_box["x"] > link_box["x"]
+
+    close.click()
+    expect(notice).to_have_count(0)
+    app.reload()
+    expect(app.locator("#bijgewerkt")).to_have_count(0)
+
+
+def test_after_an_update_whats_new_is_one_click_away(app, history, settings, tmp_path):
+    from huismus.core import updates
+
+    settings.DATA_DIR = tmp_path
+    updates.update_status(seen_version="0.0.1")
+    app.goto(app.base + "/")
+
+    app.locator("#bijgewerkt").get_by_role("link", name="Wat is er nieuw").click()
+    expect(app.locator("h1")).to_contain_text("Wat is er nieuw")
+    app.goto(app.base + "/")
+    expect(app.locator("#bijgewerkt")).to_have_count(0)

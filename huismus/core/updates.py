@@ -85,9 +85,8 @@ class Status:
     # Set just before the app replaces itself; read by the new version's
     # first start (desktop/app.py), then cleared.
     pending: dict = field(default_factory=dict)  # from_version, to_version, backup
-    # For the overview's toast after the next start: the version it updated
-    # to, or the one that didn't get installed (desktop/app.py).
-    just_updated: str = ""
+    # For the overview's toast after the next start: the version that didn't
+    # get installed (desktop/app.py).
     not_installed: str = ""
     # The checked file that waits for the next start (prepare): version,
     # path, sha256.
@@ -97,6 +96,10 @@ class Status:
     # The version that didn't get installed automatically once: the next
     # starts leave it to the button on Updates (install_at_start).
     auto_failed: str = ""
+    # The version whose "Huismus is bijgewerkt" notice was closed or whose
+    # "Wat is er nieuw" was opened: the overview's notice stays until then
+    # (updated_to). "" until the overview first had something to say.
+    seen_version: str = ""
 
     @property
     def release(self) -> Release | None:
@@ -255,6 +258,33 @@ def available() -> Release | None:
         return None
     # Found by an older version than this one (after updating by hand).
     return release if is_newer(release.version, current_version()) else None
+
+
+# -- "Huismus is bijgewerkt" ---------------------------------------------------
+
+
+def updated_to() -> str:
+    """The version the overview's notice says Huismus was updated to: the
+    running one, until it's seen (seen). In the desktop app after it
+    updated itself, in Docker after `docker compose pull`. Without a seen
+    version an administration from before this notice gets it once; a new
+    one never does, as the overview marks the version seen first
+    (core.views._updated_to). "" when there is nothing to say."""
+    seen_version = load_status().seen_version
+    current = current_version()
+    if not seen_version or is_newer(current, seen_version):
+        return current
+    if seen_version != current:
+        # An older version put back by hand: nothing new about it, and the
+        # next newer one gets the notice again.
+        seen()
+    return ""
+
+
+def seen() -> None:
+    """The notice was closed, or "Wat is er nieuw" opened."""
+    if load_status().seen_version != current_version():
+        update_status(seen_version=current_version())
 
 
 # -- Downloading ahead ---------------------------------------------------------

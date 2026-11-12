@@ -28,6 +28,9 @@ HELP_DIR = settings.BASE_DIR / "docs" / "hulp"
 LANGUAGES = ("nl", "en")
 # "Feedback geven" also shows the card Hoe gebruik je Huismus? (core.feedback_views).
 FEEDBACK = "feedback"
+# Opening it counts as having seen the overview's "Huismus is bijgewerkt"
+# (core.help_views.page).
+WHATS_NEW = "nieuw"
 
 
 @dataclass(frozen=True)
@@ -45,7 +48,7 @@ GROUPS = (
     Group(
         _("Beginnen"),
         # What each release brings; written on release day (CLAUDE.md, Releases).
-        ("beginnen", "nieuw", FEEDBACK),
+        ("beginnen", WHATS_NEW, FEEDBACK),
     ),
     Group(_("Overstappen"), ("moneybird",)),
     Group(

@@ -6,6 +6,7 @@ from . import feedback_views, views
 
 urlpatterns = [
     path("", views.home, name="home"),
+    path("bijgewerkt/gezien/", views.updated_seen, name="updated_seen"),
     path("nepdata/", views.sample_data_fill, name="sample_data_fill"),
     path("nepdata/leegmaken/", views.sample_data_clear, name="sample_data_clear"),
     path("welkom/", views.onboarding_start, name="onboarding_start"),

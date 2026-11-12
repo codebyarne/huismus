@@ -77,12 +77,13 @@ def data_dir(settings, tmp_path):
     return data
 
 
-def test_a_successful_first_start_clears_the_update_and_says_so(data_dir):
+def test_a_successful_first_start_clears_the_update(data_dir):
+    # The overview says so from the running version (core.updates.updated_to).
     updates.update_status(pending={"from_version": "1.3.0", "to_version": "1.4.0", "backup": ""})
     with patch("huismus.core.updates.current_version", return_value="1.4.0"):
         app._updated_if_pending()
     status = updates.load_status()
-    assert status.pending == {} and status.just_updated == "1.4.0"
+    assert status.pending == {} and status.not_installed == ""
 
 
 def test_still_the_previous_version_means_the_update_wasnt_installed(data_dir):
@@ -91,7 +92,7 @@ def test_still_the_previous_version_means_the_update_wasnt_installed(data_dir):
     with patch("huismus.core.updates.current_version", return_value="1.3.0"):
         app._updated_if_pending()
     status = updates.load_status()
-    assert status.pending == {} and status.just_updated == ""
+    assert status.pending == {}
     assert status.not_installed == "1.4.0"
 
 
