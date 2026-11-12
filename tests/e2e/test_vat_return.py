@@ -110,6 +110,9 @@ def test_the_csv_of_the_period_on_the_page(app):
     last_day = Period.last_finished_quarter(date.today()).last_day
     create_expense([ExpenseLineInput("Laptop", 121000, 21000, None, VatRate.HIGH)], date=last_day)
     app.set_viewport_size({"width": 390, "height": 844})
+    # Dutch chosen as with NL/EN: WebKit on Linux asks for a download in
+    # the machine's language, not the browser context's nl-NL.
+    app.context.add_cookies([{"name": "django_language", "value": "nl", "url": app.base}])
 
     app.goto(app.base + "/rapporten/btw-aangifte/")
     app.get_by_role("link", name="Maand", exact=True).click()
