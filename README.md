@@ -5,7 +5,7 @@ er offertes, facturen en creditnota's mee als pdf, en je legt je uitgaven vast
 met het bonnetje erbij, ook vanuit een map die meesynchroniseert met je
 telefoon. Reken je btw, dan zie je per kwartaal de bedragen voor je
 btw-aangifte. Kom je van Moneybird, dan neem je al je jaren mee. Meer op
-[huismus.arnekrijnsen.com](https://huismus.arnekrijnsen.com).
+[mijnhuismus.nl](https://mijnhuismus.nl).
 
 Huismus draait bij jou: als app op je Mac of Windows-pc, of in één
 Docker-container op een Raspberry Pi, een NAS of een andere server. Je

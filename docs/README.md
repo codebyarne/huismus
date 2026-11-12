@@ -12,7 +12,7 @@ Geen verwijzingen naar SPEC.md, broncode of GitHub, en geen tekst over wet of
 belasting (`CLAUDE.md`); een link naar een ander onderwerp schrijf je als
 `back-ups.nl.md#kopje`. `tests/core/test_help.py` controleert dat.
 
-Dezelfde bestanden staan ook op de Huismus-site (`huismus.arnekrijnsen.com`),
+Dezelfde bestanden staan ook op de Huismus-site (`mijnhuismus.nl`),
 met een rondleiding door de app, de downloadknoppen, een pagina over
 installeren en een pagina voor wie wil meebouwen. De site is vooral voor
 mensen die geen techneut zijn: de app voor Mac en Windows komt eerst, zelf
