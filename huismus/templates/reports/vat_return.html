@@ -16,7 +16,7 @@
             <a href="?periode={{ period }}" aria-current="page">{{ period_name }}</a>
             {% if period.next %}<a href="?periode={{ period.next }}" aria-label="{% translate 'Volgende periode' %}"><svg class="i i-sm" aria-hidden="true"><use href="#chevron-right"></use></svg></a>{% endif %}
         </nav>
-        <a class="btn btn-secondary" href="{% url 'reports:vat_return_csv' %}?periode={{ period }}" hx-boost="false" data-file><svg class="i" aria-hidden="true"><use href="#download"></use></svg>{% translate "CSV downloaden" %}</a>
+        <a class="btn btn-secondary" href="{% url 'reports:vat_return_csv' %}?periode={{ period }}" hx-boost="false" data-file download><svg class="i" aria-hidden="true"><use href="#download"></use></svg>{% translate "CSV downloaden" %}</a>
     </div>{% endif %}
 </div>
 
