@@ -69,7 +69,8 @@ checks it. Meanwhile the overview says "Found Huismus …. It's being
 downloaded."; after that "Huismus … is ready". You don't have to
 do anything: the next time you open Huismus, it first makes a backup,
 installs the new version and opens again by itself. That takes about a
-minute. The overview then says "Updated to …". Huismus never updates while
+minute. The overview then says "Huismus was updated to …", with a link to
+[What's new](nieuw.en.md). Huismus never updates while
 you're working.
 
 Don't want to wait? Choose **Check now** under **Settings → Updates**, or
