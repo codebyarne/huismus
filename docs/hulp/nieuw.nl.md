@@ -1,6 +1,6 @@
 # Wat is er nieuw
 
-Elke woensdag komt er een nieuwe versie van Huismus. Hier lees je per versie
+Ongeveer elke twee weken komt er een nieuwe versie van Huismus. Hier lees je per versie
 wat je er nu mee kunt. De nieuwste staat bovenaan.
 
 ## 0.1.3, 4 november 2026

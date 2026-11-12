@@ -44,7 +44,7 @@ class Group:
 GROUPS = (
     Group(
         _("Beginnen"),
-        # What each weekly release brings; written on release day (CLAUDE.md, Releases).
+        # What each release brings; written on release day (CLAUDE.md, Releases).
         ("beginnen", "nieuw", FEEDBACK),
     ),
     Group(_("Overstappen"), ("moneybird",)),

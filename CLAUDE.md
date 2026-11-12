@@ -105,9 +105,10 @@ De Raspberry Pi van de eigenaar is een gewone Docker-installatie (besluit
 `docs/hulp/docker.nl.md`. Huismus zelf is nooit vanaf internet bereikbaar.
 Adres van de Pi: `huismus-intern/werkwijze.md`.
 
-Releases gaan **één keer per week, op woensdag** (besluit 2026-11-04): Claude
-maakt dan zelf een release van wat er die week op `main` kwam (het laatste cijfer
-omhoog, 0.1.x) en meldt welke versie klaarstaat en wat erin zit, in gewone taal.
+We streven naar **een release ongeveer elke twee weken**, zonder vaste dag en
+zonder harde frequentie (besluit eigenaar 2026-11-12; verving "elke woensdag"):
+Claude maakt dan zelf een release van wat er sinds de vorige release op `main` kwam
+(het laatste cijfer omhoog, 0.1.x) en meldt welke versie klaarstaat en wat erin zit, in gewone taal.
 Eerst: `verify-e2e` op die `main`, de WebKit- en Firefox-jobs op `main` groen, en
 `review-veiligheid` over alles sinds de vorige release: een bevinding met ernst
 hoog of middel houdt de release tegen tot hij opgelost is, een lage wordt een
@@ -118,13 +119,13 @@ De release-PR (versie in `pyproject.toml`) zet bovenaan `docs/hulp/nieuw.nl.md` 
 `nieuw.en.md` wat de gebruiker er nu mee kan, volgens `docs/schrijfwijzer.md`:
 wat je ziet of doet, niet hoe het gebouwd is; interne wijzigingen (tests, CI) laat
 je weg. Die pagina staat onder Hulp in elke installatie.
-Kwam er die week alleen documentatie bij, dan is er geen release.
+Kwam er sinds de vorige release alleen documentatie bij, dan is er geen release.
 
 Tussendoor alleen een release voor een bug die facturen, nummers of gegevens
-raakt, of die de app onbruikbaar maakt; meld waarom die niet tot woensdag kon
+raakt, of die de app onbruikbaar maakt; meld waarom die niet tot de volgende release kon
 wachten.
 
-Omdat werk tot een week op `main` ligt voordat iemand het krijgt, moet `main`
+Omdat werk een paar weken op `main` kan liggen voordat iemand het krijgt, moet `main`
 altijd uit te brengen zijn: merge alleen wat af is. Een groot stuk knip je in
 delen die elk los werken; een scherm dat nog niet af is, krijgt pas een link in
 het menu als het af is. Geen feature flags: één gebruiker per installatie, en
