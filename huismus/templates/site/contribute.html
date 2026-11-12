@@ -64,6 +64,18 @@ uv sync
     </ul>
 </section>
 
+<section class="card card-pad help-text" id="ondertekening">
+    {% comment %}The code signing policy SignPath Foundation asks for (signpath.org/terms), linked from the foot of every page.{% endcomment %}
+    <h2>{% translate "Ondertekening" %}</h2>
+    <p>{% translate "Gratis ondertekening van de Windows-versie door SignPath.io, certificaat van SignPath Foundation." %}</p>
+    <ul>
+        <li>{% blocktranslate %}<strong>Gebouwd uit deze broncode:</strong> elke versie wordt in GitHub Actions gebouwd uit de code op GitHub. Pas daarna wordt hij ondertekend.{% endblocktranslate %}</li>
+        <li>{% blocktranslate %}<strong>Auteurs en reviewers:</strong> <a href="{{ repository }}/graphs/contributors">iedereen die meebouwt</a>. Elke wijziging komt binnen via een pull request.{% endblocktranslate %}</li>
+        <li>{% blocktranslate %}<strong>Goedkeuring:</strong> de beheerder van de repository, <a href="https://github.com/codebyarne">codebyarne</a>, keurt elke ondertekening met de hand goed.{% endblocktranslate %}</li>
+        <li>{% blocktranslate %}<strong>Privacy:</strong> Huismus stuurt niets naar andere systemen, tenzij jij erom vraagt. De enige uitzondering: eens per dag kijkt het of er een nieuwe versie is. Dat zet je uit bij Instellingen → Updates.{% endblocktranslate %}</li>
+    </ul>
+</section>
+
 <section class="card card-pad help-text">
     <h2>{% translate "Afspraken" %}</h2>
     <ul>

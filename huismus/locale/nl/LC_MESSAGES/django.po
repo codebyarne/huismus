@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-07 16:37+0100\n"
+"POT-Creation-Date: 2026-11-12 20:10+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1967,7 +1967,6 @@ msgstr ""
 msgid "Kies het btw-tarief."
 msgstr ""
 
-#, python-format
 msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
 msgstr ""
 
@@ -2044,7 +2043,6 @@ msgstr ""
 msgid "Bonnetje verwijderd."
 msgstr ""
 
-#, python-format
 msgid "0% of geen btw"
 msgstr ""
 
@@ -2605,7 +2603,6 @@ msgstr ""
 msgid "Leveringen/diensten belast met laag tarief"
 msgstr ""
 
-#, python-format
 msgid "Leveringen/diensten belast met 0% of niet bij u belast"
 msgstr ""
 
@@ -5482,6 +5479,13 @@ msgstr ""
 msgid "Deze site telt bezoeken met GoatCounter, zonder cookies."
 msgstr ""
 
+#, python-format
+msgid ""
+"Gratis ondertekening van de Windows-versie door SignPath.io, certificaat van "
+"SignPath Foundation. <a href=\"%(contribute_url)s#ondertekening\">Hoe we "
+"ondertekenen</a>"
+msgstr ""
+
 msgid "Installeren"
 msgstr ""
 
@@ -5619,6 +5623,38 @@ msgstr ""
 msgid ""
 "<strong>Geen echte gegevens:</strong> nooit een echte factuur, IBAN of "
 "export in de repo, een test of een issue."
+msgstr ""
+
+msgid "Ondertekening"
+msgstr ""
+
+msgid ""
+"Gratis ondertekening van de Windows-versie door SignPath.io, certificaat van "
+"SignPath Foundation."
+msgstr ""
+
+msgid ""
+"<strong>Gebouwd uit deze broncode:</strong> elke versie wordt in GitHub "
+"Actions gebouwd uit de code op GitHub. Pas daarna wordt hij ondertekend."
+msgstr ""
+
+#, python-format
+msgid ""
+"<strong>Auteurs en reviewers:</strong> <a href=\"%(repository)s/graphs/"
+"contributors\">iedereen die meebouwt</a>. Elke wijziging komt binnen via een "
+"pull request."
+msgstr ""
+
+msgid ""
+"<strong>Goedkeuring:</strong> de beheerder van de repository, <a "
+"href=\"https://github.com/codebyarne\">codebyarne</a>, keurt elke "
+"ondertekening met de hand goed."
+msgstr ""
+
+msgid ""
+"<strong>Privacy:</strong> Huismus stuurt niets naar andere systemen, tenzij "
+"jij erom vraagt. De enige uitzondering: eens per dag kijkt het of er een "
+"nieuwe versie is. Dat zet je uit bij Instellingen → Updates."
 msgstr ""
 
 msgid "Afspraken"
