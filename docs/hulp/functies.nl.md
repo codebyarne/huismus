@@ -80,19 +80,21 @@ Dit staat op de lijst. De volgorde kan nog veranderen, en er is geen datum.
 - Uren bijhouden, en daar een factuur van maken
 - Periodieke facturen, zoals elke maand dezelfde
 - Een winst-en-verliesrekening per jaar
-- Kilometers bijhouden
-- Investeringen en afschrijving
 - Een XAF-auditfile voor je boekhouder
 - Importeren uit Rompslomp en andere pakketten
 - Overstappen midden in het jaar
 - Een bonnetje uit de bonnetjesmap aan een bestaande uitgave hangen
-- Back-ups naar Google Drive, OneDrive en Proton Drive
+- Back-ups rechtstreeks naar Google Drive en OneDrive, ook zonder hun app op je computer
 
 ## Misschien later
 
-Dit kan niet met alleen je eigen computer. Het vraagt een dienst op internet,
-dus het komt pas als dat veilig en eenvoudig kan.
+Hierover is nog niets besloten. Een deel vraagt een dienst op internet, en dat
+komt pas als het veilig en eenvoudig kan.
 
+- Kilometers bijhouden
+- Investeringen en afschrijving
+- Je bonnetje naar Huismus mailen
+- Back-ups rechtstreeks naar Proton Drive
 - Een koppeling met je bank
 - Je btw-aangifte vanuit Huismus versturen
 - Een betaallink op de factuur
@@ -104,7 +106,6 @@ dus het komt pas als dat veilig en eenvoudig kan.
 
 - Salarissen en loonadministratie
 - Een webshop
-- Eén Huismus voor meerdere bedrijven
 - Belastingadvies: Huismus telt wat jij invult
 
 Mis je iets? Zeg het in Huismus via **Hulp → Feedback geven**.
