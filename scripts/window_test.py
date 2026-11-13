@@ -120,8 +120,9 @@ class Shots:
         print("Screenshot:", path.name, flush=True)  # noqa: T201
 
     def screen(self, name: str) -> None:
-        """The whole screen, with the window and any dialog over it
-        (Windows; on macOS the job takes the window itself)."""
+        """The whole screen, with the app's own window around the page and
+        any dialog over it (Windows; on macOS the job photographs the
+        window itself, scripts/window-test-mac.sh)."""
         if sys.platform != "win32":
             return
         from PIL import ImageGrab
@@ -240,6 +241,7 @@ def first_invoice(page, base, shots):
     pdf = _download(page, download)
     if not pdf.startswith(b"%PDF"):
         raise AssertionError("De download is geen PDF")
+    shots.screen("scherm-factuur")
     print(f"Factuur {number} uitgegeven, PDF van {len(pdf)} bytes", flush=True)  # noqa: T201
 
 
@@ -347,8 +349,11 @@ def updated(page, base, shots, version):
     shots.take("bijgewerkt-overzicht")
     page.goto(base + "/facturen/")
     shots.take("bijgewerkt-facturen")
-    page.goto(base + "/instellingen/back-ups/")
-    shots.take("bijgewerkt-back-ups")
+    # The backup from before the update, among those to restore.
+    page.goto(base + "/instellingen/back-ups/terugzetten/")
+    expect(page.locator('input[name="archive"]').first).to_be_attached()
+    shots.take("bijgewerkt-terugzetten")
+    shots.screen("scherm-bijgewerkt")
 
 
 def records(db: Path) -> dict:
