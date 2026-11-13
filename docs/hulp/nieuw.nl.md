@@ -5,6 +5,39 @@ wat je er nu mee kunt. De nieuwste staat bovenaan.
 
 Na een nieuwe versie wijst een melding op het overzicht je hierheen.
 
+## 0.1.4, 13 november 2026
+
+- **Bonnetjes onderweg.** Bewaar een foto van een bonnetje op je telefoon in je
+  bonnetjesmap. Huismus haalt hem op, en op het overzicht zie je bijvoorbeeld
+  **2 nieuwe bonnetjes**. De map kies je bij **Instellingen → Bonnetjesmap**:
+  een map in iCloud Drive, Google Drive, OneDrive of Dropbox, of in Docker
+  Dropbox of WebDAV. Foto's van een iPhone (HEIC) werken ook. Zo werkt het:
+  [Bonnetjes onderweg](bonnetjes.nl.md).
+- **Alles in één keer verwerken.** Met **Verwerken** loop je de bonnetjes
+  zonder uitgave een voor een door, met het bonnetje groot naast de velden.
+  Na **Opslaan** of **Klopt** komt het volgende bonnetje.
+- **Huismus leest je bonnetjes zelf**, als je dat wilt. Kies bij
+  **Instellingen → Bonnetjes lezen met AI** een AI-dienst met je eigen
+  sleutel, of Ollama op je eigen computer. Elk nieuw bonnetje wordt dan een
+  uitgave met **Nakijken**. Ook wat een AI-assistent invult, krijgt
+  **Nakijken**.
+- **De btw-aangifte.** Onder **Rapporten → Btw-aangifte** zie je per kwartaal,
+  maand of jaar wat je in elke rubriek invult, en wat je betaalt of
+  terugkrijgt. Met **CSV downloaden** krijg je hetzelfde als bestand. Je neemt
+  de bedragen zelf over; Huismus verstuurt niets. Zo werkt het:
+  [KOR en btw](kor-en-btw.nl.md#btw-aangifte).
+- **Btw per uitgaveregel.** Staat de KOR uit, dan kies je bij elke
+  uitgaveregel het btw-tarief. Het jaaroverzicht toont je kosten dan zonder
+  btw en de voorbelasting apart. Bij een import uit Moneybird neemt Huismus
+  het tarief mee als de naam ervan duidelijk is.
+- **De hulp in groepen**, zodat je sneller vindt wat je zoekt.
+- **Na een nieuwe versie** zegt het overzicht één keer dat Huismus is
+  bijgewerkt, met een link naar deze pagina. **Nu zoeken** bij
+  **Instellingen → Updates** kijkt meteen of er een nieuwe versie is.
+- **Kleinere verbeteringen.** Een factuurregel staat op één rij. Een brede
+  tabel scrolt binnen zijn kaart in plaats van afgeknipt te worden. Een
+  foutpagina zegt in gewone woorden wat er mis is, zonder foutcode.
+
 ## 0.1.3, 4 november 2026
 
 - **Kies het bonnetje meteen bij een nieuwe uitgave.** Je hoeft de uitgave niet

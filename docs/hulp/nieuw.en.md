@@ -5,6 +5,37 @@ version, what you can do with it now. The newest is at the top.
 
 After a new version, a notice on the overview points you here.
 
+## 0.1.4, 13 November 2026
+
+- **Receipts on the road.** Save a photo of a receipt on your phone in your
+  receipts folder. Huismus fetches it, and the overview shows, for example,
+  **2 new receipts**. Choose the folder under **Settings → Receipts folder**:
+  a folder in iCloud Drive, Google Drive, OneDrive or Dropbox, or in Docker
+  Dropbox or WebDAV. Photos from an iPhone (HEIC) work too. How it works:
+  [Receipts on the road](bonnetjes.en.md).
+- **Process them all in one go.** With **Process** you go through the receipts
+  without an expense one by one, with the receipt large beside the fields.
+  After **Save** or **Looks right**, the next receipt comes up.
+- **Huismus reads your receipts itself**, if you want. Under **Settings →
+  Reading receipts with AI**, choose an AI service with your own key, or Ollama
+  on your own computer. Each new receipt then becomes an expense marked
+  **To check**. What an AI assistant fills in is marked **To check** too.
+- **The VAT return.** Under **Reports → VAT return** you see, per quarter,
+  month or year, what goes in each box, and what you pay or get back. **Download
+  CSV** gives you the same as a file. You copy the amounts over yourself;
+  Huismus sends nothing. How it works: [KOR and VAT](kor-en-btw.en.md#vat-return).
+- **VAT per expense line.** With the KOR off, you choose the VAT rate for each
+  expense line. The year overview then shows your costs without VAT and the
+  input VAT apart. When importing from Moneybird, Huismus takes the rate along
+  when its name says it plainly.
+- **Help in groups**, so you find what you need faster.
+- **After a new version** the overview says once that Huismus was updated,
+  with a link to this page. **Check now** under **Settings → Updates** looks
+  for a new version right away.
+- **Smaller improvements.** An invoice line sits on one row. A wide table
+  scrolls inside its card instead of being cut off. An error page says in
+  plain words what went wrong, without an error code.
+
 ## 0.1.3, 4 November 2026
 
 - **Choose the receipt right away for a new expense.** You no longer have to
