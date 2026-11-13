@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 07:00+0100\n"
+"POT-Creation-Date: 2026-11-13 07:56+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -5439,6 +5439,24 @@ msgstr ""
 msgid "Klik op <strong>Toch uitvoeren</strong>."
 msgstr ""
 
+msgid "Geen knop Toch uitvoeren, of fout 4551?"
+msgstr ""
+
+msgid ""
+"Dan blokkeert Smart App Control van Windows 11 de app, omdat hij niet "
+"ondertekend is. Zet het uit: <strong>Windows-beveiliging › App- en "
+"browserbeheer › Instellingen voor Smart App Control › Uit</strong>, en open "
+"het bestand opnieuw."
+msgstr ""
+
+msgid ""
+"Laat het uit zolang je Huismus gebruikt, anders blokkeert Windows de app "
+"weer. Je levert er wat bescherming mee in."
+msgstr ""
+
+msgid "Meer over de desktop-app"
+msgstr ""
+
 msgid "Waarom vraagt je computer of je de app vertrouwt?"
 msgstr ""
 
@@ -6004,9 +6022,6 @@ msgstr ""
 
 msgid ""
 "Bonnetjes vanaf je telefoon? Kies een bonnetjesmap die meesynchroniseert."
-msgstr ""
-
-msgid "Meer over de desktop-app"
 msgstr ""
 
 msgid "Liever zelf draaien op een server?"
