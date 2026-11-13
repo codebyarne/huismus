@@ -1482,8 +1482,9 @@ def test_connecting_an_ai_assistant_and_copying_the_key(app, browser_name):
         headers={"Authorization": f"Bearer {secret}"},
     )
     assert answer.json() == {"jsonrpc": "2.0", "id": 1, "result": {}}
-    app.reload()
-    expect(app.locator("#adres-en-sleutel .pill")).to_have_text("Gekoppeld")
+    # Without a reload: the pill asks again while it waits (the owner
+    # connected Claude and the page went on saying "Wacht op verbinding").
+    expect(app.locator("#adres-en-sleutel .pill")).to_have_text("Gekoppeld", timeout=10_000)
 
     # A new key asks first, then locks the old one out.
     app.get_by_role("button", name="Nieuwe sleutel").click()
