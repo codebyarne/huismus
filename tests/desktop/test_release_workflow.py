@@ -148,3 +148,18 @@ def test_the_publish_job_downloads_only_the_two_apps():
     # v0.1.1: the Docker build record on the same run made the download fail.
     assert 'pattern: "*-app"' in PUBLISH_JOB
     assert "name: macos-app\n" in MAC_JOB and "name: windows-app\n" in WINDOWS_JOB
+
+
+def test_the_store_package_is_built_and_installed_but_not_on_the_release():
+    """The Microsoft Store version (desktop/msix.py) goes to Partner Center
+    by hand; the GitHub release keeps the two files the updates look for."""
+    assert "./scripts/build-msix.sh" in WINDOWS_JOB
+    assert "Add-AppxPackage" in WINDOWS_JOB and "--check" in WINDOWS_JOB
+    assert "name: windows-store" in WINDOWS_JOB
+    assert ".msix" not in PUBLISH_JOB
+
+
+def test_the_store_identity_comes_from_repository_secrets():
+    # The publisher's display name is a person's name (CLAUDE.md, "Privé").
+    for name in ("MSIX_IDENTITY_NAME", "MSIX_PUBLISHER", "MSIX_PUBLISHER_DISPLAY_NAME"):
+        assert f"{name}: ${{{{ secrets.{name} }}}}" in WINDOWS_JOB
