@@ -89,10 +89,15 @@ cat "$RUNNER_TEMP/before.json"
 for _ in $(seq 300); do
     if [ "$(grep -c "Huismus draait op" "$log" 2>/dev/null)" -ge 2 ] && running \
         && ! grep -q '"to_version"' "$data/update-status.json"; then
+        updated=yes
         break
     fi
     sleep 1
 done
+if [ "${updated:-}" != yes ]; then
+    echo "::error::Bijwerken was na 300 s niet klaar"
+    exit 1
+fi
 "${test[@]}" updated "$new_version" --cdp "$cdp" --shots "$shots/bijwerken"
 quit_app
 
