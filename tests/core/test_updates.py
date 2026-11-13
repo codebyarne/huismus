@@ -427,6 +427,122 @@ def test_after_a_failed_automatic_install_it_doesnt_say_downloading(found):
     assert updates.downloading() is None
 
 
+# -- A version for a newer macOS (issue #155) -----------------------------------
+# 0.1.4 asked macOS 15 instead of 14; a 0.1.3 app on macOS 14 updated itself
+# and didn't open any more. The Mac app now reads the downloaded app's
+# LSMinimumSystemVersion first (desktop/updater.py) and leaves the current
+# version in place on an older macOS.
+
+
+@pytest.fixture
+def needs_15(found, monkeypatch):
+    """1.4.0 found on a Mac with macOS 14.6.1, and it asks macOS 15.0."""
+    read = []
+    monkeypatch.setattr(updates, "minimum_os", lambda package: read.append(package) or "15.0")
+    monkeypatch.setattr(updates, "this_macos", lambda: "14.6.1")
+    return read
+
+
+def test_macos_versions_compare_as_numbers():
+    assert updates.older_macos("14.6.1", "15.0")
+    assert updates.older_macos("10.15", "10.9") is False
+    assert updates.older_macos("15", "15.0") is False
+    assert updates.older_macos("15.0.1", "15.0") is False
+    assert updates.older_macos("26.1", "15.0") is False
+    assert updates.older_macos("15.7", "26") is True
+    # Unknown: as before, nothing is held back.
+    assert updates.older_macos("", "15.0") is False
+    assert updates.older_macos("14.6", "") is False
+    assert updates.older_macos("14.6", "fifteen") is False
+
+
+def test_the_minimum_macos_is_read_after_downloading(needs_15):
+    updates.prepare()
+
+    assert needs_15 == [Path(updates.load_status().downloaded["path"])]
+    assert updates.load_status().downloaded["minimum_os"] == "15.0"
+
+
+def test_a_version_for_a_newer_macos_waits_and_says_which(needs_15):
+    updates.prepare()
+
+    assert updates.needs_macos() == "15"
+    assert updates.waiting() is None
+    assert updates.downloading() is None
+    # Kept: it's installed once macOS is up to date.
+    assert Path(updates.load_status().downloaded["path"]).exists()
+
+
+def test_a_version_for_a_newer_macos_is_not_installed_at_start(needs_15, monkeypatch):
+    updates.prepare()
+    handed = []
+    monkeypatch.setattr(updates, "installer", lambda *args: handed.append(args))
+
+    with patch("huismus.core.auto_backups.safety_backup") as backup:
+        assert updates.install_at_start() is False
+
+    assert handed == []
+    backup.assert_not_called()
+    status = updates.load_status()
+    # Not a failure: nothing to say "niet gelukt" about, and it's tried
+    # again after macOS is updated.
+    assert status.not_installed == "" and status.auto_failed == ""
+
+
+@pytest.mark.django_db(transaction=True)
+def test_after_updating_macos_it_is_installed_at_start(needs_15, monkeypatch):
+    updates.prepare()
+    monkeypatch.setattr(updates, "this_macos", lambda: "15.1")
+    handed = []
+    monkeypatch.setattr(updates, "installer", lambda *args: handed.append(args))
+
+    assert updates.needs_macos() == ""
+    assert updates.install_at_start() is True
+    assert handed
+
+
+def test_bijwerken_refuses_a_version_for_a_newer_macos(needs_15, monkeypatch):
+    # Not downloaded ahead: the button downloads and reads it itself.
+    handed = []
+    monkeypatch.setattr(updates, "installer", lambda *args: handed.append(args))
+
+    with (
+        patch("huismus.core.auto_backups.safety_backup") as backup,
+        pytest.raises(updates.UpdateError, match="macos"),
+    ):
+        updates.install(updates.available())
+
+    assert handed == [] and updates.load_status().pending == {}
+    backup.assert_not_called()
+    # Kept, so the page can say which macOS it needs.
+    assert updates.needs_macos() == "15"
+
+
+def test_an_app_that_cant_be_read_is_installed_as_before(found, monkeypatch):
+    def unreadable(package):
+        raise OSError("hdiutil failed")
+
+    monkeypatch.setattr(updates, "minimum_os", unreadable)
+    monkeypatch.setattr(updates, "this_macos", lambda: "14.6.1")
+    updates.prepare()
+
+    assert updates.needs_macos() == ""
+    assert updates.waiting() is not None
+
+
+def test_a_macos_is_named_as_the_mac_names_it():
+    assert updates.macos_label("15") == "15 (Sequoia)"
+    assert updates.macos_label("26") == "26 (Tahoe)"
+    assert updates.macos_label("27.1") == "27.1"
+
+
+def test_without_a_minimum_reader_nothing_is_held_back(found, monkeypatch):
+    # Windows and Docker register none (desktop/app.py).
+    monkeypatch.setattr(updates, "this_macos", lambda: "14.6.1")
+    updates.prepare()
+    assert updates.needs_macos() == "" and updates.waiting() is not None
+
+
 # -- Docker: only a notice ------------------------------------------------------
 # Huismus in Docker looks for a new version too and says so on the overview,
 # but never downloads or replaces anything: updating is the user's own

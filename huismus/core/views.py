@@ -159,7 +159,15 @@ def _update_notices(request) -> dict:
         "new_release": updates.available(),
         "release_waiting": updates.waiting(),
         "release_downloading": updates.downloading(),
+        "release_needs_macos": _needs_macos(),
     }
+
+
+def _needs_macos() -> str:
+    """ "15 (Sequoia)" when the new version needs a newer macOS than this
+    Mac has (issue #155), else ""."""
+    needed = updates.needs_macos()
+    return updates.macos_label(needed) if needed else ""
 
 
 @login_required
