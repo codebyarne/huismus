@@ -44,9 +44,9 @@ def test_a_trial_build_publishes_nothing_and_builds_only_windows():
 
 
 def test_it_builds_on_apple_silicon_with_the_minimum_macos_of_the_app():
-    assert "runs-on: macos-14\n" in MAC_JOB
+    assert "runs-on: macos-15\n" in MAC_JOB
     recipe = (ROOT / "desktop" / "huismus.spec").read_text()
-    assert '"LSMinimumSystemVersion": "14.0"' in recipe
+    assert '"LSMinimumSystemVersion": "15.0"' in recipe
 
 
 def test_the_mac_app_is_not_built_against_an_older_sdk_than_it_runs_on():

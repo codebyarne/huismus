@@ -99,10 +99,10 @@ jobs:
 
   macos-app:
     # Apple Silicon. Pango comes from Homebrew, whose packages here are built
-    # for macOS 14, hence LSMinimumSystemVersion 14.0 in desktop/huismus.spec
-    # (huismus-intern/besluiten.md, 2026-10-29).
+    # for macOS 15, hence LSMinimumSystemVersion 15.0 in desktop/huismus.spec.
+    # GitHub no longer runs macos-14 (huismus-intern/besluiten.md, 2026-11-13).
     if: github.event_name == 'push'
-    runs-on: macos-14
+    runs-on: macos-15
     env:
       # Signed with the Developer ID and notarized once its secrets are set
       # (scripts/mac-ondertekenen.sh, decided 2026-11-12); ad hoc before that.

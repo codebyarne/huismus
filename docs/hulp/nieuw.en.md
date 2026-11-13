@@ -32,6 +32,9 @@ After a new version, a notice on the overview points you here.
 - **After a new version** the overview says once that Huismus was updated,
   with a link to this page. **Check now** under **Settings → Updates** looks
   for a new version right away.
+- **The Mac app now needs macOS 15 (Sequoia) or newer.** Still on macOS 14?
+  Update your Mac in **System Settings → General → Software Update**. Your
+  records stay where they are.
 - **Smaller improvements.** An invoice line sits on one row. A wide table
   scrolls inside its card instead of being cut off. An error page says in
   plain words what went wrong, without an error code.

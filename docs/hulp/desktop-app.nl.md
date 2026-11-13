@@ -2,7 +2,7 @@
 
 Met de desktop-app gebruik je Huismus als gewone app op je Mac of
 Windows-pc, zonder server. Je administratie staat dan op je eigen computer.
-De app werkt op macOS 14 of nieuwer met een Apple-chip, en op Windows 10 of
+De app werkt op macOS 15 (Sequoia) of nieuwer met een Apple-chip, en op Windows 10 of
 nieuwer.
 
 ## De eerste keer openen

@@ -37,8 +37,8 @@ Zolang de nepdata erin staat, maakt Huismus geen back-ups.
 Download de desktop-app bij de
 [releases](https://github.com/codebyarne/huismus/releases):
 `Huismus-<versie>-macos.dmg` of `Huismus-<versie>-windows.exe`. Je hebt geen
-Docker of server nodig. De app werkt op macOS 14 of nieuwer met een
-Apple-chip, en op Windows 10 of nieuwer. De app is nog niet ondertekend, dus de eerste keer
+Docker of server nodig. De app werkt op macOS 15 (Sequoia) of nieuwer
+met een Apple-chip, en op Windows 10 of nieuwer. De app is nog niet ondertekend, dus de eerste keer
 waarschuwt je computer. Hoe je hem dan toch opent:
 [de desktop-app](docs/hulp/desktop-app.nl.md).
 
@@ -235,8 +235,8 @@ data is in, Huismus makes no backups.
 Download the desktop app from the
 [releases](https://github.com/codebyarne/huismus/releases):
 `Huismus-<version>-macos.dmg` or `Huismus-<version>-windows.exe`. You don't
-need Docker or a server. The app works on macOS 14 or newer with an Apple
-chip, and on Windows 10 or newer. The app isn't signed yet, so your computer warns
+need Docker or a server. The app works on macOS 15 (Sequoia) or newer with an
+Apple chip, and on Windows 10 or newer. The app isn't signed yet, so your computer warns
 you the first time. How to open it anyway:
 [the desktop app](docs/hulp/desktop-app.en.md).
 
