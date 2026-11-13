@@ -45,7 +45,7 @@ above the fields.{% endcomment %}
         {% else %}
         <img class="process-img" src="{{ receipt.file.url }}" alt="{{ receipt_label }}">
         {% endif %}
-        <a class="small" id="bonnetje-openen" href="{{ receipt.file.url }}" hx-boost="false" target="_blank" rel="noopener">{% translate "Bonnetje openen" %} ↗</a>
+        <a class="small" id="bonnetje-openen" href="{{ receipt.file.url }}" hx-boost="false" target="_blank" rel="noopener" data-view-receipt="bonnetje-bekijken" data-name="{{ receipt.filename }}" data-label="{{ receipt_label }}"{% if receipt.is_pdf %} data-pdf{% endif %}>{% translate "Bonnetje openen" %} ↗</a>
         {% else %}
         <p class="muted" id="geen-bonnetje">{% translate "Geen bonnetje bij deze uitgave." %}</p>
         <form method="post" action="{% url 'expenses:receipt_upload' expense.pk %}" enctype="multipart/form-data" class="dropzone" data-dropzone>
@@ -88,5 +88,6 @@ above the fields.{% endcomment %}
         </form>
     </div>
 </div>
+{% include "expenses/_receipt_dialog.html" %}
 {% endif %}
 {% endblock %}

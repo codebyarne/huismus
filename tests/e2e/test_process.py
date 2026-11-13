@@ -118,3 +118,90 @@ def test_on_a_phone_the_receipt_is_above_the_fields_and_a_pdf_is_not_framed(app)
     expect(frame).to_be_hidden()
     assert frame.get_attribute("src") is None
     expect(app.get_by_role("link", name="Bonnetje openen ↗")).to_be_visible()
+
+
+_INSTALLED_APP = """const own = window.matchMedia.bind(window);
+window.matchMedia = (query) => query === "(display-mode: standalone)"
+    ? { matches: true, media: query, addEventListener() {}, removeEventListener() {} }
+    : own(query);"""
+
+
+def test_in_the_installed_app_a_receipt_opens_over_verwerken(app):
+    # In the app on the home screen a new tab took over the screen with no
+    # way back (the owner, on an iPhone). Playwright can't install the app:
+    # matchMedia says it is installed.
+    _stack()
+    app.add_init_script(_INSTALLED_APP)
+    app.set_viewport_size({"width": 390, "height": 800})
+    app.goto(app.base + "/uitgaven/verwerken/")
+    dialog = app.locator("#bonnetje-bekijken")
+    pages = []
+    app.context.on("page", lambda page: pages.append(page))
+
+    # A photo: the image itself, whole, over the page.
+    app.get_by_role("link", name="Bonnetje openen ↗").click()
+    expect(dialog).to_be_visible()
+    photo = dialog.get_by_role("img", name="Bonnetje kassabon.png")
+    expect(photo).to_be_visible()
+    assert photo.bounding_box()["width"] <= 390
+    dialog.get_by_role("button", name="Sluiten").click()
+    expect(dialog).to_be_hidden()
+    expect(photo).to_have_count(0)
+
+    # A PDF: in a frame, and what was typed stays.
+    app.get_by_role("link", name="Overslaan").click()
+    expect(app.locator("#verwerken-teller")).to_have_text("2 van 3")
+    supplier = app.get_by_label("Leverancier")
+    supplier.fill("NS Reizigers")
+    url = app.url
+    for close in ("button", "Escape"):
+        app.get_by_role("link", name="Bonnetje openen ↗").click()
+        expect(dialog).to_be_visible()
+        frame = dialog.locator("iframe.pdf-frame")
+        expect(frame).to_have_attribute(
+            "src", Expense.objects.get(supplier="NS").attachments.get().file.url
+        )
+        expect(dialog.get_by_role("button", name="Sluiten")).to_be_in_viewport()
+        if close == "button":
+            dialog.get_by_role("button", name="Sluiten").click()
+        else:
+            app.keyboard.press("Escape")
+        expect(dialog).to_be_hidden()
+        expect(frame).to_have_count(0)
+        expect(app.get_by_role("link", name="Bonnetje openen ↗")).to_be_focused()
+        assert app.url == url
+        expect(supplier).to_have_value("NS Reizigers")
+    assert pages == []
+
+
+@pytest.mark.parametrize("where", ["tray", "expense"])
+def test_in_the_installed_app_a_receipt_thumbnail_opens_over_the_page(app, where):
+    if where == "tray":
+        receipt = _in_tray("reis.pdf", _pdf([["NS", "blad 1"]]))
+        path = "/uitgaven/bonnetjes/"
+    else:
+        expense = _to_check("NS", 4, "reis.pdf", _pdf([["NS", "blad 1"]]))
+        receipt = expense.attachments.get()
+        path = f"/uitgaven/{expense.pk}/"
+    app.add_init_script(_INSTALLED_APP)
+    app.set_viewport_size({"width": 390, "height": 800})
+    app.goto(app.base + path)
+    url = app.url
+
+    app.locator(f"a.thumb[href='{receipt.file.url}']").click()
+    dialog = app.locator("#bonnetje-bekijken")
+    expect(dialog).to_be_visible()
+    expect(dialog.locator("iframe.pdf-frame")).to_have_attribute("src", receipt.file.url)
+    dialog.get_by_role("button", name="Sluiten").click()
+    expect(dialog).to_be_hidden()
+    assert app.url == url
+
+
+def test_in_a_browser_tab_a_receipt_still_opens_in_a_new_tab(app):
+    _stack()
+    app.set_viewport_size({"width": 390, "height": 800})
+    app.goto(app.base + "/uitgaven/verwerken/")
+    with app.context.expect_page() as opened:
+        app.get_by_role("link", name="Bonnetje openen ↗").click()
+    expect(app.locator("#bonnetje-bekijken")).to_be_hidden()
+    opened.value.close()

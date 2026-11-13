@@ -1,0 +1,16 @@
+{% load i18n %}
+{% comment %}A receipt over the page, in the installed app (app.js,
+data-view-receipt): there a new tab takes over the screen with no way back,
+and in Verwerken what was typed would be gone. The same answer as
+"Voorbeeld-pdf" (documents/_editor_dialogs.html). In a browser tab, in the
+desktop app and without JS the link opens the file in a new tab and this
+dialog stays unused. The templates keep the page itself free of a frame
+until the dialog opens.{% endcomment %}
+<dialog id="bonnetje-bekijken" class="dialog is-pdf" aria-labelledby="bonnetje-bekijken-titel">
+    <div class="dialog-body">
+        <h2 id="bonnetje-bekijken-titel" class="r-name"></h2>
+        <template data-pdf><iframe class="pdf-frame"></iframe></template>
+        <template data-photo><img class="dialog-photo" alt=""></template>
+    </div>
+    <div class="dialog-foot"><button type="button" class="btn btn-secondary" command="close" commandfor="bonnetje-bekijken" autofocus>{% translate "Sluiten" %}</button></div>
+</dialog>

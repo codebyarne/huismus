@@ -71,3 +71,31 @@ def test_pages_link_the_manifest_and_the_home_screen_icon(client):
     assert f'<link rel="manifest" href="{reverse("pwa_manifest")}">' in html
     assert "core/icons/apple-touch-icon.png" in html
     assert 'name="theme-color"' in html
+
+
+# Addresses outside Huismus: in the installed app iOS opens those in a sheet
+# with "Gereed", so a new tab there is fine.
+_ELSEWHERE = ("{{ whats_new_url }}", "{{ authorize_url }}", "{{ release.page_url }}")
+
+
+def test_every_new_tab_inside_huismus_has_a_way_back_in_the_installed_app():
+    # In the app on the home screen a new tab of Huismus's own takes over the
+    # screen with no back button (a receipt in Verwerken, the owner on an
+    # iPhone, BUGS-BY-HAND.md). Each such link or button needs app.js's
+    # answer there: a dialog over the page (data-view-receipt,
+    # data-preview-pdf) or a sheet (data-file).
+    import re
+    from pathlib import Path
+
+    templates = Path(__file__).resolve().parents[2] / "huismus" / "templates"
+    stranded = []
+    for path in templates.rglob("*.html"):
+        if path.parts[-2] == "site":  # the public site: no app there
+            continue
+        for tag in re.findall(r"<(?:a|button)\b[^>]*target=\"_blank\"[^>]*>", path.read_text()):
+            href = re.search(r'href="([^"]*)"', tag)
+            if href and href.group(1) in _ELSEWHERE:
+                continue
+            if not re.search(r"data-(view-receipt|preview-pdf|file)\b", tag):
+                stranded.append(f"{path.relative_to(templates)}: {tag[:120]}")
+    assert not stranded, stranded
