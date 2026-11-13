@@ -228,6 +228,68 @@ def test_a_failed_update_says_why_on_the_updates_page(desktop, code, sentence):
     assert 'id="bijwerken-mislukt"' in page and sentence in page
 
 
+# -- A version for a newer macOS (issue #155; huismus-intern/besluiten.md, 2026-11-13)
+
+
+@pytest.fixture
+def needs_15(desktop, monkeypatch, tmp_path):
+    """1.4.0 downloaded ahead, asking macOS 15.0, on a Mac with 14.6."""
+    package = tmp_path / "Huismus-1.4.0-macos.dmg"
+    package.write_bytes(b"dmg")
+    updates.update_status(
+        available=RELEASE,
+        downloaded={
+            "version": "1.4.0",
+            "path": str(package),
+            "sha256": RELEASE["sha256"],
+            "minimum_os": "15.0",
+        },
+    )
+    monkeypatch.setattr(updates, "this_macos", lambda: "14.6")
+    return desktop
+
+
+def test_the_overview_says_to_update_macos_first(needs_15):
+    page = _overview(needs_15)
+    assert "Huismus 1.4.0 is er, maar vraagt macOS 15 (Sequoia) of nieuwer." in page
+    assert "Werk eerst macOS bij." in page
+    assert "staat klaar" not in page and "wordt gedownload" not in page
+
+
+def test_updates_says_which_macos_and_offers_no_button(needs_15):
+    page = needs_15.get(reverse("business:updates")).content.decode()
+    assert "Deze versie vraagt macOS 15 (Sequoia) of nieuwer. Je Mac heeft macOS 14.6." in page
+    assert "Systeeminstellingen → Algemeen → Software-update" in page
+    assert "Wat is er nieuw in 1.4.0?" in page
+    assert "Bijwerken naar 1.4.0" not in page
+    assert needs_15.get(reverse("business:updates_install")).url == reverse("business:updates")
+
+
+def test_in_english_too(needs_15):
+    needs_15.cookies["django_language"] = "en"
+    assert "Huismus 1.4.0 is out, but needs macOS 15 (Sequoia) or later." in _overview(needs_15)
+    page = needs_15.get(reverse("business:updates")).content.decode()
+    assert "This version needs macOS 15 (Sequoia) or later. Your Mac has macOS 14.6." in page
+
+
+def test_bijwerken_for_a_newer_macos_is_no_error(desktop, monkeypatch):
+    # Not downloaded ahead (looking happened, downloading not yet): the
+    # button finds out, and Updates then says what to do, without a red
+    # message (huismus-intern/besluiten.md, 2026-11-13).
+    updates.update_status(available=RELEASE)
+    monkeypatch.setattr(updates, "this_macos", lambda: "14.6")
+
+    def asks_15(release):
+        updates.update_status(downloaded={"version": "1.4.0", "path": "", "minimum_os": "15"})
+        raise updates.UpdateError("macos")
+
+    with patch("huismus.core.updates.install", side_effect=asks_15):
+        response = desktop.post(reverse("business:updates_install"), follow=True)
+    page = response.content.decode()
+    assert 'id="bijwerken-mislukt"' not in page
+    assert "Deze versie vraagt macOS 15 (Sequoia) of nieuwer." in page
+
+
 # -- "Huismus is bijgewerkt" (issue #149; huismus-intern/besluiten.md, 2026-11-12)
 
 UPDATED = "Huismus is bijgewerkt naar 1.3.0."

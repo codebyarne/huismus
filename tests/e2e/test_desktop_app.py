@@ -234,6 +234,39 @@ def test_a_downloaded_version_waits_for_the_next_start(desktop, tmp_path, monkey
     expect(app.locator("#nieuwe-versie")).to_have_count(0)
 
 
+@pytest.mark.parametrize("width", [360, 1440])
+def test_a_version_for_a_newer_macos_says_to_update_macos_first(
+    desktop, tmp_path, monkeypatch, width
+):
+    """Issue #155: 0.1.4 asked macOS 15, and a 0.1.3 app on macOS 14 updated
+    itself and didn't open any more. Now the downloaded app is read first;
+    the banner turns from "wordt gedownload" into what to do, by itself."""
+    from huismus.core import updates
+
+    app = desktop
+    app.set_viewport_size({"width": width, "height": 800})
+    _fake_release(tmp_path, monkeypatch)
+    monkeypatch.setattr(updates, "minimum_os", lambda package: "15.0")
+    monkeypatch.setattr(updates, "this_macos", lambda: "14.6")
+    updates.check()
+
+    app.goto(app.base + "/")
+    expect(app.locator("#nieuwe-versie")).to_contain_text("wordt gedownload")
+    updates.prepare()
+    expect(app.locator("#nieuwe-versie")).to_contain_text(
+        "Huismus 1.4.0 is er, maar vraagt macOS 15 (Sequoia) of nieuwer. Werk eerst macOS bij."
+    )
+    assert _overflow(app) <= 1
+
+    app.locator("#nieuwe-versie").click()
+    expect(app.locator("#eerst-macos")).to_contain_text(
+        "Deze versie vraagt macOS 15 (Sequoia) of nieuwer. Je Mac heeft macOS 14.6."
+    )
+    expect(app.get_by_role("link", name="Wat is er nieuw in 1.4.0?")).to_be_visible()
+    expect(app.get_by_role("link", name="Bijwerken naar 1.4.0")).to_have_count(0)
+    assert _overflow(app) <= 1
+
+
 def test_set_a_password_then_turn_it_off(desktop):
     # Wachtwoord (design D6): the fields show once the switch is on, with
     # CSS only; then the app asks it when it opens, until it is turned off.
