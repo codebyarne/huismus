@@ -1,0 +1,21 @@
+{
+  "name": "huismus-promo-film",
+  "private": true,
+  "description": "Promofilmpjes van Huismus, gemonteerd met Remotion uit echte schermbeelden (scripts/promo_film.py).",
+  "license": "AGPL-3.0-or-later",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.541",
+    "@remotion/transitions": "4.0.541",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.541"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.12",
+    "typescript": "5.6.3"
+  }
+}
