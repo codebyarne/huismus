@@ -49,8 +49,10 @@ def test_set_up_webdav_save_the_code_and_restore_from_it(app, dav):
 
     expect(app.locator("h1")).to_have_text("Back-ups")
     expect(app.locator("#toasts")).to_contain_text("De eerste back-up gaat nu naar WebDAV.")
-    # The upload runs in its own thread; the row asks again until it's done.
-    expect(row).to_contain_text("Laatste back-up vandaag")
+    # The upload runs in its own thread; the row asks again every 3 s until
+    # it's done. On a busy machine (the gate, every core) that took longer
+    # than expect's 5 s now and then; 10 s as in the test below.
+    expect(row).to_contain_text("Laatste back-up vandaag", timeout=10_000)
     expect(app.locator("#plek-dropbox")).to_contain_text("Ontkoppel eerst WebDAV")
     row.get_by_role("link", name="Beheren").click()
     expect(app.locator("h1")).to_have_text("Back-ups in WebDAV")
