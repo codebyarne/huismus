@@ -295,7 +295,8 @@ jobs:
         # it runs inside the package, so the check also sees that it knows
         # (the log line) and that its log reaches the real %LOCALAPPDATA%,
         # not a folder of the package's own (FileSystemWriteVirtualization).
-        shell: pwsh
+        # Windows PowerShell: PowerShell 7 can't load the Appx module.
+        shell: powershell
         env:
           MSIX_PUBLISHER: ${{ secrets.MSIX_PUBLISHER }}
         run: |
