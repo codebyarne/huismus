@@ -15,10 +15,15 @@ REPO=codebyarne/huismus
 PROJECT_ID=PVT_kwHOELVXCM4BqhnM
 STATUS_FIELD=PVTSSF_lAHOELVXCM4BqhnMzho4YqM
 IN_PROGRESS=47fc9ee4
-# "@me" en niet codebyarne: met een naam zoekt gh project eerst op of het een
-# gebruiker of organisatie is, en dat mag het token met alleen `project` niet
-# ("unknown owner type"). Het token en de lokale login zijn allebei van de eigenaar.
-OWNER="@me"
+# Direct GraphQL en niet `gh project`: dat eist voor elk token ook read:org en
+# read:discussion, en het token voor de Action heeft alleen `project`.
+board_gql() {
+  if [[ -n "${GH_PROJECT_TOKEN:-}" ]]; then
+    GH_TOKEN="$GH_PROJECT_TOKEN" gh api graphql "$@"
+  else
+    gh api graphql "$@"
+  fi
+}
 
 run() {
   if [[ -n "${DRY_RUN:-}" ]]; then
@@ -28,24 +33,71 @@ run() {
   fi
 }
 
+# Alle items in de volgorde van het bord, als [{id, status, repo, number, labels}].
 board_items() {
-  ./scripts/bord.sh item-list 1 --owner "$OWNER" --limit 500 --format json
+  # shellcheck disable=SC2016  # $project en $endCursor zijn GraphQL-variabelen
+  board_gql --paginate -f project="$PROJECT_ID" -f query='
+    query($project: ID!, $endCursor: String) {
+      node(id: $project) { ... on ProjectV2 {
+        items(first: 100, after: $endCursor) {
+          pageInfo { hasNextPage endCursor }
+          nodes {
+            id
+            status: fieldValueByName(name: "Status") {
+              ... on ProjectV2ItemFieldSingleSelectValue { name }
+            }
+            content { ... on Issue {
+              number
+              repository { nameWithOwner }
+              labels(first: 30) { nodes { name } }
+            } }
+          }
+        }
+      } }
+    }' --jq '.data.node.items.nodes[] | {
+      id,
+      status: .status.name,
+      repo: .content.repository.nameWithOwner,
+      number: .content.number,
+      labels: [.content.labels.nodes[]?.name]
+    }' | jq -s .
+}
+
+set_in_progress() {
+  # shellcheck disable=SC2016
+  board_gql -f project="$PROJECT_ID" -f item="$1" -f field="$STATUS_FIELD" \
+    -f option="$IN_PROGRESS" -f query='
+    mutation($project: ID!, $item: ID!, $field: ID!, $option: String!) {
+      updateProjectV2ItemFieldValue(input: {
+        projectId: $project, itemId: $item, fieldId: $field,
+        value: { singleSelectOptionId: $option }
+      }) { clientMutationId }
+    }' --silent
+}
+
+add_to_board() {
+  local issue_id
+  issue_id=$(gh api "repos/$REPO/issues/$1" --jq .node_id)
+  # shellcheck disable=SC2016
+  board_gql -f project="$PROJECT_ID" -f content="$issue_id" -f query='
+    mutation($project: ID!, $content: ID!) {
+      addProjectV2ItemById(input: { projectId: $project, contentId: $content }) {
+        item { id }
+      }
+    }' --jq .data.addProjectV2ItemById.item.id
 }
 
 items=$(board_items)
 
 if [[ -n "${BEZIG_ISSUE:-}" ]]; then
   item=$(jq -r --argjson n "$BEZIG_ISSUE" --arg repo "$REPO" \
-    '.items[] | select(.content.type == "Issue" and .content.repository == $repo and .content.number == $n) | .id' \
-    <<<"$items")
+    '.[] | select(.repo == $repo and .number == $n) | .id' <<<"$items")
   if [[ -z "$item" ]]; then
-    item=$(run ./scripts/bord.sh item-add 1 --owner "$OWNER" \
-      --url "https://github.com/$REPO/issues/$BEZIG_ISSUE" --format json --jq .id)
+    item=$(run add_to_board "$BEZIG_ISSUE")
   fi
   echo "#$BEZIG_ISSUE is bezig: op het bord naar In Progress"
-  run ./scripts/bord.sh item-edit --project-id "$PROJECT_ID" --id "$item" \
-    --field-id "$STATUS_FIELD" --single-select-option-id "$IN_PROGRESS"
-  [[ -z "${DRY_RUN:-}" ]] && items=$(board_items)
+  run set_in_progress "$item"
+  if [[ -z "${DRY_RUN:-}" ]]; then items=$(board_items); fi
 fi
 
 # Het bord kent de staat van een issue niet; een gesloten issue kan nog even op
@@ -55,11 +107,11 @@ open_issues=$(gh api --paginate "repos/$REPO/issues?state=open&per_page=100" \
 
 # Dezelfde wachtrij als in CLAUDE.md: bovenste Todo-issue zonder wacht, idee of pauze.
 next=$(jq -r --argjson open "$open_issues" --arg repo "$REPO" '
-  [.items[]
-   | select(.content.type == "Issue" and .content.repository == $repo and .status == "Todo")
-   | select(.content.number as $n | $open | index($n))
-   | select((.labels // []) | any(. == "wacht" or . == "idee" or . == "pauze") | not)
-  ][0].content.number // empty' <<<"$items")
+  [.[]
+   | select(.repo == $repo and .status == "Todo")
+   | select(.number as $n | $open | index($n))
+   | select(.labels | any(. == "wacht" or . == "idee" or . == "pauze") | not)
+  ][0].number // empty' <<<"$items")
 
 labelled=$(gh api "repos/$REPO/issues?labels=volgende&state=all&per_page=100" --jq '.[].number')
 
