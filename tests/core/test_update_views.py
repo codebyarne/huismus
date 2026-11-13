@@ -281,7 +281,7 @@ def test_bijwerken_for_a_newer_macos_is_no_error(desktop, monkeypatch):
 
     def asks_15(release):
         updates.update_status(downloaded={"version": "1.4.0", "path": "", "minimum_os": "15"})
-        raise updates.UpdateError("macos")
+        raise updates.NeedsNewerMacOS
 
     with patch("huismus.core.updates.install", side_effect=asks_15):
         response = desktop.post(reverse("business:updates_install"), follow=True)

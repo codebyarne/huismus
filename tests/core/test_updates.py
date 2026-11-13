@@ -518,6 +518,17 @@ def test_bijwerken_refuses_a_version_for_a_newer_macos(needs_15, monkeypatch):
     assert updates.needs_macos() == "15"
 
 
+def test_an_even_newer_version_for_a_newer_macos_replaces_the_waiting_one(needs_15):
+    # Replacing the file itself: test_a_newer_release_replaces_the_waiting_one.
+    updates.prepare()
+    updates.update_status(available=updates.load_status().available | {"version": "1.5.0"})
+
+    updates.prepare()
+
+    assert updates.load_status().downloaded["version"] == "1.5.0"
+    assert updates.needs_macos() == "15" and updates.waiting() is None
+
+
 def test_an_app_that_cant_be_read_is_installed_as_before(found, monkeypatch):
     def unreadable(package):
         raise OSError("hdiutil failed")
