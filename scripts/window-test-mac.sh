@@ -100,10 +100,15 @@ open "$app"
 for _ in $(seq 300); do
     if [ "$(grep -c "Huismus draait op" "$log" 2>/dev/null)" -ge 2 ] && pgrep -x Huismus >/dev/null \
         && ! grep -q '"to_version"' "$data/update-status.json"; then
+        updated=yes
         break
     fi
     sleep 1
 done
+if [ "${updated:-}" != yes ]; then
+    echo "::error::Bijwerken was na 300 s niet klaar"
+    exit 1
+fi
 version=$(defaults read "$app/Contents/Info.plist" CFBundleShortVersionString)
 if [ "$version" != "$new_version" ]; then
     echo "::error::Na het bijwerken staat versie $version er, niet $new_version"
@@ -113,6 +118,8 @@ fi
 quit_app
 
 # Driven once more with a token of this script's own: the overview and pages.
+# A log of its own, so the test reads this start's address, not an earlier one.
+mv "$log" "$RUNNER_TEMP/huismus-bijwerken.log"
 start_with_token
 HUISMUS_RELEASE_TEST_TOKEN="$token" "${test[@]}" updated "$new_version" --server --shots "$shots/bijwerken"
 quit_app
