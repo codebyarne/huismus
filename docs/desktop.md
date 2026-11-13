@@ -212,6 +212,58 @@ installeert heeft geen MSYS2 nodig. Staat MSYS2 ergens anders dan `C:\msys64`,
 zet dan `PANGO_BIN` op zijn map `ucrt64\bin`. Controleren gaat net als op de Mac:
 `HUISMUS_DATA_DIR=... dist/Huismus/Huismus.exe --check`.
 
+### Microsoft Store
+
+Dezelfde `dist/Huismus` gaat ook als MSIX-pakket naar de Microsoft Store
+(Store-ID `9NKWHBHSFMHN`). Microsoft ondertekent wat de Store uitlevert, dus
+die versie heeft geen last van SmartScreen of Smart App Control. Na
+`build-windows.sh`, met de Windows SDK:
+
+```bash
+./scripts/build-msix.sh
+```
+
+Dat maakt `dist/Huismus-<versie>-windows.msix`, niet ondertekend: de Store
+ondertekent hem zelf. Het manifest en de logo's komen uit `desktop/msix.py`.
+De identiteit die Partner Center voor Huismus heeft vastgelegd, staat in drie
+secrets van de repository (Settings → Secrets and variables → Actions),
+omdat de naam van de uitgever een persoonsnaam is en de logs van een run
+openbaar zijn:
+`MSIX_IDENTITY_NAME`, `MSIX_PUBLISHER` (`CN=…`) en
+`MSIX_PUBLISHER_DISPLAY_NAME`. Lokaal zet je ze in de omgeving.
+
+Wat anders is dan bij de installer:
+
+- **Bijwerken doet de Store.** `Huismus.exe` ziet zelf dat hij uit een pakket
+  draait (`desktop/windows.py`, `packaged`) en zet dan `HUISMUS_STORE`.
+  Huismus kijkt dan niet op GitHub, downloadt niets en installeert niets;
+  Instellingen → Updates zegt alleen dat de Store het doet. Wat de installer
+  in het statusbestand achterliet (een gedownloade versie, een mislukte
+  update), gaat bij de eerste start weg (`updates.start_from_store`).
+- **Back-up vóór de migraties.** De Store vervangt de app terwijl Huismus
+  dicht is. Brengt de nieuwe versie migraties mee, dan maakt Huismus bij het
+  openen eerst een back-up, net als bij een eigen update. Mislukken de
+  migraties, dan biedt het scherm die back-up aan.
+- **Dezelfde administratie.** Het manifest zet de virtualisatie van
+  `%APPDATA%` uit (`FileSystemWriteVirtualization`, met de beperkte
+  capability `unvirtualizedResources`). Zo blijft de administratie in
+  `%APPDATA%\Huismus`: wie overstapt van de installer houdt alles, en
+  verwijderen laat de administratie staan. Daarom is Windows 10 2004 het
+  minimum.
+
+`release.yml` bouwt het pakket in de job `windows-app`, ondertekent een kopie
+met een wegwerpcertificaat, installeert die en draait `Huismus.exe --check`
+via zijn alias, binnen het pakket. Het pakket staat 30 dagen als artifact
+`windows-store` bij de run. Het komt niet op de GitHub-release: de updates
+van de installer zoeken daar alleen de `.exe` en de `.dmg`.
+
+**Inzenden** gaat met de hand in Partner Center: Start submission, het
+`.msix` uit het artifact uploaden, en bij `unvirtualizedResources` deze reden:
+"The app stores the user's own bookkeeping records in %APPDATA%\Huismus, the
+same place as our installer version, so users who move to the Store version
+keep their data, and uninstalling never deletes their records." Elke versie
+moet hoger zijn dan de vorige inzending.
+
 Vanuit de broncode, zonder in te pakken:
 
 ```bash
