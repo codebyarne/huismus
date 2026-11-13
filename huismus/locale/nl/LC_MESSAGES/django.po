@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 07:36+0100\n"
+"POT-Creation-Date: 2026-11-13 08:05+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1249,9 +1249,6 @@ msgid "Voor je boekhouder"
 msgstr ""
 
 msgid "Installeren en bijwerken"
-msgstr ""
-
-msgid "Wat Huismus (nog) niet doet"
 msgstr ""
 
 msgid "Huismus zet een back-up terug. Even geduld…"

@@ -155,7 +155,7 @@
             <li>
                 <div class="grow">
                     <a class="title" href="{% url 'quotes:edit' quote.pk %}">{{ quote|contact_name }}</a>
-                    <div class="small muted">{{ quote.number }}{% if hint.0 == "soon" %} · <span class="due-hint"><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% if hint.1 == 0 %}{% translate "verloopt vandaag" %}{% else %}{% blocktranslate count days=hint.1 %}verloopt over {{ days }} dag{% plural %}verloopt over {{ days }} dagen{% endblocktranslate %}{% endif %}</span>{% elif hint.0 == "past" %} · <span class="due-hint is-past"><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% translate "geldigheid voorbij" %}</span>{% elif quote.expiry_date %} · {% blocktranslate with date=quote.expiry_date|date:"j b Y" %}geldig tot {{ date }}{% endblocktranslate %}{% endif %}</div>
+                    <div class="small muted">{{ quote.number }}{% if hint.0 == "soon" %} · <span class="due-hint"><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% if hint.1 == 0 %}{% translate "verloopt vandaag" %}{% else %}{% blocktranslate count days=hint.1 %}verloopt over {{ days }} dag{% plural %}verloopt over {{ days }} dagen{% endblocktranslate %}{% endif %}</span>{% elif hint.0 == "past" %} · <span class="due-hint is-past"><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% translate "geldigheid voorbij" %}</span>{% elif quote.expiry_date %} · {% blocktranslate with date=quote.expiry_date|date:"SHORT_DATE_FORMAT" %}geldig tot {{ date }}{% endblocktranslate %}{% endif %}</div>
                 </div>
                 <span class="amount">{{ quote.total_cents|money }}</span>
             </li>

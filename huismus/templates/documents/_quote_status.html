@@ -17,7 +17,7 @@ endpoints (quotes:accept, ...); unsaved edits in the editor don't go along.{% en
             <span class="small muted">{% translate "Verzend de offerte om hem een nummer te geven. Daarna kun je hem mailen of de PDF downloaden." %}</span>
             {% elif document.status == "sent" %}
             <strong>{% translate "Wacht op antwoord van de klant" %}</strong>
-            <span class="small muted">{% translate "Heb je antwoord? Leg het hier vast." %}{% if document.expiry_date %} {% blocktranslate with date=document.expiry_date|date:"j b Y" %}Geldig tot {{ date }}.{% endblocktranslate %}{% endif %}</span>
+            <span class="small muted">{% translate "Heb je antwoord? Leg het hier vast." %}{% if document.expiry_date %} {% blocktranslate with date=document.expiry_date|date:"SHORT_DATE_FORMAT" %}Geldig tot {{ date }}.{% endblocktranslate %}{% endif %}</span>
             {% elif document.status == "accepted" %}
             <strong>{% translate "Geaccepteerd door de klant" %}</strong>
             <span class="small muted">{% if converted_invoice %}{% translate "Er is al een factuur van gemaakt." %} <a href="{% url 'documents:edit' converted_invoice.pk %}">{% translate "Naar de factuur" %}</a>{% else %}{% translate "Zet de offerte om naar een factuur." %}{% endif %}</span>

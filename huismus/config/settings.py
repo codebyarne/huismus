@@ -148,6 +148,8 @@ LANGUAGES = [
     ("en", "English"),
 ]
 LOCALE_PATHS = [CODE_DIR / "locale"]
+# "6 aug 2026" in Dutch, "6 Aug 2026" in English (huismus/formats/).
+FORMAT_MODULE_PATH = "huismus.formats"
 # The NL/EN choice (set_language) for a year instead of until the browser
 # closes: a phone, and the app on its home screen, close all the time, and
 # the language jumped back while the login stayed (huismus-intern/besluiten.md,

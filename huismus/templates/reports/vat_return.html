@@ -95,7 +95,7 @@
     <div class="card-pad"><h3>{{ titles.back_in_draft }}</h3><p class="muted small">{% translate "Je zette deze facturen terug in concept. Geef ze weer uit, dan tellen ze mee." %}</p></div>
     <div class="table-wrap"><table class="table">
         <thead><tr><th>{% translate "Nummer" %}</th><th>{% translate "Datum" %}</th></tr></thead>
-        <tbody>{% for document in report.back_in_draft %}<tr><td class="num"><a href="{% url 'documents:edit' document.pk %}">{{ document.number }}</a></td><td class="num">{{ document.issue_date|date:"j b Y" }}</td></tr>{% endfor %}</tbody>
+        <tbody>{% for document in report.back_in_draft %}<tr><td class="num"><a href="{% url 'documents:edit' document.pk %}">{{ document.number }}</a></td><td class="num">{{ document.issue_date|date:"SHORT_DATE_FORMAT" }}</td></tr>{% endfor %}</tbody>
     </table></div>
 </section>
 {% endif %}
@@ -105,7 +105,7 @@
     <div class="card-pad"><h3>{{ titles.lines_missing }}</h3><p class="muted small">{% translate "Vul het tarief en de btw aan in de uitgave, dan tellen ze mee." %}</p></div>
     <div class="table-wrap"><table class="table">
         <thead><tr><th>{% translate "Uitgave" %}</th><th class="r">{% translate "Bedrag" %}</th></tr></thead>
-        <tbody>{% for line in report.lines_missing %}<tr><td><a href="{% url 'expenses:edit' line.expense_id %}">{{ line.expense.supplier|default:line.expense.description|default:_("Uitgave") }}</a><br><span class="muted small">{{ line.expense.date|date:"j b Y" }}{% if line.description %} · {{ line.description }}{% endif %}</span></td><td class="r amount">{{ line.amount_cents|money }}</td></tr>{% endfor %}</tbody>
+        <tbody>{% for line in report.lines_missing %}<tr><td><a href="{% url 'expenses:edit' line.expense_id %}">{{ line.expense.supplier|default:line.expense.description|default:_("Uitgave") }}</a><br><span class="muted small">{{ line.expense.date|date:"SHORT_DATE_FORMAT" }}{% if line.description %} · {{ line.description }}{% endif %}</span></td><td class="r amount">{{ line.amount_cents|money }}</td></tr>{% endfor %}</tbody>
     </table></div>
 </section>
 {% endif %}

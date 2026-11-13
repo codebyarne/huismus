@@ -454,7 +454,7 @@ def reason_sentence(receipt: Attachment) -> str:
     if reason == SIMILAR:
         similar = receipt.read_similar
         return _("Niet gelezen: lijkt op je uitgave van %(date)s (%(amount)s).") % {
-            "date": date_filter(similar.date, "j b Y"),
+            "date": date_filter(similar.date, "SHORT_DATE_FORMAT"),
             "amount": money(similar.amount_cents),
         }
     if reason == TIMEOUT:

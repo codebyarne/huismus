@@ -15,7 +15,7 @@
     </div>
     <div class="mode-banner is-done" style="border-radius:0 0 var(--r-lg) var(--r-lg);padding:var(--s-4) var(--s-6)">
         <span class="mb-icon" style="width:36px;height:36px"><svg class="i" aria-hidden="true"><use href="#check"></use></svg></span>
-        <div><strong>{% translate "Geïmporteerd" %}</strong> <span class="muted small">{{ run.started_at|date:"j b Y, H:i" }}</span></div>
+        <div><strong>{% translate "Geïmporteerd" %}</strong> <span class="muted small">{{ run.started_at|date:"SHORT_DATETIME_FORMAT" }}</span></div>
     </div>
 </section>
 <section class="card">

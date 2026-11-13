@@ -47,8 +47,9 @@ class Group:
 GROUPS = (
     Group(
         _("Beginnen"),
-        # What each release brings; written on release day (CLAUDE.md, Releases).
-        ("beginnen", WHATS_NEW, FEEDBACK),
+        # WHATS_NEW: what each release brings, written on release day (CLAUDE.md,
+        # Releases).
+        ("beginnen", "functies", WHATS_NEW, FEEDBACK),
     ),
     Group(_("Overstappen"), ("moneybird",)),
     Group(
@@ -64,9 +65,8 @@ GROUPS = (
             "ai-assistenten",
         ),
     ),
-    Group(_("Voor je boekhouder"), ("exporteren",)),
+    Group(_("Voor je boekhouder"), ("boekhouder", "exporteren")),
     Group(_("Installeren en bijwerken"), ("desktop-app", "docker", "vps", "telefoon")),
-    Group(_("Wat Huismus (nog) niet doet"), ()),
 )
 TOPICS = tuple(slug for group in GROUPS for slug in group.topics)
 
