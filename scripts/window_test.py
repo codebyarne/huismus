@@ -245,29 +245,50 @@ def _invoice_number(page) -> str:
 
 
 def _download(page, link) -> bytes:
-    """As the user's click, where Playwright can catch the download. In
-    WebView2 (Windows) the app shows its own save dialog instead, which
-    no test can click: there the page fetches the same address, with the
-    window's own cookie."""
-    href = link.get_attribute("href")
-    if page.context.browser and page.context.browser.browser_type.name == "chromium":
-        try:
-            with page.expect_download(timeout=15_000) as caught:
-                link.click()
-            return Path(caught.value.path()).read_bytes()
-        except Exception as error:
-            print("Geen download te vangen, dus opgehaald:", error, flush=True)  # noqa: T201
-    data = page.evaluate(
-        """async href => {
-            const response = await fetch(href);
-            const bytes = new Uint8Array(await response.arrayBuffer());
-            return Array.from(bytes.slice(0, 8)).concat([bytes.length]);
-        }""",
-        href,
-    )
-    *head, size = data
-    print(f"PDF opgehaald: {size} bytes", flush=True)  # noqa: T201
-    return bytes(head)
+    """Downloaden, as the user clicks it. In the app's window on Windows
+    pywebview asks where to save with the system's own dialog; the test
+    accepts what it proposes (Enter), as a user would, and reads the file
+    from Downloads. Elsewhere Playwright catches the download."""
+    if sys.platform != "win32":
+        with page.expect_download() as caught:
+            link.click()
+        return Path(caught.value.path()).read_bytes()
+    downloads = Path.home() / "Downloads"
+    before = set(downloads.glob("*.pdf"))
+    # Clicked from the page a moment later, so this call doesn't wait on a
+    # window that only a modal dialog answers.
+    link.evaluate("link => setTimeout(() => link.click(), 300)")
+    _retry(_press_enter_in_the_save_dialog, "bewaarvenster", seconds=60)
+    saved = _retry(lambda: _new_file(downloads, before), "pdf in Downloads", seconds=60)
+    return saved.read_bytes()
+
+
+def _press_enter_in_the_save_dialog():
+    """The system's dialog (class #32770) of this session, brought forward
+    and answered with Enter."""
+    import ctypes
+
+    user32 = ctypes.windll.user32
+    dialog = user32.FindWindowW("#32770", None)
+    if not dialog:
+        raise LookupError("nog geen bewaarvenster")
+    user32.SetForegroundWindow(dialog)
+    time.sleep(0.5)
+    enter = 0x0D
+    user32.keybd_event(enter, 0, 0, 0)
+    user32.keybd_event(enter, 0, 2, 0)  # KEYEVENTF_KEYUP
+    time.sleep(1)
+    if user32.IsWindow(dialog) and user32.IsWindowVisible(dialog):
+        raise LookupError("het bewaarvenster staat er nog")
+
+
+def _new_file(folder: Path, before: set) -> Path:
+    new = [path for path in set(folder.glob("*.pdf")) - before if path.stat().st_size > 0]
+    if not new:
+        raise LookupError("nog geen nieuwe pdf")
+    time.sleep(1)  # written to the end
+    print("Bewaard:", new[0].name, flush=True)  # noqa: T201
+    return new[0]
 
 
 def updated(page, base, shots, version):
