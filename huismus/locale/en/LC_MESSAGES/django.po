@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 07:00+0100\n"
+"POT-Creation-Date: 2026-11-13 07:49+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1301,9 +1301,6 @@ msgstr "For your accountant"
 
 msgid "Installeren en bijwerken"
 msgstr "Installing and updating"
-
-msgid "Wat Huismus (nog) niet doet"
-msgstr "What Huismus doesn't do (yet)"
 
 msgid "Huismus zet een back-up terug. Even geduld…"
 msgstr "Huismus is restoring a backup. One moment…"
@@ -6554,6 +6551,9 @@ msgid ""
 msgstr ""
 "If you have a Raspberry Pi, a NAS, your own server or a VPS, you can also "
 "run Huismus in Docker. That is for people who are handy with that."
+
+#~ msgid "Wat Huismus (nog) niet doet"
+#~ msgstr "What Huismus doesn't do (yet)"
 
 #~ msgid ""
 #~ "Gratis ondertekening van de Windows-versie door SignPath.io, certificaat "
