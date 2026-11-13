@@ -73,6 +73,7 @@ rm -rf "$data" "$data.lock" "$log"
 start_with_token
 "${test[@]}" mac-window "$shots/00-venster.png"
 HUISMUS_RELEASE_TEST_TOKEN="$token" "${test[@]}" first-invoice --server --shots "$shots"
+"${test[@]}" mac-window "$shots/12-venster.png"
 quit_app
 
 echo "== 2. Bijwerken vanaf $previous_tag"
@@ -85,8 +86,10 @@ git worktree add --quiet --detach "$previous" "$previous_tag"
 (
     cd "$previous"
     export HUISMUS_DATA_DIR="$data" HUISMUS_DESKTOP=true
-    uv run --no-dev python manage.py migrate --verbosity 0
-    uv run --no-dev python manage.py demo_data --yes
+    # Without Django's checks: they load every page, the PDF too, and this
+    # runner has no Pango outside the app. Making records needs no PDF.
+    uv run --no-dev python manage.py migrate --verbosity 0 --skip-checks
+    uv run --no-dev python manage.py demo_data --yes --skip-checks
 )
 "${test[@]}" records "$data/db.sqlite3" >"$RUNNER_TEMP/before.json"
 cat "$RUNNER_TEMP/before.json"
