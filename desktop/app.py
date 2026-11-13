@@ -427,7 +427,7 @@ def _configure_django(data):
     os.environ["DJANGO_SETTINGS_MODULE"] = "huismus.config.settings"
     os.environ["HUISMUS_DESKTOP"] = "true"
     os.environ["HUISMUS_DATA_DIR"] = str(data)
-    os.environ["HUISMUS_WINDOW_TOKEN"] = secrets.token_urlsafe(32)
+    os.environ["HUISMUS_WINDOW_TOKEN"] = _window_token()
     if getattr(sys, "frozen", False):
         # Fontconfig (for WeasyPrint's PDFs) looks for its configuration
         # where Homebrew or MSYS2 put it on the build machine; the app
@@ -442,6 +442,20 @@ def _configure_django(data):
         import certifi
 
         os.environ.setdefault("SSL_CERT_FILE", certifi.where())
+
+
+RELEASE_TEST_TOKEN = "HUISMUS_RELEASE_TEST_TOKEN"
+
+
+def _window_token() -> str:
+    """New at every start. Except for the release test in the window
+    (scripts/window_test.py, SPEC.md M11): on macOS Playwright can't reach
+    the window, so the test drives the same server and makes the token
+    itself. It hands the token to this one process; whoever can do that
+    can read the process anyway. Taken out of the environment at once, and
+    only a long one counts."""
+    given = os.environ.pop(RELEASE_TEST_TOKEN, "")
+    return given if len(given) >= 32 else secrets.token_urlsafe(32)
 
 
 def _use_the_apps_own_pango():
