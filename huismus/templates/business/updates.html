@@ -21,7 +21,7 @@
 <section class="card settings-section" id="nieuwe-versie">
     <div class="card-pad stack" style="gap:var(--s-3)">
         <h2>{% blocktranslate with version=release.version %}Huismus {{ version }} is er{% endblocktranslate %}</h2>
-        {% if waiting %}<p id="staat-klaar">{% translate "Hij wordt geïnstalleerd als je Huismus opnieuw opent." %}</p>{% elif downloading %}<p id="staat-klaar">{% translate "Hij wordt nu gedownload. Daarna wordt hij geïnstalleerd als je Huismus opnieuw opent." %}</p>{% endif %}
+        {% if needs_macos %}<p id="eerst-macos">{% blocktranslate with macos=needs_macos %}Deze versie vraagt macOS {{ macos }} of nieuwer. Je Mac heeft macOS {{ this_macos }}. Werk eerst macOS bij via Systeeminstellingen → Algemeen → Software-update. Daarna installeert Huismus de nieuwe versie de volgende keer dat je hem opent.{% endblocktranslate %}</p>{% elif waiting %}<p id="staat-klaar">{% translate "Hij wordt geïnstalleerd als je Huismus opnieuw opent." %}</p>{% elif downloading %}<p id="staat-klaar">{% translate "Hij wordt nu gedownload. Daarna wordt hij geïnstalleerd als je Huismus opnieuw opent." %}</p>{% endif %}
         <p><a href="{{ whats_new_url }}" target="_blank" rel="noopener">{% blocktranslate with version=release.version %}Wat is er nieuw in {{ version }}?{% endblocktranslate %}</a></p>
         {% if docker %}
         {% comment %}Docker: no button, Huismus says what to type (core.update_views._docker).{% endcomment %}
@@ -33,7 +33,7 @@
         <pre class="code-block"><code>docker compose pull
 docker compose up -d</code></pre>
         <p><a href="{{ help_url }}">{% translate "Meer over bijwerken in Docker" %}</a></p>
-        {% else %}
+        {% elif not needs_macos %}
         <div class="row"><span class="spacer"></span><a class="btn btn-primary" href="{% url 'business:updates_install' %}">{% blocktranslate with version=release.version %}Bijwerken naar {{ version }}{% endblocktranslate %}</a></div>
         {% endif %}
     </div>

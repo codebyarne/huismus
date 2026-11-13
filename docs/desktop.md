@@ -126,13 +126,27 @@ paar seconden opnieuw op (htmx, zoals de back-uprij). Daarna zegt hij op het ove
 vóórdat het venster Huismus laat zien, installeert de app hem
 (`updates.install_at_start`): nooit midden in een sessie. "Bijwerken naar
 1.4.0" op Instellingen → Updates doet hetzelfde meteen, na bevestiging.
+
+Op de Mac leest de app na het downloaden welke macOS de nieuwe versie minstens
+vraagt: `desktop/updater.py` koppelt het `.dmg` alleen-lezen aan en leest
+`LSMinimumSystemVersion` uit `Huismus.app/Contents/Info.plist`
+(`updates.minimum_os`, issue #155). Is deze macOS ouder, dan blijft de huidige
+versie staan: niet bij het openen, niet met de knop. Het overzicht zegt
+"Huismus 1.4.0 is er, maar vraagt macOS 15 (Sequoia) of nieuwer…", Updates
+zegt hoe je macOS bijwerkt en heeft geen knop. Het bestand blijft liggen; na
+de macOS-update installeert de app hem bij het volgende openen zoals altijd.
+Is het `.dmg` niet te lezen, dan houdt de app niets tegen en schrijft hij een
+regel in het logbestand. Zo ging het mis bij 0.1.4: die vroeg macOS 15, en een
+0.1.3-app op macOS 14 werkte zichzelf bij en opende daarna niet meer.
+
 Installeren gaat zo:
 
 1. kan de app zichzelf hier niet vervangen (niet in een app, map niet
    schrijfbaar), dan stopt hij vóór er iets gebeurt (`updates.precheck`);
 2. gebruikt Huismus het klaarstaande bestand (nog eens gecontroleerd), of
    downloadt het naar `.huismus-update` en controleert de SHA-256 (klopt die
-   niet, of ontbreekt hij: niets installeren);
+   niet, of ontbreekt hij: niets installeren), en leest hij op de Mac nog
+   een keer welke macOS de nieuwe versie vraagt (te oud: niets installeren);
 3. maakt hij een back-up, in de gekozen map of anders in `Huismus back-ups`;
 4. schrijft hij in `update-status.json` van welke naar welke versie en waar
    de back-up staat, start hij een klein script (`desktop/updater.py`) en
@@ -324,7 +338,8 @@ installer staat 3 dagen als bijlage bij de run, en er komt niets online.
 De Pango-pakketten van Homebrew op die runner zijn gebouwd voor macOS 15
 (Sequoia). De app vraagt daarom minstens macOS 15 (`LSMinimumSystemVersion` in
 `desktop/huismus.spec`); op een oudere macOS zegt macOS dat hij daar niet
-werkt. GitHub heeft geen runner voor macOS 14 meer, dus 14 is niet te testen
+werkt, en een app die zichzelf bijwerkt, laat zo'n versie staan (zie
+Bijwerken hierboven). GitHub heeft geen runner voor macOS 14 meer, dus 14 is niet te testen
 (huismus-intern/besluiten.md, 2026-11-13). Elke Apple Silicon-Mac kan macOS 15
 draaien.
 
