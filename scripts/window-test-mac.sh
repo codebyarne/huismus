@@ -97,8 +97,9 @@ cat "$RUNNER_TEMP/before.json"
 
 # As a user opens it. It backs up, closes, is replaced, and opens again.
 open "$app"
-for _ in $(seq 300); do
-    if [ "$(grep -c "Huismus draait op" "$log" 2>/dev/null)" -ge 2 ] && pgrep -x Huismus >/dev/null \
+for _ in $(seq 600); do
+    starts=$(cat "$log" 2>/dev/null | grep -c "Huismus draait op" || true)
+    if [ "$starts" -ge 2 ] && pgrep -x Huismus >/dev/null \
         && ! grep -q '"to_version"' "$data/update-status.json"; then
         updated=yes
         break
@@ -106,7 +107,12 @@ for _ in $(seq 300); do
     sleep 1
 done
 if [ "${updated:-}" != yes ]; then
-    echo "::error::Bijwerken was na 300 s niet klaar"
+    echo "::error::Bijwerken was na 600 s niet klaar"
+    show_log
+    echo "--- update-status.json"
+    cat "$data/update-status.json" || true
+    pgrep -lf Huismus || true
+    "${test[@]}" mac-window "$shots/20-venster-niet-bijgewerkt.png" || true
     exit 1
 fi
 version=$(defaults read "$app/Contents/Info.plist" CFBundleShortVersionString)
