@@ -505,6 +505,7 @@ a:hover { color: var(--primary-hover); }
 .dialog.is-pdf { width: min(960px, calc(100% - 16px)); max-height: calc(100dvh - 16px); }
 .dialog.is-pdf .dialog-body { padding: var(--s-4); }
 .dialog.is-pdf .pdf-frame { height: calc(100dvh - 180px); }
+.dialog.is-pdf .dialog-photo { display: block; max-width: 100%; max-height: calc(100dvh - 180px); margin: 0 auto; object-fit: contain; }
 .dialog.is-static { position: static; display: block; margin: 0; animation: none; }
 
 .sheet { margin: 0 0 0 auto; width: min(440px, 100%); max-width: none; height: 100dvh; max-height: none; padding: 0; border: 0; background: var(--surface); color: var(--text); box-shadow: var(--sh-pop); display: none; flex-direction: column; }

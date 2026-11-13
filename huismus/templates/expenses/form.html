@@ -48,7 +48,8 @@ expense.pk.{% endcomment %}
     <div class="receipts">
         {% for attachment in expense.attachments.all %}
         <div class="receipt">
-            <a class="thumb" href="{{ attachment.file.url }}" hx-boost="false" target="_blank" rel="noopener">
+            {% blocktranslate with name=attachment.filename asvar receipt_label %}Bonnetje {{ name }}{% endblocktranslate %}
+            <a class="thumb" href="{{ attachment.file.url }}" hx-boost="false" target="_blank" rel="noopener" data-view-receipt="bonnetje-bekijken" data-name="{{ attachment.filename }}" data-label="{{ receipt_label }}"{% if attachment.is_pdf %} data-pdf{% endif %}>
                 {% if attachment.is_pdf %}<svg class="i i-lg" aria-hidden="true"><use href="#file"></use></svg>
                 {% else %}<img src="{{ attachment.file.url }}" alt="" style="width:100%;height:100%;object-fit:cover">{% endif %}
             </a>
@@ -129,4 +130,5 @@ expense.pk.{% endcomment %}
     </form>
 </dialog>
 {% endif %}
+{% include "expenses/_receipt_dialog.html" %}
 {% endblock %}

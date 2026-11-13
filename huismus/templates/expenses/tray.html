@@ -36,7 +36,8 @@
     <div class="receipts" style="grid-template-columns:repeat(auto-fill,minmax(120px,1fr))">
         {% for item in receipts %}{% with receipt=item.receipt %}
         <div class="receipt" id="bonnetje-{{ receipt.pk }}">
-            <a class="thumb" href="{{ receipt.file.url }}" hx-boost="false" target="_blank" rel="noopener" aria-label="{% blocktranslate with name=receipt.filename %}{{ name }} openen{% endblocktranslate %}">
+            {% blocktranslate with name=receipt.filename asvar receipt_label %}Bonnetje {{ name }}{% endblocktranslate %}
+            <a class="thumb" href="{{ receipt.file.url }}" hx-boost="false" target="_blank" rel="noopener" data-view-receipt="bonnetje-bekijken" data-name="{{ receipt.filename }}" data-label="{{ receipt_label }}"{% if receipt.is_pdf %} data-pdf{% endif %} aria-label="{% blocktranslate with name=receipt.filename %}{{ name }} openen{% endblocktranslate %}">
                 {% if receipt.is_pdf %}<svg class="i i-lg" aria-hidden="true"><use href="#file"></use></svg>
                 {% else %}<img src="{{ receipt.file.url }}" alt="" style="width:100%;height:100%;object-fit:cover">{% endif %}
             </a>
@@ -81,4 +82,5 @@
 </div>
 {% endif %}
 </div>
+{% include "expenses/_receipt_dialog.html" %}
 {% endblock %}

@@ -540,7 +540,7 @@ document.addEventListener("click", async (event) => {
 // command, with the fallback at the top of this file). In a browser tab, in
 // the desktop app and without JS it still opens in a new tab. The click
 // comes before the submit, so the form already goes to the frame.
-let previewOpener = null;
+let pdfOpener = null;
 document.addEventListener("click", (event) => {
   const button = event.target.closest("[data-preview-pdf]");
   const dialog = button && document.getElementById(button.dataset.previewPdf);
@@ -549,9 +549,34 @@ document.addEventListener("click", (event) => {
   const frame = template.content.firstElementChild.cloneNode();
   template.after(frame);
   button.formTarget = frame.name;
-  previewOpener = button;
+  pdfOpener = button;
   dialog.showModal();
 });
+
+// A receipt (<a data-view-receipt>: "Bonnetje openen" in Verwerken, a
+// thumbnail on an expense or among the receipts without one), in the
+// installed app: as with "Voorbeeld-pdf", a new tab there takes over the
+// screen with no way back, and in Verwerken what was typed would be gone.
+// So it opens in the dialog (expenses/_receipt_dialog.html): a PDF in a
+// frame, a photo as itself. In a browser tab, in the desktop app and
+// without JS the link still opens the file in a new tab.
+document.addEventListener("click", (event) => {
+  const link = event.target.closest("a[data-view-receipt]");
+  const dialog = link && document.getElementById(link.dataset.viewReceipt);
+  if (!dialog || !window.matchMedia("(display-mode: standalone)").matches) return;
+  event.preventDefault();
+  const template = dialog.querySelector(link.hasAttribute("data-pdf") ? "template[data-pdf]" : "template[data-photo]");
+  const shown = template.content.firstElementChild.cloneNode();
+  shown.src = link.getAttribute("href");
+  if (shown.tagName === "IMG") shown.alt = link.dataset.label;
+  else shown.title = link.dataset.label;
+  shown.dataset.shown = "";
+  dialog.querySelector("h2").textContent = link.dataset.name;
+  template.after(shown);
+  pdfOpener = link;
+  dialog.showModal();
+});
+
 document.addEventListener("click", (event) => {
   // A tap on the backdrop lands on the dialog itself, not on its content.
   if (event.target.matches?.("dialog.is-pdf")) event.target.close();
@@ -562,13 +587,13 @@ document.addEventListener(
   (event) => {
     if (!event.target.matches?.("dialog.is-pdf")) return;
     // Gone, so the next preview doesn't first show the previous one.
-    event.target.querySelector("iframe")?.remove();
+    event.target.querySelector("iframe, [data-shown]")?.remove();
     // Focus back on the button that opened it; on a phone that one is in
     // the closed "Meer" menu, so on that menu's button.
-    const menu = previewOpener?.closest("[popover]");
+    const menu = pdfOpener?.closest("[popover]");
     const target = menu && !menu.matches(":popover-open")
       ? document.querySelector(`[popovertarget="${menu.id}"]`)
-      : previewOpener;
+      : pdfOpener;
     target?.focus();
   },
   true,
