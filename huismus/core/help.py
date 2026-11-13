@@ -63,6 +63,7 @@ GROUPS = (
             "kor-en-btw",
             "back-ups",
             "ai-assistenten",
+            "gegevens",
         ),
     ),
     Group(_("Voor je boekhouder"), ("boekhouder", "exporteren")),
