@@ -192,6 +192,9 @@ Answer with one JSON object and nothing else:
 Rules:
 - Never guess. Copy amounts as the receipt shows them; use null for what isn't there.
 - One line per VAT rate is enough. The lines' amounts add up to the total.
+- An amount shown as included in an article ("incl.", "inclusief", "including", e.g.
+  a recycling fee or a levy) is already in that article's price: never a line of
+  its own, and never added to the total.
 - "vat": the VAT amount the receipt states for that line or rate. null when the
   receipt shows no VAT; 0 only when the receipt says 0.
 - "vat_rate": the VAT rate the receipt states for that line: "21", "9", "0" (0% or no

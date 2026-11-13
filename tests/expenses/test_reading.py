@@ -116,6 +116,19 @@ def test_what_is_sent_is_the_receipt_as_the_assistant_reads_it(service):
     assert content[1]["image_url"]["url"].startswith("data:image/jpeg;base64,")
 
 
+def test_the_service_is_told_that_included_amounts_are_no_lines(service):
+    # A webshop's invoice lists a levy or recycling fee under an article as
+    # "Incl. ... 2,80": already in the article's price. Read as a line of
+    # its own, the lines came to more than the total and the receipt stayed
+    # in the tray ("de bedragen tellen niet op tot het totaal").
+    _receipt()
+    service.answer(ANSWER)
+    reading.read_waiting()
+    text = service.requests[-1]["messages"][0]["content"][0]["text"]
+    assert '"incl."' in text
+    assert "already in that article's price" in text
+
+
 def test_a_pdf_with_nothing_to_read_is_never_sent(service):
     from pypdf import PdfWriter
 
