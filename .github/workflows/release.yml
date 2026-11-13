@@ -5,8 +5,12 @@ name: Release
 # which the publish job puts on the GitHub release once both are checked: the
 # files the desktop app's updates look for (huismus/core/updates.py, docs/desktop.md).
 # It also puts a copy of each without the version on it, for the site's buttons.
-# By hand (workflow_dispatch): a trial build of the Windows app only, which
-# publishes nothing (huismus-intern/besluiten.md, "Windows-app: bouwkeuzes"). CLAUDE.md's
+# Before publishing, both apps are opened with their window and used as a
+# user would, and updated from the previous release (the window-test jobs,
+# SPEC.md M11, "Release test in the window"); a failure stops the release.
+# By hand (workflow_dispatch): a trial build and window test of both apps,
+# with a version above the latest release, which publishes nothing
+# (huismus-intern/besluiten.md, "Windows-app: bouwkeuzes", 2026-11-13). CLAUDE.md's
 # own commands section already documents this split: `docker build` locally
 # is native-arch only; CI/release is what builds and pushes both arm64 and
 # amd64 (a Raspberry Pi is arm64; most developer/CI machines are amd64 —
@@ -101,7 +105,6 @@ jobs:
     # Apple Silicon. Pango comes from Homebrew, whose packages here are built
     # for macOS 15, hence LSMinimumSystemVersion 15.0 in desktop/huismus.spec.
     # GitHub no longer runs macos-14 (huismus-intern/besluiten.md, 2026-11-13).
-    if: github.event_name == 'push'
     runs-on: macos-15
     env:
       # Signed with the Developer ID and notarized once its secrets are set
@@ -112,16 +115,30 @@ jobs:
 
       - name: The tag must be the version inside the app
         # Otherwise the updated app reads an older version from pyproject.toml
-        # and offers the same update again.
+        # and offers the same update again. A trial build has no tag.
         run: |
           version=$(sed -n 's/^version = "\(.*\)"$/\1/p' pyproject.toml | head -n 1)
-          if [ "$GITHUB_REF_NAME" != "v${version}" ]; then
+          if [ "$GITHUB_EVENT_NAME" = push ] && [ "$GITHUB_REF_NAME" != "v${version}" ]; then
               echo "::error::Tag $GITHUB_REF_NAME does not match version $version in pyproject.toml"
               exit 1
           fi
           echo "version=$version" >> "$GITHUB_ENV"
 
       - uses: astral-sh/setup-uv@v6
+
+      - name: A trial build gets a version above the latest release
+        # So the window test can update to it from the latest release. Only
+        # in this build: nothing is committed or published.
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          latest=$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName --jq .tagName)
+          next="${latest#v}"
+          next="${next%.*}.$(( ${next##*.} + 1 ))"
+          trial=$(printf '%s\n' "$version" "$next" | sort -V | tail -n 1)
+          uv version "$trial" --no-sync
+          echo "version=$trial" >> "$GITHUB_ENV"
 
       - name: Install Pango (goes inside the app) and gettext
         # compilemessages needs msgfmt, which Homebrew may leave off the PATH.
@@ -207,6 +224,20 @@ jobs:
 
       - uses: astral-sh/setup-uv@v6
 
+      - name: A trial build gets a version above the latest release
+        # So the window test can update to it from the latest release. Only
+        # in this build: nothing is committed or published.
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          latest=$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName --jq .tagName)
+          next="${latest#v}"
+          next="${next%.*}.$(( ${next##*.} + 1 ))"
+          trial=$(printf '%s\n' "$version" "$next" | sort -V | tail -n 1)
+          uv version "$trial" --no-sync
+          echo "version=$trial" >> "$GITHUB_ENV"
+
       - name: Install Pango (goes inside the app) and gettext
         id: msys2
         uses: msys2/setup-msys2@v2
@@ -247,11 +278,114 @@ jobs:
           retention-days: 3
           if-no-files-found: error
 
+  macos-window-test:
+    # The app as a user gets it, with its window (SPEC.md M11, "Release test
+    # in the window"; scripts/window-test-mac.sh): installed from the .dmg,
+    # used on an empty administration, then updated to from the previous
+    # release. Screenshots of each step stay with the run.
+    needs: macos-app
+    runs-on: macos-15
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: macos-app
+          path: ${{ runner.temp }}/new
+
+      - name: The previous release's download
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          new=$(ls "$RUNNER_TEMP"/new/Huismus-*-macos.dmg)
+          version=$(basename "$new" | sed 's/^Huismus-\(.*\)-macos\.dmg$/\1/')
+          previous=$(gh release list --repo "$GITHUB_REPOSITORY" --exclude-drafts --exclude-pre-releases \
+              --json tagName --jq "[.[].tagName | select(. != \"v$version\")][0]")
+          gh release download "$previous" --repo "$GITHUB_REPOSITORY" --dir "$RUNNER_TEMP/previous-release" \
+              --pattern "Huismus-${previous#v}-macos.dmg"
+          {
+              echo "new=$new"
+              echo "version=$version"
+              echo "previous=$previous"
+              echo "previous_dmg=$RUNNER_TEMP/previous-release/Huismus-${previous#v}-macos.dmg"
+          } >> "$GITHUB_ENV"
+
+      - name: Playwright and its browser
+        run: |
+          uv sync --locked --group desktop
+          uv run playwright install chromium
+
+      - name: Open, use and update the app with its window
+        run: ./scripts/window-test-mac.sh "$new" "$version" "$previous_dmg" "$previous" "$RUNNER_TEMP/screenshots"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: window-test-macos
+          path: ${{ runner.temp }}/screenshots
+          retention-days: 30
+          if-no-files-found: warn
+
+  windows-window-test:
+    # As macos-window-test, with the app the installer puts in place
+    # (scripts/window-test-windows.sh); Playwright drives its own WebView2
+    # window.
+    needs: windows-app
+    runs-on: windows-2022
+    timeout-minutes: 40
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-app
+          path: ${{ runner.temp }}/new
+
+      - name: The previous release's download
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          new=$(ls "$RUNNER_TEMP"/new/Huismus-*-windows.exe)
+          version=$(basename "$new" | sed 's/^Huismus-\(.*\)-windows\.exe$/\1/')
+          previous=$(gh release list --repo "$GITHUB_REPOSITORY" --exclude-drafts --exclude-pre-releases \
+              --json tagName --jq "[.[].tagName | select(. != \"v$version\")][0]")
+          gh release download "$previous" --repo "$GITHUB_REPOSITORY" --dir "$RUNNER_TEMP/previous-release" \
+              --pattern "Huismus-${previous#v}-windows.exe"
+          {
+              echo "new=$new"
+              echo "version=$version"
+              echo "previous=$previous"
+              echo "previous_installer=$RUNNER_TEMP/previous-release/Huismus-${previous#v}-windows.exe"
+          } >> "$GITHUB_ENV"
+
+      - name: Playwright
+        # No browser of its own: it drives the app's WebView2.
+        run: uv sync --locked
+
+      - name: Open, use and update the app with its window
+        run: ./scripts/window-test-windows.sh "$new" "$version" "$previous_installer" "$previous" "$RUNNER_TEMP/screenshots"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: window-test-windows
+          path: ${{ runner.temp }}/screenshots
+          retention-days: 30
+          if-no-files-found: warn
+
   publish:
-    # Only once both apps are built and checked, and the security job is
-    # green: never half a release.
+    # Only once both apps are built, checked and tested in their window, and
+    # the security job is green: never half a release.
     if: github.event_name == 'push'
-    needs: [security, macos-app, windows-app]
+    needs: [security, macos-app, windows-app, macos-window-test, windows-window-test]
     runs-on: ubuntu-latest
     permissions:
       contents: write
