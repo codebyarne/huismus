@@ -9,7 +9,7 @@
     <div class="titles">
         <a class="back" href="{% url 'expenses:list' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Uitgaven" %}</a>
         <h1>{% if expense %}{{ expense.description|default:expense.supplier|default:_("Uitgave")|truncatechars:60 }}{% else %}{% translate "Nieuwe uitgave" %}{% endif %}</h1>
-        {% if expense %}<span class="small muted">{% if expense.supplier %}{{ expense.supplier }} · {% endif %}{{ expense.date|date:"j b Y" }}</span>{% endif %}
+        {% if expense %}<span class="small muted">{% if expense.supplier %}{{ expense.supplier }} · {% endif %}{{ expense.date|date:"SHORT_DATE_FORMAT" }}</span>{% endif %}
     </div>
 </div>
 

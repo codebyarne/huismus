@@ -68,7 +68,7 @@
                         </td>
                         <td data-cell="primary"><a class="row-link" href="{% url 'quotes:edit' quote.pk %}">{{ quote|contact_name|default:_("Nog geen klant") }}</a></td>
                         <td data-cell="status"><span class="pill pill-{{ quote.status|quote_pill }}">{{ quote.get_status_display|capfirst }}</span></td>
-                        <td data-cell="hide" class="num">{% if quote.expiry_date %}{{ quote.expiry_date|date:"j b Y" }}{% else %}<span class="muted">·</span>{% endif %}</td>
+                        <td data-cell="hide" class="num">{% if quote.expiry_date %}{{ quote.expiry_date|date:"SHORT_DATE_FORMAT" }}{% else %}<span class="muted">·</span>{% endif %}</td>
                         <td data-cell="amount" class="r amount">{{ quote.total_cents|money }}</td>
                     </tr>
                     {% endfor %}

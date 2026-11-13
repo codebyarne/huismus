@@ -27,7 +27,9 @@ def moment(value, today=None):
         return _("vandaag %(time)s") % {"time": time}
     if days == 1:
         return _("gisteren %(time)s") % {"time": time}
-    day = date_format(value, "j b" if value.year == today.year else "j b Y")
+    day = date_format(
+        value, "MONTH_DAY_FORMAT" if value.year == today.year else "SHORT_DATE_FORMAT"
+    )
     return f"{day} {time}"
 
 

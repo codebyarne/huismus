@@ -16,7 +16,7 @@
             {% elif event.kind == "email" and event.email.succeeded %}<span class="t-dot"><svg class="i" aria-hidden="true"><use href="#mail"></use></svg></span><div class="t-body small">{% blocktranslate with to=event.email.to %}Gemaild naar {{ to }}{% endblocktranslate %}</div>
             {% elif event.kind == "email" %}<span class="t-dot is-bad"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg></span><div class="t-body small">{% blocktranslate with to=event.email.to %}Mailen mislukt naar {{ to }}{% endblocktranslate %}<br>{{ event.email.plain_error }}<br><span class="muted">{{ event.email.error }}</span></div>
             {% elif event.kind == "credit_note" %}<span class="t-dot"><svg class="i" aria-hidden="true"><use href="#undo"></use></svg></span><div class="t-body small"><a href="{% url 'documents:edit' event.document.pk %}">{% blocktranslate with number=event.document.number %}Creditnota {{ number }}{% endblocktranslate %}</a></div>{% endif %}
-            <span class="t-date">{% if event.show_year %}{{ event.date|date:"j b Y" }}{% else %}{{ event.date|date:"j b" }}{% endif %}</span>
+            <span class="t-date">{% if event.show_year %}{{ event.date|date:"SHORT_DATE_FORMAT" }}{% else %}{{ event.date|date:"MONTH_DAY_FORMAT" }}{% endif %}</span>
         </li>
         {% endfor %}
     </ol>
