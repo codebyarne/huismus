@@ -159,6 +159,7 @@ def _update_notices(request) -> dict:
         "new_release": updates.available(),
         "release_waiting": updates.waiting(),
         "release_downloading": updates.downloading(),
+        "release_needs_macos": updates.needs_macos_label(),
     }
 
 

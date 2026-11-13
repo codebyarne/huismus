@@ -15,6 +15,12 @@ right away. The first start of the new version runs the migrations; if
 they fail, the shell offers to restore that backup
 (huismus-intern/besluiten.md, 2026-11-04).
 
+On a Mac a new version may ask a newer macOS than this one has (0.1.4 asked
+15 instead of 14). After downloading, the shell reads the minimum from the
+new app (minimum_os, desktop/updater.py); on an older macOS the current
+version stays and Instellingen → Updates says to update macOS first
+(needs_macos; issue #155).
+
 Whether to look and what was found belong to this computer, like the
 backup folder: a small file next to the database that no backup carries
 (UPDATE_STATUS_FILE_NAME).
@@ -30,6 +36,7 @@ import hashlib
 import json
 import logging
 import os
+import platform
 import re
 import sys
 import threading
@@ -68,6 +75,14 @@ class UpdateError(Exception):
     why; core.update_views turns it into a sentence."""
 
 
+class NeedsNewerMacOS(UpdateError):
+    """The new version needs a newer macOS than this Mac has: no error to
+    the user, Instellingen → Updates says what to do (issue #155)."""
+
+    def __init__(self):
+        super().__init__("macos")
+
+
 @dataclass
 class Release:
     version: str
@@ -89,7 +104,7 @@ class Status:
     # get installed (desktop/app.py).
     not_installed: str = ""
     # The checked file that waits for the next start (prepare): version,
-    # path, sha256.
+    # path, sha256, minimum_os (the oldest macOS it opens on, "" if unknown).
     downloaded: dict = field(default_factory=dict)
     # When downloading last failed (ISO timestamp): tried again a day later.
     download_failed: str = ""
@@ -325,8 +340,19 @@ def prepare(now: datetime | None = None) -> None:
         logger.info("Downloaden van %s lukte niet: %s", release.version, error)
         update_status(download_failed=now.isoformat())
         return
+    _record_download(release, path, _read_minimum_os(path))
+
+
+def _record_download(release: Release, path: Path, minimum_os: str) -> None:
+    """The checked file for the next start, with the oldest macOS it opens
+    on ("" if unknown)."""
     update_status(
-        downloaded={"version": release.version, "path": str(path), "sha256": release.sha256},
+        downloaded={
+            "version": release.version,
+            "path": str(path),
+            "sha256": release.sha256,
+            "minimum_os": minimum_os,
+        },
         download_failed="",
     )
 
@@ -338,10 +364,11 @@ def _waiting_file(status: Status) -> Path | None:
 
 def waiting() -> Release | None:
     """The new version that is downloaded and will be installed at the
-    next start: what the overview and Updates say "staat klaar" about."""
+    next start: what the overview and Updates say "staat klaar" about.
+    Not while it needs a newer macOS (needs_macos)."""
     release = available()
     status = load_status()
-    if release is None or status.auto_failed == release.version:
+    if release is None or status.auto_failed == release.version or needs_macos():
         return None
     if status.downloaded.get("version") != release.version or not _waiting_file(status):
         return None
@@ -357,9 +384,93 @@ def downloading() -> Release | None:
     status = load_status()
     if release is None or status.auto_failed == release.version or status.download_failed:
         return None
-    if not settings.DESKTOP:
+    if not settings.DESKTOP or needs_macos():
         return None
     return None if waiting() is not None else release
+
+
+# -- A newer macOS ------------------------------------------------------------
+
+# Set by the desktop shell on a Mac (desktop/app.py, App.boot): a function
+# that reads the oldest macOS a downloaded package opens on
+# (LSMinimumSystemVersion), "" when it names none. None on Windows, in
+# Docker and in tests: then nothing is held back. App.boot sets it before
+# the hourly thread's first prepare(); install() reads the package again
+# anyway, so a minimum missed then is found before anything changes.
+minimum_os = None
+
+
+def _read_minimum_os(package: Path) -> str:
+    """The minimum from minimum_os, or "" when there is no reader or it
+    can't read the package. Then updating goes as before, with a line in
+    the log (huismus-intern/besluiten.md, 2026-11-13): a .dmg that can't be
+    mounted here can't be installed by desktop/updater.py either, and that
+    script then opens the old app again."""
+    if minimum_os is None:
+        return ""
+    try:
+        return minimum_os(package) or ""
+    except Exception:
+        logger.exception("Huismus kon niet lezen welke macOS %s nodig heeft", package)
+        return ""
+
+
+def this_macos() -> str:
+    """This Mac's macOS version, like "14.6.1"; "" anywhere else."""
+    return platform.mac_ver()[0] if sys.platform == "darwin" else ""
+
+
+def _macos_parts(version: str) -> tuple[int, ...] | None:
+    parts = version.split(".")
+    if not all(part.isdigit() for part in parts):
+        return None
+    while len(parts) > 1 and parts[-1] == "0":
+        parts.pop()
+    return tuple(int(part) for part in parts)
+
+
+def older_macos(this: str, minimum: str) -> bool:
+    """True when this macOS is older than minimum. False when either is
+    unknown: then nothing is held back."""
+    this_parts, minimum_parts = _macos_parts(this), _macos_parts(minimum)
+    if this_parts is None or minimum_parts is None:
+        return False
+    return this_parts < minimum_parts
+
+
+# The names macOS shows next to its number, for "macOS 15 (Sequoia)"
+# (huismus-intern/besluiten.md, 2026-11-13). Another number gets no name.
+MACOS_NAMES = {"15": "Sequoia", "26": "Tahoe"}
+
+
+def macos_label(version: str) -> str:
+    """ "15 (Sequoia)" for "15", or the number alone."""
+    name = MACOS_NAMES.get(version)
+    return f"{version} ({name})" if name else version
+
+
+def too_old_for(minimum: str) -> str:
+    """minimum as the user reads it ("15", not "15.0") when this Mac's
+    macOS is older; "" otherwise."""
+    if not older_macos(this_macos(), minimum):
+        return ""
+    return ".".join(str(part) for part in _macos_parts(minimum))
+
+
+def needs_macos() -> str:
+    """The macOS the downloaded new version needs when this Mac's is
+    older ("15"); "" otherwise, also when nothing is downloaded."""
+    release = available()
+    downloaded = load_status().downloaded
+    if release is None or downloaded.get("version") != release.version:
+        return ""
+    return too_old_for(downloaded.get("minimum_os", ""))
+
+
+def needs_macos_label() -> str:
+    """needs_macos as the overview and Updates show it: "15 (Sequoia)"."""
+    needed = needs_macos()
+    return macos_label(needed) if needed else ""
 
 
 def start_hourly_thread() -> threading.Thread:
@@ -471,6 +582,13 @@ def install(release: Release) -> None:
         precheck()
     waiting_file = _downloaded(release)
     package = waiting_file or download(release, _update_folder())
+    # Read again, also for a file downloaded ahead: the last check before
+    # anything changes. Recorded first, so Updates can say which macOS it
+    # needs and the file is used once macOS is updated.
+    minimum = _read_minimum_os(package)
+    _record_download(release, package, minimum)
+    if too_old_for(minimum):
+        raise NeedsNewerMacOS
     try:
         backup = auto_backups.safety_backup()
     except auto_backups.SafetyBackupError as error:
@@ -509,6 +627,11 @@ def install_at_start() -> bool:
         return False
     try:
         install(release)
+    except NeedsNewerMacOS:
+        # Not tried: Updates says so, and it's installed once macOS is
+        # updated. waiting() already leaves it out; this is a macOS updated
+        # backwards or a minimum read only now.
+        return False
     except UpdateError as error:
         logger.warning("Automatisch bijwerken naar %s lukte niet: %s", release.version, error)
         if str(error) == "backup":

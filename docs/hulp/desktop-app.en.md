@@ -76,6 +76,11 @@ you're working.
 Don't want to wait? Choose **Check now** under **Settings → Updates**, or
 **Update to …** when there's already a new version, and confirm.
 
+If a new version needs a newer macOS than your Mac has, Huismus keeps your
+current version. The overview and **Settings → Updates** say which macOS it
+needs. Update macOS in **System Settings → General → Software Update**; the
+next time you open Huismus, it installs the new version.
+
 If updating doesn't work, the window says so, with the buttons **Restore
 backup** and **Save log file**. Then install the previous version again.
 

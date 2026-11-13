@@ -90,6 +90,9 @@ def page(request):
             "whats_new_url": _whats_new_url(),
             "waiting": updates.waiting() is not None,
             "downloading": updates.downloading() is not None,
+            # A newer macOS needed (issue #155): then no button.
+            "needs_macos": updates.needs_macos_label(),
+            "this_macos": updates.this_macos(),
             "problem": _problem(code) if code else "",
             # Then the download by hand, from the release's page.
             "download_by_hand": code == "not-writable",
@@ -148,11 +151,15 @@ def _docker(release) -> dict:
 def install(request):
     _desktop_only()
     release = updates.available()
-    if release is None:
+    if release is None or updates.needs_macos():
         return redirect("business:updates")
     if request.method == "POST":
         try:
             updates.install(release)
+        except updates.NeedsNewerMacOS:
+            # No error: Updates says what to do (huismus-intern/besluiten.md,
+            # 2026-11-13).
+            return redirect("business:updates")
         except updates.UpdateError as error:
             request.session["update_problem"] = str(error)
             return redirect("business:updates")

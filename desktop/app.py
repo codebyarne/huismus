@@ -127,6 +127,11 @@ class App:
 
         updates.installer = self.install_update
         updates.precheck = self.check_replaceable
+        if sys.platform == "darwin":
+            # Never a new version that wouldn't open on this macOS (issue #155).
+            from desktop import updater
+
+            updates.minimum_os = updater.minimum_macos
         if updates.install_at_start():
             # A version downloaded earlier: installed before anyone works
             # (huismus-intern/besluiten.md, 2026-11-04). The window closes.
