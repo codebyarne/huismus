@@ -74,8 +74,10 @@ git worktree add --quiet --detach "$previous" "$previous_tag"
 (
     cd "$previous"
     export HUISMUS_DATA_DIR="$data" HUISMUS_DESKTOP=true
-    uv run --no-dev python manage.py migrate --verbosity 0
-    uv run --no-dev python manage.py demo_data --yes
+    # Without Django's checks: they load every page, the PDF too, and this
+    # runner has no Pango outside the app. Making records needs no PDF.
+    uv run --no-dev python manage.py migrate --verbosity 0 --skip-checks
+    uv run --no-dev python manage.py demo_data --yes --skip-checks
 )
 "${test[@]}" records "$data/db.sqlite3" >"$RUNNER_TEMP/before.json"
 cat "$RUNNER_TEMP/before.json"
