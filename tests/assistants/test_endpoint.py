@@ -45,6 +45,14 @@ def test_a_wrong_key_is_refused(client):
     assert response["WWW-Authenticate"] == "Bearer"
 
 
+def test_a_key_with_other_characters_is_refused_not_an_error(client):
+    # WSGI reads headers as latin-1: "é" reached compare_digest as a
+    # non-ASCII str, which raises TypeError, a 500 instead of a 401.
+    key.create()
+    response = _post(client, PING, secret="hm_é€")
+    assert response.status_code == 401
+
+
 def test_the_right_key_gets_an_answer(client):
     response = _post(client, PING, secret=key.create())
     assert response.status_code == 200
