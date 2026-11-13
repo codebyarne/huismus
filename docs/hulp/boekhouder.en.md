@@ -23,5 +23,5 @@ has its receipt, named after the expense's number.
 ## What isn't there yet
 
 Huismus doesn't make an XAF audit file yet, the file many accounting
-programs read. So your accountant works with the CSVs and the PDFs. What
-else is coming, you'll find in [What Huismus can do](functies.en.md#whats-coming).
+programs read. So your accountant works with the CSVs and the PDFs. For what
+else is coming, see [What Huismus can do](functies.en.md#whats-coming).

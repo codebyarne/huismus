@@ -9,7 +9,7 @@ server.
 - **Invoices** with your logo, as PDF. An invoice gets a number only when you
   issue it, and the numbers run on without gaps. See
   [Invoices](facturen.en.md).
-- **Payments**, also in parts. The overview shows what's outstanding and
+- **Tracking payments**, also in parts. The overview shows what's outstanding and
   what's overdue.
 - **Credit notes** to correct an issued invoice.
 - **Quotes** that you send and turn into an invoice with one click. See
@@ -80,19 +80,21 @@ This is on the list. The order may still change, and there's no date.
 - Tracking hours, and invoicing them
 - Recurring invoices, such as the same one every month
 - A profit and loss statement per year
-- Tracking mileage
-- Investments and depreciation
 - An XAF audit file for your accountant
 - Importing from Rompslomp and other packages
 - Switching in the middle of the year
 - Attaching a receipt from the receipts folder to an existing expense
-- Backups to Google Drive, OneDrive and Proton Drive
+- Backups straight to Google Drive and OneDrive, also without their app on your computer
 
 ## Maybe later
 
-This can't be done with just your own computer. It needs a service on the
-internet, so it only comes when that can be safe and simple.
+Nothing is decided on these yet. Some need a service on the internet, and
+those only come when that can be safe and simple.
 
+- Tracking mileage
+- Investments and depreciation
+- Mailing a receipt to Huismus
+- Backups straight to Proton Drive
 - A connection with your bank
 - Sending your VAT return from Huismus
 - A payment link on the invoice
@@ -100,11 +102,10 @@ internet, so it only comes when that can be safe and simple.
 - E-invoices through Peppol
 - An app for your phone without your own server
 
-## On purpose not
+## Left out on purpose
 
 - Salaries and payroll
 - A web shop
-- One Huismus for several businesses
 - Tax advice: Huismus adds up what you enter
 
 Missing something? Say so in Huismus through **Help → Give feedback**.
