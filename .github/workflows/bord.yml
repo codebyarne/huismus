@@ -1,0 +1,39 @@
+# Het bord "Huismus" bijhouden voor cloudsessies. Die kunnen niet bij het bord
+# (de proxy van een cloudsessie laat alleen REST-verzoeken voor deze repo door),
+# wel bij labels. Zie scripts/bord-sync.sh en CLAUDE.md, "Backlog".
+#
+# Secret BOARD_TOKEN: klassiek token met alleen het recht `project`.
+name: bord
+
+on:
+  schedule:
+    - cron: "*/15 * * * *" # verschuiven op het bord geeft GitHub geen seintje
+  workflow_dispatch:
+  issues:
+    types: [opened, reopened, closed, labeled, unlabeled]
+
+concurrency:
+  group: bord
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Labels volgende en bezig gelijk met het bord
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_PROJECT_TOKEN: ${{ secrets.BOARD_TOKEN }}
+          BEZIG_ISSUE: ${{ github.event.action == 'labeled' && github.event.label.name == 'bezig' && github.event.issue.number || '' }}
+        run: |
+          if [ -z "$GH_PROJECT_TOKEN" ]; then
+            echo "::error::Secret BOARD_TOKEN ontbreekt (klassiek token, alleen recht project)"
+            exit 1
+          fi
+          ./scripts/bord-sync.sh
