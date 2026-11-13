@@ -77,6 +77,12 @@ Terwijl je werkt, wordt Huismus nooit bijgewerkt.
 Wil je niet wachten? Kies dan bij **Instellingen → Updates** **Nu zoeken**,
 of **Bijwerken naar …** als er al een nieuwe versie is, en bevestig.
 
+Vraagt een nieuwe versie een nieuwere macOS dan je Mac heeft, dan laat Huismus
+je huidige versie staan. Het overzicht en **Instellingen → Updates** zeggen
+welke macOS nodig is. Werk macOS bij via **Systeeminstellingen → Algemeen →
+Software-update**; de volgende keer dat je Huismus opent, wordt de nieuwe
+versie geïnstalleerd.
+
 Lukt het bijwerken niet, dan zegt het venster dat, met de knoppen **Back-up
 terugzetten** en **Logbestand bewaren**. Installeer daarna de vorige versie
 opnieuw.

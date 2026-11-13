@@ -90,6 +90,7 @@ def page(request):
             "whats_new_url": _whats_new_url(),
             "waiting": updates.waiting() is not None,
             "downloading": updates.downloading() is not None,
+            **_needs_macos(),
             "problem": _problem(code) if code else "",
             # Then the download by hand, from the release's page.
             "download_by_hand": code == "not-writable",
@@ -126,6 +127,15 @@ def check(request):
     return redirect("business:updates")
 
 
+def _needs_macos() -> dict:
+    """When the new version needs a newer macOS than this Mac has: which,
+    and this Mac's (issue #155). Then no button."""
+    needed = updates.needs_macos()
+    if not needed:
+        return {}
+    return {"needs_macos": updates.macos_label(needed), "this_macos": updates.this_macos()}
+
+
 def _whats_new_url() -> str:
     """On the site, not in this Huismus: the new version brings its own text
     for Hulp → Wat is er nieuw, so only the site has it before updating."""
@@ -148,13 +158,16 @@ def _docker(release) -> dict:
 def install(request):
     _desktop_only()
     release = updates.available()
-    if release is None:
+    if release is None or updates.needs_macos():
         return redirect("business:updates")
     if request.method == "POST":
         try:
             updates.install(release)
         except updates.UpdateError as error:
-            request.session["update_problem"] = str(error)
+            # A newer macOS is no error: Updates says what to do
+            # (huismus-intern/besluiten.md, 2026-11-13).
+            if str(error) != "macos":
+                request.session["update_problem"] = str(error)
             return redirect("business:updates")
         return render(request, "business/updating.html", {"release": release})
     return render(

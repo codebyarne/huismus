@@ -4,6 +4,7 @@
 what can run without a Mac. Replacing Huismus.app itself is checked by
 hand on a Mac (SPEC.md M11, "Done when")."""
 
+import plistlib
 import subprocess
 from pathlib import Path, PureWindowsPath
 from unittest.mock import MagicMock, patch
@@ -24,6 +25,7 @@ def _shell_hooks(monkeypatch):
     # never left behind for other tests.
     monkeypatch.setattr(updates, "installer", None)
     monkeypatch.setattr(updates, "precheck", None)
+    monkeypatch.setattr(updates, "minimum_os", None)
 
 
 def test_the_install_script_is_valid_shell_and_quotes_its_paths(tmp_path):
@@ -47,6 +49,38 @@ def test_the_install_script_is_valid_shell_and_quotes_its_paths(tmp_path):
     assert script.index("mv /Applications/Huismus.app") < script.index("ditto")
     with pytest.raises(ValueError):
         updater.script(Path("/tmp/x.dmg"), "'; rm -rf ~; '", Path("/Applications/Huismus.app"), 1)
+
+
+def _app_with(tmp_path, info):
+    contents = tmp_path / "Huismus.app" / "Contents"
+    contents.mkdir(parents=True)
+    with (contents / "Info.plist").open("wb") as file:
+        plistlib.dump(info, file)
+    return tmp_path / "Huismus.app"
+
+
+def test_the_minimum_macos_comes_from_the_new_apps_info_plist(tmp_path):
+    # As desktop/huismus.spec writes it (issue #155).
+    app = _app_with(tmp_path, {"CFBundleName": "Huismus", "LSMinimumSystemVersion": "15.0"})
+    assert updater.minimum_macos_of(app) == "15.0"
+    assert updater.minimum_macos_of(_app_with(tmp_path / "old", {})) == ""
+
+
+def test_the_dmg_is_mounted_read_only_and_always_detached(tmp_path):
+    calls = []
+
+    def hdiutil(args, **kwargs):
+        calls.append(args)
+        if args[1] == "attach":
+            _app_with(Path(args[args.index("-mountpoint") + 1]), {"LSMinimumSystemVersion": "15.0"})
+        return subprocess.CompletedProcess(args, 0)
+
+    with patch("subprocess.run", side_effect=hdiutil):
+        assert updater.minimum_macos(tmp_path / "Huismus-1.4.0-macos.dmg") == "15.0"
+
+    attach, detach = calls
+    assert "-readonly" in attach and "-nobrowse" in attach
+    assert detach[:2] == ["hdiutil", "detach"]
 
 
 def test_outside_a_packaged_app_there_is_nothing_to_replace():
@@ -235,6 +269,15 @@ def test_at_start_a_waiting_version_is_installed_before_the_window_opens(data_di
     at_start.assert_called_once()
     shell.window.load_url.assert_not_called()
     thread.assert_not_called()  # no backup or check in a closing app
+
+
+@pytest.mark.parametrize("platform, reader", [("darwin", updater.minimum_macos), ("win32", None)])
+def test_only_the_mac_app_reads_which_macos_a_version_needs(
+    data_dir, monkeypatch, platform, reader
+):
+    monkeypatch.setattr("sys.platform", platform)
+    _booted(data_dir, installs=True)
+    assert updates.minimum_os is reader
 
 
 def test_without_a_waiting_version_the_window_opens_as_always(data_dir, monkeypatch):

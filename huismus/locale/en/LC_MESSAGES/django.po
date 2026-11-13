@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 07:00+0100\n"
+"POT-Creation-Date: 2026-11-13 07:36+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3543,6 +3543,17 @@ msgstr "You're using Huismus %(version)s."
 msgid "Nieuwe versie downloaden"
 msgstr "Download the new version"
 
+#, python-format
+msgid ""
+"Deze versie vraagt macOS %(macos)s of nieuwer. Je Mac heeft macOS "
+"%(this_macos)s. Werk eerst macOS bij via Systeeminstellingen → Algemeen → "
+"Software-update. Daarna installeert Huismus de nieuwe versie de volgende "
+"keer dat je hem opent."
+msgstr ""
+"This version needs macOS %(macos)s or later. Your Mac has macOS "
+"%(this_macos)s. Update macOS first in System Settings → General → Software "
+"Update. Then Huismus installs the new version the next time you open it."
+
 msgid "Hij wordt geïnstalleerd als je Huismus opnieuw opent."
 msgstr "It will be installed the next time you open Huismus."
 
@@ -3888,6 +3899,14 @@ msgstr "Huismus was updated to %(version)s."
 
 msgid "Wat is er nieuw"
 msgstr "What's new"
+
+#, python-format
+msgid ""
+"Huismus %(version)s is er, maar vraagt macOS %(macos)s of nieuwer. Werk "
+"eerst macOS bij."
+msgstr ""
+"Huismus %(version)s is out, but needs macOS %(macos)s or later. Update macOS "
+"first."
 
 #, python-format
 msgid ""
