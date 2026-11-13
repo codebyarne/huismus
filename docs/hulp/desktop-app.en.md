@@ -15,6 +15,27 @@ Anyway**.
 says "Windows protected your PC". Choose **More info** and then **Run
 anyway**. You don't need administrator rights to install Huismus.
 
+### No "Run anyway" button, or error 4551
+
+Then Smart App Control in Windows 11 is blocking the installer. It blocks apps
+that aren't signed, and Huismus isn't signed yet. It has no button to allow
+a single app. The only way to use Huismus then is to turn Smart App Control
+off:
+
+1. Open **Windows Security**.
+2. Choose **App & browser control**, then **Smart App Control settings**.
+3. Choose **Off**.
+4. Open the installer again.
+
+Keep Smart App Control off for as long as you use Huismus. If you turn it
+back on, Windows blocks the installed app too. You give up some
+protection with it: Windows no longer refuses unknown apps by itself. If you stop using Huismus, you can turn it
+back on in the same place. On an up-to-date Windows 11 you can do that
+without reinstalling Windows, Microsoft says.
+
+On a work laptop, your IT department decides about this setting. You can't
+change it yourself then.
+
 On Windows, Huismus needs Microsoft Edge WebView2 for its window. Windows 11
 and an up-to-date Windows 10 already have it. If it's missing, Huismus asks
 whether you want to download it from Microsoft now. Install it and open

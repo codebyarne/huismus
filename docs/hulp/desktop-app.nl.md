@@ -16,6 +16,28 @@ Windows "Windows heeft uw pc beschermd". Kies **Meer informatie** en dan
 **Toch uitvoeren**. Je hebt geen beheerdersrechten nodig om Huismus te
 installeren.
 
+### Geen knop "Toch uitvoeren", of fout 4551
+
+Dan blokkeert Smart App Control van Windows 11 de installer. Dat blokkeert
+apps die niet ondertekend zijn, en Huismus is nog niet ondertekend. Een knop om één
+app toch toe te laten heeft het niet. Je kunt Huismus dan alleen gebruiken
+als je Smart App Control uitzet:
+
+1. Open **Windows-beveiliging**.
+2. Kies **App- en browserbeheer** en dan **Instellingen voor Smart App
+   Control**.
+3. Kies **Uit**.
+4. Open het installatiebestand opnieuw.
+
+Laat Smart App Control uit zolang je Huismus gebruikt. Zet je het weer aan,
+dan blokkeert Windows ook de geïnstalleerde app. Je levert er wat
+bescherming mee in: Windows weigert dan niet meer vanzelf onbekende apps.
+Stop je met Huismus, dan kun je het op dezelfde plek weer aanzetten. Op een
+bijgewerkte Windows 11 kan dat zonder Windows opnieuw te installeren, zegt Microsoft.
+
+Is het een laptop van je werk, dan beslist de IT-afdeling over deze
+instelling. Je kunt hem dan zelf niet veranderen.
+
 Op Windows heeft Huismus Microsoft Edge WebView2 nodig voor zijn venster.
 Windows 11 en een bijgewerkt Windows 10 hebben dat al. Ontbreekt het, dan
 vraagt Huismus of je het nu bij Microsoft wilt downloaden. Installeer het en
