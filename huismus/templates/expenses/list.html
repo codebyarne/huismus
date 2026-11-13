@@ -74,7 +74,7 @@
                 <tbody>
                     {% for expense in expenses %}
                     <tr class="is-link">
-                        <td data-cell="secondary" class="num">{{ expense.date|date:"j b Y" }}</td>
+                        <td data-cell="secondary" class="num">{{ expense.date|date:"SHORT_DATE_FORMAT" }}</td>
                         <td data-cell="primary">
                             <a class="row-link" href="{% url 'expenses:edit' expense.pk %}">{{ expense.supplier|default:expense.description|default:_("Uitgave") }}</a>
                             {% if expense.has_receipt %}<svg class="i i-sm muted" role="img" aria-label="{% translate 'Met bonnetje' %}"><use href="#paperclip"></use></svg>{% endif %}

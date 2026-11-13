@@ -17,7 +17,7 @@ the live settings or contact.{% endcomment %}
             <span class="pill pill-final"><svg class="i" aria-hidden="true"><use href="#lock"></use></svg>{% translate "Definitief" %}</span>
             {% if document.source == "moneybird" %}<span class="pill pill-import">{% translate "Geïmporteerd uit Moneybird" %}</span>{% elif document.source %}<span class="pill pill-import">{% translate "Geïmporteerd" %}</span>{% endif %}
         </div>
-        <span class="small muted">{{ customer.display_name }} · {% blocktranslate with date=document.issue_date|date:"j b Y" %}uitgegeven op {{ date }}{% endblocktranslate %}</span>
+        <span class="small muted">{{ customer.display_name }} · {% blocktranslate with date=document.issue_date|date:"SHORT_DATE_FORMAT" %}uitgegeven op {{ date }}{% endblocktranslate %}</span>
     </div>
     <div class="actions">
         {% if document.kind == "invoice" and credited_cents < document.total_cents %}
@@ -33,7 +33,7 @@ the live settings or contact.{% endcomment %}
 </div>
 
 {% if customer_has_old_version %}
-<div class="flash flash-warning" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><div class="flash-body small">{% blocktranslate with date=last_mail.sent_at|date:"j b Y" %}Je klant heeft nog de versie van vóór het bewerken (gemaild op {{ date }}).{% endblocktranslate %} <a href="{% url 'documents:mail' document.pk %}">{% translate "Mail de nieuwe versie" %}</a></div></div>
+<div class="flash flash-warning" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><div class="flash-body small">{% blocktranslate with date=last_mail.sent_at|date:"SHORT_DATE_FORMAT" %}Je klant heeft nog de versie van vóór het bewerken (gemaild op {{ date }}).{% endblocktranslate %} <a href="{% url 'documents:mail' document.pk %}">{% translate "Mail de nieuwe versie" %}</a></div></div>
 {% endif %}
 <div class="split-rev">
     <article class="paper paper-final" aria-label="{% blocktranslate with kind=document.get_kind_display number=document.number %}{{ kind }} {{ number }}, alleen-lezen{% endblocktranslate %}">
@@ -58,9 +58,9 @@ the live settings or contact.{% endcomment %}
             </div>
             <dl class="doc-meta">
                 <dt>{% translate "Nummer" %}</dt><dd><strong>{{ document.number }}</strong></dd>
-                <dt>{% translate "Factuurdatum" %}</dt><dd>{{ document.issue_date|date:"j b Y" }}</dd>
-                {% if document.delivery_date %}<dt>{% translate "Leverdatum" %}</dt><dd>{{ document.delivery_date|date:"j b Y" }}</dd>{% endif %}
-                {% if document.due_date and not is_credit %}<dt>{% translate "Vervaldatum" %}</dt><dd>{{ document.due_date|date:"j b Y" }}</dd>{% endif %}
+                <dt>{% translate "Factuurdatum" %}</dt><dd>{{ document.issue_date|date:"SHORT_DATE_FORMAT" }}</dd>
+                {% if document.delivery_date %}<dt>{% translate "Leverdatum" %}</dt><dd>{{ document.delivery_date|date:"SHORT_DATE_FORMAT" }}</dd>{% endif %}
+                {% if document.due_date and not is_credit %}<dt>{% translate "Vervaldatum" %}</dt><dd>{{ document.due_date|date:"SHORT_DATE_FORMAT" }}</dd>{% endif %}
             </dl>
         </div>
         {% if document.intro_text %}<p style="margin-bottom:var(--s-5)">{{ document.intro_text|linebreaksbr }}</p>{% endif %}
@@ -123,7 +123,7 @@ the live settings or contact.{% endcomment %}
                 {% for credit in credit_notes %}
                 <li>
                     <span class="list-icon"><svg class="i i-sm" aria-hidden="true"><use href="#undo"></use></svg></span>
-                    <div class="grow"><a class="title" href="{% url 'documents:edit' credit.pk %}">{% translate "Creditnota" %} {{ credit.number|default:_("(concept)") }}</a><div class="small muted">{% if credit.issue_date %}{{ credit.issue_date|date:"j b Y" }}{% else %}{% translate "nog niet uitgegeven" %}{% endif %}</div></div>
+                    <div class="grow"><a class="title" href="{% url 'documents:edit' credit.pk %}">{% translate "Creditnota" %} {{ credit.number|default:_("(concept)") }}</a><div class="small muted">{% if credit.issue_date %}{{ credit.issue_date|date:"SHORT_DATE_FORMAT" }}{% else %}{% translate "nog niet uitgegeven" %}{% endif %}</div></div>
                     <span class="amount">{{ credit.total_cents|money_for:credit }}</span>
                 </li>
                 {% endfor %}
@@ -139,7 +139,7 @@ the live settings or contact.{% endcomment %}
                 {% for payment in payments %}
                 <li>
                     <span class="list-icon is-ok"><svg class="i i-sm" aria-hidden="true"><use href="#check"></use></svg></span>
-                    <div class="grow"><strong class="num">{{ payment.amount_cents|money }}</strong><div class="small muted">{{ payment.paid_on|date:"j b Y" }}{% if payment.method %} · {{ payment.method }}{% endif %}{% if payment.note %} · {{ payment.note }}{% endif %}</div></div>
+                    <div class="grow"><strong class="num">{{ payment.amount_cents|money }}</strong><div class="small muted">{{ payment.paid_on|date:"SHORT_DATE_FORMAT" }}{% if payment.method %} · {{ payment.method }}{% endif %}{% if payment.note %} · {{ payment.note }}{% endif %}</div></div>
                 </li>
                 {% endfor %}
             </ul>
@@ -176,7 +176,7 @@ the live settings or contact.{% endcomment %}
             <p class="muted">{% blocktranslate with number=document.number %}{{ number }} is uitgegeven. Een uitgegeven factuur corrigeer je meestal met een creditnota: dan blijft wat je klant kreeg zoals het was, en staat de correctie er apart naast.{% endblocktranslate %}</p>
             {% endif %}
             {% if last_mail %}
-            <p class="muted">{% blocktranslate with date=last_mail.sent_at|date:"j b Y" to=last_mail.to %}Je hebt hem op {{ date }} gemaild naar {{ to }}. Pas je hem aan, dan heeft je klant een andere versie dan jij, onder hetzelfde nummer. Mail hem opnieuw zodra je hem weer hebt uitgegeven.{% endblocktranslate %}</p>
+            <p class="muted">{% blocktranslate with date=last_mail.sent_at|date:"SHORT_DATE_FORMAT" to=last_mail.to %}Je hebt hem op {{ date }} gemaild naar {{ to }}. Pas je hem aan, dan heeft je klant een andere versie dan jij, onder hetzelfde nummer. Mail hem opnieuw zodra je hem weer hebt uitgegeven.{% endblocktranslate %}</p>
             {% else %}
             <p class="muted">{% blocktranslate with number=document.number %}Hij wordt weer een concept, met nummer {{ number }} en dezelfde datum. Pas aan wat nodig is en geef hem daarna opnieuw uit.{% endblocktranslate %}</p>
             {% endif %}

@@ -98,7 +98,7 @@
                 <li>
                     <div class="grow">
                         <a class="title" href="{% if d.kind == 'quote' %}{% url 'quotes:edit' d.pk %}{% else %}{% url 'documents:edit' d.pk %}{% endif %}">{{ d.get_kind_display|capfirst }} {{ d.number|default:_("(concept)") }}</a>
-                        <div class="small muted">{{ d.issue_date|date:"j b Y"|default:"" }}</div>
+                        <div class="small muted">{{ d.issue_date|date:"SHORT_DATE_FORMAT"|default:"" }}</div>
                     </div>
                     <span class="stack" style="gap:4px;align-items:flex-end">
                         <span class="amount small">{% if d.kind == "credit_note" %}&minus;&nbsp;{% endif %}{{ d.total_cents|money }}</span>
