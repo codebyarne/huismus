@@ -20,7 +20,10 @@ Bron: [Aan welke eisen moeten facturen voldoen voor uw btw-administratie?](https
 - Uw btw-identificatienummer.
 - Als u bij de KVK bent ingeschreven: uw KVK-nummer.
 - De datum waarop de factuur is uitgereikt.
-- Een factuurnummer — gebruik opeenvolgende nummers voor uw facturen.
+- Een factuurnummer. Letterlijk: "Gebruik opeenvolgende nummers voor uw
+  facturen, met 1 of meer reeksen. Elk factuurnummer mag maar 1 keer
+  voorkomen." (nagekeken 13 november 2026). Waar een reeks bij hoort
+  (vestiging, afdeling, apparaat) zegt de pagina niet.
 - Bij goederen: wat voor goederen u hebt geleverd en hoeveel.
 - Bij diensten: wat voor diensten u hebt geleverd en de omvang ervan.
 - De datum waarop de goederen of diensten zijn geleverd.
