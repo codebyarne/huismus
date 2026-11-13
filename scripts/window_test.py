@@ -264,14 +264,27 @@ def _download(page, link) -> bytes:
 
 
 def _press_enter_in_the_save_dialog():
-    """The system's dialog (class #32770) of this session, brought forward
-    and answered with Enter."""
+    """The system's save dialog (class #32770) of Huismus.exe, never one
+    of another program, brought forward and answered with Enter."""
     import ctypes
+    from ctypes import wintypes
 
     user32 = ctypes.windll.user32
-    dialog = user32.FindWindowW("#32770", None)
-    if not dialog:
-        raise LookupError("nog geen bewaarvenster")
+    dialogs = []
+
+    @ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
+    def collect(window, _):
+        name = ctypes.create_unicode_buffer(64)
+        user32.GetClassNameW(window, name, 64)
+        if name.value == "#32770" and user32.IsWindowVisible(window):
+            if _program_of(window).lower().endswith("\\huismus.exe"):
+                dialogs.append(window)
+        return True
+
+    user32.EnumWindows(collect, 0)
+    if not dialogs:
+        raise LookupError("nog geen bewaarvenster van Huismus")
+    dialog = dialogs[0]
     user32.SetForegroundWindow(dialog)
     time.sleep(0.5)
     enter = 0x0D
@@ -280,6 +293,25 @@ def _press_enter_in_the_save_dialog():
     time.sleep(1)
     if user32.IsWindow(dialog) and user32.IsWindowVisible(dialog):
         raise LookupError("het bewaarvenster staat er nog")
+
+
+def _program_of(window) -> str:
+    """The path of the program that owns a window."""
+    import ctypes
+    from ctypes import wintypes
+
+    pid = wintypes.DWORD()
+    ctypes.windll.user32.GetWindowThreadProcessId(window, ctypes.byref(pid))
+    process = ctypes.windll.kernel32.OpenProcess(0x1000, False, pid.value)  # QUERY_LIMITED
+    if not process:
+        return ""
+    try:
+        path = ctypes.create_unicode_buffer(1024)
+        size = wintypes.DWORD(1024)
+        ctypes.windll.kernel32.QueryFullProcessImageNameW(process, 0, path, ctypes.byref(size))
+        return path.value
+    finally:
+        ctypes.windll.kernel32.CloseHandle(process)
 
 
 def _new_file(folder: Path, before: set) -> Path:
