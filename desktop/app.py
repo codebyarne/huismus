@@ -428,6 +428,13 @@ def _configure_django(data):
     os.environ["HUISMUS_DESKTOP"] = "true"
     os.environ["HUISMUS_DATA_DIR"] = str(data)
     os.environ["HUISMUS_WINDOW_TOKEN"] = _window_token()
+    if sys.platform == "win32":
+        from desktop import windows
+
+        if windows.packaged():
+            # The Microsoft Store version: the Store updates it (SPEC.md M11).
+            os.environ["HUISMUS_STORE"] = "true"
+            logger.info("Huismus uit de Microsoft Store: bijwerken gaat via de Store")
     if getattr(sys, "frozen", False):
         # Fontconfig (for WeasyPrint's PDFs) looks for its configuration
         # where Homebrew or MSYS2 put it on the build machine; the app

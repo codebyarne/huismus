@@ -61,7 +61,13 @@ class Server:
         from django.core.wsgi import get_wsgi_application
 
         django.setup()
+        from django.conf import settings
+
         try:
+            if settings.STORE:
+                from huismus.core import updates
+
+                updates.start_from_store()
             call_command("migrate", interactive=False, verbosity=0)
         except Exception as error:
             raise MigrationFailed() from error

@@ -39,6 +39,10 @@ ALLOWED_HOSTS = [h for h in os.environ.get("ALLOWED_HOSTS", "").split(",") if h]
 # carries WINDOW_TOKEN (huismus/core/desktop.py), and only on this computer.
 DESKTOP = os.environ.get("HUISMUS_DESKTOP", "false").lower() == "true"
 WINDOW_TOKEN = os.environ.get("HUISMUS_WINDOW_TOKEN", "")
+# The Windows app from the Microsoft Store (desktop/msix.py): the Store
+# updates it, so Huismus never looks for, downloads or installs a version
+# itself (huismus/core/updates.py). desktop/app.py sets it.
+STORE = DESKTOP and os.environ.get("HUISMUS_STORE", "false").lower() == "true"
 
 # Huismus's app at Dropbox (huismus-intern/cloud-registratie.md), for backups straight
 # to Dropbox (huismus/core/cloud_backups.py). An app key is no secret: an app that

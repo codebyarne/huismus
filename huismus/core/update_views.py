@@ -28,7 +28,7 @@ DOCKER_UPDATING_ANCHOR = {"nl": "#bijwerken", "en": "#updating"}
 
 
 def _desktop_only():
-    if not settings.DESKTOP:
+    if not settings.DESKTOP or updates.by_store():
         raise Http404
 
 
@@ -65,6 +65,12 @@ def _check_and_prepare():
 
 @login_required
 def page(request):
+    if updates.by_store():
+        # Only the version and who updates it: nothing to switch or press
+        # (huismus-intern/besluiten.md, 2026-11-13).
+        return render(
+            request, "business/updates.html", {"store": True, "version": updates.current_version()}
+        )
     if request.method == "POST":
         enabled = request.POST.get("enabled") == "on"
         if enabled:
@@ -105,7 +111,7 @@ def check(request):
     look. The one place Huismus looks during a request, because the user
     asked and waits for the answer (at most TIMEOUT_SECONDS). The desktop
     app then downloads in the background, as after any look."""
-    if not updates.load_status().enabled:
+    if not updates.load_status().enabled or updates.by_store():
         return redirect("business:updates")
     try:
         release = updates.look_now()
