@@ -97,6 +97,7 @@ def main() -> int:
                 updated(page, base, shots, args.version)
         except Exception:
             shots.take("mislukt")
+            shots.screen("scherm-mislukt")
             raise
         finally:
             close()
@@ -116,6 +117,17 @@ class Shots:
         self.page.wait_for_load_state("networkidle")
         self.page.wait_for_timeout(800)
         self.page.screenshot(path=path)
+        print("Screenshot:", path.name, flush=True)  # noqa: T201
+
+    def screen(self, name: str) -> None:
+        """The whole screen, with the window and any dialog over it
+        (Windows; on macOS the job takes the window itself)."""
+        if sys.platform != "win32":
+            return
+        from PIL import ImageGrab
+
+        path = self.folder / f"{name}.png"
+        ImageGrab.grab(all_screens=True).save(path)
         print("Screenshot:", path.name, flush=True)  # noqa: T201
 
 
@@ -285,6 +297,9 @@ def _press_enter_in_the_save_dialog():
     if not dialogs:
         raise LookupError("nog geen bewaarvenster van Huismus")
     dialog = dialogs[0]
+    title = ctypes.create_unicode_buffer(256)
+    user32.GetWindowTextW(dialog, title, 256)
+    print("Bewaarvenster:", title.value, flush=True)  # noqa: T201
     user32.SetForegroundWindow(dialog)
     time.sleep(0.5)
     enter = 0x0D
