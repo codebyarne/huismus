@@ -67,6 +67,11 @@ class FakeAIService:
                     threading.Event().wait(fake.delay)
                 if fake.key and authorization != f"Bearer {fake.key}":
                     return self._send(401, {"error": {"message": "Invalid API key"}})
+                # As newer models do (Anthropic's Claude Haiku 5.5 among
+                # them): sampling settings are refused.
+                if {"temperature", "top_p", "top_k"} & request.keys():
+                    message = "temperature, top_p and top_k are not supported for this model"
+                    return self._send(400, {"error": {"message": message}})
                 if request.get("model") not in fake.models:
                     message = f"The model {request.get('model')} does not exist"
                     return self._send(404, {"error": {"message": message}})

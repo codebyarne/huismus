@@ -218,12 +218,10 @@ def _message_of(body: bytes) -> str:
 def chat(config: Config, content: list[dict], timeout: float = TIMEOUT) -> str:
     """Sends one user message (OpenAI's content parts: text and image_url)
     and returns the answer's text. ServiceError when it fails."""
+    # No temperature or other sampling settings: newer models refuse them
+    # with a 400 (Anthropic's Claude Haiku 5.5 among them).
     body = json.dumps(
-        {
-            "model": config.model,
-            "messages": [{"role": "user", "content": content}],
-            "temperature": 0,
-        }
+        {"model": config.model, "messages": [{"role": "user", "content": content}]}
     ).encode()
     headers = {"Content-Type": "application/json", "User-Agent": "Huismus"}
     if config.key:
@@ -277,15 +275,21 @@ def _test_image() -> str:
 
 def test_connection(config: Config) -> None:
     """One small request with an image, so a model that can't read images
-    shows up now and not at the first receipt. ServiceError when it fails."""
-    chat(
-        config,
-        [
-            {"type": "text", "text": "What word is in this image? Answer with that word only."},
-            image_part(_test_image()),
-        ],
-        timeout=60,
-    )
+    shows up now and not at the first receipt. ServiceError when it fails,
+    with the service's own message in the log: the page only says why in
+    plain words."""
+    try:
+        chat(
+            config,
+            [
+                {"type": "text", "text": "What word is in this image? Answer with that word only."},
+                image_part(_test_image()),
+            ],
+            timeout=60,
+        )
+    except ServiceError as error:
+        logger.warning("Test van %s mislukt (%s): %s", name(config), error.reason, error.detail)
+        raise
 
 
 def failure_sentence(reason: str, config: Config) -> str:

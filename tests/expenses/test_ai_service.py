@@ -81,6 +81,15 @@ def test_chat_sends_model_key_and_content(ai_fake):
     assert ai_fake.authorizations[-1] == f"Bearer {KEY}"
 
 
+def test_chat_sends_no_sampling_settings(ai_fake):
+    # Newer models refuse temperature, top_p and top_k with a 400
+    # (Anthropic's Claude Haiku 5.5 among them), so the request leaves them
+    # to the service's default.
+    ai_service.chat(_config(ai_fake), [{"type": "text", "text": "x"}])
+    request = ai_fake.requests[-1]
+    assert not {"temperature", "top_p", "top_k"} & request.keys()
+
+
 def test_no_key_sends_no_authorization(ai_fake):
     ai_fake.key = ""
     ai_service.chat(_config(ai_fake, key=""), [{"type": "text", "text": "x"}])
@@ -160,6 +169,14 @@ def test_test_connection_sends_one_image(ai_fake):
     images = [part for part in content if part["type"] == "image_url"]
     assert len(images) == 1
     assert images[0]["image_url"]["url"].startswith("data:image/jpeg;base64,")
+
+
+def test_a_failed_test_logs_what_the_service_said(ai_fake, caplog):
+    ai_fake.answer((400, {"error": {"message": "temperature is not supported"}}))
+    with pytest.raises(ServiceError):
+        ai_service.test_connection(_config(ai_fake))
+    assert "temperature is not supported" in caplog.text
+    assert KEY not in caplog.text
 
 
 def test_every_reason_has_a_sentence():
