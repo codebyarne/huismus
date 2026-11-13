@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """The desktop app's shell (desktop/): the parts that run without a window."""
 
+import os
 import urllib.error
 import urllib.request
 
@@ -113,3 +114,21 @@ def test_the_updating_screen_says_which_version(lang, line):
 def test_the_check_reads_a_heic_photo():
     # The release's --check fails when pillow-heif's libraries are missing.
     app._check_heic()
+
+
+def test_every_start_gets_a_new_window_token(monkeypatch):
+    monkeypatch.delenv(app.RELEASE_TEST_TOKEN, raising=False)
+    first, second = app._window_token(), app._window_token()
+    assert first != second and len(first) >= 32
+
+
+def test_the_release_test_hands_its_own_long_token_and_it_leaves_the_environment(monkeypatch):
+    # scripts/window_test.py on macOS, where Playwright can't reach the window.
+    monkeypatch.setenv(app.RELEASE_TEST_TOKEN, "t" * 32)
+    assert app._window_token() == "t" * 32
+    assert app.RELEASE_TEST_TOKEN not in os.environ
+
+
+def test_a_short_token_from_the_environment_does_not_count(monkeypatch):
+    monkeypatch.setenv(app.RELEASE_TEST_TOKEN, "kort")
+    assert app._window_token() != "kort"
