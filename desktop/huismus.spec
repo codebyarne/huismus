@@ -87,7 +87,7 @@ if not WINDOWS:
         info_plist={
             "CFBundleDisplayName": "Huismus",
             "NSHighResolutionCapable": True,
-            "LSMinimumSystemVersion": "14.0",
+            "LSMinimumSystemVersion": "15.0",
             "CFBundleDevelopmentRegion": "nl",
             "CFBundleLocalizations": ["nl", "en"],
         },

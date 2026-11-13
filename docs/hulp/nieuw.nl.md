@@ -34,6 +34,9 @@ Na een nieuwe versie wijst een melding op het overzicht je hierheen.
 - **Na een nieuwe versie** zegt het overzicht één keer dat Huismus is
   bijgewerkt, met een link naar deze pagina. **Nu zoeken** bij
   **Instellingen → Updates** kijkt meteen of er een nieuwe versie is.
+- **De Mac-app heeft nu macOS 15 (Sequoia) of nieuwer nodig.** Heb je nog
+  macOS 14? Werk je Mac dan bij via **Systeeminstellingen → Algemeen →
+  Software-update**. Je administratie blijft staan.
 - **Kleinere verbeteringen.** Een factuurregel staat op één rij. Een brede
   tabel scrolt binnen zijn kaart in plaats van afgeknipt te worden. Een
   foutpagina zegt in gewone woorden wat er mis is, zonder foutcode.

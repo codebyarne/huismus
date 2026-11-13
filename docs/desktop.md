@@ -3,7 +3,7 @@
 Naast de Pi/Docker-route draait Huismus ook als gewone app op een Mac of op
 Windows (SPEC.md M11). Het is dezelfde Django-app met dezelfde
 SQLite-database; alleen het inpakken en de eerste start zijn anders. Dit is
-nog een **prototype**: macOS 14 of nieuwer op Apple Silicon, en Windows 10 of
+nog een **prototype**: macOS 15 of nieuwer op Apple Silicon, en Windows 10 of
 nieuwer op x64. Windows 11 op ARM draait de x64-versie via emulatie; Windows
 10 op ARM en 32-bit Windows niet. De downloadpagina volgt.
 
@@ -302,7 +302,7 @@ het Docker-image:
    pakketten van `uv.lock`, en `manage.py check --deploy` draait met de
    instellingen van Docker, waar elke waarschuwing de release stopt. Het
    Docker-image en de publicatie wachten op deze job.
-4. Op een Apple Silicon-runner (`macos-14`) installeert de job Pango uit
+4. Op een Apple Silicon-runner (`macos-15`) installeert de job Pango uit
    Homebrew, draait `scripts/build-mac.sh` en daarna `Huismus --check` op een
    lege administratie. Faalt die controle, dan komt er niets online.
 5. Op een Windows-runner (`windows-2022`) installeert de job Pango uit MSYS2
@@ -321,10 +321,12 @@ Een proefbouw zonder release: start de workflow "Release" met de hand (Actions
 → Release → Run workflow). Dan bouwt en controleert alleen de Windows-job; de
 installer staat 3 dagen als bijlage bij de run, en er komt niets online.
 
-De Pango-pakketten van Homebrew op die runner zijn gebouwd voor macOS 14
-(Sonoma). De app vraagt daarom minstens macOS 14 (`LSMinimumSystemVersion` in
+De Pango-pakketten van Homebrew op die runner zijn gebouwd voor macOS 15
+(Sequoia). De app vraagt daarom minstens macOS 15 (`LSMinimumSystemVersion` in
 `desktop/huismus.spec`); op een oudere macOS zegt macOS dat hij daar niet
-werkt. Elke Apple Silicon-Mac kan macOS 14 draaien.
+werkt. GitHub heeft geen runner voor macOS 14 meer, dus 14 is niet te testen
+(huismus-intern/besluiten.md, 2026-11-13). Elke Apple Silicon-Mac kan macOS 15
+draaien.
 
 De repo is openbaar: de runners van GitHub Actions kosten dan geen tegoed, en
 de app leest de releaselijst zonder inloggen.

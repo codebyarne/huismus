@@ -2,7 +2,7 @@
 
 With the desktop app you use Huismus as an ordinary app on your Mac or
 Windows PC, without a server. Your records then live on your own computer.
-The app works on macOS 14 or newer with an Apple chip, and on Windows 10 or
+The app works on macOS 15 (Sequoia) or newer with an Apple chip, and on Windows 10 or
 newer.
 
 ## Opening it the first time
