@@ -286,6 +286,16 @@ def _updates_card(ok, off) -> dict:
         line = _("Huismus %(version)s is er") % {"version": release.version}
     else:
         line = _("Versie %(version)s") % {"version": updates.current_version()}
+    if updates.by_store():
+        # No switch, so no Aan/Uit (huismus-intern/besluiten.md, 2026-11-13).
+        return {
+            "title": _("Updates"),
+            "intro": _("De Microsoft Store werkt Huismus bij."),
+            "slug": "updates",
+            "url": reverse("business:updates"),
+            "line": line,
+            "pill": None,
+        }
     on, off_text = pgettext_lazy("setting", "Aan"), pgettext_lazy("setting", "Uit")
     return {
         "title": _("Updates"),

@@ -226,6 +226,8 @@ def check(now: datetime | None = None) -> Release | None:
 def look_now(now: datetime | None = None) -> Release | None:
     """check(), but UpdateError("look") when GitHub can't be reached, so
     "Nu zoeken" on Instellingen → Updates can say so."""
+    if by_store():
+        return None
     now = now or timezone.localtime()
     try:
         releases = json.loads(_fetch(releases_url()))
@@ -237,11 +239,18 @@ def look_now(now: datetime | None = None) -> Release | None:
     return release
 
 
+def by_store() -> bool:
+    """The Windows app from the Microsoft Store (settings.STORE): the Store
+    updates it, so Huismus never looks, downloads or installs itself
+    (SPEC.md M11, "Microsoft Store"; huismus-intern/besluiten.md, 2026-11-13)."""
+    return settings.STORE
+
+
 def check_if_due(now: datetime | None = None) -> None:
     """At start and once a day after (desktop/app.py, start_hourly_thread),
     if it's on."""
     status = load_status()
-    if not status.enabled:
+    if not status.enabled or by_store():
         return
     now = now or timezone.localtime()
     last = datetime.fromisoformat(status.last_check) if status.last_check else None
@@ -254,7 +263,7 @@ def available() -> Release | None:
     found earlier, and only while looking is on."""
     status = load_status()
     release = status.release
-    if not status.enabled or release is None:
+    if not status.enabled or release is None or by_store():
         return None
     # Found by an older version than this one (after updating by hand).
     return release if is_newer(release.version, current_version()) else None
@@ -505,7 +514,7 @@ def install_at_start() -> bool:
     tries again, and the overview's backup warning says what's wrong with
     the folder (huismus-intern/besluiten.md, 2026-11-04)."""
     release = waiting()
-    if release is None or installer is None:
+    if release is None or installer is None or by_store():
         return False
     try:
         install(release)
@@ -516,3 +525,41 @@ def install_at_start() -> bool:
         update_status(auto_failed=release.version, not_installed=release.version)
         return False
     return True
+
+
+# -- The Microsoft Store version ------------------------------------------------
+
+
+def start_from_store() -> None:
+    """Before the migrations at every start of the Store version
+    (desktop/server.py).
+
+    Someone who moved from the installer may still have its update status:
+    a downloaded installer, a version found or one that failed. None of it
+    applies here, so it goes.
+
+    The Store replaced the app while Huismus was closed, so the backup that
+    install() makes before an update is made here: when this version brings
+    migrations an existing administration lacks, as on Docker
+    (manage.py migrate_with_backup). Recorded as pending, so failing
+    migrations get the screen that offers this backup back (desktop/app.py),
+    and the first start that works clears it. SafetyBackupError when the
+    backup can't be made: then nothing is migrated."""
+    from . import auto_backups
+    from .backup import sample_data_in_use
+    from .management.commands.migrate_with_backup import has_administration, pending_migrations
+
+    status = load_status()
+    _forget_download(status)
+    update_status(available={}, pending={}, not_installed="", auto_failed="", download_failed="")
+    if not (pending_migrations() and has_administration() and not sample_data_in_use()):
+        return
+    logger.info("Nieuwe versie uit de Store (%s): eerst een back-up", current_version())
+    backup = auto_backups.safety_backup()
+    update_status(
+        pending={
+            "from_version": status.seen_version,
+            "to_version": current_version(),
+            "backup": str(backup),
+        }
+    )

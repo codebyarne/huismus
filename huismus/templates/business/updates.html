@@ -13,6 +13,11 @@
     </div>
 </div>
 
+{% if store %}
+<section class="card settings-section" id="store">
+    <div class="card-pad"><p>{% translate "De Microsoft Store werkt Huismus bij." %}</p></div>
+</section>
+{% else %}
 {% if problem %}
 <p class="hint-banner is-bad" id="bijwerken-mislukt" role="alert" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{{ problem }}{% if download_by_hand and release %} <a href="{{ release.page_url }}" target="_blank" rel="noopener">{% translate "Nieuwe versie downloaden" %}</a>{% endif %}</span></p>
 {% endif %}
@@ -53,4 +58,5 @@ docker compose up -d</code></pre>
         <div class="row">{% if enabled %}<button type="submit" class="btn" formaction="{% url 'business:updates_check' %}">{% translate "Nu zoeken" %}</button>{% endif %}<span class="spacer"></span><button type="submit" class="btn btn-primary">{% translate "Opslaan" %}</button></div>
     </div>
 </form>
+{% endif %}
 {% endblock %}

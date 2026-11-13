@@ -94,3 +94,22 @@ def bring_forward(pid: int) -> bool:
     if user32.IsIconic(found[0]):
         user32.ShowWindow(found[0], SW_RESTORE)
     return bool(user32.SetForegroundWindow(found[0]))
+
+
+# What GetCurrentPackageFullName says outside a package.
+APPMODEL_ERROR_NO_PACKAGE = 15700
+
+
+def packaged(kernel32=None) -> bool:
+    """Whether this Huismus.exe runs from the Microsoft Store's package
+    (desktop/msix.py) rather than from the installer's folder. Inside a
+    package Windows knows its full name: asked with an empty buffer, it
+    says the buffer is too small instead of "no package"."""
+    import ctypes
+
+    if kernel32 is None:
+        kernel32 = ctypes.windll.kernel32
+    length = ctypes.c_uint32(0)
+    return kernel32.GetCurrentPackageFullName(ctypes.byref(length), None) != (
+        APPMODEL_ERROR_NO_PACKAGE
+    )
