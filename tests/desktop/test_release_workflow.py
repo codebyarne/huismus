@@ -15,7 +15,13 @@ WORKFLOW = (ROOT / ".github" / "workflows" / "release.yml").read_text()
 
 DOCKER_JOB = WORKFLOW.split("\n  build-and-push:\n", 1)[1].split("\n  macos-app:\n", 1)[0]
 MAC_JOB = WORKFLOW.split("\n  macos-app:\n", 1)[1].split("\n  windows-app:\n", 1)[0]
-WINDOWS_JOB = WORKFLOW.split("\n  windows-app:\n", 1)[1].split("\n  publish:\n", 1)[0]
+WINDOWS_JOB = WORKFLOW.split("\n  windows-app:\n", 1)[1].split("\n  macos-window-test:\n", 1)[0]
+MAC_WINDOW_TEST = WORKFLOW.split("\n  macos-window-test:\n", 1)[1].split(
+    "\n  windows-window-test:\n", 1
+)[0]
+WINDOWS_WINDOW_TEST = WORKFLOW.split("\n  windows-window-test:\n", 1)[1].split("\n  publish:\n", 1)[
+    0
+]
 PUBLISH_JOB = WORKFLOW.split("\n  publish:\n", 1)[1]
 
 
@@ -35,12 +41,19 @@ def test_it_runs_on_a_version_tag_and_by_hand_as_a_trial():
     assert 'on:\n  push:\n    tags:\n      - "v*"\n  workflow_dispatch:\n\n' in WORKFLOW
 
 
-def test_a_trial_build_publishes_nothing_and_builds_only_windows():
-    # By hand only the Windows build: the Mac's minutes count ten times.
-    for job in (DOCKER_JOB, MAC_JOB, PUBLISH_JOB):
+def test_a_trial_builds_and_tests_both_apps_and_publishes_nothing():
+    # The repository is public, so the Mac's minutes cost nothing either
+    # (2026-11-13; before, a trial built Windows only).
+    for job in (DOCKER_JOB, PUBLISH_JOB):
         assert "if: github.event_name == 'push'\n" in job
-    assert "if: github.event_name" not in WINDOWS_JOB.split("steps:", 1)[0]
-    assert "retention-days: 3" in WINDOWS_JOB
+    for job in (MAC_JOB, WINDOWS_JOB, MAC_WINDOW_TEST, WINDOWS_WINDOW_TEST):
+        assert "if: github.event_name" not in job.split("steps:", 1)[0]
+    for job in (MAC_JOB, WINDOWS_JOB):
+        assert "retention-days: 3" in job
+        # Above the latest release, so the window test can update to it.
+        trial = job.split("- name: A trial build gets a version above the latest release", 1)[1]
+        assert "if: github.event_name == 'workflow_dispatch'" in trial.split("run:", 1)[0]
+        assert 'uv version "$trial" --no-sync' in trial
 
 
 def test_it_builds_on_apple_silicon_with_the_minimum_macos_of_the_app():
@@ -68,14 +81,40 @@ def test_only_the_publish_job_may_write_releases():
     assert "contents: write" in PUBLISH_JOB
 
 
-def test_the_release_waits_for_both_apps():
-    assert "needs: [security, macos-app, windows-app]" in PUBLISH_JOB
+def test_the_release_waits_for_both_apps_and_their_window_tests():
+    needs = "needs: [security, macos-app, windows-app, macos-window-test, windows-window-test]"
+    assert needs in PUBLISH_JOB
+
+
+def test_the_window_tests_use_the_built_apps_and_keep_their_screenshots():
+    # SPEC.md M11, "Release test in the window".
+    for job, app, script in (
+        (MAC_WINDOW_TEST, "macos-app", "./scripts/window-test-mac.sh"),
+        (WINDOWS_WINDOW_TEST, "windows-app", "./scripts/window-test-windows.sh"),
+    ):
+        assert f"needs: {app}\n" in job
+        assert f"name: {app}\n" in job
+        assert script in job
+        assert "--exclude-drafts --exclude-pre-releases" in job
+        keep = job.split("- uses: actions/upload-artifact@v4", 1)[1]
+        assert "if: always()" in keep and "screenshots" in keep
+
+
+def test_only_the_window_test_switches_on_remote_debugging():
+    # The window's cookie must not reach other programs: the app itself never
+    # opens WebView2 to remote debugging.
+    variable = "WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS"
+    for path in (ROOT / "desktop").rglob("*"):
+        if path.is_file():
+            assert variable not in path.read_text(errors="ignore"), path
+    script = (ROOT / "scripts" / "window-test-windows.sh").read_text()
+    assert "--remote-debugging-address=127.0.0.1" in script
 
 
 def test_the_tag_must_match_the_version_inside_the_app():
     # Otherwise the updated app reads an older version from pyproject.toml
     # and offers the same update again.
-    assert 'if [ "$GITHUB_REF_NAME" != "v${version}" ]' in MAC_JOB
+    assert '[ "$GITHUB_REF_NAME" != "v${version}" ]' in MAC_JOB
     assert '[ "$GITHUB_REF_NAME" != "v${version}" ]' in WINDOWS_JOB
 
 
