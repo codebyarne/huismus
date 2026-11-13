@@ -235,6 +235,33 @@ def test_saving_while_the_live_totals_are_on_their_way_waits_for_them(app, conta
     assert Document.objects.get().lines.get().description == "Uren"
 
 
+def test_a_request_whose_element_is_gone_does_not_hold_up_the_forms(app):
+    # BUGS-BY-HAND.md, 2026-11-13: in the desktop app "Koppel met Claude"
+    # did nothing. An htmx request had gone out from an element that was gone
+    # by the time its answer came (a part that fetches itself every few
+    # seconds, replaced by a boosted page change). htmx tells only that
+    # element, so the document never heard the request had ended, and every
+    # form after it waited for it, for as long as the window stayed open.
+    held = []
+    app.route("**/vastgelopen/", lambda route: held.append(route))
+    app.goto(app.base + "/instellingen/ai-assistenten/")
+    with app.expect_request("**/vastgelopen/"):
+        app.evaluate(
+            """() => {
+                const part = document.createElement("div");
+                part.setAttribute("hx-get", "/vastgelopen/");
+                part.setAttribute("hx-trigger", "load");
+                document.body.append(part);
+                htmx.process(part);
+            }"""
+        )
+    app.evaluate("() => document.querySelector('[hx-get=\"/vastgelopen/\"]').remove()")
+    held[0].fulfill(status=200, body="")
+
+    app.get_by_role("button", name="Koppelen").click()
+    expect(app.locator("#sleutel")).to_be_attached()
+
+
 def test_a_form_sent_once_ignores_the_next_click_until_back(app):
     # A double click made the browser cut off the first request and send the
     # form again; after "Leegmaken" or "Terugzetten" the second one found the

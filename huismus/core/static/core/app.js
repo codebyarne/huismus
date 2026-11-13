@@ -122,11 +122,22 @@ const formMethod = (event) =>
 const sending = new Set();
 let waiting = false;
 let leaving = false;
-document.addEventListener("htmx:beforeSend", (event) => sending.add(event.detail.xhr));
-document.addEventListener("htmx:afterRequest", (event) => {
-  sending.delete(event.detail.xhr);
+const ended = (xhr) => {
+  if (!sending.delete(xhr)) return;
   if (sending.size === 0) document.dispatchEvent(new Event("huismus:idle"));
+};
+// htmx:afterRequest comes first, before htmx sends a request queued behind
+// this one. But htmx tells only the element that sent it, and once that
+// element is gone (a part that fetches itself, replaced by a page change) the
+// document never hears it. So the request's own end (loadend: an answer, an
+// error or an abort) counts too; without it the request stayed here, and
+// every form waited for it until the window closed (BUGS-BY-HAND.md).
+document.addEventListener("htmx:beforeSend", (event) => {
+  const xhr = event.detail.xhr;
+  sending.add(xhr);
+  xhr.addEventListener("loadend", () => ended(xhr));
 });
+document.addEventListener("htmx:afterRequest", (event) => ended(event.detail.xhr));
 document.addEventListener("htmx:beforeRequest", (event) => {
   if (leaving) event.preventDefault();
 });
