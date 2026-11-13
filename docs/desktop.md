@@ -290,8 +290,8 @@ als eigen versie, en de downloadpagina.
 ## Een release maken
 
 Een versie-tag bouwt beide apps in GitHub Actions
-(`.github/workflows/release.yml`, jobs `macos-app` en `windows-app`), naast
-het Docker-image:
+(`.github/workflows/release.yml`, jobs `macos-app` en `windows-app`) en
+test ze in hun venster, naast het Docker-image:
 
 1. Zet de nieuwe versie in `pyproject.toml` en zet die op `main`.
 2. Tag die commit met precies `v` plus die versie (`git tag v1.4.0 && git push
@@ -309,7 +309,40 @@ het Docker-image:
    en Inno Setup, draait `scripts/build-windows.sh`, installeert de installer
    stil en draait `Huismus.exe --check` op de geïnstalleerde app, op een lege
    administratie.
-6. Pas als beide gelukt zijn en `security` groen is, zet de job `publish` `Huismus-<versie>-macos.dmg`
+6. Daarna de releasetest in het venster (jobs `macos-window-test` en
+   `windows-window-test`, SPEC.md M11), op een verse runner per app:
+   - De nieuwe app installeren zoals een gebruiker: op de Mac uit de `.dmg`
+     naar `/Applications`, op Windows met de installer. Openen met venster op
+     een lege administratie, de onboarding doorlopen, een klant en één
+     factuur maken en uitgeven, de pdf downloaden.
+   - Dan de vorige release, uit zijn eigen download. Die krijgt nepdata van
+     zijn eigen `demo_data` (zijn broncode op die tag), en de nieuwe versie
+     staat klaar als gedownloade update. Bij het openen werkt hij zichzelf bij
+     langs zijn eigen weg: eerst een back-up, dan de app vervangen, dan de
+     nieuwe versie open. Daarna moeten de documenten en uitgaven per soort
+     en status even veel zijn en tot op de cent hetzelfde totaal hebben, net
+     als in de back-up van ervoor, en zegt het overzicht "Huismus is
+     bijgewerkt naar <versie>.".
+   - Van elke stap een screenshot, als bijlage `window-test-macos` en
+     `window-test-windows` bij de run (30 dagen).
+
+   Op Windows bestuurt Playwright het echte WebView2-venster: alleen het
+   script zet remote debugging aan, op 127.0.0.1, via
+   `WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS`; de app zelf zet die nooit. Op de
+   Mac kan Playwright niet bij een WKWebView. Daar maakt het script een token
+   en geeft het mee aan dat ene app-proces (`HUISMUS_RELEASE_TEST_TOKEN`;
+   alleen voor deze test, geen instelling voor gebruikers). De app haalt hem
+   meteen uit zijn omgeving, het log van de run maskeert hem, en Playwright
+   stuurt er dezelfde server mee aan. Een screenshot van het venster
+   (`screencapture`) laat zien dat het openging en niet leeg is.
+
+   Niet getest: het opzoeken van de release bij GitHub en het downloaden
+   (de release staat dan nog niet online), en de waarschuwing voor een
+   niet-ondertekende app (Gatekeeper, SmartScreen). Die blijven met de
+   hand: zoek en download bij elke release op één platform een echte update.
+   De scripts weigeren buiten een runner van GitHub, want ze gebruiken de
+   echte administratie van de computer.
+7. Pas als alles gelukt is en `security` groen is, zet de job `publish` `Huismus-<versie>-macos.dmg`
    en `Huismus-<versie>-windows.exe` op de GitHub-release van de tag.
    Bestaat die release nog niet, dan maakt hij hem als concept (met de
    release-notities die GitHub uit de PR-titels maakt), voegt de bestanden
@@ -318,8 +351,11 @@ het Docker-image:
    slaat concepten over, dus ziet nooit een release zonder zijn bestand.
 
 Een proefbouw zonder release: start de workflow "Release" met de hand (Actions
-→ Release → Run workflow). Dan bouwt en controleert alleen de Windows-job; de
-installer staat 3 dagen als bijlage bij de run, en er komt niets online.
+→ Release → Run workflow, of `gh workflow run release.yml --ref <branch>`).
+Dan bouwen en testen beide apps, ook in het venster, met een versie één patch
+boven de laatste release, zodat de test van die release kan bijwerken. Die
+versie staat alleen in de proefbouw. De apps staan 3 dagen als bijlage bij de
+run, de screenshots 30 dagen, en er komt niets online.
 
 De Pango-pakketten van Homebrew op die runner zijn gebouwd voor macOS 15
 (Sequoia). De app vraagt daarom minstens macOS 15 (`LSMinimumSystemVersion` in
