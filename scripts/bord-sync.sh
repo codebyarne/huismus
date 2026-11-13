@@ -15,6 +15,10 @@ REPO=codebyarne/huismus
 PROJECT_ID=PVT_kwHOELVXCM4BqhnM
 STATUS_FIELD=PVTSSF_lAHOELVXCM4BqhnMzho4YqM
 IN_PROGRESS=47fc9ee4
+# "@me" en niet codebyarne: met een naam zoekt gh project eerst op of het een
+# gebruiker of organisatie is, en dat mag het token met alleen `project` niet
+# ("unknown owner type"). Het token en de lokale login zijn allebei van de eigenaar.
+OWNER="@me"
 
 run() {
   if [[ -n "${DRY_RUN:-}" ]]; then
@@ -25,7 +29,7 @@ run() {
 }
 
 board_items() {
-  ./scripts/bord.sh item-list 1 --owner codebyarne --limit 500 --format json
+  ./scripts/bord.sh item-list 1 --owner "$OWNER" --limit 500 --format json
 }
 
 items=$(board_items)
@@ -35,7 +39,7 @@ if [[ -n "${BEZIG_ISSUE:-}" ]]; then
     '.items[] | select(.content.type == "Issue" and .content.repository == $repo and .content.number == $n) | .id' \
     <<<"$items")
   if [[ -z "$item" ]]; then
-    item=$(run ./scripts/bord.sh item-add 1 --owner codebyarne \
+    item=$(run ./scripts/bord.sh item-add 1 --owner "$OWNER" \
       --url "https://github.com/$REPO/issues/$BEZIG_ISSUE" --format json --jq .id)
   fi
   echo "#$BEZIG_ISSUE is bezig: op het bord naar In Progress"
