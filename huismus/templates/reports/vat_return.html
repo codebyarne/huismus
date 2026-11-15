@@ -23,7 +23,7 @@
 {% include "reports/_tabs.html" with current="vat_return" %}
 
 {% if report.kor_on %}
-<p class="hint-banner is-info" id="kor-aan"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{{ kor_note }} <a class="num" href="{% url 'business:topic' 'kor' %}">{% translate "KOR-instellingen" %} →</a></span></p>
+<p class="hint-banner is-info" id="kor-aan" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{{ kor_note }} <a class="num" href="{% url 'business:topic' 'kor' %}">{% translate "KOR-instellingen" %} →</a></span></p>
 <div class="split-rev" id="kor-omzet" style="margin-bottom:var(--s-5)">
     {% if kor_year.limit %}
     <section class="card kpi aside-first" id="kor-grens">

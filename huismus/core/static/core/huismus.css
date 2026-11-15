@@ -410,6 +410,11 @@ a:hover { color: var(--primary-hover); }
 .table { width: 100%; border-collapse: collapse; font-size: var(--fs-md); }
 .table th { text-align: left; font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--text-muted); padding: 11px 16px; border-bottom: 1px solid var(--border); white-space: nowrap; }
 .table td { padding: 13px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+/* Op de telefoon: een tabel met bedragen naast elkaar (zoals het jaaroverzicht) krijgt
+   kleinere letters en minder ruimte, zodat er meer kolommen in beeld passen. */
+@media (max-width: 760px) {
+  .table:not(.stackable) th, .table:not(.stackable) td { padding: 10px 8px; font-size: var(--fs-sm); }
+}
 .table tbody tr:last-child td { border-bottom: 0; }
 .table .r { text-align: right; }
 .table .amount, .table .num { font-variant-numeric: tabular-nums; }
@@ -675,6 +680,8 @@ a:hover { color: var(--primary-hover); }
   .actionbar .btn { flex: 1; padding: 0 10px; }
   /* Factuur maken: het totaal boven de knoppen, de balk boven de tabbalk. */
   .actionbar-editor { flex-wrap: wrap; }
+  /* Wat de focus krijgt (ook met Tab), schuift boven de balk en de tabbalk. */
+  html:has(.actionbar-editor) { scroll-padding-bottom: 190px; }
   .actionbar-total { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-2); flex-basis: 100%; }
   .actionbar-total strong { font-size: var(--fs-lg); font-weight: var(--fw-heavy); }
 }

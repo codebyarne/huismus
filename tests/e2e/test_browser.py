@@ -1595,6 +1595,12 @@ def test_on_a_phone_the_editor_bar_keeps_the_total_in_sight(app, contact):
     bar = app.locator(".actionbar").bounding_box()
     tabs = app.locator(".tabbar").bounding_box()
     assert bar["y"] + bar["height"] <= tabs["y"] + 1
+    # A field low on the page that gets the focus (Tab, or the browser)
+    # scrolls into sight above the bar, not under it.
+    footer = app.locator("[name=footer_text]")
+    footer.focus()
+    box = footer.bounding_box()
+    assert box["y"] + box["height"] <= app.locator(".actionbar").bounding_box()["y"] + 1
     # On a wide screen the totals beside the lines are enough.
     app.set_viewport_size({"width": 1280, "height": 800})
     expect(bar_total).to_be_hidden()
