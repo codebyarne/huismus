@@ -73,10 +73,7 @@
                 {% translate "dagen" as days_unit %}
                 {% translate "Standaard betalingstermijn" as terms_label %}
                 {% field form.default_payment_terms_days span=2 extra_class="num" suffix=days_unit label=terms_label %}
-                {% if next_invoice_number %}{% blocktranslate asvar invoice_next with number=next_invoice_number %}Volgende als je vandaag uitgeeft: {{ number }}{% endblocktranslate %}{% endif %}
-                {% field form.invoice_number_format span=2 extra_class="mono" help=invoice_next %}
-                {% if next_quote_number %}{% blocktranslate asvar quote_next with number=next_quote_number %}Volgende als je vandaag uitgeeft: {{ number }}{% endblocktranslate %}{% endif %}
-                {% field form.quote_number_format span=2 extra_class="mono" help=quote_next %}
+                {% include "business/_number_formats.html" with next_invoice=next_invoice_number next_quote=next_quote_number %}
                 <p class="help" style="grid-column:1 / -1">{% translate "In een nummerformaat staat {year} voor het jaar, {seq:04d} voor het volgnummer met vier cijfers en {customer} voor het klantnummer." %}</p>
                 <div class="field">
                     <label class="switch"><input type="checkbox" name="number_reset_yearly" role="switch"{% if form.number_reset_yearly.value %} checked{% endif %}>{% translate "Nummering elk jaar opnieuw beginnen" %}</label>

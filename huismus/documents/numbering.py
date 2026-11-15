@@ -136,7 +136,7 @@ def next_numbers_if_issued_today(settings) -> dict[str, str | None]:
     ("invoice", "quote"). issue() takes the year of the document's issue
     date; this assumes today. Without a yearly reset the sequence has no
     year (Settings.number_reset_yearly)."""
-    year = timezone.localdate().year if settings.number_reset_yearly else None
+    year = year_if_issued_today(settings.number_reset_yearly)
     return {
         "invoice": peek_next_number("invoice", settings.invoice_number_format, year=year),
         "quote": peek_next_number("quote", settings.quote_number_format, year=year),
@@ -189,48 +189,59 @@ def lowest_next_sequence_number(kind: str, template: str, *, year: int | None) -
     return highest + 1
 
 
+def check_next_sequence_number(kind: str, template: str, *, year: int | None, value: int) -> None:
+    """Raise NumberingError if the next {seq} can't be set to `value`
+    without a gap or a number twice (invariant 3): not once Huismus issued
+    a document of this kind, not onto or below a number that already
+    exists. Up and down are both fine before that: nothing was issued from
+    the sequence yet, so nothing is skipped. Changes nothing; the settings
+    form shows its errors with it, set_next_sequence_number() checks
+    again under the write lock."""
+    if value < 1:
+        raise NumberingError(_("Het volgnummer is minstens 1."))
+    if next_sequence_number_is_fixed(kind):
+        raise NumberingError(
+            _("Je hebt in Huismus al een nummer uitgegeven. Het nummer loopt nu vanzelf door.")
+        )
+    lowest = lowest_next_sequence_number(kind, template, year=year)
+    if value < lowest:
+        raise NumberingError(
+            _("Kies %(lowest)s of hoger. Een lager nummer bestaat al.") % {"lowest": lowest}
+        )
+    if not uses_customer_number(template):
+        # An existing number that doesn't fit the format (an import) can
+        # still be hit exactly. With {customer} the number isn't known
+        # until the customer is; number_for() refuses it then.
+        number = format_number(template, year=year, seq=value)
+        if Document.objects.filter(kind__in=_SEQUENCE_DOCUMENT_KINDS[kind], number=number).exists():
+            raise NumberingError(
+                _("Nummer %(number)s bestaat al. Kies een hoger volgnummer.") % {"number": number}
+            )
+
+
 def set_next_sequence_number(kind: str, template: str, *, year: int | None, value: int) -> None:
     """Set the {seq} of the next document of this sequence by hand (SPEC.md
     section 7, "the user sets the next number manually"; issue #141), for
     someone continuing the numbers of another package. Raises
-    NumberingError instead of leaving a gap or giving a number twice
-    (invariant 3): not once Huismus issued a document of this kind, not
-    onto or below a number that already exists. Up and down are both
-    fine before that: nothing was issued from it, so nothing is skipped.
-    Only the sequence row changes; a number is still given only by
-    allocate_number()."""
+    NumberingError where check_next_sequence_number() does. Only the
+    sequence row changes; a number is still given only by
+    allocate_number(), when issuing."""
     if value == next_sequence_number(kind, year=year):
         return
-    if value < 1:
-        raise NumberingError(_("Het volgnummer is minstens 1."))
     with transaction.atomic():
         # A write first, as in allocate_number(): from here SQLite holds the
-        # write lock, so no document can be issued between the checks below
-        # and the update. Reading first and writing after could instead
+        # write lock, so no document can be issued between the check and
+        # the update. Reading first and writing after could instead
         # deadlock with a concurrent issue().
         ensure_sequence_row(kind, year)
-        if next_sequence_number_is_fixed(kind):
-            raise NumberingError(
-                _("Je hebt in Huismus al een nummer uitgegeven. Het nummer loopt nu vanzelf door.")
-            )
-        lowest = lowest_next_sequence_number(kind, template, year=year)
-        if value < lowest:
-            raise NumberingError(
-                _("Kies %(lowest)s of hoger. Een lager nummer bestaat al.") % {"lowest": lowest}
-            )
-        if not uses_customer_number(template):
-            # An existing number that doesn't fit the format (an import)
-            # can still be hit exactly. With {customer} the number isn't
-            # known until the customer is; number_for() refuses it then.
-            number = format_number(template, year=year, seq=value)
-            if Document.objects.filter(
-                kind__in=_SEQUENCE_DOCUMENT_KINDS[kind], number=number
-            ).exists():
-                raise NumberingError(
-                    _("Nummer %(number)s bestaat al. Kies een hoger volgnummer.")
-                    % {"number": number}
-                )
+        check_next_sequence_number(kind, template, year=year, value=value)
         NumberSequence.objects.filter(kind=kind, year=year).update(last_value=value - 1)
+
+
+def year_if_issued_today(reset_yearly: bool) -> int | None:
+    """The year of the sequence a document issued today takes; without a
+    yearly reset the sequence has no year (Settings.number_reset_yearly)."""
+    return timezone.localdate().year if reset_yearly else None
 
 
 _SEQ_PLACEHOLDER = re.compile(r"\{seq(:[^}]*)?\}")

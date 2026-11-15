@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-15 11:03+0100\n"
+"POT-Creation-Date: 2026-11-15 11:31+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -203,6 +203,22 @@ msgid ""
 msgstr ""
 "Exempt from VAT under the small business scheme (KOR). No VAT has been "
 "charged."
+
+msgid "Volgnummer van je volgende factuur"
+msgstr "Sequence number of your next invoice"
+
+msgid ""
+"Kom je uit een ander pakket? Vul het volgnummer in dat na je laatste factuur "
+"komt."
+msgstr "Coming from another package? Enter the sequence number that follows your last invoice."
+
+msgid "Volgnummer van je volgende offerte"
+msgstr "Sequence number of your next quote"
+
+msgid ""
+"Kom je uit een ander pakket? Vul het volgnummer in dat na je laatste offerte "
+"komt."
+msgstr "Coming from another package? Enter the sequence number that follows your last quote."
 
 msgid "Factuur"
 msgstr "Invoice"
@@ -1914,6 +1930,22 @@ msgstr "A sent e-mail cannot be changed."
 msgid "[klantnummer]"
 msgstr "[customer number]"
 
+msgid "Het volgnummer is minstens 1."
+msgstr "The sequence number is at least 1."
+
+msgid ""
+"Je hebt in Huismus al een nummer uitgegeven. Het nummer loopt nu vanzelf "
+"door."
+msgstr "You already issued a number in Huismus. The number now counts up by itself."
+
+#, python-format
+msgid "Kies %(lowest)s of hoger. Een lager nummer bestaat al."
+msgstr "Choose %(lowest)s or higher. A lower number already exists."
+
+#, python-format
+msgid "Nummer %(number)s bestaat al. Kies een hoger volgnummer."
+msgstr "Number %(number)s already exists. Choose a higher sequence number."
+
 msgid "[nummer volgt]"
 msgstr "[number to follow]"
 
@@ -2451,10 +2483,9 @@ msgstr "quote numbers"
 #, python-format
 msgid ""
 "%(unparsed)s van %(total)s geïmporteerde %(label)s passen niet in het "
-"ingestelde nummerformaat. Stel het volgende nummer zelf in bij Instellingen."
-msgstr ""
-"%(unparsed)s of %(total)s imported %(label)s don't fit the number format you "
-"set. Set the next number yourself in Settings."
+"ingestelde nummerformaat. Stel het volgende nummer zelf in bij Instellingen "
+"→ Facturen en nummering."
+msgstr "%(unparsed)s of %(total)s imported %(label)s don't fit the number format you set. Set the next number yourself in Settings → Invoices and numbering."
 
 #, python-format
 msgid "Uitgave %(number)s"
@@ -3074,6 +3105,16 @@ msgstr "Manage"
 msgid "Instellen"
 msgstr "Set up"
 
+#, python-format
+msgid "Volgende als je vandaag uitgeeft: %(number)s"
+msgstr "Next if you issue today: %(number)s"
+
+msgid "Het nummer loopt vanzelf door sinds je eerste factuur in Huismus."
+msgstr "The number now counts up by itself, since your first invoice in Huismus."
+
+msgid "Het nummer loopt vanzelf door sinds je eerste offerte in Huismus."
+msgstr "The number now counts up by itself, since your first quote in Huismus."
+
 msgid "De taal van nieuwe facturen kies je bij Facturen en nummering."
 msgstr "You choose the language of new invoices under Invoices and numbering."
 
@@ -3492,10 +3533,6 @@ msgstr "days"
 
 msgid "Standaard betalingstermijn"
 msgstr "Default payment term"
-
-#, python-format
-msgid "Volgende als je vandaag uitgeeft: %(number)s"
-msgstr "Next if you issue today: %(number)s"
 
 #, python-brace-format
 msgid ""

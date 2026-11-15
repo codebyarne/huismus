@@ -54,10 +54,7 @@
             {% translate "dagen" as days_unit %}
             {% translate "Standaard betalingstermijn" as terms_label %}
             {% field form.default_payment_terms_days span=2 extra_class="num" suffix=days_unit label=terms_label %}
-            {% if next_numbers.invoice %}{% blocktranslate asvar invoice_next with number=next_numbers.invoice %}Volgende als je vandaag uitgeeft: {{ number }}{% endblocktranslate %}{% endif %}
-            {% field form.invoice_number_format span=2 extra_class="mono" help=invoice_next %}
-            {% if next_numbers.quote %}{% blocktranslate asvar quote_next with number=next_numbers.quote %}Volgende als je vandaag uitgeeft: {{ number }}{% endblocktranslate %}{% endif %}
-            {% field form.quote_number_format span=2 extra_class="mono" help=quote_next %}
+            {% include "business/_number_formats.html" with next_invoice=next_numbers.invoice next_quote=next_numbers.quote %}
             <p class="help" style="grid-column:1 / -1">{% translate "In een nummerformaat staat {year} voor het jaar, {seq:04d} voor het volgnummer met vier cijfers en {customer} voor het klantnummer." %}</p>
         </div>
         {% elif step.slug == "logo" %}
