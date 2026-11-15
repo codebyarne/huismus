@@ -116,6 +116,18 @@ def test_invoice_due_today_is_not_overdue_yet():
     assert _issued_invoice(due_date=TODAY).is_overdue is False
 
 
+def test_days_overdue_counts_from_the_due_date():
+    assert _issued_invoice(due_date=TODAY - timedelta(days=12)).days_overdue == 12
+    assert _issued_invoice(due_date=YESTERDAY).days_overdue == 1
+
+
+def test_days_overdue_is_zero_when_not_overdue():
+    assert _issued_invoice(due_date=TODAY).days_overdue == 0
+    paid = _issued_invoice(total_line_cents=10000, due_date=YESTERDAY)
+    Payment.objects.create(document=paid, paid_on=TODAY, amount_cents=10000)
+    assert paid.days_overdue == 0
+
+
 def test_paid_invoice_past_its_due_date_is_not_overdue():
     invoice = _issued_invoice(total_line_cents=10000, due_date=YESTERDAY)
     Payment.objects.create(document=invoice, paid_on=TODAY, amount_cents=10000)

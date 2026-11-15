@@ -85,7 +85,7 @@
                         <td data-cell="amount" class="r amount">{% if document.kind == "credit_note" %}&minus;&nbsp;{% endif %}{{ document.total_cents|money }}</td>
                         <td data-cell="{% if document.status == 'draft' %}hide{% else %}status{% endif %}" class="r">
                             {% if document.kind == "credit_note" %}<span class="pill pill-credit">{% translate "Creditnota" %}</span>
-                            {% elif document.is_overdue %}{% include "documents/_pill_overdue.html" %}
+                            {% elif document.is_overdue %}{% include "documents/_pill_overdue.html" with doc=document %}
                             {% elif document.payment_state %}<span class="pill pill-{{ document.payment_state }}">{{ document.payment_state|payment_state_label|capfirst }}</span>
                             {% else %}<span class="muted">·</span>{% endif %}
                         </td>
@@ -112,6 +112,6 @@
         {% endif %}
     </div>
 </section>
-<p class="small muted" style="margin-top:var(--s-3)"><span class="pill pill-overdue" style="height:20px;font-size:11px">{% translate "Vervallen" %}</span> {% translate "betekent: vervaldatum voorbij en nog niet volledig betaald." %}</p>
+<p class="small muted" style="margin-top:var(--s-3)">{% translate "Te laat betekent: vervaldatum voorbij en nog niet volledig betaald." %}</p>
 {% endif %}
 {% endblock %}
