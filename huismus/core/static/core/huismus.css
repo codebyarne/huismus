@@ -1,7 +1,7 @@
 /* SPDX-FileCopyrightText: 2026 Huismus contributors
    SPDX-License-Identifier: AGPL-3.0-or-later */
 /* ==========================================================================
-   Huismus design system: richting "Vandaag" (violet + snavelgeel)
+   Huismus design system: richting "Verfijnd" (petrol + snavelgeel)
    Plain CSS, geen build-stap. Licht/donker via light-dark() + color-scheme.
    Forceer een thema met <html data-theme="dark|light">.
    ========================================================================== */
@@ -35,39 +35,39 @@
   /* Radius */
   --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-xl: 20px; --r-pill: 999px;
 
-  /* Neutralen: bijna wit met een zweem violet; witte vlakken met een dunne rand
-     (ontwerp "Verfijnd", de eigenaar, 2026-11-15) */
-  --bg:            light-dark(#F8F7FB, #121019);
-  --surface:       light-dark(#FFFFFF, #1A1726);
-  --surface-2:     light-dark(#F2F0F7, #221E31);
-  --surface-3:     light-dark(#E7E4EF, #2C283D);
-  --border:        light-dark(#E7E4EF, #2C283D);
-  --border-strong: light-dark(#D3CEE0, #423C5A);
+  /* Neutralen: warm wit; witte vlakken met een dunne rand
+     (ontwerp "Verfijnd" in petrol, de eigenaar, 2026-11-15) */
+  --bg:            light-dark(#FBF8F3, #191613);
+  --surface:       light-dark(#FFFFFF, #231F1B);
+  --surface-2:     light-dark(#F4EFE7, #2C2722);
+  --surface-3:     light-dark(#EBE4D9, #362F29);
+  --border:        light-dark(#E6DED2, #3A342D);
+  --border-strong: light-dark(#CEC3B3, #564C42);
   /* De rand van een invoerveld haalt 3 : 1 tegen vlak en achtergrond (huismus-intern/besluiten.md, 2026-11-15). */
-  --field-border:  light-dark(#8A859C, #746D90);
-  --text:          light-dark(#1B1730, #EFEDF6);
-  --text-muted:    light-dark(#615C72, #A8A2BC);
-  --paper:         light-dark(#FFFFFF, #1F1838);
+  --field-border:  light-dark(#8A8073, #837769);
+  --text:          light-dark(#2A2520, #F2ECE4);
+  --text-muted:    light-dark(#6B6258, #B3A99C);
+  --paper:         light-dark(#FFFFFF, #26221E);
 
-  /* Primair: ochtendlucht */
-  --primary:       light-dark(#6B3FD9, #A98BF5);
-  --primary-hover: light-dark(#5B30C8, #B9A0F8);
-  --on-primary:    light-dark(#FFFFFF, #160A38);
-  --primary-soft:  light-dark(#EFEAFD, #2A2448);
-  --primary-ink:   light-dark(#5229BF, #BBA3F8);
-  --ring:          light-dark(rgb(107 63 217 / .32), rgb(169 139 245 / .42));
+  /* Primair: petrol */
+  --primary:       light-dark(#0D6B6E, #5FC9C4);
+  --primary-hover: light-dark(#0A5659, #8ADBD6);
+  --on-primary:    light-dark(#FFFFFF, #0A1F1F);
+  --primary-soft:  light-dark(#DDF0EF, #15302F);
+  --primary-ink:   light-dark(#0A5A5D, #8ADBD6);
+  --ring:          light-dark(rgb(13 107 110 / .32), rgb(95 201 196 / .42));
 
   /* Accent: snavelgeel (highlights, hints, de KOR-balk; nooit voor knoppen) */
   --accent:        light-dark(#F5A623, #F5A623);
   --accent-soft:   light-dark(#FDF0D5, #33270F);
   --accent-ink:    light-dark(#855000, #FFC766);
-  --mark-wing:     light-dark(#A98BF5, #CBB8FA);  /* vleugel van de mus: lichter dan het lijf */
+  --mark-wing:     light-dark(#5FC9C4, #8ADBD6);  /* vleugel van de mus: lichter dan het lijf */
 
-  /* Het diepviolette menu op een breed scherm */
-  --panel:         light-dark(#3B2694, #2F1D80);  /* een tint lichter dan het ontwerp: rustiger (de eigenaar, 2026-11-15) */
+  /* Het diep-petrol menu op een breed scherm */
+  --panel:         light-dark(#0B4F51, #0A3E40);
   --panel-text:    light-dark(#FFFFFF, #FFFFFF);
-  --panel-muted:   light-dark(#CFC4F2, #CFC4F2);
-  --panel-wing:    light-dark(#CBB8FA, #CBB8FA);
+  --panel-muted:   light-dark(#BFE3E1, #BFE3E1);
+  --panel-wing:    light-dark(#8ADBD6, #8ADBD6);
   --panel-hover:   rgb(255 255 255 / .10);
   --panel-current: rgb(255 255 255 / .16);
   --panel-line:    rgb(255 255 255 / .18);
@@ -76,7 +76,7 @@
   --ok:       light-dark(#1E7A45, #7AD6A0);  --ok-bg:    light-dark(#E2F3E8, #1D3326);
   --warn:     light-dark(#855000, #FFC766);  --warn-bg:  light-dark(#FDF0D5, #33270F);
   --bad:      light-dark(#B4184F, #FF8FB1);  --bad-bg:   light-dark(#FCE6EE, #3D1326);
-  --draft:    light-dark(#615C72, #A8A2BC);  --draft-bg: light-dark(#F2F0F7, #221E31);
+  --draft:    light-dark(#5E574F, #C9BFB2);  --draft-bg: light-dark(#EFEAE3, #2F2A24);
   --danger:       light-dark(#B4184F, #FF8FB1);
   --danger-hover: light-dark(#96113F, #FFB0C8);
   --on-danger:    light-dark(#FFFFFF, #33061D);
@@ -85,9 +85,9 @@
   /* Schaduwen */
   --sh-1: 0 1px 2px rgb(42 37 32 / .05);
   --sh-2: 0 1px 2px rgb(42 37 32 / .05), 0 6px 18px rgb(42 37 32 / .07);
-  --sh-paper: 0 1px 2px rgb(26 21 48 / .06), 0 14px 44px rgb(26 21 48 / .10);
-  --sh-pop: 0 2px 6px rgb(15 11 30 / .08), 0 18px 48px rgb(15 11 30 / .20);
-  --overlay: rgb(15 11 30 / .42);
+  --sh-paper: 0 1px 2px rgb(42 37 32 / .06), 0 14px 44px rgb(42 37 32 / .10);
+  --sh-pop: 0 2px 6px rgb(25 22 19 / .08), 0 18px 48px rgb(25 22 19 / .20);
+  --overlay: rgb(25 22 19 / .42);
 
   /* Maten */
   --sidebar-w: 240px;
@@ -114,7 +114,7 @@ p { margin: 0; text-wrap: pretty; }
 a { color: var(--primary-ink); text-underline-offset: 3px; }
 a:hover { color: var(--primary-hover); }
 :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
-::selection { background: rgb(107 63 217 / .2); }
+::selection { background: rgb(13 107 110 / .2); }
 .muted { color: var(--text-muted); }
 .small { font-size: var(--fs-sm); }
 .num, .amount { font-variant-numeric: tabular-nums; }
@@ -244,7 +244,7 @@ a:hover { color: var(--primary-hover); }
   }
   .tabbar a[aria-current="page"], .tabbar button[aria-current="page"] { color: var(--primary-ink); }
   .tabbar .fab { justify-self: center; align-self: center; width: 52px; height: 52px; min-height: 0; border-radius: 50%; background: var(--primary); color: var(--on-primary); box-shadow: var(--sh-2); }
-  /* Alleen violet waar een factuur maken de hoofdactie is; anders wit met een omlijning */
+  /* Alleen petrol waar een factuur maken de hoofdactie is; anders wit met een omlijning */
   .tabbar .fab-quiet { background: var(--surface); color: var(--primary-ink); box-shadow: inset 0 0 0 1px var(--border-strong); }
   .page-head { align-items: flex-start; }
   .page-head .actions { width: 100%; }
@@ -775,10 +775,10 @@ a:hover { color: var(--primary-hover); }
 .kpi-label { font-size: var(--fs-sm); color: var(--text-muted); font-weight: var(--fw-medium); display: flex; align-items: center; gap: 8px; }
 .kpi-value { white-space: nowrap; font-family: var(--font-display); font-size: var(--fs-2xl); font-weight: var(--fw-bold); letter-spacing: -0.025em; font-variant-numeric: tabular-nums; line-height: 1.15; }
 .kpi-sub { font-size: var(--fs-sm); color: var(--text-muted); }
-.kpi-hero { color: var(--text); }  /* het bedrag in gewone tekstkleur: het menu is al violet (de eigenaar, 2026-11-15, ontwerp "Verfijnd") */
+.kpi-hero { color: var(--text); }  /* het bedrag in gewone tekstkleur: het menu is al petrol (de eigenaar, 2026-11-15, ontwerp "Verfijnd") */
 a.kpi-hero:hover { color: var(--text); background: var(--surface-2); }
 /* A notice is a quiet block like the other cards: no border, no stripe. Its kind
-   shows only in the round icon; the link is violet, and red only for a real
+   shows only in the round icon; the link is petrol, and red only for a real
    problem (huismus-intern/besluiten.md, 2026-10-30; the owner, 2026-11-15). */
 .hint-banner {
   --hb-ink: var(--accent-ink); --hb-chip: var(--accent-soft); --hb-link: var(--primary-ink);

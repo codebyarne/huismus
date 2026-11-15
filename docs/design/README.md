@@ -70,7 +70,7 @@ ronde 3 (met een eigen schets-CSS, `hm.css`). Beide zijn naslag, geen bron.
    precies aan wat afwijkt.
 8. **Meldingen op het overzicht** zijn rustige kaarten (`.hint-banner`): kleur
    alleen in de streep, het icoon en de link. Rood (`.is-bad`) boven de
-   KOR-grens of als iets mislukt, amber (`.is-warn`) om op te letten, violet
+   KOR-grens of als iets mislukt, amber (`.is-warn`) om op te letten, petrol
    (`.is-info`) voor informatie, snavelgeel (geen klasse) voor een herinnering.
 9. **KOR**: de hint `.kor-note` in de editor; de tekst zelf, die de gebruiker
    in Instellingen zet, onder elke factuur.

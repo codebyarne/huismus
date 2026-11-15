@@ -752,7 +752,7 @@ def test_the_trash_icon_over_the_logo_removes_it(app):
     from huismus.business.models import Settings
 
     buffer = BytesIO()
-    Image.new("RGB", (40, 20), "#1B6AC9").save(buffer, "PNG")
+    Image.new("RGB", (40, 20), "#0D6B6E").save(buffer, "PNG")
     png = buffer.getvalue()
     business = Settings.load()
     business.logo.save("logo.png", SimpleUploadedFile("logo.png", png), save=True)
