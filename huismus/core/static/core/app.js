@@ -271,7 +271,8 @@ document.addEventListener("keydown", (event) => {
     if (url) {
       window.location.assign(url);
     } else {
-      document.getElementById("nieuw-menu")?.showPopover?.();
+      // The four choices of the phone's +: the menu panel itself has only "Nieuwe factuur".
+      document.getElementById("plus-menu")?.showPopover?.();
     }
   }
 });

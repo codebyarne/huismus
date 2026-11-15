@@ -63,6 +63,30 @@ def test_outstanding_sums_what_is_still_owed_and_counts_overdue(settings_filled)
     assert summary["overdue_count"] == 1
 
 
+def test_outstanding_says_how_much_of_it_is_overdue(settings_filled):
+    _issued(100000)
+    _issued(30000, due_date=TODAY - timedelta(days=3))
+    _issued(50000, due_date=TODAY - timedelta(days=1), paid=20000)  # partly paid, overdue
+    _issued(80000, due_date=TODAY - timedelta(days=9), paid=80000)  # paid: not overdue
+
+    summary = outstanding_invoices()
+
+    assert summary["overdue_cents"] == 30000 + 30000
+    assert summary["total_cents"] == 100000 + 30000 + 30000
+    assert summary["has_issued"] is True
+
+
+def test_outstanding_before_the_first_invoice_is_empty(settings_filled):
+    summary = outstanding_invoices()
+    assert summary == {
+        "count": 0,
+        "total_cents": 0,
+        "overdue_count": 0,
+        "overdue_cents": 0,
+        "has_issued": False,
+    }
+
+
 def test_onboarding_steps_follow_what_exists(settings_filled):
     steps = {step["key"]: step["done"] for step in onboarding_steps()}
     assert steps == {
