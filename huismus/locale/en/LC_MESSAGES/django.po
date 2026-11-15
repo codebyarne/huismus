@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-15 16:51+0100\n"
+"POT-Creation-Date: 2026-11-15 17:45+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3996,11 +3996,11 @@ msgstr "All invoices"
 msgid "Nummer"
 msgstr "Number"
 
-msgid "Totaal"
-msgstr "Total"
+msgid "Bedrag"
+msgstr "Amount"
 
-msgid "Betaalstatus"
-msgstr "Payment status"
+msgid "Status"
+msgstr "Status"
 
 msgid "Je hebt nog geen facturen uitgegeven."
 msgstr "You haven't issued any invoices yet."
@@ -4111,6 +4111,9 @@ msgstr "Attn."
 
 msgid "Niemand"
 msgstr "Nobody"
+
+msgid "Totaal"
+msgstr "Total"
 
 msgid "Factuurbedrag"
 msgstr "Invoice amount"
@@ -4464,6 +4467,9 @@ msgstr ""
 msgid "Naar factuur %(number)s"
 msgstr "To invoice %(number)s"
 
+msgid "Betaalstatus"
+msgstr "Payment status"
+
 msgid "Afgehandeld"
 msgstr "Settled"
 
@@ -4735,12 +4741,6 @@ msgstr "Search by number or customer"
 msgid "Alle jaren"
 msgstr "All years"
 
-msgid "Status"
-msgstr "Status"
-
-msgid "Bedrag"
-msgstr "Amount"
-
 msgid "Nog geen klant"
 msgstr "No customer yet"
 
@@ -4937,8 +4937,8 @@ msgstr "Add your first category below, for example Software or Travel."
 msgid "Nieuwe categorie"
 msgstr "New category"
 
-msgid "Nieuwe categorie, bijvoorbeeld Verzekeringen"
-msgstr "New category, e.g. Insurance"
+msgid "Bijvoorbeeld Verzekeringen"
+msgstr "For example Insurance"
 
 msgid "Toevoegen"
 msgstr "Add"

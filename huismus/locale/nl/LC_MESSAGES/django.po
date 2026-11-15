@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-15 16:51+0100\n"
+"POT-Creation-Date: 2026-11-15 17:45+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3746,10 +3746,10 @@ msgstr ""
 msgid "Nummer"
 msgstr ""
 
-msgid "Totaal"
+msgid "Bedrag"
 msgstr ""
 
-msgid "Betaalstatus"
+msgid "Status"
 msgstr ""
 
 msgid "Je hebt nog geen facturen uitgegeven."
@@ -3851,6 +3851,9 @@ msgid "T.a.v."
 msgstr ""
 
 msgid "Niemand"
+msgstr ""
+
+msgid "Totaal"
 msgstr ""
 
 msgid "Factuurbedrag"
@@ -4187,6 +4190,9 @@ msgstr ""
 msgid "Naar factuur %(number)s"
 msgstr ""
 
+msgid "Betaalstatus"
+msgstr ""
+
 msgid "Afgehandeld"
 msgstr ""
 
@@ -4431,12 +4437,6 @@ msgstr ""
 msgid "Alle jaren"
 msgstr ""
 
-msgid "Status"
-msgstr ""
-
-msgid "Bedrag"
-msgstr ""
-
 msgid "Nog geen klant"
 msgstr ""
 
@@ -4622,7 +4622,7 @@ msgstr ""
 msgid "Nieuwe categorie"
 msgstr ""
 
-msgid "Nieuwe categorie, bijvoorbeeld Verzekeringen"
+msgid "Bijvoorbeeld Verzekeringen"
 msgstr ""
 
 msgid "Toevoegen"
