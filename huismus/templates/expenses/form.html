@@ -93,7 +93,7 @@ expense.pk.{% endcomment %}
     Bonnetjes section above the form, with its own upload.{% endcomment %}
     {% if new_receipt_form %}{% with field=new_receipt_form.file %}
     <div class="stack" style="gap:var(--s-3)">
-        <h2>{% translate "Bonnetje" %} <span class="opt">({% translate "optioneel" %})</span></h2>
+        <h2>{% translate "Bonnetje" %}</h2>
         <label class="dropzone" style="padding:var(--s-5)" data-dropzone>
             <input type="file" name="{{ field.html_name }}" id="{{ field.auto_id }}" accept="image/png,image/jpeg,image/heic,image/heif,.heic,.heif,application/pdf" aria-label="{% translate 'Bonnetje toevoegen' %}" data-file-summary="gekozen-bonnetje"{% if field.errors %} aria-invalid="true" aria-describedby="{{ field.auto_id }}-fout"{% endif %}>
             <span class="dz-icon"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg></span>

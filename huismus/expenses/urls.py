@@ -3,13 +3,16 @@
 from django.urls import path
 from django.views.generic import RedirectView
 
-from . import inbox_views, process_views, views
+from . import inbox_views, photo_views, process_views, views
 
 app_name = "expenses"
 
 urlpatterns = [
     path("", views.expense_list, name="list"),
     path("nieuw/", views.expense_create, name="create"),
+    # On a phone, the photo first (#188).
+    path("nieuw/foto/", photo_views.photo_upload, name="photo_upload"),
+    path("nieuw/foto/<int:pk>/", photo_views.photo_expense, name="photo"),
     path("verwerken/", process_views.process, name="process"),
     path(
         "verwerken/<str:kind>/<int:pk>/",

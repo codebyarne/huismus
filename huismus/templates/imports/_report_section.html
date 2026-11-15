@@ -99,7 +99,7 @@
         </div>
         {% endif %}
         {% if r.numbering_note %}
-        <div class="flash flash-info"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><div class="flash-body"><strong>{% translate "Nummering" %}</strong><span class="small">{{ r.numbering_note }}</span></div></div>
+        <div class="flash flash-info"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><div class="flash-body"><strong>{% translate "Nummering" %}</strong><span class="small">{{ r.numbering_note }} <a href="{% url 'business:topic' 'facturen' %}">{% translate "Facturen en nummering" %} →</a></span></div></div>
         {% endif %}
     </div>
 </details>

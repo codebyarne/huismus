@@ -31,6 +31,16 @@ bedrag en het nummer dat de factuur krijgt. Met **Definitief uitgeven**:
 Daarna download je de pdf met **PDF**, of mail je hem met **Mailen**. Zie
 [Mailen](mailen.nl.md).
 
+## Doornummeren na een ander pakket
+
+Kom je uit een ander pakket? Dan wil je dat je nummers doorlopen. Ga naar
+**Instellingen → Facturen en nummering** en vul bij **Volgnummer van je
+volgende factuur** het getal in dat na je laatste factuur komt. Was je
+laatste factuur 2026-0042, dan vul je 43 in. Voor offertes werkt het net zo.
+
+Dit kan tot je eerste factuur in Huismus. Daarna loopt het nummer vanzelf
+door, zodat er geen gat in je reeks komt.
+
 ## Betalingen
 
 Op de factuur zie je de betaalstatus: onbetaald, deels betaald, betaald of
@@ -39,6 +49,15 @@ staat al ingevuld met wat er nog openstaat. Een deel betalen kan ook.
 
 Het overzicht laat zien wat er in totaal openstaat en welke facturen te laat
 zijn.
+
+## Een herinnering sturen
+
+Is een factuur te laat, dan zie je op de factuur hoeveel dagen, en staat
+bovenaan **Herinnering sturen**. Je krijgt een mail met de factuur als
+bijlage en een tekst die zegt wat er nog openstaat. Pas aan wat je wilt en
+klik op **Versturen**. Daarna zie je op de factuur wanneer je de laatste
+herinnering stuurde. Huismus stuurt nooit zelf een herinnering. De tekst stel
+je in bij [Mailen](mailen.nl.md).
 
 ## Iets corrigeren
 

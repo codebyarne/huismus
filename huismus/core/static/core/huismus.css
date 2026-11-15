@@ -888,6 +888,16 @@ div.hint-banner > form { position: relative; z-index: 1; }
   .process-receipt { position: static; }
   .process-img { max-height: 50dvh; }
 }
+/* A new expense on a phone, the photo first (#188, expenses/photo.html):
+   the photo with "Opnieuw" on it, then the amount, large. */
+.photo-shot { position: relative; padding: var(--s-3); }
+.photo-shot .process-img { max-height: min(30dvh, 260px); }
+.photo-again { position: absolute; right: var(--s-5); bottom: var(--s-5); }
+.amount-xl .input { height: 60px; font-size: var(--fs-2xl); font-weight: var(--fw-semibold); }
+.amount-xl .money::before { font-size: var(--fs-lg); }
+/* Its bar: "Uitgave opslaan" with "Alleen de foto bewaren" under it. */
+.actionbar.photo-actions { flex-direction: column; align-items: stretch; flex-wrap: nowrap; gap: 2px; }
+.actionbar.photo-actions .btn { flex: none; }
 
 .report { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--sh-1); overflow: hidden; }
 .report + .report { margin-top: var(--s-3); }

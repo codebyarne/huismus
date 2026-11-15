@@ -15,7 +15,9 @@ in wat Huismus nodig heeft voor je eerste factuur:
    die onder je facturen komt. Meer daarover in
    [KOR en btw](kor-en-btw.nl.md).
 3. **Facturen:** je standaard betalingstermijn en hoe Huismus je facturen
-   en offertes nummert. Meestal is de standaard goed.
+   en offertes nummert. Meestal is de standaard goed. Kom je uit een ander
+   pakket, vul dan het volgnummer in dat na je laatste factuur komt. Dan
+   lopen je nummers door.
 4. **Logo:** je logo komt bovenaan je facturen en offertes. Dit kan ook
    later.
 

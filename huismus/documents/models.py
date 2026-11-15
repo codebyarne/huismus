@@ -292,12 +292,12 @@ class Document(TimestampedModel):
 
     @property
     def days_overdue(self):
-        """How many days past the due date an overdue invoice is; 0 when it
-        isn't overdue. Derived, like is_overdue."""
-        if self.due_date is None or self.payment_state not in ("unpaid", "partial"):
-            return 0
-        # One reading of today, so the count can't disagree with itself at midnight.
-        return max((timezone.localdate() - self.due_date).days, 0)
+        """How many days past its due date an overdue issued invoice is
+        ("12 dagen te laat"), or None when it isn't one: no reminder (#114)
+        for anything else."""
+        if self.kind != "invoice" or self.status != "issued" or not self.is_overdue:
+            return None
+        return (timezone.localdate() - self.due_date).days
 
     def clean(self):
         super().clean()
@@ -489,6 +489,9 @@ class EmailLog(TimestampedModel):
     attachment_sha256 = models.CharField(_("sha256 van de bijlage"), max_length=64)
     succeeded = models.BooleanField(_("gelukt"))
     error = models.TextField(_("fout"), blank=True)
+    # A payment reminder for an overdue invoice (#114), not the invoice
+    # itself: the same PDF, another text, and its own line on the page.
+    reminder = models.BooleanField(_("herinnering"), default=False)
 
     class Meta:
         verbose_name = _("verstuurde e-mail")

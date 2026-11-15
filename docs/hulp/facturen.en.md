@@ -30,6 +30,16 @@ the number the invoice will get. With **Issue for good**:
 Then download the PDF with **PDF**, or mail it with **Mail**. See
 [Mail](mailen.en.md).
 
+## Carrying on from another package
+
+Coming from another package? Then you want your numbers to carry on. Go to
+**Settings → Invoices and numbering** and under **Sequence number of your
+next invoice** enter the number that follows your last invoice. If your last
+invoice was 2026-0042, enter 43. Quotes work the same way.
+
+You can do this until your first invoice in Huismus. After that the number
+counts up by itself, so your series has no gap.
+
 ## Payments
 
 The invoice shows its payment status: unpaid, partly paid, paid or overdue.
@@ -37,6 +47,14 @@ When a payment comes in, click **Record payment**. The amount is already
 filled in with what's still open. A partial payment works too.
 
 The overview shows how much is open in total and which invoices are late.
+
+## Sending a reminder
+
+When an invoice is late, the invoice shows by how many days, and **Send
+reminder** is at the top. You get a mail with the invoice attached and a
+text that says what's still open. Change what you like and click **Send**.
+After that, the invoice shows when you sent the last reminder. Huismus never
+sends a reminder by itself. You set the text under [Mail](mailen.en.md).
 
 ## Correcting something
 

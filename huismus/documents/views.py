@@ -45,7 +45,12 @@ from .listing import (
     in_tab,
     matches_search,
 )
-from .mailing import MAILABLE_STATUSES, default_message, default_recipients, send_document
+from .mailing import (
+    MAILABLE_STATUSES,
+    default_message,
+    default_recipients,
+    send_document,
+)
 from .models import Document, DocumentLine
 from .pdf import render_pdf
 from .preview import render_preview_pdf
@@ -458,7 +463,8 @@ def document_reopen_undo(request, pk):
 
 def _detail_context(document):
     """The read-only page of an issued invoice or credit note."""
-    # Only a mail that went out counts.
+    # Only a mail that went out counts. A reminder counts too: it carries
+    # the same PDF, so the customer has the invoice as it was then.
     last_mail = document.emails.filter(succeeded=True).order_by("-sent_at").first()
     context = {
         "document": document,
@@ -517,6 +523,11 @@ def _detail_context(document):
                 kind="credit_note", related_document=invoice
             ).order_by("issue_date", "pk"),
             "timeline": timeline_events(invoice),
+            # When the last payment reminder went out (#114); a failed one
+            # doesn't count.
+            "last_reminder": invoice.emails.filter(succeeded=True, reminder=True)
+            .order_by("-sent_at")
+            .first(),
             "payment_form": PaymentForm(
                 initial={
                     "paid_on": timezone.localdate(),
@@ -677,6 +688,27 @@ def document_mail(request, pk, kind="invoice"):
     document = get_object_or_404(Document, pk=pk, kind__in=kinds)
     if document.status not in MAILABLE_STATUSES[document.kind]:
         raise Http404
+    return _mail_page(request, document, reminder=False)
+
+
+@login_required
+def document_reminder(request, pk):
+    """The same mail form, as a payment reminder for an overdue invoice
+    (#114): another text, logged as a reminder. Only an issued invoice has
+    one; one that isn't (or no longer is) overdue, say just paid, goes back
+    to its page instead of an error."""
+    document = get_object_or_404(Document, pk=pk, kind="invoice", status="issued")
+    if document.days_overdue is None:
+        messages.info(
+            request,
+            _("Factuur %(number)s is niet te laat. Er is geen herinnering gestuurd.")
+            % {"number": document.number},
+        )
+        return redirect(_edit_url(document))
+    return _mail_page(request, document, reminder=True)
+
+
+def _mail_page(request, document, *, reminder):
     configured = smtp.is_configured(Settings.load())
     failed = None
     if request.method == "POST":
@@ -690,13 +722,18 @@ def document_mail(request, pk, kind="invoice"):
                 subject=form.cleaned_data["subject"],
                 body=form.cleaned_data["body"],
                 bcc_self=form.cleaned_data["bcc_self"],
+                reminder=reminder,
             )
             if log.succeeded:
-                messages.success(request, _("Gemaild naar %(to)s.") % {"to": log.to})
+                if reminder:
+                    sent = _("Herinnering gestuurd naar %(to)s.")
+                else:
+                    sent = _("Gemaild naar %(to)s.")
+                messages.success(request, sent % {"to": log.to})
                 return redirect(_edit_url(document))
             failed = log
     else:
-        subject, body = default_message(document)
+        subject, body = default_message(document, reminder=reminder)
         form = MailForm(
             initial={"to": default_recipients(document), "subject": subject, "body": body}
         )
@@ -705,6 +742,7 @@ def document_mail(request, pk, kind="invoice"):
         "documents/mail.html",
         {
             "document": document,
+            "reminder": reminder,
             "form": form,
             "mail_configured": configured,
             "failed": failed,

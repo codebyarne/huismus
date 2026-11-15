@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-15 17:45+0100\n"
+"POT-Creation-Date: 2026-11-15 18:56+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -204,6 +204,26 @@ msgstr ""
 "Exempt from VAT under the small business scheme (KOR). No VAT has been "
 "charged."
 
+msgid "Volgnummer van je volgende factuur"
+msgstr "Sequence number of your next invoice"
+
+msgid ""
+"Kom je uit een ander pakket? Vul het volgnummer in dat na je laatste factuur "
+"komt."
+msgstr ""
+"Coming from another package? Enter the sequence number that follows your "
+"last invoice."
+
+msgid "Volgnummer van je volgende offerte"
+msgstr "Sequence number of your next quote"
+
+msgid ""
+"Kom je uit een ander pakket? Vul het volgnummer in dat na je laatste offerte "
+"komt."
+msgstr ""
+"Coming from another package? Enter the sequence number that follows your "
+"last quote."
+
 msgid "Factuur"
 msgstr "Invoice"
 
@@ -212,6 +232,10 @@ msgstr "Credit note"
 
 msgid "Offerte"
 msgstr "Quote"
+
+#
+msgid "Herinnering"
+msgstr "Reminder"
 
 msgid "onderwerp in het Nederlands"
 msgstr "subject in Dutch"
@@ -434,6 +458,22 @@ msgstr "quote subject (English)"
 
 msgid "tekst offerte (engels)"
 msgstr "quote text (English)"
+
+#
+msgid "onderwerp herinnering (nederlands)"
+msgstr "reminder subject (Dutch)"
+
+#
+msgid "tekst herinnering (nederlands)"
+msgstr "reminder text (Dutch)"
+
+#
+msgid "onderwerp herinnering (engels)"
+msgstr "reminder subject (English)"
+
+#
+msgid "tekst herinnering (engels)"
+msgstr "reminder text (English)"
 
 msgid "organisatie"
 msgstr "organisation"
@@ -1710,6 +1750,32 @@ msgid "Offerte {nummer} van {bedrijf}"
 msgstr "Quote {nummer} from {bedrijf}"
 
 #, python-brace-format
+msgid "Herinnering: factuur {nummer} van {bedrijf}"
+msgstr "Reminder: invoice {nummer} from {bedrijf}"
+
+#, python-brace-format
+msgid "Beste {naam},"
+msgstr "Dear {naam},"
+
+#, python-brace-format
+msgid ""
+"Van factuur {nummer} staat nog {openstaand} open. De vervaldatum was "
+"{vervaldatum}. In de bijlage vind je de factuur."
+msgstr ""
+"Invoice {nummer} still has {openstaand} outstanding. It was due on "
+"{vervaldatum}. You'll find the invoice attached."
+
+msgid ""
+"Wil je het bedrag zo snel mogelijk overmaken? Heb je al betaald, dan kun je "
+"deze mail vergeten."
+msgstr ""
+"Could you transfer the amount as soon as possible? If you've already paid, "
+"please ignore this email."
+
+msgid "Met vriendelijke groet,"
+msgstr "Kind regards,"
+
+#, python-brace-format
 msgid "In de bijlage vind je factuur {nummer} van {bedrag}."
 msgstr "Attached is invoice {nummer} for {bedrag}."
 
@@ -1728,13 +1794,6 @@ msgstr "Please pay by {vervaldatum}."
 #, python-brace-format
 msgid "De offerte is geldig tot {geldig_tot}."
 msgstr "The quote is valid until {geldig_tot}."
-
-#, python-brace-format
-msgid "Beste {naam},"
-msgstr "Dear {naam},"
-
-msgid "Met vriendelijke groet,"
-msgstr "Kind regards,"
 
 msgid "offerte"
 msgstr "quote"
@@ -1895,6 +1954,10 @@ msgstr "succeeded"
 msgid "fout"
 msgstr "error"
 
+#
+msgid "herinnering"
+msgstr "reminder"
+
 msgid "verstuurde e-mail"
 msgstr "sent e-mail"
 
@@ -1906,6 +1969,23 @@ msgstr "A sent e-mail cannot be changed."
 
 msgid "[klantnummer]"
 msgstr "[customer number]"
+
+msgid "Het volgnummer is minstens 1."
+msgstr "The sequence number is at least 1."
+
+msgid ""
+"Je hebt in Huismus al een nummer uitgegeven. Het nummer loopt nu vanzelf "
+"door."
+msgstr ""
+"You already issued a number in Huismus. The number now counts up by itself."
+
+#, python-format
+msgid "Kies %(lowest)s of hoger. Een lager nummer bestaat al."
+msgstr "Choose %(lowest)s or higher. A lower number already exists."
+
+#, python-format
+msgid "Nummer %(number)s bestaat al. Kies een hoger volgnummer."
+msgstr "Number %(number)s already exists. Choose a higher sequence number."
 
 msgid "[nummer volgt]"
 msgstr "[number to follow]"
@@ -1999,6 +2079,14 @@ msgstr "Payment recorded."
 
 msgid "De betaling is niet opgeslagen. Kijk het bedrag en de datum na."
 msgstr "The payment wasn't saved. Check the amount and the date."
+
+#, python-format
+msgid "Factuur %(number)s is niet te laat. Er is geen herinnering gestuurd."
+msgstr "Invoice %(number)s isn't overdue. No reminder was sent."
+
+#, python-format
+msgid "Herinnering gestuurd naar %(to)s."
+msgstr "Reminder sent to %(to)s."
 
 #, python-format
 msgid "Gemaild naar %(to)s."
@@ -2192,11 +2280,14 @@ msgstr "expense line"
 msgid "uitgaveregels"
 msgstr "expense lines"
 
-msgid "Uitgave nagekeken."
-msgstr "Expense checked."
+msgid "Bonnetje bewaard. Je vindt het bij Verwerken."
+msgstr "Receipt saved. You'll find it under Process."
 
 msgid "Uitgave opgeslagen."
 msgstr "Expense saved."
+
+msgid "Uitgave nagekeken."
+msgstr "Expense checked."
 
 msgid "Niet gelezen: dit lijkt geen bonnetje."
 msgstr "Not read: this doesn't look like a receipt."
@@ -2430,10 +2521,11 @@ msgstr "quote numbers"
 #, python-format
 msgid ""
 "%(unparsed)s van %(total)s geïmporteerde %(label)s passen niet in het "
-"ingestelde nummerformaat. Stel het volgende nummer zelf in bij Instellingen."
+"ingestelde nummerformaat. Stel het volgende nummer zelf in bij Instellingen "
+"→ Facturen en nummering."
 msgstr ""
 "%(unparsed)s of %(total)s imported %(label)s don't fit the number format you "
-"set. Set the next number yourself in Settings."
+"set. Set the next number yourself in Settings → Invoices and numbering."
 
 #, python-format
 msgid "Uitgave %(number)s"
@@ -2967,6 +3059,18 @@ msgstr "Shortcuts:"
 msgid "nieuw"
 msgstr "new"
 
+msgid "Bonnetje uploaden…"
+msgstr "Uploading receipt…"
+
+msgid "Huismus is niet bereikbaar. Probeer het opnieuw als je verbinding hebt."
+msgstr "Can't reach Huismus. Try again when you're connected."
+
+msgid "Opnieuw proberen"
+msgstr "Try again"
+
+msgid "Het uploaden is mislukt. Probeer het nog een keer."
+msgstr "The upload failed. Please try once more."
+
 msgid "Niet gekoppeld"
 msgstr "Not connected"
 
@@ -3055,6 +3159,17 @@ msgstr "Manage"
 
 msgid "Instellen"
 msgstr "Set up"
+
+#, python-format
+msgid "Volgende als je vandaag uitgeeft: %(number)s"
+msgstr "Next if you issue today: %(number)s"
+
+msgid "Het nummer loopt vanzelf door sinds je eerste factuur in Huismus."
+msgstr ""
+"The number now counts up by itself, since your first invoice in Huismus."
+
+msgid "Het nummer loopt vanzelf door sinds je eerste offerte in Huismus."
+msgstr "The number now counts up by itself, since your first quote in Huismus."
 
 msgid "De taal van nieuwe facturen kies je bij Facturen en nummering."
 msgstr "You choose the language of new invoices under Invoices and numbering."
@@ -3475,10 +3590,6 @@ msgstr "days"
 msgid "Standaard betalingstermijn"
 msgstr "Default payment term"
 
-#, python-format
-msgid "Volgende als je vandaag uitgeeft: %(number)s"
-msgstr "Next if you issue today: %(number)s"
-
 #, python-brace-format
 msgid ""
 "In een nummerformaat staat {year} voor het jaar, {seq:04d} voor het "
@@ -3547,13 +3658,14 @@ msgstr "Standard texts"
 msgid ""
 "Hiermee begint elke mail. Per mail kun je hem nog aanpassen. Maak je een "
 "veld leeg, dan gebruikt Huismus zijn eigen tekst. Invulplekken: {nummer}, "
-"{bedrag}, {naam} en {bedrijf}; bij een factuur ook {vervaldatum}, bij een "
-"offerte {geldig_tot}."
+"{bedrag}, {naam} en {bedrijf}; bij een factuur en een herinnering ook "
+"{vervaldatum}, bij een herinnering {openstaand}, bij een offerte "
+"{geldig_tot}."
 msgstr ""
 "Every mail starts with this. You can still change it per mail. Leave a field "
 "empty and Huismus uses its own text. Placeholders: {nummer}, {bedrag}, "
-"{naam} and {bedrijf}; for an invoice also {vervaldatum}, for a quote "
-"{geldig_tot}."
+"{naam} and {bedrijf}; for an invoice and a reminder also {vervaldatum}, for "
+"a reminder {openstaand}, for a quote {geldig_tot}."
 
 #, python-format
 msgid "%(counter)s veld heeft aandacht nodig"
@@ -3590,6 +3702,17 @@ msgstr "You're using Huismus %(version)s."
 
 msgid "Nieuwe versie downloaden"
 msgstr "Download the new version"
+
+#, python-format
+msgid ""
+"Deze versie vraagt macOS %(macos)s of nieuwer. Je Mac heeft macOS "
+"%(this_macos)s. Werk eerst macOS bij via Systeeminstellingen → Algemeen → "
+"Software-update. Daarna installeert Huismus de nieuwe versie de volgende "
+"keer dat je hem opent."
+msgstr ""
+"This version needs macOS %(macos)s or later. Your Mac has macOS "
+"%(this_macos)s. Update macOS first in System Settings → General → Software "
+"Update. Then Huismus installs the new version the next time you open it."
 
 msgid "Hij wordt geïnstalleerd als je Huismus opnieuw opent."
 msgstr "It will be installed the next time you open Huismus."
@@ -3936,6 +4059,14 @@ msgstr "What's new"
 
 #, python-format
 msgid ""
+"Huismus %(version)s is er, maar vraagt macOS %(macos)s of nieuwer. Werk "
+"eerst macOS bij."
+msgstr ""
+"Huismus %(version)s is out, but needs macOS %(macos)s or later. Update macOS "
+"first."
+
+#, python-format
+msgid ""
 "Huismus %(version)s staat klaar. Hij wordt geïnstalleerd als je Huismus "
 "opnieuw opent."
 msgstr ""
@@ -4048,9 +4179,6 @@ msgid ""
 "en probeer het opnieuw."
 msgstr ""
 "This device can't connect to Huismus. Check your Wi-Fi or VPN and try again."
-
-msgid "Opnieuw proberen"
-msgstr "Try again"
 
 #, python-format
 msgid "Stap %(number)s van %(total)s"
@@ -4268,6 +4396,14 @@ msgstr "Unit price"
 msgid "Regel verwijderen"
 msgstr "Remove line"
 
+#, python-format
+msgid "Herinnering voor factuur %(number)s"
+msgstr "Reminder for invoice %(number)s"
+
+#, python-format
+msgid "%(kind)s %(number)s mailen"
+msgstr "Mail %(kind)s %(number)s"
+
 msgid "Vervaldatum voorbij en nog niet volledig betaald."
 msgstr "Past the due date and not fully paid yet."
 
@@ -4378,6 +4514,14 @@ msgid "Betaling %(amount)s"
 msgstr "Payment %(amount)s"
 
 #, python-format
+msgid "Herinnering gestuurd naar %(to)s"
+msgstr "Reminder sent to %(to)s"
+
+#, python-format
+msgid "Herinnering sturen mislukt naar %(to)s"
+msgstr "Sending the reminder to %(to)s failed"
+
+#, python-format
 msgid "Gemaild naar %(to)s"
 msgstr "Mailed to %(to)s"
 
@@ -4407,6 +4551,10 @@ msgstr "Imported"
 #, python-format
 msgid "uitgegeven op %(date)s"
 msgstr "issued on %(date)s"
+
+#
+msgid "Herinnering sturen"
+msgstr "Send reminder"
 
 msgid "Creditnota maken…"
 msgstr "Create credit note…"
@@ -4469,6 +4617,16 @@ msgstr "To invoice %(number)s"
 
 msgid "Betaalstatus"
 msgstr "Payment status"
+
+#, python-format
+msgid "%(count)s dag te laat"
+msgid_plural "%(count)s dagen te laat"
+msgstr[0] "%(count)s day overdue"
+msgstr[1] "%(count)s days overdue"
+
+#, python-format
+msgid "Laatste herinnering: %(date)s"
+msgstr "Last reminder: %(date)s"
 
 msgid "Afgehandeld"
 msgstr "Settled"
@@ -4765,10 +4923,6 @@ msgstr "Clear filters"
 
 msgid "Te laat betekent: vervaldatum voorbij en nog niet volledig betaald."
 msgstr "Late means: past the due date and not fully paid yet."
-
-#, python-format
-msgid "%(kind)s %(number)s mailen"
-msgstr "Mail %(kind)s %(number)s"
 
 #, python-format
 msgid ""
@@ -5094,6 +5248,24 @@ msgstr "No expense matches your search and filters."
 
 msgid "betekent dat er een bonnetje bij de uitgave zit."
 msgstr "means the expense has a receipt."
+
+msgid "Opnieuw"
+msgstr "Retake"
+
+msgid "Foto versturen"
+msgstr "Send photo"
+
+msgid "Bedrag, zoals je het betaalde"
+msgstr "Amount, as you paid it"
+
+msgid "Meer regels of een omschrijving"
+msgstr "More lines or a description"
+
+msgid "Uitgave opslaan"
+msgstr "Save expense"
+
+msgid "Alleen de foto bewaren"
+msgstr "Just keep the photo"
 
 msgid "Verwerken"
 msgstr "Process"
@@ -6635,6 +6807,45 @@ msgid ""
 msgstr ""
 "If you have a Raspberry Pi, a NAS, your own server or a VPS, you can also "
 "run Huismus in Docker. That is for people who are handy with that."
+
+#, python-format
+#~ msgid ""
+#~ "%(unparsed)s van %(total)s geïmporteerde %(label)s passen niet in het "
+#~ "ingestelde nummerformaat. Stel het volgende nummer zelf in bij "
+#~ "Instellingen."
+#~ msgstr ""
+#~ "%(unparsed)s of %(total)s imported %(label)s don't fit the number format "
+#~ "you set. Set the next number yourself in Settings."
+
+#, python-brace-format
+#~ msgid ""
+#~ "Hiermee begint elke mail. Per mail kun je hem nog aanpassen. Maak je een "
+#~ "veld leeg, dan gebruikt Huismus zijn eigen tekst. Invulplekken: {nummer}, "
+#~ "{bedrag}, {naam} en {bedrijf}; bij een factuur ook {vervaldatum}, bij een "
+#~ "offerte {geldig_tot}."
+#~ msgstr ""
+#~ "Every mail starts with this. You can still change it per mail. Leave a "
+#~ "field empty and Huismus uses its own text. Placeholders: {nummer}, "
+#~ "{bedrag}, {naam} and {bedrijf}; for an invoice also {vervaldatum}, for a "
+#~ "quote {geldig_tot}."
+
+#~ msgid "Nog geen dienst gekozen"
+#~ msgstr "No service chosen yet"
+
+#, python-format
+#~ msgid "waarvan %(count)s vervallen"
+#~ msgid_plural "waarvan %(count)s vervallen"
+#~ msgstr[0] "of which %(count)s overdue"
+#~ msgstr[1] "of which %(count)s overdue"
+
+#~ msgid "Vervallen"
+#~ msgstr "Overdue"
+
+#~ msgid "betekent: vervaldatum voorbij en nog niet volledig betaald."
+#~ msgstr "means: past the due date and not fully paid yet."
+
+#~ msgid "Nieuwe categorie, bijvoorbeeld Verzekeringen"
+#~ msgstr "New category, e.g. Insurance"
 
 #~ msgid "Je krijgt nog"
 #~ msgstr "Still to receive"

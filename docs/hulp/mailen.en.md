@@ -2,7 +2,8 @@
 
 You mail an invoice, credit note or quote straight from Huismus, with the
 PDF attached. You can do that once the invoice or credit note is issued, or
-the quote is sent. The mail goes through your own Gmail or the mail server
+the quote is sent. When an invoice is late, you also send a reminder, with
+the invoice attached. The mail goes through your own Gmail or the mail server
 of your own domain. No other service sits in between.
 
 Mailing doesn't change the document. Every attempt goes on the document's
@@ -74,7 +75,8 @@ you leave "Sender" empty, Huismus mails from your business e-mail address.
 
 Every mail starts with a subject and a text you set yourself, under
 **Settings → Mail → Standard texts**. There's a text for each kind of
-document (invoice, credit note, quote), in Dutch and in English. A document
+document (invoice, credit note, quote) and for a reminder, in Dutch and in
+English. A document
 in English gets the English text. Before you send a mail, you can still
 change all of it.
 
@@ -87,7 +89,8 @@ names, in the English texts too:
 | `{bedrag}` | the document's total |
 | `{naam}` | the customer's first name, or else the customer's name |
 | `{bedrijf}` | your business name |
-| `{vervaldatum}` | only on an invoice: the due date |
+| `{vervaldatum}` | only on an invoice and a reminder: the due date |
+| `{openstaand}` | only on a reminder: what's still open |
 | `{geldig_tot}` | only on a quote: until when it's valid |
 
 You can't save a typo such as `{klant}`. That way it never ends up in a

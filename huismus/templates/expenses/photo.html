@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load i18n forms %}
+
+{% block title %}{% translate "Nieuwe uitgave" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+{% comment %}A new expense on a phone, the photo first (#188,
+huismus/expenses/photo_views.py). The photo is in the tray already; the
+fields are one line of the ordinary form, the amount first.{% endcomment %}
+<div class="page-head">
+    <div class="titles">
+        <a class="back" href="{% url 'expenses:list' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Uitgaven" %}</a>
+        <h1>{% translate "Nieuwe uitgave" %}</h1>
+    </div>
+</div>
+
+{% form_errors form formset %}
+
+<section class="card photo-shot" aria-label="{% translate 'Bonnetje' %}">
+    {% blocktranslate with name=receipt.filename asvar receipt_label %}Bonnetje {{ name }}{% endblocktranslate %}
+    {% if receipt.is_pdf %}
+    <div class="process-file"><svg class="i i-lg" aria-hidden="true"><use href="#file"></use></svg><span class="r-name">{{ receipt.filename }}</span></div>
+    {% else %}
+    <img class="process-img" id="foto" src="{{ receipt.file.url }}" alt="{{ receipt_label }}">
+    {% endif %}
+    {% comment %}"Opnieuw": a new photo in place of this one (photo_upload,
+    vervangt). Its own form: forms can't nest. data-camera: app.js sends it
+    as soon as it is taken, and says so when Huismus can't be reached. The
+    old photo goes only once the new one is in.{% endcomment %}
+    <form class="photo-again" method="post" action="{{ upload_url }}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="vervangt" value="{{ receipt.pk }}">
+        <label class="btn btn-sm">
+            <input class="sr-only" type="file" name="file" accept="image/*" capture="environment" data-camera required>
+            <svg class="i i-sm" aria-hidden="true"><use href="#refresh"></use></svg>{% translate "Opnieuw" %}
+        </label>
+        <noscript><button type="submit" class="btn btn-sm">{% translate "Foto versturen" %}</button></noscript>
+    </form>
+</section>
+
+<form class="stack" id="uitgave-form" method="post" style="gap:var(--s-4);margin-top:var(--s-5)">
+    {% csrf_token %}
+    {% comment %}Enter saves: the first submit button of a form is the one
+    Enter clicks, and "Meer regels" comes before the bar.{% endcomment %}
+    <button type="submit" class="sr-only" tabindex="-1" aria-hidden="true"></button>
+    {{ formset.management_form }}
+    {{ line_form.id }}
+    <div class="card card-pad fieldset">
+        {% translate "Bedrag, zoals je het betaalde" as amount_label %}
+        <div class="field-group amount-xl">{% field line_form.amount_cents money=True label=amount_label %}</div>
+        {% comment %}Without the KOR every line needs its VAT and its rate
+        (ExpenseLineForm), right under the amount.{% endcomment %}
+        {% if "vat_rate" in line_form.fields %}
+        {% field line_form.vat_info_cents span=3 money=True %}
+        {% field line_form.vat_rate span=3 %}
+        {% endif %}
+        {% field form.supplier %}
+        {% field form.date span=3 %}
+        {% field line_form.category span=3 %}
+    </div>
+    {% comment %}Verwerken for this receipt, with what was typed and one
+    line more, saving nothing: its "Regel toevoegen" without JS
+    (process_views._one_more_line).{% endcomment %}
+    <div><button type="submit" class="btn btn-ghost btn-sm" id="meer-invullen" formaction="{{ full_form_url }}" name="regel_toevoegen" value="1" formnovalidate><svg class="i i-sm" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Meer regels of een omschrijving" %}</button></div>
+    <div class="actionbar photo-actions">
+        <button class="btn btn-primary" type="submit">{% translate "Uitgave opslaan" %}<span class="spinner"></span></button>
+        <button class="btn btn-ghost btn-sm" type="submit" name="alleen_foto" value="1" formnovalidate>{% translate "Alleen de foto bewaren" %}</button>
+    </div>
+</form>
+{% endblock %}

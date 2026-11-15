@@ -19,7 +19,7 @@ from huismus.business.kor_limit import kor_limit_status
 from huismus.business.models import Settings
 from huismus.documents.listing import expiry_hint
 from huismus.documents.models import Document
-from huismus.documents.numbering import next_numbers_if_issued_today
+from huismus.documents.numbering import NumberingError, next_numbers_if_issued_today
 from huismus.expenses.inbox_views import new_receipts_context
 from huismus.reports.year_overview import compute_year_overview
 
@@ -162,6 +162,7 @@ def _update_notices(request) -> dict:
         "new_release": updates.available(),
         "release_waiting": updates.waiting(),
         "release_downloading": updates.downloading(),
+        "release_needs_macos": updates.needs_macos_label(),
     }
 
 
@@ -242,10 +243,14 @@ def onboarding(request, slug):
     if request.method == "POST":
         form = SettingsPartForm(request.POST, request.FILES, instance=instance, fields=step.fields)
         if form.is_valid():
-            form.save()
-            if index + 1 < len(STEPS):
-                return redirect("onboarding", STEPS[index + 1].slug)
-            return redirect("onboarding_done")
+            try:
+                form.save()
+            except NumberingError as error:
+                form.add_error(None, str(error))
+            else:
+                if index + 1 < len(STEPS):
+                    return redirect("onboarding", STEPS[index + 1].slug)
+                return redirect("onboarding_done")
     else:
         form = SettingsPartForm(instance=instance, fields=step.fields)
 

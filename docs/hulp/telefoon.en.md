@@ -29,6 +29,23 @@ home screen there's **Share**: use it to mail the PDF or save it to
 Files. In the browser there's **Download**, and **Share** too if the browser
 can share files.
 
+## An expense with the camera
+
+Tap **+** and then **Expense**, or **New expense** under Expenses: the camera
+opens. Take a photo of the receipt. Huismus keeps it at once. Then fill in the
+amount, then the supplier, the date and the category, and tap **Save
+expense**.
+
+No time? Tap **Just keep the photo**. The receipt then waits under
+**Process** on the Expenses page, where you make it into an expense later.
+Photo didn't work out? Tap **Retake**.
+
+Can't reach Huismus, for example in a shop without your VPN? The photo stays
+on your screen. Tap **Try again** once you're connected.
+
+Rather use a photo from your library or a PDF? Close the camera: you get the
+ordinary form.
+
 ## What's on your phone
 
 Your records aren't on it. Everything stays on the server, and the app only

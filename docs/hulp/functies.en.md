@@ -11,6 +11,8 @@ server.
   [Invoices](facturen.en.md).
 - **Tracking payments**, also in parts. The overview shows what's outstanding and
   what's overdue.
+- **Sending a reminder** for an invoice that's late, with the invoice
+  attached.
 - **Credit notes** to correct an issued invoice.
 - **Quotes** that you send and turn into an invoice with one click. See
   [Quotes](offertes.en.md).
@@ -76,7 +78,6 @@ server.
 This is on the list. The order may still change, and there's no date.
 
 - Reading your bank statement, so you see which invoice is paid
-- Mailing a payment reminder for an overdue invoice
 - Tracking hours, and invoicing them
 - Recurring invoices, such as the same one every month
 - A profit and loss statement per year
