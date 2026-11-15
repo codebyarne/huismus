@@ -29,6 +29,24 @@ beginscherm staat daar **Delen**: zo mail je de pdf of bewaar je hem in
 Bestanden. In de browser staat er **Downloaden**, en als de browser kan
 delen ook **Delen**.
 
+## Een uitgave met de camera
+
+Tik op **+** en dan op **Uitgave**, of op **Nieuwe uitgave** bij Uitgaven: de
+camera gaat open. Maak een foto van het bonnetje. Huismus bewaart hem meteen.
+Daarna vul je het bedrag in, dan de leverancier, de datum en de categorie, en
+tik je op **Uitgave opslaan**.
+
+Geen tijd? Tik op **Alleen de foto bewaren**. Het bonnetje staat dan bij
+**Verwerken** op de pagina Uitgaven, en daar maak je er later een uitgave van.
+Is de foto mislukt, tik dan op **Opnieuw**.
+
+Huismus is niet bereikbaar, bijvoorbeeld in de winkel zonder VPN? Dan blijft de
+foto op je scherm staan. Tik op **Opnieuw proberen** als je weer verbinding
+hebt.
+
+Wil je liever een foto uit je fotobibliotheek of een pdf? Sluit dan de camera:
+je krijgt het gewone formulier.
+
 ## Wat er op je telefoon staat
 
 Niets van je administratie. Alles blijft op de server, en de app laat alleen
