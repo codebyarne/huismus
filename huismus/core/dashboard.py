@@ -20,8 +20,11 @@ def outstanding_invoices():
     total that is. has_issued: whether there is any issued invoice at all.
 
     The menu shows this on every page, so the query leaves out invoices
-    that are settled (payments plus credit notes reach the total); which
-    of the rest are open is still decided by Document.payment_state."""
+    that are settled (payments plus credit notes reach the total). The
+    second clause keeps an invoice of € 0 with nothing paid, which
+    payment_state calls "unpaid". The query only narrows: which invoices
+    are open is still decided by Document.payment_state, and a test checks
+    that the filter leaves out none of them."""
     issued = Document.objects.filter(kind="invoice", status="issued")
     invoices = issued.with_payment_totals().filter(
         Q(total_cents__gt=F("paid_cents") + F("credited_cents"))

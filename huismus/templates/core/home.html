@@ -102,18 +102,7 @@
 {% endwith %}
 {% endif %}
 
-{% if not has_invoices %}
-<section class="card" id="nog-geen-facturen" style="margin-bottom:var(--s-6)">
-    <div class="empty">
-        <div class="empty-art"><svg class="mark" width="72" height="72" aria-hidden="true"><use href="#mus"></use></svg></div>
-        <h2>{% translate "Nog geen facturen" %}</h2>
-        <p>{% translate "Maak je eerste factuur. Of zet je administratie over uit Moneybird." %}</p>
-        <a class="btn btn-primary btn-lg" href="{% url 'documents:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Maak je eerste factuur" %}</a>
-        <a href="{% url 'imports:upload' %}">{% translate "Importeren uit Moneybird" %}</a>
-    </div>
-</section>
-{% if waiting_quotes %}<div>{% endif %}
-{% else %}
+{% if has_invoices %}
 <div class="grid-3" style="margin-bottom:var(--s-6)">
     <a class="card kpi kpi-hero" href="{% url 'documents:list' %}?tab=openstaand&amp;jaar=alle" style="text-decoration:none">
         <span class="kpi-label">{% translate "Openstaand" %}</span>
@@ -135,7 +124,6 @@
         <span class="kpi-sub">{% translate "Naar het jaaroverzicht" %} →</span>
     </a>
 </div>
-
 <div class="split">
     <section class="card">
         <div class="card-head"><h2>{% translate "Laatste facturen" %}</h2><a class="small" href="{% url 'documents:list' %}">{% translate "Alle facturen" %}</a></div>
@@ -159,8 +147,6 @@
         <div class="card-pad small muted">{% translate "Je hebt nog geen facturen uitgegeven." %}</div>
         {% endif %}
     </section>
-{% endif %}
-    {% if has_invoices or waiting_quotes %}
     <section class="card">
         <div class="card-head"><h2>{% translate "Wachten op antwoord" %}</h2><a class="small" href="{% url 'quotes:list' %}">{% translate "Offertes" %}</a></div>
         {% if waiting_quotes %}
@@ -180,8 +166,39 @@
         <div class="card-pad small muted">{% translate "Geen offertes die op antwoord wachten." %}</div>
         {% endif %}
     </section>
-    {% endif %}
-{% if has_invoices or waiting_quotes %}</div>{% endif %}
+</div>
+{% else %}
+<section class="card" id="nog-geen-facturen" style="margin-bottom:var(--s-6)">
+    <div class="empty">
+        <div class="empty-art"><svg class="mark" width="72" height="72" aria-hidden="true"><use href="#mus"></use></svg></div>
+        <h2>{% translate "Nog geen facturen" %}</h2>
+        <p>{% translate "Maak je eerste factuur. Of zet je administratie over uit Moneybird." %}</p>
+        <a class="btn btn-primary btn-lg" href="{% url 'documents:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Eerste factuur maken" %}</a>
+        <a href="{% url 'imports:upload' %}">{% translate "Importeren uit Moneybird" %}</a>
+    </div>
+</section>
+{% if waiting_quotes %}
+    <section class="card">
+        <div class="card-head"><h2>{% translate "Wachten op antwoord" %}</h2><a class="small" href="{% url 'quotes:list' %}">{% translate "Offertes" %}</a></div>
+        {% if waiting_quotes %}
+        <ul class="list">
+            {% for quote, hint in waiting_quotes %}
+            <li>
+                <div class="grow">
+                    <a class="title" href="{% url 'quotes:edit' quote.pk %}">{{ quote|contact_name }}</a>
+                    <div class="small muted">{{ quote.number }}{% if hint.0 == "soon" %} · <span class="due-hint"><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% if hint.1 == 0 %}{% translate "verloopt vandaag" %}{% else %}{% blocktranslate count days=hint.1 %}verloopt over {{ days }} dag{% plural %}verloopt over {{ days }} dagen{% endblocktranslate %}{% endif %}</span>{% elif hint.0 == "past" %} · <span class="due-hint is-past"><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% translate "geldigheid voorbij" %}</span>{% elif quote.expiry_date %} · {% blocktranslate with date=quote.expiry_date|date:"SHORT_DATE_FORMAT" %}geldig tot {{ date }}{% endblocktranslate %}{% endif %}</div>
+                </div>
+                <span class="amount">{{ quote.total_cents|money }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+        <div class="card-foot muted">{% translate "Verzonden offertes zonder antwoord. Na de geldigheidsdatum kun je ze als verlopen markeren." %}</div>
+        {% else %}
+        <div class="card-pad small muted">{% translate "Geen offertes die op antwoord wachten." %}</div>
+        {% endif %}
+    </section>
+{% endif %}
+{% endif %}
 {% if last_backup %}
 <p class="small muted" id="laatste-back-up" style="margin-top:var(--s-4)">{% blocktranslate with moment=last_backup|moment %}Laatste back-up: {{ moment }}{% endblocktranslate %}</p>
 {% endif %}

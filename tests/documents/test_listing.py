@@ -6,7 +6,14 @@ from types import SimpleNamespace
 
 import pytest
 
-from huismus.documents.listing import contact_name, grouped, in_tab, invoice_group, matches_search
+from huismus.documents.listing import (
+    contact_name,
+    grouped,
+    in_tab,
+    invoice_group,
+    matches_search,
+    waiting_label,
+)
 
 
 def _doc(**fields):
@@ -140,3 +147,24 @@ def test_grouped_keeps_the_order_within_a_group_and_puts_groups_in_order():
 
     assert [d.number for d in rows] == ["4", "3", "", "5", "2"]
     assert [d.group for d in rows] == ["te-laat", "wacht", "concept", "betaald", "betaald"]
+
+
+LABEL_TODAY = date(2026, 11, 15)
+
+
+@pytest.mark.parametrize(
+    ("state", "due_in", "label"),
+    [
+        ("unpaid", 4, "Nog 4 dagen"),
+        ("unpaid", 1, "Nog 1 dag"),
+        ("unpaid", 0, "Vandaag te betalen"),
+        ("unpaid", None, "Onbetaald"),
+        ("partial", 4, "Deels betaald, nog 4 dagen"),
+        ("partial", 0, "Deels betaald, vandaag te betalen"),
+        ("partial", None, "Deels betaald"),
+    ],
+)
+def test_waiting_label(state, due_in, label):
+    due = None if due_in is None else LABEL_TODAY + timedelta(days=due_in)
+    document = _doc(payment_state=state, due_date=due)
+    assert str(waiting_label(document, LABEL_TODAY)) == label

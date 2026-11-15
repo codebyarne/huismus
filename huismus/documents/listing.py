@@ -8,7 +8,9 @@ few hundred invoices, and this way the tabs use payment_state itself instead
 of a second, SQL version of the same rule.
 """
 
+from django.utils.text import capfirst, format_lazy
 from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ngettext
 
 # (slug in the URL, label). The first one is the default.
 INVOICE_TABS = [
@@ -53,6 +55,23 @@ def grouped(documents):
     for document in documents:
         document.group = invoice_group(document)
     return sorted(documents, key=lambda d: order.index(d.group))
+
+
+def waiting_label(document, today):
+    """The status of an invoice in the group "Wacht op betaling": how long
+    until it is due, "Deels betaald" in front if part is paid. Without a due
+    date only the payment state."""
+    partial = document.payment_state == "partial"
+    if document.due_date is None:
+        return _("Deels betaald") if partial else _("Onbetaald")
+    days = (document.due_date - today).days
+    if days == 0:
+        when = _("vandaag te betalen")
+    else:
+        when = ngettext("nog %(days)s dag", "nog %(days)s dagen", days) % {"days": days}
+    if partial:
+        return format_lazy("{}, {}", _("Deels betaald"), when)
+    return capfirst(when)
 
 
 def in_tab(document, tab):

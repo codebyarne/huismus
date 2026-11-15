@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-15 10:23+0100\n"
+"POT-Creation-Date: 2026-11-15 10:26+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1660,6 +1660,21 @@ msgstr "Waiting for payment"
 
 msgid "Nog niet verstuurd"
 msgstr "Not sent yet"
+
+msgid "Deels betaald"
+msgstr "Partly paid"
+
+msgid "Onbetaald"
+msgstr "Unpaid"
+
+msgid "vandaag te betalen"
+msgstr "due today"
+
+#, python-format
+msgid "nog %(days)s dag"
+msgid_plural "nog %(days)s dagen"
+msgstr[0] "%(days)s day left"
+msgstr[1] "%(days)s days left"
 
 msgid "Wachten op antwoord"
 msgstr "Awaiting reply"
@@ -3947,15 +3962,6 @@ msgstr "without customer"
 msgid "Verder werken"
 msgstr "Continue"
 
-msgid "Nog geen facturen"
-msgstr "No invoices yet"
-
-msgid "Maak je eerste factuur. Of zet je administratie over uit Moneybird."
-msgstr "Make your first invoice. Or move your records over from Moneybird."
-
-msgid "Maak je eerste factuur"
-msgstr "Create your first invoice"
-
 #, python-format
 msgid "waarvan %(count)s te laat"
 msgid_plural "waarvan %(count)s te laat"
@@ -4025,6 +4031,12 @@ msgstr ""
 
 msgid "Geen offertes die op antwoord wachten."
 msgstr "No quotes waiting for a reply."
+
+msgid "Nog geen facturen"
+msgstr "No invoices yet"
+
+msgid "Maak je eerste factuur. Of zet je administratie over uit Moneybird."
+msgstr "Make your first invoice. Or move your records over from Moneybird."
 
 msgid "Huismus is niet bereikbaar"
 msgstr "Huismus can't be reached"
@@ -4699,6 +4711,9 @@ msgstr ""
 msgid "Maak je eerste factuur. Hij blijft een concept tot je hem uitgeeft."
 msgstr "Create your first invoice. It stays a draft until you issue it."
 
+msgid "Maak je eerste factuur"
+msgstr "Create your first invoice"
+
 msgid "Zoeken in facturen"
 msgstr "Search invoices"
 
@@ -4716,27 +4731,6 @@ msgstr "Amount"
 
 msgid "Nog geen klant"
 msgstr "No customer yet"
-
-msgid "Deels betaald"
-msgstr "Partly paid"
-
-msgid "vandaag te betalen"
-msgstr "due today"
-
-msgid "Vandaag te betalen"
-msgstr "Due today"
-
-#, python-format
-msgid "nog %(days)s dag"
-msgid_plural "nog %(days)s dagen"
-msgstr[0] "%(days)s day left"
-msgstr[1] "%(days)s days left"
-
-#, python-format
-msgid "Nog %(days)s dag"
-msgid_plural "Nog %(days)s dagen"
-msgstr[0] "%(days)s day left"
-msgstr[1] "%(days)s days left"
 
 #, python-format
 msgid "%(shown)s van %(total)s factuur"
@@ -6629,6 +6623,15 @@ msgid ""
 msgstr ""
 "If you have a Raspberry Pi, a NAS, your own server or a VPS, you can also "
 "run Huismus in Docker. That is for people who are handy with that."
+
+#~ msgid "Vandaag te betalen"
+#~ msgstr "Due today"
+
+#, python-format
+#~ msgid "Nog %(days)s dag"
+#~ msgid_plural "Nog %(days)s dagen"
+#~ msgstr[0] "%(days)s day left"
+#~ msgstr[1] "%(days)s days left"
 
 #~ msgid "Soort"
 #~ msgstr "Kind"
