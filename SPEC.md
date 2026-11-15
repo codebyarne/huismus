@@ -181,7 +181,8 @@ Added with the layout of direction "Vandaag" (issue #186, 2026-11-15; product-ow
 - the invoice list shows its rows in groups: Te laat, Wacht op betaling (with the days until due), Nog niet verstuurd, Betaald (fully credited ones too), Creditnota's; tabs, search, year and "Meer laden" stay. "Geïmporteerd" is quiet text, and only overdue has a colour;
 - an overview without any invoice or credit note shows one card to make the first instead of the invoice figures;
 - in the invoice editor on a phone the total stays in sight in the bar above the tab bar;
-- notices are quiet blocks: their kind shows in a round icon, only a real problem is red.
+- notices are quiet blocks: their kind shows in a round icon, only a real problem is red;
+- the cost bars in the year overview are yellow without an edge, like the other yellow bars; their amounts are in the table below (the owner, 2026-11-15).
 Out of scope: command palette with global search, live preview in settings.
 *Done when:* every screen matches the design reference on desktop and at 360px wide, in both themes; existing tests stay green; the PDF smoke test passes with the restyled template.
 

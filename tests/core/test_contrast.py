@@ -42,8 +42,9 @@ PAIRS = [
 # (graphic, surface it stands on): bars and edges need 3 : 1 (WCAG 1.4.11).
 GRAPHIC_PAIRS = [
     ("primary", "surface"),  # the revenue bar
-    ("accent-ink", "surface"),  # the edge of the yellow cost bar
 ]
+# The yellow cost bar has no edge (the owner, 2026-11-15): its amounts are in
+# the table right below the chart.
 
 
 def _tokens():
