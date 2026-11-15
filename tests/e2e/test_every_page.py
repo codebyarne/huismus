@@ -93,6 +93,9 @@ def _pages():
             f"/uitgaven/verwerken/bonnetje/{receipt.pk}/"
             for receipt in Attachment.objects.in_tray()
         ),
+        # A new expense on a phone, the photo first (#188): any receipt in
+        # the tray can be that photo.
+        *(f"/uitgaven/nieuw/foto/{receipt.pk}/" for receipt in Attachment.objects.in_tray()[:1]),
         "/rapporten/jaaroverzicht/",
         # The VAT return (SPEC.md M21, part 4): a year of the history, with
         # imports and lines without a rate under "Niet meegeteld".

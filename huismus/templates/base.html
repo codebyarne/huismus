@@ -116,6 +116,17 @@
         <footer class="app-footer"><span>{% translate "Facturen en uitgaven voor zzp'ers, met of zonder KOR" %}</span><span class="spacer"></span><span class="shortcut-hint">{% translate "Sneltoetsen:" %} <span class="kbd">N</span> {% translate "nieuw" %}{% block shortcut_search %}{% endblock %}</span></footer>
     </div>
 </div>
+{% if user.is_authenticated %}
+{% comment %}On a phone every "Uitgave" opens the camera, and the photo goes
+here (#188; app.js, "The photo first"; expenses/photo_views.py). Without JS
+this stays hidden and unused: the link goes to the ordinary form.{% endcomment %}
+<form id="camera" method="post" action="{% url 'expenses:photo_upload' %}" enctype="multipart/form-data" data-new-expense="{% url 'expenses:create' %}" hidden>
+    {% csrf_token %}
+    <input type="file" name="file" accept="image/*" capture="environment" data-camera tabindex="-1" aria-hidden="true">
+</form>
+<template id="camera-busy"><div class="toast flash-info" role="status" data-camera-toast><span class="spinner" aria-hidden="true"></span><div class="flash-body"><strong>{% translate "Bonnetje uploaden…" %}</strong></div></div></template>
+<template id="camera-offline"><div class="toast flash-error" role="alert" data-camera-toast><svg class="i" aria-hidden="true"><use href="#x-circle"></use></svg><div class="flash-body"><strong>{% translate "Huismus is niet bereikbaar. Probeer het opnieuw als je verbinding hebt." %}</strong><span><button type="button" class="btn btn-sm" data-camera-retry style="margin-top:var(--s-2)">{% translate "Opnieuw proberen" %}</button></span></div></div></template>
+{% endif %}
 {% include "core/_toasts.html" %}
 </body>
 {% endblock %}
