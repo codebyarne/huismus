@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-15 10:23+0100\n"
+"POT-Creation-Date: 2026-11-15 10:26+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1588,6 +1588,21 @@ msgstr ""
 
 msgid "Nog niet verstuurd"
 msgstr ""
+
+msgid "Deels betaald"
+msgstr ""
+
+msgid "Onbetaald"
+msgstr ""
+
+msgid "vandaag te betalen"
+msgstr ""
+
+#, python-format
+msgid "nog %(days)s dag"
+msgid_plural "nog %(days)s dagen"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Wachten op antwoord"
 msgstr ""
@@ -3697,15 +3712,6 @@ msgstr ""
 msgid "Verder werken"
 msgstr ""
 
-msgid "Nog geen facturen"
-msgstr ""
-
-msgid "Maak je eerste factuur. Of zet je administratie over uit Moneybird."
-msgstr ""
-
-msgid "Maak je eerste factuur"
-msgstr ""
-
 #, python-format
 msgid "waarvan %(count)s te laat"
 msgid_plural "waarvan %(count)s te laat"
@@ -3772,6 +3778,12 @@ msgid ""
 msgstr ""
 
 msgid "Geen offertes die op antwoord wachten."
+msgstr ""
+
+msgid "Nog geen facturen"
+msgstr ""
+
+msgid "Maak je eerste factuur. Of zet je administratie over uit Moneybird."
 msgstr ""
 
 msgid "Huismus is niet bereikbaar"
@@ -4395,6 +4407,9 @@ msgstr ""
 msgid "Maak je eerste factuur. Hij blijft een concept tot je hem uitgeeft."
 msgstr ""
 
+msgid "Maak je eerste factuur"
+msgstr ""
+
 msgid "Zoeken in facturen"
 msgstr ""
 
@@ -4412,27 +4427,6 @@ msgstr ""
 
 msgid "Nog geen klant"
 msgstr ""
-
-msgid "Deels betaald"
-msgstr ""
-
-msgid "vandaag te betalen"
-msgstr ""
-
-msgid "Vandaag te betalen"
-msgstr ""
-
-#, python-format
-msgid "nog %(days)s dag"
-msgid_plural "nog %(days)s dagen"
-msgstr[0] ""
-msgstr[1] ""
-
-#, python-format
-msgid "Nog %(days)s dag"
-msgid_plural "Nog %(days)s dagen"
-msgstr[0] ""
-msgstr[1] ""
 
 #, python-format
 msgid "%(shown)s van %(total)s factuur"

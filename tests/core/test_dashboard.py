@@ -180,3 +180,59 @@ def test_the_kor_or_vat_step_is_done_without_the_kor_and_with_a_vat_number(setti
     settings_filled.vat_number = "NL000099998B57"
     settings_filled.save()
     assert next(s for s in onboarding_steps() if s["key"] == "kor")["done"] is True
+
+
+def test_the_query_filter_leaves_out_no_open_invoice(settings_filled):
+    """outstanding_invoices() narrows the query for speed; payment_state
+    still decides. Every invoice it decides is open must be counted."""
+    _issued(100000)
+    _issued(50000, paid=20000)
+    _issued(40000, paid=40000)
+    credited = _issued(25000)
+    _issued(25000, kind="credit_note", related=credited)
+    _issued(0)  # € 0, nothing paid: "unpaid"
+
+    every = Document.objects.filter(kind="invoice", status="issued").with_payment_totals()
+    open_count = sum(1 for d in every if d.payment_state in ("unpaid", "partial"))
+
+    assert outstanding_invoices()["count"] == open_count == 3
+
+
+def _home(client):
+    user = get_user_model().objects.create_user(username="sam", password="s3cret-pass")
+    client.force_login(user)
+    return client.get(reverse("home")).content.decode().replace("\xa0", " ")
+
+
+def test_the_menu_panel_says_what_you_still_receive_and_what_is_overdue(client, settings_filled):
+    _issued(100000)
+    _issued(30000, due_date=TODAY - timedelta(days=3))
+
+    html = _home(client)
+
+    assert 'id="je-krijgt-nog"' in html
+    assert "Je krijgt nog" in html
+    assert "€ 1.300,00" in html
+    assert "€ 300,00 is te laat" in html
+
+
+def test_the_menu_panel_says_nothing_is_outstanding_when_all_is_paid(client, settings_filled):
+    _issued(40000, paid=40000)
+    assert "Niets openstaand" in _home(client)
+
+
+def test_the_menu_panel_is_empty_before_the_first_issued_invoice(client, settings_filled):
+    Contact.objects.create(company_name="Klant BV")  # past the welcome
+    assert 'id="je-krijgt-nog"' not in _home(client)
+
+
+def test_an_overview_without_invoices_shows_one_card_to_make_the_first(client, settings_filled):
+    Contact.objects.create(company_name="Klant BV")  # past the welcome
+
+    html = _home(client)
+
+    assert 'id="nog-geen-facturen"' in html
+    assert "Eerste factuur maken" in html
+    assert "Importeren uit Moneybird" in html
+    assert "Openstaand" not in html
+    assert "Laatste facturen" not in html

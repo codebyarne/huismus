@@ -119,9 +119,6 @@ def subtract(cents, other_cents):
 
 
 @register.filter
-def days_until_due(document):
-    """Whole days from today to the due date (0: due today), for "Nog 4
-    dagen" in the invoice list. None without a due date."""
-    if document.due_date is None:
-        return None
-    return (timezone.localdate() - document.due_date).days * -1
+def waiting_label(document):
+    """listing.waiting_label for today."""
+    return listing.waiting_label(document, timezone.localdate())
