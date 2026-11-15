@@ -3,9 +3,7 @@
 
 {% block title %}{% translate "Facturen" %} — Huismus{% endblock %}
 
-{% comment %}Making an invoice is this page's main action: the panel's button and the phone's + are violet, unless the list is empty (then "Maak je eerste factuur" is).{% endcomment %}
-{% block panel_new_class %}{% if has_any %}btn-primary{% else %}btn-quiet{% endif %}{% endblock %}
-{% block tab_plus_class %}{% if not has_any %}fab-quiet{% endif %}{% endblock %}
+{% comment %}The page's own "Nieuwe factuur" is its violet button (the owner, 2026-11-15), so the panel's and the phone's + stay quiet here.{% endcomment %}
 {% block main_attrs %} data-shortcut-new="{% url 'documents:create' %}"{% endblock %}
 {% block shortcut_search %}{% include "core/_shortcut_search.html" %}{% endblock %}
 
@@ -15,6 +13,9 @@
         <h1>{% translate "Facturen" %}</h1>
         <p class="lede">{% translate "Facturen en creditnota's. Een uitgegeven factuur staat vast. Corrigeren doe je met een creditnota." %}</p>
     </div>
+    {% if has_any %}<div class="actions">
+        <a class="btn btn-primary" href="{% url 'documents:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuwe factuur" %}</a>
+    </div>{% endif %}
 </div>
 
 {% if not has_any %}

@@ -120,7 +120,7 @@ def cards(settings: Settings, theme: str = "") -> list[dict]:
     """The overview: per topic its line and, where it says something, a pill
     (its text and huismus.css class). theme: the signed-in user's, for the
     card Weergave."""
-    ok, warn, off = "pill-accepted", "pill-unpaid", "pill-expired"
+    ok, warn, off = "pill-on", "pill-unpaid", "pill-expired"
     # A context of their own: "Aan" is also "To" (a mail's recipient).
     on_text, off_text = pgettext_lazy("setting", "Aan"), pgettext_lazy("setting", "Uit")
     summary = {}

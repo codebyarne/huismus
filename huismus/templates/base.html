@@ -30,7 +30,7 @@
 {% include "icons.svg" %}
 <div class="app">
     <aside class="sidebar" aria-label="{% translate 'Navigatie' %}">
-        <a class="brand" href="{% url 'home' %}"><svg class="mark" width="34" height="34" aria-hidden="true"><use href="#mus"></use></svg>Huismus</a>
+        <a class="brand" href="{% url 'home' %}"><svg class="mark" width="44" height="44" aria-hidden="true"><use href="#mus"></use></svg>Huismus</a>
         {% if panel_outstanding.has_issued %}
         {% comment %}What you still have to receive, on every page (huismus/core/dashboard.py, the same figure as the overview).{% endcomment %}
         <a class="panel-owed" id="je-krijgt-nog" href="{% url 'documents:list' %}?tab=openstaand">
@@ -68,7 +68,7 @@
     </aside>
 
     <header class="mtop">
-        <a class="brand" href="{% url 'home' %}"><svg class="mark" width="28" height="28" aria-hidden="true"><use href="#mus"></use></svg>Huismus</a>
+        <a class="brand" href="{% url 'home' %}"><svg class="mark" width="34" height="34" aria-hidden="true"><use href="#mus"></use></svg>Huismus</a>
     </header>
     {# The tab bar has no sub-items: every expenses page marks "Uitgaven". #}
     <nav class="tabbar" aria-label="{% translate 'Hoofdmenu' %}">
