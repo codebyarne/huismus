@@ -34,7 +34,7 @@ Daarna download je de pdf met **PDF**, of mail je hem met **Mailen**. Zie
 ## Betalingen
 
 Op de factuur zie je de betaalstatus: onbetaald, deels betaald, betaald of
-vervallen. Is er betaald, klik dan op **Betaling registreren**. Het bedrag
+te laat. Is er betaald, klik dan op **Betaling registreren**. Het bedrag
 staat al ingevuld met wat er nog openstaat. Een deel betalen kan ook.
 
 Het overzicht laat zien wat er in totaal openstaat en welke facturen te laat

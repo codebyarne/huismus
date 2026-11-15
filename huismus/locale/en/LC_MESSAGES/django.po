@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-15 09:20+0100\n"
+"POT-Creation-Date: 2026-11-15 09:39+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3917,8 +3917,8 @@ msgid "Verder werken"
 msgstr "Continue"
 
 #, python-format
-msgid "waarvan %(count)s vervallen"
-msgid_plural "waarvan %(count)s vervallen"
+msgid "waarvan %(count)s te laat"
+msgid_plural "waarvan %(count)s te laat"
 msgstr[0] "of which %(count)s overdue"
 msgstr[1] "of which %(count)s overdue"
 
@@ -6577,7 +6577,6 @@ msgid ""
 msgstr ""
 "If you have a Raspberry Pi, a NAS, your own server or a VPS, you can also "
 "run Huismus in Docker. That is for people who are handy with that."
-
 
 #~ msgid "Wat Huismus (nog) niet doet"
 #~ msgstr "What Huismus doesn't do (yet)"

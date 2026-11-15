@@ -109,7 +109,7 @@ def test_year_overview_shows_that_years_revenue_against_the_kor_limit(client):
     assert 'id="kor-grens"' in page
     assert "85% van je KOR-grens" in page
     assert "€ 8.500,00 van € 10.000,00" in page
-    assert "progress is-warn" in page
+    assert "progress is-kor is-warn" in page
 
 
 def test_an_earlier_year_says_it_is_measured_with_the_current_limit(client):
@@ -139,7 +139,7 @@ def test_a_year_over_the_limit_shows_a_red_bar(client):
     _issued_invoice("2020-05-01", 1_000_001)
     response = client.get(reverse("reports:year_overview"), {"jaar": "2020"})
     assert response.context["kor_limit"].level == "over"
-    assert "progress is-bad" in response.content.decode()
+    assert "progress is-kor is-bad" in response.content.decode()
 
 
 def test_the_csv_counts_revenue_without_vat(client):
