@@ -630,7 +630,12 @@ input[type="search"]::-webkit-search-cancel-button {
 
 /* ---------- 11. Document ("vel papier") ---------- */
 .doc-stage { padding: var(--s-6) 0 var(--s-10); }
+/* Het papier is altijd wit, ook in donker: je ziet wat je klant krijgt, en een logo
+   staat op de achtergrond waarvoor het gemaakt is. color-scheme: light laat alle
+   tokens binnen het papier hun lichte waarde kiezen; color zet de geërfde, al
+   opgeloste tekstkleur van de pagina opnieuw. */
 .paper {
+  color-scheme: light; color: var(--text);
   container-type: inline-size; position: relative; max-width: 860px; margin: 0 auto;
   background: var(--paper); border: 1px solid var(--border); border-radius: var(--r-sm);
   box-shadow: var(--sh-paper); padding: var(--s-12) var(--s-12) var(--s-10);
