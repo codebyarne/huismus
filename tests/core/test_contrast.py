@@ -34,6 +34,15 @@ PAIRS = [
     ("accent-ink", "accent-soft"),
     ("draft", "draft-bg"),
     ("draft", "surface"),
+    ("panel-text", "panel"),
+    ("panel-muted", "panel"),
+    ("text", "warn-bg"),
+]
+
+# (graphic, surface it stands on): bars and edges need 3 : 1 (WCAG 1.4.11).
+GRAPHIC_PAIRS = [
+    ("primary", "surface"),  # the revenue bar
+    ("accent-ink", "surface"),  # the edge of the yellow cost bar
 ]
 
 
@@ -63,3 +72,12 @@ def test_text_reaches_aa_on_its_surface(text, surface, theme):
     index = 0 if theme == "light" else 1
     ratio = _contrast(tokens[text][index], tokens[surface][index])
     assert ratio >= 4.5, f"--{text} on --{surface} ({theme}): {ratio:.2f} : 1"
+
+
+@pytest.mark.parametrize("theme", ["light", "dark"])
+@pytest.mark.parametrize(("graphic", "surface"), GRAPHIC_PAIRS)
+def test_bars_reach_3_to_1_on_their_surface(graphic, surface, theme):
+    tokens = _tokens()
+    index = 0 if theme == "light" else 1
+    ratio = _contrast(tokens[graphic][index], tokens[surface][index])
+    assert ratio >= 3, f"--{graphic} on --{surface} ({theme}): {ratio:.2f} : 1"
