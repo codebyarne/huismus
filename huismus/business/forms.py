@@ -29,7 +29,12 @@ MAIL_TEXT_FIELDS = [
     for language in mail_texts.LANGUAGES
     for part in ("subject", "body")
 ]
-MAIL_TEXT_TITLES = {"invoice": _("Factuur"), "credit_note": _("Creditnota"), "quote": _("Offerte")}
+MAIL_TEXT_TITLES = {
+    "invoice": _("Factuur"),
+    "credit_note": _("Creditnota"),
+    "quote": _("Offerte"),
+    "reminder": _("Herinnering"),
+}
 MAIL_TEXT_PARTS = {
     ("subject", "nl"): _("onderwerp in het Nederlands"),
     ("body", "nl"): _("tekst in het Nederlands"),

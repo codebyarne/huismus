@@ -629,3 +629,153 @@ def test_the_mail_page_says_when_the_customer_wants_post(client_in):
     response = client_in.get(_mail_url(invoice))
 
     assert "per post" in response.content.decode()
+
+
+# --- Payment reminders (#114) ---
+
+
+def _reminder_url(document):
+    return reverse("documents:reminder", args=[document.pk])
+
+
+def _remind(client, document, **data):
+    fields = {"to": "sanne@example.invalid", "subject": "Herinnering", "body": "Nog open.", **data}
+    return client.post(_reminder_url(document), fields)
+
+
+def test_a_reminder_goes_out_with_the_invoice_pdf_and_is_logged_as_one(client_in):
+    invoice = _invoice()  # due 15 March 2026, so overdue
+
+    response = _remind(client_in, invoice)
+
+    assert response.status_code == 302
+    assert response.url == reverse("documents:edit", args=[invoice.pk])
+    [message] = mail.outbox
+    assert message.attachments[0][0] == f"{invoice.number}.pdf"
+    [log] = EmailLog.objects.all()
+    assert log.reminder is True
+    assert log.succeeded
+
+
+def test_an_ordinary_mail_is_no_reminder(client_in):
+    _post(client_in, _invoice())
+
+    assert EmailLog.objects.get().reminder is False
+
+
+def test_a_reminder_leaves_the_invoice_as_it_was(client_in):
+    invoice = _invoice()
+    before = _as_stored(invoice)
+
+    _remind(client_in, invoice)
+
+    assert _as_stored(invoice) == before
+
+
+def test_the_reminder_text_says_what_is_still_open(client_in):
+    from huismus.documents.models import Payment
+
+    invoice = _invoice(language="nl")
+    Payment.objects.create(document=invoice, paid_on=datetime.date(2026, 3, 20), amount_cents=35000)
+
+    initial = client_in.get(_reminder_url(invoice)).context["form"].initial
+
+    assert initial["subject"] == f"Herinnering: factuur {invoice.number} van Voorbeeld BV"
+    assert initial["body"].startswith("Beste Sanne,")
+    assert "€\u00a0500,00" in initial["body"]  # 850 minus the 350 paid
+    assert "15 maart 2026" in initial["body"]
+    assert initial["body"].rstrip().endswith("Voorbeeld BV")
+
+
+def test_an_english_invoice_gets_the_english_reminder(client_in):
+    invoice = _invoice(language="en")
+
+    initial = client_in.get(_reminder_url(invoice)).context["form"].initial
+
+    assert initial["subject"] == f"Reminder: invoice {invoice.number} from Voorbeeld BV"
+    assert initial["body"].startswith("Dear Sanne,")
+    assert "15 March 2026" in initial["body"]
+
+
+def test_the_reminder_text_from_the_settings_is_filled_in(client_in, business_settings):
+    business_settings.mail_reminder_subject_nl = "Nog open: {nummer}"
+    business_settings.mail_reminder_body_nl = "{openstaand} van {bedrag}, sinds {vervaldatum}."
+    business_settings.save()
+    invoice = _invoice(language="nl")
+
+    initial = client_in.get(_reminder_url(invoice)).context["form"].initial
+
+    assert initial["subject"] == f"Nog open: {invoice.number}"
+    assert initial["body"] == "€\u00a0850,00 van €\u00a0850,00, sinds 15 maart 2026."
+
+
+@pytest.mark.parametrize("kind", ["draft", "credit_note", "quote"])
+def test_only_an_issued_invoice_has_a_reminder_form(client_in, kind):
+    if kind == "draft":
+        document = _draft()
+    elif kind == "credit_note":
+        document = issue(_draft(kind="credit_note", related_document=_invoice()))
+    else:
+        document = _quote()
+
+    assert client_in.get(_reminder_url(document)).status_code == 404
+    assert _remind(client_in, document).status_code == 404
+    assert mail.outbox == []
+
+
+@pytest.mark.parametrize("state", ["paid", "not_due"])
+def test_an_invoice_that_is_not_overdue_gets_no_reminder(client_in, state):
+    from huismus.documents.models import Payment
+
+    if state == "paid":
+        invoice = _invoice()
+        Payment.objects.create(
+            document=invoice, paid_on=datetime.date(2026, 3, 20), amount_cents=85000
+        )
+    else:
+        invoice = _invoice(due_date=datetime.date(2099, 1, 1))
+    page = reverse("documents:edit", args=[invoice.pk])
+
+    for response in (client_in.get(_reminder_url(invoice)), _remind(client_in, invoice)):
+        assert (response.status_code, response.url) == (302, page)
+    assert mail.outbox == []
+    shown = client_in.get(page).content.decode()
+    assert f"Factuur {invoice.number} is niet te laat. Er is geen herinnering gestuurd." in shown
+
+
+def test_the_reminder_button_is_only_on_an_overdue_invoice(client_in):
+    overdue = _invoice()
+    not_due = _invoice(due_date=datetime.date(2099, 1, 1))
+
+    def page(document):
+        return client_in.get(reverse("documents:edit", args=[document.pk])).content.decode()
+
+    assert _reminder_url(overdue) in page(overdue)
+    assert _reminder_url(not_due) not in page(not_due)
+
+
+def test_the_invoice_shows_the_last_reminder_and_how_late_it_is(client_in):
+    invoice = _invoice(due_date=datetime.date.today() - datetime.timedelta(days=12))
+
+    page = client_in.get(reverse("documents:edit", args=[invoice.pk])).content.decode()
+    assert "12 dagen te laat" in page
+    assert "Laatste herinnering" not in page
+
+    _remind(client_in, invoice)
+    page = client_in.get(reverse("documents:edit", args=[invoice.pk])).content.decode()
+    assert "Laatste herinnering" in page
+    assert "Herinnering gestuurd naar sanne@example.invalid" in page
+
+
+def test_a_failed_reminder_is_not_the_last_reminder(client_in, monkeypatch):
+    def refuse(*args, **kwargs):
+        raise smtplib.SMTPAuthenticationError(535, b"nee")
+
+    monkeypatch.setattr("django.core.mail.EmailMessage.send", refuse)
+    invoice = _invoice()
+
+    _remind(client_in, invoice)
+
+    page = client_in.get(reverse("documents:edit", args=[invoice.pk])).content.decode()
+    assert "Laatste herinnering" not in page
+    assert "Herinnering sturen mislukt naar sanne@example.invalid" in page
