@@ -23,7 +23,7 @@ from django.utils.translation import gettext as _
 # --bg and --surface in huismus.css (light): the splash screen behind the
 # icon while the app starts, and the title bar, which on a phone sits
 # above the white top bar. base.html has the dark ones for theme-color.
-BACKGROUND_COLOR = "#FBF8F3"
+BACKGROUND_COLOR = "#F1ECFD"
 THEME_COLOR = "#FFFFFF"
 
 
