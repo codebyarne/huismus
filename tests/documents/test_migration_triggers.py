@@ -111,3 +111,42 @@ def test_adding_reverse_charge_keeps_the_triggers_and_issued_documents():
     executor = MigrationExecutor(connection)
     executor.migrate(executor.loader.graph.leaf_nodes())
     clean_up_issued_documents_for_flush()
+
+
+def test_marking_reminders_keeps_the_mail_log_and_its_triggers():
+    """0017 adds a column to the mail log without rebuilding it (#114)."""
+    before = ("documents", "0016_vat_rows")
+    after = ("documents", "0017_emaillog_reminder")
+    executor = MigrationExecutor(connection)
+    executor.migrate([before])
+    old_apps = executor.loader.project_state([before]).apps
+    document = old_apps.get_model("documents", "Document").objects.create(
+        kind="invoice", status="draft"
+    )
+    old_apps.get_model("documents", "EmailLog").objects.create(
+        document=document,
+        to="sanne@example.invalid",
+        subject="Factuur",
+        attachment_name="2026-0001.pdf",
+        attachment_sha256="",
+        succeeded=True,
+    )
+
+    executor = MigrationExecutor(connection)
+    executor.migrate([after])
+
+    assert {
+        "documents_emaillog_append_only_update",
+        "documents_emaillog_append_only_delete",
+    } <= _triggers()
+    EmailLog = executor.loader.project_state([after]).apps.get_model("documents", "EmailLog")
+    kept = EmailLog.objects.get()
+    assert (kept.subject, kept.reminder) == ("Factuur", False)
+    with pytest.raises(Exception, match="immutable"):
+        EmailLog.objects.update(reminder=True)
+
+    from tests.support import clean_up_issued_documents_for_flush
+
+    executor = MigrationExecutor(connection)
+    executor.migrate(executor.loader.graph.leaf_nodes())
+    clean_up_issued_documents_for_flush()

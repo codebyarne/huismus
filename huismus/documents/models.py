@@ -480,6 +480,9 @@ class EmailLog(TimestampedModel):
     attachment_sha256 = models.CharField(_("sha256 van de bijlage"), max_length=64)
     succeeded = models.BooleanField(_("gelukt"))
     error = models.TextField(_("fout"), blank=True)
+    # A payment reminder for an overdue invoice (#114), not the invoice
+    # itself: the same PDF, another text, and its own line on the page.
+    reminder = models.BooleanField(_("herinnering"), default=False)
 
     class Meta:
         verbose_name = _("verstuurde e-mail")
