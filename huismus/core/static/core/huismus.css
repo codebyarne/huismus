@@ -669,7 +669,7 @@ a:hover { color: var(--primary-hover); }
 /* Het totaal in de balk: alleen op de telefoon, daar staat het rijtje totalen vaak buiten beeld. */
 .actionbar-total { display: none; }
 @media (max-width: 760px) {
-  .actionbar { bottom: calc(62px + env(safe-area-inset-bottom)); padding: 10px var(--s-4); }
+  .actionbar { bottom: calc(65px + env(safe-area-inset-bottom)); padding: 10px var(--s-4); }
   .actionbar { flex-wrap: nowrap; }
   .actionbar .status { display: none; }
   .actionbar .btn { flex: 1; padding: 0 10px; }

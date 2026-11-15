@@ -1574,3 +1574,27 @@ def test_a_new_expense_gets_its_receipt_in_one_go(app, tmp_path):
     expect(app.get_by_text("Uitgave opgeslagen.")).to_be_visible()
     expect(app.locator(".receipt .r-name")).to_have_text("bon-hosting.png")
     assert Expense.objects.get().attachments.count() == 1
+
+
+def test_on_a_phone_the_editor_bar_keeps_the_total_in_sight(app, contact):
+    """#186: on a phone the total stays in the bar at the bottom, above the
+    tab bar, and follows what you type (the server's figure, like #totalen)."""
+    app.set_viewport_size({"width": 360, "height": 740})
+    app.goto(app.base + "/facturen/nieuw/")
+    picker = app.locator("input[role=combobox]")
+    picker.fill("korrel")
+    picker.press("Enter")
+    line = app.locator("[data-formset-forms=lines] .line").first
+    line.locator("textarea[name$=-description]").fill("Uren")
+    line.locator("input[name$=-quantity]").fill("2,5")
+    line.locator("input[name$=-unit_price_cents]").fill("85")
+
+    bar_total = app.locator("#actiebalk-totaal")
+    expect(bar_total).to_be_visible()
+    expect(bar_total).to_contain_text("257,13")
+    bar = app.locator(".actionbar").bounding_box()
+    tabs = app.locator(".tabbar").bounding_box()
+    assert bar["y"] + bar["height"] <= tabs["y"] + 1
+    # On a wide screen the totals beside the lines are enough.
+    app.set_viewport_size({"width": 1280, "height": 800})
+    expect(bar_total).to_be_hidden()
