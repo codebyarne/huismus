@@ -62,9 +62,9 @@
 
   /* Het diepviolette menu op een breed scherm */
   --panel:         light-dark(#2A1670, #2F1D80);
-  --panel-text:    #FFFFFF;
-  --panel-muted:   #CFC4F2;
-  --panel-wing:    #CBB8FA;
+  --panel-text:    light-dark(#FFFFFF, #FFFFFF);
+  --panel-muted:   light-dark(#CFC4F2, #CFC4F2);
+  --panel-wing:    light-dark(#CBB8FA, #CBB8FA);
   --panel-hover:   rgb(255 255 255 / .10);
   --panel-current: rgb(255 255 255 / .16);
   --panel-line:    rgb(255 255 255 / .18);
@@ -195,6 +195,12 @@ a:hover { color: var(--primary-hover); }
 .sidebar .btn-primary:hover { background: color-mix(in oklab, var(--panel-text) 88%, var(--panel)); }
 .sidebar .btn-quiet { --btn-bg: transparent; --btn-fg: var(--panel-text); --btn-bd: var(--panel-line); }
 .sidebar .btn-quiet:hover { background: var(--panel-hover); }
+/* "Je krijgt nog" bovenin het vlak */
+.panel-owed { display: flex; flex-direction: column; gap: 2px; padding: var(--s-3) 10px var(--s-2); color: inherit; text-decoration: none; border-radius: var(--r-lg); }
+.panel-owed:hover { color: inherit; background: var(--panel-hover); }
+.panel-owed-label, .panel-owed-sub { color: var(--panel-muted); font-size: var(--fs-sm); }
+.panel-owed-amount { font-size: 2rem; font-weight: var(--fw-heavy); letter-spacing: -0.025em; line-height: 1.2; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.panel-owed-sub:empty { display: none; }
 #nieuw-menu { position-anchor: --nieuw; inset: auto; top: anchor(bottom); left: anchor(left); width: anchor-size(width); margin-top: 6px; }
 #plus-menu { inset: auto 0 calc(72px + env(safe-area-inset-bottom)); margin: 0 auto; }
 #meer-menu { inset: auto 12px calc(72px + env(safe-area-inset-bottom)) auto; max-height: calc(100dvh - 140px); overflow-y: auto; }
@@ -240,6 +246,8 @@ a:hover { color: var(--primary-hover); }
   }
   .tabbar a[aria-current="page"], .tabbar button[aria-current="page"] { color: var(--primary-ink); }
   .tabbar .fab { justify-self: center; align-self: center; width: 52px; height: 52px; min-height: 0; border-radius: 50%; background: var(--primary); color: var(--on-primary); box-shadow: var(--sh-2); }
+  /* Alleen violet waar een factuur maken de hoofdactie is; anders wit met een omlijning */
+  .tabbar .fab-quiet { background: var(--surface); color: var(--primary-ink); box-shadow: inset 0 0 0 1px var(--border-strong); }
   .page-head { align-items: flex-start; }
   .page-head .actions { width: 100%; }
   .page-head .actions .btn-primary { flex: 1 1 100%; order: -1; }
@@ -391,6 +399,9 @@ a:hover { color: var(--primary-hover); }
 .card-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); padding: var(--s-4) var(--s-5); border-bottom: 1px solid var(--border); }
 .card-head h2 { font-size: var(--fs-md); }
 .card-foot { padding: var(--s-3) var(--s-5); border-top: 1px solid var(--border); font-size: var(--fs-sm); }
+/* Een kopje per groep in een lijst (Te laat, Wacht op betaling, ...) */
+.list-group-title { padding: var(--s-5) var(--s-5) var(--s-2); font-size: var(--fs-md); font-weight: var(--fw-bold); }
+.imported { display: block; }
 .section-title { font-size: var(--fs-lg); margin-bottom: var(--s-3); }
 .divider { height: 1px; background: var(--border); border: 0; margin: var(--s-6) 0; }
 
@@ -474,7 +485,8 @@ a:hover { color: var(--primary-hover); }
 /* Alleen wat om actie vraagt krijgt een vlak: te laat, deels betaald, nakijken.
    De rest is rustig (huismus-intern/besluiten.md, 2026-10-30 en 2026-11-15). */
 .pill-overdue   { --pill-bg: var(--bad-bg); --pill-fg: var(--bad); }
-.pill-partial, .pill-check { --pill-bg: var(--warn-bg); --pill-fg: var(--warn); }
+.pill-check { --pill-bg: var(--warn-bg); --pill-fg: var(--warn); }
+.pill-partial { --pill-bg: transparent; --pill-fg: var(--text); padding-inline: 0; font-weight: var(--fw-medium); }  /* loopt nog: alleen "te laat" krijgt kleur */
 .pill-partial::before { background: linear-gradient(90deg, currentColor 50%, transparent 50%); box-shadow: inset 0 0 0 1.5px currentColor; }
 .pill-import    { --pill-bg: var(--accent-soft); --pill-fg: var(--accent-ink); }
 .pill-credit    { --pill-bg: var(--surface-2); --pill-fg: var(--text); box-shadow: inset 0 0 0 1px var(--border); }
@@ -768,13 +780,14 @@ div.hint-banner:hover { border-color: var(--border); }
 .chart-col { display: grid; grid-template-rows: 1fr 28px; background-image: linear-gradient(var(--border) 1px, transparent 1px); background-size: 100% calc((100% - 28px) / 4); }
 .chart-bars { display: flex; align-items: flex-end; justify-content: center; gap: 6px; border-bottom: 1.5px solid var(--border-strong); }
 .chart-bar { width: min(34%, 38px); height: calc(var(--v) * 1%); border-radius: 6px 6px 2px 2px; background: var(--primary); position: relative; transition: height .4s var(--ease); }
-.chart-bar.is-cost { background: var(--accent); }
+/* Geel haalt tegen wit geen 3 : 1; de donkergele rand wel (6,7 : 1 licht, 11,3 : 1 donker). */
+.chart-bar.is-cost { background: var(--accent); box-shadow: inset 0 0 0 1.5px var(--accent-ink); }
 .chart-bar.is-empty { height: 2px; background: var(--border-strong); }
 .chart-label { display: grid; place-items: center; font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--text-muted); }
 .legend { display: flex; gap: var(--s-4); font-size: var(--fs-sm); color: var(--text-muted); }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
 .legend i { width: 10px; height: 10px; border-radius: 3px; background: var(--primary); }
-.legend i.is-cost { background: var(--accent); }
+.legend i.is-cost { background: var(--accent); box-shadow: inset 0 0 0 1.5px var(--accent-ink); }
 .hbars { display: flex; flex-direction: column; gap: 14px; }
 .hbar { display: grid; grid-template-columns: minmax(120px, 190px) minmax(0, 1fr) 96px; gap: var(--s-3); align-items: center; font-size: var(--fs-sm); }
 .hbar-track { height: 10px; border-radius: var(--r-pill); background: var(--surface-2); overflow: hidden; }
@@ -972,7 +985,7 @@ div.hint-banner:hover { border-color: var(--border); }
 
 /* Betaalstatus "Gecrediteerd": creditnota's dekken het hele factuurbedrag.
    Zelfde uiterlijk als de creditnota-pil, zonder stip. */
-.pill-credited { --pill-bg: var(--surface-2); --pill-fg: var(--text); box-shadow: inset 0 0 0 1px var(--border); }
+.pill-credited { --pill-bg: transparent; --pill-fg: var(--text-muted); padding-inline: 0; font-weight: var(--fw-medium); }
 .pill-credited::before { display: none; }
 
 /* {% field ... suffix="dagen" %}: eenheid rechts in het invoerveld
@@ -1032,7 +1045,7 @@ div.hint-banner:hover { border-color: var(--border); }
 .card.is-highlighted { border-color: var(--primary); box-shadow: 0 0 0 3px var(--ring); }
 /* Kleurblokje in een KPI-label, gelijk aan de legenda van de grafiek. */
 .legend-dot { width: 10px; height: 10px; border-radius: 3px; background: var(--primary); }
-.legend-dot.is-cost { background: var(--accent); }
+.legend-dot.is-cost { background: var(--accent); box-shadow: inset 0 0 0 1.5px var(--accent-ink); }
 /* Sneltoetsen bestaan alleen met een toetsenbord: niet tonen op touch. */
 @media (hover: none) { .shortcut-hint { display: none; } }
 /* Phone: the icon stays beside the first line, the link wraps below the text. */
