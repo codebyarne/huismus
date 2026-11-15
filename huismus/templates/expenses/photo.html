@@ -65,7 +65,7 @@ fields are one line of the ordinary form, the amount first.{% endcomment %}
     <div><button type="submit" class="btn btn-ghost btn-sm" id="meer-invullen" formaction="{{ full_form_url }}" name="regel_toevoegen" value="1" formnovalidate><svg class="i i-sm" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Meer regels of een omschrijving" %}</button></div>
     <div class="actionbar photo-actions">
         <button class="btn btn-primary" type="submit">{% translate "Uitgave opslaan" %}<span class="spinner"></span></button>
-        <button class="btn btn-ghost" type="submit" name="alleen_foto" value="1" formnovalidate>{% translate "Alleen de foto bewaren" %}</button>
+        <button class="btn btn-ghost btn-sm" type="submit" name="alleen_foto" value="1" formnovalidate>{% translate "Alleen de foto bewaren" %}</button>
     </div>
 </form>
 {% endblock %}
