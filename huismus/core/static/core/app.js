@@ -674,3 +674,75 @@ function showReceiptPdfs(root) {
 wideScreen.addEventListener("change", () => showReceiptPdfs(document));
 if (window.htmx) window.htmx.onLoad(showReceiptPdfs);
 else showReceiptPdfs(document);
+
+// The photo first (#188, expenses/photo_views.py): on a phone, a link to the
+// new-expense form opens the camera instead. The photo is sent at once;
+// Huismus puts it with the receipts and opens the page with the amount.
+// Cancelling the camera opens the ordinary form, where a photo from the
+// library, a PDF or no receipt at all is possible. On a wide screen, in the
+// desktop app and without JS, the link is the ordinary form.
+const phone = window.matchMedia("(max-width: 760px) and (pointer: coarse)");
+
+// Capture, and no further: htmx's boost listens on the link itself.
+document.addEventListener(
+  "click",
+  (event) => {
+    const camera = document.getElementById("camera");
+    const link = event.target.closest?.("a[href]");
+    if (!camera || !link || !phone.matches || event.defaultPrevented) return;
+    if (link.pathname !== camera.dataset.newExpense || link.search) return;
+    event.preventDefault();
+    event.stopPropagation();
+    link.closest("[popover]")?.hidePopover();
+    const input = camera.querySelector("input[type=file]");
+    input.value = "";
+    // Browsers that don't say "cancel" leave the user where they tapped.
+    input.oncancel = () => window.location.assign(link.href);
+    input.click();
+  },
+  true,
+);
+
+// A photo taken, from that hidden form or from "Opnieuw" on the photo page:
+// sent with fetch, so a failed connection leaves the photo here to send
+// again. A photo from the camera isn't always in the library too: a
+// browser error page would lose it.
+let unsent = null;
+
+function cameraToast(id) {
+  for (const toast of document.querySelectorAll("[data-camera-toast]")) toast.remove();
+  const template = document.getElementById(id);
+  if (template) document.getElementById("toasts")?.append(template.content.cloneNode(true));
+}
+
+async function sendPhoto(form, file) {
+  unsent = { form, file };
+  cameraToast("camera-busy");
+  const data = new FormData(form);
+  data.set("file", file);
+  let response;
+  try {
+    response = await fetch(form.action, { method: "POST", body: data });
+  } catch {
+    response = null;
+  }
+  if (!response?.ok) {
+    cameraToast("camera-offline");
+    return;
+  }
+  unsent = null;
+  // Where Huismus sent it: the photo page, or the ordinary form with the
+  // reason it refused the file.
+  window.location.assign(response.url);
+}
+
+document.addEventListener("change", (event) => {
+  const input = event.target;
+  if (!input.matches?.("input[type=file][data-camera]") || !input.files.length) return;
+  input.oncancel = null;
+  sendPhoto(input.form, input.files[0]);
+});
+
+document.addEventListener("click", (event) => {
+  if (event.target.closest?.("[data-camera-retry]") && unsent) sendPhoto(unsent.form, unsent.file);
+});
