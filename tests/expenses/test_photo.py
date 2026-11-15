@@ -239,3 +239,23 @@ def test_alleen_de_foto_bewaren_leaves_it_in_the_tray_and_reads_it(logged_in, mo
 def test_both_need_a_login(client):
     assert client.post(reverse("expenses:photo_upload")).status_code == 302
     assert "/login/" in client.get(reverse("expenses:photo", args=[1])).url
+
+
+def test_a_vervangt_that_is_no_number_replaces_nothing(logged_in):
+    _take(logged_in)
+    _take(logged_in, color="blue", vervangt="nee")
+    assert Attachment.objects.in_tray().count() == 2
+
+
+def test_opnieuw_never_removes_a_receipt_from_the_receipts_folder(logged_in):
+    _take(logged_in)
+    folder = Attachment.objects.get()
+    Attachment.objects.filter(pk=folder.pk).update(source="bonnetjesmap")
+    _take(logged_in, color="blue", vervangt=str(folder.pk))
+    assert Attachment.objects.in_tray().count() == 2
+
+
+def test_the_desktop_app_has_no_camera(logged_in, settings):
+    assert 'id="camera"' in logged_in.get(reverse("expenses:list")).content.decode()
+    settings.DESKTOP = True
+    assert 'id="camera"' not in logged_in.get(reverse("expenses:list")).content.decode()

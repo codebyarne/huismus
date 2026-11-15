@@ -11,6 +11,7 @@ from playwright.sync_api import expect
 from huismus.core.demo_receipts import _photo
 from huismus.core.models import Attachment
 from huismus.expenses.models import Expense
+from tests.e2e.conftest import IGNORED
 
 pytestmark = pytest.mark.django_db(transaction=True)
 
@@ -32,7 +33,11 @@ def phone(app, browser, browser_name):
     context.add_cookies(app.context.cookies())
     page = context.new_page()
     errors = []
-    page.on("pageerror", lambda error: errors.append(str(error)))
+    # The same JavaScript errors as the app fixture lets pass.
+    page.on(
+        "pageerror",
+        lambda error: None if any(n in str(error) for n in IGNORED) else errors.append(str(error)),
+    )
     page.base = app.base
     yield page
     context.close()
@@ -106,6 +111,17 @@ def test_without_a_connection_the_photo_stays_to_send_again(phone):
     phone.get_by_role("button", name="Opnieuw proberen").tap()
     expect(phone.locator("h1")).to_have_text("Nieuwe uitgave")
     assert Attachment.objects.in_tray().count() == 1
+
+
+def test_closing_the_camera_opens_the_ordinary_form(phone):
+    phone.goto(phone.base + "/uitgaven/")
+    with phone.expect_file_chooser():
+        phone.get_by_role("link", name="Nieuwe uitgave").first.tap()
+    # What the browser does when the camera is closed without a photo.
+    phone.locator("#camera input[type=file]").dispatch_event("cancel")
+    expect(phone).to_have_url(phone.base + "/uitgaven/nieuw/")
+    expect(phone.get_by_text("Sleep een bonnetje hierheen")).to_be_visible()
+    assert not Attachment.objects.exists()
 
 
 def test_on_a_wide_screen_uitgave_is_the_ordinary_form(app):

@@ -724,10 +724,13 @@ async function sendPhoto(form, file) {
   try {
     response = await fetch(form.action, { method: "POST", body: data });
   } catch {
-    response = null;
-  }
-  if (!response?.ok) {
+    // No answer at all: no connection with Huismus.
     cameraToast("camera-offline");
+    return;
+  }
+  if (!response.ok) {
+    // Huismus answered, with an error.
+    cameraToast("camera-failed");
     return;
   }
   unsent = null;
