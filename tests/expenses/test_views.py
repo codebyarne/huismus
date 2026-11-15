@@ -479,3 +479,11 @@ def test_category_edit_with_an_empty_name_keeps_the_row_open_with_the_error(clie
     assert response.status_code == 200
     assert response.context["editing_pk"] == category.pk
     assert 'aria-invalid="true"' in response.content.decode()
+
+
+def test_the_receipt_on_a_new_expense_is_not_called_optional(client):
+    # A receipt is the proof of an expense (the owner, 2026-11-15): the
+    # form doesn't ask for one, but doesn't call it optional either.
+    _login(client)
+    page = client.get(reverse("expenses:create")).content.decode()
+    assert "<h2>Bonnetje</h2>" in page
