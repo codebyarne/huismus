@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-15 09:58+0100\n"
+"POT-Creation-Date: 2026-11-15 10:36+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2116,10 +2116,13 @@ msgstr ""
 msgid "uitgaveregels"
 msgstr ""
 
-msgid "Uitgave nagekeken."
+msgid "Bonnetje bewaard. Je vindt het bij Verwerken."
 msgstr ""
 
 msgid "Uitgave opgeslagen."
+msgstr ""
+
+msgid "Uitgave nagekeken."
 msgstr ""
 
 msgid "Niet gelezen: dit lijkt geen bonnetje."
@@ -2794,6 +2797,18 @@ msgid "Sneltoetsen:"
 msgstr ""
 
 msgid "nieuw"
+msgstr ""
+
+msgid "Bonnetje uploaden…"
+msgstr ""
+
+msgid "Huismus is niet bereikbaar. Probeer het opnieuw als je verbinding hebt."
+msgstr ""
+
+msgid "Opnieuw proberen"
+msgstr ""
+
+msgid "Het uploaden is mislukt. Probeer het nog een keer."
 msgstr ""
 
 msgid "Niet gekoppeld"
@@ -3782,9 +3797,6 @@ msgstr ""
 msgid ""
 "Dit apparaat krijgt geen verbinding met Huismus. Controleer je wifi of VPN "
 "en probeer het opnieuw."
-msgstr ""
-
-msgid "Opnieuw proberen"
 msgstr ""
 
 #, python-format
@@ -4778,6 +4790,24 @@ msgid "Geen uitgave past bij je zoekopdracht en filters."
 msgstr ""
 
 msgid "betekent dat er een bonnetje bij de uitgave zit."
+msgstr ""
+
+msgid "Opnieuw"
+msgstr ""
+
+msgid "Foto versturen"
+msgstr ""
+
+msgid "Bedrag, zoals je het betaalde"
+msgstr ""
+
+msgid "Meer regels of een omschrijving"
+msgstr ""
+
+msgid "Uitgave opslaan"
+msgstr ""
+
+msgid "Alleen de foto bewaren"
 msgstr ""
 
 msgid "Verwerken"
