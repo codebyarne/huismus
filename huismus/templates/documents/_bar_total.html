@@ -1,0 +1,3 @@
+{% load i18n documents_tags %}
+{% comment %}The total in the editor's bar, so it stays in sight on a phone while you scroll through the lines. The same totals as #totalen (one totals function, invariant 4); documents:preview swaps it with them.{% endcomment %}
+<span class="actionbar-total" id="actiebalk-totaal"{% if oob %} hx-swap-oob="true"{% endif %}><span class="muted">{% translate "Totaal" %}</span> <strong class="amount">{{ totals.total_cents|money_for:document }}</strong></span>

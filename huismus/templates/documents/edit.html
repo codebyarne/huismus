@@ -135,8 +135,9 @@
 {% endblock %}
 
 {% block actionbar %}
-<div class="actionbar">
+<div class="actionbar actionbar-editor">
     <span class="status"></span>
+    {% include "documents/_bar_total.html" %}
     {% comment %}The extra actions: in the bar on a wide screen, behind "Meer" on a phone (see .actionbar-more in huismus.css).{% endcomment %}
     <button class="btn btn-secondary actionbar-more-toggle" type="button" popovertarget="actiebalk-meer" aria-label="{% translate 'Meer' %}"><svg class="i" aria-hidden="true"><use href="#more"></use></svg></button>
     <div id="actiebalk-meer" class="actionbar-more" popover="auto">

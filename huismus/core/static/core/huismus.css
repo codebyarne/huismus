@@ -10,21 +10,23 @@
 :root {
   color-scheme: light dark;
 
-  /* Typografie: systeemfontstack (offline, geen hosting nodig) */
-  --font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
+  /* Typografie: de ronde systeemletter waar die er is, anders de gewone
+     (offline, geen webfont) */
+  --font-sans: ui-rounded, "SF Pro Rounded", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --fs-xs: 0.75rem;    /* 12 */
   --fs-sm: 0.8125rem;  /* 13 */
-  --fs-md: 0.9375rem;  /* 15: basis */
+  --fs-md: 1rem;       /* 16: basis */
   --fs-lg: 1.0625rem;  /* 17 */
   --fs-xl: 1.375rem;   /* 22 */
-  --fs-2xl: 1.75rem;   /* 28 */
+  --fs-2xl: 1.875rem;  /* 30 */
   --fs-3xl: 2.25rem;   /* 36 */
   --lh-tight: 1.2;
   --lh: 1.5;
   --fw-medium: 550;
   --fw-semibold: 620;
   --fw-bold: 700;
+  --fw-heavy: 800;
 
   /* Spacing (4px-raster) */
   --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px; --s-5: 20px;
@@ -58,6 +60,15 @@
   --accent-ink:    light-dark(#855000, #FFC766);
   --mark-wing:     light-dark(#A98BF5, #CBB8FA);  /* vleugel van de mus: lichter dan het lijf */
 
+  /* Het diepviolette menu op een breed scherm */
+  --panel:         light-dark(#2A1670, #2F1D80);
+  --panel-text:    #FFFFFF;
+  --panel-muted:   #CFC4F2;
+  --panel-wing:    #CBB8FA;
+  --panel-hover:   rgb(255 255 255 / .10);
+  --panel-current: rgb(255 255 255 / .16);
+  --panel-line:    rgb(255 255 255 / .18);
+
   /* Status */
   --ok:       light-dark(#1E7A45, #7AD6A0);  --ok-bg:    light-dark(#E2F3E8, #1D3326);
   --warn:     light-dark(#855000, #FFC766);  --warn-bg:  light-dark(#FDF0D5, #33270F);
@@ -76,7 +87,7 @@
   --overlay: rgb(15 11 30 / .42);
 
   /* Maten */
-  --sidebar-w: 248px;
+  --sidebar-w: 288px;
   --content-max: 1120px;
   --control-h: 40px;
   --ease: cubic-bezier(.2, .7, .2, 1);
@@ -93,7 +104,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 h1, h2, h3, h4 { margin: 0; line-height: var(--lh-tight); font-weight: var(--fw-semibold); letter-spacing: -0.015em; text-wrap: balance; }
-h1 { font-size: var(--fs-2xl); letter-spacing: -0.022em; }
+h1 { font-size: var(--fs-2xl); font-weight: var(--fw-heavy); letter-spacing: -0.022em; }
 h2 { font-size: var(--fs-lg); }
 h3 { font-size: var(--fs-md); }
 p { margin: 0; text-wrap: pretty; }
@@ -148,33 +159,42 @@ a:hover { color: var(--primary-hover); }
 .sidebar {
   position: sticky; top: 0; height: 100vh; overflow-y: auto;
   display: flex; flex-direction: column; gap: var(--s-4);
-  padding: var(--s-5) var(--s-3); background: var(--surface); border-right: 1px solid var(--border);
+  padding: var(--s-6) var(--s-5); background: var(--panel); color: var(--panel-text);
+  /* De mus in wit op het vlak, met een lichte vleugel en het oog in de kleur van het vlak */
+  --mark-body: var(--panel-text); --mark-wing-fill: var(--panel-wing); --mark-eye: var(--panel);
 }
+.sidebar :focus-visible { outline-color: var(--panel-text); }
 .sidebar > * { flex-shrink: 0; }
-.brand { display: flex; align-items: center; gap: 10px; padding: 2px 10px; color: var(--text); text-decoration: none; font-weight: var(--fw-bold); font-size: 1.1875rem; letter-spacing: -0.02em; }
-.brand:hover { color: var(--text); }
+.brand { display: flex; align-items: center; gap: 10px; padding: 2px 10px; color: inherit; text-decoration: none; font-weight: var(--fw-bold); font-size: 1.1875rem; letter-spacing: -0.02em; }
+.brand:hover { color: inherit; }
 .nav { display: flex; flex-direction: column; gap: 2px; }
 .nav a {
-  display: flex; align-items: center; gap: 11px; min-height: 38px; padding: 0 10px; border-radius: var(--r-md);
-  color: var(--text-muted); text-decoration: none; font-weight: var(--fw-medium); font-size: 0.90625rem;
+  display: flex; align-items: center; gap: 11px; min-height: 40px; padding: 0 14px; border-radius: var(--r-pill);
+  color: var(--panel-text); text-decoration: none; font-weight: var(--fw-medium); font-size: 0.90625rem;
   transition: background .15s, color .15s;
 }
-.nav a:hover { background: var(--surface-2); color: var(--text); }
-.nav a[aria-current="page"], .nav a.is-active { background: var(--primary-soft); color: var(--primary-ink); font-weight: var(--fw-semibold); }
+.nav a:hover { background: var(--panel-hover); color: var(--panel-text); }
+.nav a[aria-current="page"], .nav a.is-active { background: var(--panel-current); color: var(--panel-text); font-weight: var(--fw-semibold); }
 .nav .sub { display: flex; flex-direction: column; gap: 1px; margin: 2px 0 6px; }
 .nav .sub a { min-height: 32px; padding-left: 39px; font-size: var(--fs-sm); }
-.nav .sub a[aria-current="page"] { background: none; color: var(--primary-ink); }
+.nav .sub a { padding-left: 43px; }
+.nav .sub a[aria-current="page"] { background: none; color: var(--panel-text); text-decoration: underline; text-underline-offset: 4px; }
 .sidebar-search {
   display: flex; align-items: center; gap: 10px; height: 38px; padding: 0 10px; border-radius: var(--r-md);
   border: 1px solid var(--border); background: var(--bg); color: var(--text-muted); font: inherit; font-size: var(--fs-sm); cursor: pointer; width: 100%;
 }
 .sidebar-search .kbd { margin-left: auto; }
-.sidebar-foot { margin-top: auto; display: flex; flex-direction: column; gap: 6px; padding-top: var(--s-3); border-top: 1px solid var(--border); }
+.sidebar-foot { margin-top: auto; display: flex; flex-direction: column; gap: 6px; padding-top: var(--s-3); border-top: 1px solid var(--panel-line); }
 .sidebar-foot .nav a { min-height: 34px; font-size: var(--fs-sm); }
 .lang { display: inline-flex; padding: 2px; gap: 2px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--border); }
 .lang button { height: 26px; min-width: 34px; padding: 0 8px; border: 0; border-radius: 6px; background: none; font: 600 12px/1 var(--font-sans); color: var(--text-muted); cursor: pointer; }
 .lang button[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: var(--sh-1); }
 .btn-new { anchor-name: --nieuw; }
+/* Op het vlak: wit als het de hoofdactie van de pagina is, anders alleen een omlijning */
+.sidebar .btn-primary { --btn-bg: var(--panel-text); --btn-fg: var(--panel); }
+.sidebar .btn-primary:hover { background: color-mix(in oklab, var(--panel-text) 88%, var(--panel)); }
+.sidebar .btn-quiet { --btn-bg: transparent; --btn-fg: var(--panel-text); --btn-bd: var(--panel-line); }
+.sidebar .btn-quiet:hover { background: var(--panel-hover); }
 #nieuw-menu { position-anchor: --nieuw; inset: auto; top: anchor(bottom); left: anchor(left); width: anchor-size(width); margin-top: 6px; }
 #plus-menu { inset: auto 0 calc(72px + env(safe-area-inset-bottom)); margin: 0 auto; }
 #meer-menu { inset: auto 12px calc(72px + env(safe-area-inset-bottom)) auto; max-height: calc(100dvh - 140px); overflow-y: auto; }
@@ -200,12 +220,12 @@ a:hover { color: var(--primary-hover); }
   .sidebar { display: none; }
   .content { padding: var(--s-5) var(--s-4) 112px; }
   .app-footer { padding: var(--s-4) var(--s-4) 96px; }
-  h1 { font-size: var(--fs-xl); }
+  h1 { font-size: 1.625rem; }
   .main { padding-top: 56px; }
   .mtop {
     display: flex; align-items: center; gap: 10px; position: fixed; top: 0; left: 0; right: 0; z-index: 20;
-    height: 56px; padding: 0 var(--s-4); background: color-mix(in oklab, var(--surface) 90%, transparent);
-    backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);
+    height: 56px; padding: 0 var(--s-4); background: color-mix(in oklab, var(--bg) 90%, transparent);
+    backdrop-filter: blur(10px);
   }
   .mtop .brand { padding: 0; font-size: var(--fs-lg); }
   .mtop .spacer { flex: 1; }
@@ -219,7 +239,7 @@ a:hover { color: var(--primary-hover); }
     font-size: 11px; font-weight: var(--fw-medium); color: var(--text-muted); text-decoration: none; border-radius: var(--r-md);
   }
   .tabbar a[aria-current="page"], .tabbar button[aria-current="page"] { color: var(--primary-ink); }
-  .tabbar .fab { justify-self: center; align-self: center; width: 48px; height: 48px; min-height: 0; border-radius: 50%; background: var(--primary); color: var(--on-primary); box-shadow: var(--sh-2); }
+  .tabbar .fab { justify-self: center; align-self: center; width: 52px; height: 52px; min-height: 0; border-radius: 50%; background: var(--primary); color: var(--on-primary); box-shadow: var(--sh-2); }
   .page-head { align-items: flex-start; }
   .page-head .actions { width: 100%; }
   .page-head .actions .btn-primary { flex: 1 1 100%; order: -1; }
@@ -235,9 +255,9 @@ a:hover { color: var(--primary-hover); }
 .btn {
   --btn-bg: var(--surface); --btn-fg: var(--text); --btn-bd: var(--border-strong);
   position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  height: var(--control-h); padding: 0 16px; border-radius: var(--r-md);
+  height: var(--control-h); padding: 0 18px; border-radius: var(--r-pill);
   background: var(--btn-bg); color: var(--btn-fg); border: 1px solid var(--btn-bd);
-  font: var(--fw-semibold) var(--fs-sm)/1 var(--font-sans); letter-spacing: .005em; white-space: nowrap;
+  font: var(--fw-semibold) 0.9375rem/1 var(--font-sans); letter-spacing: .005em; white-space: nowrap;
   text-decoration: none; cursor: pointer; user-select: none;
   transition: background .15s, border-color .15s, transform .08s, box-shadow .15s;
 }
@@ -254,8 +274,8 @@ a:hover { color: var(--primary-hover); }
 .btn-danger:focus-visible { box-shadow: 0 0 0 3px var(--danger-ring); }
 .btn-danger-quiet { --btn-bg: transparent; --btn-bd: transparent; --btn-fg: var(--danger); }
 .btn-danger-quiet:hover { background: var(--bad-bg); }
-.btn-sm { height: 32px; padding: 0 12px; border-radius: 8px; }
-.btn-lg { height: 48px; padding: 0 22px; font-size: var(--fs-md); border-radius: 12px; }
+.btn-sm { height: 32px; padding: 0 14px; }
+.btn-lg { height: 48px; padding: 0 24px; font-size: var(--fs-md); }
 .btn-icon { width: var(--control-h); padding: 0; }
 .btn-sm.btn-icon { width: 32px; }
 .btn-block { width: 100%; }
@@ -290,7 +310,7 @@ a:hover { color: var(--primary-hover); }
 .input, .select, .textarea {
   width: 100%; height: var(--control-h); padding: 0 12px;
   font: inherit; font-size: var(--fs-md); color: var(--text);
-  background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--r-md);
+  background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--r-lg);
   transition: border-color .15s, box-shadow .15s, background .15s;
 }
 /* Pseudo-elementen lossen light-dark() niet overal op. currentColor is hier de tekstkleur van het veld,
@@ -307,7 +327,7 @@ a:hover { color: var(--primary-hover); }
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238a8075' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat; background-position: right 12px center;
 }
-.input-sm { height: 34px; font-size: var(--fs-sm); padding: 0 10px; border-radius: 8px; }
+.input-sm { height: 34px; font-size: var(--fs-sm); padding: 0 12px; border-radius: var(--r-md); }
 .select.input-sm { padding-right: 30px; background-position: right 8px center; }
 .money { position: relative; }
 .money::before { content: "€"; position: absolute; left: 12px; top: 50%; translate: 0 -50%; color: var(--text-muted); pointer-events: none; font-size: var(--fs-sm); }
@@ -365,7 +385,8 @@ a:hover { color: var(--primary-hover); }
 .combo-list .muted { font-size: var(--fs-sm); }
 
 /* ---------- 6. Kaarten, tabellen, lijsten ---------- */
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--sh-1); min-width: 0; }
+/* Blokken zonder rand, met ronde hoeken, op de lila achtergrond */
+.card { background: var(--surface); border: 0; border-radius: var(--r-xl); min-width: 0; }
 .card-pad { padding: var(--s-5) var(--s-6); }
 .card-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); padding: var(--s-4) var(--s-5); border-bottom: 1px solid var(--border); }
 .card-head h2 { font-size: var(--fs-md); }
@@ -634,11 +655,18 @@ a:hover { color: var(--primary-hover); }
 }
 .actionbar .status { display: flex; align-items: center; gap: 8px; margin-right: auto; font-size: var(--fs-sm); color: var(--text-muted); }
 .actionbar .dot-unsaved { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+/* Het totaal in de balk: alleen op de telefoon, daar staat het rijtje totalen vaak buiten beeld. */
+.actionbar-total { display: none; }
 @media (max-width: 760px) {
   .actionbar { bottom: calc(62px + env(safe-area-inset-bottom)); padding: 10px var(--s-4); }
   .actionbar { flex-wrap: nowrap; }
   .actionbar .status { display: none; }
   .actionbar .btn { flex: 1; padding: 0 10px; }
+  /* Factuur maken: de balk neemt de plek van de tabbalk in, met het totaal erboven. */
+  body:has(.actionbar-editor) .tabbar { display: none; }
+  .actionbar-editor { bottom: 0; flex-wrap: wrap; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
+  .actionbar-total { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-2); flex-basis: 100%; }
+  .actionbar-total strong { font-size: var(--fs-lg); font-weight: var(--fw-heavy); }
 }
 /* Extra actions in the editor's bar. On a wide screen the popover's own box
    is dissolved (display: contents), so its buttons sit in the bar; on a
@@ -932,12 +960,12 @@ div.hint-banner:hover { border-color: var(--border); }
 /* Uitloggen is een POST-formulier (Django's LogoutView), geen link:
    de knop krijgt dezelfde vorm als de navigatielinks. */
 .nav .nav-button {
-  display: flex; align-items: center; gap: 11px; width: 100%; min-height: 34px; padding: 0 10px;
-  border: 0; border-radius: var(--r-md); background: none; cursor: pointer;
-  color: var(--text-muted); font: inherit; font-weight: var(--fw-medium); font-size: var(--fs-sm); text-align: left;
+  display: flex; align-items: center; gap: 11px; width: 100%; min-height: 34px; padding: 0 14px;
+  border: 0; border-radius: var(--r-pill); background: none; cursor: pointer;
+  color: var(--panel-text); font: inherit; font-weight: var(--fw-medium); font-size: var(--fs-sm); text-align: left;
   transition: background .15s, color .15s;
 }
-.nav .nav-button:hover { background: var(--surface-2); color: var(--text); }
+.nav .nav-button:hover { background: var(--panel-hover); color: var(--panel-text); }
 
 /* Taalwissel onder de inlogkaart: .login is een grid met place-items:center,
    dus de kaart en de wissel staan onder elkaar gecentreerd. */
