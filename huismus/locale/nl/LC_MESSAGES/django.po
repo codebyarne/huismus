@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-15 11:03+0100\n"
+"POT-Creation-Date: 2026-11-15 11:31+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -186,6 +186,22 @@ msgstr ""
 msgid ""
 "Vrijgesteld van btw op grond van de kleineondernemersregeling (KOR). Er is "
 "geen btw in rekening gebracht."
+msgstr ""
+
+msgid "Volgnummer van je volgende factuur"
+msgstr ""
+
+msgid ""
+"Kom je uit een ander pakket? Vul het volgnummer in dat na je laatste factuur "
+"komt."
+msgstr ""
+
+msgid "Volgnummer van je volgende offerte"
+msgstr ""
+
+msgid ""
+"Kom je uit een ander pakket? Vul het volgnummer in dat na je laatste offerte "
+"komt."
 msgstr ""
 
 msgid "Factuur"
@@ -1832,6 +1848,22 @@ msgstr ""
 msgid "[klantnummer]"
 msgstr ""
 
+msgid "Het volgnummer is minstens 1."
+msgstr ""
+
+msgid ""
+"Je hebt in Huismus al een nummer uitgegeven. Het nummer loopt nu vanzelf "
+"door."
+msgstr ""
+
+#, python-format
+msgid "Kies %(lowest)s of hoger. Een lager nummer bestaat al."
+msgstr ""
+
+#, python-format
+msgid "Nummer %(number)s bestaat al. Kies een hoger volgnummer."
+msgstr ""
+
 msgid "[nummer volgt]"
 msgstr ""
 
@@ -2335,7 +2367,8 @@ msgstr ""
 #, python-format
 msgid ""
 "%(unparsed)s van %(total)s geïmporteerde %(label)s passen niet in het "
-"ingestelde nummerformaat. Stel het volgende nummer zelf in bij Instellingen."
+"ingestelde nummerformaat. Stel het volgende nummer zelf in bij Instellingen "
+"→ Facturen en nummering."
 msgstr ""
 
 #, python-format
@@ -2895,6 +2928,16 @@ msgstr ""
 msgid "Instellen"
 msgstr ""
 
+#, python-format
+msgid "Volgende als je vandaag uitgeeft: %(number)s"
+msgstr ""
+
+msgid "Het nummer loopt vanzelf door sinds je eerste factuur in Huismus."
+msgstr ""
+
+msgid "Het nummer loopt vanzelf door sinds je eerste offerte in Huismus."
+msgstr ""
+
 msgid "De taal van nieuwe facturen kies je bij Facturen en nummering."
 msgstr ""
 
@@ -3272,10 +3315,6 @@ msgid "dagen"
 msgstr ""
 
 msgid "Standaard betalingstermijn"
-msgstr ""
-
-#, python-format
-msgid "Volgende als je vandaag uitgeeft: %(number)s"
 msgstr ""
 
 #, python-brace-format

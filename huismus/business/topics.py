@@ -77,6 +77,8 @@ TOPICS = (
             "invoice_number_format",
             "quote_number_format",
             "number_reset_yearly",
+            "next_invoice_number",
+            "next_quote_number",
             "default_language",
             "currency",
         ),

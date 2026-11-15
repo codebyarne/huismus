@@ -5,12 +5,21 @@ from decimal import Decimal
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import UploadedFile
+from django.db import transaction
 from django.utils.text import format_lazy
 from django.utils.translation import gettext_lazy as _
 
 from huismus.core.forms import EuroCentsField
 from huismus.documents import mail_texts
-from huismus.documents.numbering import format_number
+from huismus.documents.numbering import (
+    NumberingError,
+    check_next_sequence_number,
+    format_number,
+    next_sequence_number,
+    next_sequence_number_is_fixed,
+    set_next_sequence_number,
+    year_if_issued_today,
+)
 
 from . import smtp
 from .logo import validate_and_sanitize_logo
@@ -20,6 +29,22 @@ DEFAULT_KOR_TEXT = _(
     "Vrijgesteld van btw op grond van de kleineondernemersregeling (KOR). "
     "Er is geen btw in rekening gebracht."
 )
+
+
+# Not settings fields: they set the sequence (documents.numbering). Per
+# field the kind of sequence, label and help.
+NEXT_NUMBER_FIELDS = {
+    "next_invoice_number": (
+        "invoice",
+        _("Volgnummer van je volgende factuur"),
+        _("Kom je uit een ander pakket? Vul het volgnummer in dat na je laatste factuur komt."),
+    ),
+    "next_quote_number": (
+        "quote",
+        _("Volgnummer van je volgende offerte"),
+        _("Kom je uit een ander pakket? Vul het volgnummer in dat na je laatste offerte komt."),
+    ),
+}
 
 
 # Instellingen → Mailen: a subject and a body per kind and language.
@@ -254,3 +279,59 @@ class SettingsPartForm(SettingsForm):
         for name in list(self.fields):
             if name not in fields:
                 del self.fields[name]
+        # The next number by hand (issue #141), where the fields name it
+        # (Facturen en nummering, the start's Facturen step), and only for a
+        # kind Huismus never gave a number yet (invariant 3).
+        year = year_if_issued_today(self.instance.number_reset_yearly)
+        self.fixed_sequences = {}
+        for name, (kind, label, help_text) in NEXT_NUMBER_FIELDS.items():
+            if name not in fields:
+                continue
+            self.fixed_sequences[kind] = next_sequence_number_is_fixed(kind)
+            if not self.fixed_sequences[kind]:
+                self.fields[name] = forms.IntegerField(
+                    label=label,
+                    help_text=help_text,
+                    min_value=1,
+                    # Empty keeps the number as it is.
+                    required=False,
+                    initial=next_sequence_number(kind, year=year),
+                )
+
+    def _next_numbers(self):
+        """(kind, format, year, value) per next-number field in the form,
+        from what the form saves: the number format and yearly reset may
+        change in the same save."""
+        reset_yearly = self.cleaned_data.get(
+            "number_reset_yearly", self.instance.number_reset_yearly
+        )
+        year = year_if_issued_today(reset_yearly)
+        for name, (kind, _label, _help) in NEXT_NUMBER_FIELDS.items():
+            value = self.cleaned_data.get(name)
+            template = self.cleaned_data.get(f"{kind}_number_format") or getattr(
+                self.instance, f"{kind}_number_format"
+            )
+            if name in self.fields and value is not None:
+                yield name, kind, template, year, value
+
+    def clean(self):
+        cleaned = super().clean()
+        if not self.errors:
+            for name, kind, template, year, value in self._next_numbers():
+                if value == next_sequence_number(kind, year=year):
+                    continue
+                try:
+                    check_next_sequence_number(kind, template, year=year, value=value)
+                except NumberingError as error:
+                    self.add_error(name, str(error))
+        return cleaned
+
+    def save(self, commit=True):
+        """With the next numbers, in one transaction: a refusal (an invoice
+        issued since the check in clean()) leaves the settings unsaved too.
+        Raises NumberingError then; the view shows it."""
+        with transaction.atomic():
+            instance = super().save(commit)
+            for _name, kind, template, year, value in self._next_numbers():
+                set_next_sequence_number(kind, template, year=year, value=value)
+        return instance
