@@ -40,6 +40,15 @@ staat al ingevuld met wat er nog openstaat. Een deel betalen kan ook.
 Het overzicht laat zien wat er in totaal openstaat en welke facturen te laat
 zijn.
 
+## Een herinnering sturen
+
+Is een factuur te laat, dan zie je op de factuur hoeveel dagen, en staat
+bovenaan **Herinnering sturen**. Je krijgt een mail met de factuur als
+bijlage en een tekst die zegt wat er nog openstaat. Pas aan wat je wilt en
+klik op **Versturen**. Daarna zie je op de factuur wanneer je de laatste
+herinnering stuurde. Huismus stuurt nooit zelf een herinnering. De tekst stel
+je in bij [Mailen](mailen.nl.md).
+
 ## Iets corrigeren
 
 Een uitgegeven factuur verander je niet meer. Klopt er iets niet, maak dan
