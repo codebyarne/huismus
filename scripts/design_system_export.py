@@ -33,7 +33,7 @@ COMPONENTS = {
     "knoppen": (
         "Button",
         "Acties",
-        "Knoppen: primair (violet) voor de ene hoofdactie, secundair (wit) en ghost "
+        "Knoppen: primair (petrol) voor de ene hoofdactie, secundair (wit) en ghost "
         "(kaal) voor de rest, danger (rood) alleen voor verwijderen.\n\n"
         "- Eén primaire knop per scherm of dialoog.\n"
         "- Snavelgeel is nooit een knop.\n"
@@ -64,7 +64,7 @@ COMPONENTS = {
         "statuskleur.\n\n"
         "- `.is-bad` (rood): over de KOR-grens, iets is mislukt.\n"
         "- `.is-warn` (amber): let op.\n"
-        "- `.is-info` (violet): informatie, zoals een nieuwe versie.\n"
+        "- `.is-info` (petrol): informatie, zoals een nieuwe versie.\n"
         "- Zonder klasse (snavelgeel): een herinnering, zoals een open concept.\n"
         "- Na een actie: `.flash` bovenaan de pagina of `.toast` rechtsboven; "
         "foutmeldingen blijven staan.",
@@ -85,7 +85,7 @@ COMPONENTS = {
         "kaarten; elke cel krijgt `data-cell`.\n\n"
         "- Concepten tonen `Concept` in plaats van een nummer.\n"
         "- Bedragen rechts, met tabulaire cijfers.\n"
-        "- De violette KPI-kaart (`.kpi-hero`) is er één per scherm: openstaand.",
+        "- De KPI-kaart (`.kpi-hero`) is er één per scherm: openstaand.",
     ),
     "leeg": (
         "EmptyState",
@@ -148,8 +148,8 @@ COVER = """<!-- @dsCard height=288 -->
     <rect class="sky" x="528" y="216" width="72" height="24" rx="12"/>
   </svg>
   <p class="name">Huismus</p>
-  <p class="tag">Facturen voor zzp'ers onder de KOR. Vandaag: violet en snavelgeel
-    op neutralen met een zweem violet.</p>
+  <p class="tag">Facturen voor zzp'ers onder de KOR. Petrol en snavelgeel
+    op warme neutralen.</p>
 </div>
 """
 
@@ -214,7 +214,7 @@ COLOR_USAGE = {
     "primary": "Primaire knop, actieve navigatie, focus. Ochtendlucht.",
     "primary-hover": "Hover van de primaire knop.",
     "on-primary": "Tekst op --primary.",
-    "primary-soft": "Zacht violet vlak (gekozen item, informatie), met --primary-ink.",
+    "primary-soft": "Zacht petrol vlak (gekozen item, informatie), met --primary-ink.",
     "primary-ink": "Tekst en links op --primary-soft en op de pagina.",
     "ring": "Focusring.",
     "accent": "Snavelgeel: snavel, KOR-balk, herinnering, kosten in grafieken. Nooit een knop.",
@@ -389,8 +389,8 @@ def readme(commit):
     return f"""# Huismus
 
 Self-hosted facturatie voor Nederlandse zzp'ers onder de KOR. Eén gebruiker, op een
-Raspberry Pi, laptop en telefoon. Richting **Vandaag**: violet en snavelgeel op
-neutralen met een zweem violet.
+Raspberry Pi, laptop en telefoon. Richting **Verfijnd**: petrol en snavelgeel op
+warme neutralen.
 
 > Dit Design System is een **kopie**. De bron is `huismus/core/static/core/huismus.css` in
 > `codebyarne/huismus`, de componenten staan op `docs/design/componenten.html`.
@@ -402,8 +402,8 @@ neutralen met een zweem violet.
 1. **Kleur alleen waar je iets moet doen; de rest is rustig.** Te laat, over de
    KOR-grens: een gekleurd vlak (`--bad-bg`, `--warn-bg`). Betaald, definitief,
    afgerond: alleen een vinkje of slotje in `--text-muted`. Zo valt het ene belangrijke op.
-2. **Vandaag.** `--primary` (violet) voor acties, `--accent` (snavelgeel) voor
-   highlights en herinneringen, neutralen met een zweem violet (`--bg`, `--surface`)
+2. **Petrol.** `--primary` (petrol) voor acties, `--accent` (snavelgeel) voor
+   highlights en herinneringen, warme neutralen (`--bg`, `--surface`)
    voor de rest. Geen nieuwe kleuren of lettertypes zonder besluit.
 3. **Snavelgeel is nooit een knop.**
 4. **Uitgegeven is definitief.** Geen invoervelden, een slotje. Concepten hebben geen nummer.
