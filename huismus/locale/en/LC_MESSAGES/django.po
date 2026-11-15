@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-15 09:39+0100\n"
+"POT-Creation-Date: 2026-11-15 10:23+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1652,6 +1652,15 @@ msgstr "Paid"
 msgid "Creditnota's"
 msgstr "Credit notes"
 
+msgid "Te laat"
+msgstr "Overdue"
+
+msgid "Wacht op betaling"
+msgstr "Waiting for payment"
+
+msgid "Nog niet verstuurd"
+msgstr "Not sent yet"
+
 msgid "Wachten op antwoord"
 msgstr "Awaiting reply"
 
@@ -2849,6 +2858,18 @@ msgstr "costs"
 msgid "%(quarter)se kwartaal %(year)s"
 msgstr "Q%(quarter)s %(year)s"
 
+msgid "jan–mrt"
+msgstr "Jan–Mar"
+
+msgid "apr–jun"
+msgstr "Apr–Jun"
+
+msgid "jul–sep"
+msgstr "Jul–Sep"
+
+msgid "okt–dec"
+msgstr "Oct–Dec"
+
 msgid "Kwartaal"
 msgstr "Quarter"
 
@@ -2870,8 +2891,18 @@ msgstr "No category"
 msgid "Navigatie"
 msgstr "Navigation"
 
-msgid "Nieuw"
-msgstr "New"
+msgid "Je krijgt nog"
+msgstr "Still to receive"
+
+#, python-format
+msgid "%(amount)s is te laat"
+msgstr "%(amount)s is overdue"
+
+msgid "Niets openstaand"
+msgstr "Nothing outstanding"
+
+msgid "Nieuwe factuur"
+msgstr "New invoice"
 
 msgid "Hoofdmenu"
 msgstr "Main menu"
@@ -2896,6 +2927,9 @@ msgstr "Help"
 
 msgid "Uitloggen"
 msgstr "Log out"
+
+msgid "Nieuw"
+msgstr "New"
 
 msgid "Meer"
 msgstr "More"
@@ -3862,9 +3896,6 @@ msgstr "%(done)s of %(total)s done"
 msgid "Doen"
 msgstr "Start"
 
-msgid "Nieuwe factuur"
-msgstr "New invoice"
-
 #, python-format
 msgid ""
 "Je omzet in %(year)s (%(revenue)s) is hoger dan je KOR-grens van %(limit)s."
@@ -3915,6 +3946,15 @@ msgstr "without customer"
 
 msgid "Verder werken"
 msgstr "Continue"
+
+msgid "Nog geen facturen"
+msgstr "No invoices yet"
+
+msgid "Maak je eerste factuur. Of zet je administratie over uit Moneybird."
+msgstr "Make your first invoice. Or move your records over from Moneybird."
+
+msgid "Maak je eerste factuur"
+msgstr "Create your first invoice"
 
 #, python-format
 msgid "waarvan %(count)s te laat"
@@ -4656,14 +4696,8 @@ msgstr ""
 "Invoices and credit notes. An issued invoice is final. To correct it, make a "
 "credit note."
 
-msgid "Nog geen facturen"
-msgstr "No invoices yet"
-
 msgid "Maak je eerste factuur. Hij blijft een concept tot je hem uitgeeft."
 msgstr "Create your first invoice. It stays a draft until you issue it."
-
-msgid "Maak je eerste factuur"
-msgstr "Create your first invoice"
 
 msgid "Zoeken in facturen"
 msgstr "Search invoices"
@@ -4674,14 +4708,35 @@ msgstr "Search by number or customer"
 msgid "Alle jaren"
 msgstr "All years"
 
-msgid "Soort"
-msgstr "Kind"
-
 msgid "Status"
 msgstr "Status"
 
+msgid "Bedrag"
+msgstr "Amount"
+
 msgid "Nog geen klant"
 msgstr "No customer yet"
+
+msgid "Deels betaald"
+msgstr "Partly paid"
+
+msgid "vandaag te betalen"
+msgstr "due today"
+
+msgid "Vandaag te betalen"
+msgstr "Due today"
+
+#, python-format
+msgid "nog %(days)s dag"
+msgid_plural "nog %(days)s dagen"
+msgstr[0] "%(days)s day left"
+msgstr[1] "%(days)s days left"
+
+#, python-format
+msgid "Nog %(days)s dag"
+msgid_plural "Nog %(days)s dagen"
+msgstr[0] "%(days)s day left"
+msgstr[1] "%(days)s days left"
 
 #, python-format
 msgid "%(shown)s van %(total)s factuur"
@@ -5009,9 +5064,6 @@ msgstr "All expenses"
 
 msgid "Leverancier"
 msgstr "Supplier"
-
-msgid "Bedrag"
-msgstr "Amount"
 
 msgid "Met bonnetje"
 msgstr "With receipt"
@@ -5636,6 +5688,21 @@ msgstr "Download CSV"
 msgid "KOR-instellingen"
 msgstr "KOR settings"
 
+#, python-format
+msgid "Omzet in %(year)s"
+msgstr "Revenue in %(year)s"
+
+#, python-format
+msgid "van %(limit)s, je KOR-grens"
+msgstr "of %(limit)s, your KOR limit"
+
+msgid "Per kwartaal"
+msgstr "Per quarter"
+
+#, python-format
+msgid "Omzet per kwartaal in %(year)s"
+msgstr "Revenue per quarter in %(year)s"
+
 msgid "De omzet en btw uit je facturen en uitgaven, per rubriek."
 msgstr "Revenue and VAT from your invoices and expenses, per box."
 
@@ -5726,9 +5793,6 @@ msgstr "%(revenue)s of %(limit)s"
 msgid "Gemeten met je huidige KOR-grens van %(limit)s."
 msgstr "Measured against your current KOR limit of %(limit)s."
 
-msgid "Per kwartaal"
-msgstr "Per quarter"
-
 msgid "Staafgrafiek omzet en kosten per kwartaal"
 msgstr "Bar chart of revenue and costs per quarter"
 
@@ -5739,18 +5803,6 @@ msgstr "Revenue Q%(q)s: %(amount)s"
 #, python-format
 msgid "Kosten Q%(q)s: %(amount)s"
 msgstr "Costs Q%(q)s: %(amount)s"
-
-msgid "jan–mrt"
-msgstr "Jan–Mar"
-
-msgid "apr–jun"
-msgstr "Apr–Jun"
-
-msgid "jul–sep"
-msgstr "Jul–Sep"
-
-msgid "okt–dec"
-msgstr "Oct–Dec"
 
 msgid "Kosten zonder btw per categorie"
 msgstr "Costs excluding VAT by category"
@@ -6577,6 +6629,9 @@ msgid ""
 msgstr ""
 "If you have a Raspberry Pi, a NAS, your own server or a VPS, you can also "
 "run Huismus in Docker. That is for people who are handy with that."
+
+#~ msgid "Soort"
+#~ msgstr "Kind"
 
 #~ msgid "Wat Huismus (nog) niet doet"
 #~ msgstr "What Huismus doesn't do (yet)"
