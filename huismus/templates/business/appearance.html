@@ -11,7 +11,7 @@ theme on <html> and the new language apply at once (core.appearance_views).{% en
     {% csrf_token %}
     <div class="page-head">
         <div class="titles">
-            <a class="small" href="{% url 'business:overview' %}">← {% translate "Instellingen" %}</a>
+            <a class="back" href="{% url 'business:overview' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Instellingen" %}</a>
             <h1>{% translate "Weergave" %}</h1>
             <p class="lede">{% translate "Taal en thema van Huismus. Je facturen veranderen niet." %}</p>
         </div>

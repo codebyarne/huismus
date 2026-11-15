@@ -120,7 +120,10 @@ def cards(settings: Settings, theme: str = "") -> list[dict]:
     """The overview: per topic its line and, where it says something, a pill
     (its text and huismus.css class). theme: the signed-in user's, for the
     card Weergave."""
-    ok, warn, off = "pill-on", "pill-unpaid", "pill-expired"
+    # Quiet text, never a coloured pill: a tick for on, grey for off, the
+    # warning sign where you have to do something (huismus-intern/besluiten.md,
+    # 2026-11-15). Only "te laat" has a colour.
+    ok, warn, off = "state-on", "state-attention", "state-off"
     # A context of their own: "Aan" is also "To" (a mail's recipient).
     on_text, off_text = pgettext_lazy("setting", "Aan"), pgettext_lazy("setting", "Uit")
     summary = {}
@@ -190,7 +193,7 @@ def _backups_card(ok, off) -> dict:
     if not status.folder and not cloud.service:
         line, pill = _("Nog geen map gekozen"), (pgettext_lazy("setting", "Uit"), off)
     elif status.failed or (cloud.service and cloud.failed):
-        line, pill = _("De laatste back-up is mislukt"), (_("Mislukt"), "pill-overdue")
+        line, pill = _("De laatste back-up is mislukt"), (_("Mislukt"), "state-attention")
     else:
         line = _("Laatste back-up: %(moment)s") % {"moment": moment(last)} if last else ""
         pill = (pgettext_lazy("setting", "Aan"), ok)
@@ -211,7 +214,7 @@ def _receipts_folder_card(ok, off) -> dict:
     if not inbox.is_on(status):
         line, pill = _("Nog geen map gekozen"), (pgettext_lazy("setting", "Uit"), off)
     elif status.failed:
-        line, pill = _("Ophalen is mislukt"), (_("Mislukt"), "pill-overdue")
+        line, pill = _("Ophalen is mislukt"), (_("Mislukt"), "state-attention")
     else:
         line, pill = inbox.place(status), (pgettext_lazy("setting", "Aan"), ok)
     return {
@@ -228,9 +231,12 @@ def _receipt_reading_card(ok, off) -> dict:
     """Bonnetjes lezen (SPEC.md M20, part 3, expenses.reading_views): the
     user's own AI service turns receipts into expenses to check."""
     if not ai_service.is_on():
-        line, pill = _("Nog geen dienst gekozen"), (pgettext_lazy("setting", "Uit"), off)
+        # The overview shows no intro, so the line says what goes here: your
+        # own API key (BUGS-BY-HAND.md, 2026-11-07).
+        line = _("Nog geen AI-dienst met API-sleutel")
+        pill = (pgettext_lazy("setting", "Uit"), off)
     elif reading.failure_sentence():
-        line, pill = _("Lezen is mislukt"), (_("Mislukt"), "pill-overdue")
+        line, pill = _("Lezen is mislukt"), (_("Mislukt"), "state-attention")
     else:
         line = _("Met %(service)s") % {"service": ai_service.name()}
         pill = (pgettext_lazy("setting", "Aan"), ok)
@@ -267,7 +273,7 @@ def _assistants_card(ok, off) -> dict:
     elif assistant_key.is_used():
         line, pill = "", (_("Gekoppeld"), ok)
     else:
-        line, pill = "", (_("Wacht op verbinding"), "pill-sent")
+        line, pill = "", (_("Wacht op verbinding"), "state-wait")
     return {
         "title": _("AI-assistenten"),
         "intro": _("Laat een AI-assistent met je administratie werken."),
@@ -335,3 +341,44 @@ def _appearance_card(theme) -> dict:
         "line": f"{language_name(get_language())} · {dict(THEME_CHOICES)[theme]}",
         "pill": None,
     }
+
+
+# The overview's groups, in this order; within a group the cards keep the
+# order of cards() (huismus-intern/besluiten.md, 2026-11-15).
+GROUPS = (
+    (_("Bedrijf en facturen"), ("bedrijf", "kor", "facturen", "huisstijl", "mailen")),
+    (_("Bonnetjes"), ("bonnetjesmap", "bonnetjes-lezen")),
+    (_("Back-ups en export"), ("back-ups", "exporteren")),
+    (_("Huismus"), ("ai-assistenten", "updates", "wachtwoord", "weergave")),
+)
+
+# An icon per card, from huismus/templates/icons.svg.
+ICONS = {
+    "bedrijf": "building",
+    "kor": "percent",
+    "facturen": "hash",
+    "huisstijl": "image",
+    "mailen": "mail",
+    "bonnetjesmap": "folder",
+    "bonnetjes-lezen": "sparkles",
+    "back-ups": "archive",
+    "exporteren": "download",
+    "ai-assistenten": "chat",
+    "updates": "refresh",
+    "wachtwoord": "lock",
+    "weergave": "sun",
+}
+
+
+def grouped(cards: list[dict]) -> list[tuple[str, list[dict]]]:
+    """The cards in their groups, each with its icon; a group without a
+    card on this installation is left out."""
+    by_slug = {card["slug"]: {**card, "icon": ICONS[card["slug"]]} for card in cards}
+    result = []
+    for title, slugs in GROUPS:
+        members = [by_slug.pop(slug) for slug in slugs if slug in by_slug]
+        if members:
+            result.append((title, members))
+    if by_slug:  # a card that has no group yet: last, never lost
+        result[-1][1].extend(by_slug.values())
+    return result

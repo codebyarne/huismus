@@ -10,9 +10,10 @@
 :root {
   color-scheme: light dark;
 
-  /* Typografie: de ronde systeemletter waar die er is, anders de gewone
-     (offline, geen webfont) */
-  --font-sans: ui-rounded, "SF Pro Rounded", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
+  /* Typografie: de gewone systeemletter voor alle tekst; de ronde alleen voor
+     koppen en grote bedragen (offline, geen webfont; ontwerp "Verfijnd", 2026-11-15) */
+  --font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
+  --font-display: ui-rounded, "SF Pro Rounded", var(--font-sans);
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --fs-xs: 0.75rem;    /* 12 */
   --fs-sm: 0.8125rem;  /* 13 */
@@ -34,22 +35,25 @@
   /* Radius */
   --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-xl: 20px; --r-pill: 999px;
 
-  /* Neutralen: verenkleed van de mus */
-  --bg:            light-dark(#F1ECFD, #0F0B1E);
-  --surface:       light-dark(#FFFFFF, #1B1533);
-  --surface-2:     light-dark(#EAE3FA, #2A2150);
-  --surface-3:     light-dark(#DDD3F5, #362B63);
-  --border:        light-dark(#D9CFF5, #3A2F66);
-  --border-strong: light-dark(#B9ABE3, #55488A);
-  --text:          light-dark(#1A1530, #F0EDFA);
-  --text-muted:    light-dark(#585170, #ACA3CC);
+  /* Neutralen: bijna wit met een zweem violet; witte vlakken met een dunne rand
+     (ontwerp "Verfijnd", de eigenaar, 2026-11-15) */
+  --bg:            light-dark(#F8F7FB, #121019);
+  --surface:       light-dark(#FFFFFF, #1A1726);
+  --surface-2:     light-dark(#F2F0F7, #221E31);
+  --surface-3:     light-dark(#E7E4EF, #2C283D);
+  --border:        light-dark(#E7E4EF, #2C283D);
+  --border-strong: light-dark(#D3CEE0, #423C5A);
+  /* De rand van een invoerveld haalt 3 : 1 tegen vlak en achtergrond (huismus-intern/besluiten.md, 2026-11-15). */
+  --field-border:  light-dark(#8A859C, #746D90);
+  --text:          light-dark(#1B1730, #EFEDF6);
+  --text-muted:    light-dark(#615C72, #A8A2BC);
   --paper:         light-dark(#FFFFFF, #1F1838);
 
   /* Primair: ochtendlucht */
   --primary:       light-dark(#6B3FD9, #A98BF5);
   --primary-hover: light-dark(#5B30C8, #B9A0F8);
   --on-primary:    light-dark(#FFFFFF, #160A38);
-  --primary-soft:  light-dark(#E6DEFA, #2A2150);
+  --primary-soft:  light-dark(#EFEAFD, #2A2448);
   --primary-ink:   light-dark(#5229BF, #BBA3F8);
   --ring:          light-dark(rgb(107 63 217 / .32), rgb(169 139 245 / .42));
 
@@ -72,7 +76,7 @@
   --ok:       light-dark(#1E7A45, #7AD6A0);  --ok-bg:    light-dark(#E2F3E8, #1D3326);
   --warn:     light-dark(#855000, #FFC766);  --warn-bg:  light-dark(#FDF0D5, #33270F);
   --bad:      light-dark(#B4184F, #FF8FB1);  --bad-bg:   light-dark(#FCE6EE, #3D1326);
-  --draft:    light-dark(#585170, #ACA3CC);  --draft-bg: light-dark(#EAE3FA, #2A2150);
+  --draft:    light-dark(#615C72, #A8A2BC);  --draft-bg: light-dark(#F2F0F7, #221E31);
   --danger:       light-dark(#B4184F, #FF8FB1);
   --danger-hover: light-dark(#96113F, #FFB0C8);
   --on-danger:    light-dark(#FFFFFF, #33061D);
@@ -86,13 +90,11 @@
   --overlay: rgb(15 11 30 / .42);
 
   /* Maten */
-  --sidebar-w: 288px;
+  --sidebar-w: 240px;
   --content-max: 1120px;
   --control-h: 40px;
   --ease: cubic-bezier(.2, .7, .2, 1);
 }
-/* Op een middelbreed scherm (een laptop van 1024) houdt de inhoud genoeg ruimte. */
-@media (max-width: 1200px) { :root { --sidebar-w: 248px; } }
 :root[data-theme="dark"]  { color-scheme: dark; }
 :root[data-theme="light"] { color-scheme: light; }
 
@@ -105,7 +107,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 h1, h2, h3, h4 { margin: 0; line-height: var(--lh-tight); font-weight: var(--fw-semibold); letter-spacing: -0.015em; text-wrap: balance; }
-h1 { font-size: var(--fs-2xl); font-weight: var(--fw-bold); letter-spacing: -0.022em; }
+h1 { font-family: var(--font-display); font-size: var(--fs-2xl); font-weight: var(--fw-bold); letter-spacing: -0.022em; }
 h2 { font-size: var(--fs-lg); }
 h3 { font-size: var(--fs-md); }
 p { margin: 0; text-wrap: pretty; }
@@ -125,10 +127,12 @@ a:hover { color: var(--primary-hover); }
 .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-5); }
 .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-5); }
 .split { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: var(--s-5); align-items: start; }
+/* Overzicht: Laatste facturen is een tabel met lange klantnamen, dus breder (ontwerp "Verfijnd"). */
+.split.split-wide { grid-template-columns: minmax(0, 2.3fr) minmax(0, 1fr); }
 .split-rev { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: var(--s-6); align-items: start; }
 .split-even { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: var(--s-6); align-items: start; }
 @media (max-width: 980px) { .split-rev > .aside-first { order: -1; } }
-@media (max-width: 980px) { .grid-3 { grid-template-columns: 1fr 1fr; } .grid-3 > :first-child { grid-column: 1 / -1; } .split, .split-rev, .split-even { grid-template-columns: 1fr; } }
+@media (max-width: 980px) { .grid-3 { grid-template-columns: 1fr 1fr; } .grid-3 > :first-child { grid-column: 1 / -1; } .split, .split.split-wide, .split-rev, .split-even { grid-template-columns: 1fr; } }
 @media (max-width: 760px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
 
 .i { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
@@ -160,18 +164,18 @@ a:hover { color: var(--primary-hover); }
 .sidebar {
   position: sticky; top: 0; height: 100vh; overflow-y: auto;
   display: flex; flex-direction: column; gap: var(--s-4);
-  padding: var(--s-6) var(--s-5); background: var(--panel); color: var(--panel-text);
+  padding: var(--s-5) var(--s-4); background: var(--panel); color: var(--panel-text);
   /* De mus in wit op het vlak, met een lichte vleugel en het oog in de kleur van het vlak */
   --mark-body: var(--panel-text); --mark-wing-fill: var(--panel-wing); --mark-eye: var(--panel);
 }
 .sidebar :focus-visible { outline-color: var(--panel-text); }
 .sidebar > * { flex-shrink: 0; }
-.brand { display: flex; align-items: center; gap: 10px; padding: 2px 10px; color: inherit; text-decoration: none; font-weight: var(--fw-bold); font-size: 1.375rem; letter-spacing: -0.02em; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 2px 8px; color: inherit; text-decoration: none; font-family: var(--font-display); font-weight: var(--fw-bold); font-size: 1.25rem; letter-spacing: -0.02em; }
 .brand:hover { color: inherit; }
 .nav { display: flex; flex-direction: column; gap: 2px; }
 .nav a {
-  display: flex; align-items: center; gap: 11px; min-height: 40px; padding: 0 14px; border-radius: var(--r-pill);
-  color: var(--panel-text); text-decoration: none; font-weight: var(--fw-medium); font-size: 0.90625rem;
+  display: flex; align-items: center; gap: 11px; min-height: 38px; padding: 0 12px; border-radius: 8px;
+  color: var(--panel-text); text-decoration: none; font-weight: 500; font-size: 0.90625rem;
   transition: background .15s, color .15s;
 }
 .nav a:hover { background: var(--panel-hover); color: var(--panel-text); }
@@ -196,12 +200,6 @@ a:hover { color: var(--primary-hover); }
 .sidebar .btn-primary:hover { background: color-mix(in oklab, var(--panel-text) 88%, var(--panel)); }
 .sidebar .btn-quiet { --btn-bg: transparent; --btn-fg: var(--panel-text); --btn-bd: var(--panel-line); }
 .sidebar .btn-quiet:hover { background: var(--panel-hover); }
-/* "Je krijgt nog" bovenin het vlak */
-.panel-owed { display: flex; flex-direction: column; gap: 2px; padding: var(--s-3) 10px var(--s-2); color: inherit; text-decoration: none; border-radius: var(--r-lg); }
-.panel-owed:hover { color: inherit; background: var(--panel-hover); }
-.panel-owed-label, .panel-owed-sub { color: var(--panel-muted); font-size: var(--fs-sm); }
-.panel-owed-amount { font-size: 1.75rem; font-weight: var(--fw-bold); letter-spacing: -0.025em; line-height: 1.2; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.panel-owed-sub:empty { display: none; }
 #plus-menu { inset: auto 0 calc(72px + env(safe-area-inset-bottom)); margin: 0 auto; }
 #meer-menu { inset: auto 12px calc(72px + env(safe-area-inset-bottom)) auto; max-height: calc(100dvh - 140px); overflow-y: auto; }
 
@@ -263,7 +261,7 @@ a:hover { color: var(--primary-hover); }
 .btn {
   --btn-bg: var(--surface); --btn-fg: var(--text); --btn-bd: var(--border-strong);
   position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  height: var(--control-h); padding: 0 18px; border-radius: var(--r-pill);
+  height: var(--control-h); padding: 0 16px; border-radius: var(--r-md);
   background: var(--btn-bg); color: var(--btn-fg); border: 1px solid var(--btn-bd);
   font: var(--fw-semibold) 0.9375rem/1 var(--font-sans); letter-spacing: .005em; white-space: nowrap;
   text-decoration: none; cursor: pointer; user-select: none;
@@ -272,7 +270,7 @@ a:hover { color: var(--primary-hover); }
 .btn:hover { background: var(--surface-2); color: var(--btn-fg); }
 .btn:active { transform: translateY(1px); }
 .btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--ring); }
-.btn-primary { --btn-bg: var(--primary); --btn-fg: var(--on-primary); --btn-bd: transparent; box-shadow: var(--sh-1); }
+.btn-primary { --btn-bg: var(--primary); --btn-fg: var(--on-primary); --btn-bd: transparent; }
 .btn-primary:hover { background: var(--primary-hover); }
 .btn-secondary { /* standaard */ }
 .btn-ghost { --btn-bg: transparent; --btn-bd: transparent; --btn-fg: var(--text); }
@@ -318,13 +316,13 @@ a:hover { color: var(--primary-hover); }
 .input, .select, .textarea {
   width: 100%; height: var(--control-h); padding: 0 12px;
   font: inherit; font-size: var(--fs-md); color: var(--text);
-  background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--r-lg);
+  background: var(--surface); border: 1px solid var(--field-border); border-radius: var(--r-md);
   transition: border-color .15s, box-shadow .15s, background .15s;
 }
 /* Pseudo-elementen lossen light-dark() niet overal op. currentColor is hier de tekstkleur van het veld,
    al opgelost; 62% daarvan haalt 4,5 : 1 op het veld, in licht en donker. */
 .input::placeholder, .textarea::placeholder, .palette-search input::placeholder { color: color-mix(in oklab, currentColor 62%, transparent); opacity: 1; }
-.input:hover, .select:hover, .textarea:hover { border-color: color-mix(in oklab, var(--border-strong) 60%, var(--text)); }
+.input:hover, .select:hover, .textarea:hover { border-color: color-mix(in oklab, var(--field-border) 60%, var(--text)); }
 .input:focus, .select:focus, .textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--ring); }
 .input[aria-invalid="true"], .select[aria-invalid="true"], .textarea[aria-invalid="true"] { border-color: var(--danger); background: color-mix(in oklab, var(--bad-bg) 45%, var(--surface)); }
 .input[aria-invalid="true"]:focus { box-shadow: 0 0 0 3px var(--danger-ring); }
@@ -393,14 +391,14 @@ a:hover { color: var(--primary-hover); }
 .combo-list .muted { font-size: var(--fs-sm); }
 
 /* ---------- 6. Kaarten, tabellen, lijsten ---------- */
-/* Blokken zonder rand, met ronde hoeken, op de lila achtergrond */
-.card { background: var(--surface); border: 0; border-radius: var(--r-xl); min-width: 0; }
+/* Witte vlakken met een dunne rand op de bijna witte achtergrond (ontwerp "Verfijnd", 2026-11-15) */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); min-width: 0; }
 .card-pad { padding: var(--s-5) var(--s-6); }
-.card-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); padding: var(--s-4) var(--s-5) var(--s-2); }
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); padding: 14px var(--s-5); border-bottom: 1px solid var(--border); }
 .card-head h2 { font-size: var(--fs-md); }
 .card-foot { padding: var(--s-3) var(--s-5) var(--s-4); font-size: var(--fs-sm); }
 /* Een kopje per groep in een lijst (Te laat, Wacht op betaling, ...) */
-.list-group-title { padding: var(--s-5) var(--s-5) var(--s-2); font-size: var(--fs-md); font-weight: var(--fw-bold); }
+.list-group-title { padding: var(--s-4) var(--s-5) 6px; font-size: var(--fs-sm); font-weight: var(--fw-semibold); }
 .imported { display: block; }
 .section-title { font-size: var(--fs-lg); margin-bottom: var(--s-3); }
 .divider { height: 1px; background: var(--border); border: 0; margin: var(--s-6) 0; }
@@ -411,7 +409,7 @@ a:hover { color: var(--primary-hover); }
 .table { width: 100%; border-collapse: collapse; font-size: var(--fs-md); }
 .table th { text-align: left; font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--text-muted); padding: 11px 16px; border-bottom: 1px solid var(--border); white-space: nowrap; }
 /* Lijnen tussen rijen: zacht, zodat een lijst rustig blijft. */
-.table td { padding: 14px 16px; border-bottom: 1px solid color-mix(in oklab, var(--border) 55%, transparent); vertical-align: middle; }
+.table td { padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
 /* Op de telefoon: een tabel met bedragen naast elkaar (zoals het jaaroverzicht) krijgt
    kleinere letters en minder ruimte, zodat er meer kolommen in beeld passen. */
 @media (max-width: 760px) {
@@ -435,25 +433,47 @@ a:hover { color: var(--primary-hover); }
 /* Mobiel: rijen stapelen tot kaarten */
 /* 720: met de letter van 16 px past een rij van vijf kolommen daaronder niet meer naast elkaar. */
 @container (max-width: 720px) {
-  .table.stackable thead { display: none; }
-  .table.stackable tbody tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3px 12px; padding: 13px 16px; border-bottom: 1px solid var(--border); }
-  .table.stackable tbody tr:last-child { border-bottom: 0; }
-  .table.stackable td { padding: 0; border: 0; }
-  .table.stackable td[data-cell="primary"] { grid-column: 1; grid-row: 1; font-size: var(--fs-md); }
-  .table.stackable td[data-cell="secondary"] { grid-column: 1; grid-row: 2; font-size: var(--fs-sm); color: var(--text-muted); text-align: left; }
-  .table.stackable tr.is-editing { background: var(--primary-soft); }
-  .table.stackable tr.is-editing td { background: none; }
-  .table.stackable td[data-cell="order"] { grid-column: 1; grid-row: 3; text-align: left; }
+  .table.stackable:not(.stackable-narrow) thead { display: none; }
+  .table.stackable:not(.stackable-narrow) tbody tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3px 12px; padding: 13px 16px; border-bottom: 1px solid var(--border); }
+  .table.stackable:not(.stackable-narrow) tbody tr:last-child { border-bottom: 0; }
+  .table.stackable:not(.stackable-narrow) td { padding: 0; border: 0; }
+  .table.stackable:not(.stackable-narrow) td[data-cell="primary"] { grid-column: 1; grid-row: 1; font-size: var(--fs-md); }
+  .table.stackable:not(.stackable-narrow) td[data-cell="secondary"] { grid-column: 1; grid-row: 2; font-size: var(--fs-sm); color: var(--text-muted); text-align: left; }
+  .table.stackable:not(.stackable-narrow) tr.is-editing { background: var(--primary-soft); }
+  .table.stackable:not(.stackable-narrow) tr.is-editing td { background: none; }
+  .table.stackable:not(.stackable-narrow) td[data-cell="order"] { grid-column: 1; grid-row: 3; text-align: left; }
   /* Het veld heeft hier geen kolomkop meer: het label (sr-only) wordt zichtbaar. */
-  .table.stackable td[data-cell="order"] > label { position: static; width: auto; height: auto; overflow: visible; clip: auto; font-size: var(--fs-sm); color: var(--text-muted); margin-right: 8px; }
-  .table.stackable td[data-cell="amount"] { grid-column: 2; grid-row: 1; text-align: right; font-weight: var(--fw-semibold); }
-  .table.stackable td[data-cell="status"] { grid-column: 2; grid-row: 2; justify-self: end; }
-  .table.stackable td[data-cell="action"] { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+  .table.stackable:not(.stackable-narrow) td[data-cell="order"] > label { position: static; width: auto; height: auto; overflow: visible; clip: auto; font-size: var(--fs-sm); color: var(--text-muted); margin-right: 8px; }
+  .table.stackable:not(.stackable-narrow) td[data-cell="amount"] { grid-column: 2; grid-row: 1; text-align: right; font-weight: var(--fw-semibold); }
+  .table.stackable:not(.stackable-narrow) td[data-cell="status"] { grid-column: 2; grid-row: 2; justify-self: end; }
+  .table.stackable:not(.stackable-narrow) td[data-cell="action"] { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
   /* w-min (1%) is een kolombreedte; in een grid wordt de cel er 1px smal van en
      steken de knoppen eruit. Hier past de cel zich weer aan de inhoud aan. */
-  .table.stackable td.w-min { width: auto; }
-  .table.stackable td[data-cell="hide"] { display: none; }
-  .table.stackable tfoot { display: none; }
+  .table.stackable:not(.stackable-narrow) td.w-min { width: auto; }
+  .table.stackable:not(.stackable-narrow) td[data-cell="hide"] { display: none; }
+  .table.stackable:not(.stackable-narrow) tfoot { display: none; }
+}
+/* A table with four columns (Laatste facturen on the overview) stays a table down to 520 px. */
+@container (max-width: 520px) {
+  .table.stackable-narrow thead { display: none; }
+  .table.stackable-narrow tbody tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3px 12px; padding: 13px 16px; border-bottom: 1px solid var(--border); }
+  .table.stackable-narrow tbody tr:last-child { border-bottom: 0; }
+  .table.stackable-narrow td { padding: 0; border: 0; }
+  .table.stackable-narrow td[data-cell="primary"] { grid-column: 1; grid-row: 1; font-size: var(--fs-md); }
+  .table.stackable-narrow td[data-cell="secondary"] { grid-column: 1; grid-row: 2; font-size: var(--fs-sm); color: var(--text-muted); text-align: left; }
+  .table.stackable-narrow tr.is-editing { background: var(--primary-soft); }
+  .table.stackable-narrow tr.is-editing td { background: none; }
+  .table.stackable-narrow td[data-cell="order"] { grid-column: 1; grid-row: 3; text-align: left; }
+  /* Het veld heeft hier geen kolomkop meer: het label (sr-only) wordt zichtbaar. */
+  .table.stackable-narrow td[data-cell="order"] > label { position: static; width: auto; height: auto; overflow: visible; clip: auto; font-size: var(--fs-sm); color: var(--text-muted); margin-right: 8px; }
+  .table.stackable-narrow td[data-cell="amount"] { grid-column: 2; grid-row: 1; text-align: right; font-weight: var(--fw-semibold); }
+  .table.stackable-narrow td[data-cell="status"] { grid-column: 2; grid-row: 2; justify-self: end; }
+  .table.stackable-narrow td[data-cell="action"] { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+  /* w-min (1%) is een kolombreedte; in een grid wordt de cel er 1px smal van en
+     steken de knoppen eruit. Hier past de cel zich weer aan de inhoud aan. */
+  .table.stackable-narrow td.w-min { width: auto; }
+  .table.stackable-narrow td[data-cell="hide"] { display: none; }
+  .table.stackable-narrow tfoot { display: none; }
 }
 
 .list { list-style: none; margin: 0; padding: 0; }
@@ -505,8 +525,9 @@ a:hover { color: var(--primary-hover); }
 .pill-unpaid, .pill-sent, .pill-final, .pill-paid, .pill-accepted, .pill-rejected, .pill-expired { --pill-bg: transparent; padding-inline: 0; font-weight: var(--fw-medium); }
 .pill-unpaid, .pill-sent { --pill-fg: var(--text); }  /* loopt nog: wachten op de ander */
 .pill-final, .pill-paid, .pill-accepted, .pill-rejected, .pill-expired { --pill-fg: var(--text-muted); }  /* afgerond */
-/* Een instelling die aan staat of klaar is: snavelgeel, zodat je in één oogopslag ziet wat aan staat (de eigenaar, 2026-11-15). */
-.pill-on { --pill-bg: var(--accent-soft); --pill-fg: var(--accent-ink); }
+/* Een instelling die aan staat of klaar is: gewone tekst met een vinkje, zonder vlak;
+   alleen "te laat" heeft kleur (huismus-intern/besluiten.md, 2026-11-15, ontwerp "Verfijnd"). */
+.pill-on { --pill-bg: transparent; --pill-fg: var(--text); padding-inline: 0; font-weight: var(--fw-medium); }
 .pill-on::before { width: 10px; height: 6px; border-radius: 0; background: transparent; border-left: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: translateY(-1px) rotate(-45deg); }
 /* Open stip: nog niet afgerond, of verlopen. */
 .pill-unpaid::before, .pill-sent::before, .pill-expired::before { background: transparent; box-shadow: inset 0 0 0 1.5px currentColor; }
@@ -752,27 +773,26 @@ a:hover { color: var(--primary-hover); }
 /* ---------- 13. Dashboard & jaaroverzicht ---------- */
 .kpi { padding: var(--s-5) var(--s-6); display: flex; flex-direction: column; gap: 6px; }
 .kpi-label { font-size: var(--fs-sm); color: var(--text-muted); font-weight: var(--fw-medium); display: flex; align-items: center; gap: 8px; }
-.kpi-value { white-space: nowrap; font-size: var(--fs-2xl); font-weight: var(--fw-bold); letter-spacing: -0.025em; font-variant-numeric: tabular-nums; line-height: 1.15; }
+.kpi-value { white-space: nowrap; font-family: var(--font-display); font-size: var(--fs-2xl); font-weight: var(--fw-bold); letter-spacing: -0.025em; font-variant-numeric: tabular-nums; line-height: 1.15; }
 .kpi-sub { font-size: var(--fs-sm); color: var(--text-muted); }
-.kpi-hero { color: var(--text); }  /* wit blok, alleen het bedrag violet: het menu is al violet (de eigenaar, 2026-11-15) */
-.kpi-hero .kpi-value { color: var(--primary-ink); }
-a.kpi-hero:hover { color: var(--text); background: var(--primary-soft); }
+.kpi-hero { color: var(--text); }  /* het bedrag in gewone tekstkleur: het menu is al violet (de eigenaar, 2026-11-15, ontwerp "Verfijnd") */
+a.kpi-hero:hover { color: var(--text); background: var(--surface-2); }
 /* A notice is a quiet block like the other cards: no border, no stripe. Its kind
    shows only in the round icon; the link is violet, and red only for a real
    problem (huismus-intern/besluiten.md, 2026-10-30; the owner, 2026-11-15). */
 .hint-banner {
   --hb-ink: var(--accent-ink); --hb-chip: var(--accent-soft); --hb-link: var(--primary-ink);
   display: flex; align-items: center; gap: var(--s-3); padding: 12px var(--s-5) 12px var(--s-3);
-  border-radius: var(--r-xl); background: var(--surface); color: var(--text);
-  border: 0; font-weight: var(--fw-medium); text-decoration: none;
+  border-radius: var(--r-lg); background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); font-weight: var(--fw-medium); text-decoration: none;
   transition: background .15s;
 }
-a.hint-banner:hover, div.hint-banner:has(> a):hover { color: var(--text); background: var(--primary-soft); }
+a.hint-banner:hover, div.hint-banner:has(> a):hover { color: var(--text); background: var(--surface-2); }
 /* A notice with a close button is a div: its link covers the whole block, the close button stays on top. */
 div.hint-banner:has(> a) { position: relative; }
 div.hint-banner > a::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
 div.hint-banner > form { position: relative; z-index: 1; }
-.hint-banner > .i { box-sizing: content-box; width: 18px; height: 18px; padding: 8px; border-radius: 50%; color: var(--hb-ink); background: var(--hb-chip); flex: none; }
+.hint-banner > .i { box-sizing: content-box; width: 18px; height: 18px; padding: 6px; border-radius: 50%; color: var(--hb-ink); background: var(--hb-chip); flex: none; }
 .hint-banner .spacer { flex: 1; }
 .hint-banner .spacer + span, .hint-banner a { color: var(--hb-link); font-weight: var(--fw-semibold); }
 .hint-banner.is-warn { --hb-ink: var(--warn); --hb-chip: var(--warn-bg); }
@@ -935,6 +955,11 @@ div.hint-banner > form { position: relative; z-index: 1; }
 .settings-section { scroll-margin-top: var(--s-6); }
 .settings-section .card-pad { display: flex; flex-direction: column; gap: var(--s-4); }
 .settings-section + .settings-section { margin-top: var(--s-5); }
+/* A topic page: its sections one card, split by a thin line, not loose cards
+   (huismus-intern/besluiten.md, 2026-11-15). */
+form > div > .settings-section + .settings-section { margin-top: 0; border-top: 0; border-top-left-radius: 0; border-top-right-radius: 0; }
+form > div > .settings-section:has(+ .settings-section) { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+form > div > .settings-section .card-head { border-bottom: 0; padding-bottom: 0; }
 .settings-preview { position: sticky; top: var(--s-6); }
 .logo-slot { position: relative; width: 120px; height: 64px; border-radius: 8px; border: 1.5px dashed var(--border-strong); display: grid; place-items: center; font-size: var(--fs-xs); color: var(--text-muted); background: var(--surface-2); }
 @media (max-width: 1180px) { .settings { grid-template-columns: 180px minmax(0, 1fr); } .settings-preview { display: none; } }
@@ -988,8 +1013,8 @@ div.hint-banner > form { position: relative; z-index: 1; }
    de knop krijgt dezelfde vorm als de navigatielinks. */
 .nav .nav-button {
   display: flex; align-items: center; gap: 11px; width: 100%; min-height: 34px; padding: 0 14px;
-  border: 0; border-radius: var(--r-pill); background: none; cursor: pointer;
-  color: var(--panel-text); font: inherit; font-weight: var(--fw-medium); font-size: var(--fs-sm); text-align: left;
+  border: 0; border-radius: 8px; background: none; cursor: pointer;
+  color: var(--panel-text); font: inherit; font-weight: 500; font-size: var(--fs-sm); text-align: left;
   transition: background .15s, color .15s;
 }
 .nav .nav-button:hover { background: var(--panel-hover); color: var(--panel-text); }
@@ -1008,23 +1033,47 @@ div.hint-banner > form { position: relative; z-index: 1; }
 .input-suffix .input { padding-left: 12px; padding-right: 56px; }
 .input-suffix .suffix { position: absolute; right: 12px; top: 50%; translate: 0 -50%; pointer-events: none; }
 
-/* Instellingen: een kaart per onderwerp (ontwerp ronde 3, Main.dc.html);
-   op een telefoon een compacte lijst zonder de uitleg. */
+/* Instellingen: een lijst met rijen in groepen, twee kolommen op een breed scherm
+   (huismus-intern/besluiten.md, 2026-11-15). De eerste groep links, de rest rechts. */
+.settings-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: dense; gap: var(--s-5) var(--s-6); align-items: start; }
+.settings-group:first-child { grid-row: span 3; }
+.settings-group > h2 { font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--text-muted); padding: 0 4px var(--s-2); }
+.settings-list { list-style: none; margin: 0; padding: 0; overflow: hidden; }
+.settings-list > li + li { border-top: 1px solid var(--border); }
+.settings-list a { display: flex; align-items: center; gap: 14px; padding: 13px var(--s-5); color: var(--text); text-decoration: none; }
+.settings-list a:hover { background: var(--surface-2); color: var(--text); }
+.settings-list a:focus-visible { outline-offset: -2px; border-radius: 0; }
+.settings-icon, .settings-chevron { color: var(--text-muted); flex: none; }
+.settings-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.settings-title { font-weight: var(--fw-semibold); }
+.settings-line { font-size: var(--fs-sm); color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.state { display: inline-flex; align-items: center; gap: 5px; font-size: var(--fs-sm); font-weight: var(--fw-medium); color: var(--text); white-space: nowrap; }
+.state-on, .state-attention { color: var(--text); }
+.state-off, .state-wait { color: var(--text-muted); }
+@media (max-width: 980px) { .settings-groups { grid-template-columns: minmax(0, 1fr); } .settings-group:first-child { grid-row: auto; } }
+@media (max-width: 760px) { .settings-list a { padding: 12px var(--s-4); } }
+/* Een smalle telefoon: de status onder de regel, de titel wordt nooit afgekapt. */
+@media (max-width: 380px) {
+  .settings-list a { flex-wrap: wrap; row-gap: 2px; }
+  .settings-list .state { order: 1; margin-left: 34px; }
+  .settings-text { flex-basis: calc(100% - 68px); }
+}
+/* Hulp: een kaart per pagina (ontwerp ronde 3, Main.dc.html); op een telefoon een compacte lijst zonder de uitleg. */
 .settings-topics { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4); }
 .settings-topics > li { display: flex; }
 .settings-topics .card { flex: 1; display: flex; flex-direction: column; gap: var(--s-2); color: inherit; text-decoration: none; }
 .settings-topics .card:hover { border-color: var(--border-strong); }
 .settings-topics .topic-head { justify-content: space-between; flex-wrap: wrap; row-gap: var(--s-1); }
 .settings-topics h2 { font-size: var(--fs-md); }
-/* Hulp: dezelfde kaarten onder een kopje per groep (issue #130). */
-.help-group > h2 { margin-bottom: var(--s-3); }
-.help-group + .help-group { margin-top: var(--s-6); }
 @media (max-width: 980px) { .settings-topics { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 760px) {
   .settings-topics { grid-template-columns: 1fr; gap: var(--s-2); }
   .settings-topics .card { padding: var(--s-3) var(--s-4); gap: 2px; }
   .settings-topics .topic-intro { display: none; }
 }
+/* Hulp: dezelfde kaarten onder een kopje per groep (issue #130). */
+.help-group > h2 { margin-bottom: var(--s-3); }
+.help-group + .help-group { margin-top: var(--s-6); }
 
 /* Nummerformaten ({year}-{seq:04d}) in een monospace letter, zoals het ontwerp. */
 .input.mono { font-family: var(--font-mono); font-size: var(--fs-sm); }
@@ -1115,3 +1164,9 @@ div.hint-banner > form { position: relative; z-index: 1; }
 .help-text th { text-align: left; color: var(--text-muted); font-weight: var(--fw-semibold); }
 .help-text th, .help-text td { padding: var(--s-2) var(--s-3) var(--s-2) 0; border-bottom: 1px solid var(--border); vertical-align: top; overflow-wrap: anywhere; }
 .help-text a { overflow-wrap: anywhere; }
+
+/* "Te laat" in a list: the pill one width, how late beside it in quiet text
+   (huismus-intern/besluiten.md, 2026-11-15). The amounts stay in one column. */
+.overdue { display: inline-flex; align-items: center; gap: var(--s-2); white-space: nowrap; }
+.overdue .pill-overdue { min-width: 72px; justify-content: center; }
+.overdue-since { font-size: var(--fs-sm); color: var(--text-muted); font-variant-numeric: tabular-nums; }

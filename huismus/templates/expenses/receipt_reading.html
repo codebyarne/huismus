@@ -8,7 +8,7 @@
 {% comment %}Instellingen → Bonnetjes lezen (SPEC.md M20 part 3, expenses.reading_views). Built like Bonnetjesmap: a card for what is on, a form card, Uitzetten.{% endcomment %}
 <div class="page-head">
     <div class="titles">
-        <a class="small" href="{% url 'business:overview' %}">← {% translate "Instellingen" %}</a>
+        <a class="back" href="{% url 'business:overview' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Instellingen" %}</a>
         <h1>{% translate "Bonnetjes lezen met AI" %}</h1>
         <p class="lede">{% translate "Huismus stuurt elk bonnetje uit je bonnetjesmap naar een AI-dienst die jij kiest, en maakt er een uitgave van. Jij kijkt hem na met Klopt." %}{% if help_url %} <a href="{{ help_url }}">{% translate "Zo werkt het" %} →</a>{% endif %}</p>
     </div>

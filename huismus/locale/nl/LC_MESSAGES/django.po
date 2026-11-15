@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-15 10:33+0100\n"
+"POT-Creation-Date: 2026-11-15 16:51+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -550,7 +550,7 @@ msgstr ""
 msgid "Bonnetjes van onderweg, vanzelf in Huismus."
 msgstr ""
 
-msgid "Nog geen dienst gekozen"
+msgid "Nog geen AI-dienst met API-sleutel"
 msgstr ""
 
 msgid "Lezen is mislukt"
@@ -622,6 +622,18 @@ msgid "Weergave"
 msgstr ""
 
 msgid "Taal en thema van Huismus. Je facturen veranderen niet."
+msgstr ""
+
+msgid "Bedrijf en facturen"
+msgstr ""
+
+msgid "Bonnetjes"
+msgstr ""
+
+msgid "Back-ups en export"
+msgstr ""
+
+msgid "Huismus"
 msgstr ""
 
 msgid "Instellingen opgeslagen."
@@ -2002,9 +2014,6 @@ msgstr ""
 msgid "Stel eerst WebDAV in bij Back-ups."
 msgstr ""
 
-msgid "Bonnetjes"
-msgstr ""
-
 msgid "Huismus bonnetjes"
 msgstr ""
 
@@ -2742,16 +2751,6 @@ msgid "Zonder categorie"
 msgstr ""
 
 msgid "Navigatie"
-msgstr ""
-
-msgid "Je krijgt nog"
-msgstr ""
-
-#, python-format
-msgid "%(amount)s is te laat"
-msgstr ""
-
-msgid "Niets openstaand"
 msgstr ""
 
 msgid "Nieuwe factuur"
@@ -4001,6 +4000,16 @@ msgstr ""
 #, python-format
 msgid "%(days)s dag te laat"
 msgid_plural "%(days)s dagen te laat"
+msgstr[0] ""
+msgstr[1] ""
+
+#, python-format
+msgid "sinds %(date)s"
+msgstr ""
+
+#, python-format
+msgid "%(days)s dag"
+msgid_plural "%(days)s dagen"
 msgstr[0] ""
 msgstr[1] ""
 

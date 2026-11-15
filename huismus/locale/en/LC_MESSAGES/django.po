@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-15 10:33+0100\n"
+"POT-Creation-Date: 2026-11-15 16:51+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -579,8 +579,8 @@ msgstr "Receipts folder"
 msgid "Bonnetjes van onderweg, vanzelf in Huismus."
 msgstr "Receipts from the road, in Huismus by themselves."
 
-msgid "Nog geen dienst gekozen"
-msgstr "No service chosen yet"
+msgid "Nog geen AI-dienst met API-sleutel"
+msgstr "No AI service with an API key yet"
 
 msgid "Lezen is mislukt"
 msgstr "Reading failed"
@@ -654,6 +654,18 @@ msgstr "Appearance"
 
 msgid "Taal en thema van Huismus. Je facturen veranderen niet."
 msgstr "Language and theme of Huismus. Your invoices stay the same."
+
+msgid "Bedrijf en facturen"
+msgstr "Business and invoices"
+
+msgid "Bonnetjes"
+msgstr "Receipts"
+
+msgid "Back-ups en export"
+msgstr "Backups and export"
+
+msgid "Huismus"
+msgstr "Huismus"
 
 msgid "Instellingen opgeslagen."
 msgstr "Settings saved."
@@ -2085,9 +2097,6 @@ msgstr "Link Dropbox under Backups first."
 msgid "Stel eerst WebDAV in bij Back-ups."
 msgstr "Set up WebDAV at Backups first."
 
-msgid "Bonnetjes"
-msgstr "Receipts"
-
 msgid "Huismus bonnetjes"
 msgstr "Huismus receipts"
 
@@ -2905,16 +2914,6 @@ msgstr "No category"
 
 msgid "Navigatie"
 msgstr "Navigation"
-
-msgid "Je krijgt nog"
-msgstr "Still to receive"
-
-#, python-format
-msgid "%(amount)s is te laat"
-msgstr "%(amount)s is overdue"
-
-msgid "Niets openstaand"
-msgstr "Nothing outstanding"
 
 msgid "Nieuwe factuur"
 msgstr "New invoice"
@@ -4274,6 +4273,16 @@ msgid "%(days)s dag te laat"
 msgid_plural "%(days)s dagen te laat"
 msgstr[0] "%(days)s day late"
 msgstr[1] "%(days)s days late"
+
+#, python-format
+msgid "sinds %(date)s"
+msgstr "since %(date)s"
+
+#, python-format
+msgid "%(days)s dag"
+msgid_plural "%(days)s dagen"
+msgstr[0] "%(days)s day"
+msgstr[1] "%(days)s days"
 
 msgid "Stappen van de offerte"
 msgstr "Quote steps"
@@ -6626,6 +6635,16 @@ msgid ""
 msgstr ""
 "If you have a Raspberry Pi, a NAS, your own server or a VPS, you can also "
 "run Huismus in Docker. That is for people who are handy with that."
+
+#~ msgid "Je krijgt nog"
+#~ msgstr "Still to receive"
+
+#, python-format
+#~ msgid "%(amount)s is te laat"
+#~ msgstr "%(amount)s is overdue"
+
+#~ msgid "Niets openstaand"
+#~ msgstr "Nothing outstanding"
 
 #~ msgid "Vandaag te betalen"
 #~ msgstr "Due today"

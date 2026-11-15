@@ -12,17 +12,27 @@
     </div>
 </div>
 
-{% comment %}A card per topic (business.topics); on a phone a compact list, without the intro.{% endcomment %}
-<ul class="settings-topics">
-    {% for card in cards %}
-    <li>
-        {% comment %}Named after the topic, described by its pill and line: the intro is hidden on a phone, the name stays the same.{% endcomment %}
-        <a class="card card-pad" href="{{ card.url }}" aria-label="{{ card.title }}" aria-describedby="{% if card.pill %}{{ card.slug }}-pill {% endif %}{% if card.line %}{{ card.slug }}-line{% endif %}">
-            <div class="row topic-head"><h2>{{ card.title }}</h2>{% if card.pill %}<span class="pill {{ card.pill.1 }}" id="{{ card.slug }}-pill">{{ card.pill.0 }}</span>{% endif %}</div>
-            <span class="small muted topic-intro">{{ card.intro }}</span>
-            {% if card.line %}<span class="small topic-line" id="{{ card.slug }}-line">{{ card.line }}</span>{% endif %}
-        </a>
-    </li>
+{% comment %}A list per group (business.topics.grouped): each row is one link with the topic's icon, name, line and state (huismus-intern/besluiten.md, 2026-11-15). The state is quiet text: a tick when on, grey when off, the warning sign when you have to do something.{% endcomment %}
+<div class="settings-groups">
+    {% for title, cards in groups %}
+    <section class="settings-group" aria-labelledby="groep-{{ forloop.counter }}">
+        <h2 id="groep-{{ forloop.counter }}">{{ title }}</h2>
+        <ul class="card settings-list">
+            {% for card in cards %}
+            <li>
+                <a href="{{ card.url }}" aria-label="{{ card.title }}" aria-describedby="{% if card.line %}{{ card.slug }}-line {% endif %}{% if card.pill %}{{ card.slug }}-pill{% endif %}">
+                    <svg class="i settings-icon" aria-hidden="true"><use href="#{{ card.icon }}"></use></svg>
+                    <span class="settings-text">
+                        <span class="settings-title">{{ card.title }}</span>
+                        {% if card.line %}<span class="settings-line" id="{{ card.slug }}-line">{{ card.line }}</span>{% endif %}
+                    </span>
+                    {% if card.pill %}<span class="state {{ card.pill.1 }}" id="{{ card.slug }}-pill">{% if card.pill.1 == "state-on" %}<svg class="i i-sm" aria-hidden="true"><use href="#check"></use></svg>{% elif card.pill.1 == "state-attention" %}<svg class="i i-sm" aria-hidden="true"><use href="#alert"></use></svg>{% endif %}{{ card.pill.0 }}</span>{% endif %}
+                    <svg class="i i-sm settings-chevron" aria-hidden="true"><use href="#chevron-right"></use></svg>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
     {% endfor %}
-</ul>
+</div>
 {% endblock %}

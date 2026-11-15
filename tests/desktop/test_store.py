@@ -231,5 +231,5 @@ def test_the_updates_page_says_the_store_updates_huismus(window):
 @pytest.mark.django_db
 def test_the_settings_card_has_no_on_or_off(window):
     page = window.get(reverse("business:overview")).content.decode()
-    assert "De Microsoft Store werkt Huismus bij." in page
+    assert 'id="updates-line"' in page
     assert 'id="updates-pill"' not in page

@@ -104,7 +104,7 @@ def test_docker_a_new_x_y_needs_a_new_tag_first(docker):
 
 def test_docker_shows_the_notice_and_the_card(docker):
     page = docker.get(reverse("business:overview")).content.decode()
-    assert "Huismus zegt het als er een nieuwe versie is." in page
+    assert 'id="updates-pill"' in page
     assert "Versie 1.3.0" in page
     assert 'id="nieuwe-versie"' not in _overview(docker)
 

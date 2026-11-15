@@ -204,26 +204,16 @@ def _home(client):
     return client.get(reverse("home")).content.decode().replace("\xa0", " ")
 
 
-def test_the_menu_panel_says_what_you_still_receive_and_what_is_overdue(client, settings_filled):
+def test_the_menu_panel_shows_no_amount(client, settings_filled):
+    """The amount is the overview's; the panel only has the menu
+    (huismus-intern/besluiten.md, 2026-11-15)."""
     _issued(100000)
-    _issued(30000, due_date=TODAY - timedelta(days=3))
 
     html = _home(client)
 
-    assert 'id="je-krijgt-nog"' in html
-    assert "Je krijgt nog" in html
-    assert "€ 1.300,00" in html
-    assert "€ 300,00 is te laat" in html
-
-
-def test_the_menu_panel_says_nothing_is_outstanding_when_all_is_paid(client, settings_filled):
-    _issued(40000, paid=40000)
-    assert "Niets openstaand" in _home(client)
-
-
-def test_the_menu_panel_is_empty_before_the_first_issued_invoice(client, settings_filled):
-    Contact.objects.create(company_name="Klant BV")  # past the welcome
-    assert 'id="je-krijgt-nog"' not in _home(client)
+    sidebar = html[html.index('<aside class="sidebar"') : html.index("</aside>")]
+    assert "€" not in sidebar
+    assert "Je krijgt nog" not in html
 
 
 def test_an_overview_without_invoices_shows_one_card_to_make_the_first(client, settings_filled):
