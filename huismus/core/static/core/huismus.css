@@ -92,6 +92,8 @@
   --control-h: 40px;
   --ease: cubic-bezier(.2, .7, .2, 1);
 }
+/* Op een middelbreed scherm (een laptop van 1024) houdt de inhoud genoeg ruimte. */
+@media (max-width: 1200px) { :root { --sidebar-w: 248px; } }
 :root[data-theme="dark"]  { color-scheme: dark; }
 :root[data-theme="light"] { color-scheme: light; }
 
