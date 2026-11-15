@@ -113,6 +113,16 @@ def test_without_a_connection_the_photo_stays_to_send_again(phone):
     assert Attachment.objects.in_tray().count() == 1
 
 
+def test_a_refused_photo_opens_the_ordinary_form_with_the_reason(phone, monkeypatch):
+    # Found in the screenshots, 2026-11-15: the reason was gone.
+    monkeypatch.setattr("huismus.expenses.receipts.MAX_RECEIPT_BYTES", 10)
+    phone.goto(phone.base + "/uitgaven/")
+    _camera(phone, lambda: phone.get_by_role("link", name="Nieuwe uitgave").first.tap())
+    expect(phone).to_have_url(phone.base + "/uitgaven/nieuw/")
+    expect(phone.locator("#toasts")).to_contain_text("groter dan")
+    assert not Attachment.objects.exists()
+
+
 def test_closing_the_camera_opens_the_ordinary_form(phone):
     phone.goto(phone.base + "/uitgaven/")
     with phone.expect_file_chooser():

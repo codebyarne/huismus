@@ -50,9 +50,11 @@ def _photo(name="IMG_0001.jpg", color="red"):
     return SimpleUploadedFile(name, buffer.getvalue(), content_type="image/jpeg")
 
 
-def _take(client, color="red", **extra):
-    """The photo from the camera, as app.js sends it."""
-    return client.post(reverse("expenses:photo_upload"), {"file": _photo(color=color), **extra})
+def _take(client, color="red", headers=None, **extra):
+    """The photo from the camera, as the form without JS sends it."""
+    return client.post(
+        reverse("expenses:photo_upload"), {"file": _photo(color=color), **extra}, headers=headers
+    )
 
 
 def _form(**extra):
@@ -259,3 +261,16 @@ def test_the_desktop_app_has_no_camera(logged_in, settings):
     assert 'id="camera"' in logged_in.get(reverse("expenses:list")).content.decode()
     settings.DESKTOP = True
     assert 'id="camera"' not in logged_in.get(reverse("expenses:list")).content.decode()
+
+
+def test_to_app_js_it_says_where_to_go_instead_of_redirecting(logged_in, monkeypatch):
+    # fetch() would follow a redirect and use up the next page's message.
+    response = _take(logged_in, headers={"X-Huismus-Camera": "1"})
+    receipt = Attachment.objects.get()
+    assert response.status_code == 204
+    assert response["X-Huismus-Go"] == reverse("expenses:photo", args=[receipt.pk])
+
+    monkeypatch.setattr("huismus.expenses.receipts.MAX_RECEIPT_BYTES", 10)
+    response = _take(logged_in, color="blue", headers={"X-Huismus-Camera": "1"})
+    assert response["X-Huismus-Go"] == reverse("expenses:create")
+    assert "groter dan" in logged_in.get(response["X-Huismus-Go"]).content.decode()
