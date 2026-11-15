@@ -1360,7 +1360,8 @@ def test_a_mail_text_changed_in_the_settings_is_where_the_mail_starts(app, conta
 
     _mail_set_up(settings)
     app.goto(f"{app.base}/instellingen/mailen/")
-    app.locator("details", has_text="Factuur").locator("summary").click()
+    # Exactly "Factuur": the block Herinnering mentions invoices too.
+    app.locator("details summary").filter(has=app.get_by_text("Factuur", exact=True)).click()
     subject = app.get_by_label("Onderwerp in het Nederlands").first
     expect(subject).to_have_value("Factuur {nummer} van {bedrijf}")
     subject.fill("Rekening {nummer}")

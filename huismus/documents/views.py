@@ -45,7 +45,6 @@ from .listing import (
 )
 from .mailing import (
     MAILABLE_STATUSES,
-    can_remind,
     default_message,
     default_recipients,
     send_document,
@@ -461,7 +460,8 @@ def document_reopen_undo(request, pk):
 
 def _detail_context(document):
     """The read-only page of an issued invoice or credit note."""
-    # Only a mail that went out counts, a reminder too: it has the PDF.
+    # Only a mail that went out counts. A reminder counts too: it carries
+    # the same PDF, so the customer has the invoice as it was then.
     last_mail = document.emails.filter(succeeded=True).order_by("-sent_at").first()
     context = {
         "document": document,
@@ -520,11 +520,8 @@ def _detail_context(document):
                 kind="credit_note", related_document=invoice
             ).order_by("issue_date", "pk"),
             "timeline": timeline_events(invoice),
-            # Payment reminders (#114): how late it is, and when the last
-            # one went out (a failed one doesn't count).
-            "days_overdue": (
-                (timezone.localdate() - invoice.due_date).days if invoice.is_overdue else None
-            ),
+            # When the last payment reminder went out (#114); a failed one
+            # doesn't count.
             "last_reminder": invoice.emails.filter(succeeded=True, reminder=True)
             .order_by("-sent_at")
             .first(),
@@ -694,10 +691,11 @@ def document_mail(request, pk, kind="invoice"):
 @login_required
 def document_reminder(request, pk):
     """The same mail form, as a payment reminder for an overdue invoice
-    (#114): another text, logged as a reminder. An invoice that isn't (or
-    no longer is) overdue, say just paid, goes back to its page."""
+    (#114): another text, logged as a reminder. Only an issued invoice has
+    one; one that isn't (or no longer is) overdue, say just paid, goes back
+    to its page instead of an error."""
     document = get_object_or_404(Document, pk=pk, kind="invoice", status="issued")
-    if not can_remind(document):
+    if document.days_overdue is None:
         messages.info(
             request,
             _("Factuur %(number)s is niet te laat. Er is geen herinnering gestuurd.")
