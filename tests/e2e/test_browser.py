@@ -594,7 +594,7 @@ def test_on_a_phone_the_language_is_set_under_instellingen(app):
     app.goto(app.base + "/facturen/")
     app.click(".tabbar button[popovertarget=meer-menu]")
     app.locator("#meer-menu a", has_text="Instellingen").click()
-    app.locator(".settings-topics a", has_text="Weergave").click()
+    app.locator(".settings-list a", has_text="Weergave").click()
     expect(app).to_have_url(app.base + APPEARANCE)
     app.locator("#weergave label", has_text="English").click()
     app.locator("button[type=submit][form=weergave]").click()
@@ -781,7 +781,7 @@ def test_a_settings_topic_opens_from_the_overview_and_saves_on_its_own_page(app,
 
     expect(app.get_by_text("Instellingen opgeslagen.")).to_be_visible()
     expect(app).to_have_url(f"{app.base}/instellingen/kor/")
-    app.get_by_role("link", name="← Instellingen").click()
+    app.get_by_role("link", name="Instellingen", exact=True).first.click()
     expect(app.get_by_role("link", name="KOR", exact=True)).to_contain_text("Aan")
     assert Settings.load().kor_enabled
 

@@ -51,7 +51,7 @@ def _card(client):
 def test_the_card_comes_right_after_bonnetjesmap(client_in):
     page = client_in.get("/instellingen/").content.decode()
     assert page.index("/instellingen/bonnetjesmap/") < page.index("/instellingen/bonnetjes-lezen/")
-    assert "Nog geen dienst gekozen" in _card(client_in)
+    assert "Nog geen AI-dienst met API-sleutel" in _card(client_in)
 
 
 def test_the_card_says_it_is_where_your_own_ai_key_goes(client_in):

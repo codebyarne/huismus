@@ -124,17 +124,31 @@ def test_overdue_invoice_shows_how_many_days_late(client_in):
     html = _get(client_in).content.decode()
     explanation = "Vervaldatum voorbij en nog niet volledig betaald."
     # Explained where the label stands: a tooltip, and for screen readers.
-    assert f'class="pill pill-overdue no-dot" title="{explanation}">10 dagen te laat<' in html
+    # One pill, "Te laat", with how late beside it (huismus-intern/besluiten.md, 2026-11-15).
+    assert f'class="pill pill-overdue no-dot" title="{explanation}">Te laat<' in html
+    assert '<span class="overdue-since">10 dagen</span>' in html
     assert f'<span class="sr-only">: {explanation}</span>' in html
     english = client_in.get(reverse("documents:list"), HTTP_ACCEPT_LANGUAGE="en").content.decode()
-    assert 'title="Past the due date and not fully paid yet.">10 days late<' in english
+    assert 'title="Past the due date and not fully paid yet.">Overdue<' in english
+    assert '<span class="overdue-since">10 days</span>' in english
+
+
+def test_an_invoice_a_hundred_days_late_says_since_when(client_in):
+    _invoice(
+        "Lang te laat BV",
+        issue_date=TODAY - timedelta(days=130),
+        due_date=TODAY - timedelta(days=100),
+    )
+    html = _get(client_in).content.decode()
+    assert "sinds " in html
+    assert "100 dagen" not in html
 
 
 def test_invoice_one_day_late_says_dag(client_in):
     _invoice(
         "Net te laat BV", issue_date=TODAY - timedelta(days=15), due_date=TODAY - timedelta(days=1)
     )
-    assert ">1 dag te laat<" in _get(client_in).content.decode()
+    assert '<span class="overdue-since">1 dag</span>' in _get(client_in).content.decode()
 
 
 def test_the_search_shortcut_is_hinted_only_on_pages_with_a_search_field(client_in):
@@ -189,7 +203,7 @@ def test_the_list_shows_invoices_in_groups_with_how_long_until_due(client_in):
     assert positions == sorted(positions)
     assert 'id="groep-creditnotas"' not in html  # only groups with rows
     assert html.index("Bouwbedrijf Van Dijk") < positions[1]
-    assert "12 dagen te laat" in html
+    assert '<span class="overdue-since">12 dagen</span>' in html
     assert "Nog 4 dagen" in html
     assert "Vandaag te betalen" in html
     assert html.index("Bakkerij Jansen BV") > positions[2]

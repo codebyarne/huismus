@@ -108,7 +108,6 @@ TEMPLATES = [
                 "huismus.core.context_processors.desktop",
                 "huismus.core.context_processors.sample_data",
                 "huismus.core.context_processors.theme",
-                "huismus.core.context_processors.panel",
             ],
         },
     },

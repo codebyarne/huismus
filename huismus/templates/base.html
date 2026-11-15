@@ -31,14 +31,6 @@
 <div class="app">
     <aside class="sidebar" aria-label="{% translate 'Navigatie' %}">
         <a class="brand" href="{% url 'home' %}"><svg class="mark" width="44" height="44" aria-hidden="true"><use href="#mus"></use></svg>Huismus</a>
-        {% if panel_outstanding.has_issued %}
-        {% comment %}What you still have to receive, on every page (huismus/core/dashboard.py, the same figure as the overview).{% endcomment %}
-        <a class="panel-owed" id="je-krijgt-nog" href="{% url 'documents:list' %}?tab=openstaand">
-            <span class="panel-owed-label">{% translate "Je krijgt nog" %}</span>
-            <span class="panel-owed-amount">{{ panel_outstanding.total_cents|money }}</span>
-            <span class="panel-owed-sub">{% if panel_outstanding.overdue_cents %}{% blocktranslate with amount=panel_outstanding.overdue_cents|money %}{{ amount }} is te laat{% endblocktranslate %}{% elif not panel_outstanding.total_cents %}{% translate "Niets openstaand" %}{% endif %}</span>
-        </a>
-        {% endif %}
         {% comment %}Violet (white on the panel) only where making an invoice is the page's main action: the overview and the invoice list, unless they are empty (then their own "Eerste factuur maken" is).{% endcomment %}
         <a class="btn {% block panel_new_class %}btn-quiet{% endblock %} btn-new btn-block" href="{% url 'documents:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuwe factuur" %}</a>
         <nav class="nav" aria-label="{% translate 'Hoofdmenu' %}">

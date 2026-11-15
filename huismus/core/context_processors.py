@@ -4,11 +4,9 @@
 and whether the desktop app signed the window in without a password."""
 
 from django.conf import settings
-from django.utils.functional import SimpleLazyObject
 
 from huismus.core import auto_backups
 from huismus.core.appearance import theme_of
-from huismus.core.dashboard import outstanding_invoices
 from huismus.core.desktop import has_no_password
 
 # Expense routes that have their own item in the sidebar's sub-navigation.
@@ -60,12 +58,3 @@ def theme(request):
     if user is None or not user.is_authenticated:
         return {"theme": ""}
     return {"theme": theme_of(user)}
-
-
-def panel(request):
-    """panel_outstanding: what the menu panel shows under "Je krijgt nog"
-    (huismus/core/dashboard.py). Lazy, so a response that doesn't draw the
-    menu (an HTMX fragment, a PDF) runs no query for it."""
-    if not getattr(request, "user", None) or not request.user.is_authenticated:
-        return {}
-    return {"panel_outstanding": SimpleLazyObject(outstanding_invoices)}

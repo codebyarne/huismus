@@ -124,20 +124,20 @@
         <span class="kpi-sub">{% translate "Naar het jaaroverzicht" %} →</span>
     </a>
 </div>
-<div class="split">
+<div class="split split-wide">
     <section class="card">
         <div class="card-head"><h2>{% translate "Laatste facturen" %}</h2><a class="small" href="{% url 'documents:list' %}">{% translate "Alle facturen" %}</a></div>
         {% if latest_invoices %}
         <div class="table-wrap">
-            <table class="table stackable">
-                <thead><tr><th>{% translate "Nummer" %}</th><th>{% translate "Klant" %}</th><th class="r">{% translate "Totaal" %}</th><th class="r">{% translate "Betaalstatus" %}</th></tr></thead>
+            <table class="table stackable stackable-narrow">
+                <thead><tr><th class="w-min">{% translate "Nummer" %}</th><th>{% translate "Klant" %}</th><th class="r w-min">{% translate "Bedrag" %}</th><th class="w-min">{% translate "Status" %}</th></tr></thead>
                 <tbody>
                     {% for invoice in latest_invoices %}
                     <tr class="is-link">
                         <td data-cell="secondary" class="num">{{ invoice.number }}</td>
                         <td data-cell="primary"><a class="row-link" href="{% url 'documents:edit' invoice.pk %}">{{ invoice|contact_name }}</a></td>
                         <td data-cell="amount" class="r amount">{{ invoice.total_cents|money }}</td>
-                        <td data-cell="status" class="r">{% if invoice.is_overdue %}{% include "documents/_pill_overdue.html" with doc=invoice %}{% else %}<span class="pill pill-{{ invoice.payment_state }}">{{ invoice.payment_state|payment_state_label|capfirst }}</span>{% endif %}</td>
+                        <td data-cell="status">{% if invoice.is_overdue %}{% include "documents/_pill_overdue.html" with doc=invoice %}{% else %}<span class="pill pill-{{ invoice.payment_state }}">{{ invoice.payment_state|payment_state_label|capfirst }}</span>{% endif %}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

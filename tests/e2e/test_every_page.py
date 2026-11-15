@@ -602,10 +602,7 @@ NAVIGATION_JS = """
   );
   const phoneNav = ".mtop, .tabbar, #plus-menu, #meer-menu";
   const phone = new Set(actions(phoneNav).filter(reachable).map(key));
-  // "Je krijgt nog" is a shortcut to Facturen › Openstaand, which the phone
-  // reaches through Facturen; on the phone the amount itself is the overview's (#186).
   return actions(".sidebar")
-    .filter((el) => !el.matches(".panel-owed"))
     .filter((el) => !phone.has(key(el)))
     .map((el) => `${(el.innerText || "").trim()} ${key(el)}`);
 }
