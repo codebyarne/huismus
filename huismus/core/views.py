@@ -105,6 +105,9 @@ def home(request):
         "core/home.html",
         {
             "first_time": False,
+            # No invoice or credit note in any status yet: one card to make the
+            # first, in place of the invoice figures (#186).
+            "has_invoices": Document.objects.filter(kind__in=["invoice", "credit_note"]).exists(),
             "greeting": _greeting(now),
             "today": today,
             "outstanding": outstanding_invoices(),
