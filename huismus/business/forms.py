@@ -318,6 +318,8 @@ class SettingsPartForm(SettingsForm):
         cleaned = super().clean()
         if not self.errors:
             for name, kind, template, year, value in self._next_numbers():
+                # Unchanged is not a change: no checks, so it never stops
+                # the rest of the form from saving.
                 if value == next_sequence_number(kind, year=year):
                     continue
                 try:

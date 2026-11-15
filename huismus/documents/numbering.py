@@ -167,7 +167,10 @@ def next_sequence_number_is_fixed(kind: str) -> bool:
     user continues by hand. A reopened document ("Toch bewerken") keeps its
     number, so it still counts."""
     return Document.objects.filter(
-        kind__in=_SEQUENCE_DOCUMENT_KINDS[kind], number__isnull=False, source=""
+        # source is empty for a document made in Huismus, set for an imported one.
+        kind__in=_SEQUENCE_DOCUMENT_KINDS[kind],
+        number__isnull=False,
+        source="",
     ).exists()
 
 
