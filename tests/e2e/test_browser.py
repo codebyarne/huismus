@@ -1232,6 +1232,49 @@ def test_an_issued_invoice_is_mailed_from_its_page_and_lands_on_the_timeline(
     assert message.attachments[0][0] == f"{invoice.number}.pdf"
 
 
+def test_an_overdue_invoice_gets_a_reminder_from_its_page(app, contact, settings):
+    # #114: the reminder is the main action of an overdue invoice, goes out
+    # with the invoice PDF, and the page then says when it went.
+    import datetime
+
+    from django.core import mail
+
+    from huismus.documents.issuing import issue
+    from huismus.documents.models import DocumentLine
+
+    _mail_set_up(settings)
+    contact.email = "bakker@example.invalid"
+    contact.save()
+    invoice = Document.objects.create(
+        kind="invoice",
+        status="draft",
+        contact=contact,
+        issue_date=datetime.date.today() - datetime.timedelta(days=42),
+        due_date=datetime.date.today() - datetime.timedelta(days=12),
+    )
+    DocumentLine.objects.create(document=invoice, description="Brood", unit_price_cents=1250)
+    issue(invoice)
+    app.goto(f"{app.base}/facturen/{invoice.pk}/")
+    expect(app.get_by_text("12 dagen te laat")).to_be_visible()
+
+    app.locator(".page-head").get_by_role("link", name="Herinnering sturen").click()
+
+    expect(app.locator("h1")).to_have_text(f"Herinnering voor factuur {invoice.number}")
+    expect(app.get_by_label("Onderwerp")).to_have_value(
+        f"Herinnering: factuur {invoice.number} van Voorbeeld BV"
+    )
+    app.locator(".actionbar").get_by_role("button", name="Versturen").click()
+
+    expect(app).to_have_url(f"{app.base}/facturen/{invoice.pk}/")
+    expect(app.get_by_text("Herinnering gestuurd naar bakker@example.invalid.")).to_be_visible()
+    expect(app.locator(".timeline")).to_contain_text(
+        "Herinnering gestuurd naar bakker@example.invalid"
+    )
+    expect(app.get_by_text("Laatste herinnering:")).to_be_visible()
+    [message] = mail.outbox
+    assert message.attachments[0][0] == f"{invoice.number}.pdf"
+
+
 def test_on_a_phone_a_sent_quote_is_mailed_from_behind_meer(app, contact, settings):
     from django.core import mail
 
@@ -1317,7 +1360,8 @@ def test_a_mail_text_changed_in_the_settings_is_where_the_mail_starts(app, conta
 
     _mail_set_up(settings)
     app.goto(f"{app.base}/instellingen/mailen/")
-    app.locator("details", has_text="Factuur").locator("summary").click()
+    # Exactly "Factuur": the block Herinnering mentions invoices too.
+    app.locator("details summary").filter(has=app.get_by_text("Factuur", exact=True)).click()
     subject = app.get_by_label("Onderwerp in het Nederlands").first
     expect(subject).to_have_value("Factuur {nummer} van {bedrijf}")
     subject.fill("Rekening {nummer}")

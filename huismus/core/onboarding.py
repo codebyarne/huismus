@@ -51,7 +51,13 @@ STEPS = (
             "Je betalingstermijn en hoe Huismus je facturen en offertes nummert. "
             "Meestal is de standaard goed."
         ),
-        ("default_payment_terms_days", "invoice_number_format", "quote_number_format"),
+        (
+            "default_payment_terms_days",
+            "invoice_number_format",
+            "quote_number_format",
+            "next_invoice_number",
+            "next_quote_number",
+        ),
     ),
     Step(
         "logo",

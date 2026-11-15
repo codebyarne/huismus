@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-15 17:45+0100\n"
+"POT-Creation-Date: 2026-11-15 19:01+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -188,6 +188,22 @@ msgid ""
 "geen btw in rekening gebracht."
 msgstr ""
 
+msgid "Volgnummer van je volgende factuur"
+msgstr ""
+
+msgid ""
+"Kom je uit een ander pakket? Vul het volgnummer in dat na je laatste factuur "
+"komt."
+msgstr ""
+
+msgid "Volgnummer van je volgende offerte"
+msgstr ""
+
+msgid ""
+"Kom je uit een ander pakket? Vul het volgnummer in dat na je laatste offerte "
+"komt."
+msgstr ""
+
 msgid "Factuur"
 msgstr ""
 
@@ -195,6 +211,9 @@ msgid "Creditnota"
 msgstr ""
 
 msgid "Offerte"
+msgstr ""
+
+msgid "Herinnering"
 msgstr ""
 
 msgid "onderwerp in het Nederlands"
@@ -409,6 +428,18 @@ msgid "onderwerp offerte (engels)"
 msgstr ""
 
 msgid "tekst offerte (engels)"
+msgstr ""
+
+msgid "onderwerp herinnering (nederlands)"
+msgstr ""
+
+msgid "tekst herinnering (nederlands)"
+msgstr ""
+
+msgid "onderwerp herinnering (engels)"
+msgstr ""
+
+msgid "tekst herinnering (engels)"
 msgstr ""
 
 msgid "organisatie"
@@ -1638,6 +1669,28 @@ msgid "Offerte {nummer} van {bedrijf}"
 msgstr ""
 
 #, python-brace-format
+msgid "Herinnering: factuur {nummer} van {bedrijf}"
+msgstr ""
+
+#, python-brace-format
+msgid "Beste {naam},"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"Van factuur {nummer} staat nog {openstaand} open. De vervaldatum was "
+"{vervaldatum}. In de bijlage vind je de factuur."
+msgstr ""
+
+msgid ""
+"Wil je het bedrag zo snel mogelijk overmaken? Heb je al betaald, dan kun je "
+"deze mail vergeten."
+msgstr ""
+
+msgid "Met vriendelijke groet,"
+msgstr ""
+
+#, python-brace-format
 msgid "In de bijlage vind je factuur {nummer} van {bedrag}."
 msgstr ""
 
@@ -1655,13 +1708,6 @@ msgstr ""
 
 #, python-brace-format
 msgid "De offerte is geldig tot {geldig_tot}."
-msgstr ""
-
-#, python-brace-format
-msgid "Beste {naam},"
-msgstr ""
-
-msgid "Met vriendelijke groet,"
 msgstr ""
 
 msgid "offerte"
@@ -1823,6 +1869,9 @@ msgstr ""
 msgid "fout"
 msgstr ""
 
+msgid "herinnering"
+msgstr ""
+
 msgid "verstuurde e-mail"
 msgstr ""
 
@@ -1833,6 +1882,22 @@ msgid "Een verstuurde e-mail is onveranderlijk."
 msgstr ""
 
 msgid "[klantnummer]"
+msgstr ""
+
+msgid "Het volgnummer is minstens 1."
+msgstr ""
+
+msgid ""
+"Je hebt in Huismus al een nummer uitgegeven. Het nummer loopt nu vanzelf "
+"door."
+msgstr ""
+
+#, python-format
+msgid "Kies %(lowest)s of hoger. Een lager nummer bestaat al."
+msgstr ""
+
+#, python-format
+msgid "Nummer %(number)s bestaat al. Kies een hoger volgnummer."
 msgstr ""
 
 msgid "[nummer volgt]"
@@ -1920,6 +1985,14 @@ msgid "Betaling geregistreerd."
 msgstr ""
 
 msgid "De betaling is niet opgeslagen. Kijk het bedrag en de datum na."
+msgstr ""
+
+#, python-format
+msgid "Factuur %(number)s is niet te laat. Er is geen herinnering gestuurd."
+msgstr ""
+
+#, python-format
+msgid "Herinnering gestuurd naar %(to)s."
 msgstr ""
 
 #, python-format
@@ -2108,10 +2181,13 @@ msgstr ""
 msgid "uitgaveregels"
 msgstr ""
 
-msgid "Uitgave nagekeken."
+msgid "Bonnetje bewaard. Je vindt het bij Verwerken."
 msgstr ""
 
 msgid "Uitgave opgeslagen."
+msgstr ""
+
+msgid "Uitgave nagekeken."
 msgstr ""
 
 msgid "Niet gelezen: dit lijkt geen bonnetje."
@@ -2324,7 +2400,8 @@ msgstr ""
 #, python-format
 msgid ""
 "%(unparsed)s van %(total)s geïmporteerde %(label)s passen niet in het "
-"ingestelde nummerformaat. Stel het volgende nummer zelf in bij Instellingen."
+"ingestelde nummerformaat. Stel het volgende nummer zelf in bij Instellingen "
+"→ Facturen en nummering."
 msgstr ""
 
 #, python-format
@@ -2803,6 +2880,18 @@ msgstr ""
 msgid "nieuw"
 msgstr ""
 
+msgid "Bonnetje uploaden…"
+msgstr ""
+
+msgid "Huismus is niet bereikbaar. Probeer het opnieuw als je verbinding hebt."
+msgstr ""
+
+msgid "Opnieuw proberen"
+msgstr ""
+
+msgid "Het uploaden is mislukt. Probeer het nog een keer."
+msgstr ""
+
 msgid "Niet gekoppeld"
 msgstr ""
 
@@ -2885,6 +2974,16 @@ msgid "Beheren"
 msgstr ""
 
 msgid "Instellen"
+msgstr ""
+
+#, python-format
+msgid "Volgende als je vandaag uitgeeft: %(number)s"
+msgstr ""
+
+msgid "Het nummer loopt vanzelf door sinds je eerste factuur in Huismus."
+msgstr ""
+
+msgid "Het nummer loopt vanzelf door sinds je eerste offerte in Huismus."
 msgstr ""
 
 msgid "De taal van nieuwe facturen kies je bij Facturen en nummering."
@@ -3266,10 +3365,6 @@ msgstr ""
 msgid "Standaard betalingstermijn"
 msgstr ""
 
-#, python-format
-msgid "Volgende als je vandaag uitgeeft: %(number)s"
-msgstr ""
-
 #, python-brace-format
 msgid ""
 "In een nummerformaat staat {year} voor het jaar, {seq:04d} voor het "
@@ -3334,8 +3429,9 @@ msgstr ""
 msgid ""
 "Hiermee begint elke mail. Per mail kun je hem nog aanpassen. Maak je een "
 "veld leeg, dan gebruikt Huismus zijn eigen tekst. Invulplekken: {nummer}, "
-"{bedrag}, {naam} en {bedrijf}; bij een factuur ook {vervaldatum}, bij een "
-"offerte {geldig_tot}."
+"{bedrag}, {naam} en {bedrijf}; bij een factuur en een herinnering ook "
+"{vervaldatum}, bij een herinnering {openstaand}, bij een offerte "
+"{geldig_tot}."
 msgstr ""
 
 #, python-format
@@ -3372,6 +3468,14 @@ msgid "Je gebruikt Huismus %(version)s."
 msgstr ""
 
 msgid "Nieuwe versie downloaden"
+msgstr ""
+
+#, python-format
+msgid ""
+"Deze versie vraagt macOS %(macos)s of nieuwer. Je Mac heeft macOS "
+"%(this_macos)s. Werk eerst macOS bij via Systeeminstellingen → Algemeen → "
+"Software-update. Daarna installeert Huismus de nieuwe versie de volgende "
+"keer dat je hem opent."
 msgstr ""
 
 msgid "Hij wordt geïnstalleerd als je Huismus opnieuw opent."
@@ -3688,6 +3792,12 @@ msgstr ""
 
 #, python-format
 msgid ""
+"Huismus %(version)s is er, maar vraagt macOS %(macos)s of nieuwer. Werk "
+"eerst macOS bij."
+msgstr ""
+
+#, python-format
+msgid ""
 "Huismus %(version)s staat klaar. Hij wordt geïnstalleerd als je Huismus "
 "opnieuw opent."
 msgstr ""
@@ -3794,9 +3904,6 @@ msgstr ""
 msgid ""
 "Dit apparaat krijgt geen verbinding met Huismus. Controleer je wifi of VPN "
 "en probeer het opnieuw."
-msgstr ""
-
-msgid "Opnieuw proberen"
 msgstr ""
 
 #, python-format
@@ -3997,6 +4104,14 @@ msgstr ""
 msgid "Regel verwijderen"
 msgstr ""
 
+#, python-format
+msgid "Herinnering voor factuur %(number)s"
+msgstr ""
+
+#, python-format
+msgid "%(kind)s %(number)s mailen"
+msgstr ""
+
 msgid "Vervaldatum voorbij en nog niet volledig betaald."
 msgstr ""
 
@@ -4105,6 +4220,14 @@ msgid "Betaling %(amount)s"
 msgstr ""
 
 #, python-format
+msgid "Herinnering gestuurd naar %(to)s"
+msgstr ""
+
+#, python-format
+msgid "Herinnering sturen mislukt naar %(to)s"
+msgstr ""
+
+#, python-format
 msgid "Gemaild naar %(to)s"
 msgstr ""
 
@@ -4133,6 +4256,9 @@ msgstr ""
 
 #, python-format
 msgid "uitgegeven op %(date)s"
+msgstr ""
+
+msgid "Herinnering sturen"
 msgstr ""
 
 msgid "Creditnota maken…"
@@ -4191,6 +4317,10 @@ msgid "Naar factuur %(number)s"
 msgstr ""
 
 msgid "Betaalstatus"
+msgstr ""
+
+#, python-format
+msgid "Laatste herinnering: %(date)s"
 msgstr ""
 
 msgid "Afgehandeld"
@@ -4460,10 +4590,6 @@ msgid "Filters wissen"
 msgstr ""
 
 msgid "Te laat betekent: vervaldatum voorbij en nog niet volledig betaald."
-msgstr ""
-
-#, python-format
-msgid "%(kind)s %(number)s mailen"
 msgstr ""
 
 #, python-format
@@ -4772,6 +4898,24 @@ msgid "Geen uitgave past bij je zoekopdracht en filters."
 msgstr ""
 
 msgid "betekent dat er een bonnetje bij de uitgave zit."
+msgstr ""
+
+msgid "Opnieuw"
+msgstr ""
+
+msgid "Foto versturen"
+msgstr ""
+
+msgid "Bedrag, zoals je het betaalde"
+msgstr ""
+
+msgid "Meer regels of een omschrijving"
+msgstr ""
+
+msgid "Uitgave opslaan"
+msgstr ""
+
+msgid "Alleen de foto bewaren"
 msgstr ""
 
 msgid "Verwerken"
@@ -6092,3 +6236,9 @@ msgid ""
 "Heb je een Raspberry Pi, een NAS, een eigen server of een VPS, dan kun je "
 "Huismus ook in Docker draaien. Dat is voor wie daar handig mee is."
 msgstr ""
+
+#, python-format
+#~ msgid "%(count)s dag te laat"
+#~ msgid_plural "%(count)s dagen te laat"
+#~ msgstr[0] "%(count)s dag te laat"
+#~ msgstr[1] "%(count)s dagen te laat"

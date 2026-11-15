@@ -598,7 +598,8 @@ def _continue_numbering(
     if unparsed:
         return _(
             "%(unparsed)s van %(total)s geïmporteerde %(label)s passen niet in het ingestelde "
-            "nummerformaat. Stel het volgende nummer zelf in bij Instellingen."
+            "nummerformaat. Stel het volgende nummer zelf in bij Instellingen → Facturen en "
+            "nummering."
         ) % {"unparsed": unparsed, "total": len(imported_numbers), "label": label}
     return ""
 

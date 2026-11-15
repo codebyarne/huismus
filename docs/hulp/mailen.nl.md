@@ -2,7 +2,8 @@
 
 Je mailt een factuur, creditnota of offerte rechtstreeks vanuit Huismus, met
 de pdf als bijlage. Dat kan zodra de factuur of creditnota is uitgegeven, of
-de offerte verzonden. De mail gaat via je eigen Gmail of via de mailserver
+de offerte verzonden. Is een factuur te laat, dan stuur je ook een
+herinnering, met de factuur als bijlage. De mail gaat via je eigen Gmail of via de mailserver
 van je eigen domein. Er zit geen andere dienst tussen.
 
 Mailen verandert niets aan het document. Elke poging komt op de tijdlijn van
@@ -76,7 +77,8 @@ je "Afzender" leeg, dan mailt Huismus vanaf het e-mailadres van je bedrijf.
 
 Elke mail begint met een onderwerp en een tekst die je zelf instelt, bij
 **Instellingen → Mailen → Standaardteksten**. Er is een tekst per soort
-document (factuur, creditnota, offerte), in het Nederlands en in het Engels.
+document (factuur, creditnota, offerte) en voor een herinnering, in het
+Nederlands en in het Engels.
 Een Engels document krijgt de Engelse tekst. Voordat je een mail verstuurt,
 kun je alles nog aanpassen.
 
@@ -88,7 +90,8 @@ Met invulplekken zet Huismus de gegevens van het document in de tekst:
 | `{bedrag}` | het totaal, bijvoorbeeld € 850,00 |
 | `{naam}` | de voornaam van de klant, of anders de naam van de klant |
 | `{bedrijf}` | de naam van je bedrijf |
-| `{vervaldatum}` | alleen bij een factuur: de vervaldatum |
+| `{vervaldatum}` | alleen bij een factuur en een herinnering: de vervaldatum |
+| `{openstaand}` | alleen bij een herinnering: wat er nog openstaat |
 | `{geldig_tot}` | alleen bij een offerte: tot wanneer hij geldig is |
 
 Een tikfout zoals `{klant}` kun je niet opslaan. Zo komt hij nooit in een

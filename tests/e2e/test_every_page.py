@@ -51,6 +51,10 @@ def _pages():
     documents = Document.objects.all()
     issued = _first(documents.filter(kind="invoice", status="issued"), "invoice")
     sent_quote = _first(documents.filter(kind="quote", status="sent"), "quote")
+    overdue = next(
+        (d for d in documents.filter(kind="invoice", status="issued") if d.is_overdue), None
+    )
+    assert overdue is not None, "huismus/core/demo_history.py has no overdue invoice"
     pages = [
         "/",
         "/facturen/",
@@ -58,6 +62,8 @@ def _pages():
         f"/facturen/{_first(documents.filter(kind='invoice', status='draft'), 'draft').pk}/",
         f"/facturen/{issued.pk}/",
         f"/facturen/{issued.pk}/mailen/",
+        f"/facturen/{overdue.pk}/",
+        f"/facturen/{overdue.pk}/herinnering/",
         f"/facturen/{issued.pk}/pdf/bekijken/",
         f"/offertes/{_first(documents.filter(kind='quote', status='sent'), 'quote').pk}/mailen/",
         f"/offertes/{sent_quote.pk}/pdf/bekijken/",
@@ -87,6 +93,9 @@ def _pages():
             f"/uitgaven/verwerken/bonnetje/{receipt.pk}/"
             for receipt in Attachment.objects.in_tray()
         ),
+        # A new expense on a phone, the photo first (#188): any receipt in
+        # the tray can be that photo.
+        *(f"/uitgaven/nieuw/foto/{receipt.pk}/" for receipt in Attachment.objects.in_tray()[:1]),
         "/rapporten/jaaroverzicht/",
         # The VAT return (SPEC.md M21, part 4): a year of the history, with
         # imports and lines without a rate under "Niet meegeteld".

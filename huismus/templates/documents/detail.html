@@ -20,6 +20,10 @@ the live settings or contact.{% endcomment %}
         <span class="small muted">{{ customer.display_name }} · {% blocktranslate with date=document.issue_date|date:"SHORT_DATE_FORMAT" %}uitgegeven op {{ date }}{% endblocktranslate %}</span>
     </div>
     <div class="actions">
+        {% if document.days_overdue is not None %}
+        {% comment %}The main action of an overdue invoice (#114, owner 2026-11-15).{% endcomment %}
+        <a class="btn btn-primary" href="{% url 'documents:reminder' document.pk %}"><svg class="i" aria-hidden="true"><use href="#send"></use></svg>{% translate "Herinnering sturen" %}</a>
+        {% endif %}
         {% if document.kind == "invoice" and credited_cents < document.total_cents %}
         <button class="btn btn-secondary" type="button" command="show-modal" commandfor="creditnota"><svg class="i" aria-hidden="true"><use href="#undo"></use></svg>{% translate "Creditnota maken…" %}</button>
         {% endif %}
@@ -109,10 +113,15 @@ the live settings or contact.{% endcomment %}
                 {% if document.is_overdue %}{% include "documents/_pill_overdue.html" with doc=document full=True %}
                 {% else %}<span class="pill pill-{{ document.payment_state }}">{{ document.payment_state|payment_state_label|capfirst }}</span>{% endif %}
             </div>
+            {% comment %}How late it is stands in the pill above; here only when the last reminder went.{% endcomment %}
+            {% if last_reminder %}
+            <p class="small muted">{% blocktranslate with date=last_reminder.sent_at|date:"SHORT_DATE_FORMAT" %}Laatste herinnering: {{ date }}{% endblocktranslate %}</p>
+            {% endif %}
             <div class="progress{% if document.payment_state == 'partial' %} is-warn{% endif %}" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ settled_percent }}" aria-label="{% translate 'Afgehandeld' %}"><span style="width:{{ settled_percent }}%"></span></div>
             {% with invoice=document %}{% include "documents/_credit_room.html" %}{% endwith %}
             {% if outstanding_cents > 0 %}
-            <button class="btn btn-primary btn-block" type="button" command="show-modal" commandfor="betaling"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Betaling registreren" %}</button>
+            {% comment %}Secondary on an overdue invoice: there the reminder is the main action.{% endcomment %}
+            <button class="btn {% if document.days_overdue is not None %}btn-secondary{% else %}btn-primary{% endif %} btn-block" type="button" command="show-modal" commandfor="betaling"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Betaling registreren" %}</button>
             {% endif %}
         </section>
 

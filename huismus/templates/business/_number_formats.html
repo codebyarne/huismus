@@ -1,0 +1,18 @@
+{% load i18n forms %}
+{% comment %}The invoice and quote number formats, each with the next sequence number under it while
+Huismus has not given a number of that kind yet (issue #141; business.forms.SettingsPartForm).
+A column per kind, so the next number stays under its own format. Used on Instellingen →
+Facturen en nummering and in the start's Facturen step; the form's fields must name
+next_invoice_number and next_quote_number (topics.py, core/onboarding.py).{% endcomment %}
+<div class="span-2" style="display:grid;gap:var(--s-4);align-content:start">
+    {% if next_invoice %}{% blocktranslate asvar invoice_next with number=next_invoice %}Volgende als je vandaag uitgeeft: {{ number }}{% endblocktranslate %}{% endif %}
+    {% field form.invoice_number_format extra_class="mono" help=invoice_next %}
+    {% if form.fixed_sequences.invoice %}<p class="help">{% translate "Het nummer loopt vanzelf door sinds je eerste factuur in Huismus." %}</p>
+    {% else %}{% field form.next_invoice_number extra_class="num" %}{% endif %}
+</div>
+<div class="span-2" style="display:grid;gap:var(--s-4);align-content:start">
+    {% if next_quote %}{% blocktranslate asvar quote_next with number=next_quote %}Volgende als je vandaag uitgeeft: {{ number }}{% endblocktranslate %}{% endif %}
+    {% field form.quote_number_format extra_class="mono" help=quote_next %}
+    {% if form.fixed_sequences.quote %}<p class="help">{% translate "Het nummer loopt vanzelf door sinds je eerste offerte in Huismus." %}</p>
+    {% else %}{% field form.next_quote_number extra_class="num" %}{% endif %}
+</div>

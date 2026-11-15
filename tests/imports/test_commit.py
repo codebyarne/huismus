@@ -4,6 +4,8 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
+from django.template.loader import render_to_string
+from django.urls import reverse
 
 from huismus.business.models import Settings
 from huismus.contacts.models import Contact, ContactPerson
@@ -270,6 +272,11 @@ def test_real_moneybird_numbers_do_not_fit_the_default_format():
 
     assert report.numbering_note != ""
     assert NumberSequence.objects.count() == 0
+    # The report says where: the next number by hand (issue #141).
+    section = render_to_string(
+        "imports/_report_section.html", {"r": {"numbering_note": report.numbering_note}}
+    )
+    assert reverse("business:topic", args=["facturen"]) in section
 
 
 def test_an_apparent_payment_with_no_paid_on_date_is_reported_not_dropped():

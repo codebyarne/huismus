@@ -147,6 +147,14 @@ class Settings(TimestampedModel):
         _("onderwerp offerte (engels)"), max_length=300, blank=True
     )
     mail_quote_body_en = models.TextField(_("tekst offerte (engels)"), blank=True)
+    mail_reminder_subject_nl = models.CharField(
+        _("onderwerp herinnering (nederlands)"), max_length=300, blank=True
+    )
+    mail_reminder_body_nl = models.TextField(_("tekst herinnering (nederlands)"), blank=True)
+    mail_reminder_subject_en = models.CharField(
+        _("onderwerp herinnering (engels)"), max_length=300, blank=True
+    )
+    mail_reminder_body_en = models.TextField(_("tekst herinnering (engels)"), blank=True)
 
     # Hoe gebruik je Huismus? (huismus.core.feedback): the organisation last
     # sent, to fill in next time, and whether the done page still asks.

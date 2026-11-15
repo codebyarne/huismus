@@ -14,7 +14,9 @@ Huismus needs for your first invoice:
 2. **KOR:** whether you use the small business scheme (KOR), and if so the
    text that goes under your invoices. More in [KOR and VAT](kor-en-btw.en.md).
 3. **Invoices:** your default payment term and how Huismus numbers your
-   invoices and quotes. The default is usually fine.
+   invoices and quotes. The default is usually fine. Coming from another
+   package? Enter the sequence number that follows your last invoice, so
+   your numbers carry on.
 4. **Logo:** your logo goes at the top of your invoices and quotes. This can
    wait.
 

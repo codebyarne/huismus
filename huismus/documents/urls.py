@@ -34,6 +34,7 @@ urlpatterns = [
         name="original_pdf_embed",
     ),
     path("<int:pk>/mailen/", views.document_mail, name="mail"),
+    path("<int:pk>/herinnering/", views.document_reminder, name="reminder"),
 ]
 
 # Quotes, mounted at offertes/ in huismus/config/urls.py under its own "quotes"
