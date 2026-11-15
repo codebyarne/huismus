@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-15 10:26+0100\n"
+"POT-Creation-Date: 2026-11-15 10:33+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3784,6 +3784,9 @@ msgid "Nog geen facturen"
 msgstr ""
 
 msgid "Maak je eerste factuur. Of zet je administratie over uit Moneybird."
+msgstr ""
+
+msgid "Naar je uitgaven"
 msgstr ""
 
 msgid "Huismus is niet bereikbaar"
