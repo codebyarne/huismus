@@ -9,6 +9,31 @@ Eén onderwerp, van plan tot release. Je werkt door tot het af is of tot
 iets op de **escalatielijst** (`CLAUDE.md`, "Autonoom werken") staat. Een
 productvraag of een design gaat naar de `product-owner`-agent, niet naar de eigenaar.
 
+## Onder regie
+
+Staat in je opdracht de regel `Regie: ja`, dan heeft `/regie` je gestart
+(`.claude/skills/regie/`). Er lopen dan andere mijlpalen naast je, en de
+eigenaar praat met de regie, niet met jou. Alles hieronder blijft gelden, met
+deze verschillen:
+
+- **Rapport.** Houd je stand bij in
+  `"$(git rev-parse --path-format=absolute --git-common-dir)/regie/<issue>.md"`,
+  met de eerste regel en de standen die `/regie` beschrijft (`BEZIG`, `VRAAG`,
+  `FLOW`, `KLAAR`, `VAST`). Werk het bij als je stand verandert, en zet die eerste
+  regel ook bovenaan je laatste bericht van elke beurt. Screenshots voor de
+  eigenaar kopieer je naar `regie/<issue>/` ernaast.
+- **Vragen aan de eigenaar (stap 9 en "Flow voorleggen")**: geen AskUserQuestion
+  en geen SendUserFile. Zet de vraag of de flow in je rapport, stand `VRAAG` of
+  `FLOW`, ga door met wat er niet van afhangt, en rond je beurt af. Het antwoord
+  komt via de regie, als bericht in deze sessie.
+- **Geen release (stap 7).** Mergen wel, zoals altijd. De release doet de regie.
+- **Melden (stap 8)**: geen pushmelding aan de eigenaar. Stand `KLAAR` in je
+  rapport, met wat de gebruiker merkt en de PO-besluiten. De regel in
+  `huismus-intern/STATUS.md` blijft.
+- **Geen opvolger (stap 10).** De regie kiest het volgende werk.
+- **Botsing.** Merk je dat een andere lopende mijlpaal hetzelfde scherm of een
+  migratie raakt: stand `VAST`, met welk issue en waarom.
+
 ## 1. Begin
 
 - Eigen worktree en branch vanaf de nieuwste `origin/main` (`CLAUDE.md`,
@@ -150,7 +175,7 @@ sessie, maar geef het door aan een nieuwe:
    later nog een keer wakker wordt.
 
 Zonder `create_session` (een lokale sessie): noem het volgende onderwerp in
-je melding en start niets.
+je melding en start niets. Onder regie sla je deze stap over (zie "Onder regie").
 
 Wacht je onderwerp op de eigenaar (stap 9) en hangt het volgende er niet van af, dan
 mag je de opvolger al starten: geef je issue eerst het label `wacht`, zodat de

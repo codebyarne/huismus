@@ -353,6 +353,15 @@ een sessie traag. Na het melden start `/mijlpaal` zelf een nieuwe cloudsessie
 voor het volgende issue uit de wachtrij (zie "Backlog"; stap 10 van de skill).
 Een open issue met het label `pauze` of een lege wachtrij stopt de keten.
 
+**Meer tegelijk: `/regie`.** Wil de eigenaar meerdere mijlpalen tegelijk en één
+gesprek voor het overzicht, dan begint die met `/regie` (`.claude/skills/regie/`) in een
+lokale sessie. De regie start per issue uit de wachtrij een lokale sessie met
+`/mijlpaal` (standaard drie tegelijk, nooit twee op hetzelfde scherm), krijgt hun
+rapporten, en bundelt status, vragen en screenshots voor de eigenaar. Mijlpalen
+onder regie starten geen opvolger en maken geen release; dat doet de regie.
+Lokaal, omdat cloudsessies niet terugmelden. Nieuwe sessies op de Mac van de
+eigenaar staan standaard op Remote Control, zodat het ook vanaf de telefoon gaat.
+
 **Escalatielijst.** Alleen dit vraag je aan de eigenaar zelf, in producttaal en met
 een advies:
 
