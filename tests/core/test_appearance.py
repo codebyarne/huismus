@@ -56,7 +56,7 @@ def test_saving_a_theme_stores_it_for_the_user_and_sets_it_on_html(client, user)
     assert '<html lang="nl" data-theme="dark">' in page
     assert 'name="theme" value="dark" checked' in page
     # One theme colour for the address bar, the chosen one (--surface dark).
-    assert '<meta name="theme-color" content="#231F1B">' in page
+    assert '<meta name="theme-color" content="#1B1533">' in page
     assert "prefers-color-scheme" not in page
 
 

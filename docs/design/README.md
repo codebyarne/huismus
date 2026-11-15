@@ -48,10 +48,11 @@ ronde 3 (met een eigen schets-CSS, `hm.css`). Beide zijn naslag, geen bron.
 
 ## Domeinregels in de UI
 
-1. **Kleur alleen waar je iets moet doen; de rest is rustig** (besluit
-   2026-10-30). Een gekleurd vlak alleen voor wat aandacht vraagt (Vervallen,
-   Onbetaald, over de KOR-grens). Afgerond is rustig: alleen een stip of slotje
-   in gedempte tekst.
+1. **Kleur alleen waar je iets moet doen; de rest is rustig** (besluiten
+   2026-10-30 en 2026-11-15). Een gekleurd vlak alleen voor wat aandacht vraagt
+   (te laat, over de KOR-grens). Afgerond is rustig: alleen een vinkje of slotje
+   in gedempte tekst. Onbetaald en verstuurd zijn gewone tekst, een concept een
+   gestippeld randje.
 2. **Uitgegeven is definitief**: `.paper-final`, `.paper-stamp`, en in lijsten
    "Definitief" met een slotje in gedempte tekst (`.pill-final`, geen vlak).
    Geen invoervelden; corrigeren alleen via een creditnota.
@@ -59,17 +60,18 @@ ronde 3 (met een eigen schets-CSS, `hm.css`). Beide zijn naslag, geen bron.
    wordt toegekend.
 4. **Concepten hebben geen nummer**: `<span class="draft-no">Concept</span>`
    of "bij uitgeven".
-5. **Betaalstatus wordt afgeleid**: `.pill-unpaid` en `.pill-partial` (amber
-   vlak), `.pill-paid` (groene stip, geen vlak), `.pill-credited`; voorbij de
-   vervaldatum `.pill-overdue` ("Vervallen", rood vlak, het enige wat opvalt).
+5. **Betaalstatus wordt afgeleid**: `.pill-unpaid` (gewone tekst, open
+   stip), `.pill-partial` (amber vlak), `.pill-paid` (vinkje, geen vlak),
+   `.pill-credited`; voorbij de vervaldatum `.pill-overdue` ("12 dagen te laat",
+   framboos vlak, het enige wat opvalt).
 6. **Een geïmporteerd document** krijgt `.pill-import` en de originele pdf is
    primair.
 7. **De import is standaard een proefdraai.** Het rapport stelt gerust of wijst
    precies aan wat afwijkt.
 8. **Meldingen op het overzicht** zijn rustige kaarten (`.hint-banner`): kleur
    alleen in de streep, het icoon en de link. Rood (`.is-bad`) boven de
-   KOR-grens of als iets mislukt, amber (`.is-warn`) om op te letten, blauw
-   (`.is-info`) voor informatie, abrikoos (geen klasse) voor een herinnering.
+   KOR-grens of als iets mislukt, amber (`.is-warn`) om op te letten, violet
+   (`.is-info`) voor informatie, snavelgeel (geen klasse) voor een herinnering.
 9. **KOR**: de hint `.kor-note` in de editor; de tekst zelf, die de gebruiker
    in Instellingen zet, onder elke factuur.
 10. **Totalen komen van de server**, elk formulier werkt zonder JavaScript.

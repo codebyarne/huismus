@@ -154,7 +154,12 @@ COVER = """<!-- @dsCard height=288 -->
 LOGO = "mus"  # the one symbol in icons.svg that is the mark, not an icon
 # A standalone SVG knows neither currentColor nor the page's tokens: the sparrow's
 # parts and the icons' ink get the light value of these tokens instead.
-MARK_TOKENS = {"mark-body": "primary", "mark-accent": "accent", "mark-eye": "surface"}
+MARK_TOKENS = {
+    "mark-body": "primary",
+    "mark-accent": "accent",
+    "mark-wing-fill": "mark-wing",
+    "mark-eye": "surface",
+}
 ICON_INK_TOKEN = "text"
 
 
