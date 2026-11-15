@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-15 10:32+0100\n"
+"POT-Creation-Date: 2026-11-15 11:03+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2210,11 +2210,14 @@ msgstr "expense line"
 msgid "uitgaveregels"
 msgstr "expense lines"
 
-msgid "Uitgave nagekeken."
-msgstr "Expense checked."
+msgid "Bonnetje bewaard. Je vindt het bij Verwerken."
+msgstr "Receipt saved. You'll find it under Process."
 
 msgid "Uitgave opgeslagen."
 msgstr "Expense saved."
+
+msgid "Uitgave nagekeken."
+msgstr "Expense checked."
 
 msgid "Niet gelezen: dit lijkt geen bonnetje."
 msgstr "Not read: this doesn't look like a receipt."
@@ -2969,6 +2972,18 @@ msgstr "Shortcuts:"
 
 msgid "nieuw"
 msgstr "new"
+
+msgid "Bonnetje uploaden…"
+msgstr "Uploading receipt…"
+
+msgid "Huismus is niet bereikbaar. Probeer het opnieuw als je verbinding hebt."
+msgstr "Can't reach Huismus. Try again when you're connected."
+
+msgid "Opnieuw proberen"
+msgstr "Try again"
+
+msgid "Het uploaden is mislukt. Probeer het nog een keer."
+msgstr "The upload failed. Please try once more."
 
 msgid "Niet gekoppeld"
 msgstr "Not connected"
@@ -4066,9 +4081,6 @@ msgid ""
 msgstr ""
 "This device can't connect to Huismus. Check your Wi-Fi or VPN and try again."
 
-msgid "Opnieuw proberen"
-msgstr "Try again"
-
 #, python-format
 msgid "Stap %(number)s van %(total)s"
 msgstr "Step %(number)s of %(total)s"
@@ -5130,6 +5142,24 @@ msgstr "No expense matches your search and filters."
 
 msgid "betekent dat er een bonnetje bij de uitgave zit."
 msgstr "means the expense has a receipt."
+
+msgid "Opnieuw"
+msgstr "Retake"
+
+msgid "Foto versturen"
+msgstr "Send photo"
+
+msgid "Bedrag, zoals je het betaalde"
+msgstr "Amount, as you paid it"
+
+msgid "Meer regels of een omschrijving"
+msgstr "More lines or a description"
+
+msgid "Uitgave opslaan"
+msgstr "Save expense"
+
+msgid "Alleen de foto bewaren"
+msgstr "Just keep the photo"
 
 msgid "Verwerken"
 msgstr "Process"
