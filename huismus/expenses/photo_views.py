@@ -47,13 +47,19 @@ def photo_upload(request):
         messages.error(request, form.errors["file"][0])
         return redirect("expenses:create")
     uploaded = form.cleaned_data["file"]
-    replaced = Attachment.objects.in_tray().filter(pk=_int(request.POST.get("vervangt"))).first()
-    if replaced is not None:
-        replaced.file.delete(save=False)
-        replaced.delete()
     receipt = Attachment.objects.create(
         file=uploaded, kind="receipt", sha256=sha256_of(uploaded), source=SOURCE
     )
+    # The old one goes only now the new one is in. Only a photo taken here
+    # that still waits in the tray: one on an expense meanwhile (another
+    # tab) or one from the receipts folder stays. Anything else than a
+    # number replaces nothing.
+    replaces = request.POST.get("vervangt", "")
+    if replaces.isdigit():
+        replaced = Attachment.objects.in_tray().filter(source=SOURCE, pk=int(replaces))
+        for old in replaced:
+            old.file.delete(save=False)
+            old.delete()
     return redirect("expenses:photo", pk=receipt.pk)
 
 
@@ -100,10 +106,3 @@ def photo_expense(request, pk):
             "upload_url": reverse("expenses:photo_upload"),
         },
     )
-
-
-def _int(value) -> int | None:
-    try:
-        return int(value)
-    except (TypeError, ValueError):
-        return None
