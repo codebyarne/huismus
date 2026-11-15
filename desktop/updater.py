@@ -14,9 +14,13 @@ waits until this process has ended and opens the app again after:
 
 Then the window closes. Only tested by hand, on a Mac and on Windows
 (SPEC.md M11, "Done when").
+
+Before that, on macOS, minimum_macos reads which macOS the downloaded app
+needs, so core.updates never installs one that wouldn't open (issue #155).
 """
 
 import os
+import plistlib
 import re
 import shlex
 import subprocess
@@ -88,6 +92,32 @@ def installed_app() -> Path | None:
             return None
         return Path(sys.executable).resolve().parent
     return app_bundle()
+
+
+def minimum_macos(package: Path) -> str:
+    """The LSMinimumSystemVersion of Huismus.app in the downloaded .dmg,
+    like "15.0"; "" when it names none. Mounted read-only and out of
+    sight, as the install script does; an error when that fails
+    (core.updates then holds nothing back)."""
+    with tempfile.TemporaryDirectory(prefix="huismus-dmg-") as mount:
+        subprocess.run(
+            ["hdiutil", "attach", "-nobrowse", "-readonly", "-mountpoint", mount, str(package)],
+            check=True,
+            capture_output=True,
+            timeout=120,
+        )
+        try:
+            return minimum_macos_of(Path(mount) / "Huismus.app")
+        finally:
+            subprocess.run(["hdiutil", "detach", mount, "-quiet"], capture_output=True, timeout=60)
+
+
+def minimum_macos_of(app: Path) -> str:
+    """The LSMinimumSystemVersion in app's Info.plist, "" without one."""
+    with (app / "Contents" / "Info.plist").open("rb") as file:
+        info = plistlib.load(file)
+    minimum = info.get("LSMinimumSystemVersion", "")
+    return minimum if isinstance(minimum, str) else ""
 
 
 def script(package: Path, sha256: str, app: Path, pid: int) -> str:
