@@ -143,6 +143,96 @@ def next_numbers_if_issued_today(settings) -> dict[str, str | None]:
     }
 
 
+# Which document kinds take their numbers from a sequence: credit notes
+# share the invoice sequence (models.SEQUENCE_KIND_CHOICES).
+_SEQUENCE_DOCUMENT_KINDS = {"invoice": ["invoice", "credit_note"], "quote": ["quote"]}
+
+
+def next_sequence_number(kind: str, *, year: int | None) -> int:
+    """The {seq} the next document of this sequence gets. Reads only."""
+    last_value = (
+        NumberSequence.objects.filter(kind=kind, year=year)
+        .values_list("last_value", flat=True)
+        .first()
+    )
+    return (last_value or 0) + 1
+
+
+def next_sequence_number_is_fixed(kind: str) -> bool:
+    """True once Huismus itself gave a document of this kind a number, in
+    any year. From then on numbers only move by issuing: setting the next
+    one by hand could leave a gap after a number Huismus gave, also in a
+    new year's sequence (invariant 3). Imported documents don't count:
+    their numbers come from the package the user left, which is what the
+    user continues by hand. A reopened document ("Toch bewerken") keeps its
+    number, so it still counts."""
+    return Document.objects.filter(
+        kind__in=_SEQUENCE_DOCUMENT_KINDS[kind], number__isnull=False, source=""
+    ).exists()
+
+
+def lowest_next_sequence_number(kind: str, template: str, *, year: int | None) -> int:
+    """Just above the highest {seq} already in this sequence: the numbers
+    that fit the format, of this year when it resets yearly. Below that the
+    sequence would reach a number that exists."""
+    highest = 0
+    documents = Document.objects.filter(
+        kind__in=_SEQUENCE_DOCUMENT_KINDS[kind], number__isnull=False
+    ).select_related("contact")
+    for document in documents:
+        if year is not None and (document.issue_date is None or document.issue_date.year != year):
+            continue
+        customer = (document.contact.customer_number if document.contact else "") or ""
+        seq = parse_number(template, document.number, year=year, customer=customer)
+        if seq is not None:
+            highest = max(highest, seq)
+    return highest + 1
+
+
+def set_next_sequence_number(kind: str, template: str, *, year: int | None, value: int) -> None:
+    """Set the {seq} of the next document of this sequence by hand (SPEC.md
+    section 7, "the user sets the next number manually"; issue #141), for
+    someone continuing the numbers of another package. Raises
+    NumberingError instead of leaving a gap or giving a number twice
+    (invariant 3): not once Huismus issued a document of this kind, not
+    onto or below a number that already exists. Up and down are both
+    fine before that: nothing was issued from it, so nothing is skipped.
+    Only the sequence row changes; a number is still given only by
+    allocate_number()."""
+    if value == next_sequence_number(kind, year=year):
+        return
+    if value < 1:
+        raise NumberingError(_("Het volgnummer is minstens 1."))
+    with transaction.atomic():
+        # A write first, as in allocate_number(): from here SQLite holds the
+        # write lock, so no document can be issued between the checks below
+        # and the update. Reading first and writing after could instead
+        # deadlock with a concurrent issue().
+        ensure_sequence_row(kind, year)
+        if next_sequence_number_is_fixed(kind):
+            raise NumberingError(
+                _("Je hebt in Huismus al een nummer uitgegeven. Het nummer loopt nu vanzelf door.")
+            )
+        lowest = lowest_next_sequence_number(kind, template, year=year)
+        if value < lowest:
+            raise NumberingError(
+                _("Kies %(lowest)s of hoger. Een lager nummer bestaat al.") % {"lowest": lowest}
+            )
+        if not uses_customer_number(template):
+            # An existing number that doesn't fit the format (an import)
+            # can still be hit exactly. With {customer} the number isn't
+            # known until the customer is; number_for() refuses it then.
+            number = format_number(template, year=year, seq=value)
+            if Document.objects.filter(
+                kind__in=_SEQUENCE_DOCUMENT_KINDS[kind], number=number
+            ).exists():
+                raise NumberingError(
+                    _("Nummer %(number)s bestaat al. Kies een hoger volgnummer.")
+                    % {"number": number}
+                )
+        NumberSequence.objects.filter(kind=kind, year=year).update(last_value=value - 1)
+
+
 _SEQ_PLACEHOLDER = re.compile(r"\{seq(:[^}]*)?\}")
 
 
