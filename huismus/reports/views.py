@@ -122,14 +122,43 @@ def _period_name(period: Period) -> str:
     return str(period.year)
 
 
+# The quarters as the VAT return under the KOR names them.
+QUARTER_MONTHS = [_("jan–mrt"), _("apr–jun"), _("jul–sep"), _("okt–dec")]
+
+
+def _kor_year(today) -> dict:
+    """With the KOR on there is no return to fill in: the page shows this
+    year's revenue per quarter and how close it is to the KOR limit, the
+    same figures as the year overview (one function for both). A quarter
+    still to come has no figure (None)."""
+    year = today.year
+    current_quarter = (today.month - 1) // 3 + 1
+    overview = compute_year_overview(year)
+    return {
+        "year": year,
+        "quarters": [
+            {
+                "months": months,
+                "revenue_cents": (
+                    None if quarter.quarter > current_quarter else quarter.revenue_cents
+                ),
+            }
+            for months, quarter in zip(QUARTER_MONTHS, overview.quarters, strict=True)
+        ],
+        "limit": kor_limit_status(year),
+    }
+
+
 @login_required
 def vat_return(request):
-    period = Period.parse(request.GET.get("periode"), today=timezone.localdate())
+    today = timezone.localdate()
+    period = Period.parse(request.GET.get("periode"), today=today)
     report = compute_vat_return(period)
     return render(
         request,
         "reports/vat_return.html",
         {
+            "kor_year": _kor_year(today) if report.kor_on else None,
             "report": report,
             "period": period,
             "period_name": _period_name(period),
