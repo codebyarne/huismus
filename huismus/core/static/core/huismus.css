@@ -1043,6 +1043,10 @@ form > div > .settings-section .card-head { border-bottom: 0; padding-bottom: 0;
 .settings-list a { display: flex; align-items: center; gap: 14px; padding: 13px var(--s-5); color: var(--text); text-decoration: none; }
 .settings-list a:hover { background: var(--surface-2); color: var(--text); }
 .settings-list a:focus-visible { outline-offset: -2px; border-radius: 0; }
+/* The first and last row follow the card's round corners, also with the focus outline. */
+.settings-list > li:first-child a { border-radius: var(--r-lg) var(--r-lg) 0 0; }
+.settings-list > li:last-child a { border-radius: 0 0 var(--r-lg) var(--r-lg); }
+.settings-list > li:only-child a { border-radius: var(--r-lg); }
 .settings-icon, .settings-chevron { color: var(--text-muted); flex: none; }
 .settings-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
 .settings-title { font-weight: var(--fw-semibold); }
