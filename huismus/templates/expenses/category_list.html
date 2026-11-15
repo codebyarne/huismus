@@ -93,7 +93,7 @@
     <form class="card-foot row" method="post" action="{% url 'expenses:category_list' %}" style="gap:var(--s-2);padding:var(--s-3) var(--s-4)">
         {% csrf_token %}
         <label class="sr-only" for="cat-nieuw">{% translate "Nieuwe categorie" %}</label>
-        <input id="cat-nieuw" class="input input-sm" name="name" required placeholder="{% translate 'Nieuwe categorie, bijvoorbeeld Verzekeringen' %}" style="flex:1;min-width:200px"{% if form.name.errors %} aria-invalid="true" aria-describedby="cat-nieuw-err"{% endif %}>
+        <input id="cat-nieuw" class="input input-sm" name="name" required placeholder="{% translate 'Nieuwe categorie, bijvoorbeeld Verzekeringen' %}" style="flex:1 1 280px;min-width:0"{% if form.name.errors %} aria-invalid="true" aria-describedby="cat-nieuw-err"{% endif %}>
         <button class="btn btn-secondary btn-sm" type="submit"><svg class="i i-sm" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Toevoegen" %}</button>
         {% for error in form.name.errors %}<p class="error" id="cat-nieuw-err" style="flex-basis:100%"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>{{ error }}</p>{% endfor %}
     </form>
