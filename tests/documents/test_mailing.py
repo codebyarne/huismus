@@ -779,3 +779,14 @@ def test_a_failed_reminder_is_not_the_last_reminder(client_in, monkeypatch):
     page = client_in.get(reverse("documents:edit", args=[invoice.pk])).content.decode()
     assert "Laatste herinnering" not in page
     assert "Herinnering sturen mislukt naar sanne@example.invalid" in page
+
+
+def test_only_an_overdue_issued_invoice_counts_its_days_overdue():
+    invoice = _invoice(due_date=datetime.date.today() - datetime.timedelta(days=1))
+    credit_note = issue(_draft(kind="credit_note", related_document=_invoice()))
+
+    assert invoice.days_overdue == 1
+    assert _invoice(due_date=datetime.date(2099, 1, 1)).days_overdue is None
+    assert _draft().days_overdue is None
+    assert credit_note.days_overdue is None
+    assert _quote().days_overdue is None

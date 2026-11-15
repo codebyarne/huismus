@@ -20,7 +20,7 @@ the live settings or contact.{% endcomment %}
         <span class="small muted">{{ customer.display_name }} · {% blocktranslate with date=document.issue_date|date:"SHORT_DATE_FORMAT" %}uitgegeven op {{ date }}{% endblocktranslate %}</span>
     </div>
     <div class="actions">
-        {% if document.is_overdue %}
+        {% if document.days_overdue is not None %}
         {% comment %}The main action of an overdue invoice (#114, owner 2026-11-15).{% endcomment %}
         <a class="btn btn-primary" href="{% url 'documents:reminder' document.pk %}"><svg class="i" aria-hidden="true"><use href="#send"></use></svg>{% translate "Herinnering sturen" %}</a>
         {% endif %}
@@ -113,10 +113,10 @@ the live settings or contact.{% endcomment %}
                 {% if document.is_overdue %}{% include "documents/_pill_overdue.html" %}
                 {% else %}<span class="pill pill-{{ document.payment_state }}">{{ document.payment_state|payment_state_label|capfirst }}</span>{% endif %}
             </div>
-            {% if days_overdue is not None or last_reminder %}
+            {% if document.days_overdue is not None or last_reminder %}
             <p class="small muted">
-                {% if days_overdue is not None %}{% blocktranslate count count=days_overdue %}{{ count }} dag te laat{% plural %}{{ count }} dagen te laat{% endblocktranslate %}{% endif %}
-                {% if days_overdue is not None and last_reminder %}·{% endif %}
+                {% if document.days_overdue is not None %}{% blocktranslate count count=document.days_overdue %}{{ count }} dag te laat{% plural %}{{ count }} dagen te laat{% endblocktranslate %}{% endif %}
+                {% if document.days_overdue is not None and last_reminder %}·{% endif %}
                 {% if last_reminder %}{% blocktranslate with date=last_reminder.sent_at|date:"SHORT_DATE_FORMAT" %}Laatste herinnering: {{ date }}{% endblocktranslate %}{% endif %}
             </p>
             {% endif %}
@@ -124,7 +124,7 @@ the live settings or contact.{% endcomment %}
             {% with invoice=document %}{% include "documents/_credit_room.html" %}{% endwith %}
             {% if outstanding_cents > 0 %}
             {% comment %}Secondary on an overdue invoice: there the reminder is the main action.{% endcomment %}
-            <button class="btn {% if document.is_overdue %}btn-secondary{% else %}btn-primary{% endif %} btn-block" type="button" command="show-modal" commandfor="betaling"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Betaling registreren" %}</button>
+            <button class="btn {% if document.days_overdue is not None %}btn-secondary{% else %}btn-primary{% endif %} btn-block" type="button" command="show-modal" commandfor="betaling"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Betaling registreren" %}</button>
             {% endif %}
         </section>
 

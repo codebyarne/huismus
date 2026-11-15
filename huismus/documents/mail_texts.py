@@ -12,8 +12,9 @@ import re
 from django.utils import translation
 from django.utils.translation import gettext as _
 
-# "reminder" is no kind of document but a mail about an invoice; it has
-# texts of its own, so it is one more kind here.
+# The kinds of mail text, not Document.kind: one per kind of document, plus
+# "reminder", a payment reminder about an invoice (#114) with texts of its
+# own. {nummer}, {bedrag}, {naam} and {bedrijf} work in all of them.
 KINDS = ["invoice", "credit_note", "quote", "reminder"]
 LANGUAGES = ["nl", "en"]
 

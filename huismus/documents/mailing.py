@@ -45,12 +45,6 @@ def _date(value) -> str:
     return dateformat.format(value, "j F Y")
 
 
-def can_remind(document) -> bool:
-    """A payment reminder (#114) is for an issued invoice that is overdue:
-    its due date has passed and it isn't fully paid (Document.is_overdue)."""
-    return document.kind == "invoice" and document.status == "issued" and document.is_overdue
-
-
 def default_message(document, *, reminder=False) -> tuple[str, str]:
     """Subject and body to start from: the mail text from the settings for
     this kind and language, or the standard text (documents.mail_texts),
