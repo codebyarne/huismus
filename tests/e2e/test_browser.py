@@ -339,6 +339,27 @@ def _background(page):
     return page.evaluate("getComputedStyle(document.body).backgroundColor")
 
 
+def test_the_paper_of_a_document_stays_white_in_dark(app, contact):
+    # The owner, 2026-11-15: on dark paper a logo made for white disappears, and the
+    # page suggests the invoice itself comes out dark.
+    app.emulate_media(color_scheme="dark")
+    app.goto(app.base + "/facturen/nieuw/")
+    paper = app.locator("article.paper")
+    expect(paper).to_be_visible()
+
+    def style(selector, prop):
+        return app.evaluate(
+            "([s, p]) => getComputedStyle(document.querySelector(s))[p]", [selector, prop]
+        )
+
+    assert _background(app) != "rgb(255, 255, 255)"  # the page around it is dark
+    assert style("article.paper", "backgroundColor") == "rgb(255, 255, 255)"
+    assert style("article.paper", "color") == "rgb(26, 21, 48)"
+    # What you type on the paper is dark on white too.
+    assert style("article.paper .input", "backgroundColor") == "rgb(255, 255, 255)"
+    assert style("article.paper .input", "color") == "rgb(26, 21, 48)"
+
+
 def test_a_chosen_theme_beats_the_system_and_stays_after_a_reload(app, browser):
     # A tester, 2026-10-31: Huismus only followed the system's light/dark.
     app.emulate_media(color_scheme="light")
