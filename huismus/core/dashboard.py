@@ -4,6 +4,7 @@
 payment state and outstanding amounts come from Document's own
 with_payment_totals(), revenue and costs from huismus.reports.year_overview."""
 
+from django.db.models import F, Q
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
@@ -15,13 +16,25 @@ from huismus.documents.models import Document
 
 def outstanding_invoices():
     """Issued invoices the customer still owes money on: how many, the
-    total still open, and how many of them are overdue."""
-    invoices = Document.objects.filter(kind="invoice", status="issued").with_payment_totals()
+    total still open, how many of them are overdue and how much of the
+    total that is. has_issued: whether there is any issued invoice at all.
+
+    The menu shows this on every page, so the query leaves out invoices
+    that are settled (payments plus credit notes reach the total); which
+    of the rest are open is still decided by Document.payment_state."""
+    issued = Document.objects.filter(kind="invoice", status="issued")
+    invoices = issued.with_payment_totals().filter(
+        Q(total_cents__gt=F("paid_cents") + F("credited_cents"))
+        | Q(paid_cents__lte=0, credited_cents__lte=0)
+    )
     open_invoices = [d for d in invoices if d.payment_state in ("unpaid", "partial")]
+    overdue = [d for d in open_invoices if d.is_overdue]
     return {
         "count": len(open_invoices),
         "total_cents": sum(d.outstanding_cents for d in open_invoices),
-        "overdue_count": sum(1 for d in open_invoices if d.is_overdue),
+        "overdue_count": len(overdue),
+        "overdue_cents": sum(d.outstanding_cents for d in overdue),
+        "has_issued": bool(open_invoices) or issued.exists(),
     }
 
 
