@@ -167,7 +167,7 @@ a:hover { color: var(--primary-hover); }
 }
 .sidebar :focus-visible { outline-color: var(--panel-text); }
 .sidebar > * { flex-shrink: 0; }
-.brand { display: flex; align-items: center; gap: 10px; padding: 2px 10px; color: inherit; text-decoration: none; font-weight: var(--fw-bold); font-size: 1.1875rem; letter-spacing: -0.02em; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 2px 10px; color: inherit; text-decoration: none; font-weight: var(--fw-heavy); font-size: 1.5rem; letter-spacing: -0.02em; }
 .brand:hover { color: inherit; }
 .nav { display: flex; flex-direction: column; gap: 2px; }
 .nav a {
@@ -216,7 +216,7 @@ a:hover { color: var(--primary-hover); }
 .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s-4); flex-wrap: wrap; margin-bottom: var(--s-6); }
 .page-head .titles { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .page-head .actions { display: flex; gap: var(--s-2); flex-wrap: wrap; }
-.back { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-sm); color: var(--text-muted); text-decoration: none; font-weight: var(--fw-medium); }
+.back { display: inline-flex; align-items: center; gap: 4px; padding-block: 6px; margin-bottom: 6px; font-size: var(--fs-sm); color: var(--text-muted); text-decoration: none; font-weight: var(--fw-medium); }
 .back:hover { color: var(--text); }
 .lede { color: var(--text-muted); max-width: 62ch; }
 
@@ -433,7 +433,8 @@ a:hover { color: var(--primary-hover); }
 .table .draft-no { color: var(--text-muted); font-style: italic; font-weight: var(--fw-medium); }
 .table tfoot td { font-weight: var(--fw-bold); border-top: 1px solid var(--border-strong); border-bottom: 0; }
 /* Mobiel: rijen stapelen tot kaarten */
-@container (max-width: 560px) {
+/* 720: met de letter van 16 px past een rij van vijf kolommen daaronder niet meer naast elkaar. */
+@container (max-width: 720px) {
   .table.stackable thead { display: none; }
   .table.stackable tbody tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3px 12px; padding: 13px 16px; border-bottom: 1px solid var(--border); }
   .table.stackable tbody tr:last-child { border-bottom: 0; }
@@ -504,6 +505,9 @@ a:hover { color: var(--primary-hover); }
 .pill-unpaid, .pill-sent, .pill-final, .pill-paid, .pill-accepted, .pill-rejected, .pill-expired { --pill-bg: transparent; padding-inline: 0; font-weight: var(--fw-medium); }
 .pill-unpaid, .pill-sent { --pill-fg: var(--text); }  /* loopt nog: wachten op de ander */
 .pill-final, .pill-paid, .pill-accepted, .pill-rejected, .pill-expired { --pill-fg: var(--text-muted); }  /* afgerond */
+/* Een instelling die aan staat of klaar is: snavelgeel, zodat je in één oogopslag ziet wat aan staat (de eigenaar, 2026-11-15). */
+.pill-on { --pill-bg: var(--accent-soft); --pill-fg: var(--accent-ink); }
+.pill-on::before { width: 10px; height: 6px; border-radius: 0; background: transparent; border-left: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: translateY(-1px) rotate(-45deg); }
 /* Open stip: nog niet afgerond, of verlopen. */
 .pill-unpaid::before, .pill-sent::before, .pill-expired::before { background: transparent; box-shadow: inset 0 0 0 1.5px currentColor; }
 /* Betaald en geaccepteerd: een vinkje, getekend als de linker- en onderrand van een
@@ -753,6 +757,7 @@ a:hover { color: var(--primary-hover); }
 .kpi-hero { background: var(--primary); color: var(--on-primary); border-color: transparent; }
 .kpi-hero .kpi-label, .kpi-hero .kpi-sub { color: color-mix(in oklab, var(--on-primary) 82%, var(--primary)); }
 .kpi-hero a { color: var(--on-primary); }
+a.kpi-hero:hover { color: var(--on-primary); background: var(--primary-hover); }
 /* A notice is a quiet block like the other cards: no border, no stripe. Its kind
    shows only in the round icon; the link is violet, and red only for a real
    problem (huismus-intern/besluiten.md, 2026-10-30; the owner, 2026-11-15). */
@@ -763,7 +768,11 @@ a:hover { color: var(--primary-hover); }
   border: 0; font-weight: var(--fw-medium); text-decoration: none;
   transition: background .15s;
 }
-a.hint-banner:hover { color: var(--text); background: color-mix(in oklab, var(--surface) 92%, var(--primary)); }
+a.hint-banner:hover, div.hint-banner:has(> a):hover { color: var(--text); background: var(--primary-soft); }
+/* A notice with a close button is a div: its link covers the whole block, the close button stays on top. */
+div.hint-banner:has(> a) { position: relative; }
+div.hint-banner > a::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+div.hint-banner > form { position: relative; z-index: 1; }
 .hint-banner > .i { box-sizing: content-box; width: 18px; height: 18px; padding: 8px; border-radius: 50%; color: var(--hb-ink); background: var(--hb-chip); flex: none; }
 .hint-banner .spacer { flex: 1; }
 .hint-banner .spacer + span, .hint-banner a { color: var(--hb-link); font-weight: var(--fw-semibold); }
