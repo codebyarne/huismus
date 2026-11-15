@@ -294,9 +294,10 @@ class Document(TimestampedModel):
     def days_overdue(self):
         """How many days past the due date an overdue invoice is; 0 when it
         isn't overdue. Derived, like is_overdue."""
-        if not self.is_overdue:
+        if self.due_date is None or self.payment_state not in ("unpaid", "partial"):
             return 0
-        return (timezone.localdate() - self.due_date).days
+        # One reading of today, so the count can't disagree with itself at midnight.
+        return max((timezone.localdate() - self.due_date).days, 0)
 
     def clean(self):
         super().clean()

@@ -10,7 +10,7 @@ eigen server.
   hem uitgeeft, en de nummers lopen door zonder gaten. Zie
   [Facturen](facturen.nl.md).
 - **Betalingen** bijhouden, ook in delen. Op het overzicht zie je wat
-  openstaat en wat vervallen is.
+  openstaat en wat te laat is.
 - **Creditnota's** om een uitgegeven factuur te corrigeren.
 - **Offertes** die je verzendt en met één klik omzet naar een factuur. Zie
   [Offertes](offertes.nl.md).
@@ -76,7 +76,7 @@ eigen server.
 Dit staat op de lijst. De volgorde kan nog veranderen, en er is geen datum.
 
 - Je bankafschrift inlezen, zodat je ziet welke factuur betaald is
-- Een betaalherinnering mailen bij een vervallen factuur
+- Een betaalherinnering mailen bij een factuur die te laat is
 - Uren bijhouden, en daar een factuur van maken
 - Periodieke facturen, zoals elke maand dezelfde
 - Een winst-en-verliesrekening per jaar

@@ -104,14 +104,14 @@
     <a class="card kpi kpi-hero" href="{% url 'documents:list' %}?tab=openstaand&amp;jaar=alle" style="text-decoration:none">
         <span class="kpi-label">{% translate "Openstaand" %}</span>
         <span class="kpi-value">{{ outstanding.total_cents|money }}</span>
-        <span class="kpi-sub">{% blocktranslate count count=outstanding.count %}{{ count }} factuur{% plural %}{{ count }} facturen{% endblocktranslate %}{% if outstanding.overdue_count %}, {% blocktranslate count count=outstanding.overdue_count %}waarvan {{ count }} vervallen{% plural %}waarvan {{ count }} vervallen{% endblocktranslate %}{% endif %} →</span>
+        <span class="kpi-sub">{% blocktranslate count count=outstanding.count %}{{ count }} factuur{% plural %}{{ count }} facturen{% endblocktranslate %}{% if outstanding.overdue_count %}, {% blocktranslate count count=outstanding.overdue_count %}waarvan {{ count }} te laat{% plural %}waarvan {{ count }} te laat{% endblocktranslate %}{% endif %} →</span>
     </a>
     <div class="card kpi">
         <span class="kpi-label">{% blocktranslate %}Omzet {{ year }}{% endblocktranslate %}</span>
         <span class="kpi-value">{{ overview.revenue_cents|money }}</span>
         <span class="kpi-sub">{% if overview.shows_input_vat %}{% blocktranslate with costs=overview.expenses_cents|money %}Kosten zonder btw {{ costs }}{% endblocktranslate %}{% else %}{% blocktranslate with costs=overview.expenses_cents|money %}Kosten {{ costs }}{% endblocktranslate %}{% endif %}</span>
         {% if kor_limit %}
-        <span class="progress{% if kor_limit.level == 'near' %} is-warn{% elif kor_limit.level == 'over' %} is-bad{% endif %}" style="margin-top:var(--s-2)" aria-hidden="true"><span style="width:{{ kor_limit.bar_percent }}%"></span></span>
+        <span class="progress is-kor{% if kor_limit.level == 'near' %} is-warn{% elif kor_limit.level == 'over' %} is-bad{% endif %}" style="margin-top:var(--s-2)" aria-hidden="true"><span style="width:{{ kor_limit.bar_percent }}%"></span></span>
         <span class="kpi-sub">{% blocktranslate with percent=kor_limit.percent %}{{ percent }}% van je KOR-grens{% endblocktranslate %}</span>
         {% endif %}
     </div>

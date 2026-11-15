@@ -31,7 +31,7 @@
 {% if kor_limit %}
 <section class="card card-pad" id="kor-grens" style="margin-bottom:var(--s-5)">
     <h2 style="margin-bottom:var(--s-4)">{% translate "KOR-grens" %}</h2>
-    <div class="progress{% if kor_limit.level == 'near' %} is-warn{% elif kor_limit.level == 'over' %} is-bad{% endif %}" aria-hidden="true"><span style="width:{{ kor_limit.bar_percent }}%"></span></div>
+    <div class="progress is-kor{% if kor_limit.level == 'near' %} is-warn{% elif kor_limit.level == 'over' %} is-bad{% endif %}" aria-hidden="true"><span style="width:{{ kor_limit.bar_percent }}%"></span></div>
     <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:var(--s-2);margin-top:var(--s-3)">
         <span>{% blocktranslate with percent=kor_limit.percent %}{{ percent }}% van je KOR-grens{% endblocktranslate %}</span>
         <span class="amount">{% blocktranslate with revenue=kor_limit.revenue_cents|money limit=kor_limit.limit_cents|money %}{{ revenue }} van {{ limit }}{% endblocktranslate %}</span>

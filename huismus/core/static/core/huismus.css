@@ -100,7 +100,7 @@ p { margin: 0; text-wrap: pretty; }
 a { color: var(--primary-ink); text-underline-offset: 3px; }
 a:hover { color: var(--primary-hover); }
 :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
-::selection { background: rgb(27 106 201 / .2); }
+::selection { background: rgb(107 63 217 / .2); }
 .muted { color: var(--text-muted); }
 .small { font-size: var(--fs-sm); }
 .num, .amount { font-variant-numeric: tabular-nums; }
@@ -293,8 +293,9 @@ a:hover { color: var(--primary-hover); }
   background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--r-md);
   transition: border-color .15s, box-shadow .15s, background .15s;
 }
-/* Pseudo-elementen lossen light-dark() niet overal op: vaste kleur die op licht én donker leesbaar is */
-.input::placeholder, .textarea::placeholder, .palette-search input::placeholder { color: #8C84A6; opacity: 1; }
+/* Pseudo-elementen lossen light-dark() niet overal op. currentColor is hier de tekstkleur van het veld,
+   al opgelost; 62% daarvan haalt 4,5 : 1 op het veld, in licht en donker. */
+.input::placeholder, .textarea::placeholder, .palette-search input::placeholder { color: color-mix(in oklab, currentColor 62%, transparent); opacity: 1; }
 .input:hover, .select:hover, .textarea:hover { border-color: color-mix(in oklab, var(--border-strong) 60%, var(--text)); }
 .input:focus, .select:focus, .textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--ring); }
 .input[aria-invalid="true"], .select[aria-invalid="true"], .textarea[aria-invalid="true"] { border-color: var(--danger); background: color-mix(in oklab, var(--bad-bg) 45%, var(--surface)); }
@@ -449,28 +450,25 @@ a:hover { color: var(--primary-hover); }
 .pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex: none; }
 .pill.no-dot::before, .pill-final::before, .pill-import::before { display: none; }
 .pill .i { width: 13px; height: 13px; stroke-width: 2.2; }
-.pill-concept   { --pill-bg: transparent; --pill-fg: var(--draft); outline: 1px dashed currentColor; outline-offset: -1px; }
-.pill-concept::before { display: none; }
-.pill-final     { --pill-bg: var(--surface-3); --pill-fg: var(--text); }
-.pill-accepted  { --pill-bg: var(--ok-bg); --pill-fg: var(--ok); }
-.pill-rejected  { --pill-bg: var(--bad-bg); --pill-fg: var(--bad); }
-.pill-expired   { --pill-bg: transparent; --pill-fg: var(--text-muted); box-shadow: inset 0 0 0 1px var(--border-strong); }
-.pill-expired::before { background: transparent; box-shadow: inset 0 0 0 1.5px currentColor; }
-.pill-check { --pill-bg: var(--warn-bg); --pill-fg: var(--warn); }
-/* Openstaand en verstuurd zijn nog niets om iets mee te doen: gewone tekst. Alleen "te laat" krijgt een vlak (huismus-intern/besluiten.md, 2026-11-15). */
-.pill-unpaid, .pill-sent { --pill-bg: transparent; --pill-fg: var(--text); padding-inline: 0; font-weight: var(--fw-medium); }
-.pill-unpaid::before, .pill-sent::before { background: transparent; box-shadow: inset 0 0 0 1.5px currentColor; }
-.pill-partial   { --pill-bg: var(--warn-bg); --pill-fg: var(--warn); }
-.pill-partial::before { background: linear-gradient(90deg, currentColor 50%, transparent 50%); box-shadow: inset 0 0 0 1.5px currentColor; }
-.pill-paid      { --pill-bg: var(--ok-bg); --pill-fg: var(--ok); }
+/* Alleen wat om actie vraagt krijgt een vlak: te laat, deels betaald, nakijken.
+   De rest is rustig (huismus-intern/besluiten.md, 2026-10-30 en 2026-11-15). */
 .pill-overdue   { --pill-bg: var(--bad-bg); --pill-fg: var(--bad); }
+.pill-partial, .pill-check { --pill-bg: var(--warn-bg); --pill-fg: var(--warn); }
+.pill-partial::before { background: linear-gradient(90deg, currentColor 50%, transparent 50%); box-shadow: inset 0 0 0 1.5px currentColor; }
 .pill-import    { --pill-bg: var(--accent-soft); --pill-fg: var(--accent-ink); }
 .pill-credit    { --pill-bg: var(--surface-2); --pill-fg: var(--text); box-shadow: inset 0 0 0 1px var(--border); }
 .pill-credit::before { display: none; }
-/* Quiet statuses: settled, nothing left to do. No fill, only the dot (or lock) in
-   colour, so a pill with a fill (Vervallen, Openstaand) stands out (huismus-intern/besluiten.md, 2026-10-30). */
-.pill-final, .pill-paid, .pill-accepted, .pill-rejected, .pill-expired { --pill-bg: transparent; box-shadow: none; --pill-fg: var(--text-muted); padding-inline: 0; font-weight: var(--fw-medium); }
-/* Betaald en geaccepteerd: een vinkje in gedempte tekst, geen groen. */
+/* Concept: een gestippeld randje. Met outline, want een box-shadow kan niet stippelen. */
+.pill-concept   { --pill-bg: transparent; --pill-fg: var(--draft); outline: 1px dashed currentColor; outline-offset: -1px; }
+.pill-concept::before { display: none; }
+/* Rustig, zonder vlak: gewone of gedempte tekst met een teken ervoor. */
+.pill-unpaid, .pill-sent, .pill-final, .pill-paid, .pill-accepted, .pill-rejected, .pill-expired { --pill-bg: transparent; padding-inline: 0; font-weight: var(--fw-medium); }
+.pill-unpaid, .pill-sent { --pill-fg: var(--text); }  /* loopt nog: wachten op de ander */
+.pill-final, .pill-paid, .pill-accepted, .pill-rejected, .pill-expired { --pill-fg: var(--text-muted); }  /* afgerond */
+/* Open stip: nog niet afgerond, of verlopen. */
+.pill-unpaid::before, .pill-sent::before, .pill-expired::before { background: transparent; box-shadow: inset 0 0 0 1.5px currentColor; }
+/* Betaald en geaccepteerd: een vinkje, getekend als de linker- en onderrand van een
+   blokje van 10 bij 6 px dat 45 graden gedraaid is; 1 px omhoog zet het recht naast de tekst. */
 .pill-paid::before, .pill-accepted::before { width: 10px; height: 6px; border-radius: 0; background: transparent; border-left: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: translateY(-1px) rotate(-45deg); }
 .pill-rejected::before { background: var(--bad); }
 .proposal { display: inline-flex; align-items: center; height: 18px; padding: 0 6px; border-radius: 4px; font: 700 10px/1 var(--font-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--accent-ink); background: var(--accent-soft); border: 1px dashed color-mix(in oklab, var(--accent-ink) 45%, transparent); vertical-align: middle; }
@@ -663,7 +661,8 @@ a:hover { color: var(--primary-hover); }
 
 /* ---------- 12. Voortgang, stappen, tijdlijn ---------- */
 .progress { height: 8px; border-radius: var(--r-pill); background: var(--surface-3); overflow: hidden; }
-.progress > span { display: block; height: 100%; border-radius: inherit; background: var(--accent); }
+.progress > span { display: block; height: 100%; border-radius: inherit; background: var(--text-muted); }
+.progress.is-kor > span { background: var(--accent); }  /* de KOR-balk: snavelgeel tot hij waarschuwt */
 .progress.is-warn > span { background: var(--warn); }
 .progress.is-bad > span { background: var(--bad); }
 
