@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-15 09:39+0100\n"
+"POT-Creation-Date: 2026-11-15 10:23+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1580,6 +1580,15 @@ msgstr ""
 msgid "Creditnota's"
 msgstr ""
 
+msgid "Te laat"
+msgstr ""
+
+msgid "Wacht op betaling"
+msgstr ""
+
+msgid "Nog niet verstuurd"
+msgstr ""
+
 msgid "Wachten op antwoord"
 msgstr ""
 
@@ -2687,6 +2696,18 @@ msgstr ""
 msgid "%(quarter)se kwartaal %(year)s"
 msgstr ""
 
+msgid "jan–mrt"
+msgstr ""
+
+msgid "apr–jun"
+msgstr ""
+
+msgid "jul–sep"
+msgstr ""
+
+msgid "okt–dec"
+msgstr ""
+
 msgid "Kwartaal"
 msgstr ""
 
@@ -2708,7 +2729,17 @@ msgstr ""
 msgid "Navigatie"
 msgstr ""
 
-msgid "Nieuw"
+msgid "Je krijgt nog"
+msgstr ""
+
+#, python-format
+msgid "%(amount)s is te laat"
+msgstr ""
+
+msgid "Niets openstaand"
+msgstr ""
+
+msgid "Nieuwe factuur"
 msgstr ""
 
 msgid "Hoofdmenu"
@@ -2733,6 +2764,9 @@ msgid "Hulp"
 msgstr ""
 
 msgid "Uitloggen"
+msgstr ""
+
+msgid "Nieuw"
 msgstr ""
 
 msgid "Meer"
@@ -3617,9 +3651,6 @@ msgstr ""
 msgid "Doen"
 msgstr ""
 
-msgid "Nieuwe factuur"
-msgstr ""
-
 #, python-format
 msgid ""
 "Je omzet in %(year)s (%(revenue)s) is hoger dan je KOR-grens van %(limit)s."
@@ -3664,6 +3695,15 @@ msgid "zonder klant"
 msgstr ""
 
 msgid "Verder werken"
+msgstr ""
+
+msgid "Nog geen facturen"
+msgstr ""
+
+msgid "Maak je eerste factuur. Of zet je administratie over uit Moneybird."
+msgstr ""
+
+msgid "Maak je eerste factuur"
 msgstr ""
 
 #, python-format
@@ -4352,13 +4392,7 @@ msgid ""
 "je met een creditnota."
 msgstr ""
 
-msgid "Nog geen facturen"
-msgstr ""
-
 msgid "Maak je eerste factuur. Hij blijft een concept tot je hem uitgeeft."
-msgstr ""
-
-msgid "Maak je eerste factuur"
 msgstr ""
 
 msgid "Zoeken in facturen"
@@ -4370,14 +4404,35 @@ msgstr ""
 msgid "Alle jaren"
 msgstr ""
 
-msgid "Soort"
+msgid "Status"
 msgstr ""
 
-msgid "Status"
+msgid "Bedrag"
 msgstr ""
 
 msgid "Nog geen klant"
 msgstr ""
+
+msgid "Deels betaald"
+msgstr ""
+
+msgid "vandaag te betalen"
+msgstr ""
+
+msgid "Vandaag te betalen"
+msgstr ""
+
+#, python-format
+msgid "nog %(days)s dag"
+msgid_plural "nog %(days)s dagen"
+msgstr[0] ""
+msgstr[1] ""
+
+#, python-format
+msgid "Nog %(days)s dag"
+msgid_plural "Nog %(days)s dagen"
+msgstr[0] ""
+msgstr[1] ""
 
 #, python-format
 msgid "%(shown)s van %(total)s factuur"
@@ -4687,9 +4742,6 @@ msgid "Alle uitgaven"
 msgstr ""
 
 msgid "Leverancier"
-msgstr ""
-
-msgid "Bedrag"
 msgstr ""
 
 msgid "Met bonnetje"
@@ -5259,6 +5311,21 @@ msgstr ""
 msgid "KOR-instellingen"
 msgstr ""
 
+#, python-format
+msgid "Omzet in %(year)s"
+msgstr ""
+
+#, python-format
+msgid "van %(limit)s, je KOR-grens"
+msgstr ""
+
+msgid "Per kwartaal"
+msgstr ""
+
+#, python-format
+msgid "Omzet per kwartaal in %(year)s"
+msgstr ""
+
 msgid "De omzet en btw uit je facturen en uitgaven, per rubriek."
 msgstr ""
 
@@ -5342,9 +5409,6 @@ msgstr ""
 msgid "Gemeten met je huidige KOR-grens van %(limit)s."
 msgstr ""
 
-msgid "Per kwartaal"
-msgstr ""
-
 msgid "Staafgrafiek omzet en kosten per kwartaal"
 msgstr ""
 
@@ -5354,18 +5418,6 @@ msgstr ""
 
 #, python-format
 msgid "Kosten Q%(q)s: %(amount)s"
-msgstr ""
-
-msgid "jan–mrt"
-msgstr ""
-
-msgid "apr–jun"
-msgstr ""
-
-msgid "jul–sep"
-msgstr ""
-
-msgid "okt–dec"
 msgstr ""
 
 msgid "Kosten zonder btw per categorie"
