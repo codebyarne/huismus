@@ -38,6 +38,14 @@ filled in with what's still open. A partial payment works too.
 
 The overview shows how much is open in total and which invoices are late.
 
+## Sending a reminder
+
+When an invoice is late, the invoice shows by how many days, and **Send
+reminder** is at the top. You get a mail with the invoice attached and a
+text that says what's still open. Change what you like and click **Send**.
+After that, the invoice shows when you sent the last reminder. Huismus never
+sends a reminder by itself. You set the text under [Mail](mailen.en.md).
+
 ## Correcting something
 
 You don't change an issued invoice anymore. If something's wrong, make a
