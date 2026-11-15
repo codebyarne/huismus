@@ -31,6 +31,16 @@ bedrag en het nummer dat de factuur krijgt. Met **Definitief uitgeven**:
 Daarna download je de pdf met **PDF**, of mail je hem met **Mailen**. Zie
 [Mailen](mailen.nl.md).
 
+## Doornummeren na een ander pakket
+
+Kom je uit een ander pakket? Dan wil je dat je nummers doorlopen. Ga naar
+**Instellingen → Facturen en nummering** en vul bij **Volgnummer van je
+volgende factuur** het getal in dat na je laatste factuur komt. Was je
+laatste factuur 2026-0042, dan vul je 43 in. Voor offertes werkt het net zo.
+
+Dit kan tot je eerste factuur in Huismus. Daarna loopt het nummer vanzelf
+door, zodat er geen gat in je reeks komt.
+
 ## Betalingen
 
 Op de factuur zie je de betaalstatus: onbetaald, deels betaald, betaald of
