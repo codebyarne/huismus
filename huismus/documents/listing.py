@@ -20,6 +20,41 @@ INVOICE_TABS = [
 ]
 
 
+# The groups of the invoice list, in the order they show (#186).
+INVOICE_GROUPS = {
+    "te-laat": _("Te laat"),
+    "wacht": _("Wacht op betaling"),
+    "concept": _("Nog niet verstuurd"),
+    "betaald": _("Betaald"),
+    "creditnotas": _("Creditnota's"),
+}
+
+
+def invoice_group(document):
+    """Which group of the invoice list a document belongs to. Drafts of
+    either kind are "not sent yet"; fully credited invoices count as paid,
+    like the tab Betaald."""
+    if document.status == "draft":
+        return "concept"
+    if document.kind == "credit_note":
+        return "creditnotas"
+    if document.is_overdue:
+        return "te-laat"
+    if document.payment_state in ("unpaid", "partial"):
+        return "wacht"
+    return "betaald"
+
+
+def grouped(documents):
+    """The documents with .group set, sorted by group in INVOICE_GROUPS
+    order. Within a group they keep the order they came in, so "Meer
+    laden" continues a group instead of starting its heading again."""
+    order = list(INVOICE_GROUPS)
+    for document in documents:
+        document.group = invoice_group(document)
+    return sorted(documents, key=lambda d: order.index(d.group))
+
+
 def in_tab(document, tab):
     if tab == "concepten":
         return document.status == "draft"

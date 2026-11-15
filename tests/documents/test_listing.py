@@ -6,7 +6,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from huismus.documents.listing import contact_name, in_tab, matches_search
+from huismus.documents.listing import contact_name, grouped, in_tab, invoice_group, matches_search
 
 
 def _doc(**fields):
@@ -109,3 +109,34 @@ TODAY = date(2026, 9, 29)
 def test_expiry_hint(status, expiry, expected):
     quote = _doc(kind="quote", status=status, expiry_date=expiry)
     assert expiry_hint(quote, today=TODAY) == expected
+
+
+@pytest.mark.parametrize(
+    ("document", "group"),
+    [
+        (_doc(is_overdue=True), "te-laat"),
+        (_doc(payment_state="partial", is_overdue=True), "te-laat"),
+        (_doc(is_overdue=False), "wacht"),
+        (_doc(payment_state="partial", is_overdue=False), "wacht"),
+        (_doc(status="draft", payment_state=None, is_overdue=False), "concept"),
+        (_doc(payment_state="paid", is_overdue=False), "betaald"),
+        (_doc(payment_state="credited", is_overdue=False), "betaald"),
+        (_doc(kind="credit_note", payment_state=None, is_overdue=False), "creditnotas"),
+        (_doc(kind="credit_note", status="draft", payment_state=None, is_overdue=False), "concept"),
+    ],
+)
+def test_invoice_group(document, group):
+    assert invoice_group(document) == group
+
+
+def test_grouped_keeps_the_order_within_a_group_and_puts_groups_in_order():
+    paid_new = _doc(payment_state="paid", is_overdue=False, number="5")
+    late = _doc(is_overdue=True, number="4")
+    waiting = _doc(is_overdue=False, number="3")
+    paid_old = _doc(payment_state="paid", is_overdue=False, number="2")
+    draft = _doc(status="draft", payment_state=None, is_overdue=False, number="")
+
+    rows = grouped([paid_new, late, waiting, paid_old, draft])
+
+    assert [d.number for d in rows] == ["4", "3", "", "5", "2"]
+    assert [d.group for d in rows] == ["te-laat", "wacht", "concept", "betaald", "betaald"]

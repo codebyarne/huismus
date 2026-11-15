@@ -3,6 +3,9 @@
 
 {% block title %}{% translate "Facturen" %} — Huismus{% endblock %}
 
+{% comment %}Making an invoice is this page's main action: the panel's button and the phone's + are violet, unless the list is empty (then "Maak je eerste factuur" is).{% endcomment %}
+{% block panel_new_class %}{% if has_any %}btn-primary{% else %}btn-quiet{% endif %}{% endblock %}
+{% block tab_plus_class %}{% if not has_any %}fab-quiet{% endif %}{% endblock %}
 {% block main_attrs %} data-shortcut-new="{% url 'documents:create' %}"{% endblock %}
 {% block shortcut_search %}{% include "core/_shortcut_search.html" %}{% endblock %}
 
@@ -11,9 +14,6 @@
     <div class="titles">
         <h1>{% translate "Facturen" %}</h1>
         <p class="lede">{% translate "Facturen en creditnota's. Een uitgegeven factuur staat vast. Corrigeren doe je met een creditnota." %}</p>
-    </div>
-    <div class="actions">
-        <a class="btn btn-primary" href="{% url 'documents:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuwe factuur" %}</a>
     </div>
 </div>
 
@@ -57,43 +57,43 @@
     </form>
     <div id="facturen-resultaat">
         {% if documents %}
+        {% regroup documents by group as groups %}
+        {% for group in groups %}
+        <h2 class="list-group-title" id="groep-{{ group.grouper }}">{{ group_titles|get:group.grouper }}</h2>
         <div class="table-wrap">
-            <table class="table stackable">
+            <table class="table stackable" aria-labelledby="groep-{{ group.grouper }}">
                 <thead>
                     <tr>
-                        <th>{% translate "Nummer" %}</th>
-                        <th>{% translate "Soort" %}</th>
                         <th>{% translate "Klant" %}</th>
+                        <th>{% translate "Nummer" %}</th>
+                        <th>{% translate "Datum" %}</th>
                         <th>{% translate "Status" %}</th>
-                        <th class="r">{% translate "Totaal" %}</th>
-                        <th class="r">{% translate "Betaalstatus" %}</th>
+                        <th class="r">{% translate "Bedrag" %}</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for document in documents %}
+                    {% for document in group.list %}
                     <tr class="is-link">
-                        <td data-cell="secondary" class="num">{% if document.number %}{{ document.number }}{% else %}<span class="draft-no">{% translate "Concept" %}</span>{% endif %}</td>
-                        <td data-cell="hide">{% if document.kind == "credit_note" %}<span class="pill pill-credit">{% translate "Creditnota" %}</span>{% else %}{% translate "Factuur" %}{% endif %}</td>
                         <td data-cell="primary">
                             <a class="row-link" href="{% url 'documents:edit' document.pk %}">{{ document|contact_name|default:_("Nog geen klant") }}</a>
-                            {% if document.source %}<span class="pill pill-import" style="margin-left:6px">{% translate "Geïmporteerd" %}</span>{% endif %}
+                            {% if document.source %}<span class="small muted imported">{% translate "Geïmporteerd" %}</span>{% endif %}
                         </td>
-                        <td data-cell="{% if document.status == 'draft' %}status{% else %}hide{% endif %}">
-                            {% if document.status == "draft" %}<span class="pill pill-concept">{% translate "Concept" %}</span>
-                            {% else %}<span class="pill pill-final"><svg class="i" aria-hidden="true"><use href="#lock"></use></svg>{% translate "Definitief" %}</span>{% endif %}
+                        <td data-cell="secondary" class="num muted">{{ document.number }}</td>
+                        <td data-cell="hide" class="num muted">{{ document.issue_date|date:"j M Y" }}</td>
+                        <td data-cell="status">
+                            {% if document.group == "concept" %}<span class="pill pill-concept">{% translate "Concept" %}</span>
+                            {% elif document.group == "creditnotas" %}<span class="pill pill-credit">{% translate "Creditnota" %}</span>
+                            {% elif document.group == "te-laat" %}{% include "documents/_pill_overdue.html" with doc=document %}
+                            {% elif document.group == "wacht" %}{% with days=document|days_until_due %}<span class="pill pill-{{ document.payment_state }}">{% if document.payment_state == "partial" %}{% translate "Deels betaald" %}{% if days is not None %}, {% endif %}{% endif %}{% if days is None %}{% if document.payment_state != "partial" %}{{ document.payment_state|payment_state_label|capfirst }}{% endif %}{% elif days == 0 %}{% if document.payment_state == "partial" %}{% translate "vandaag te betalen" %}{% else %}{% translate "Vandaag te betalen" %}{% endif %}{% elif document.payment_state == "partial" %}{% blocktranslate count days=days %}nog {{ days }} dag{% plural %}nog {{ days }} dagen{% endblocktranslate %}{% else %}{% blocktranslate count days=days %}Nog {{ days }} dag{% plural %}Nog {{ days }} dagen{% endblocktranslate %}{% endif %}</span>{% endwith %}
+                            {% else %}<span class="pill pill-{{ document.payment_state }}">{{ document.payment_state|payment_state_label|capfirst }}</span>{% endif %}
                         </td>
                         <td data-cell="amount" class="r amount">{% if document.kind == "credit_note" %}&minus;&nbsp;{% endif %}{{ document.total_cents|money }}</td>
-                        <td data-cell="{% if document.status == 'draft' %}hide{% else %}status{% endif %}" class="r">
-                            {% if document.kind == "credit_note" %}<span class="pill pill-credit">{% translate "Creditnota" %}</span>
-                            {% elif document.is_overdue %}{% include "documents/_pill_overdue.html" with doc=document %}
-                            {% elif document.payment_state %}<span class="pill pill-{{ document.payment_state }}">{{ document.payment_state|payment_state_label|capfirst }}</span>
-                            {% else %}<span class="muted">·</span>{% endif %}
-                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
+        {% endfor %}
         <div class="card-foot row">
             <span class="muted">{% blocktranslate count total=total with shown=documents|length %}{{ shown }} van {{ total }} factuur{% plural %}{{ shown }} van {{ total }} facturen{% endblocktranslate %}</span>
             <span class="spacer"></span>

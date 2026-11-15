@@ -171,3 +171,26 @@ def test_query_count_does_not_grow_with_the_number_of_invoices(
         _invoice(f"Klant {number}", paid=5000)
     with django_assert_max_num_queries(8):
         _get(client_in)
+
+
+def test_the_list_shows_invoices_in_groups_with_how_long_until_due(client_in):
+    """#186: Te laat, Wacht op betaling, Nog niet verstuurd, Betaald, each
+    with its own heading, in that order."""
+    _invoice("Studio Noordwind", due_date=TODAY + timedelta(days=4))
+    _invoice("Atelier De Vries", paid=10000)
+    _invoice("Bouwbedrijf Van Dijk", due_date=TODAY - timedelta(days=12))
+    _invoice("Vandaag BV", due_date=TODAY)
+    _draft("Bakkerij Jansen BV")
+
+    html = client_in.get(reverse("documents:list")).content.decode().replace("\xa0", " ")
+
+    headings = ["groep-te-laat", "groep-wacht", "groep-concept", "groep-betaald"]
+    positions = [html.index(f'id="{heading}"') for heading in headings]
+    assert positions == sorted(positions)
+    assert 'id="groep-creditnotas"' not in html  # only groups with rows
+    assert html.index("Bouwbedrijf Van Dijk") < positions[1]
+    assert "12 dagen te laat" in html
+    assert "Nog 4 dagen" in html
+    assert "Vandaag te betalen" in html
+    assert html.index("Bakkerij Jansen BV") > positions[2]
+    assert html.index("Atelier De Vries") > positions[3]
