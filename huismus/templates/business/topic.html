@@ -145,7 +145,7 @@
                 {% endif %}
                 <div data-group="smtp" style="margin-top:var(--s-6)">
                     <p class="label">{% translate "Standaardteksten" %}</p>
-                    <p class="small muted" style="margin:var(--s-1) 0 var(--s-4)">{% translate "Hiermee begint elke mail. Per mail kun je hem nog aanpassen. Maak je een veld leeg, dan gebruikt Huismus zijn eigen tekst. Invulplekken: {nummer}, {bedrag}, {naam} en {bedrijf}; bij een factuur ook {vervaldatum}, bij een offerte {geldig_tot}." %}</p>
+                    <p class="small muted" style="margin:var(--s-1) 0 var(--s-4)">{% translate "Hiermee begint elke mail. Per mail kun je hem nog aanpassen. Maak je een veld leeg, dan gebruikt Huismus zijn eigen tekst. Invulplekken: {nummer}, {bedrag}, {naam} en {bedrijf}; bij een factuur en een herinnering ook {vervaldatum}, bij een herinnering {openstaand}, bij een offerte {geldig_tot}." %}</p>
                     <div class="stack" style="gap:var(--s-3)">
                         {% for block in mail_text_blocks %}
                         <details class="report"{% if block.has_errors %} open{% endif %}>

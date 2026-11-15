@@ -45,10 +45,17 @@ def _date(value) -> str:
     return dateformat.format(value, "j F Y")
 
 
-def default_message(document) -> tuple[str, str]:
+def can_remind(document) -> bool:
+    """A payment reminder (#114) is for an issued invoice that is overdue:
+    its due date has passed and it isn't fully paid (Document.is_overdue)."""
+    return document.kind == "invoice" and document.status == "issued" and document.is_overdue
+
+
+def default_message(document, *, reminder=False) -> tuple[str, str]:
     """Subject and body to start from: the mail text from the settings for
     this kind and language, or the standard text (documents.mail_texts),
-    filled in from the document."""
+    filled in from the document. With reminder, the text of a payment
+    reminder for the invoice."""
     customer = document.contact_snapshot or {}
     values = {
         "nummer": document.number,
@@ -56,6 +63,10 @@ def default_message(document) -> tuple[str, str]:
         "bedrag": money(document.total_cents),
         "naam": customer.get("first_name") or customer.get("display_name", ""),
     }
+    kind = document.kind
+    if reminder:
+        kind = "reminder"
+        values["openstaand"] = money(document.outstanding_cents)
     with translation.override(document.language):
         if document.due_date:
             values["vervaldatum"] = _date(document.due_date)
@@ -64,8 +75,8 @@ def default_message(document) -> tuple[str, str]:
     business = Settings.load()
     language = document.language if document.language in mail_texts.LANGUAGES else "nl"
     subject, body = (
-        getattr(business, mail_texts.field_name(document.kind, part, language))
-        or mail_texts.standard_text(document.kind, part, language)
+        getattr(business, mail_texts.field_name(kind, part, language))
+        or mail_texts.standard_text(kind, part, language)
         for part in ("subject", "body")
     )
     return mail_texts.fill(subject, values), mail_texts.fill(body, values)
@@ -84,9 +95,12 @@ def attachment(document) -> tuple[str, bytes]:
     return f"{document.number}.pdf", content
 
 
-def send_document(document, *, to: list[str], subject: str, body: str, bcc_self: bool):
-    """Mail the document and log the attempt. Returns the EmailLog; a
-    failure is in its `error`, not raised."""
+def send_document(
+    document, *, to: list[str], subject: str, body: str, bcc_self: bool, reminder=False
+):
+    """Mail the document and log the attempt, as a payment reminder if
+    reminder is set. Returns the EmailLog; a failure is in its `error`,
+    not raised."""
     business = Settings.load()
     sender = smtp.sender(business)
     bcc = [sender] if bcc_self else []
@@ -118,4 +132,5 @@ def send_document(document, *, to: list[str], subject: str, body: str, bcc_self:
         attachment_sha256=hashlib.sha256(content).hexdigest() if content else "",
         succeeded=not error,
         error=error,
+        reminder=reminder,
     )

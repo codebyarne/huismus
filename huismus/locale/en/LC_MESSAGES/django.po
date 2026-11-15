@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 15:46+0100\n"
+"POT-Creation-Date: 2026-11-15 09:58+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -212,6 +212,10 @@ msgstr "Credit note"
 
 msgid "Offerte"
 msgstr "Quote"
+
+#
+msgid "Herinnering"
+msgstr "Reminder"
 
 msgid "onderwerp in het Nederlands"
 msgstr "subject in Dutch"
@@ -434,6 +438,22 @@ msgstr "quote subject (English)"
 
 msgid "tekst offerte (engels)"
 msgstr "quote text (English)"
+
+#
+msgid "onderwerp herinnering (nederlands)"
+msgstr "reminder subject (Dutch)"
+
+#
+msgid "tekst herinnering (nederlands)"
+msgstr "reminder text (Dutch)"
+
+#
+msgid "onderwerp herinnering (engels)"
+msgstr "reminder subject (English)"
+
+#
+msgid "tekst herinnering (engels)"
+msgstr "reminder text (English)"
 
 msgid "organisatie"
 msgstr "organisation"
@@ -1674,6 +1694,28 @@ msgid "Offerte {nummer} van {bedrijf}"
 msgstr "Quote {nummer} from {bedrijf}"
 
 #, python-brace-format
+msgid "Herinnering: factuur {nummer} van {bedrijf}"
+msgstr "Reminder: invoice {nummer} from {bedrijf}"
+
+#, python-brace-format
+msgid "Beste {naam},"
+msgstr "Dear {naam},"
+
+#, python-brace-format
+msgid ""
+"Van factuur {nummer} staat nog {openstaand} open. De vervaldatum was "
+"{vervaldatum}. In de bijlage vind je de factuur."
+msgstr "Invoice {nummer} still has {openstaand} outstanding. It was due on {vervaldatum}. You'll find the invoice attached."
+
+msgid ""
+"Wil je het bedrag zo snel mogelijk overmaken? Heb je al betaald, dan kun je "
+"deze mail vergeten."
+msgstr "Could you transfer the amount as soon as possible? If you've already paid, please ignore this email."
+
+msgid "Met vriendelijke groet,"
+msgstr "Kind regards,"
+
+#, python-brace-format
 msgid "In de bijlage vind je factuur {nummer} van {bedrag}."
 msgstr "Attached is invoice {nummer} for {bedrag}."
 
@@ -1692,13 +1734,6 @@ msgstr "Please pay by {vervaldatum}."
 #, python-brace-format
 msgid "De offerte is geldig tot {geldig_tot}."
 msgstr "The quote is valid until {geldig_tot}."
-
-#, python-brace-format
-msgid "Beste {naam},"
-msgstr "Dear {naam},"
-
-msgid "Met vriendelijke groet,"
-msgstr "Kind regards,"
 
 msgid "offerte"
 msgstr "quote"
@@ -1859,6 +1894,10 @@ msgstr "succeeded"
 msgid "fout"
 msgstr "error"
 
+#
+msgid "herinnering"
+msgstr "reminder"
+
 msgid "verstuurde e-mail"
 msgstr "sent e-mail"
 
@@ -1963,6 +2002,14 @@ msgstr "Payment recorded."
 
 msgid "De betaling is niet opgeslagen. Kijk het bedrag en de datum na."
 msgstr "The payment wasn't saved. Check the amount and the date."
+
+#, python-format
+msgid "Factuur %(number)s is niet te laat. Er is geen herinnering gestuurd."
+msgstr "Invoice %(number)s isn't overdue. No reminder was sent."
+
+#, python-format
+msgid "Herinnering gestuurd naar %(to)s."
+msgstr "Reminder sent to %(to)s."
 
 #, python-format
 msgid "Gemaild naar %(to)s."
@@ -3499,13 +3546,10 @@ msgstr "Standard texts"
 msgid ""
 "Hiermee begint elke mail. Per mail kun je hem nog aanpassen. Maak je een "
 "veld leeg, dan gebruikt Huismus zijn eigen tekst. Invulplekken: {nummer}, "
-"{bedrag}, {naam} en {bedrijf}; bij een factuur ook {vervaldatum}, bij een "
-"offerte {geldig_tot}."
-msgstr ""
-"Every mail starts with this. You can still change it per mail. Leave a field "
-"empty and Huismus uses its own text. Placeholders: {nummer}, {bedrag}, "
-"{naam} and {bedrijf}; for an invoice also {vervaldatum}, for a quote "
+"{bedrag}, {naam} en {bedrijf}; bij een factuur en een herinnering ook "
+"{vervaldatum}, bij een herinnering {openstaand}, bij een offerte "
 "{geldig_tot}."
+msgstr "Every mail starts with this. You can still change it per mail. Leave a field empty and Huismus uses its own text. Placeholders: {nummer}, {bedrag}, {naam} and {bedrijf}; for an invoice and a reminder also {vervaldatum}, for a reminder {openstaand}, for a quote {geldig_tot}."
 
 #, python-format
 msgid "%(counter)s veld heeft aandacht nodig"
@@ -4211,6 +4255,14 @@ msgstr "Unit price"
 msgid "Regel verwijderen"
 msgstr "Remove line"
 
+#, python-format
+msgid "Herinnering voor factuur %(number)s"
+msgstr "Reminder for invoice %(number)s"
+
+#, python-format
+msgid "%(kind)s %(number)s mailen"
+msgstr "Mail %(kind)s %(number)s"
+
 msgid "Vervaldatum voorbij en nog niet volledig betaald."
 msgstr "Past the due date and not fully paid yet."
 
@@ -4308,6 +4360,14 @@ msgid "Betaling %(amount)s"
 msgstr "Payment %(amount)s"
 
 #, python-format
+msgid "Herinnering gestuurd naar %(to)s"
+msgstr "Reminder sent to %(to)s"
+
+#, python-format
+msgid "Herinnering sturen mislukt naar %(to)s"
+msgstr "Sending the reminder to %(to)s failed"
+
+#, python-format
 msgid "Gemaild naar %(to)s"
 msgstr "Mailed to %(to)s"
 
@@ -4337,6 +4397,10 @@ msgstr "Imported"
 #, python-format
 msgid "uitgegeven op %(date)s"
 msgstr "issued on %(date)s"
+
+#
+msgid "Herinnering sturen"
+msgstr "Send reminder"
 
 msgid "Creditnota maken…"
 msgstr "Create credit note…"
@@ -4396,6 +4460,16 @@ msgstr ""
 #, python-format
 msgid "Naar factuur %(number)s"
 msgstr "To invoice %(number)s"
+
+#, python-format
+msgid "%(count)s dag te laat"
+msgid_plural "%(count)s dagen te laat"
+msgstr[0] "%(count)s day overdue"
+msgstr[1] "%(count)s days overdue"
+
+#, python-format
+msgid "Laatste herinnering: %(date)s"
+msgstr "Last reminder: %(date)s"
 
 msgid "Afgehandeld"
 msgstr "Settled"
@@ -4703,10 +4777,6 @@ msgid "betekent: vervaldatum voorbij en nog niet volledig betaald."
 msgstr "means: past the due date and not fully paid yet."
 
 #, python-format
-msgid "%(kind)s %(number)s mailen"
-msgstr "Mail %(kind)s %(number)s"
-
-#, python-format
 msgid ""
 "Stel bij <a href=\"%(settings_url)s\">Instellingen</a> in hoe Huismus mailt."
 msgstr ""
@@ -4917,6 +4987,10 @@ msgid_plural "%(count)s bestanden"
 msgstr[0] "%(count)s file"
 msgstr[1] "%(count)s files"
 
+#, python-format
+msgid "Bonnetje %(name)s"
+msgstr "Receipt %(name)s"
+
 msgid "Bonnetje verwijderen"
 msgstr "Delete receipt"
 
@@ -5042,10 +5116,6 @@ msgstr "Nothing left to process."
 
 msgid "Naar Uitgaven"
 msgstr "Go to Expenses"
-
-#, python-format
-msgid "Bonnetje %(name)s"
-msgstr "Receipt %(name)s"
 
 msgid "Bonnetje openen"
 msgstr "Open receipt"

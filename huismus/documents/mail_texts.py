@@ -1,8 +1,9 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""The text a mail starts from (SPEC.md M10): per kind of document and per
-language, set in Instellingen → Mailen, or the standard text below when
-that setting is empty. Placeholders like {nummer} are filled in per
+"""The text a mail starts from (SPEC.md M10): per kind of document, plus
+the payment reminder for an overdue invoice (#114), and per language, set
+in Instellingen → Mailen, or the standard text below when that setting is
+empty. Placeholders like {nummer} are filled in per
 document; the user can still change everything per mail.
 """
 
@@ -11,7 +12,9 @@ import re
 from django.utils import translation
 from django.utils.translation import gettext as _
 
-KINDS = ["invoice", "credit_note", "quote"]
+# "reminder" is no kind of document but a mail about an invoice; it has
+# texts of its own, so it is one more kind here.
+KINDS = ["invoice", "credit_note", "quote", "reminder"]
 LANGUAGES = ["nl", "en"]
 
 # Every placeholder, and the kinds it belongs to. The names are Dutch in
@@ -21,8 +24,9 @@ PLACEHOLDERS = {
     "bedrag": KINDS,
     "naam": KINDS,
     "bedrijf": KINDS,
-    "vervaldatum": ["invoice"],
+    "vervaldatum": ["invoice", "reminder"],
     "geldig_tot": ["quote"],
+    "openstaand": ["reminder"],
 }
 DATE_PLACEHOLDERS = {"vervaldatum", "geldig_tot"}
 _PLACEHOLDER = re.compile(r"\{(\w+)\}")
@@ -40,7 +44,25 @@ def standard_text(kind: str, part: str, language: str) -> str:
                 "invoice": _("Factuur {nummer} van {bedrijf}"),
                 "credit_note": _("Creditnota {nummer} van {bedrijf}"),
                 "quote": _("Offerte {nummer} van {bedrijf}"),
+                "reminder": _("Herinnering: factuur {nummer} van {bedrijf}"),
             }[kind]
+        if kind == "reminder":
+            return (
+                _("Beste {naam},")
+                + "\n\n"
+                + _(
+                    "Van factuur {nummer} staat nog {openstaand} open. "
+                    "De vervaldatum was {vervaldatum}. In de bijlage vind je de factuur."
+                )
+                + "\n\n"
+                + _(
+                    "Wil je het bedrag zo snel mogelijk overmaken? "
+                    "Heb je al betaald, dan kun je deze mail vergeten."
+                )
+                + "\n\n"
+                + _("Met vriendelijke groet,")
+                + "\n{bedrijf}\n"
+            )
         attached = {
             "invoice": _("In de bijlage vind je factuur {nummer} van {bedrag}."),
             "credit_note": _("In de bijlage vind je creditnota {nummer} van {bedrag}."),
