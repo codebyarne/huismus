@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
 from django import template
+from django.utils import timezone
 from django.utils.translation import gettext
 from django.utils.translation import gettext_lazy as _
 
@@ -115,3 +116,12 @@ def subtract(cents, other_cents):
     """cents − other_cents, for amounts that are a plain difference of two
     stored values ("Nog te crediteren" = invoice total − credited)."""
     return (cents or 0) - (other_cents or 0)
+
+
+@register.filter
+def days_until_due(document):
+    """Whole days from today to the due date (0: due today), for "Nog 4
+    dagen" in the invoice list. None without a due date."""
+    if document.due_date is None:
+        return None
+    return (timezone.localdate() - document.due_date).days * -1

@@ -36,9 +36,11 @@ from .forms import (
 )
 from .issuing import IssueError, issue
 from .listing import (
+    INVOICE_GROUPS,
     INVOICE_TABS,
     QUOTE_TABS,
     expiry_hint,
+    grouped,
     in_quote_tab,
     in_tab,
     matches_search,
@@ -101,7 +103,7 @@ def document_list(request):
     )
 
     found = [d for d in invoices if matches_search(d, query)]
-    rows = [d for d in found if in_tab(d, tab)]
+    rows = grouped([d for d in found if in_tab(d, tab)])
 
     def list_url(**changes):
         params = {"tab": tab, "q": query, "jaar": year or "alle", **changes}
@@ -129,6 +131,7 @@ def document_list(request):
             "year": year,
             "years": years,
             "has_any": Document.objects.filter(kind__in=["invoice", "credit_note"]).exists(),
+            "group_titles": INVOICE_GROUPS,
         },
     )
 
