@@ -722,7 +722,14 @@ async function sendPhoto(form, file) {
   data.set("file", file);
   let response;
   try {
-    response = await fetch(form.action, { method: "POST", body: data });
+    // The header asks Huismus to say where to go (X-Huismus-Go) rather than
+    // to redirect: following a redirect here would use up the next page's
+    // message, such as why it refused the file (expenses/photo_views.py).
+    response = await fetch(form.action, {
+      method: "POST",
+      body: data,
+      headers: { "X-Huismus-Camera": "1" },
+    });
   } catch {
     // No answer at all: no connection with Huismus.
     cameraToast("camera-offline");
@@ -734,9 +741,9 @@ async function sendPhoto(form, file) {
     return;
   }
   unsent = null;
-  // Where Huismus sent it: the photo page, or the ordinary form with the
-  // reason it refused the file.
-  window.location.assign(response.url);
+  // Where Huismus sends it: the photo page, or the ordinary form with the
+  // reason it refused the file. Signed out meanwhile: the login page.
+  window.location.assign(response.headers.get("X-Huismus-Go") || response.url);
 }
 
 document.addEventListener("change", (event) => {

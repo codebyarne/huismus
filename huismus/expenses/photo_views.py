@@ -16,6 +16,7 @@ Without JS, or on a wide screen, "Uitgave" is the ordinary form
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -32,6 +33,9 @@ from .views import TrayReceiptGone, all_valid, save_expense
 
 # Attachment.source of a photo taken here.
 SOURCE = "telefoon"
+# The request header app.js sends the photo with, and the response header
+# with the page to open (_go).
+CAMERA, GO = "X-Huismus-Camera", "X-Huismus-Go"
 
 
 @login_required
@@ -45,7 +49,7 @@ def photo_upload(request):
         # The form's own reason: "Dit bonnetje is groter dan 10 MB. …". The
         # ordinary form can take a photo from the library or a PDF.
         messages.error(request, form.errors["file"][0])
-        return redirect("expenses:create")
+        return _go(request, reverse("expenses:create"))
     uploaded = form.cleaned_data["file"]
     receipt = Attachment.objects.create(
         file=uploaded, kind="receipt", sha256=sha256_of(uploaded), source=SOURCE
@@ -60,7 +64,19 @@ def photo_upload(request):
         for old in replaced:
             old.file.delete(save=False)
             old.delete()
-    return redirect("expenses:photo", pk=receipt.pk)
+    return _go(request, reverse("expenses:photo", kwargs={"pk": receipt.pk}))
+
+
+def _go(request, url):
+    """Where the page goes next. To app.js's upload (the header CAMERA) a
+    204 with the address: had fetch() followed a redirect, it would have
+    shown the next page's message to nobody, and the page that opens after
+    it wouldn't have it any more. To a plain form, a redirect."""
+    if CAMERA not in request.headers:
+        return redirect(url)
+    response = HttpResponse(status=204)
+    response[GO] = url
+    return response
 
 
 @login_required
