@@ -113,12 +113,9 @@ the live settings or contact.{% endcomment %}
                 {% if document.is_overdue %}{% include "documents/_pill_overdue.html" with doc=document full=True %}
                 {% else %}<span class="pill pill-{{ document.payment_state }}">{{ document.payment_state|payment_state_label|capfirst }}</span>{% endif %}
             </div>
-            {% if document.days_overdue is not None or last_reminder %}
-            <p class="small muted">
-                {% if document.days_overdue is not None %}{% blocktranslate count count=document.days_overdue %}{{ count }} dag te laat{% plural %}{{ count }} dagen te laat{% endblocktranslate %}{% endif %}
-                {% if document.days_overdue is not None and last_reminder %}·{% endif %}
-                {% if last_reminder %}{% blocktranslate with date=last_reminder.sent_at|date:"SHORT_DATE_FORMAT" %}Laatste herinnering: {{ date }}{% endblocktranslate %}{% endif %}
-            </p>
+            {% comment %}How late it is stands in the pill above; here only when the last reminder went.{% endcomment %}
+            {% if last_reminder %}
+            <p class="small muted">{% blocktranslate with date=last_reminder.sent_at|date:"SHORT_DATE_FORMAT" %}Laatste herinnering: {{ date }}{% endblocktranslate %}</p>
             {% endif %}
             <div class="progress{% if document.payment_state == 'partial' %} is-warn{% endif %}" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ settled_percent }}" aria-label="{% translate 'Afgehandeld' %}"><span style="width:{{ settled_percent }}%"></span></div>
             {% with invoice=document %}{% include "documents/_credit_room.html" %}{% endwith %}
