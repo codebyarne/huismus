@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 15:46+0100\n"
+"POT-Creation-Date: 2026-11-15 09:20+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3943,8 +3943,11 @@ msgstr ""
 msgid "Vervaldatum voorbij en nog niet volledig betaald."
 msgstr ""
 
-msgid "Vervallen"
-msgstr ""
+#, python-format
+msgid "%(days)s dag te laat"
+msgid_plural "%(days)s dagen te laat"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Stappen van de offerte"
 msgstr ""
@@ -4395,7 +4398,7 @@ msgstr ""
 msgid "Filters wissen"
 msgstr ""
 
-msgid "betekent: vervaldatum voorbij en nog niet volledig betaald."
+msgid "Te laat betekent: vervaldatum voorbij en nog niet volledig betaald."
 msgstr ""
 
 #, python-format
@@ -4600,6 +4603,10 @@ msgid_plural "%(count)s bestanden"
 msgstr[0] ""
 msgstr[1] ""
 
+#, python-format
+msgid "Bonnetje %(name)s"
+msgstr ""
+
 msgid "Bonnetje verwijderen"
 msgstr ""
 
@@ -4720,10 +4727,6 @@ msgid "Niets meer te verwerken."
 msgstr ""
 
 msgid "Naar Uitgaven"
-msgstr ""
-
-#, python-format
-msgid "Bonnetje %(name)s"
 msgstr ""
 
 msgid "Bonnetje openen"

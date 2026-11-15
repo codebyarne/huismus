@@ -117,17 +117,24 @@ def test_year_filter_defaults_to_all_years_and_keeps_drafts(client_in):
     assert _get(client_in).context["years"] == [TODAY.year, TODAY.year - 1]
 
 
-def test_overdue_invoice_shows_vervallen(client_in):
+def test_overdue_invoice_shows_how_many_days_late(client_in):
     _invoice(
         "Te laat BV", issue_date=TODAY - timedelta(days=40), due_date=TODAY - timedelta(days=10)
     )
     html = _get(client_in).content.decode()
     explanation = "Vervaldatum voorbij en nog niet volledig betaald."
     # Explained where the label stands: a tooltip, and for screen readers.
-    assert f'class="pill pill-overdue" title="{explanation}">Vervallen<' in html
+    assert f'class="pill pill-overdue no-dot" title="{explanation}">10 dagen te laat<' in html
     assert f'<span class="sr-only">: {explanation}</span>' in html
     english = client_in.get(reverse("documents:list"), HTTP_ACCEPT_LANGUAGE="en").content.decode()
-    assert 'title="Past the due date and not fully paid yet.">Overdue<' in english
+    assert 'title="Past the due date and not fully paid yet.">10 days late<' in english
+
+
+def test_invoice_one_day_late_says_dag(client_in):
+    _invoice(
+        "Net te laat BV", issue_date=TODAY - timedelta(days=15), due_date=TODAY - timedelta(days=1)
+    )
+    assert ">1 dag te laat<" in _get(client_in).content.decode()
 
 
 def test_the_search_shortcut_is_hinted_only_on_pages_with_a_search_field(client_in):

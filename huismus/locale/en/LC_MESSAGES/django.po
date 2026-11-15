@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 15:46+0100\n"
+"POT-Creation-Date: 2026-11-15 09:20+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -4214,8 +4214,11 @@ msgstr "Remove line"
 msgid "Vervaldatum voorbij en nog niet volledig betaald."
 msgstr "Past the due date and not fully paid yet."
 
-msgid "Vervallen"
-msgstr "Overdue"
+#, python-format
+msgid "%(days)s dag te laat"
+msgid_plural "%(days)s dagen te laat"
+msgstr[0] "%(days)s day late"
+msgstr[1] "%(days)s days late"
 
 msgid "Stappen van de offerte"
 msgstr "Quote steps"
@@ -4699,8 +4702,8 @@ msgstr "No invoices match this search, tab and year."
 msgid "Filters wissen"
 msgstr "Clear filters"
 
-msgid "betekent: vervaldatum voorbij en nog niet volledig betaald."
-msgstr "means: past the due date and not fully paid yet."
+msgid "Te laat betekent: vervaldatum voorbij en nog niet volledig betaald."
+msgstr "Late means: past the due date and not fully paid yet."
 
 #, python-format
 msgid "%(kind)s %(number)s mailen"
@@ -4917,6 +4920,10 @@ msgid_plural "%(count)s bestanden"
 msgstr[0] "%(count)s file"
 msgstr[1] "%(count)s files"
 
+#, python-format
+msgid "Bonnetje %(name)s"
+msgstr "Receipt %(name)s"
+
 msgid "Bonnetje verwijderen"
 msgstr "Delete receipt"
 
@@ -5042,10 +5049,6 @@ msgstr "Nothing left to process."
 
 msgid "Naar Uitgaven"
 msgstr "Go to Expenses"
-
-#, python-format
-msgid "Bonnetje %(name)s"
-msgstr "Receipt %(name)s"
 
 msgid "Bonnetje openen"
 msgstr "Open receipt"
@@ -6574,6 +6577,7 @@ msgid ""
 msgstr ""
 "If you have a Raspberry Pi, a NAS, your own server or a VPS, you can also "
 "run Huismus in Docker. That is for people who are handy with that."
+
 
 #~ msgid "Wat Huismus (nog) niet doet"
 #~ msgstr "What Huismus doesn't do (yet)"

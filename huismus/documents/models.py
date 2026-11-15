@@ -290,6 +290,14 @@ class Document(TimestampedModel):
             and self.due_date < timezone.localdate()
         )
 
+    @property
+    def days_overdue(self):
+        """How many days past the due date an overdue invoice is; 0 when it
+        isn't overdue. Derived, like is_overdue."""
+        if not self.is_overdue:
+            return 0
+        return (timezone.localdate() - self.due_date).days
+
     def clean(self):
         super().clean()
         if self.status not in ALLOWED_STATUSES_BY_KIND[self.kind]:
