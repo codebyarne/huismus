@@ -16,6 +16,7 @@ from huismus.business import smtp
 from huismus.business.kor_limit import kor_limit_crossed_by
 from huismus.business.models import Settings
 from huismus.contacts.models import Contact
+from huismus.core.sorting import chosen_sort, sort_headers, sorted_rows
 from huismus.core.templatetags.money import euros
 
 from .detail import contact_changed_since_issue, timeline_events
@@ -37,7 +38,9 @@ from .forms import (
 from .issuing import IssueError, issue
 from .listing import (
     INVOICE_GROUPS,
+    INVOICE_SORT_KEYS,
     INVOICE_TABS,
+    QUOTE_SORT_KEYS,
     QUOTE_TABS,
     expiry_hint,
     grouped,
@@ -109,9 +112,14 @@ def document_list(request):
 
     found = [d for d in invoices if matches_search(d, query)]
     rows = grouped([d for d in found if in_tab(d, tab)])
+    # Sorted by a column, the list is one table: the groups would cut it up.
+    sort = chosen_sort(request, INVOICE_SORT_KEYS)
+    rows = sorted_rows(rows, sort, INVOICE_SORT_KEYS)
+    for document in rows:
+        document.list_group = "" if sort else document.group
 
     def list_url(**changes):
-        params = {"tab": tab, "q": query, "jaar": year or "alle", **changes}
+        params = {"tab": tab, "q": query, "jaar": year or "alle", "sorteer": sort, **changes}
         return "?" + urlencode({k: v for k, v in params.items() if v})
 
     tabs = [
@@ -137,6 +145,8 @@ def document_list(request):
             "years": years,
             "has_any": Document.objects.filter(kind__in=["invoice", "credit_note"]).exists(),
             "group_titles": INVOICE_GROUPS,
+            "sort": sort_headers(sort, INVOICE_SORT_KEYS, lambda value: list_url(sorteer=value)),
+            "sorted_by": sort,
         },
     )
 
@@ -774,10 +784,12 @@ def quote_list(request):
     quotes = quotes.order_by(Case(When(status="draft", then=0), default=1), "-issue_date", "-pk")
     found = [q for q in quotes if matches_search(q, query)]
     today = timezone.localdate()
-    rows = [(q, expiry_hint(q, today=today)) for q in found if in_quote_tab(q, tab)]
+    sort = chosen_sort(request, QUOTE_SORT_KEYS)
+    in_tab_now = sorted_rows([q for q in found if in_quote_tab(q, tab)], sort, QUOTE_SORT_KEYS)
+    rows = [(q, expiry_hint(q, today=today)) for q in in_tab_now]
 
     def list_url(**changes):
-        params = {"tab": tab, "q": query, **changes}
+        params = {"tab": tab, "q": query, "sorteer": sort, **changes}
         return "?" + urlencode({k: v for k, v in params.items() if v})
 
     tabs = [
@@ -798,6 +810,8 @@ def quote_list(request):
             "tab": tab,
             "query": query,
             "has_any": Document.objects.filter(kind="quote").exists(),
+            "sort": sort_headers(sort, QUOTE_SORT_KEYS, lambda value: list_url(sorteer=value)),
+            "sorted_by": sort,
         },
     )
 

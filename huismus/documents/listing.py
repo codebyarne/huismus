@@ -141,3 +141,22 @@ def expiry_hint(quote, *, today):
     if days_left <= EXPIRY_HINT_DAYS:
         return ("soon", days_left)
     return None
+
+
+# What a column of the invoice list sorts on. A credit note's amount counts
+# as money going back, as the list shows it.
+INVOICE_SORT_KEYS = {
+    "klant": lambda d: contact_name(d).casefold(),
+    "nummer": lambda d: d.number or "",
+    "datum": lambda d: (d.issue_date is not None, d.issue_date),
+    "status": lambda d: list(INVOICE_GROUPS).index(d.group),
+    "bedrag": lambda d: -d.total_cents if d.kind == "credit_note" else d.total_cents,
+}
+
+QUOTE_SORT_KEYS = {
+    "klant": lambda q: contact_name(q).casefold(),
+    "nummer": lambda q: q.number or "",
+    "geldig": lambda q: (q.expiry_date is not None, q.expiry_date),
+    "status": lambda q: q.status,
+    "totaal": lambda q: q.total_cents,
+}
