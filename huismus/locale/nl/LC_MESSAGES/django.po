@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-16 18:09+0100\n"
+"POT-Creation-Date: 2026-11-16 20:47+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3679,6 +3679,12 @@ msgstr ""
 msgid "Naar Back-ups"
 msgstr ""
 
+msgid "Verder werken"
+msgstr ""
+
+msgid "zonder klant"
+msgstr ""
+
 msgid "Hoe gebruik je Huismus?"
 msgstr ""
 
@@ -3834,18 +3840,6 @@ msgid "Huismus %(version)s is gevonden en wordt gedownload."
 msgstr ""
 
 msgid "Bekijken"
-msgstr ""
-
-#, python-format
-msgid "Je hebt nog %(count)s concept:"
-msgid_plural "Je hebt nog %(count)s concepten, waaronder:"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "zonder klant"
-msgstr ""
-
-msgid "Verder werken"
 msgstr ""
 
 #, python-format

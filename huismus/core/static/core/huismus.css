@@ -1220,11 +1220,21 @@ form > div > .settings-section .card-head { border-bottom: 0; padding-bottom: 0;
 .pill-paid::before { width: 9px; height: 5px; }
 .pill-unpaid { --pill-bg: var(--surface); --pill-fg: var(--text); box-shadow: inset 0 0 0 1px var(--border-strong); padding-inline: 10px; font-weight: var(--fw-semibold); }
 .pill-partial { --pill-bg: var(--warn-bg); --pill-fg: var(--warn); padding-inline: 10px; font-weight: var(--fw-semibold); }
-/* The notices on Overzicht: one card, a line between them (the owner, 2026-11-16). */
-.notices { margin-bottom: var(--s-5); border: 1px solid var(--border); border-radius: var(--r-lg); background: var(--surface); overflow: hidden; }
+/* The notices on Overzicht (design review, 2026-11-16). A warning is a slim tinted strip, not a
+   white card like the figures below it; news is a quiet line of text. */
+.notices { display: flex; flex-direction: column; gap: var(--s-2); margin-bottom: var(--s-5); }
 .notices:not(:has(.hint-banner)) { display: none; }
 .notices > div:not(.hint-banner) { display: contents; }
-.notices .hint-banner { margin: 0 !important; border: 0; border-radius: 0; box-shadow: 0 1px 0 var(--border); padding-block: 10px; }
+.notices .hint-banner { margin: 0 !important; }
+.notices .hint-banner.is-warn, .notices .hint-banner.is-bad { padding: 8px var(--s-4) 8px var(--s-2); border-radius: var(--r-md); background: var(--hb-chip); border-color: color-mix(in oklab, var(--hb-ink) 22%, transparent); }
+.notices .hint-banner.is-warn > .i, .notices .hint-banner.is-bad > .i { background: none; padding: 4px; }
+.notices a.hint-banner.is-warn:hover, .notices a.hint-banner.is-bad:hover { background: color-mix(in oklab, var(--hb-chip) 86%, var(--hb-ink)); }
+.notices .hint-banner.is-warn .spacer + span { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+.notices .hint-banner.is-bad { font-weight: var(--fw-semibold); }
+.notices .hint-banner.is-info { padding: 2px var(--s-2); gap: var(--s-2); border: 0; background: none; font-size: var(--fs-sm); color: var(--text-muted); }
+.notices .hint-banner.is-info > .i { background: none; padding: 0; width: 16px; height: 16px; }
+.notices .hint-banner.is-info .spacer { display: none; }
+.notices a.hint-banner.is-info:hover, .notices div.hint-banner.is-info:has(> a):hover { background: none; color: var(--text); }
 @media (min-width: 761px) { .hint-banner .spacer + span, .hint-banner .spacer ~ a { white-space: nowrap; } }
 /* A column heading that sorts the list: the arrow shows the direction, a faint one on hover says it can. */
 .th-sort { display: inline-flex; align-items: center; gap: 4px; color: inherit; text-decoration: none; border-radius: 4px; }
