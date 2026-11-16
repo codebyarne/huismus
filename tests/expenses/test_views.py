@@ -499,7 +499,7 @@ def test_a_category_with_expenses_links_to_those_expenses_over_all_years(client)
 
     page = client.get(reverse("expenses:category_list")).content.decode()
 
-    link = f'{reverse("expenses:list")}?categorie={used.pk}&amp;jaar=alle'
+    link = f"{reverse('expenses:list')}?categorie={used.pk}&amp;jaar=alle"
     assert page.count(f'href="{link}"') == 2  # the name and the count
     assert page.count("?categorie=") == 2  # the category without expenses has no link
     # Following it shows the expense, also one from an earlier year.
