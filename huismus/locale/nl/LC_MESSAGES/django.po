@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-15 19:01+0100\n"
+"POT-Creation-Date: 2026-11-16 08:39+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3728,6 +3728,30 @@ msgstr ""
 msgid "Sluiten"
 msgstr ""
 
+msgid "verloopt vandaag"
+msgstr ""
+
+#, python-format
+msgid "verloopt over %(days)s dag"
+msgid_plural "verloopt over %(days)s dagen"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Verlopen"
+msgstr ""
+
+#, python-format
+msgid "geldig tot %(date)s"
+msgstr ""
+
+msgid ""
+"Verzonden offertes zonder antwoord. Na de geldigheidsdatum kun je ze als "
+"verlopen markeren."
+msgstr ""
+
+msgid "Geen offertes die op antwoord wachten."
+msgstr ""
+
 msgid "Uitleg bij de versie van Huismus die je nu gebruikt."
 msgstr ""
 
@@ -3856,37 +3880,13 @@ msgstr ""
 msgid "Nummer"
 msgstr ""
 
-msgid "Bedrag"
-msgstr ""
-
 msgid "Status"
 msgstr ""
 
+msgid "Bedrag"
+msgstr ""
+
 msgid "Je hebt nog geen facturen uitgegeven."
-msgstr ""
-
-msgid "verloopt vandaag"
-msgstr ""
-
-#, python-format
-msgid "verloopt over %(days)s dag"
-msgid_plural "verloopt over %(days)s dagen"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "geldigheid voorbij"
-msgstr ""
-
-#, python-format
-msgid "geldig tot %(date)s"
-msgstr ""
-
-msgid ""
-"Verzonden offertes zonder antwoord. Na de geldigheidsdatum kun je ze als "
-"verlopen markeren."
-msgstr ""
-
-msgid "Geen offertes die op antwoord wachten."
 msgstr ""
 
 msgid "Nog geen facturen"
@@ -4138,9 +4138,6 @@ msgid "Verzonden"
 msgstr ""
 
 msgid "Afgewezen"
-msgstr ""
-
-msgid "Verlopen"
 msgstr ""
 
 msgid "Geaccepteerd, afgewezen of verlopen"

@@ -51,24 +51,20 @@
             <table class="table stackable">
                 <thead>
                     <tr>
-                        <th>{% translate "Nummer" %}</th>
                         <th>{% translate "Klant" %}</th>
-                        <th>{% translate "Status" %}</th>
+                        <th>{% translate "Nummer" %}</th>
                         <th>{% translate "Geldig tot" %}</th>
+                        <th>{% translate "Status" %}</th>
                         <th class="r">{% translate "Totaal" %}</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for quote, hint in quotes %}
                     <tr class="is-link">
-                        <td data-cell="secondary">
-                            {% if quote.number %}<span class="num">{{ quote.number }}</span>{% else %}<span class="draft-no">{% translate "Concept" %}</span>{% endif %}
-                            {% if hint.0 == "soon" %}<span class="due-hint"><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% if hint.1 == 0 %}{% translate "verloopt vandaag" %}{% else %}{% blocktranslate count days=hint.1 %}verloopt over {{ days }} dag{% plural %}verloopt over {{ days }} dagen{% endblocktranslate %}{% endif %}</span>
-                            {% elif hint.0 == "past" %}<span class="due-hint is-past"><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% translate "geldigheid voorbij" %}</span>{% endif %}
-                        </td>
                         <td data-cell="primary"><a class="row-link" href="{% url 'quotes:edit' quote.pk %}">{{ quote|contact_name|default:_("Nog geen klant") }}</a></td>
-                        <td data-cell="status"><span class="pill pill-{{ quote.status|quote_pill }}">{{ quote.get_status_display|capfirst }}</span></td>
-                        <td data-cell="hide" class="num">{% if quote.expiry_date %}{{ quote.expiry_date|date:"SHORT_DATE_FORMAT" }}{% else %}<span class="muted">·</span>{% endif %}</td>
+                        <td data-cell="secondary" class="num muted">{% if quote.number %}{{ quote.number }}{% else %}<span class="draft-no">{% translate "Concept" %}</span>{% endif %}</td>
+                        <td data-cell="hide" class="num muted">{% if quote.expiry_date %}{{ quote.expiry_date|date:"SHORT_DATE_FORMAT" }}{% endif %}</td>
+                        <td data-cell="status">{% comment %}A sent quote whose date has passed reads as "Verlopen" (the owner, 2026-11-16); its stored status changes only when the user marks it.{% endcomment %}{% if hint.0 == "past" %}<span class="pill pill-quote-expired">{% translate "Verlopen" %}</span>{% else %}<span class="status-hint"><span class="pill pill-{{ quote.status|quote_pill }}">{{ quote.get_status_display|capfirst }}</span>{% if hint.0 == "soon" %}<span class="due-hint"><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% if hint.1 == 0 %}{% translate "verloopt vandaag" %}{% else %}{% blocktranslate count days=hint.1 %}verloopt over {{ days }} dag{% plural %}verloopt over {{ days }} dagen{% endblocktranslate %}{% endif %}</span>{% endif %}</span>{% endif %}</td>
                         <td data-cell="amount" class="r amount">{{ quote.total_cents|money }}</td>
                     </tr>
                     {% endfor %}

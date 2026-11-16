@@ -30,10 +30,10 @@ def contact_name(document):
 # Quote status -> pill class in huismus.css (§7).
 QUOTE_PILLS = {
     "draft": "concept",
-    "sent": "sent",
-    "accepted": "accepted",
-    "declined": "rejected",
-    "expired": "expired",
+    "sent": "quote-sent",
+    "accepted": "quote-accepted",
+    "declined": "quote-declined",
+    "expired": "quote-expired",
 }
 
 
