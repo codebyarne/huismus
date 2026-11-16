@@ -118,6 +118,7 @@ def _contacts() -> list[Contact]:
     return [
         Contact.objects.create(
             company_name=name,
+            customer_number=f"K{i + 1:03d}",
             address_line1=f"Voorbeeldstraat {i + 1}",
             postal_code="1012 NX",
             city="Amsterdam",

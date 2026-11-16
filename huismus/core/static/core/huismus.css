@@ -483,11 +483,12 @@ a:hover { color: var(--primary-hover); }
 .list .title { font-weight: var(--fw-semibold); color: var(--text); text-decoration: none; }
 .list .title::after { content: ""; position: absolute; inset: 0; }
 .list > li:hover { background: var(--surface-2); }
-/* Documenten in een smalle kaart (Overzicht): naam en bedrag op één lijn, nummer en termijn eronder */
-.list-docs > li { align-items: baseline; }
-.list-docs .title { display: block; overflow-wrap: break-word; }
-.list-docs .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 10px; margin-top: 2px; font-size: var(--fs-sm); color: var(--text-muted); }
-.list-docs .amount { font-weight: var(--fw-semibold); font-variant-numeric: tabular-nums; white-space: nowrap; }
+/* Documenten in een smalle kaart (Overzicht), als een gestapelde tabelrij: naam en bedrag op één lijn, nummer en status eronder; bedrag en status rechts uitgelijnd */
+.list-docs > li { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: 4px 12px; }
+.list-docs .title { overflow-wrap: break-word; }
+.list-docs .meta { font-size: var(--fs-sm); color: var(--text-muted); }
+.list-docs .amount { justify-self: end; font-weight: var(--fw-semibold); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.list-docs .status { justify-self: end; align-self: center; }
 
 /* Filtertabs. Too many for the width: they break onto a next line, never
    scroll out of sight (Offertes at 1024px, 2026-10-31). So the active tab's
@@ -1204,18 +1205,24 @@ form > div > .settings-section .card-head { border-bottom: 0; padding-bottom: 0;
   .table.stackable .status-hint:has(.due-hint) .pill { display: none; }
 }
 /* Every status of a quote is a pill, each with its own colour, so a list reads at a glance
-   (the owner, 2026-11-16; before that only "te laat" had colour): petrol while it waits,
-   green for yes, red for no, grey once it lapsed. */
-.pill-quote-sent { --pill-bg: var(--primary-soft); --pill-fg: var(--primary-ink); }
+   (the owner, 2026-11-16; before that only "te laat" had colour): an outline while it waits,
+   petrol for yes (the house colour is the good news), red for no, grey once it lapsed. */
+.pill-quote-sent { --pill-bg: var(--surface); --pill-fg: var(--text); box-shadow: inset 0 0 0 1px var(--border-strong); }
 .pill-quote-sent::before { background: transparent; box-shadow: inset 0 0 0 1.5px currentColor; }
-.pill-quote-accepted { --pill-bg: var(--ok-bg); --pill-fg: var(--ok); }
+.pill-quote-accepted { --pill-bg: var(--primary-soft); --pill-fg: var(--primary-ink); }
 .pill-quote-accepted::before { width: 9px; height: 5px; border-radius: 0; background: transparent; border-left: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: translateY(-1px) rotate(-45deg); }
 .pill-quote-declined { --pill-bg: var(--bad-bg); --pill-fg: var(--bad); }
 .pill-quote-expired { --pill-bg: var(--draft-bg); --pill-fg: var(--draft); }
 .pill-quote-expired::before { background: transparent; box-shadow: inset 0 0 0 1.5px currentColor; }
 /* An invoice's payment status is a pill too, like a quote's (the owner, 2026-11-16):
-   green once paid, petrol while it waits, amber when part is in. "Te laat" stays red. */
-.pill-paid { --pill-bg: var(--ok-bg); --pill-fg: var(--ok); padding-inline: 10px; font-weight: var(--fw-semibold); }
+   petrol once paid, an outline while it waits, amber when part is in. "Te laat" stays red. */
+.pill-paid { --pill-bg: var(--primary-soft); --pill-fg: var(--primary-ink); padding-inline: 10px; font-weight: var(--fw-semibold); }
 .pill-paid::before { width: 9px; height: 5px; }
-.pill-unpaid { --pill-bg: var(--primary-soft); --pill-fg: var(--primary-ink); padding-inline: 10px; font-weight: var(--fw-semibold); }
+.pill-unpaid { --pill-bg: var(--surface); --pill-fg: var(--text); box-shadow: inset 0 0 0 1px var(--border-strong); padding-inline: 10px; font-weight: var(--fw-semibold); }
 .pill-partial { --pill-bg: var(--warn-bg); --pill-fg: var(--warn); padding-inline: 10px; font-weight: var(--fw-semibold); }
+/* The notices on Overzicht: one card, a line between them (the owner, 2026-11-16). */
+.notices { margin-bottom: var(--s-5); border: 1px solid var(--border); border-radius: var(--r-lg); background: var(--surface); overflow: hidden; }
+.notices:not(:has(.hint-banner)) { display: none; }
+.notices > div:not(.hint-banner) { display: contents; }
+.notices .hint-banner { margin: 0 !important; border: 0; border-radius: 0; box-shadow: 0 1px 0 var(--border); padding-block: 10px; }
+@media (min-width: 761px) { .hint-banner .spacer + span, .hint-banner .spacer ~ a { white-space: nowrap; } }

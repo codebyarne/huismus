@@ -51,6 +51,8 @@
 </div>
 
 {% comment %}The notices come before the figures: on a phone the three figures stack and would push them out of sight (BUGS-BY-HAND.md).{% endcomment %}
+{% comment %}All notices in one card with a line between them, not a stack of loose blocks (the owner, 2026-11-16).{% endcomment %}
+<div class="notices">
 {% if backup_warning.level == "bad" %}{% include "core/_backup_banner.html" %}{% endif %}
 {% if kor_limit and kor_limit.level != "ok" %}
 <a class="hint-banner {% if kor_limit.level == 'over' %}is-bad{% else %}is-warn{% endif %}" id="kor-melding" href="{% url 'reports:year_overview' %}?jaar={{ year }}" style="margin-bottom:var(--s-4)">
@@ -103,6 +105,7 @@
 </a>
 {% endwith %}
 {% endif %}
+</div>
 
 {% if has_invoices %}
 <div class="grid-3" style="margin-bottom:var(--s-6)">
