@@ -1,0 +1,20 @@
+{% load i18n money documents_tags %}{% comment %}Wants `waiting_quotes`: (quote, hint) pairs of sent quotes without an answer. One row per quote: who and how much on the first line, number and validity below.{% endcomment %}
+<section class="card">
+    <div class="card-head"><h2>{% translate "Wachten op antwoord" %}</h2><a class="small" href="{% url 'quotes:list' %}">{% translate "Offertes" %}</a></div>
+    {% if waiting_quotes %}
+    <ul class="list list-docs">
+        {% for quote, hint in waiting_quotes %}
+        <li>
+            <div class="grow">
+                <a class="title" href="{% url 'quotes:edit' quote.pk %}">{{ quote|contact_name }}</a>
+                <div class="meta"><span class="num">{{ quote.number }}</span>{% if hint.0 == "soon" %}<span class="due-hint"><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% if hint.1 == 0 %}{% translate "verloopt vandaag" %}{% else %}{% blocktranslate count days=hint.1 %}verloopt over {{ days }} dag{% plural %}verloopt over {{ days }} dagen{% endblocktranslate %}{% endif %}</span>{% elif hint.0 == "past" %}<span class="pill pill-quote-expired">{% translate "Verlopen" %}</span>{% elif quote.expiry_date %}<span>{% blocktranslate with date=quote.expiry_date|date:"SHORT_DATE_FORMAT" %}geldig tot {{ date }}{% endblocktranslate %}</span>{% endif %}</div>
+            </div>
+            <span class="amount">{{ quote.total_cents|money }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+    <div class="card-foot muted">{% translate "Verzonden offertes zonder antwoord. Na de geldigheidsdatum kun je ze als verlopen markeren." %}</div>
+    {% else %}
+    <div class="card-pad small muted">{% translate "Geen offertes die op antwoord wachten." %}</div>
+    {% endif %}
+</section>

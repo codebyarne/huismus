@@ -80,7 +80,7 @@
                             {% if document.source %}<span class="small muted imported">{% translate "Geïmporteerd" %}</span>{% endif %}
                         </td>
                         <td data-cell="secondary" class="num muted">{{ document.number }}</td>
-                        <td data-cell="hide" class="num muted">{{ document.issue_date|date:"j M Y" }}</td>
+                        <td data-cell="hide" class="num muted">{{ document.issue_date|date:"SHORT_DATE_FORMAT" }}</td>
                         <td data-cell="status">
                             {% if document.group == "concept" %}<span class="pill pill-concept">{% translate "Concept" %}</span>
                             {% elif document.group == "creditnotas" %}<span class="pill pill-credit">{% translate "Creditnota" %}</span>

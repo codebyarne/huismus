@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-15 19:01+0100\n"
+"POT-Creation-Date: 2026-11-16 08:39+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3985,6 +3985,32 @@ msgstr "search"
 msgid "Sluiten"
 msgstr "Close"
 
+msgid "verloopt vandaag"
+msgstr "expires today"
+
+#, python-format
+msgid "verloopt over %(days)s dag"
+msgid_plural "verloopt over %(days)s dagen"
+msgstr[0] "expires in %(days)s day"
+msgstr[1] "expires in %(days)s days"
+
+msgid "Verlopen"
+msgstr "Expired"
+
+#, python-format
+msgid "geldig tot %(date)s"
+msgstr "valid until %(date)s"
+
+msgid ""
+"Verzonden offertes zonder antwoord. Na de geldigheidsdatum kun je ze als "
+"verlopen markeren."
+msgstr ""
+"Sent quotes without a reply. After the expiry date you can mark them as "
+"expired."
+
+msgid "Geen offertes die op antwoord wachten."
+msgstr "No quotes waiting for a reply."
+
 msgid "Uitleg bij de versie van Huismus die je nu gebruikt."
 msgstr "Explanations for the version of Huismus you're using now."
 
@@ -4127,40 +4153,14 @@ msgstr "All invoices"
 msgid "Nummer"
 msgstr "Number"
 
-msgid "Bedrag"
-msgstr "Amount"
-
 msgid "Status"
 msgstr "Status"
 
+msgid "Bedrag"
+msgstr "Amount"
+
 msgid "Je hebt nog geen facturen uitgegeven."
 msgstr "You haven't issued any invoices yet."
-
-msgid "verloopt vandaag"
-msgstr "expires today"
-
-#, python-format
-msgid "verloopt over %(days)s dag"
-msgid_plural "verloopt over %(days)s dagen"
-msgstr[0] "expires in %(days)s day"
-msgstr[1] "expires in %(days)s days"
-
-msgid "geldigheid voorbij"
-msgstr "no longer valid"
-
-#, python-format
-msgid "geldig tot %(date)s"
-msgstr "valid until %(date)s"
-
-msgid ""
-"Verzonden offertes zonder antwoord. Na de geldigheidsdatum kun je ze als "
-"verlopen markeren."
-msgstr ""
-"Sent quotes without a reply. After the expiry date you can mark them as "
-"expired."
-
-msgid "Geen offertes die op antwoord wachten."
-msgstr "No quotes waiting for a reply."
 
 msgid "Nog geen facturen"
 msgstr "No invoices yet"
@@ -4431,9 +4431,6 @@ msgstr "Sent"
 
 msgid "Afgewezen"
 msgstr "Declined"
-
-msgid "Verlopen"
-msgstr "Expired"
 
 msgid "Geaccepteerd, afgewezen of verlopen"
 msgstr "Accepted, declined or expired"
@@ -6801,6 +6798,9 @@ msgid ""
 msgstr ""
 "If you have a Raspberry Pi, a NAS, your own server or a VPS, you can also "
 "run Huismus in Docker. That is for people who are handy with that."
+
+#~ msgid "geldigheid voorbij"
+#~ msgstr "no longer valid"
 
 #, python-format
 #~ msgid "%(count)s dag te laat"
