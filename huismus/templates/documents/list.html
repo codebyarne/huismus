@@ -31,7 +31,7 @@
     </div>
 </div>
 {% else %}
-<section class="card">
+<section class="card list-card">
     <nav class="tabs" id="facturen-tabs" aria-label="{% translate 'Filter' %}" style="padding:0 var(--s-3)">
         {% for t in tabs %}
         <a class="tab" href="{{ t.url }}"{% if t.slug == tab %} aria-current="page"{% endif %}>{{ t.label }} <span class="count">{{ t.count }}</span></a>
@@ -45,6 +45,7 @@
           hx-target="#facturen-resultaat" hx-select="#facturen-resultaat" hx-select-oob="#facturen-tabs"
           hx-swap="outerHTML" hx-push-url="true">
         <input type="hidden" name="tab" value="{{ tab }}">
+        {% if sorted_by %}<input type="hidden" name="sorteer" value="{{ sorted_by }}">{% endif %}
         <label class="input-affix">
             <span class="sr-only">{% translate "Zoeken in facturen" %}</span>
             <svg class="i" aria-hidden="true"><use href="#search"></use></svg>
@@ -54,22 +55,26 @@
             {% for y in years %}<option value="{{ y }}"{% if y == year %} selected{% endif %}>{{ y }}</option>{% endfor %}
             <option value="alle"{% if year is None %} selected{% endif %}>{% translate "Alle jaren" %}</option>
         </select>
+        {% comment %}Stacked (phone) the list has no column headings: the same sort links sit in this menu.{% endcomment %}
+        <button type="button" class="btn btn-secondary btn-sm sort-menu-btn" popovertarget="sorteer-menu">{% translate "Sorteren" %}</button>
+        <div id="sorteer-menu" class="menu" popover="auto">{% include "core/_sort_item.html" with col=sort.klant label=_("Klant") %}{% include "core/_sort_item.html" with col=sort.nummer label=_("Nummer") %}{% include "core/_sort_item.html" with col=sort.datum label=_("Datum") %}{% include "core/_sort_item.html" with col=sort.status label=_("Status") %}{% include "core/_sort_item.html" with col=sort.bedrag label=_("Bedrag") %}</div>
         <noscript><button type="submit" class="btn btn-sm">{% translate "Zoeken" %}</button></noscript>
     </form>
     <div id="facturen-resultaat">
         {% if documents %}
-        {% regroup documents by group as groups %}
+        {% comment %}Sorted by a column there is one table, without the group headings (list_group is empty then).{% endcomment %}
+        {% regroup documents by list_group as groups %}
         {% for group in groups %}
-        <h2 class="list-group-title" id="groep-{{ group.grouper }}">{{ group_titles|get:group.grouper }}</h2>
+        {% if group.grouper %}<h2 class="list-group-title" id="groep-{{ group.grouper }}">{{ group_titles|get:group.grouper }}</h2>{% endif %}
         <div class="table-wrap">
-            <table class="table stackable" aria-labelledby="groep-{{ group.grouper }}">
+            <table class="table stackable"{% if group.grouper %} aria-labelledby="groep-{{ group.grouper }}"{% endif %}>
                 <thead>
                     <tr>
-                        <th>{% translate "Klant" %}</th>
-                        <th>{% translate "Nummer" %}</th>
-                        <th>{% translate "Datum" %}</th>
-                        <th>{% translate "Status" %}</th>
-                        <th class="r">{% translate "Bedrag" %}</th>
+                        {% include "core/_sort_th.html" with col=sort.klant label=_("Klant") %}
+                        {% include "core/_sort_th.html" with col=sort.nummer label=_("Nummer") %}
+                        {% include "core/_sort_th.html" with col=sort.datum label=_("Datum") %}
+                        {% include "core/_sort_th.html" with col=sort.status label=_("Status") %}
+                        {% include "core/_sort_th.html" with col=sort.bedrag label=_("Bedrag") cls="r" %}
                     </tr>
                 </thead>
                 <tbody>

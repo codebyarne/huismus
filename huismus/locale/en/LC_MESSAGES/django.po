@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-16 08:39+0100\n"
+"POT-Creation-Date: 2026-11-16 18:09+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3050,8 +3050,8 @@ msgstr ""
 msgid "Weer leegmaken"
 msgstr "Clear sample data"
 
-msgid "Facturen en uitgaven voor zzp'ers, met of zonder KOR"
-msgstr "Invoices and expenses for Dutch freelancers, with or without the KOR"
+msgid "Lokale boekhouding voor zzp'ers"
+msgstr "Local bookkeeping for Dutch freelancers"
 
 msgid "Sneltoetsen:"
 msgstr "Shortcuts:"
@@ -3870,14 +3870,17 @@ msgstr "Search customers"
 msgid "Zoek op naam, klantnummer of plaats"
 msgstr "Search by name, number or city"
 
-msgid "Zoeken"
-msgstr "Search"
+msgid "Sorteren"
+msgstr "Sort"
 
 msgid "Naam"
 msgstr "Name"
 
 msgid "Plaats"
 msgstr "City"
+
+msgid "Zoeken"
+msgstr "Search"
 
 msgid "Actie"
 msgstr "Action"
@@ -5207,14 +5210,14 @@ msgstr "Category"
 msgid "Alle categorieën"
 msgstr "All categories"
 
+msgid "Leverancier"
+msgstr "Supplier"
+
 msgid "Alleen uitgaven om na te kijken."
 msgstr "Only expenses to check."
 
 msgid "Alle uitgaven"
 msgstr "All expenses"
-
-msgid "Leverancier"
-msgstr "Supplier"
 
 msgid "Met bonnetje"
 msgstr "With receipt"

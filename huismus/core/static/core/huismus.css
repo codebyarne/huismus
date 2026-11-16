@@ -1226,3 +1226,20 @@ form > div > .settings-section .card-head { border-bottom: 0; padding-bottom: 0;
 .notices > div:not(.hint-banner) { display: contents; }
 .notices .hint-banner { margin: 0 !important; border: 0; border-radius: 0; box-shadow: 0 1px 0 var(--border); padding-block: 10px; }
 @media (min-width: 761px) { .hint-banner .spacer + span, .hint-banner .spacer ~ a { white-space: nowrap; } }
+/* A column heading that sorts the list: the arrow shows the direction, a faint one on hover says it can. */
+.th-sort { display: inline-flex; align-items: center; gap: 4px; color: inherit; text-decoration: none; border-radius: 4px; }
+.th-sort::after { content: "↕"; font-size: 11px; opacity: 0; transition: opacity .12s; }
+.th-sort:hover { color: var(--text); }
+.th-sort:hover::after, .th-sort:focus-visible::after { opacity: .6; }
+th[aria-sort] .th-sort { color: var(--text); }
+th[aria-sort="ascending"] .th-sort::after { content: "↑"; opacity: 1; }
+th[aria-sort="descending"] .th-sort::after { content: "↓"; opacity: 1; }
+th.r .th-sort { flex-direction: row-reverse; }
+/* Stacked, a list has no headings: "Sorteren" in the toolbar opens the same links. The card is the
+   container, as wide as its table, so the button shows exactly when the headings are gone. */
+.list-card { container: list / inline-size; }
+@container list (min-width: 721px) { .sort-menu-btn { display: none; } }
+#sorteer-menu { inset: auto 12px calc(84px + env(safe-area-inset-bottom)) 12px; }
+#sorteer-menu a[data-sort]::after { margin-left: auto; font-size: 12px; color: var(--text-muted); }
+#sorteer-menu a[data-sort="ascending"]::after { content: "↑"; }
+#sorteer-menu a[data-sort="descending"]::after { content: "↓"; }

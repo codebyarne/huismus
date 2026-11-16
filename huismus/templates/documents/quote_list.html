@@ -27,7 +27,7 @@
     </div>
 </div>
 {% else %}
-<section class="card">
+<section class="card list-card">
     <nav class="tabs" id="offertes-tabs" aria-label="{% translate 'Filter' %}" style="padding:0 var(--s-3)">
         {% for t in tabs %}
         <a class="tab" href="{{ t.url }}"{% if t.slug == tab %} aria-current="page"{% endif %}>{{ t.label }} <span class="count">{{ t.count }}</span></a>
@@ -38,11 +38,15 @@
           hx-target="#offertes-resultaat" hx-select="#offertes-resultaat" hx-select-oob="#offertes-tabs"
           hx-swap="outerHTML" hx-push-url="true">
         <input type="hidden" name="tab" value="{{ tab }}">
+        {% if sorted_by %}<input type="hidden" name="sorteer" value="{{ sorted_by }}">{% endif %}
         <label class="input-affix">
             <span class="sr-only">{% translate "Zoeken in offertes" %}</span>
             <svg class="i" aria-hidden="true"><use href="#search"></use></svg>
             <input class="input input-sm" type="search" name="q" value="{{ query }}" placeholder="{% translate 'Zoek op nummer of klant' %}" autocomplete="off">
         </label>
+        {% comment %}Stacked (phone) the list has no column headings: the same sort links sit in this menu.{% endcomment %}
+        <button type="button" class="btn btn-secondary btn-sm sort-menu-btn" popovertarget="sorteer-menu">{% translate "Sorteren" %}</button>
+        <div id="sorteer-menu" class="menu" popover="auto">{% include "core/_sort_item.html" with col=sort.klant label=_("Klant") %}{% include "core/_sort_item.html" with col=sort.nummer label=_("Nummer") %}{% include "core/_sort_item.html" with col=sort.geldig label=_("Geldig tot") %}{% include "core/_sort_item.html" with col=sort.status label=_("Status") %}{% include "core/_sort_item.html" with col=sort.totaal label=_("Totaal") %}</div>
         <noscript><button type="submit" class="btn btn-sm">{% translate "Zoeken" %}</button></noscript>
     </form>
     <div id="offertes-resultaat">
@@ -51,11 +55,11 @@
             <table class="table stackable">
                 <thead>
                     <tr>
-                        <th>{% translate "Klant" %}</th>
-                        <th>{% translate "Nummer" %}</th>
-                        <th>{% translate "Geldig tot" %}</th>
-                        <th>{% translate "Status" %}</th>
-                        <th class="r">{% translate "Totaal" %}</th>
+                        {% include "core/_sort_th.html" with col=sort.klant label=_("Klant") %}
+                        {% include "core/_sort_th.html" with col=sort.nummer label=_("Nummer") %}
+                        {% include "core/_sort_th.html" with col=sort.geldig label=_("Geldig tot") %}
+                        {% include "core/_sort_th.html" with col=sort.status label=_("Status") %}
+                        {% include "core/_sort_th.html" with col=sort.totaal label=_("Totaal") cls="r" %}
                     </tr>
                 </thead>
                 <tbody>

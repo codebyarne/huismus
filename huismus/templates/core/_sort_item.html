@@ -1,0 +1,1 @@
+{% comment %}One column in the phone's "Sorteren" menu: the same link as the column heading (core/_sort_th.html), which a stacked list doesn't show.{% endcomment %}<a href="{{ col.url }}"{% if col.state %} aria-current="true" data-sort="{{ col.state }}"{% endif %}>{{ label }}</a>

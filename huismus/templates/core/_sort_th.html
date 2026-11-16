@@ -1,0 +1,1 @@
+{% comment %}A column heading that sorts the list (huismus/core/sorting.py). Wants `col` (the column's entry in `sort`) and `label`; `cls` for the th's classes. A plain link: it works without JS.{% endcomment %}<th{% if cls %} class="{{ cls }}"{% endif %}{% if col.state %} aria-sort="{{ col.state }}"{% endif %}><a class="th-sort" href="{{ col.url }}">{{ label }}</a></th>
