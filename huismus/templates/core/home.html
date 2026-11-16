@@ -51,7 +51,7 @@
 </div>
 
 {% comment %}The notices come before the figures: on a phone the three figures stack and would push them out of sight (BUGS-BY-HAND.md).{% endcomment %}
-{% comment %}All notices in one card with a line between them, not a stack of loose blocks (the owner, 2026-11-16).{% endcomment %}
+{% comment %}Only warnings look like a warning: a slim tinted strip. News (bijgewerkt, nieuwe versie, bonnetjes) is a quiet line, and drafts are work, in their own card below the figures (design review, 2026-11-16).{% endcomment %}
 <div class="notices">
 {% if backup_warning.level == "bad" %}{% include "core/_backup_banner.html" %}{% endif %}
 {% if kor_limit and kor_limit.level != "ok" %}
@@ -94,16 +94,6 @@
     <span class="spacer"></span>
     <span>{% translate "Bekijken" %} →</span>
 </a>
-{% endif %}
-{% if drafts %}
-{% with first=drafts.0 %}
-<a class="hint-banner" href="{% url 'documents:edit' first.pk %}" style="margin-bottom:var(--s-4)">
-    <svg class="i" aria-hidden="true"><use href="#edit"></use></svg>
-    <span>{% blocktranslate count count=drafts|length %}Je hebt nog {{ count }} concept:{% plural %}Je hebt nog {{ count }} concepten, waaronder:{% endblocktranslate %} <strong>{{ first|contact_name|default:_("zonder klant") }}, {{ first.total_cents|money }}</strong></span>
-    <span class="spacer"></span>
-    <span>{% translate "Verder werken" %} →</span>
-</a>
-{% endwith %}
 {% endif %}
 </div>
 
@@ -152,7 +142,10 @@
         <div class="card-pad small muted">{% translate "Je hebt nog geen facturen uitgegeven." %}</div>
         {% endif %}
     </section>
-    {% include "core/_waiting_quotes.html" %}
+    <div class="stack" style="gap:var(--s-5)">
+        {% if drafts %}{% include "core/_drafts_card.html" %}{% endif %}
+        {% include "core/_waiting_quotes.html" %}
+    </div>
 </div>
 {% else %}
 <section class="card" id="nog-geen-facturen" style="margin-bottom:var(--s-6)">
@@ -172,6 +165,7 @@
         <span class="kpi-sub">{% translate "Naar je uitgaven" %} →</span>
     </a>
 </div>
+{% if drafts %}<div style="margin-bottom:var(--s-5)">{% include "core/_drafts_card.html" %}</div>{% endif %}
 {% if waiting_quotes %}
     {% include "core/_waiting_quotes.html" %}
 {% endif %}

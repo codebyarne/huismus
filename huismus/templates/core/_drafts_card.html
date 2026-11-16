@@ -1,0 +1,14 @@
+{% load i18n money documents_tags %}{% comment %}Wants `drafts`: the draft invoices. Work to go on with, so it sits beside the lists and not among the warnings above the figures (design review, 2026-11-16). At most five; the rest is in Facturen.{% endcomment %}
+<section class="card" id="concepten">
+    <div class="card-head"><h2>{% translate "Verder werken" %}</h2><a class="small" href="{% url 'documents:list' %}?tab=concepten">{% translate "Concepten" %}</a></div>
+    <ul class="list list-docs">
+        {% for draft in drafts|slice:":5" %}
+        <li>
+            <a class="title" href="{% url 'documents:edit' draft.pk %}">{{ draft|contact_name|default:_("zonder klant") }}</a>
+            <span class="amount">{{ draft.total_cents|money }}</span>
+            <span class="meta"></span>
+            <span class="status"><span class="pill pill-concept">{% translate "Concept" %}</span></span>
+        </li>
+        {% endfor %}
+    </ul>
+</section>

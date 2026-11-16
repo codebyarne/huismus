@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-16 18:09+0100\n"
+"POT-Creation-Date: 2026-11-16 20:47+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3933,6 +3933,12 @@ msgstr "Set up backups"
 msgid "Naar Back-ups"
 msgstr "To Backups"
 
+msgid "Verder werken"
+msgstr "Continue"
+
+msgid "zonder klant"
+msgstr "without customer"
+
 msgid "Hoe gebruik je Huismus?"
 msgstr "How do you use Huismus?"
 
@@ -4108,18 +4114,6 @@ msgstr "Found Huismus %(version)s. It's being downloaded."
 
 msgid "Bekijken"
 msgstr "View"
-
-#, python-format
-msgid "Je hebt nog %(count)s concept:"
-msgid_plural "Je hebt nog %(count)s concepten, waaronder:"
-msgstr[0] "You still have %(count)s draft:"
-msgstr[1] "You still have %(count)s drafts, including:"
-
-msgid "zonder klant"
-msgstr "without customer"
-
-msgid "Verder werken"
-msgstr "Continue"
 
 #, python-format
 msgid "waarvan %(count)s te laat"
@@ -6801,6 +6795,12 @@ msgid ""
 msgstr ""
 "If you have a Raspberry Pi, a NAS, your own server or a VPS, you can also "
 "run Huismus in Docker. That is for people who are handy with that."
+
+#, python-format
+#~ msgid "Je hebt nog %(count)s concept:"
+#~ msgid_plural "Je hebt nog %(count)s concepten, waaronder:"
+#~ msgstr[0] "You still have %(count)s draft:"
+#~ msgstr[1] "You still have %(count)s drafts, including:"
 
 #~ msgid "geldigheid voorbij"
 #~ msgstr "no longer valid"
