@@ -39,12 +39,13 @@ itself. See [Receipts on the road](bonnetjes.en.md).
 
 Under **Categories** on the Expenses page you add, rename and order your
 categories. The order decides how they appear in drop-down lists and on the
-year overview.
+year overview. Click a category to see its expenses, of every year.
 
 ## Searching and the year overview
 
 At the top of the list you search by supplier or description, and filter by
-year and category.
+year and category. Click **Date**, **Supplier** or **Amount** above the list to
+sort by it; click again to turn the order round. On a phone, use **Sort**.
 
 **Reports → Year overview** shows your revenue, your costs and the difference
 for each year, also per quarter. If you don't use the KOR, those are your

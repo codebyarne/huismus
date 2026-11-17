@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-17 06:46+0100\n"
+"POT-Creation-Date: 2026-11-17 07:22+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1706,15 +1706,6 @@ msgstr "Paid"
 
 msgid "Creditnota's"
 msgstr "Credit notes"
-
-msgid "Te laat"
-msgstr "Overdue"
-
-msgid "Wacht op betaling"
-msgstr "Waiting for payment"
-
-msgid "Nog niet verstuurd"
-msgstr "Not sent yet"
 
 msgid "Deels betaald"
 msgstr "Partly paid"
@@ -4422,6 +4413,9 @@ msgid_plural "%(days)s dagen te laat"
 msgstr[0] "%(days)s day late"
 msgstr[1] "%(days)s days late"
 
+msgid "Te laat"
+msgstr "Overdue"
+
 #, python-format
 msgid "sinds %(date)s"
 msgstr "since %(date)s"
@@ -6798,6 +6792,12 @@ msgid ""
 msgstr ""
 "If you have a Raspberry Pi, a NAS, your own server or a VPS, you can also "
 "run Huismus in Docker. That is for people who are handy with that."
+
+#~ msgid "Wacht op betaling"
+#~ msgstr "Waiting for payment"
+
+#~ msgid "Nog niet verstuurd"
+#~ msgstr "Not sent yet"
 
 #, python-format
 #~ msgid "Je hebt nog %(count)s concept:"

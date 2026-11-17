@@ -46,9 +46,15 @@ def items() -> list[Item]:
     ]
 
 
+def counts() -> tuple[int, int]:
+    """What waits, per kind: (expenses to check, receipts without an
+    expense). The overview's card "Bonnetjes" shows both."""
+    return Expense.objects.filter(needs_review=True).count(), Attachment.objects.in_tray().count()
+
+
 def count() -> int:
-    """ "Verwerken (24)" on Uitgaven."""
-    return Expense.objects.filter(needs_review=True).count() + Attachment.objects.in_tray().count()
+    """ "Verwerken (24)" on Uitgaven: the whole stack."""
+    return sum(counts())
 
 
 def next_item(current: Item, before: list[Item]) -> Item | None:

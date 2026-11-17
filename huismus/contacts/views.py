@@ -5,23 +5,24 @@ from urllib.parse import urlencode
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.db.models.functions import Lower
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from huismus.business.models import Settings
-from huismus.core.sorting import chosen_sort, sort_headers
+from huismus.core.sorting import chosen_sort, sort_headers, sorted_rows
 from huismus.documents.models import Document
 
 from .forms import ContactForm, ContactPersonFormSet
 from .models import Contact
 
-# What a column of the customer list sorts on; a name is the company or the person.
-CONTACT_SORT_FIELDS = {
-    "naam": ["company_name", "last_name", "first_name"],
-    "klantnummer": ["customer_number"],
-    "plaats": ["city"],
+# What a column of the customer list sorts on. The name as the list shows it
+# (the company, else the person), so people and companies sort together. A
+# customer number sorts as text: "K10" before "K9".
+CONTACT_SORT_KEYS = {
+    "naam": lambda c: c.display_name.casefold(),
+    "klantnummer": lambda c: c.customer_number.casefold(),
+    "plaats": lambda c: c.city.casefold(),
 }
 
 
@@ -45,10 +46,8 @@ def contact_list(request):
             | Q(email__icontains=query)
             | Q(city__icontains=query)
         )
-    sort = chosen_sort(request, CONTACT_SORT_FIELDS)
-    if sort:
-        fields = [Lower(field) for field in CONTACT_SORT_FIELDS[sort.removeprefix("-")]]
-        contacts = contacts.order_by(*(f.desc() if sort.startswith("-") else f for f in fields))
+    sort = chosen_sort(request, CONTACT_SORT_KEYS)
+    contacts = sorted_rows(list(contacts), sort, CONTACT_SORT_KEYS)
 
     def list_url(value):
         params = {"archived": "1" if show_archived else "", "q": query, "sorteer": value}
@@ -58,7 +57,7 @@ def contact_list(request):
         request,
         "contacts/list.html",
         {
-            "sort": sort_headers(sort, CONTACT_SORT_FIELDS, list_url),
+            "sort": sort_headers(sort, CONTACT_SORT_KEYS, list_url),
             "sorted_by": sort,
             "contacts": contacts,
             "query": query,

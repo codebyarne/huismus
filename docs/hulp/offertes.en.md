@@ -21,7 +21,10 @@ At the top of the quote you see which step it's in. Got an answer? Record it
 with **Accept** or **Decline**. No answer and the quote has run out? Choose
 **Mark as expired**.
 
-On the overview, **Awaiting reply** lists the quotes that are still open.
+On the overview, **Awaiting reply** lists the quotes that are still open. Once
+a sent quote has run out, the list and the overview already show it as
+**Expired**. It stays under Awaiting reply until you choose **Mark as
+expired** yourself, or record the answer after all.
 
 ## From quote to invoice
 

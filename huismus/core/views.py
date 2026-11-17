@@ -17,12 +17,11 @@ from django.views.static import serve as static_serve
 from huismus.business.forms import SettingsPartForm
 from huismus.business.kor_limit import kor_limit_status
 from huismus.business.models import Settings
-from huismus.core.models import Attachment
 from huismus.documents.listing import expiry_hint
 from huismus.documents.models import Document
 from huismus.documents.numbering import NumberingError, next_numbers_if_issued_today
+from huismus.expenses import batch
 from huismus.expenses.inbox_views import new_receipts_context
-from huismus.expenses.models import Expense
 from huismus.reports.year_overview import compute_year_overview
 
 from . import (
@@ -100,6 +99,7 @@ def home(request):
         )
 
     now = timezone.localtime()
+    to_check_count, tray_count = batch.counts()
     today = now.date()
     sent_quotes = Document.objects.filter(kind="quote", status="sent").select_related("contact")
     return render(
@@ -131,8 +131,8 @@ def home(request):
             "updated_to": updated_to,
             **new_receipts_context(),
             # What waits in Verwerken, for the card on the overview.
-            "to_check_count": Expense.objects.filter(needs_review=True).count(),
-            "tray_count": Attachment.objects.in_tray().count(),
+            "to_check_count": to_check_count,
+            "tray_count": tray_count,
         },
     )
 
