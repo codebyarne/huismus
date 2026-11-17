@@ -226,3 +226,29 @@ def test_an_overview_without_invoices_shows_one_card_to_make_the_first(client, s
     assert "Importeren uit Moneybird" in html
     assert "Openstaand" not in html
     assert "Laatste facturen" not in html
+
+
+def test_home_has_a_card_for_drafts_and_one_for_what_waits_in_verwerken(client, settings_filled):
+    from huismus.expenses.models import Expense
+
+    get_user_model().objects.create_user(username="freelancer", password="s3cret-pass")
+    client.login(username="freelancer", password="s3cret-pass")
+    _issued(10000)
+
+    calm = client.get(reverse("home")).content.decode()
+    assert 'id="concepten"' not in calm
+    assert 'id="te-verwerken"' not in calm
+
+    contact = Contact.objects.create(company_name="Concept Klant")
+    Document.objects.create(kind="invoice", status="draft", contact=contact, total_cents=9500)
+    Expense.objects.create(date=TODAY, supplier="Acme", amount_cents=100, needs_review=True)
+
+    response = client.get(reverse("home"))
+    page = response.content.decode()
+
+    assert 'id="concepten"' in page and "Concept Klant" in page
+    assert 'id="te-verwerken"' in page
+    assert response.context["to_check_count"] == 1
+    assert f'href="{reverse("expenses:list")}?nakijken=1"' in page
+    # A draft is work, not a notice above the figures.
+    assert page.index('id="concepten"') > page.index("kpi-value")

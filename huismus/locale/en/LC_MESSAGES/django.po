@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-16 20:47+0100\n"
+"POT-Creation-Date: 2026-11-17 06:11+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3988,6 +3988,15 @@ msgid_plural "%(counter)s velden hebben aandacht nodig:"
 msgstr[0] "One field needs attention:"
 msgstr[1] "%(counter)s fields need attention:"
 
+msgid "Verwerken"
+msgstr "Process"
+
+msgid "Bonnetjes zonder uitgave"
+msgstr "Receipts without an expense"
+
+msgid "Nakijken"
+msgstr "To check"
+
 msgid "zoeken"
 msgstr "search"
 
@@ -5216,9 +5225,6 @@ msgstr "All expenses"
 msgid "Met bonnetje"
 msgstr "With receipt"
 
-msgid "Nakijken"
-msgstr "To check"
-
 #, python-format
 msgid "Totaal van %(total)s uitgave in %(year)s"
 msgid_plural "Totaal van alle %(total)s uitgaven in %(year)s"
@@ -5254,9 +5260,6 @@ msgstr "Save expense"
 
 msgid "Alleen de foto bewaren"
 msgstr "Just keep the photo"
-
-msgid "Verwerken"
-msgstr "Process"
 
 #, python-format
 msgid "%(position)s van %(total)s"
@@ -5359,9 +5362,6 @@ msgstr "Want to use Dropbox or WebDAV? Set it up at Backups first."
 
 msgid "Huismus haalt dan niets meer op. De bonnetjes die er al zijn, blijven."
 msgstr "Huismus stops picking up receipts. Receipts it already has stay."
-
-msgid "Bonnetjes zonder uitgave"
-msgstr "Receipts without an expense"
 
 #, python-format
 msgid "Uit de map %(place)s."
