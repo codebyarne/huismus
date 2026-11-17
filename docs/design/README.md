@@ -15,7 +15,7 @@
    privé; de link staat in `huismus-intern/werkwijze.md`. Een kopie van 1, gemaakt met
    `scripts/design_system_export.py`, om in Claude nieuwe designs mee te maken.
    Het noemt zelf uit welke commit het gebouwd is (README daar, en
-   `lastChange`). Laatst bijgewerkt: 2026-11-15, uit commit `ccb4f94` (tak `huisstijl`, petrol).
+   `lastChange`). Laatst bijgewerkt: 2026-11-17, uit commit `6e62286` (tak `huisstijl`: petrol, pills, sorteren).
 
 Bekijken: start vanuit de root van de repo `python3 -m http.server 8000` en open
 http://localhost:8000/docs/design/componenten.html (de pagina laadt
