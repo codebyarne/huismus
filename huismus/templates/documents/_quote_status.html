@@ -26,7 +26,7 @@ answer can still be recorded here.{% endcomment %}
             {% elif shown == "accepted" %}
             <strong>{% translate "Geaccepteerd door de klant" %}</strong>
             <span class="small muted">{% if converted_invoice %}{% translate "Er is al een factuur van gemaakt." %} <a href="{% url 'documents:edit' converted_invoice.pk %}">{% translate "Naar de factuur" %}</a>{% else %}{% translate "Zet de offerte om naar een factuur." %}{% endif %}</span>
-            {% elif document.status == "sent" %}
+            {% elif shown == "expired" and document.status == "sent" %}
             {% comment %}Past its date, without an answer.{% endcomment %}
             <strong>{% translate "Verlopen" %}</strong>
             <span class="small muted">{% blocktranslate with date=document.expiry_date|date:"SHORT_DATE_FORMAT" %}Was geldig tot {{ date }}. Heb je toch nog antwoord? Leg het hier vast.{% endblocktranslate %}</span>

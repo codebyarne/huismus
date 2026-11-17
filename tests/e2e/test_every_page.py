@@ -256,6 +256,9 @@ CUT_OFF_TABS = """() => [...document.querySelectorAll('.tab')]
 # A menu (popover) whose button is in sight must open inside the window:
 # "Sorteren" on Klanten and Offertes hung half off the left edge of a phone
 # (#204). Opened and closed here in one go; layout is worked out at once.
+# That measures the place the CSS gives it. Where app.js places the menu (a
+# browser without anchor positioning) it does so after the menu has opened:
+# test_on_a_phone_sorteren_opens_its_menu_under_the_button covers that.
 MENUS_OFF_SCREEN = """() => [...document.querySelectorAll('[popover]')]
     .filter(menu => {
         const button = document.querySelector(`[popovertarget="${menu.id}"]`);

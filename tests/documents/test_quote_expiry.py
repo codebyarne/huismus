@@ -117,6 +117,15 @@ def test_a_later_expiry_date_makes_it_wait_again(user_client):
     assert counts["afgewezen"] == 0
 
 
+def test_the_customers_page_says_expired_too(user_client):
+    quote = _quote(-1)
+
+    page = user_client.get(reverse("contacts:edit", args=[quote.contact.pk])).content.decode()
+
+    assert quote.number in page
+    assert "pill-quote-expired" in page
+
+
 def test_the_overview_only_lists_quotes_that_still_wait(user_client):
     _quote(-1, name="Datum Voorbij")
     _quote(5, name="Wacht Nog")
