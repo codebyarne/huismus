@@ -144,6 +144,7 @@
     </section>
     <div class="stack" style="gap:var(--s-5)">
         {% if drafts %}{% include "core/_drafts_card.html" %}{% endif %}
+        {% if tray_count or to_check_count %}{% include "core/_process_card.html" %}{% endif %}
         {% include "core/_waiting_quotes.html" %}
     </div>
 </div>
@@ -166,6 +167,7 @@
     </a>
 </div>
 {% if drafts %}<div style="margin-bottom:var(--s-5)">{% include "core/_drafts_card.html" %}</div>{% endif %}
+{% if tray_count or to_check_count %}<div style="margin-bottom:var(--s-5)">{% include "core/_process_card.html" %}</div>{% endif %}
 {% if waiting_quotes %}
     {% include "core/_waiting_quotes.html" %}
 {% endif %}

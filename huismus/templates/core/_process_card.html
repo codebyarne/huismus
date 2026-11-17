@@ -1,0 +1,18 @@
+{% load i18n %}{% comment %}Wants `to_check_count` and `tray_count`: what waits in Verwerken (huismus/expenses/batch.py), on the overview so you see it without opening Uitgaven (the owner, 2026-11-16). Shown only when something waits.{% endcomment %}
+<section class="card" id="te-verwerken">
+    <div class="card-head"><h2>{% translate "Bonnetjes" %}</h2><a class="small" href="{% url 'expenses:process' %}">{% translate "Verwerken" %}</a></div>
+    <ul class="list list-docs">
+        {% if tray_count %}
+        <li>
+            <a class="title" href="{% url 'expenses:tray' %}">{% translate "Bonnetjes zonder uitgave" %}</a>
+            <span class="amount">{{ tray_count }}</span>
+        </li>
+        {% endif %}
+        {% if to_check_count %}
+        <li>
+            <a class="title" href="{% url 'expenses:list' %}?nakijken=1">{% translate "Nakijken" %}</a>
+            <span class="amount">{{ to_check_count }}</span>
+        </li>
+        {% endif %}
+    </ul>
+</section>

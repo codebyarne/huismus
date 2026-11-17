@@ -75,12 +75,12 @@
   /* Status */
   --ok:       light-dark(#1E7A45, #7AD6A0);  --ok-bg:    light-dark(#E2F3E8, #1D3326);
   --warn:     light-dark(#855000, #FFC766);  --warn-bg:  light-dark(#FDF0D5, #33270F);
-  --bad:      light-dark(#B4184F, #FF8FB1);  --bad-bg:   light-dark(#FCE6EE, #3D1326);
+  --bad:      light-dark(#B3261E, #FF9C8F);  --bad-bg:   light-dark(#FBE9E5, #3D1814);
   --draft:    light-dark(#5E574F, #C9BFB2);  --draft-bg: light-dark(#EFEAE3, #2F2A24);
-  --danger:       light-dark(#B4184F, #FF8FB1);
-  --danger-hover: light-dark(#96113F, #FFB0C8);
-  --on-danger:    light-dark(#FFFFFF, #33061D);
-  --danger-ring:  light-dark(rgb(180 24 79 / .28), rgb(255 143 177 / .38));
+  --danger:       light-dark(#B3261E, #FF9C8F);
+  --danger-hover: light-dark(#8F1D17, #FFB8AE);
+  --on-danger:    light-dark(#FFFFFF, #33100C);
+  --danger-ring:  light-dark(rgb(179 38 30 / .28), rgb(255 156 143 / .38));
 
   /* Schaduwen */
   --sh-1: 0 1px 2px rgb(42 37 32 / .05);
