@@ -77,3 +77,11 @@ de factuur zoals hij was.
 Stuur je vaker dezelfde factuur, bijvoorbeeld elke maand? Open de vorige en
 klik op **Kopiëren**. Je krijgt een nieuw concept met dezelfde klant en
 regels.
+
+## Zoeken en sorteren
+
+Bovenaan de lijst zoek je op nummer of klant en kies je een jaar. De lijst
+begint met wat te laat is en eindigt met wat betaald is. Klik op een kolom,
+zoals **Klant** of **Bedrag**, om daarop te sorteren; nog een keer klikken
+draait de volgorde om, en een derde keer geeft de gewone volgorde terug. Op een
+telefoon doe je dat met **Sorteren**. Bij Offertes en Klanten werkt het net zo.

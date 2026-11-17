@@ -60,10 +60,12 @@ ronde 3 (met een eigen schets-CSS, `hm.css`). Beide zijn naslag, geen bron.
    wordt toegekend.
 4. **Concepten hebben geen nummer**: `<span class="draft-no">Concept</span>`
    of "bij uitgeven".
-5. **Betaalstatus wordt afgeleid**: `.pill-unpaid` (gewone tekst, open
-   stip), `.pill-partial` (amber vlak), `.pill-paid` (vinkje, geen vlak),
-   `.pill-credited`; voorbij de vervaldatum `.pill-overdue` ("12 dagen te laat",
-   framboos vlak, het enige wat opvalt).
+5. **Betaalstatus wordt afgeleid**: `.pill-unpaid` (wit met een randje, open
+   stip), `.pill-partial` (amber vlak), `.pill-paid` (petrol vlak met een
+   vinkje), `.pill-credited`; voorbij de vervaldatum `.pill-overdue` ("Te laat",
+   warm rood vlak). Offertes: `.pill-quote-sent` (wit met een randje),
+   `.pill-quote-accepted` (petrol), `.pill-quote-declined` (rood),
+   `.pill-quote-expired` (grijs).
 6. **Een geïmporteerd document** krijgt `.pill-import` en de originele pdf is
    primair.
 7. **De import is standaard een proefdraai.** Het rapport stelt gerust of wijst

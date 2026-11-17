@@ -270,12 +270,13 @@ EXPENSE_SORT_FIELDS = {
 
 
 def _expense_order(sort):
-    """The list's own order (newest first), or the chosen column first."""
-    own = ["-date", "-pk"]
+    """The list's own order (newest first), or the chosen column first with
+    the newest first among equals."""
     if not sort:
-        return own
+        return ["-date", "-pk"]
     field = EXPENSE_SORT_FIELDS[sort.removeprefix("-")]
-    return [field.desc() if sort.startswith("-") else field.asc(), *own]
+    chosen = field.desc() if sort.startswith("-") else field.asc()
+    return [chosen, "-pk"] if sort.removeprefix("-") == "datum" else [chosen, "-date", "-pk"]
 
 
 def _shown_cents(category_pk):

@@ -22,14 +22,10 @@ INVOICE_TABS = [
 ]
 
 
-# The groups of the invoice list, in the order they show (#186).
-INVOICE_GROUPS = {
-    "te-laat": _("Te laat"),
-    "wacht": _("Wacht op betaling"),
-    "concept": _("Nog niet verstuurd"),
-    "betaald": _("Betaald"),
-    "creditnotas": _("Creditnota's"),
-}
+# The order of the invoice list (#186): what needs the user first. The list
+# shows no heading per group (the owner, 2026-11-17); the Status column says it.
+INVOICE_GROUPS = ("te-laat", "wacht", "concept", "betaald", "creditnotas")
+GROUP_RANK = {group: rank for rank, group in enumerate(INVOICE_GROUPS)}
 
 
 def invoice_group(document):
@@ -49,12 +45,10 @@ def invoice_group(document):
 
 def grouped(documents):
     """The documents with .group set, sorted by group in INVOICE_GROUPS
-    order. Within a group they keep the order they came in, so "Meer
-    laden" continues a group instead of starting its heading again."""
-    order = list(INVOICE_GROUPS)
+    order. Within a group they keep the order they came in."""
     for document in documents:
         document.group = invoice_group(document)
-    return sorted(documents, key=lambda d: order.index(d.group))
+    return sorted(documents, key=lambda d: GROUP_RANK[d.group])
 
 
 def waiting_label(document, today):
@@ -149,14 +143,36 @@ INVOICE_SORT_KEYS = {
     "klant": lambda d: contact_name(d).casefold(),
     "nummer": lambda d: d.number or "",
     "datum": lambda d: (d.issue_date is not None, d.issue_date),
-    "status": lambda d: list(INVOICE_GROUPS).index(d.group),
+    "status": lambda d: GROUP_RANK[d.group],
     "bedrag": lambda d: -d.total_cents if d.kind == "credit_note" else d.total_cents,
 }
 
-QUOTE_SORT_KEYS = {
-    "klant": lambda q: contact_name(q).casefold(),
-    "nummer": lambda q: q.number or "",
-    "geldig": lambda q: (q.expiry_date is not None, q.expiry_date),
-    "status": lambda q: q.status,
-    "totaal": lambda q: q.total_cents,
+# The order of quote statuses when sorting on Status: what still needs the
+# user first. "shown-expired" is a sent quote whose date has passed, which
+# the list shows as Verlopen (shown_quote_status).
+QUOTE_STATUS_RANK = {
+    status: rank
+    for rank, status in enumerate(
+        ("draft", "sent", "shown-expired", "accepted", "declined", "expired")
+    )
 }
+
+
+def shown_quote_status(quote, *, today):
+    """The status as the list shows it: a sent quote past its expiry date
+    reads as expired, while its stored status stays "sent" until the user
+    marks it (SPEC.md M8)."""
+    past = expiry_hint(quote, today=today) == ("past", None)
+    return "shown-expired" if past else quote.status
+
+
+def quote_sort_keys(today):
+    """What a column of the quote list sorts on. Status goes by what the
+    row shows, so the rows that read Verlopen stay together."""
+    return {
+        "klant": lambda q: contact_name(q).casefold(),
+        "nummer": lambda q: q.number or "",
+        "geldig": lambda q: (q.expiry_date is not None, q.expiry_date),
+        "status": lambda q: QUOTE_STATUS_RANK[shown_quote_status(q, today=today)],
+        "totaal": lambda q: q.total_cents,
+    }

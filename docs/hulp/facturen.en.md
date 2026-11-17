@@ -73,3 +73,11 @@ first. **Cancel** in the draft takes you back to the invoice as it was.
 Do you send the same invoice more often, every month for example? Open the
 last one and click **Copy**. You get a new draft with the same customer and
 lines.
+
+## Searching and sorting
+
+At the top of the list you search by number or customer and pick a year. The
+list starts with what is overdue and ends with what is paid. Click a column,
+such as **Customer** or **Amount**, to sort by it; click again to turn the
+order round, and a third time for the usual order. On a phone, use **Sort**.
+Quotes and Customers work the same way.

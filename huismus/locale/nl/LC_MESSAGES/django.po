@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-17 06:46+0100\n"
+"POT-Creation-Date: 2026-11-17 07:22+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1624,15 +1624,6 @@ msgid "Betaald"
 msgstr ""
 
 msgid "Creditnota's"
-msgstr ""
-
-msgid "Te laat"
-msgstr ""
-
-msgid "Wacht op betaling"
-msgstr ""
-
-msgid "Nog niet verstuurd"
 msgstr ""
 
 msgid "Deels betaald"
@@ -4129,6 +4120,9 @@ msgid "%(days)s dag te laat"
 msgid_plural "%(days)s dagen te laat"
 msgstr[0] ""
 msgstr[1] ""
+
+msgid "Te laat"
+msgstr ""
 
 #, python-format
 msgid "sinds %(date)s"

@@ -492,7 +492,7 @@ def test_the_receipt_on_a_new_expense_is_not_called_optional(client):
 def test_a_category_with_expenses_links_to_those_expenses_over_all_years(client):
     _login(client)
     used = ExpenseCategory.objects.create(name="Software")
-    ExpenseCategory.objects.create(name="Reiskosten")
+    unused = ExpenseCategory.objects.create(name="Reiskosten")
     create_expense(
         [ExpenseLineInput("", 1000, None, used)], date="2021-01-15", supplier="Oude Leverancier"
     )
@@ -501,7 +501,7 @@ def test_a_category_with_expenses_links_to_those_expenses_over_all_years(client)
 
     link = f"{reverse('expenses:list')}?categorie={used.pk}&amp;jaar=alle"
     assert page.count(f'href="{link}"') == 2  # the name and the count
-    assert page.count("?categorie=") == 2  # the category without expenses has no link
+    assert f"?categorie={unused.pk}" not in page  # a category without expenses has no link
     # Following it shows the expense, also one from an earlier year.
     listed = client.get(reverse("expenses:list"), {"categorie": used.pk, "jaar": "alle"})
     assert b"Oude Leverancier" in listed.content

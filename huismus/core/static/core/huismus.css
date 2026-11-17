@@ -526,20 +526,21 @@ a:hover { color: var(--primary-hover); }
 /* Concept: een gestippeld randje. Met outline, want een box-shadow kan niet stippelen. */
 .pill-concept   { --pill-bg: transparent; --pill-fg: var(--draft); outline: 1px dashed currentColor; outline-offset: -1px; }
 .pill-concept::before { display: none; }
-/* Rustig, zonder vlak: gewone of gedempte tekst met een teken ervoor. */
-.pill-unpaid, .pill-sent, .pill-final, .pill-paid, .pill-accepted, .pill-rejected, .pill-expired { --pill-bg: transparent; padding-inline: 0; font-weight: var(--fw-medium); }
-.pill-unpaid, .pill-sent { --pill-fg: var(--text); }  /* loopt nog: wachten op de ander */
-.pill-final, .pill-paid, .pill-accepted, .pill-rejected, .pill-expired { --pill-fg: var(--text-muted); }  /* afgerond */
+/* Rustig, zonder vlak: gewone of gedempte tekst met een teken ervoor. Voor een stand buiten
+   facturen en offertes (een koppeling, een label op de site); die twee hebben hun eigen
+   gekleurde pills, verderop (.pill-paid, .pill-unpaid, .pill-quote-*). */
+.pill-sent, .pill-final, .pill-accepted, .pill-expired { --pill-bg: transparent; padding-inline: 0; font-weight: var(--fw-medium); }
+.pill-sent { --pill-fg: var(--text); }  /* loopt nog: wachten op de ander */
+.pill-final, .pill-accepted, .pill-expired { --pill-fg: var(--text-muted); }  /* afgerond */
 /* Een instelling die aan staat of klaar is: gewone tekst met een vinkje, zonder vlak;
    alleen "te laat" heeft kleur (huismus-intern/besluiten.md, 2026-11-15, ontwerp "Verfijnd"). */
 .pill-on { --pill-bg: transparent; --pill-fg: var(--text); padding-inline: 0; font-weight: var(--fw-medium); }
 .pill-on::before { width: 10px; height: 6px; border-radius: 0; background: transparent; border-left: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: translateY(-1px) rotate(-45deg); }
 /* Open stip: nog niet afgerond, of verlopen. */
 .pill-unpaid::before, .pill-sent::before, .pill-expired::before { background: transparent; box-shadow: inset 0 0 0 1.5px currentColor; }
-/* Betaald en geaccepteerd: een vinkje, getekend als de linker- en onderrand van een
-   blokje van 10 bij 6 px dat 45 graden gedraaid is; 1 px omhoog zet het recht naast de tekst. */
+/* Een vinkje, getekend als de linker- en onderrand van een blokje van 10 bij 6 px dat
+   45 graden gedraaid is; 1 px omhoog zet het recht naast de tekst. */
 .pill-paid::before, .pill-accepted::before { width: 10px; height: 6px; border-radius: 0; background: transparent; border-left: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: translateY(-1px) rotate(-45deg); }
-.pill-rejected::before { background: var(--bad); }
 .proposal { display: inline-flex; align-items: center; height: 18px; padding: 0 6px; border-radius: 4px; font: 700 10px/1 var(--font-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--accent-ink); background: var(--accent-soft); border: 1px dashed color-mix(in oklab, var(--accent-ink) 45%, transparent); vertical-align: middle; }
 
 /* ---------- 8. Meldingen ---------- */
@@ -993,10 +994,9 @@ form > div > .settings-section .card-head { border-bottom: 0; padding-bottom: 0;
 .login-brand h1 { font-size: var(--fs-2xl); }
 
 /* ---------- 17. Aanvullingen (ronde 2) ---------- */
-/* Hint bij offerte die bijna verloopt of verlopen is */
+/* Hint bij een offerte die bijna verloopt */
 .due-hint { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--warn); white-space: nowrap; }
 .due-hint .i { width: 13px; height: 13px; }
-.due-hint.is-past { color: var(--bad); }
 /* Verwijzing tussen documenten (creditnota ↔ factuur) */
 .doc-ref { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: var(--r-pill); background: var(--surface-2); border: 1px solid var(--border); font-size: var(--fs-sm); font-weight: var(--fw-medium); color: var(--text); text-decoration: none; }
 .doc-ref:hover { background: var(--surface-3); color: var(--text); }
@@ -1235,11 +1235,11 @@ form > div > .settings-section .card-head { border-bottom: 0; padding-bottom: 0;
 .notices .hint-banner.is-info .spacer { display: none; }
 .notices a.hint-banner.is-info:hover, .notices div.hint-banner.is-info:has(> a):hover { background: none; color: var(--text); }
 @media (min-width: 761px) { .hint-banner .spacer + span, .hint-banner .spacer ~ a { white-space: nowrap; } }
-/* A column heading that sorts the list: the arrow shows the direction, a faint one on hover says it can. */
+/* A column heading that sorts the list: a faint arrow says it can, a clear one shows the direction. */
 .th-sort { display: inline-flex; align-items: center; gap: 4px; color: inherit; text-decoration: none; border-radius: 4px; }
-.th-sort::after { content: "↕"; font-size: 11px; opacity: 0; transition: opacity .12s; }
+.th-sort::after { content: "↕"; font-size: 11px; opacity: .3; transition: opacity .12s; }
 .th-sort:hover { color: var(--text); }
-.th-sort:hover::after, .th-sort:focus-visible::after { opacity: .6; }
+.th-sort:hover::after, .th-sort:focus-visible::after { opacity: .7; }
 th[aria-sort] .th-sort { color: var(--text); }
 th[aria-sort="ascending"] .th-sort::after { content: "↑"; opacity: 1; }
 th[aria-sort="descending"] .th-sort::after { content: "↓"; opacity: 1; }
@@ -1249,7 +1249,12 @@ th.r .th-sort { flex-direction: row-reverse; }
 .list-card { container: list / inline-size; }
 @container list (min-width: 721px) { .sort-menu-btn { display: none; } }
 #sorteer-menu { inset: auto 12px calc(84px + env(safe-area-inset-bottom)) 12px; }
-#sorteer-menu a[data-sort]::after { margin-left: auto; font-size: 12px; color: var(--text-muted); }
+.sort-menu-btn.is-active { --btn-bg: var(--primary-soft); --btn-fg: var(--primary-ink); --btn-bd: transparent; }
+@supports (anchor-name: --sorteren) {
+  .sort-menu-btn { anchor-name: --sorteren; }
+  #sorteer-menu { position-anchor: --sorteren; inset: auto; top: calc(anchor(bottom) + 6px); right: anchor(right); min-width: 200px; }
+}
+#sorteer-menu a[data-sort] { font-weight: var(--fw-semibold); }
+#sorteer-menu a[data-sort]::after { margin-left: auto; font-size: 14px; color: var(--primary-ink); }
 #sorteer-menu a[data-sort="ascending"]::after { content: "↑"; }
 #sorteer-menu a[data-sort="descending"]::after { content: "↓"; }
-}

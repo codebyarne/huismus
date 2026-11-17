@@ -3,6 +3,9 @@
 """Sorting a list by a column heading (huismus/core/sorting.py), on the four
 lists that have it."""
 
+import re
+from datetime import timedelta
+
 import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -109,3 +112,60 @@ def test_an_unknown_column_is_ignored_and_search_keeps_the_sorting(user_client, 
     first = next(iter(user_client.get(reverse(name)).context["sort"]))
     page = user_client.get(reverse(name), {"sorteer": first}).content.decode()
     assert f'<input type="hidden" name="sorteer" value="{first}">' in page
+
+
+def _names_in_rows(response):
+    """The customer names in the order of the table rows (not the page as a
+    whole: a name can also be in a menu or a title)."""
+    return re.findall(r'class="row-link"[^>]*>([^<]+)</a>', response.content.decode())
+
+
+def test_customers_sort_by_the_name_the_list_shows_people_among_companies(user_client):
+    """Found in review: sorting on the company field put every person (no
+    company name) before every company."""
+    Contact.objects.create(company_name="Zeilmaker BV")
+    Contact.objects.create(first_name="Anna", last_name="Mulder")
+    Contact.objects.create(company_name="Bakkerij Jansen")
+    url = reverse("contacts:list")
+
+    up = _names_in_rows(user_client.get(url, {"sorteer": "naam"}))
+    down = _names_in_rows(user_client.get(url, {"sorteer": "-naam"}))
+
+    assert up == ["Anna Mulder", "Bakkerij Jansen", "Zeilmaker BV"]
+    assert down == up[::-1]
+
+
+def test_quotes_sort_by_the_status_the_list_shows(user_client):
+    """A sent quote past its date reads Verlopen: it sorts after the ones
+    that still wait, not among them (found in review)."""
+    today = timezone.localdate()
+    waiting = _draft("quote", "Wacht Nog", 100)
+    past = _draft("quote", "Datum Voorbij", 100)
+    accepted = _draft("quote", "Zei Ja", 100)
+    Document.objects.filter(pk=waiting.pk).update(
+        status="sent", expiry_date=today + timedelta(days=30)
+    )
+    Document.objects.filter(pk=past.pk).update(status="sent", expiry_date=today - timedelta(days=3))
+    Document.objects.filter(pk=accepted.pk).update(status="accepted")
+
+    response = user_client.get(reverse("quotes:list"), {"sorteer": "status"})
+
+    assert _names_in_rows(response) == ["Wacht Nog", "Datum Voorbij", "Zei Ja"]
+    page = response.content.decode()
+    # Shown as Verlopen, stored as sent: still under "Wachten op antwoord".
+    assert page.count("pill-quote-expired") == 1
+    assert Document.objects.get(pk=past.pk).status == "sent"
+    waiting_tab = user_client.get(reverse("quotes:list"), {"tab": "wachten"})
+    assert "Datum Voorbij" in waiting_tab.content.decode()
+
+
+def test_the_phone_sort_menu_keeps_the_search_and_refreshes_with_it(user_client):
+    """Found in review: the menu sat outside the part the live search
+    refreshes, so choosing a sort after typing dropped the search."""
+    Contact.objects.create(company_name="Anker", city="Zwolle")
+    page = user_client.get(reverse("contacts:list"), {"q": "Ank"}).content.decode()
+
+    menu = page[page.index('id="sorteer-menu"') :]
+    menu = menu[: menu.index("</div>")]
+    assert "q=Ank" in menu and "sorteer=naam" in menu
+    assert 'hx-select-oob="#sorteer-menu,#sorteer-knop"' in page
