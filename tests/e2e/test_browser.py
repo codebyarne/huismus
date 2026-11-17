@@ -771,18 +771,20 @@ def test_the_trash_icon_over_the_logo_removes_it(app):
 def test_a_settings_topic_opens_from_the_overview_and_saves_on_its_own_page(app, width):
     app.set_viewport_size({"width": width, "height": 800})
     app.goto(app.base + "/instellingen/")
-    card = app.get_by_role("link", name="KOR", exact=True)
+    card = app.get_by_role("link", name="Kleineondernemersregeling (KOR)", exact=True)
     expect(card).to_contain_text("Uit")
 
     card.click()
-    expect(app.locator("h1")).to_have_text("KOR")
+    expect(app.locator("h1")).to_have_text("Kleineondernemersregeling (KOR)")
     app.get_by_role("switch", name="Ik gebruik de KOR").check()
     app.get_by_role("button", name="Opslaan", exact=True).click()
 
     expect(app.get_by_text("Instellingen opgeslagen.")).to_be_visible()
     expect(app).to_have_url(f"{app.base}/instellingen/kor/")
     app.get_by_role("link", name="Instellingen", exact=True).first.click()
-    expect(app.get_by_role("link", name="KOR", exact=True)).to_contain_text("Aan")
+    expect(
+        app.get_by_role("link", name="Kleineondernemersregeling (KOR)", exact=True)
+    ).to_contain_text("Aan")
     assert Settings.load().kor_enabled
 
 

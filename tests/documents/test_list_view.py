@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """The invoice list (M8): tabs, search, year filter, overdue, "Meer laden"."""
 
+import re
 from datetime import date, timedelta
 
 import pytest
@@ -187,9 +188,10 @@ def test_query_count_does_not_grow_with_the_number_of_invoices(
         _get(client_in)
 
 
-def test_the_list_shows_invoices_in_groups_with_how_long_until_due(client_in):
-    """#186: Te laat, Wacht op betaling, Nog niet verstuurd, Betaald, each
-    with its own heading, in that order."""
+def test_the_list_orders_invoices_by_what_needs_you_first(client_in):
+    """#186: te laat, wacht op betaling, nog niet verstuurd, betaald, in
+    that order. Without a heading per group: the Status column says it
+    (the owner, 2026-11-17)."""
     _invoice("Studio Noordwind", due_date=TODAY + timedelta(days=4))
     _invoice("Atelier De Vries", paid=10000)
     _invoice("Bouwbedrijf Van Dijk", due_date=TODAY - timedelta(days=12))
@@ -198,13 +200,12 @@ def test_the_list_shows_invoices_in_groups_with_how_long_until_due(client_in):
 
     html = client_in.get(reverse("documents:list")).content.decode().replace("\xa0", " ")
 
-    headings = ["groep-te-laat", "groep-wacht", "groep-concept", "groep-betaald"]
-    positions = [html.index(f'id="{heading}"') for heading in headings]
+    names = ["Bouwbedrijf Van Dijk", "Studio Noordwind", "Bakkerij Jansen BV", "Atelier De Vries"]
+    positions = [html.index(name) for name in names]
     assert positions == sorted(positions)
-    assert 'id="groep-creditnotas"' not in html  # only groups with rows
-    assert html.index("Bouwbedrijf Van Dijk") < positions[1]
+    assert html.index("Bouwbedrijf Van Dijk") < html.index("Vandaag BV") < positions[2]
+    assert len(re.findall(r"<table", html)) == 1
+    assert "group-row" not in html
     assert '<span class="overdue-since">12 dagen</span>' in html
     assert "Nog 4 dagen" in html
     assert "Vandaag te betalen" in html
-    assert html.index("Bakkerij Jansen BV") > positions[2]
-    assert html.index("Atelier De Vries") > positions[3]
