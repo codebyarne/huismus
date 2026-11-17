@@ -398,7 +398,10 @@ a:hover { color: var(--primary-hover); }
 .card-head h2 { font-size: var(--fs-md); }
 .card-foot { padding: var(--s-3) var(--s-5) var(--s-4); font-size: var(--fs-sm); }
 /* Een kopje per groep in een lijst (Te laat, Wacht op betaling, ...) */
-.list-group-title { padding: var(--s-4) var(--s-5) 6px; font-size: var(--fs-sm); font-weight: var(--fw-semibold); }
+/* A band across the table: it belongs to the rows below it and can't float loose above the headings. */
+.table .group-row th { padding: 7px 16px; background: var(--surface-2); border-bottom: 1px solid var(--border); font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--text); text-align: left; }
+.table tbody:has(> .group-row) tr:last-child td { border-bottom: 1px solid var(--border); }
+.table tbody:last-child tr:last-child td { border-bottom: 0; }
 .imported { display: block; }
 .section-title { font-size: var(--fs-lg); margin-bottom: var(--s-3); }
 .divider { height: 1px; background: var(--border); border: 0; margin: var(--s-6) 0; }
@@ -1253,3 +1256,8 @@ th.r .th-sort { flex-direction: row-reverse; }
 #sorteer-menu a[data-sort]::after { margin-left: auto; font-size: 12px; color: var(--text-muted); }
 #sorteer-menu a[data-sort="ascending"]::after { content: "↑"; }
 #sorteer-menu a[data-sort="descending"]::after { content: "↓"; }
+/* Stacked, the band of a group is one full-width line, not a grid like the rows. */
+@container (max-width: 720px) {
+  .table.stackable tbody tr.group-row { display: block; padding: 0; }
+  .table.stackable tbody tr.group-row th { display: block; }
+}

@@ -143,9 +143,9 @@
         {% endif %}
     </section>
     <div class="stack" style="gap:var(--s-5)">
+        {% include "core/_waiting_quotes.html" %}
         {% if drafts %}{% include "core/_drafts_card.html" %}{% endif %}
         {% if tray_count or to_check_count %}{% include "core/_process_card.html" %}{% endif %}
-        {% include "core/_waiting_quotes.html" %}
     </div>
 </div>
 {% else %}
