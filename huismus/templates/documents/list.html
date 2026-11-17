@@ -62,12 +62,10 @@
     </form>
     <div id="facturen-resultaat">
         {% if documents %}
-        {% comment %}Sorted by a column there is one table, without the group headings (list_group is empty then).{% endcomment %}
+        {% comment %}One table, so the columns line up over every group. A group (Te laat, Betaald, ...) is a tbody that starts with a band naming it; sorted by a column there are no groups (list_group is empty then).{% endcomment %}
         {% regroup documents by list_group as groups %}
-        {% for group in groups %}
-        {% if group.grouper %}<h2 class="list-group-title" id="groep-{{ group.grouper }}">{{ group_titles|get:group.grouper }}</h2>{% endif %}
         <div class="table-wrap">
-            <table class="table stackable"{% if group.grouper %} aria-labelledby="groep-{{ group.grouper }}"{% endif %}>
+            <table class="table stackable">
                 <thead>
                     <tr>
                         {% include "core/_sort_th.html" with col=sort.klant label=_("Klant") %}
@@ -77,7 +75,9 @@
                         {% include "core/_sort_th.html" with col=sort.bedrag label=_("Bedrag") cls="r" %}
                     </tr>
                 </thead>
+                {% for group in groups %}
                 <tbody>
+                    {% if group.grouper %}<tr class="group-row"><th colspan="5" scope="rowgroup" id="groep-{{ group.grouper }}">{{ group_titles|get:group.grouper }}</th></tr>{% endif %}
                     {% for document in group.list %}
                     <tr class="is-link">
                         <td data-cell="primary">
@@ -97,9 +97,9 @@
                     </tr>
                     {% endfor %}
                 </tbody>
+                {% endfor %}
             </table>
         </div>
-        {% endfor %}
         <div class="card-foot row">
             <span class="muted">{% blocktranslate count total=total with shown=documents|length %}{{ shown }} van {{ total }} factuur{% plural %}{{ shown }} van {{ total }} facturen{% endblocktranslate %}</span>
             <span class="spacer"></span>

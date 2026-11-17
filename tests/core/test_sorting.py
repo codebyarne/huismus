@@ -96,8 +96,8 @@ def test_sorted_invoices_are_one_table_without_group_headings(user_client):
     by_amount = user_client.get(url, {"sorteer": "-bedrag"})
     page = by_amount.content.decode()
 
-    assert "list-group-title" in own
-    assert "list-group-title" not in page
+    assert 'class="group-row"' in own
+    assert 'class="group-row"' not in page
     assert len(re.findall(r"<table", page)) == 1
     assert _order(by_amount, "Kleine Klant", "Grote Klant") == ["Grote Klant", "Kleine Klant"]
 
