@@ -25,6 +25,9 @@ Archief: de oplevering uit Claude Design van september 2026 staat in
 `archief/2026-09-claude-design/`. `ronde-3/` bevat de gekeurde designs van
 ronde 3 (met een eigen schets-CSS, `hm.css`). Beide zijn naslag, geen bron.
 
+Ronde 7 is het concept voor de site in de nieuwe huisstijl: `ronde-7/site-prompt.md`
+(de prompt voor Claude Design) en `ronde-7/fotos.md` (de foto's van mensen).
+
 ## Een nieuw design maken
 
 - Een HTML-bestand in een map per ronde (`docs/design/ronde-4/` enz.) dat de
