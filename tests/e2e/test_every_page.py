@@ -253,6 +253,24 @@ CUT_OFF_TABS = """() => [...document.querySelectorAll('.tab')]
     .map(el => el.innerText.trim())"""
 
 
+# A menu (popover) whose button is in sight must open inside the window:
+# "Sorteren" on Klanten and Offertes hung half off the left edge of a phone
+# (#204). Opened and closed here in one go; layout is worked out at once.
+MENUS_OFF_SCREEN = """() => [...document.querySelectorAll('[popover]')]
+    .filter(menu => {
+        const button = document.querySelector(`[popovertarget="${menu.id}"]`);
+        if (!button || !button.checkVisibility() || menu.matches(':popover-open')) return false;
+        menu.showPopover();
+        const box = menu.getBoundingClientRect();
+        menu.hidePopover();
+        const page = document.documentElement;
+        // 1px slack: positions are fractions and round differently.
+        return box.left < -1 || box.top < -1
+            || box.right > page.clientWidth + 1 || box.bottom > page.clientHeight + 1;
+    })
+    .map(menu => menu.id)"""
+
+
 def _problems_on(page, path, language, dutch, data):
     problems = []
     response = page.goto(page.base + path)
@@ -331,6 +349,9 @@ def _problems_on(page, path, language, dutch, data):
     cut_off_tabs = page.evaluate(CUT_OFF_TABS)
     if cut_off_tabs:
         problems.append(f"tab afgeknipt: {sorted(set(cut_off_tabs))}")
+    off_screen = page.evaluate(MENUS_OFF_SCREEN)
+    if off_screen:
+        problems.append(f"menu opent buiten beeld: {sorted(off_screen)}")
     return problems
 
 

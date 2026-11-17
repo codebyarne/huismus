@@ -249,8 +249,12 @@ a:hover { color: var(--primary-hover); }
   .page-head { align-items: flex-start; }
   .page-head .actions { width: 100%; }
   .page-head .actions .btn-primary { flex: 1 1 100%; order: -1; }
-  .page-head .actions .btn-ghost { height: 36px; padding: 0 10px; }
+  /* The other actions share one row under the main one, all the same size. */
+  .page-head .actions .btn:not(.btn-primary) { flex: 1 1 0; height: 36px; padding: 0 10px; font-size: var(--fs-sm); }
+  .page-head .actions > form { flex: 1 1 0; display: flex; }
   .page-head .actions .btn-ghost .i { display: none; }
+  /* A phone has no keys for them. */
+  .shortcut-hint { display: none; }
 }
 
 /* HTMX-indicator */
@@ -341,6 +345,12 @@ a:hover { color: var(--primary-hover); }
 .input-affix { position: relative; }
 .input-affix .i { position: absolute; left: 12px; top: 50%; translate: 0 -50%; color: var(--text-muted); pointer-events: none; }
 .input-affix .input { padding-left: 38px; }
+/* The cross that empties a search field: the browser's own is blue in some; this one is petrol everywhere. */
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none; appearance: none; width: 16px; height: 16px; margin-left: 6px; cursor: pointer; background: var(--primary-ink);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M18 6 6 18'/%3E%3Cpath d='m6 6 12 12'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M18 6 6 18'/%3E%3Cpath d='m6 6 12 12'/%3E%3C/svg%3E") center / contain no-repeat;
+}
 .input-affix .kbd { position: absolute; right: 10px; top: 50%; translate: 0 -50%; }
 /* Rustig veld dat pas bij hover/focus een rand krijgt (factuureditor) */
 .input-quiet { border-color: transparent; background-color: transparent; }
@@ -496,6 +506,9 @@ a:hover { color: var(--primary-hover); }
 .tab { display: inline-flex; align-items: center; gap: 7px; padding: 10px 12px; color: var(--text-muted); text-decoration: none; font-weight: var(--fw-semibold); font-size: var(--fs-sm); white-space: nowrap; }
 /* On a phone a little less room beside each tab, so Offertes takes three rows, not four. */
 @media (max-width: 560px) { .tab { padding-inline: 8px; } }
+/* On a phone the tabs are smaller, so five or six take two rows instead of three or four. They
+   wrap and never slide sideways: a row that scrolls hid tabs without showing it (BUGS-BY-HAND.md, 2026-10-31). */
+@media (max-width: 560px) { .tab { gap: 5px; padding: 8px 4px; font-size: var(--fs-xs); } .tab .count { padding: 0 5px; font-size: 10px; } }
 .tab:hover { color: var(--text); }
 .tab[aria-current="page"], .tab[aria-selected="true"] { color: var(--text); box-shadow: inset 0 -2px 0 var(--primary); }
 .tab .count { font-size: 11px; padding: 1px 7px; border-radius: var(--r-pill); background: var(--surface-2); color: var(--text-muted); font-variant-numeric: tabular-nums; }
@@ -713,8 +726,9 @@ a:hover { color: var(--primary-hover); }
   .actionbar .btn { flex: 1; padding: 0 10px; }
   /* Factuur maken: het totaal boven de knoppen, de balk boven de tabbalk. */
   .actionbar-editor { flex-wrap: wrap; }
-  /* Wat de focus krijgt (ook met Tab), schuift boven de balk en de tabbalk. */
-  html:has(.actionbar-editor) { scroll-padding-bottom: 190px; }
+  /* Wat de focus krijgt (ook met Tab), schuift boven de balk en de tabbalk: samen 208px hoog
+     (twee rijen in de balk). WebKit schuift precies tot deze rand, dus hij moet eronder blijven. */
+  html:has(.actionbar-editor) { scroll-padding-bottom: 230px; }
   .actionbar-total { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-2); flex-basis: 100%; }
   .actionbar-total strong { font-size: var(--fs-lg); font-weight: var(--fw-bold); }
 }
@@ -1248,11 +1262,14 @@ th.r .th-sort { flex-direction: row-reverse; }
    container, as wide as its table, so the button shows exactly when the headings are gone. */
 .list-card { container: list / inline-size; }
 @container list (min-width: 721px) { .sort-menu-btn { display: none; } }
-#sorteer-menu { inset: auto 12px calc(84px + env(safe-area-inset-bottom)) 12px; }
+/* Without anchor positioning app.js puts the menu under its button; without JS too it sits bottom right. */
+#sorteer-menu { inset: auto 12px calc(84px + env(safe-area-inset-bottom)) auto; }
 .sort-menu-btn.is-active { --btn-bg: var(--primary-soft); --btn-fg: var(--primary-ink); --btn-bd: transparent; }
-@supports (anchor-name: --sorteren) {
+/* Under the button, right edges in line; where the button is at the left (Klanten, Offertes) the
+   menu would leave the screen there, so it turns round and lines up on the left. */
+@supports (position-area: bottom) {
   .sort-menu-btn { anchor-name: --sorteren; }
-  #sorteer-menu { position-anchor: --sorteren; inset: auto; top: calc(anchor(bottom) + 6px); right: anchor(right); min-width: 200px; }
+  #sorteer-menu { position-anchor: --sorteren; inset: auto; margin: 6px 0 0; position-area: bottom span-left; position-try-fallbacks: flip-inline; min-width: 200px; }
 }
 #sorteer-menu a[data-sort] { font-weight: var(--fw-semibold); }
 #sorteer-menu a[data-sort]::after { margin-left: auto; font-size: 14px; color: var(--primary-ink); }

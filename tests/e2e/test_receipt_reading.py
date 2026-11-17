@@ -57,7 +57,7 @@ def test_choose_a_service_save_and_turn_off(app, ai_fake):
     assert ai_service.load().key == ""
 
 
-def test_a_receipt_comes_in_is_read_and_checked(app, ai_fake, tmp_path, monkeypatch):
+def test_a_receipt_comes_in_is_read_and_checked(app, ai_fake, tmp_path, monkeypatch, browser_name):
     monkeypatch.setattr(inbox, "SETTLE_SECONDS", 0)
     # Not the welcome on the overview: an administration with something in it.
     Contact.objects.create(company_name="Klant BV")
@@ -66,7 +66,11 @@ def test_a_receipt_comes_in_is_read_and_checked(app, ai_fake, tmp_path, monkeypa
     inbox.choose_folder(folder)
     ai_service.save(Config("other", ai_fake.url, "nep-model", KEY))
     ai_fake.answer(ANSWER, {**ANSWER, "total": None})
-    (folder / "bouwmarkt.png").write_bytes(_png())
+    # A name per browser engine: run with two engines at once
+    # (--browser webkit --browser firefox) the second run finds the first
+    # one's file in the same data folder and stores its own under a new name.
+    receipt = f"bouwmarkt-{browser_name}.png"
+    (folder / receipt).write_bytes(_png())
     (folder / "onleesbaar.png").write_bytes(_png() + b"2")
 
     app.goto(app.base + "/uitgaven/bonnetjes/")
@@ -92,7 +96,7 @@ def test_a_receipt_comes_in_is_read_and_checked(app, ai_fake, tmp_path, monkeypa
     expect(app.locator("#toasts")).to_contain_text("Uitgave nagekeken.")
     expense.refresh_from_db()
     assert not expense.needs_review
-    assert expense.attachments.get().filename == "bouwmarkt.png"
+    assert expense.attachments.get().filename == receipt
     assert Attachment.objects.in_tray().count() == 1
 
 
