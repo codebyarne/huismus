@@ -67,6 +67,22 @@ def test_the_invoice_list_says_it_is_sorted_by_status_before_anyone_sorts(user_c
     )
 
 
+def test_the_invoice_lists_own_order_is_the_one_by_status(user_client):
+    """The heading says so (own_order above); this keeps the two together."""
+    draft = _draft("invoice", "Nog Een Concept", 100)
+    late = _draft("invoice", "Te Laat", 100)
+    Document.objects.filter(pk=late.pk).update(
+        status="issued", number="2026-0001", due_date=timezone.localdate() - timedelta(days=9)
+    )
+    url = reverse("documents:list")
+
+    assert draft.pk < late.pk
+    assert _names_in_rows(user_client.get(url)) == ["Te Laat", "Nog Een Concept"]
+    assert _names_in_rows(user_client.get(url)) == _names_in_rows(
+        user_client.get(url, {"sorteer": "status"})
+    )
+
+
 def test_customers_sort_by_city_both_ways(user_client):
     Contact.objects.create(company_name="Anker", city="Zwolle")
     Contact.objects.create(company_name="Zeilmaker", city="Almere")

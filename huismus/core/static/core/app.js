@@ -31,11 +31,12 @@ if (!CSS.supports("position-area: bottom")) {
   const place = () => {
     const menu = document.querySelector("#sorteer-menu:popover-open");
     const button = document.getElementById("sorteer-knop");
-    if (!menu || !button) return;
+    if (!menu) return;
+    menu.style.visibility = "";
+    if (!button) return;
     const box = button.getBoundingClientRect();
     const left = box.right - menu.offsetWidth;
     menu.style.inset = `${box.bottom + 6}px auto auto ${left < 0 ? box.left : left}px`;
-    menu.style.visibility = "";
   };
   // Neither event bubbles: capture. The menu's width is only known once it
   // is open, so it stays out of sight for the moment in between instead of

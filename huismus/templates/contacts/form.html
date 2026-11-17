@@ -103,7 +103,7 @@
                     <span class="stack" style="gap:4px;align-items:flex-end">
                         <span class="amount small">{% if d.kind == "credit_note" %}&minus;&nbsp;{% endif %}{{ d.total_cents|money }}</span>
                         {% if d.status == "draft" %}<span class="pill pill-concept">{% translate "Concept" %}</span>
-                        {% elif d.kind == "quote" %}<span class="pill pill-{{ d.status|quote_pill }}">{{ d.get_status_display|capfirst }}</span>
+                        {% elif d.kind == "quote" %}<span class="pill pill-{{ d.shown_status|quote_pill }}">{{ d.get_shown_status_display|capfirst }}</span>
                         {% elif d.kind == "credit_note" %}<span class="pill pill-credit">{% translate "Creditnota" %}</span>
                         {% elif d.is_overdue %}{% include "documents/_pill_overdue.html" with doc=d %}
                         {% else %}<span class="pill pill-{{ d.payment_state }}">{{ d.payment_state|payment_state_label|capfirst }}</span>{% endif %}

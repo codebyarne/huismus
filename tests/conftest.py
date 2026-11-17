@@ -86,6 +86,21 @@ def _no_cloud_link():
 
 
 @pytest.fixture(autouse=True)
+def _no_uploaded_files():
+    """Receipts and other attachments are files in DATA_DIR too
+    (core.models.attachment_upload_to), and the database that names them is
+    emptied after every test. A file left behind made the next test with
+    the same receipt store its own under another name
+    ("bouwmarkt_8zJBnCA.png"): seen with two browser engines in one run."""
+    import shutil
+
+    from django.conf import settings
+
+    yield
+    shutil.rmtree(Path(settings.DATA_DIR) / "attachments", ignore_errors=True)
+
+
+@pytest.fixture(autouse=True)
 def _no_receipts_folder():
     """Which receipts folder Huismus looks in is a file in DATA_DIR too
     (expenses.inbox)."""

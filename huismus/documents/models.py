@@ -286,7 +286,8 @@ class Document(TimestampedModel):
         A sent quote reads as expired from the day after its expiry date,
         while the stored status stays "sent" until the user records an
         answer or marks it (SPEC.md M8): Huismus changes nothing by itself,
-        and a late yes can still be recorded."""
+        and a late yes can still be recorded. Today is the server's date,
+        as for is_overdue."""
         past = self.expiry_date is not None and self.expiry_date < timezone.localdate()
         return "expired" if self.status == "sent" and past else self.status
 
