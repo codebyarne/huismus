@@ -68,7 +68,7 @@
                         <td data-cell="primary"><a class="row-link" href="{% url 'quotes:edit' quote.pk %}">{{ quote|contact_name|default:_("Nog geen klant") }}</a></td>
                         <td data-cell="secondary" class="num muted">{% if quote.number %}{{ quote.number }}{% else %}<span class="draft-no">{% translate "Concept" %}</span>{% endif %}</td>
                         <td data-cell="hide" class="num muted">{% if quote.expiry_date %}{{ quote.expiry_date|date:"SHORT_DATE_FORMAT" }}{% endif %}</td>
-                        <td data-cell="status">{% comment %}A sent quote whose date has passed reads as "Verlopen" (the owner, 2026-11-16); its stored status changes only when the user marks it.{% endcomment %}{% if hint.0 == "past" %}<span class="pill pill-quote-expired">{% translate "Verlopen" %}</span>{% else %}<span class="status-hint"><span class="pill pill-{{ quote.status|quote_pill }}">{{ quote.get_status_display|capfirst }}</span>{% if hint.0 == "soon" %}<span class="due-hint"><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% if hint.1 == 0 %}{% translate "verloopt vandaag" %}{% else %}{% blocktranslate count days=hint.1 %}verloopt over {{ days }} dag{% plural %}verloopt over {{ days }} dagen{% endblocktranslate %}{% endif %}</span>{% endif %}</span>{% endif %}</td>
+                        <td data-cell="status">{% comment %}The status as every screen shows it (Document.shown_status): a sent quote reads as "Verlopen" after its date.{% endcomment %}<span class="status-hint"><span class="pill pill-{{ quote.shown_status|quote_pill }}">{{ quote.get_shown_status_display|capfirst }}</span>{% if hint.0 == "soon" %}<span class="due-hint"><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% if hint.1 == 0 %}{% translate "verloopt vandaag" %}{% else %}{% blocktranslate count days=hint.1 %}verloopt over {{ days }} dag{% plural %}verloopt over {{ days }} dagen{% endblocktranslate %}{% endif %}</span>{% endif %}</span></td>
                         <td data-cell="amount" class="r amount">{{ quote.total_cents|money }}</td>
                     </tr>
                     {% endfor %}
@@ -84,6 +84,6 @@
         {% endif %}
     </div>
 </section>
-<p class="small muted" style="margin-top:var(--s-3)">{% translate "Verloopt een verzonden offerte binnen 7 dagen, dan zie je dat in de lijst. Is hij verlopen, zet hem dan op de offertepagina op verlopen." %}</p>
+<p class="small muted" style="margin-top:var(--s-3)">{% translate "Verloopt een verzonden offerte binnen 7 dagen, dan zie je dat in de lijst. Na de geldigheidsdatum staat hij bij Afgewezen of verlopen. Het antwoord van de klant kun je dan nog vastleggen." %}</p>
 {% endif %}
 {% endblock %}

@@ -231,7 +231,7 @@ def _quotes(year):
             _customer(quote).get("customer_number", ""),
             _customer(quote).get("display_name", ""),
             quote.reference,
-            quote.get_status_display(),
+            quote.get_shown_status_display(),
             quote.accepted_on,
             quote.declined_on,
             Amount(quote.subtotal_cents),

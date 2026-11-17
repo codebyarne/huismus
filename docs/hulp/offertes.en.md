@@ -18,13 +18,13 @@ again if the customer already has it.
 ## The customer's answer
 
 At the top of the quote you see which step it's in. Got an answer? Record it
-with **Accept** or **Decline**. No answer and the quote has run out? Choose
+with **Accept** or **Decline**. Already know there won't be an answer? Choose
 **Mark as expired**.
 
 On the overview, **Awaiting reply** lists the quotes that are still open. Once
-a sent quote has run out, the list and the overview already show it as
-**Expired**. It stays under Awaiting reply until you choose **Mark as
-expired** yourself, or record the answer after all.
+a sent quote has run out, it shows as **Expired** under **Declined or
+expired** by itself, and leaves the overview. If the customer says yes or no
+after all, record it on the quote with **Accept** or **Decline**.
 
 ## From quote to invoice
 

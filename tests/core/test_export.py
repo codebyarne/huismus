@@ -300,6 +300,13 @@ def test_payment_columns():
     assert row["bron"] == "Huismus"
 
 
+def test_a_sent_quote_past_its_date_is_exported_as_expired():
+    quote = send_quote(_draft(kind="quote"))
+    Document.objects.filter(pk=quote.pk).update(expiry_date=date(2025, 4, 1))
+
+    assert _rows(_zip(), "offertes.csv")[0]["status"] == "verlopen"
+
+
 def test_quotes_with_their_status_and_the_invoice_they_became():
     quote = accept_quote(send_quote(_draft(kind="quote", lines=((1, 20000, 2100),))))
     invoice = issue(convert_to_invoice(quote))

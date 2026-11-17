@@ -53,6 +53,13 @@ def test_the_steps_are_business_kor_invoices_and_logo():
     assert [step.slug for step in STEPS] == ["bedrijf", "kor", "facturen", "logo"]
 
 
+def test_the_kor_step_spells_its_name_out_and_the_step_bar_keeps_it_short(logged_in):
+    page = logged_in.get(_url("kor")).content.decode()
+
+    assert "<h1>Kleineondernemersregeling (KOR)</h1>" in page
+    assert "</span>KOR</li>" in page
+
+
 def test_the_wizard_requires_login(client):
     response = client.get(_url("bedrijf"))
     assert response.status_code == 302

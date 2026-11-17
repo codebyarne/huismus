@@ -78,6 +78,7 @@ def test_matches_search_on_number_or_customer(query, expected):
 from datetime import date, timedelta  # noqa: E402
 
 from huismus.documents.listing import expiry_hint, in_quote_tab  # noqa: E402
+from huismus.documents.models import Document  # noqa: E402
 
 
 @pytest.mark.parametrize(
@@ -94,7 +95,7 @@ from huismus.documents.listing import expiry_hint, in_quote_tab  # noqa: E402
     ],
 )
 def test_in_quote_tab(status, tab, expected):
-    assert in_quote_tab(_doc(kind="quote", status=status), tab) is expected
+    assert in_quote_tab(Document(kind="quote", status=status), tab) is expected
 
 
 TODAY = date(2026, 9, 29)
@@ -107,7 +108,7 @@ TODAY = date(2026, 9, 29)
         ("sent", TODAY + timedelta(days=7), ("soon", 7)),
         ("sent", TODAY + timedelta(days=8), None),
         ("sent", TODAY, ("soon", 0)),
-        ("sent", TODAY - timedelta(days=1), ("past", None)),
+        ("sent", TODAY - timedelta(days=1), None),  # reads as expired: no hint
         ("sent", None, None),
         ("accepted", TODAY - timedelta(days=1), None),  # only waiting quotes get a hint
         ("draft", TODAY + timedelta(days=2), None),

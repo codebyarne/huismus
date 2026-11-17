@@ -16,6 +16,12 @@ class Step:
     title: str
     intro: str
     fields: tuple[str, ...]
+    # The name in the step bar, where the title doesn't fit.
+    short: str = ""
+
+    @property
+    def label(self):
+        return self.short or self.title
 
 
 STEPS = (
@@ -40,9 +46,10 @@ STEPS = (
     ),
     Step(
         "kor",
-        _("KOR"),
+        _("Kleineondernemersregeling (KOR)"),
         _("Gebruik je de kleineondernemersregeling? Dan komt jouw KOR-tekst onder elke factuur."),
         ("kor_enabled", "kor_text", "kor_limit_cents", "kor_warning_percent"),
+        short=_("KOR"),
     ),
     Step(
         "facturen",

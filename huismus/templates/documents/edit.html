@@ -7,12 +7,13 @@
 {% block content %}
 <form id="factuur" method="post" action="{{ form_action }}">
     {% csrf_token %}
-    <div class="page-head" style="margin-bottom:var(--s-4)">
+    {% comment %}As wide as the paper below, so the title starts where the paper does.{% endcomment %}
+    <div class="page-head" style="max-width:860px;margin:0 auto var(--s-4)">
         <div class="titles">
             <a class="back" href="{{ list_url }}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% if is_quote %}{% translate "Offertes" %}{% else %}{% translate "Facturen" %}{% endif %}</a>
             <div class="row">
                 <h1>{% if is_quote %}{% if document.number %}{% translate "Offerte" %} {{ document.number }}{% elif contact %}{% blocktranslate with name=contact.display_name %}Offerte voor {{ name }}{% endblocktranslate %}{% else %}{% translate "Nieuwe offerte" %}{% endif %}{% elif document.number %}{{ document.get_kind_display|capfirst }} {{ document.number }}{% elif document.kind == "credit_note" %}{% translate "Creditnota" %}{% elif contact %}{% blocktranslate with name=contact.display_name %}Factuur voor {{ name }}{% endblocktranslate %}{% else %}{% translate "Nieuwe factuur" %}{% endif %}</h1>
-                {% if is_quote %}<span class="pill pill-{{ document.status|quote_pill }}">{{ document.get_status_display|capfirst }}</span>{% else %}<span class="pill pill-concept">{% translate "Concept" %}</span>{% endif %}
+                {% if is_quote %}<span class="pill pill-{{ document.shown_status|quote_pill }}">{{ document.get_shown_status_display|capfirst }}</span>{% else %}<span class="pill pill-concept">{% translate "Concept" %}</span>{% endif %}
             </div>
         </div>
     </div>
@@ -24,7 +25,8 @@
     {% elif not is_quote and document.number %}
     <div class="flash flash-info" style="max-width:860px;margin:0 auto var(--s-4)"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><div class="flash-body small">{% blocktranslate with number=document.number %}Dit concept heeft al nummer {{ number }} uit Moneybird. Bij uitgeven houdt hij dat nummer.{% endblocktranslate %}</div></div>
     {% endif %}
-    {% if is_quote and document.number %}
+    {% comment %}Only while the quote still waits for an answer; after that there is nothing to send again.{% endcomment %}
+    {% if is_quote and document.status == "sent" %}
     <div class="flash flash-info" style="max-width:860px;margin:0 auto var(--s-4)"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><div class="flash-body small">{% blocktranslate with number=document.number %}Offerte {{ number }} is al verzonden. Pas je iets aan, download dan de nieuwe PDF en stuur die opnieuw naar de klant. De klant kun je niet meer wijzigen.{% endblocktranslate %}</div></div>
     {% endif %}
 

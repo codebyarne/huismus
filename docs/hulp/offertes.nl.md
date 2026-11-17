@@ -19,14 +19,14 @@ nieuwe pdf opnieuw moet versturen als de klant hem al heeft.
 ## Het antwoord van de klant
 
 Bovenaan de offerte zie je in welke stap hij staat. Heb je antwoord, leg het
-dan vast met **Accepteren** of **Afwijzen**. Hoor je niets en is de
-geldigheid voorbij, dan kies je **Markeer als verlopen**.
+dan vast met **Accepteren** of **Afwijzen**. Weet je al dat er geen
+antwoord meer komt, dan kies je **Markeer als verlopen**.
 
 Op het overzicht staat bij **Wachten op antwoord** welke offertes nog open
-staan. Is de geldigheid van een verzonden offerte voorbij, dan staat hij in de
-lijst en op het overzicht al als **Verlopen**. Hij blijft bij Wachten op
-antwoord staan tot je zelf **Markeer als verlopen** kiest, of alsnog het
-antwoord vastlegt.
+staan. Is de geldigheid van een verzonden offerte voorbij, dan staat hij
+vanzelf als **Verlopen** bij **Afgewezen of verlopen**, en niet meer op het
+overzicht. Zegt de klant daarna toch nog ja of nee, dan leg je dat op de
+offerte vast met **Accepteren** of **Afwijzen**.
 
 ## Van offerte naar factuur
 

@@ -39,13 +39,13 @@ from .issuing import IssueError, issue
 from .listing import (
     INVOICE_SORT_KEYS,
     INVOICE_TABS,
+    QUOTE_SORT_KEYS,
     QUOTE_TABS,
     expiry_hint,
     grouped,
     in_quote_tab,
     in_tab,
     matches_search,
-    quote_sort_keys,
 )
 from .mailing import (
     MAILABLE_STATUSES,
@@ -140,7 +140,9 @@ def document_list(request):
             "year": year,
             "years": years,
             "has_any": Document.objects.filter(kind__in=["invoice", "credit_note"]).exists(),
-            "sort": sort_headers(sort, INVOICE_SORT_KEYS, lambda value: list_url(sorteer=value)),
+            "sort": sort_headers(
+                sort, INVOICE_SORT_KEYS, lambda value: list_url(sorteer=value), own_order="status"
+            ),
             "sorted_by": sort,
         },
     )
@@ -779,9 +781,8 @@ def quote_list(request):
     quotes = quotes.order_by(Case(When(status="draft", then=0), default=1), "-issue_date", "-pk")
     found = [q for q in quotes if matches_search(q, query)]
     today = timezone.localdate()
-    sort_keys = quote_sort_keys(today)
-    sort = chosen_sort(request, sort_keys)
-    shown = sorted_rows([q for q in found if in_quote_tab(q, tab)], sort, sort_keys)
+    sort = chosen_sort(request, QUOTE_SORT_KEYS)
+    shown = sorted_rows([q for q in found if in_quote_tab(q, tab)], sort, QUOTE_SORT_KEYS)
     rows = [(q, expiry_hint(q, today=today)) for q in shown]
 
     def list_url(**changes):
@@ -806,7 +807,7 @@ def quote_list(request):
             "tab": tab,
             "query": query,
             "has_any": Document.objects.filter(kind="quote").exists(),
-            "sort": sort_headers(sort, sort_keys, lambda value: list_url(sorteer=value)),
+            "sort": sort_headers(sort, QUOTE_SORT_KEYS, lambda value: list_url(sorteer=value)),
             "sorted_by": sort,
         },
     )

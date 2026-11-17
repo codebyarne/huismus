@@ -107,7 +107,8 @@ QUOTE_TABS = [
     ("afgewezen", _("Afgewezen of verlopen")),
 ]
 
-# Tab -> the quote statuses it shows.
+# Tab -> the quote statuses it shows, as the user reads them
+# (Document.shown_status): a sent quote past its date is under "afgewezen".
 _QUOTE_TAB_STATUSES = {
     "concepten": {"draft"},
     "wachten": {"sent"},
@@ -121,18 +122,17 @@ EXPIRY_HINT_DAYS = 7
 
 def in_quote_tab(document, tab):
     statuses = _QUOTE_TAB_STATUSES.get(tab)
-    return statuses is None or document.status in statuses
+    return statuses is None or document.shown_status in statuses
 
 
 def expiry_hint(quote, *, today):
-    """For a sent quote: ("soon", days_left) from EXPIRY_HINT_DAYS before its
-    expiry date, ("past", None) once that date has passed, else None."""
+    """For a quote still waiting for an answer: ("soon", days_left) from
+    EXPIRY_HINT_DAYS before its expiry date, else None. After that date it
+    reads as expired (Document.shown_status) and needs no hint."""
     if quote.status != "sent" or quote.expiry_date is None:
         return None
     days_left = (quote.expiry_date - today).days
-    if days_left < 0:
-        return ("past", None)
-    if days_left <= EXPIRY_HINT_DAYS:
+    if 0 <= days_left <= EXPIRY_HINT_DAYS:
         return ("soon", days_left)
     return None
 
@@ -148,31 +148,18 @@ INVOICE_SORT_KEYS = {
 }
 
 # The order of quote statuses when sorting on Status: what still needs the
-# user first. "shown-expired" is a sent quote whose date has passed, which
-# the list shows as Verlopen (shown_quote_status).
+# user first.
 QUOTE_STATUS_RANK = {
-    status: rank
-    for rank, status in enumerate(
-        ("draft", "sent", "shown-expired", "accepted", "declined", "expired")
-    )
+    status: rank for rank, status in enumerate(("draft", "sent", "accepted", "declined", "expired"))
 }
 
 
-def shown_quote_status(quote, *, today):
-    """The status as the list shows it: a sent quote past its expiry date
-    reads as expired, while its stored status stays "sent" until the user
-    marks it (SPEC.md M8)."""
-    past = expiry_hint(quote, today=today) == ("past", None)
-    return "shown-expired" if past else quote.status
-
-
-def quote_sort_keys(today):
-    """What a column of the quote list sorts on. Status goes by what the
-    row shows, so the rows that read Verlopen stay together."""
-    return {
-        "klant": lambda q: contact_name(q).casefold(),
-        "nummer": lambda q: q.number or "",
-        "geldig": lambda q: (q.expiry_date is not None, q.expiry_date),
-        "status": lambda q: QUOTE_STATUS_RANK[shown_quote_status(q, today=today)],
-        "totaal": lambda q: q.total_cents,
-    }
+# What a column of the quote list sorts on. Status goes by what the row
+# shows, so the rows that read Verlopen stay together.
+QUOTE_SORT_KEYS = {
+    "klant": lambda q: contact_name(q).casefold(),
+    "nummer": lambda q: q.number or "",
+    "geldig": lambda q: (q.expiry_date is not None, q.expiry_date),
+    "status": lambda q: QUOTE_STATUS_RANK[q.shown_status],
+    "totaal": lambda q: q.total_cents,
+}

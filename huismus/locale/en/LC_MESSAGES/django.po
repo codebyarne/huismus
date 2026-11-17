@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-17 07:22+0100\n"
+"POT-Creation-Date: 2026-11-17 08:13+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1417,15 +1417,15 @@ msgstr "preferences"
 msgid "Dit komt op elke factuur en offerte."
 msgstr "This goes on every invoice and quote."
 
-msgid "KOR"
-msgstr "KOR"
-
 msgid ""
 "Gebruik je de kleineondernemersregeling? Dan komt jouw KOR-tekst onder elke "
 "factuur."
 msgstr ""
 "Using the small business scheme (KOR)? Then your KOR text goes under every "
 "invoice."
+
+msgid "KOR"
+msgstr "KOR"
 
 msgid "Facturen"
 msgstr "Invoices"
@@ -2164,6 +2164,7 @@ msgstr "Fill in the VAT amount. No VAT paid? Then fill in 0."
 msgid "Kies het btw-tarief."
 msgstr "Choose the VAT rate."
 
+#, python-format
 msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
 msgstr "With 0% or no VAT, the VAT amount is € 0.00."
 
@@ -2238,6 +2239,7 @@ msgstr "Saved. Huismus picks up new receipts from %(place)s by itself."
 msgid "Bonnetje verwijderd."
 msgstr "Receipt deleted."
 
+#, python-format
 msgid "0% of geen btw"
 msgstr "0% or no VAT"
 
@@ -2877,6 +2879,7 @@ msgstr "Supplies/services subject to the high VAT rate"
 msgid "Leveringen/diensten belast met laag tarief"
 msgstr "Supplies/services subject to the low VAT rate"
 
+#, python-format
 msgid "Leveringen/diensten belast met 0% of niet bij u belast"
 msgstr "Supplies/services taxed at 0% or not taxed to you"
 
@@ -4006,19 +4009,16 @@ msgid_plural "verloopt over %(days)s dagen"
 msgstr[0] "expires in %(days)s day"
 msgstr[1] "expires in %(days)s days"
 
-msgid "Verlopen"
-msgstr "Expired"
-
 #, python-format
 msgid "geldig tot %(date)s"
 msgstr "valid until %(date)s"
 
 msgid ""
-"Verzonden offertes zonder antwoord. Na de geldigheidsdatum kun je ze als "
-"verlopen markeren."
+"Verzonden offertes zonder antwoord. Na de geldigheidsdatum staan ze bij "
+"Offertes onder Afgewezen of verlopen."
 msgstr ""
-"Sent quotes without a reply. After the expiry date you can mark them as "
-"expired."
+"Sent quotes without a reply. After the expiry date you find them in Quotes "
+"under Declined or expired."
 
 msgid "Geen offertes die op antwoord wachten."
 msgstr "No quotes waiting for a reply."
@@ -4435,6 +4435,9 @@ msgstr "Sent"
 msgid "Afgewezen"
 msgstr "Declined"
 
+msgid "Verlopen"
+msgstr "Expired"
+
 msgid "Geaccepteerd, afgewezen of verlopen"
 msgstr "Accepted, declined or expired"
 
@@ -4469,6 +4472,10 @@ msgstr "To the invoice"
 
 msgid "Zet de offerte om naar een factuur."
 msgstr "Convert the quote to an invoice."
+
+#, python-format
+msgid "Was geldig tot %(date)s. Heb je toch nog antwoord? Leg het hier vast."
+msgstr "Was valid until %(date)s. Got a reply after all? Record it here."
 
 msgid "Afgewezen door de klant"
 msgstr "Declined by the customer"
@@ -4970,10 +4977,12 @@ msgstr "No quotes match this search and tab."
 
 msgid ""
 "Verloopt een verzonden offerte binnen 7 dagen, dan zie je dat in de lijst. "
-"Is hij verlopen, zet hem dan op de offertepagina op verlopen."
+"Na de geldigheidsdatum staat hij bij Afgewezen of verlopen. Het antwoord van "
+"de klant kun je dan nog vastleggen."
 msgstr ""
-"When a sent quote expires within 7 days, the list shows it. Once it has "
-"expired, mark it as expired on the quote page."
+"When a sent quote expires within 7 days, the list shows it. After the expiry "
+"date it is under Declined or expired. You can still record the customer's "
+"reply then."
 
 msgid "Naar inloggen"
 msgstr "Log in"
@@ -5224,15 +5233,15 @@ msgstr "With receipt"
 
 #, python-format
 msgid "Totaal van %(total)s uitgave in %(year)s"
-msgid_plural "Totaal van alle %(total)s uitgaven in %(year)s"
+msgid_plural "Totaal van %(total)s uitgaven in %(year)s"
 msgstr[0] "Total of %(total)s expense in %(year)s"
-msgstr[1] "Total of all %(total)s expenses in %(year)s"
+msgstr[1] "Total of %(total)s expenses in %(year)s"
 
 #, python-format
 msgid "Totaal van %(total)s uitgave"
-msgid_plural "Totaal van alle %(total)s uitgaven"
+msgid_plural "Totaal van %(total)s uitgaven"
 msgstr[0] "Total of %(total)s expense"
-msgstr[1] "Total of all %(total)s expenses"
+msgstr[1] "Total of %(total)s expenses"
 
 msgid "Geen uitgave past bij je zoekopdracht en filters."
 msgstr "No expense matches your search and filters."

@@ -3,6 +3,8 @@
 """What an assistant can do (SPEC.md M16), through the same code as the app:
 the editor's forms, compute_totals(), issue(), send_quote(), send_document()."""
 
+from datetime import timedelta
+
 import pytest
 from django.core import mail
 from django.utils import timezone
@@ -285,6 +287,17 @@ def test_searching_documents(tool, business, customer):
     assert len(data["documents"]) == 2
     data, _text, _error = tool("search_documents", query=invoice.number)
     assert [d["number"] for d in data["documents"]] == [invoice.number]
+
+
+def test_a_sent_quote_past_its_date_is_expired_for_the_assistant_too(tool, business, customer):
+    quote = _draft(customer, kind="quote")
+    Document.objects.filter(pk=quote.pk).update(
+        status="sent", number="OFF-1", expiry_date=timezone.localdate() - timedelta(days=1)
+    )
+    data, _text, _error = tool("search_documents", kind="quote", status="expired")
+    assert [(d["id"], d["status"]) for d in data["documents"]] == [(quote.pk, "expired")]
+    data, _text, _error = tool("search_documents", kind="quote", status="sent")
+    assert data["documents"] == []
 
 
 def test_an_issued_document_shows_its_snapshot(tool, business, customer):
