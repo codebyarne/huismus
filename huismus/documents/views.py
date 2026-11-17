@@ -37,7 +37,6 @@ from .forms import (
 )
 from .issuing import IssueError, issue
 from .listing import (
-    INVOICE_GROUPS,
     INVOICE_SORT_KEYS,
     INVOICE_TABS,
     QUOTE_SORT_KEYS,
@@ -112,11 +111,8 @@ def document_list(request):
 
     found = [d for d in invoices if matches_search(d, query)]
     rows = grouped([d for d in found if in_tab(d, tab)])
-    # Sorted by a column, the list is one table: the groups would cut it up.
     sort = chosen_sort(request, INVOICE_SORT_KEYS)
     rows = sorted_rows(rows, sort, INVOICE_SORT_KEYS)
-    for document in rows:
-        document.list_group = "" if sort else document.group
 
     def list_url(**changes):
         params = {"tab": tab, "q": query, "jaar": year or "alle", "sorteer": sort, **changes}
@@ -144,7 +140,6 @@ def document_list(request):
             "year": year,
             "years": years,
             "has_any": Document.objects.filter(kind__in=["invoice", "credit_note"]).exists(),
-            "group_titles": INVOICE_GROUPS,
             "sort": sort_headers(sort, INVOICE_SORT_KEYS, lambda value: list_url(sorteer=value)),
             "sorted_by": sort,
         },

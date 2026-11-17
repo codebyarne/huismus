@@ -3,8 +3,6 @@
 """Sorting a list by a column heading (huismus/core/sorting.py), on the four
 lists that have it."""
 
-import re
-
 import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -87,19 +85,16 @@ def test_quotes_sort_by_total(user_client):
     assert _order(down, "Kleine Klant", "Grote Klant") == ["Grote Klant", "Kleine Klant"]
 
 
-def test_sorted_invoices_are_one_table_without_group_headings(user_client):
+def test_invoices_sort_by_amount(user_client):
     _draft("invoice", "Kleine Klant", 500)
     _draft("invoice", "Grote Klant", 90000)
     url = reverse("documents:list")
 
-    own = user_client.get(url).content.decode()
-    by_amount = user_client.get(url, {"sorteer": "-bedrag"})
-    page = by_amount.content.decode()
+    up = user_client.get(url, {"sorteer": "bedrag"})
+    down = user_client.get(url, {"sorteer": "-bedrag"})
 
-    assert 'class="group-row"' in own
-    assert 'class="group-row"' not in page
-    assert len(re.findall(r"<table", page)) == 1
-    assert _order(by_amount, "Kleine Klant", "Grote Klant") == ["Grote Klant", "Kleine Klant"]
+    assert _order(up, "Kleine Klant", "Grote Klant") == ["Kleine Klant", "Grote Klant"]
+    assert _order(down, "Kleine Klant", "Grote Klant") == ["Grote Klant", "Kleine Klant"]
 
 
 @pytest.mark.parametrize(

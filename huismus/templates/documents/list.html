@@ -62,8 +62,7 @@
     </form>
     <div id="facturen-resultaat">
         {% if documents %}
-        {% comment %}One table, so the columns line up over every group. A group (Te laat, Betaald, ...) is a tbody that starts with a band naming it; sorted by a column there are no groups (list_group is empty then).{% endcomment %}
-        {% regroup documents by list_group as groups %}
+        {% comment %}One table. The rows come in the order of INVOICE_GROUPS (te laat first, betaald last) but without a heading per group: the Status column already says it (the owner, 2026-11-17).{% endcomment %}
         <div class="table-wrap">
             <table class="table stackable">
                 <thead>
@@ -75,10 +74,8 @@
                         {% include "core/_sort_th.html" with col=sort.bedrag label=_("Bedrag") cls="r" %}
                     </tr>
                 </thead>
-                {% for group in groups %}
                 <tbody>
-                    {% if group.grouper %}<tr class="group-row"><th colspan="5" scope="rowgroup" id="groep-{{ group.grouper }}">{{ group_titles|get:group.grouper }}</th></tr>{% endif %}
-                    {% for document in group.list %}
+                    {% for document in documents %}
                     <tr class="is-link">
                         <td data-cell="primary">
                             <a class="row-link" href="{% url 'documents:edit' document.pk %}">{{ document|contact_name|default:_("Nog geen klant") }}</a>
@@ -97,7 +94,6 @@
                     </tr>
                     {% endfor %}
                 </tbody>
-                {% endfor %}
             </table>
         </div>
         <div class="card-foot row">

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-17 06:11+0100\n"
+"POT-Creation-Date: 2026-11-17 06:46+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -486,7 +486,7 @@ msgstr ""
 msgid "Staat op elke factuur: naam, adres, KvK, btw-nummer, bank en e-mail."
 msgstr ""
 
-msgid "KOR"
+msgid "Kleineondernemersregeling (KOR)"
 msgstr ""
 
 msgid ""
@@ -1355,6 +1355,9 @@ msgid "voorkeuren"
 msgstr ""
 
 msgid "Dit komt op elke factuur en offerte."
+msgstr ""
+
+msgid "KOR"
 msgstr ""
 
 msgid ""

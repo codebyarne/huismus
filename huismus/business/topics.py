@@ -58,7 +58,7 @@ TOPICS = (
     ),
     Topic(
         "kor",
-        _("KOR"),
+        _("Kleineondernemersregeling (KOR)"),
         _("De KOR-tekst onder je facturen, en wanneer je hoort dat je omzet de grens nadert."),
         (
             "kor_enabled",
