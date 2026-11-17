@@ -17,10 +17,15 @@ def chosen_sort(request, columns):
     return value if value.removeprefix("-") in columns else ""
 
 
-def sort_headers(current, columns, url_for):
+def sort_headers(current, columns, url_for, own_order=""):
     """Per column what its heading needs: the address of the next step and
     the aria-sort state now. `url_for(value)` builds the list's address with
-    that ?sorteer= value ("" leaves it out)."""
+    that ?sorteer= value ("" leaves it out).
+
+    `own_order` names the column the list is in before anyone sorts it (the
+    invoice list: Status). Its heading then shows that, and the first click
+    turns the list around instead of sorting it the way it already is."""
+    current = current or own_order
     headers = {}
     for column in columns:
         if current == column:

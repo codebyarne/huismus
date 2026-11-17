@@ -14,7 +14,7 @@ from django.utils import timezone
 from huismus.contacts.models import Contact
 from huismus.core.sorting import sort_headers
 from huismus.documents.models import Document
-from huismus.expenses.models import Expense
+from huismus.expenses.models import Expense, ExpenseCategory
 
 pytestmark = pytest.mark.django_db
 
@@ -42,6 +42,29 @@ def test_a_heading_goes_up_then_down_then_back_to_the_lists_own_order():
         "state": "ascending",
     }
     assert sort_headers("-naam", ["naam"], url)["naam"] == {"url": "?", "state": "descending"}
+
+
+def test_the_column_a_list_is_already_in_shows_it_and_turns_round_on_the_first_click():
+    def url(value):
+        return f"?sorteer={value}" if value else "?"
+
+    def headers(current):
+        return sort_headers(current, ["status", "klant"], url, own_order="status")
+
+    assert headers("")["status"] == {"url": "?sorteer=-status", "state": "ascending"}
+    assert headers("-status")["status"] == {"url": "?", "state": "descending"}
+    assert headers("")["klant"] == {"url": "?sorteer=klant", "state": ""}
+    assert headers("klant")["status"] == {"url": "?sorteer=status", "state": ""}
+
+
+def test_the_invoice_list_says_it_is_sorted_by_status_before_anyone_sorts(user_client):
+    _draft("invoice", "Klant BV", 100)
+
+    page = user_client.get(reverse("documents:list")).content.decode()
+
+    assert re.search(
+        r'aria-sort="ascending"><a class="th-sort" href="\?[^"]*sorteer=-status"', page
+    )
 
 
 def test_customers_sort_by_city_both_ways(user_client):
@@ -74,6 +97,21 @@ def test_expenses_sort_by_amount_and_the_total_stays_the_same(user_client):
 def _draft(kind, name, cents):
     contact = Contact.objects.create(company_name=name)
     return Document.objects.create(kind=kind, contact=contact, total_cents=cents)
+
+
+def test_the_expenses_total_counts_what_the_filter_left_not_all(user_client):
+    rent = ExpenseCategory.objects.create(name="Huur")
+    for supplier in ("Verhuurder", "Verhuurder"):
+        expense = Expense.objects.create(supplier=supplier, date="2026-03-01", amount_cents=100)
+        expense.lines.create(category=rent, amount_cents=100)
+    Expense.objects.create(supplier="Bakker", date="2026-03-02", amount_cents=100)
+
+    page = user_client.get(
+        reverse("expenses:list"), {"categorie": rent.pk, "jaar": "alle"}
+    ).content.decode()
+
+    assert "Totaal van 2 uitgaven" in page
+    assert "Totaal van alle" not in page
 
 
 def test_quotes_sort_by_total(user_client):
@@ -136,8 +174,8 @@ def test_customers_sort_by_the_name_the_list_shows_people_among_companies(user_c
 
 
 def test_quotes_sort_by_the_status_the_list_shows(user_client):
-    """A sent quote past its date reads Verlopen: it sorts after the ones
-    that still wait, not among them (found in review)."""
+    """A sent quote past its date reads Verlopen: it sorts with the other
+    expired ones, after everything else (#204)."""
     today = timezone.localdate()
     waiting = _draft("quote", "Wacht Nog", 100)
     past = _draft("quote", "Datum Voorbij", 100)
@@ -150,13 +188,11 @@ def test_quotes_sort_by_the_status_the_list_shows(user_client):
 
     response = user_client.get(reverse("quotes:list"), {"sorteer": "status"})
 
-    assert _names_in_rows(response) == ["Wacht Nog", "Datum Voorbij", "Zei Ja"]
+    assert _names_in_rows(response) == ["Wacht Nog", "Zei Ja", "Datum Voorbij"]
     page = response.content.decode()
-    # Shown as Verlopen, stored as sent: still under "Wachten op antwoord".
+    # Shown as Verlopen, stored as sent.
     assert page.count("pill-quote-expired") == 1
     assert Document.objects.get(pk=past.pk).status == "sent"
-    waiting_tab = user_client.get(reverse("quotes:list"), {"tab": "wachten"})
-    assert "Datum Voorbij" in waiting_tab.content.decode()
 
 
 def test_the_phone_sort_menu_keeps_the_search_and_refreshes_with_it(user_client):

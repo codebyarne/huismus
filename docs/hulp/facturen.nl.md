@@ -83,5 +83,6 @@ regels.
 Bovenaan de lijst zoek je op nummer of klant en kies je een jaar. De lijst
 begint met wat te laat is en eindigt met wat betaald is. Klik op een kolom,
 zoals **Klant** of **Bedrag**, om daarop te sorteren; nog een keer klikken
-draait de volgorde om, en een derde keer geeft de gewone volgorde terug. Op een
+draait de volgorde om, en een derde keer geeft de gewone volgorde terug. De
+gewone volgorde is die van **Status**; klik daarop om hem om te draaien. Op een
 telefoon doe je dat met **Sorteren**. Bij Offertes en Klanten werkt het net zo.

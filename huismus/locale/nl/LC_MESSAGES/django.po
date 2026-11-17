@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-17 07:22+0100\n"
+"POT-Creation-Date: 2026-11-17 08:13+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1357,12 +1357,12 @@ msgstr ""
 msgid "Dit komt op elke factuur en offerte."
 msgstr ""
 
-msgid "KOR"
-msgstr ""
-
 msgid ""
 "Gebruik je de kleineondernemersregeling? Dan komt jouw KOR-tekst onder elke "
 "factuur."
+msgstr ""
+
+msgid "KOR"
 msgstr ""
 
 msgid "Facturen"
@@ -2066,6 +2066,7 @@ msgstr ""
 msgid "Kies het btw-tarief."
 msgstr ""
 
+#, python-format
 msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
 msgstr ""
 
@@ -2139,6 +2140,7 @@ msgstr ""
 msgid "Bonnetje verwijderd."
 msgstr ""
 
+#, python-format
 msgid "0% of geen btw"
 msgstr ""
 
@@ -2703,6 +2705,7 @@ msgstr ""
 msgid "Leveringen/diensten belast met laag tarief"
 msgstr ""
 
+#, python-format
 msgid "Leveringen/diensten belast met 0% of niet bij u belast"
 msgstr ""
 
@@ -3749,16 +3752,13 @@ msgid_plural "verloopt over %(days)s dagen"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Verlopen"
-msgstr ""
-
 #, python-format
 msgid "geldig tot %(date)s"
 msgstr ""
 
 msgid ""
-"Verzonden offertes zonder antwoord. Na de geldigheidsdatum kun je ze als "
-"verlopen markeren."
+"Verzonden offertes zonder antwoord. Na de geldigheidsdatum staan ze bij "
+"Offertes onder Afgewezen of verlopen."
 msgstr ""
 
 msgid "Geen offertes die op antwoord wachten."
@@ -4143,6 +4143,9 @@ msgstr ""
 msgid "Afgewezen"
 msgstr ""
 
+msgid "Verlopen"
+msgstr ""
+
 msgid "Geaccepteerd, afgewezen of verlopen"
 msgstr ""
 
@@ -4174,6 +4177,10 @@ msgid "Naar de factuur"
 msgstr ""
 
 msgid "Zet de offerte om naar een factuur."
+msgstr ""
+
+#, python-format
+msgid "Was geldig tot %(date)s. Heb je toch nog antwoord? Leg het hier vast."
 msgstr ""
 
 msgid "Afgewezen door de klant"
@@ -4641,7 +4648,8 @@ msgstr ""
 
 msgid ""
 "Verloopt een verzonden offerte binnen 7 dagen, dan zie je dat in de lijst. "
-"Is hij verlopen, zet hem dan op de offertepagina op verlopen."
+"Na de geldigheidsdatum staat hij bij Afgewezen of verlopen. Het antwoord van "
+"de klant kun je dan nog vastleggen."
 msgstr ""
 
 msgid "Naar inloggen"
@@ -4881,13 +4889,13 @@ msgstr ""
 
 #, python-format
 msgid "Totaal van %(total)s uitgave in %(year)s"
-msgid_plural "Totaal van alle %(total)s uitgaven in %(year)s"
+msgid_plural "Totaal van %(total)s uitgaven in %(year)s"
 msgstr[0] ""
 msgstr[1] ""
 
 #, python-format
 msgid "Totaal van %(total)s uitgave"
-msgid_plural "Totaal van alle %(total)s uitgaven"
+msgid_plural "Totaal van %(total)s uitgaven"
 msgstr[0] ""
 msgstr[1] ""
 

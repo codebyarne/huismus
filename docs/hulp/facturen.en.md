@@ -79,5 +79,6 @@ lines.
 At the top of the list you search by number or customer and pick a year. The
 list starts with what is overdue and ends with what is paid. Click a column,
 such as **Customer** or **Amount**, to sort by it; click again to turn the
-order round, and a third time for the usual order. On a phone, use **Sort**.
+order round, and a third time for the usual order. The usual order is the one
+by **Status**; click it to turn the list round. On a phone, use **Sort**.
 Quotes and Customers work the same way.

@@ -98,8 +98,8 @@
                hx-swap="outerHTML show:none" hx-push-url="true">{% translate "Meer laden" %}<span class="spinner"></span></a>
             {% endif %}
             <span class="muted">
-                {% if year %}{% blocktranslate count total=total %}Totaal van {{ total }} uitgave in {{ year }}{% plural %}Totaal van alle {{ total }} uitgaven in {{ year }}{% endblocktranslate %}
-                {% else %}{% blocktranslate count total=total %}Totaal van {{ total }} uitgave{% plural %}Totaal van alle {{ total }} uitgaven{% endblocktranslate %}{% endif %}
+                {% if year %}{% blocktranslate count total=total %}Totaal van {{ total }} uitgave in {{ year }}{% plural %}Totaal van {{ total }} uitgaven in {{ year }}{% endblocktranslate %}
+                {% else %}{% blocktranslate count total=total %}Totaal van {{ total }} uitgave{% plural %}Totaal van {{ total }} uitgaven{% endblocktranslate %}{% endif %}
             </span>
             <span class="amount">{{ total_cents|money }}</span>
         </div>

@@ -161,7 +161,7 @@ def _summary(document) -> dict:
     return {
         "id": document.pk,
         "kind": document.kind,
-        "status": document.status,
+        "status": document.shown_status,
         "number": document.number or None,
         "customer": contact_name(document),
         "issue_date": _date(document.issue_date),
@@ -256,10 +256,11 @@ def get_overview(arguments):
 STATUS_FILTERS = {
     "draft": lambda d: d.status == "draft",
     "issued": lambda d: d.status == "issued",
-    "sent": lambda d: d.status == "sent",
+    # As the screens show it: a sent quote past its date is expired.
+    "sent": lambda d: d.shown_status == "sent",
     "accepted": lambda d: d.status == "accepted",
     "declined": lambda d: d.status == "declined",
-    "expired": lambda d: d.status == "expired",
+    "expired": lambda d: d.shown_status == "expired",
     "open": lambda d: d.payment_state in ("unpaid", "partial"),
     "overdue": lambda d: d.is_overdue,
     "paid": lambda d: d.payment_state in ("paid", "credited"),

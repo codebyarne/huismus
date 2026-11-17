@@ -125,6 +125,8 @@ def home(request):
             "waiting_quotes": [
                 (quote, expiry_hint(quote, today=today))
                 for quote in sent_quotes.order_by("expiry_date", "pk")
+                # Past its date a quote reads as expired and is under Offertes.
+                if quote.shown_status == "sent"
             ],
             **_backup_context(now),
             **_update_notices(request),
