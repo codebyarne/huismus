@@ -338,6 +338,16 @@ gebruikt:
   WebView2; daar gaat een download al naar een bewaarvenster, en
   `desktop/webview2.py` laat `target="_blank"` naar Huismus zelf over aan
   WebView2, dat er een tweede venster met zijn pdf-viewer voor opent.
+- **Wat het venster van CSS kent.** De schermen gebruiken `popover`,
+  containerquery's en CSS-ankerpositionering (het menu "Sorteren" op een smal
+  scherm). Op de Mac is het venster de WebKit van macOS zelf, niet die van
+  een bijgewerkte Safari: macOS 15 kent `popover` (sinds Safari 17) en
+  containerquery's (sinds Safari 16), maar ankerpositionering pas vanaf
+  macOS 26. Daar zet `app.js` het menu onder zijn knop. WebView2 op Windows
+  werkt zichzelf bij en loopt gelijk met Edge: het kent alle drie (Chromium
+  114, 105 en 129). Getest is dit in Playwrights WebKit en Chromium, met en
+  zonder ankerpositionering (`tests/e2e/test_browser.py`), niet in een
+  venster op macOS 15 zelf.
 - **Pango op Windows** komt uit MSYS2 (UCRT64). WeasyPrint zoekt zijn
   bibliotheken op naam; de app laat die naam alleen in zijn eigen map zoeken,
   net als op de Mac (`_use_the_apps_own_pango` in `desktop/app.py`).

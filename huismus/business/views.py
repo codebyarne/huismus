@@ -35,7 +35,7 @@ def _mail_text_blocks(form):
 @login_required
 def overview(request):
     cards = topics.cards(Settings.load(), theme=theme_of(request.user))
-    return render(request, "business/overview.html", {"cards": cards})
+    return render(request, "business/overview.html", {"groups": topics.grouped(cards)})
 
 
 @login_required

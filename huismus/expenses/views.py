@@ -6,12 +6,14 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.db.models import Count, Exists, F, OuterRef, ProtectedError, Q, Subquery, Sum
+from django.db.models.functions import Lower
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from huismus.core.models import Attachment
+from huismus.core.sorting import chosen_sort, sort_headers
 
 from . import batch, inbox, reading
 from .forms import (
@@ -88,18 +90,24 @@ def expense_list(request):
             or 0
         )
 
+    sort = chosen_sort(request, EXPENSE_SORT_FIELDS)
     rows = (
         expenses.prefetch_related("lines__category")
         .annotate(has_receipt=Exists(Attachment.objects.filter(expense=OuterRef("pk"))))
         .annotate(shown_cents=_shown_cents(category_pk))
-        .order_by("-date", "-pk")[:shown]
+        .order_by(*_expense_order(sort))[:shown]
     )
     params = {
         "q": query,
         "jaar": year or "alle",
         "categorie": category_pk or "",
         "nakijken": "1" if to_check else "",
+        "sorteer": sort,
     }
+
+    def sort_url(value):
+        return "?" + urlencode({k: v for k, v in {**params, "sorteer": value}.items() if v})
+
     more_url = None
     if total > shown:
         more_url = "?" + urlencode(
@@ -113,6 +121,8 @@ def expense_list(request):
             "total": total,
             "total_cents": total_cents,
             "more_url": more_url,
+            "sort": sort_headers(sort, EXPENSE_SORT_FIELDS, sort_url),
+            "sorted_by": sort,
             "query": query,
             "year": year,
             "years": years,
@@ -248,6 +258,25 @@ def _next_in_stack(current, stack, done: int = 1) -> str:
     Verwerken's "Niets meer te verwerken."."""
     following = batch.next_item(current, stack)
     return following.url(done) if following else reverse("expenses:process")
+
+
+# What a column of the expense list sorts on. Not the category: an expense
+# can have lines in several.
+EXPENSE_SORT_FIELDS = {
+    "datum": F("date"),
+    "leverancier": Lower("supplier"),
+    "bedrag": F("shown_cents"),
+}
+
+
+def _expense_order(sort):
+    """The list's own order (newest first), or the chosen column first with
+    the newest first among equals."""
+    if not sort:
+        return ["-date", "-pk"]
+    field = EXPENSE_SORT_FIELDS[sort.removeprefix("-")]
+    chosen = field.desc() if sort.startswith("-") else field.asc()
+    return [chosen, "-pk"] if sort.removeprefix("-") == "datum" else [chosen, "-date", "-pk"]
 
 
 def _shown_cents(category_pk):

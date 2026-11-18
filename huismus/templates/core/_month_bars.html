@@ -1,0 +1,12 @@
+{% load i18n money %}{% comment %}Wants `month_bars` (core.dashboard.month_bars) and `year`: the year's revenue per month in the petrol block (#215). The bars are a picture; a screen reader gets the amounts as a list. No sums here: heights and amounts come from the view.{% endcomment %}
+<div class="months" id="omzet-per-maand">
+    <ul class="sr-only" aria-label="{% blocktranslate %}Omzet per maand in {{ year }}{% endblocktranslate %}">
+        {% for bar in month_bars %}{% if not bar.is_ahead %}<li>{{ bar.name }}: {{ bar.revenue_cents|money }}</li>{% endif %}{% endfor %}
+    </ul>
+    <div class="month-bars" aria-hidden="true">
+        {% for bar in month_bars %}<span class="month-bar{% if bar.is_current %} is-current{% elif bar.is_ahead %} is-ahead{% endif %}" style="--v:{{ bar.height_percent }}"></span>{% endfor %}
+    </div>
+    <div class="month-names" aria-hidden="true">
+        {% for bar in month_bars %}<span{% if bar.is_current %} class="is-current"{% endif %}><span class="month-short">{{ bar.short }}</span><span class="month-letter">{{ bar.letter }}</span></span>{% endfor %}
+    </div>
+</div>

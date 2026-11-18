@@ -49,7 +49,7 @@ GROUPS = (
         _("Beginnen"),
         # WHATS_NEW: what each release brings, written on release day (CLAUDE.md,
         # Releases).
-        ("beginnen", "functies", WHATS_NEW, FEEDBACK),
+        ("beginnen", WHATS_NEW, FEEDBACK),
     ),
     Group(_("Overstappen"), ("moneybird",)),
     Group(

@@ -281,6 +281,20 @@ class Document(TimestampedModel):
         return self.total_cents - credited_cents - paid_cents
 
     @property
+    def shown_status(self):
+        """The status as every screen, the export and the assistant show it.
+        A sent quote reads as expired from the day after its expiry date,
+        while the stored status stays "sent" until the user records an
+        answer or marks it (SPEC.md M8): Huismus changes nothing by itself,
+        and a late yes can still be recorded. Today is the server's date,
+        as for is_overdue."""
+        past = self.expiry_date is not None and self.expiry_date < timezone.localdate()
+        return "expired" if self.status == "sent" and past else self.status
+
+    def get_shown_status_display(self):
+        return dict(STATUS_CHOICES)[self.shown_status]
+
+    @property
     def is_overdue(self):
         """An issued invoice whose due date has passed and that isn't fully
         paid yet. Derived like payment_state, never stored (SPEC.md M8)."""

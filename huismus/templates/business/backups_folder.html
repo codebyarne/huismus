@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n backups %}
+{% load i18n backups notices %}
 
 {% block title %}{% translate "Map voor back-ups" %} — Huismus{% endblock %}
 {% block content_class %}content-narrow{% endblock %}
@@ -15,9 +15,9 @@
 </div>
 
 {% if failure %}
-<p class="hint-banner is-bad" id="back-up-mislukt" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% blocktranslate with moment=status.last_failure_at|moment %}De back-up van {{ moment }} is mislukt.{% endblocktranslate %} {{ failure }}</span></p>
+<p class="hint-banner is-bad" id="back-up-mislukt" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% lead %}{% blocktranslate with moment=status.last_failure_at|moment %}De back-up van {{ moment }} is mislukt.{% endblocktranslate %} {{ failure }}{% endlead %}</span></p>
 {% elif folder_missing %}
-<p class="hint-banner is-warn" id="map-weg" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% blocktranslate with folder=folder_label %}De map {{ folder }} is nu niet bereikbaar. Is de schijf aangesloten?{% endblocktranslate %}</span></p>
+<p class="hint-banner is-warn" id="map-weg" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% lead %}{% blocktranslate with folder=folder_label %}De map {{ folder }} is nu niet bereikbaar. Is de schijf aangesloten?{% endblocktranslate %}{% endlead %}</span></p>
 {% endif %}
 
 <form method="post" class="card settings-section" id="back-upmap">

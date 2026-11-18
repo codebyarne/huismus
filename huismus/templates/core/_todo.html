@@ -1,0 +1,20 @@
+{% load i18n %}{% comment %}Wants `todo` (core.todo.build_todo): what waits for the user, the most urgent first (#189). A row is its icon, two lines of text and one button. Only an overdue invoice is raspberry, and only its title goes somewhere else than its button: to the invoice itself.{% endcomment %}
+<section class="section" aria-labelledby="te-doen">
+    <div class="section-head"><h2 id="te-doen">{% translate "Te doen" %}{% if todo.count %} <span class="count-badge" id="te-doen-teller">{{ todo.count }}</span>{% endif %}</h2></div>
+    {% if todo.items %}
+    <ul class="todo">
+        {% for item in todo.items %}
+        <li class="todo-item{% if item.is_late %} is-late{% endif %}" data-todo="{{ item.kind }}">
+            <span class="todo-icon" aria-hidden="true"><svg class="i"><use href="#{{ item.icon }}"></use></svg></span>
+            <span class="todo-text">
+                {% if item.url %}<a class="todo-title" href="{{ item.url }}">{{ item.title }}</a>{% else %}<strong class="todo-title">{{ item.title }}</strong>{% endif %}
+                <span class="todo-detail">{{ item.detail }}</span>
+            </span>
+            <a class="btn {% if item.is_late %}btn-danger{% else %}btn-secondary todo-go{% endif %}" href="{{ item.action_url }}"{% if not item.url %} aria-label="{{ item.action }}: {{ item.title }}"{% endif %}><span>{{ item.action }}</span>{% if not item.is_late %}<svg class="i" aria-hidden="true"><use href="#chevron-right"></use></svg>{% endif %}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="todo-none" id="niets-te-doen">{% translate "Er wacht niets op je." %}</p>
+    {% endif %}
+</section>

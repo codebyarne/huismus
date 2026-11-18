@@ -9,7 +9,7 @@
     {% csrf_token %}
     <div class="page-head">
         <div class="titles">
-            <a class="small" href="{% url 'business:overview' %}">← {% translate "Instellingen" %}</a>
+            <a class="back" href="{% url 'business:overview' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Instellingen" %}</a>
             <h1>{{ topic.title }}</h1>
             <p class="lede">{{ topic.intro }}</p>
         </div>

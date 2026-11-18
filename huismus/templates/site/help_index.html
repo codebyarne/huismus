@@ -2,6 +2,10 @@
 {% load i18n %}
 
 {% block title %}{% translate "Hulp" %} — Huismus{% endblock %}
+{% block og_title %}{% translate "Hulp" %} — Huismus{% endblock %}
+{% block description %}{% translate "Uitleg bij Huismus: beginnen, overstappen, facturen, bonnetjes, btw en back-ups." %}{% endblock %}
+
+{% block main_class %}wrap help-index{% endblock %}
 
 {% block content %}
 <div class="page-head">
@@ -27,4 +31,8 @@
     </ul>
 </section>
 {% endfor %}
+
+<section class="band band-final" id="downloaden">
+    {% include "site/_final.html" %}
+</section>
 {% endblock %}

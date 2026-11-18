@@ -33,10 +33,10 @@ COMPONENTS = {
     "knoppen": (
         "Button",
         "Acties",
-        "Knoppen: primair (blauw) voor de ene hoofdactie, secundair (wit) en ghost "
+        "Knoppen: primair (petrol) voor de ene hoofdactie, secundair (wit) en ghost "
         "(kaal) voor de rest, danger (rood) alleen voor verwijderen.\n\n"
         "- Eén primaire knop per scherm of dialoog.\n"
-        "- Abrikoos is nooit een knop.\n"
+        "- Snavelgeel is nooit een knop.\n"
         "- Laadtoestand: HTMX zet `.htmx-request` op de knop; het label verdwijnt "
         "en de spinner verschijnt, de breedte blijft gelijk.\n"
         "- Klassen: `.btn` plus `.btn-primary`, `.btn-secondary`, `.btn-ghost`, "
@@ -47,23 +47,25 @@ COMPONENTS = {
         "StatusLabel",
         "Status",
         "Statuslabels (`.pill`): een vlak alleen als er iets moet gebeuren.\n\n"
-        "- Vol vlak: Vervallen (rood), Onbetaald en Deels betaald (amber), "
-        "Verzonden (blauw), Concept (grijs), Geïmporteerd (abrikoos).\n"
+        "- Vol vlak: te laat (framboos, met het aantal dagen). Deels betaald: een "
+        "randje met een half gevulde stip. Geïmporteerd: een neutraal vlak.\n"
+        "- Gewone tekst met een open stip: Onbetaald, Verzonden. Concept: een "
+        "gestippeld randje.\n"
         "- Rustig, zonder vlak: Definitief (slotje), Betaald en Geaccepteerd "
-        "(groene stip), Afgewezen (rode stip), Verlopen (open stip).\n"
+        "(vinkje), Afgewezen (rode stip), Verlopen (open stip).\n"
         "- Rand zonder kleur: Creditnota, Gecrediteerd.\n"
         "- De tabel in de preview zegt per label wanneer je hem gebruikt.",
     ),
     "meldingen": (
         "Notice",
         "Status",
-        "Meldingen. Op het overzicht een rustige kaart (`.hint-banner`) met een "
-        "gekleurde streep en een gekleurd icoon; alleen de link rechts in de "
-        "statuskleur.\n\n"
-        "- `.is-bad` (rood): over de KOR-grens, iets is mislukt.\n"
-        "- `.is-warn` (amber): let op.\n"
-        "- `.is-info` (blauw): informatie, zoals een nieuwe versie.\n"
-        "- Zonder klasse (abrikoos): een herinnering, zoals een open concept.\n"
+        "Meldingen. Een melding (`.hint-banner`) is één smalle regel in dezelfde "
+        "neutrale tint; alleen het icoon zegt de soort, de link aan het eind is "
+        "petrol. Geen geel, geen framboos.\n\n"
+        "- `.is-bad`: een gevuld rondje met een uitroepteken (over de KOR-grens, mislukt).\n"
+        "- `.is-warn`: een driehoek in de tekstkleur.\n"
+        "- `.is-info`: een petrol icoon (nieuws, zoals een nieuwe versie).\n"
+        "- Zonder klasse: een grijs icoon.\n"
         "- Na een actie: `.flash` bovenaan de pagina of `.toast` rechtsboven; "
         "foutmeldingen blijven staan.",
     ),
@@ -83,12 +85,14 @@ COMPONENTS = {
         "kaarten; elke cel krijgt `data-cell`.\n\n"
         "- Concepten tonen `Concept` in plaats van een nummer.\n"
         "- Bedragen rechts, met tabulaire cijfers.\n"
-        "- De blauwe KPI-kaart (`.kpi-hero`) is er één per scherm: openstaand.",
+        "- De blikvanger (`.kpi-hero`) is er één per scherm: een diep petrol vlak "
+        "met het grootste bedrag.",
     ),
     "leeg": (
         "EmptyState",
         "Inhoud",
-        "Lege toestand: de mus, één zin wat hier komt, en de actie om te beginnen.",
+        "Lege toestand: de losse mus op de dakgoot, één zin wat hier komt, en de "
+        "actie om te beginnen.",
     ),
     "dialoog": (
         "Dialog",
@@ -146,15 +150,15 @@ COVER = """<!-- @dsCard height=288 -->
     <rect class="sky" x="528" y="216" width="72" height="24" rx="12"/>
   </svg>
   <p class="name">Huismus</p>
-  <p class="tag">Facturen voor zzp'ers onder de KOR. Zomerochtend: hemelsblauw en
-    abrikoos op warme neutralen.</p>
+  <p class="tag">Facturen voor zzp'ers onder de KOR. Petrol
+    op koel, bijna wit.</p>
 </div>
 """
 
-LOGO = "mus"  # the one symbol in icons.svg that is the mark, not an icon
-# A standalone SVG knows neither currentColor nor the page's tokens: the sparrow's
-# parts and the icons' ink get the light value of these tokens instead.
-MARK_TOKENS = {"mark-body": "primary", "mark-accent": "accent", "mark-eye": "surface"}
+LOGO = "mus"  # the one symbol in icons.svg that is the logo, not an icon
+# A standalone SVG knows neither currentColor nor the page's tokens: the logo's
+# parts (var(--mark-tile) and so on) and the icons' ink get the light value of
+# their token instead.
 ICON_INK_TOKEN = "text"
 
 
@@ -205,17 +209,17 @@ COLOR_USAGE = {
     "primary": "Primaire knop, actieve navigatie, focus. Ochtendlucht.",
     "primary-hover": "Hover van de primaire knop.",
     "on-primary": "Tekst op --primary.",
-    "primary-soft": "Zacht blauw vlak (Verzonden, informatie), met --primary-ink.",
+    "primary-soft": "Zacht petrol vlak (gekozen item, informatie), met --primary-ink.",
     "primary-ink": "Tekst en links op --primary-soft en op de pagina.",
     "ring": "Focusring.",
-    "accent": "Abrikoos: streep van een herinnering, kosten in grafieken. Nooit een knop.",
-    "accent-soft": "Zacht abrikoos vlak: KOR-hint, Geïmporteerd.",
+    "accent": "Snavelgeel: snavel, KOR-balk, herinnering, kosten in grafieken. Nooit een knop.",
+    "accent-soft": "Zacht geel vlak: KOR-hint, Geïmporteerd.",
     "accent-ink": "Tekst op --accent-soft.",
-    "ok": "Betaald, gelukt (stip of icoon).",
+    "ok": "Gelukt (icoon of melding). Betaald is een vinkje in gedempte tekst.",
     "ok-bg": "Vlak bij een geslaagde melding.",
-    "warn": "Let op: onbetaald, deels betaald.",
+    "warn": "Let op: deels betaald, bijna bij de KOR-grens.",
     "warn-bg": "Vlak bij --warn.",
-    "bad": "Vervallen, over de KOR-grens, fout.",
+    "bad": "Te laat, over de KOR-grens, fout.",
     "bad-bg": "Vlak bij --bad.",
     "draft": "Concept.",
     "draft-bg": "Vlak van Concept.",
@@ -292,7 +296,11 @@ def tokens(commit):
         },
         "type": {
             "fonts": [],
-            "families": {"sans": t["font-sans"].strip(), "mono": t["font-mono"].strip()},
+            "families": {
+                "sans": t["font-sans"].strip(),
+                "display": t["font-display"].strip(),
+                "mono": t["font-mono"].strip(),
+            },
             "groups": [{"name": "Tekst", "family": "sans", "styles": styles}],
         },
         "spacing": {
@@ -341,11 +349,17 @@ def standalone_svg(name, symbol):
     body = re.sub(r"^<symbol[^>]*>|</symbol>$", "", symbol)
     attrs = re.search(r"<symbol([^>]*)>", symbol).group(1).replace(f' id="{name}"', "")
     attrs = attrs.replace('stroke="currentColor"', f'stroke="{_light(ICON_INK_TOKEN)}"')
-    for var, token in MARK_TOKENS.items():
-        body = re.sub(rf"var\(--{var},var\(--[\w-]+\)\)", _light(token), body)
+
+    def fill_in(match):
+        token = match.group(1)
+        if token not in _root_tokens():
+            sys.exit(f"icons.svg#{name} uses --{token}, which is no token of huismus.css.")
+        return _light(token)
+
+    body = re.sub(r"var\(--([\w-]+)\)", fill_in, body)
     svg = f'<svg xmlns="http://www.w3.org/2000/svg"{attrs}>{body}</svg>\n'
     if "var(" in svg or "currentColor" in svg:
-        sys.exit(f"icons.svg#{name} uses a colour this script can't fill in; extend MARK_TOKENS.")
+        sys.exit(f"icons.svg#{name} uses a colour this script can't fill in.")
     return svg
 
 
@@ -380,8 +394,8 @@ def readme(commit):
     return f"""# Huismus
 
 Self-hosted facturatie voor Nederlandse zzp'ers onder de KOR. Eén gebruiker, op een
-Raspberry Pi, laptop en telefoon. Richting **Zomerochtend**: hemelsblauw en abrikoos op
-warme neutralen.
+Raspberry Pi, laptop en telefoon. Richting **Helder**: petrol op
+koel, bijna wit; de inhoud op één wit vel, één diep petrol blikvanger per scherm.
 
 > Dit Design System is een **kopie**. De bron is `huismus/core/static/core/huismus.css` in
 > `codebyarne/huismus`, de componenten staan op `docs/design/componenten.html`.
@@ -390,13 +404,13 @@ warme neutralen.
 
 ## Principes
 
-1. **Kleur alleen waar je iets moet doen; de rest is rustig.** Vervallen, onbetaald,
-   over de KOR-grens: een gekleurd vlak (`--bad-bg`, `--warn-bg`). Betaald, definitief,
-   afgerond: alleen een stip of slotje in `--text-muted`. Zo valt het ene belangrijke op.
-2. **Zomerochtend.** `--primary` (hemelsblauw) voor acties, `--accent` (abrikoos) voor
-   highlights en herinneringen, warme neutralen (`--bg`, `--surface`) voor de rest. Geen
-   nieuwe kleuren of lettertypes zonder besluit.
-3. **Abrikoos is nooit een knop.**
+1. **Kleur alleen waar je iets moet doen; de rest is rustig.** Te laat, over de
+   KOR-grens: een gekleurd vlak (`--bad-bg`, `--warn-bg`). Betaald, definitief,
+   afgerond: alleen een vinkje of slotje in `--text-muted`. Zo valt het ene belangrijke op.
+2. **Petrol.** `--primary` (petrol) voor acties en voor wat goed ging, koele neutralen
+   (`--bg`, `--surface`) voor de rest. Geen geel in de app: `--accent` is alleen de snavel.
+   Geen nieuwe kleuren of lettertypes zonder besluit.
+3. **Framboos alleen voor te laat en voor fouten.**
 4. **Uitgegeven is definitief.** Geen invoervelden, een slotje. Concepten hebben geen nummer.
 5. **Licht en donker, telefoon en laptop.** Alles werkt op 360 px, in beide thema's, en
    haalt WCAG AA. Elk formulier werkt zonder JavaScript; totalen komen van de server.
@@ -410,16 +424,18 @@ onder een factuur is de tekst van de gebruiker zelf. Engels komt via vertalingen
 
 ## Letters
 
-De systeemletter (`--font-sans`): geen webfonts, werkt offline. Cijfers in bedragen
-tabulair. Nummerformaten en code in `--font-mono`.
+Inter voor tekst (`--font-sans`), Bricolage Grotesque voor koppen en grote bedragen
+(`--font-display`). Beide zitten als bestanden in de app (`components/fonts/`, SIL OFL 1.1):
+er wordt niets van buiten geladen. Cijfers in bedragen tabulair. Nummerformaten en code
+in `--font-mono`.
 
 ## Iconen
 
 Lijniconen op een raster van 24, lijndikte 1,8, ronde uiteinden, in `currentColor`.
 In de app komen ze uit één sprite (`huismus/templates/icons.svg`). De bestanden hier hebben
 een vaste inkt (`--text` licht, {_light(ICON_INK_TOKEN)}) omdat een losse afbeelding geen
-`currentColor` kent. De mus is het merkteken: lijf `--primary`, vleugel en snavel
-`--accent`.
+`currentColor` kent. Het logo is de mus op de tegel: tegel `--mark-tile`, mus `--mark-bird`, vleugel
+`--mark-wing`, snavel `--accent`. De losse mus (`mus-vogel`) is voor een lege toestand.
 
 ## Domeinregels in de UI
 {domain}
@@ -448,6 +464,8 @@ def export(out, commit):
     )
     (project / "README.md").write_text(readme(commit), encoding="utf-8")
     shutil.copy(CSS, project / "components" / "bundle.css")
+    # The letters the CSS loads: url("fonts/...") beside it.
+    shutil.copytree(CSS.parent / "fonts", project / "components" / "fonts")
     sections = _sections()
     for section_id, (name, _, guide) in COMPONENTS.items():
         folder = project / "components" / name
@@ -466,7 +484,8 @@ def export(out, commit):
     )
     (project / "assets" / "Logos").mkdir(parents=True)
     (project / "assets" / "Logos" / "README.md").write_text(
-        "# Logo\n\nDe mus: lijf `--primary`, vleugel en snavel `--accent`, oog `--surface`.\n",
+        "# Logo\n\nDe mus op de tegel: tegel `--mark-tile`, mus `--mark-bird`, vleugel "
+        "`--mark-wing`, snavel `--accent`. In donker een mint tegel met een donkere mus.\n",
         encoding="utf-8",
     )
     for group, names in (("Logos", [LOGO]), ("Icons", [n for n in symbols if n != LOGO])):

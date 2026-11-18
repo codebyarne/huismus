@@ -2,7 +2,9 @@
 {% load i18n %}
 
 {% block title %}{{ page.title }} — Huismus{% endblock %}
-{% block main_class %}site-narrow{% endblock %}
+{% block og_title %}{{ page.title }} — Huismus{% endblock %}
+{% block description %}{{ summary }}{% endblock %}
+{% block main_class %}wrap site-narrow{% endblock %}
 
 {% block content %}
 <div class="page-head">
@@ -16,4 +18,8 @@
 <article class="card card-pad help-text">
     {{ page.html|safe }}
 </article>
+
+<section class="band band-final" id="downloaden">
+    {% include "site/_final.html" %}
+</section>
 {% endblock %}

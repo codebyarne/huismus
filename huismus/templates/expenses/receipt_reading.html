@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n forms %}
+{% load i18n forms notices %}
 
 {% block title %}{% translate "Bonnetjes lezen met AI" %} — {% translate "Instellingen" %} — Huismus{% endblock %}
 {% block content_class %}content-narrow{% endblock %}
@@ -8,7 +8,7 @@
 {% comment %}Instellingen → Bonnetjes lezen (SPEC.md M20 part 3, expenses.reading_views). Built like Bonnetjesmap: a card for what is on, a form card, Uitzetten.{% endcomment %}
 <div class="page-head">
     <div class="titles">
-        <a class="small" href="{% url 'business:overview' %}">← {% translate "Instellingen" %}</a>
+        <a class="back" href="{% url 'business:overview' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Instellingen" %}</a>
         <h1>{% translate "Bonnetjes lezen met AI" %}</h1>
         <p class="lede">{% translate "Huismus stuurt elk bonnetje uit je bonnetjesmap naar een AI-dienst die jij kiest, en maakt er een uitgave van. Jij kijkt hem na met Klopt." %}{% if help_url %} <a href="{{ help_url }}">{% translate "Zo werkt het" %} →</a>{% endif %}</p>
     </div>
@@ -26,7 +26,7 @@
     </div>
     <div class="card-pad stack" style="gap:var(--s-3)">
         <p style="overflow-wrap:anywhere"><strong id="lezen-dienst">{{ service }} · {{ saved.model }}</strong></p>
-        {% if failure %}<p class="hint-banner is-bad" id="lezen-mislukt"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% blocktranslate with reason=failure trimmed %}Huismus kon je bonnetjes niet lezen. {{ reason }} Ze wachten hier tot het weer lukt.{% endblocktranslate %}</span></p>{% endif %}
+        {% if failure %}<p class="hint-banner is-bad" id="lezen-mislukt"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% lead %}{% blocktranslate with reason=failure trimmed %}Huismus kon je bonnetjes niet lezen. {{ reason }} Ze wachten hier tot het weer lukt.{% endblocktranslate %}{% endlead %}</span></p>{% endif %}
         <div class="row"><a href="{% url 'expenses:tray' %}">{% translate "Naar de bonnetjes zonder uitgave" %} →</a></div>
     </div>
 </section>

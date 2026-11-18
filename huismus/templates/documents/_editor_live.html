@@ -2,6 +2,7 @@
 {% comment %}Response of documents:preview. Only out-of-band swaps: the live
 parts of the editor, recomputed on the server for the unsaved form.{% endcomment %}
 {% include "documents/_totals.html" with oob=True %}
+{% include "documents/_bar_total.html" with oob=True %}
 {% include "documents/_address.html" with oob=True %}
 {% include "documents/_attention.html" with oob=True %}
 {% include "documents/_issue_summary.html" with oob=True %}

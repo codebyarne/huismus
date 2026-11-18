@@ -44,7 +44,7 @@ door, zodat er geen gat in je reeks komt.
 ## Betalingen
 
 Op de factuur zie je de betaalstatus: onbetaald, deels betaald, betaald of
-vervallen. Is er betaald, klik dan op **Betaling registreren**. Het bedrag
+te laat. Is er betaald, klik dan op **Betaling registreren**. Het bedrag
 staat al ingevuld met wat er nog openstaat. Een deel betalen kan ook.
 
 Het overzicht laat zien wat er in totaal openstaat en welke facturen te laat
@@ -77,3 +77,12 @@ de factuur zoals hij was.
 Stuur je vaker dezelfde factuur, bijvoorbeeld elke maand? Open de vorige en
 klik op **Kopiëren**. Je krijgt een nieuw concept met dezelfde klant en
 regels.
+
+## Zoeken en sorteren
+
+Bovenaan de lijst zoek je op nummer of klant en kies je een jaar. De lijst
+begint met wat te laat is en eindigt met wat betaald is. Klik op een kolom,
+zoals **Klant** of **Bedrag**, om daarop te sorteren; nog een keer klikken
+draait de volgorde om, en een derde keer geeft de gewone volgorde terug. De
+gewone volgorde is die van **Status**; klik daarop om hem om te draaien. Op een
+telefoon doe je dat met **Sorteren**. Bij Offertes en Klanten werkt het net zo.

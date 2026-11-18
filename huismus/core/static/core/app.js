@@ -21,6 +21,44 @@ document.addEventListener("click", (event) => {
   if (command === "close") target?.close();
 });
 
+// "Sorteren" on a stacked list opens under its button with CSS anchor
+// positioning (huismus.css). Where that is missing (the Mac app on macOS 15,
+// older Safari and Firefox) the menu would sit in a corner of the window,
+// so its place is set here from the button's: right edges in line, or the
+// left ones when the menu would leave the screen. Without JS it sits bottom
+// right, above the tab bar.
+if (!CSS.supports("position-area: bottom")) {
+  const place = () => {
+    const menu = document.querySelector("#sorteer-menu:popover-open");
+    const button = document.getElementById("sorteer-knop");
+    if (!menu) return;
+    menu.style.visibility = "";
+    if (!button) return;
+    const box = button.getBoundingClientRect();
+    const left = box.right - menu.offsetWidth;
+    // At once: with "reduce motion" on, huismus.css gives every change a
+    // transition of 1 ms, and WebKit then showed the menu for a moment where
+    // it was the time before.
+    menu.style.transition = "none";
+    menu.style.inset = `${box.bottom + 6}px auto auto ${left < 0 ? box.left : left}px`;
+  };
+  // Neither event bubbles: capture. The menu's width is only known once it
+  // is open, so it stays out of sight for the moment in between instead of
+  // showing where it was last time.
+  document.addEventListener(
+    "beforetoggle",
+    (event) => {
+      if (event.target.id === "sorteer-menu" && event.newState === "open") {
+        event.target.style.visibility = "hidden";
+      }
+    },
+    true,
+  );
+  document.addEventListener("toggle", (event) => event.target.id === "sorteer-menu" && place(), true);
+  window.addEventListener("scroll", place, { passive: true });
+  window.addEventListener("resize", place);
+}
+
 // An out-of-band swap keeps any button and only updates it. Leaving a field
 // sends the editor's live totals, whose answer brings a new "Uitgeven…"
 // button (documents/_editor_live.html). If that answer landed between
@@ -271,7 +309,8 @@ document.addEventListener("keydown", (event) => {
     if (url) {
       window.location.assign(url);
     } else {
-      document.getElementById("nieuw-menu")?.showPopover?.();
+      // The four choices of the phone's +: the menu panel itself has only "Nieuwe factuur".
+      document.getElementById("plus-menu")?.showPopover?.();
     }
   }
 });

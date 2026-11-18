@@ -51,9 +51,10 @@
                 </tr>
                 {% else %}
                 <tr>
-                    <td data-cell="primary">{{ category.name }}</td>
+                    {% comment %}A category with expenses leads to those expenses, over all years (the owner, 2026-11-16).{% endcomment %}
+                    <td data-cell="primary">{% if category.expense_count %}<a class="row-link" href="{% url 'expenses:list' %}?categorie={{ category.pk }}&amp;jaar=alle">{{ category.name }}</a>{% else %}{{ category.name }}{% endif %}</td>
                     <td data-cell="hide" class="r num">{{ category.sort_order }}</td>
-                    <td data-cell="secondary" class="r num muted">{% if category.expense_count %}{% blocktranslate count count=category.expense_count %}{{ count }} uitgave{% plural %}{{ count }} uitgaven{% endblocktranslate %}{% else %}{% translate "geen uitgaven" %}{% endif %}</td>
+                    <td data-cell="secondary" class="r num muted">{% if category.expense_count %}<a href="{% url 'expenses:list' %}?categorie={{ category.pk }}&amp;jaar=alle">{% blocktranslate count count=category.expense_count %}{{ count }} uitgave{% plural %}{{ count }} uitgaven{% endblocktranslate %}</a>{% else %}{% translate "geen uitgaven" %}{% endif %}</td>
                     <td data-cell="action" class="r w-min">
                         <div class="row" style="gap:4px;flex-wrap:nowrap">
                             <a class="btn btn-ghost btn-sm" href="?bewerk={{ category.pk }}"><svg class="i i-sm" aria-hidden="true"><use href="#edit"></use></svg>{% translate "Bewerken" %}</a>
@@ -93,7 +94,7 @@
     <form class="card-foot row" method="post" action="{% url 'expenses:category_list' %}" style="gap:var(--s-2);padding:var(--s-3) var(--s-4)">
         {% csrf_token %}
         <label class="sr-only" for="cat-nieuw">{% translate "Nieuwe categorie" %}</label>
-        <input id="cat-nieuw" class="input input-sm" name="name" required placeholder="{% translate 'Nieuwe categorie, bijvoorbeeld Verzekeringen' %}" style="flex:1;min-width:200px"{% if form.name.errors %} aria-invalid="true" aria-describedby="cat-nieuw-err"{% endif %}>
+        <input id="cat-nieuw" class="input input-sm" name="name" required placeholder="{% translate 'Bijvoorbeeld Verzekeringen' %}" style="flex:1 1 280px;min-width:0"{% if form.name.errors %} aria-invalid="true" aria-describedby="cat-nieuw-err"{% endif %}>
         <button class="btn btn-secondary btn-sm" type="submit"><svg class="i i-sm" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Toevoegen" %}</button>
         {% for error in form.name.errors %}<p class="error" id="cat-nieuw-err" style="flex-basis:100%"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>{{ error }}</p>{% endfor %}
     </form>

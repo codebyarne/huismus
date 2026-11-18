@@ -12,7 +12,9 @@ from PIL import Image
 from playwright.sync_api import expect
 
 from huismus.business.models import Settings
+from huismus.contacts.models import Contact
 from huismus.documents.models import Document
+from huismus.expenses.models import Expense
 
 pytestmark = pytest.mark.django_db(transaction=True)
 
@@ -339,6 +341,27 @@ def _background(page):
     return page.evaluate("getComputedStyle(document.body).backgroundColor")
 
 
+def test_the_paper_of_a_document_stays_white_in_dark(app, contact):
+    # The owner, 2026-11-15: on dark paper a logo made for white disappears, and the
+    # page suggests the invoice itself comes out dark.
+    app.emulate_media(color_scheme="dark")
+    app.goto(app.base + "/facturen/nieuw/")
+    paper = app.locator("article.paper")
+    expect(paper).to_be_visible()
+
+    def style(selector, prop):
+        return app.evaluate(
+            "([s, p]) => getComputedStyle(document.querySelector(s))[p]", [selector, prop]
+        )
+
+    assert _background(app) != "rgb(255, 255, 255)"  # the page around it is dark
+    assert style("article.paper", "backgroundColor") == "rgb(255, 255, 255)"
+    assert style("article.paper", "color") == "rgb(12, 35, 37)"
+    # What you type on the paper is dark on white too.
+    assert style("article.paper .input", "backgroundColor") == "rgb(255, 255, 255)"
+    assert style("article.paper .input", "color") == "rgb(12, 35, 37)"
+
+
 def test_a_chosen_theme_beats_the_system_and_stays_after_a_reload(app, browser):
     # A tester, 2026-10-31: Huismus only followed the system's light/dark.
     app.emulate_media(color_scheme="light")
@@ -594,7 +617,7 @@ def test_on_a_phone_the_language_is_set_under_instellingen(app):
     app.goto(app.base + "/facturen/")
     app.click(".tabbar button[popovertarget=meer-menu]")
     app.locator("#meer-menu a", has_text="Instellingen").click()
-    app.locator(".settings-topics a", has_text="Weergave").click()
+    app.locator(".settings-list a", has_text="Weergave").click()
     expect(app).to_have_url(app.base + APPEARANCE)
     app.locator("#weergave label", has_text="English").click()
     app.locator("button[type=submit][form=weergave]").click()
@@ -752,7 +775,7 @@ def test_the_trash_icon_over_the_logo_removes_it(app):
     from huismus.business.models import Settings
 
     buffer = BytesIO()
-    Image.new("RGB", (40, 20), "#1B6AC9").save(buffer, "PNG")
+    Image.new("RGB", (40, 20), "#0D6B6E").save(buffer, "PNG")
     png = buffer.getvalue()
     business = Settings.load()
     business.logo.save("logo.png", SimpleUploadedFile("logo.png", png), save=True)
@@ -771,18 +794,20 @@ def test_the_trash_icon_over_the_logo_removes_it(app):
 def test_a_settings_topic_opens_from_the_overview_and_saves_on_its_own_page(app, width):
     app.set_viewport_size({"width": width, "height": 800})
     app.goto(app.base + "/instellingen/")
-    card = app.get_by_role("link", name="KOR", exact=True)
+    card = app.get_by_role("link", name="Kleineondernemersregeling (KOR)", exact=True)
     expect(card).to_contain_text("Uit")
 
     card.click()
-    expect(app.locator("h1")).to_have_text("KOR")
+    expect(app.locator("h1")).to_have_text("Kleineondernemersregeling (KOR)")
     app.get_by_role("switch", name="Ik gebruik de KOR").check()
     app.get_by_role("button", name="Opslaan", exact=True).click()
 
     expect(app.get_by_text("Instellingen opgeslagen.")).to_be_visible()
     expect(app).to_have_url(f"{app.base}/instellingen/kor/")
-    app.get_by_role("link", name="← Instellingen").click()
-    expect(app.get_by_role("link", name="KOR", exact=True)).to_contain_text("Aan")
+    app.get_by_role("link", name="Instellingen", exact=True).first.click()
+    expect(
+        app.get_by_role("link", name="Kleineondernemersregeling (KOR)", exact=True)
+    ).to_contain_text("Aan")
     assert Settings.load().kor_enabled
 
 
@@ -1469,7 +1494,7 @@ def test_starting_step_by_step_without_moneybird(app, live_server):
     app.fill("#id_email", "hallo@example.invalid")
     app.get_by_role("button", name="Opslaan en verder").click()
 
-    expect(app.locator("h1")).to_have_text("KOR")
+    expect(app.locator("h1")).to_have_text("Kleineondernemersregeling (KOR)")
     app.get_by_role("switch").check()
     app.fill("#id_kor_text", "Vrijgesteld van btw (KOR).")
     app.get_by_role("button", name="Opslaan en verder").click()
@@ -1564,7 +1589,7 @@ def test_an_expense_gets_a_second_line_in_another_category(app):
     """Regel toevoegen adds a line on the spot, each line has its own
     category, and the expense's total is the sum (huismus-intern/besluiten.md,
     2026-11-02)."""
-    from huismus.expenses.models import Expense, ExpenseCategory
+    from huismus.expenses.models import ExpenseCategory
 
     ExpenseCategory.objects.create(name="Software", sort_order=0)
     ExpenseCategory.objects.create(name="Reiskosten", sort_order=1)
@@ -1598,8 +1623,6 @@ def test_a_new_expense_gets_its_receipt_in_one_go(app, tmp_path):
 
     from PIL import Image
 
-    from huismus.expenses.models import Expense
-
     buffer = BytesIO()
     Image.new("RGB", (4, 4), color="red").save(buffer, format="PNG")
     receipt = tmp_path / "bon-hosting.png"
@@ -1618,3 +1641,80 @@ def test_a_new_expense_gets_its_receipt_in_one_go(app, tmp_path):
     expect(app.get_by_text("Uitgave opgeslagen.")).to_be_visible()
     expect(app.locator(".receipt .r-name")).to_have_text("bon-hosting.png")
     assert Expense.objects.get().attachments.count() == 1
+
+
+def test_on_a_phone_the_editor_bar_keeps_the_total_in_sight(app, contact):
+    """#186: on a phone the total stays in the bar at the bottom, above the
+    tab bar, and follows what you type (the server's figure, like #totalen)."""
+    app.set_viewport_size({"width": 360, "height": 740})
+    app.goto(app.base + "/facturen/nieuw/")
+    picker = app.locator("input[role=combobox]")
+    picker.fill("korrel")
+    picker.press("Enter")
+    line = app.locator("[data-formset-forms=lines] .line").first
+    line.locator("textarea[name$=-description]").fill("Uren")
+    line.locator("input[name$=-quantity]").fill("2,5")
+    line.locator("input[name$=-unit_price_cents]").fill("85")
+
+    bar_total = app.locator("#actiebalk-totaal")
+    expect(bar_total).to_be_visible()
+    expect(bar_total).to_contain_text("257,13")
+    bar = app.locator(".actionbar").bounding_box()
+    tabs = app.locator(".tabbar").bounding_box()
+    assert bar["y"] + bar["height"] <= tabs["y"] + 1
+    # A field low on the page that gets the focus (Tab, or the browser)
+    # scrolls into sight above the bar, not under it.
+    footer = app.locator("[name=footer_text]")
+    footer.focus()
+    box = footer.bounding_box()
+    assert box["y"] + box["height"] <= app.locator(".actionbar").bounding_box()["y"] + 1
+    # On a wide screen the totals beside the lines are enough.
+    app.set_viewport_size({"width": 1280, "height": 800})
+    expect(bar_total).to_be_hidden()
+
+
+@pytest.mark.parametrize("anchoring", ["the browser's", "none"])
+def test_on_a_phone_sorteren_opens_its_menu_under_the_button(app, anchoring):
+    """#204: the menu hangs under its button with CSS anchor positioning.
+    Where that is missing (the Mac app on macOS 15) it opened in the bottom
+    left corner of the window, over the sidebar; app.js places it there.
+    On Klanten the button is at the left: lined up on the right, the menu
+    left the screen."""
+    Contact.objects.create(company_name="Anker", city="Zwolle")
+    Contact.objects.create(company_name="Zeilmaker", city="Almere")
+    if anchoring == "none":
+        # A browser without anchor positioning: it skips the @supports block
+        # and says so to app.js.
+        app.add_init_script(
+            "const real = CSS.supports.bind(CSS);"
+            "CSS.supports = (...a) => !String(a[0]).includes('position-area') && real(...a);"
+        )
+
+        def without_anchoring(route):
+            response = route.fetch()
+            css = response.text().replace("@supports (position-area:", "@supports (geen-anker:")
+            route.fulfill(response=response, body=css)
+
+        app.route("**/huismus*.css", without_anchoring)
+    app.set_viewport_size({"width": 390, "height": 800})
+    app.goto(app.base + "/contacten/")
+
+    app.locator("#sorteer-knop").click()
+
+    menu = app.locator("#sorteer-menu")
+    expect(menu).to_be_visible()
+    box, button = menu.bounding_box(), app.locator("#sorteer-knop").bounding_box()
+    assert abs(box["y"] - (button["y"] + button["height"] + 6)) <= 2
+    assert abs(box["x"] - button["x"]) <= 2
+    assert box["x"] + box["width"] <= 390
+    # With room on its left the menu lines up with the button's right edge.
+    app.keyboard.press("Escape")
+    app.set_viewport_size({"width": 700, "height": 800})
+    app.locator("#sorteer-knop").click()
+    expect(menu).to_be_visible()
+    box, button = menu.bounding_box(), app.locator("#sorteer-knop").bounding_box()
+    assert abs(box["y"] - (button["y"] + button["height"] + 6)) <= 2
+    assert abs((box["x"] + box["width"]) - (button["x"] + button["width"])) <= 2
+    assert box["x"] >= 0
+    menu.get_by_role("link", name="Plaats").click()
+    expect(app.locator(".table tbody tr").first).to_contain_text("Zeilmaker")

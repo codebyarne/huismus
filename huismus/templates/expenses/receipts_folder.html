@@ -8,7 +8,7 @@
 {% comment %}Instellingen → Bonnetjesmap (SPEC.md M20, expenses.inbox_views.settings_page). Built like Map voor back-ups: a radio per place, a plain POST.{% endcomment %}
 <div class="page-head">
     <div class="titles">
-        <a class="small" href="{% url 'business:overview' %}">← {% translate "Instellingen" %}</a>
+        <a class="back" href="{% url 'business:overview' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Instellingen" %}</a>
         <h1>{% translate "Bonnetjesmap" %}</h1>
         <p class="lede">{% translate "Bewaar onderweg een foto of pdf van een bonnetje in deze map. Huismus haalt hem vanzelf op en zet hem bij de bonnetjes zonder uitgave." %} <a href="{{ help_url }}">{% translate "Zo werkt het" %} →</a></p>
     </div>

@@ -109,7 +109,7 @@ def test_year_overview_shows_that_years_revenue_against_the_kor_limit(client):
     assert 'id="kor-grens"' in page
     assert "85% van je KOR-grens" in page
     assert "€ 8.500,00 van € 10.000,00" in page
-    assert "progress is-warn" in page
+    assert "progress is-kor is-warn" in page
 
 
 def test_an_earlier_year_says_it_is_measured_with_the_current_limit(client):
@@ -139,7 +139,7 @@ def test_a_year_over_the_limit_shows_a_red_bar(client):
     _issued_invoice("2020-05-01", 1_000_001)
     response = client.get(reverse("reports:year_overview"), {"jaar": "2020"})
     assert response.context["kor_limit"].level == "over"
-    assert "progress is-bad" in response.content.decode()
+    assert "progress is-kor is-bad" in response.content.decode()
 
 
 def test_the_csv_counts_revenue_without_vat(client):
@@ -178,3 +178,45 @@ def test_the_old_year_overview_address_still_arrives(client, old, new):
     response = client.get(old)
     assert response.status_code == 301
     assert response.url == new
+
+
+def test_the_vat_return_under_the_kor_shows_this_years_revenue_per_quarter(client):
+    """With the KOR on there is no return to fill in (#186): the page shows
+    this year's revenue per quarter and the KOR limit, the year overview's
+    figures."""
+    _login(client)
+    _kor_on()
+    year = timezone.localdate().year
+    _issued_invoice(f"{year}-02-01", 298_000)
+    _issued_invoice(f"{year}-03-01", 364_000)
+    _issued_invoice(f"{year - 1}-05-01", 999_999)  # last year: doesn't count
+
+    response = client.get(reverse("reports:vat_return"))
+
+    kor_year = response.context["kor_year"]
+    assert kor_year["limit"].revenue_cents == 662_000
+    # The four quarters add up to the figure in the card.
+    shown = [q["revenue_cents"] for q in kor_year["quarters"] if q["revenue_cents"] is not None]
+    assert sum(shown) == kor_year["limit"].revenue_cents
+    page = response.content.decode().replace("\xa0", " ")
+    assert 'id="kor-omzet"' in page
+    assert f"Omzet in {year}" in page
+    assert "€ 6.620,00" in page
+    assert "van € 10.000,00, je KOR-grens" in page
+    assert 'jan–mrt</th><td class="r amount">€ 6.620,00' in page
+
+
+def test_quarters_still_to_come_show_a_dash(client):
+    _login(client)
+    _kor_on()
+    today = timezone.localdate()
+    quarters = client.get(reverse("reports:vat_return")).context["kor_year"]["quarters"]
+    current = (today.month - 1) // 3
+    assert all(q["revenue_cents"] is None for q in quarters[current + 1 :])
+    assert all(q["revenue_cents"] is not None for q in quarters[: current + 1])
+
+
+def test_the_vat_return_without_the_kor_has_no_kor_revenue(client):
+    _login(client)
+    page = client.get(reverse("reports:vat_return")).content.decode()
+    assert 'id="kor-omzet"' not in page

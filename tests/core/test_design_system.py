@@ -17,6 +17,7 @@ ICONS = ROOT / "huismus" / "templates" / "icons.svg"
 # Variants that only make sense inside the app shell, not on a page of their own.
 NOT_ON_PAGE = {
     "btn-new",  # the sidebar's "Nieuwe factuur", styled by .sidebar
+    "btn-quiet",  # that button where it isn't the page's main action, also by .sidebar
     "flash-body",  # the text inside a .flash or .toast, not a variant of its own
 }
 

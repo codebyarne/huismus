@@ -20,14 +20,21 @@ from . import inbox, reading
 OTHER_FOLDER, DROPBOX, WEBDAV = "other", inbox.DROPBOX, inbox.WEBDAV
 
 
-def _state(status: inbox.Status) -> dict:
-    """What the status part shows, on Bonnetjesmap and above the tray."""
+def _state() -> dict:
+    """What the status part shows, on Bonnetjesmap and above the tray.
+
+    Whether a look or a reading runs is asked first, the status read after.
+    The other way round a look that ended in between left the page with the
+    old status (say, the red line of an earlier failure) and nothing that
+    asks again: it stayed that way until a reload."""
+    fetching, reading_now = inbox.fetching(), reading.is_reading()
+    status = inbox.load()
     on = inbox.is_on(status)
     return {
         "status": status,
         "on": on,
         "place": inbox.place(status) if on else "",
-        "fetching": inbox.fetching(),
+        "fetching": fetching,
         "failure": inbox.failure_sentence(status) if on and status.failed else "",
         "skipped": [
             {"name": item["name"], "reason": inbox.skip_sentence(item["reason"])}
@@ -37,7 +44,7 @@ def _state(status: inbox.Status) -> dict:
         else [],
         "help_url": help.url("bonnetjes"),
         # Huismus reading the receipts (SPEC.md M20, part 3).
-        "reading_now": reading.is_reading(),
+        "reading_now": reading_now,
         "reading_failure": reading.failure_sentence(),
     }
 
@@ -107,7 +114,7 @@ def settings_page(request):
         request,
         "expenses/receipts_folder.html",
         {
-            **_state(status),
+            **_state(),
             "suggestions": [
                 (name, str(path), auto_backups.folder_label(path)) for name, path in suggestions
             ],
@@ -131,7 +138,7 @@ def tray(request):
         request,
         "expenses/tray.html",
         {
-            **_state(inbox.load()),
+            **_state(),
             "receipts": [
                 {
                     "receipt": receipt,

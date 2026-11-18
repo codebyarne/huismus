@@ -18,8 +18,10 @@ Addresses: Dutch at the root, English under /en/.
 
     /                   /en/
     /installeren/       /en/install/
+    /functies/          /en/features/
     /hulp/              /en/help/
     /hulp/<onderwerp>/  /en/help/<topic>/
+    /waarom/            /en/why/
     /meebouwen/         /en/contribute/
     /download/<mac|windows>/  /en/download/<mac|windows>/
 
@@ -36,7 +38,7 @@ from django.template.loader import render_to_string
 from django.utils import translation
 from PIL import Image
 
-from . import help, updates
+from . import help, site_features, updates
 
 DOMAIN = "mijnhuismus.nl"
 REPOSITORY = "https://github.com/codebyarne/huismus"
@@ -56,22 +58,27 @@ MAC_PRIVACY_SETTINGS = "x-apple.systempreferences:com.apple.settings.PrivacySecu
 # Empty: the site counts nothing (besluit 2026-11-03).
 COUNTER_VARIABLE = "HUISMUS_SITE_COUNTER"
 # The pictures in docs/site/, each as <name>.<nl|en>.<light|dark>.webp.
-MEDIA = (
-    "overzicht",
-    "factuur-maken",
-    "offerte-omzetten",
-    "facturen",
-    "offertes",
-    "uitgaven",
-    "jaaroverzicht",
-    "ai",
-    "instellingen",
-    "importeren",
-    "welkom",
-)
+STILLS = ("overzicht",)
+# Only as a phone shows them.
+PHONE_STILLS = ("uitgaven",)
+ANIMATIONS = ("factuur-maken", "importeren")
+# Parts of a screen, shown large (Camera.detail in scripts/site_beelden.py).
+DETAILS = ("kor", "jaar")
+MEDIA = STILLS + PHONE_STILLS + ANIMATIONS + DETAILS
 MEDIA_DIR = Path(settings.BASE_DIR) / "docs" / "site"
+# A still is 2560 px wide, for a sharp screen; a phone gets this width.
+SMALL_WIDTH = 1280
+# The photos of people at work (scripts/site_fotos.py), each in two widths.
+PHOTOS = {
+    "werkplaats": (800, 1600),
+    "keukentafel": (600, 1200),
+    "fotograaf": (360, 720),
+    "hovenier": (360, 720),
+    "schrijver": (360, 720),
+}
 
 _STATIC = Path(settings.BASE_DIR) / "huismus" / "core" / "static" / "core"
+_FONTS = ("inter-latin-wght-normal.woff2", "bricolage-grotesque-latin-opsz-normal.woff2")
 _SITE_CSS = Path(settings.BASE_DIR) / "huismus" / "templates" / "site" / "site.css"
 
 
@@ -90,8 +97,29 @@ def whats_new_url(language: str) -> str:
     return f"https://{DOMAIN}{help_url(language, 'nieuw')}"
 
 
+def features_overview_url(language: str | None) -> str:
+    """The page Functies on the site, for the app's Hulp: everything Huismus
+    can do and what comes later is only there."""
+    language = "en" if (language or "")[:2] == "en" else "nl"
+    return f"https://{DOMAIN}{features_url(language)}"
+
+
 def install_url(language: str) -> str:
     return "/installeren/" if language == "nl" else "/en/install/"
+
+
+def features_url(language: str) -> str:
+    return "/functies/" if language == "nl" else "/en/features/"
+
+
+def switching_url(language: str) -> str:
+    """Overstappen in the menu: the block on the home page, until the page
+    Overstappen exists (huismus-intern/besluiten.md, 2026-11-13)."""
+    return home_url(language) + "#overstappen"
+
+
+def why_url(language: str) -> str:
+    return "/waarom/" if language == "nl" else "/en/why/"
 
 
 def contribute_url(language: str) -> str:
@@ -110,12 +138,74 @@ def download_url(platform: str) -> str:
 
 
 def media_files() -> list[Path]:
+    """Every picture of the app; a still also as the app shows it on a phone
+    (….phone.webp), for a narrow screen."""
     return [
-        MEDIA_DIR / f"{name}.{language}.{scheme}.webp"
+        MEDIA_DIR / f"{name}.{language}.{scheme}{kind}.webp"
         for name in MEDIA
         for language in help.LANGUAGES
         for scheme in ("light", "dark")
+        for kind in (
+            ("", ".phone") if name in STILLS else (".phone",) if name in PHONE_STILLS else ("",)
+        )
     ]
+
+
+# The photos with the app on the laptop: one per language (scripts/site_fotos.py).
+PHOTOS_WITH_SCREEN = ("werkplaats", "keukentafel")
+
+
+def photo_files() -> list[Path]:
+    files = []
+    for name, widths in PHOTOS.items():
+        languages = help.LANGUAGES if name in PHOTOS_WITH_SCREEN else ("",)
+        for language in languages:
+            for width in widths:
+                parts = (name, language, str(width), "webp")
+                files.append(MEDIA_DIR / "fotos" / ".".join(p for p in parts if p))
+    return files
+
+
+def social_image(language: str) -> Path:
+    """The picture a link to the site shows on LinkedIn and in chat apps:
+    1200 × 630, PNG because not every app reads WebP (scripts/site_beelden.py)."""
+    return MEDIA_DIR / f"delen.{language}.png"
+
+
+def _shot_sizes() -> dict[str, tuple[int, int]]:
+    """{name: (width, height)} in CSS pixels of the parts and phone screens
+    (they are made at twice that), so an img reserves the right room."""
+    sizes = {}
+    for name, kind in [(n, "") for n in DETAILS] + [(n, ".phone") for n in PHONE_STILLS]:
+        with Image.open(MEDIA_DIR / f"{name}.nl.light{kind}.webp") as picture:
+            sizes[name] = (picture.width // 2, picture.height // 2)
+    return sizes
+
+
+def _short(text: str, limit: int = 160) -> str:
+    """A summary for a search result: whole sentences that fit, else whole words."""
+    if len(text) <= limit:
+        return text
+    sentences, kept = text.split(". "), ""
+    for sentence in sentences:
+        candidate = f"{kept}{sentence}." if not kept else f"{kept} {sentence}."
+        if len(candidate.rstrip(".") + ".") > limit:
+            break
+        kept = candidate.replace("..", ".")
+    if kept:
+        return kept
+    return text[: limit - 1].rsplit(" ", 1)[0] + "…"
+
+
+def _features() -> dict:
+    now, later = site_features.counts()
+    return {
+        "groups": site_features.FEATURES,
+        "now_count": now,
+        "later_count": later,
+        "maybe": site_features.MAYBE,
+        "never": site_features.NEVER,
+    }
 
 
 def _help_links(language: str) -> dict[str, str]:
@@ -133,6 +223,17 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
                 "nav": "home",
                 "switch_url": home_url(other),
                 "help": _help_links(language),
+                "features": _features(),
+                "shot": _shot_sizes(),
+            },
+        ),
+        features_url(language): (
+            "site/features.html",
+            {
+                "nav": "features",
+                "switch_url": features_url(other),
+                "help": _help_links(language),
+                "features": _features(),
             },
         ),
         install_url(language): (
@@ -156,6 +257,10 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
             )
             for name, platform in PLATFORMS.items()
         },
+        why_url(language): (
+            "site/why.html",
+            {"nav": "why", "switch_url": why_url(other)},
+        ),
         contribute_url(language): (
             "site/contribute.html",
             {"nav": "contribute", "switch_url": contribute_url(other)},
@@ -186,9 +291,30 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
         page = help.render(slug, language, link=lambda s, a: help_url(language, s, a))
         pages[help_url(language, slug)] = (
             "site/help_page.html",
-            {"nav": "help", "switch_url": help_url(other, slug), "page": page},
+            {
+                "nav": "help",
+                "switch_url": help_url(other, slug),
+                "page": page,
+                "summary": _short(help.summary(slug, language)),
+            },
         )
     return pages
+
+
+def _links(language: str) -> dict[str, str]:
+    """The addresses every page of one language links to."""
+    return {
+        "language": language,
+        "mac_url": download_page_url(language, "mac"),
+        "windows_url": download_page_url(language, "windows"),
+        "home_url": home_url(language),
+        "switching_url": switching_url(language),
+        "features_url": features_url(language),
+        "help_index_url": help_url(language),
+        "install_url": install_url(language),
+        "contribute_url": contribute_url(language),
+        "why_url": why_url(language),
+    }
 
 
 def build(out: Path) -> list[str]:
@@ -208,6 +334,7 @@ def build(out: Path) -> list[str]:
         "domain": DOMAIN,
         "mac_privacy_settings": MAC_PRIVACY_SETTINGS,
         "counter": os.environ.get(COUNTER_VARIABLE, "").strip(),
+        "fonts": _FONTS,
     }
     addresses = []
     for language in help.LANGUAGES:
@@ -218,15 +345,10 @@ def build(out: Path) -> list[str]:
                     shared
                     | context
                     | {
-                        "language": language,
                         "address": address,
-                        "mac_url": download_page_url(language, "mac"),
-                        "windows_url": download_page_url(language, "windows"),
-                        "home_url": home_url(language),
-                        "help_index_url": help_url(language),
-                        "install_url": install_url(language),
-                        "contribute_url": contribute_url(language),
-                    },
+                        "other_language": "en" if language == "nl" else "nl",
+                    }
+                    | _links(language),
                 )
                 target = out / address.strip("/") / "index.html"
                 target.parent.mkdir(parents=True, exist_ok=True)
@@ -236,39 +358,65 @@ def build(out: Path) -> list[str]:
         (out / "404.html").write_text(
             render_to_string(
                 "site/404.html",
-                shared
-                | {
-                    "language": "nl",
-                    "address": "/404/",
-                    "mac_url": download_page_url("nl", "mac"),
-                    "windows_url": download_page_url("nl", "windows"),
-                    "home_url": "/",
-                    "help_index_url": "/hulp/",
-                    "install_url": install_url("nl"),
-                    "contribute_url": contribute_url("nl"),
-                },
+                shared | {"address": "/404/", "nav": "404"} | _links("nl"),
             ),
             encoding="utf-8",
         )
-    (out / "beelden").mkdir()
+    (out / "beelden" / "fotos").mkdir(parents=True)
     for path in media_files():
         shutil.copy(path, out / "beelden" / path.name)
+    for name in STILLS:
+        for path in MEDIA_DIR.glob(f"{name}.*.webp"):
+            if not path.stem.endswith(".phone"):
+                _small(path, out / "beelden" / f"{path.stem}.{SMALL_WIDTH}.webp")
+    for name in ANIMATIONS:
+        for path in MEDIA_DIR.glob(f"{name}.*.webp"):
+            _last_frame(path, out / "beelden" / f"{path.stem}.still.webp")
+    for path in photo_files():
+        shutil.copy(path, out / "beelden" / "fotos" / path.name)
     for language in help.LANGUAGES:
-        _social_image(language, out / f"delen.{language}.png")
+        shutil.copy(social_image(language), out / f"delen.{language}.png")
     shutil.copy(_STATIC / "huismus.css", out / "huismus.css")
     shutil.copy(_SITE_CSS, out / "site.css")
+    # huismus.css loads its letters from fonts/, next to itself.
+    shutil.copytree(_STATIC / "fonts", out / "fonts")
     shutil.copy(_STATIC / "favicon.svg", out / "favicon.svg")
     shutil.copy(_STATIC / "icons" / "apple-touch-icon.png", out / "apple-touch-icon.png")
+    _for_search_engines(out, addresses)
     # GitHub Pages: the custom domain, and serve the files as they are (no Jekyll).
     (out / "CNAME").write_text(DOMAIN + "\n", encoding="utf-8")
     (out / ".nojekyll").write_text("", encoding="utf-8")
     return addresses
 
 
-def _social_image(language: str, target: Path) -> None:
-    """The picture a link to the site shows on LinkedIn and in chat apps:
-    the overview, 1200 × 630, PNG because not every app reads WebP."""
-    with Image.open(MEDIA_DIR / f"overzicht.{language}.light.webp") as shot:
-        width = shot.width
-        height = round(width * 630 / 1200)
-        shot.crop((0, 0, width, height)).resize((1200, 630), Image.LANCZOS).save(target)
+def _small(still: Path, target: Path) -> None:
+    with Image.open(still) as picture:
+        height = round(picture.height * SMALL_WIDTH / picture.width)
+        picture.resize((SMALL_WIDTH, height), Image.LANCZOS).save(target, quality=80, method=6)
+
+
+def _last_frame(animation: Path, target: Path) -> None:
+    """With "minder beweging" a visitor gets the end of an animation as a
+    still: the paid invoice, the finished import (WCAG 2.2.2)."""
+    with Image.open(animation) as picture:
+        picture.seek(picture.n_frames - 1)
+        picture.convert("RGB").save(target, quality=80, method=6)
+
+
+def _for_search_engines(out: Path, addresses: list[str]) -> None:
+    """robots.txt and a sitemap. The download pages only start a download, so
+    they stay out (they also say noindex)."""
+    downloads = {download_page_url(lang, name) for lang in help.LANGUAGES for name in PLATFORMS}
+    urls = "".join(
+        f"<url><loc>https://{DOMAIN}{address}</loc></url>\n"
+        for address in addresses
+        if address not in downloads
+    )
+    (out / "sitemap.xml").write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        f'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n',
+        encoding="utf-8",
+    )
+    (out / "robots.txt").write_text(
+        f"User-agent: *\nAllow: /\n\nSitemap: https://{DOMAIN}/sitemap.xml\n", encoding="utf-8"
+    )

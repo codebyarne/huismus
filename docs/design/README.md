@@ -15,7 +15,7 @@
    privé; de link staat in `huismus-intern/werkwijze.md`. Een kopie van 1, gemaakt met
    `scripts/design_system_export.py`, om in Claude nieuwe designs mee te maken.
    Het noemt zelf uit welke commit het gebouwd is (README daar, en
-   `lastChange`). Laatst bijgewerkt: 2026-11-05, uit commit `1f149f9`.
+   `lastChange`). Laatst bijgewerkt: 2026-11-18, uit commit `1793a7b` (tak `huisstijl`: richting Helder, logo Tegel, meldingen, geen geel).
 
 Bekijken: start vanuit de root van de repo `python3 -m http.server 8000` en open
 http://localhost:8000/docs/design/componenten.html (de pagina laadt
@@ -24,6 +24,17 @@ http://localhost:8000/docs/design/componenten.html (de pagina laadt
 Archief: de oplevering uit Claude Design van september 2026 staat in
 `archief/2026-09-claude-design/`. `ronde-3/` bevat de gekeurde designs van
 ronde 3 (met een eigen schets-CSS, `hm.css`). Beide zijn naslag, geen bron.
+
+Het logo "Tegel" staat in `icons/`: `tegel.svg` (licht), `tegel-donker.svg`, `tegel-klein.svg`
+(vereenvoudigd, voor een tabblad) en `mus.svg` (de losse mus van een lege toestand). In de app
+komt het uit `icons.svg#mus`; `scripts/make_app_icons.py` maakt er de app-iconen van. De letters
+(Inter en Bricolage Grotesque, SIL OFL 1.1) staan in `huismus/core/static/core/fonts/`.
+
+Ronde 7 is het concept voor de site in de nieuwe huisstijl: `ronde-7/site-prompt.md`
+(de prompt voor Claude Design) en `ronde-7/fotos.md` (de foto's van mensen).
+Ronde 8 is datzelfde concept in "Helder", zoals het gebouwd is: `ronde-8/README.md`.
+`icons/logo.svg` en `logo-donker.svg` zijn het logo met het woord "Huismus" als één
+tekening (`scripts/make_wordmark.py`).
 
 ## Een nieuw design maken
 
@@ -48,10 +59,11 @@ ronde 3 (met een eigen schets-CSS, `hm.css`). Beide zijn naslag, geen bron.
 
 ## Domeinregels in de UI
 
-1. **Kleur alleen waar je iets moet doen; de rest is rustig** (besluit
-   2026-10-30). Een gekleurd vlak alleen voor wat aandacht vraagt (Vervallen,
-   Onbetaald, over de KOR-grens). Afgerond is rustig: alleen een stip of slotje
-   in gedempte tekst.
+1. **Kleur alleen waar je iets moet doen; de rest is rustig** (besluiten
+   2026-10-30 en 2026-11-15). Een gekleurd vlak alleen voor wat aandacht vraagt
+   (te laat, over de KOR-grens). Afgerond is rustig: alleen een vinkje of slotje
+   in gedempte tekst. Onbetaald en verstuurd zijn gewone tekst, een concept een
+   gestippeld randje.
 2. **Uitgegeven is definitief**: `.paper-final`, `.paper-stamp`, en in lijsten
    "Definitief" met een slotje in gedempte tekst (`.pill-final`, geen vlak).
    Geen invoervelden; corrigeren alleen via een creditnota.
@@ -59,17 +71,20 @@ ronde 3 (met een eigen schets-CSS, `hm.css`). Beide zijn naslag, geen bron.
    wordt toegekend.
 4. **Concepten hebben geen nummer**: `<span class="draft-no">Concept</span>`
    of "bij uitgeven".
-5. **Betaalstatus wordt afgeleid**: `.pill-unpaid` en `.pill-partial` (amber
-   vlak), `.pill-paid` (groene stip, geen vlak), `.pill-credited`; voorbij de
-   vervaldatum `.pill-overdue` ("Vervallen", rood vlak, het enige wat opvalt).
+5. **Betaalstatus wordt afgeleid**: `.pill-unpaid` (wit met een randje, open
+   stip), `.pill-partial` (hetzelfde randje, half gevulde stip), `.pill-paid` (petrol vlak met een
+   vinkje), `.pill-credited`; voorbij de vervaldatum `.pill-overdue` ("Te laat",
+   warm rood vlak). Offertes: `.pill-quote-sent` (wit met een randje),
+   `.pill-quote-accepted` (petrol), `.pill-quote-declined` (rood),
+   `.pill-quote-expired` (grijs).
 6. **Een geïmporteerd document** krijgt `.pill-import` en de originele pdf is
    primair.
 7. **De import is standaard een proefdraai.** Het rapport stelt gerust of wijst
    precies aan wat afwijkt.
-8. **Meldingen op het overzicht** zijn rustige kaarten (`.hint-banner`): kleur
-   alleen in de streep, het icoon en de link. Rood (`.is-bad`) boven de
-   KOR-grens of als iets mislukt, amber (`.is-warn`) om op te letten, blauw
-   (`.is-info`) voor informatie, abrikoos (geen klasse) voor een herinnering.
+8. **Meldingen** (`.hint-banner`) zijn smalle regels in één neutrale tint; alleen
+   het icoon zegt de soort: een gevuld rondje met een uitroepteken (`.is-bad`), een
+   driehoek (`.is-warn`), petrol (`.is-info`) voor nieuws, grijs voor de rest. De
+   link aan het eind is petrol. Geen geel in de app.
 9. **KOR**: de hint `.kor-note` in de editor; de tekst zelf, die de gebruiker
    in Instellingen zet, onder elke factuur.
 10. **Totalen komen van de server**, elk formulier werkt zonder JavaScript.

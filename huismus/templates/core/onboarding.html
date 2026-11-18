@@ -14,7 +14,7 @@
 </div>
 <ol class="steps" style="margin-bottom:var(--s-6)">
     {% for item in steps %}
-    <li class="step {% if forloop.counter == step_number %}is-current{% elif forloop.counter < step_number %}is-done{% endif %}"{% if forloop.counter == step_number %} aria-current="step"{% endif %}><span class="dot">{% if forloop.counter < step_number %}<svg class="i" aria-hidden="true"><use href="#check"></use></svg>{% else %}{{ forloop.counter }}{% endif %}</span>{{ item.title }}</li>
+    <li class="step {% if forloop.counter == step_number %}is-current{% elif forloop.counter < step_number %}is-done{% endif %}"{% if forloop.counter == step_number %} aria-current="step"{% endif %}><span class="dot">{% if forloop.counter < step_number %}<svg class="i" aria-hidden="true"><use href="#check"></use></svg>{% else %}{{ forloop.counter }}{% endif %}</span>{{ item.label }}</li>
     {% endfor %}
 </ol>
 

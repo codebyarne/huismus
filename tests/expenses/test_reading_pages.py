@@ -51,7 +51,7 @@ def _card(client):
 def test_the_card_comes_right_after_bonnetjesmap(client_in):
     page = client_in.get("/instellingen/").content.decode()
     assert page.index("/instellingen/bonnetjesmap/") < page.index("/instellingen/bonnetjes-lezen/")
-    assert "Nog geen dienst gekozen" in _card(client_in)
+    assert "Nog geen AI-dienst met API-sleutel" in _card(client_in)
 
 
 def test_the_card_says_it_is_where_your_own_ai_key_goes(client_in):
@@ -107,7 +107,10 @@ def test_the_tray_is_red_while_the_service_fails(client_in, service):
     reading.read_waiting()
     page = client_in.get("/uitgaven/bonnetjes/").content.decode()
     assert 'id="lezen-mislukt"' in page
-    assert "Huismus kon je bonnetjes niet lezen. 127.0.0.1 weigert je sleutel." in page
+    assert (
+        "<strong>Huismus kon je bonnetjes niet lezen.</strong>"
+        " 127.0.0.1 weigert je sleutel." in page
+    )
     assert "Huismus leest dit bonnetje…" not in page
     page = client_in.get("/instellingen/bonnetjes-lezen/").content.decode()
     assert 'id="lezen-mislukt"' in page
