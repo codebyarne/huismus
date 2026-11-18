@@ -124,7 +124,7 @@ def _quote_item(quote, hint, today) -> TodoItem:
     parts = [contact_name(quote), money(quote.total_cents)]
     # hint: documents.listing.expiry_hint, ("soon", days left) or None.
     if hint:
-        days_left = hint[1]
+        _soon, days_left = hint
         if days_left == 0:
             parts.append(_("verloopt vandaag"))
         else:
@@ -162,7 +162,9 @@ def _draft_item(draft) -> TodoItem:
 
 
 def build_todo(*, overdue, waiting_quotes, drafts, tray_count, to_check_count, today) -> Todo:
-    """`overdue`: overdue invoices, the longest overdue first.
+    """`overdue`: overdue invoices, the one that fell due last first: the
+    order of core.dashboard.outstanding_invoices, so years-old open
+    invoices don't hide last week's (huismus-intern/besluiten.md, 2026-11-18).
     `waiting_quotes`: (quote, expiry hint) pairs. `drafts`: draft invoices."""
     overdue, waiting_quotes, drafts = list(overdue), list(waiting_quotes), list(drafts)
     items = [_overdue_item(invoice) for invoice in overdue[:MAX_PER_KIND]]
