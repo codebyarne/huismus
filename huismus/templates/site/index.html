@@ -67,13 +67,14 @@
 
 <section class="wrap" id="overstappen" aria-labelledby="overstappen-kop">
     <div class="band">
-        <div class="halves">
-            <div class="band-text">
-                <p class="kicker">{% translate "Overstappen" %}</p>
-                <h2 id="overstappen-kop">{% translate "Neem al je jaren mee" %}</h2>
-                <p class="lede">{% translate "Je oude administratie hoeft niet achter te blijven. Huismus neemt je klanten, facturen, offertes en uitgaven uit Moneybird één op één over, met de pdf’s en de bonnetjes. Je factuurnummers lopen gewoon door." %}</p>
-                <a class="more" href="{{ help.moneybird }}">{% translate "Zo stap je over" %} <span aria-hidden="true">→</span></a>
-                <ol class="moves">
+        <div class="band-text band-intro">
+            <p class="kicker">{% translate "Overstappen" %}</p>
+            <h2 id="overstappen-kop">{% translate "Neem al je jaren mee" %}</h2>
+            <p class="lede">{% translate "Je oude administratie hoeft niet achter te blijven. Huismus neemt je klanten, facturen, offertes en uitgaven uit Moneybird één op één over, met de pdf’s en de bonnetjes. Je factuurnummers lopen gewoon door." %}</p>
+            <a class="more" href="{{ help.moneybird }}">{% translate "Zo stap je over" %} <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="halves band-steps">
+            <ol class="moves">
                     <li>
                         <span class="step-n" aria-hidden="true">1</span>
                         <div><h3>{% translate "Exporteer alles" %}</h3>
@@ -90,7 +91,6 @@
                         <p>{% translate "Daarna importeer je, en Huismus zet alles erin. Je oude jaren staan dan op je eigen computer, zonder abonnement." %}</p></div>
                     </li>
                 </ol>
-            </div>
             <div class="band-shot">
                 {% translate "Animatie: een export uit Moneybird kiezen, de proefdraai bekijken en importeren." as alt %}
                 {% include "site/_beeld.html" with name="importeren" alt=alt %}
