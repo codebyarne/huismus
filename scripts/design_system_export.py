@@ -349,10 +349,17 @@ def standalone_svg(name, symbol):
     body = re.sub(r"^<symbol[^>]*>|</symbol>$", "", symbol)
     attrs = re.search(r"<symbol([^>]*)>", symbol).group(1).replace(f' id="{name}"', "")
     attrs = attrs.replace('stroke="currentColor"', f'stroke="{_light(ICON_INK_TOKEN)}"')
-    body = re.sub(r"var\(--([\w-]+)\)", lambda m: _light(m.group(1)), body)
+
+    def fill_in(match):
+        token = match.group(1)
+        if token not in _root_tokens():
+            sys.exit(f"icons.svg#{name} uses --{token}, which is no token of huismus.css.")
+        return _light(token)
+
+    body = re.sub(r"var\(--([\w-]+)\)", fill_in, body)
     svg = f'<svg xmlns="http://www.w3.org/2000/svg"{attrs}>{body}</svg>\n'
     if "var(" in svg or "currentColor" in svg:
-        sys.exit(f"icons.svg#{name} uses a colour that is no token of huismus.css.")
+        sys.exit(f"icons.svg#{name} uses a colour this script can't fill in.")
     return svg
 
 
