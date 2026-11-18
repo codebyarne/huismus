@@ -826,7 +826,7 @@ input[type="search"]::-webkit-search-cancel-button {
 /* A container of its own: the amount's size (cqi) follows the block's width, wherever it stands. */
 .kpi-hero { container-type: inline-size; background: var(--hero); color: var(--hero-text); border-color: transparent; border-radius: var(--r-xl); padding: var(--s-8) var(--s-8) var(--s-6); gap: var(--s-2); justify-content: center; }
 .kpi-hero .kpi-label, .kpi-hero .kpi-sub, .kpi-hero .muted { color: var(--hero-muted); }
-.kpi-hero .kpi-value { font-size: clamp(2.25rem, 5cqi + 1rem, 4rem); font-weight: var(--fw-semibold); letter-spacing: -0.03em; line-height: 1.05; }
+.kpi-hero .kpi-value { font-size: clamp(1.75rem, 5cqi + 1rem, 4rem); font-weight: var(--fw-semibold); letter-spacing: -0.03em; line-height: 1.05; }
 .kpi-hero .progress { background: var(--hero-track); height: 10px; margin-top: var(--s-3); }
 .kpi-hero .progress > span, .kpi-hero .progress.is-kor > span { background: var(--hero-bar); }
 .kpi-hero .progress.is-warn > span { background: var(--accent); }
