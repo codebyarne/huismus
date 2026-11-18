@@ -592,7 +592,8 @@ ACTIONS_JS = """
     // One line: a notice's link stands beside its text on a wide screen and runs on in it
     // on a phone: a line break in one and a space in the other.
     // textContent, not innerText: a tile that hides a line on a phone is still the same action.
-    const name = (el.getAttribute("aria-label") || el.textContent || "").replace(/\s+/g, " ").trim();
+    const text = el.getAttribute("aria-label") || el.textContent || "";
+    const name = text.replace(/\s+/g, " ").trim();
     const where = el.getAttribute("href") || el.getAttribute("formaction") || "";
     out.push({
       key: `${name} ${where}`.trim(), visible: visible(el),
