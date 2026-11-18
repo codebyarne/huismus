@@ -46,8 +46,19 @@ def _read(out, address):
     return page
 
 
+@pytest.fixture(scope="module", autouse=True)
+def _not_yet_past():
+    """build_site refuses a month of Komt eraan that is over (a release has to
+    update site_features.py). The tests must not turn red on 1 January for
+    that, so they build as if no month were past."""
+    from unittest import mock
+
+    with mock.patch.object(site.site_features, "months_in_the_past", return_value=[]):
+        yield
+
+
 @pytest.fixture(scope="module")
-def out(tmp_path_factory):
+def out(tmp_path_factory, _not_yet_past):
     out = tmp_path_factory.mktemp("site")
     call_command("build_site", str(out))
     return out
@@ -342,6 +353,9 @@ def test_a_month_in_the_past_stops_the_build(tmp_path, monkeypatch):
     from huismus.core import site_features
 
     monkeypatch.setattr(site_features, "COMING", ((date(2020, 1, 1), ()),))
+    monkeypatch.setattr(
+        site_features, "months_in_the_past", site_features.__dict__["_months_in_the_past"]
+    )
     with pytest.raises(CommandError, match="2020-01"):
         call_command("build_site", str(tmp_path / "site"))
 
@@ -351,3 +365,20 @@ def test_every_picture_that_comes_with_the_site_is_on_a_page(out):
     pages = " ".join(path.read_text() for path in out.rglob("index.html"))
     for path in (out / "beelden").rglob("*.webp"):
         assert f"/beelden/{path.relative_to(out / 'beelden')}" in pages, path.name
+
+
+def test_on_the_home_page_each_jump_in_the_menu_has_its_own_address(out):
+    """A popover stays open on a jump within the same page, and the site has no
+    JS: on the home page each menu link to a block is a navigation of its own,
+    so choosing one closes the menu, also after the other."""
+    page = _read(out, "/")
+    jumps = [link for link in page.links if link.startswith("/?")]
+    assert len(jumps) == len(set(jumps)) == 2, jumps
+
+
+def test_a_help_page_is_described_in_whole_words():
+    assert site._short("Kort.") == "Kort."
+    text = "Eerste zin is kort. " + "Tweede zin is veel te lang " * 10 + "."
+    assert site._short(text) == "Eerste zin is kort."
+    assert site._short("woord " * 60).endswith("woord…")
+    assert len(site._short("woord " * 60)) <= 160

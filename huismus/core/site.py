@@ -168,6 +168,31 @@ def social_image(language: str) -> Path:
     return MEDIA_DIR / f"delen.{language}.png"
 
 
+def _shot_sizes() -> dict[str, tuple[int, int]]:
+    """{name: (width, height)} in CSS pixels of the parts and phone screens
+    (they are made at twice that), so an img reserves the right room."""
+    sizes = {}
+    for name, kind in [(n, "") for n in DETAILS] + [(n, ".phone") for n in PHONE_STILLS]:
+        with Image.open(MEDIA_DIR / f"{name}.nl.light{kind}.webp") as picture:
+            sizes[name] = (picture.width // 2, picture.height // 2)
+    return sizes
+
+
+def _short(text: str, limit: int = 160) -> str:
+    """A summary for a search result: whole sentences that fit, else whole words."""
+    if len(text) <= limit:
+        return text
+    sentences, kept = text.split(". "), ""
+    for sentence in sentences:
+        candidate = f"{kept}{sentence}." if not kept else f"{kept} {sentence}."
+        if len(candidate.rstrip(".") + ".") > limit:
+            break
+        kept = candidate.replace("..", ".")
+    if kept:
+        return kept
+    return text[: limit - 1].rsplit(" ", 1)[0] + "…"
+
+
 def _features() -> dict:
     next_up = None
     if site_features.COMING:
@@ -201,6 +226,7 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
                 "switch_url": home_url(other),
                 "help": _help_links(language),
                 "features": _features(),
+                "shot": _shot_sizes(),
             },
         ),
         features_url(language): (
@@ -267,7 +293,7 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
                 "nav": "help",
                 "switch_url": help_url(other, slug),
                 "page": page,
-                "summary": help.summary(slug, language),
+                "summary": _short(help.summary(slug, language)),
             },
         )
     return pages

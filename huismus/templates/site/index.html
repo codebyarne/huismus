@@ -153,7 +153,7 @@
                 </div>
                 <div class="bento-shot">
                     {% translate "Uitgaven op een telefoon: een lijst met per uitgave de leverancier, de datum en het bedrag." as alt %}
-                    {% include "site/_detail.html" with name="uitgaven" kind=".phone" alt=alt width=390 height=760 %}
+                    {% include "site/_detail.html" with name="uitgaven" kind=".phone" alt=alt width=shot.uitgaven.0 height=shot.uitgaven.1 %}
                 </div>
             </article>
             <article class="bento-item">
@@ -164,7 +164,7 @@
                 </div>
                 <div class="bento-shot">
                     {% translate "De KOR-grens: de omzet van dit jaar tegenover de grens, en daaronder de omzet en de kosten per kwartaal." as alt %}
-                    {% include "site/_detail.html" with name="kor" alt=alt width=1040 height=620 %}
+                    {% include "site/_detail.html" with name="kor" alt=alt width=shot.kor.0 height=shot.kor.1 %}
                 </div>
             </article>
             <article class="bento-item bento-wide">
@@ -175,7 +175,7 @@
                 </div>
                 <div class="bento-shot">
                     {% translate "Het jaaroverzicht: de omzet, de kosten en de winst van dit jaar, met de knoppen CSV downloaden en Exporteren." as alt %}
-                    {% include "site/_detail.html" with name="jaar" alt=alt width=1040 height=300 %}
+                    {% include "site/_detail.html" with name="jaar" alt=alt width=shot.jaar.0 height=shot.jaar.1 %}
                 </div>
             </article>
         </div>

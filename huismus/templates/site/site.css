@@ -37,7 +37,7 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
   .site-top { background: light-dark(rgb(241 245 244 / .82), rgb(6 20 21 / .82)); backdrop-filter: saturate(1.4) blur(12px); -webkit-backdrop-filter: saturate(1.4) blur(12px); }
 }
 .site-head { display: flex; align-items: center; gap: var(--s-2) var(--s-4); min-height: var(--head-h); }
-.site-logo { display: inline-flex; flex: none; color: var(--text); border-radius: 10px; }
+.site-logo { display: inline-flex; align-items: center; min-height: 44px; flex: none; color: var(--text); border-radius: 10px; }
 .site-logo:hover { color: var(--text); }
 .site-logo .logo { display: block; width: auto; height: 36px; }
 /* Het menu is een popover (voor de telefoon). Op een breed scherm staat het gewoon in de rij. */
@@ -295,6 +295,7 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .site-main .help-text { gap: var(--s-4); }
 .site-main .help-text h2 { margin-top: var(--s-8); font-size: 1.5rem; }
 .site-main .help-text h2:first-child { margin-top: 0; }
+.site-main .help-text pre code { white-space: pre-wrap; overflow-wrap: anywhere; }
 .site-main .help-text pre { white-space: pre-wrap; overflow-wrap: anywhere; padding: var(--s-4); border-radius: var(--r-md); background: var(--surface-2); font-size: var(--fs-sm); }
 .site-main .flash .small { font-size: var(--fs-md); }
 .site-main .card h2 { font-family: var(--font-display); font-size: 1.375rem; }
@@ -342,7 +343,7 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
   .site-logo .logo { height: 32px; }
   .nav-toggle, .lang-switch { min-height: 44px; }
   .nav-toggle { padding: 0 12px; }
-  .lang-switch { padding: 0 8px; }
+  .lang-switch { min-width: 44px; justify-content: center; padding: 0 8px; }
   .lang-switch .i { display: none; }
   .lang-menu a { min-height: 44px; }
   .more { min-height: 44px; }
