@@ -22,8 +22,8 @@ Bovenaan de offerte zie je in welke stap hij staat. Heb je antwoord, leg het
 dan vast met **Accepteren** of **Afwijzen**. Weet je al dat er geen
 antwoord meer komt, dan kies je **Markeer als verlopen**.
 
-Op het overzicht staat bij **Wachten op antwoord** welke offertes nog open
-staan. Is de geldigheid van een verzonden offerte voorbij, dan staat hij
+Op het overzicht staat onder **Te doen** welke offertes nog op antwoord
+wachten, en hoelang al. Is de geldigheid van een verzonden offerte voorbij, dan staat hij
 vanzelf als **Verlopen** bij **Afgewezen of verlopen**, en niet meer op het
 overzicht. Zegt de klant daarna toch nog ja of nee, dan leg je dat op de
 offerte vast met **Accepteren** of **Afwijzen**.

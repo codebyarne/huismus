@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-18 15:36+0100\n"
+"POT-Creation-Date: 2026-11-18 17:25+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1499,6 +1499,114 @@ msgstr "today %(time)s"
 msgid "gisteren %(time)s"
 msgstr "yesterday %(time)s"
 
+msgid "Bekijken"
+msgstr "View"
+
+#, python-format
+msgid "Factuur %(number)s is te laat sinds %(date)s"
+msgstr "Invoice %(number)s is overdue since %(date)s"
+
+#, python-format
+msgid "Factuur %(number)s is %(days)s dag te laat"
+msgid_plural "Factuur %(number)s is %(days)s dagen te laat"
+msgstr[0] "Invoice %(number)s is %(days)s day overdue"
+msgstr[1] "Invoice %(number)s is %(days)s days overdue"
+
+#, python-format
+msgid "laatste herinnering: %(date)s"
+msgstr "last reminder: %(date)s"
+
+#
+msgid "Herinnering sturen"
+msgstr "Send reminder"
+
+#, python-format
+msgid "Offerte %(number)s wacht sinds %(date)s op antwoord"
+msgstr "Quote %(number)s has been waiting for an answer since %(date)s"
+
+#, python-format
+msgid "Offerte %(number)s wacht %(days)s dag op antwoord"
+msgid_plural "Offerte %(number)s wacht %(days)s dagen op antwoord"
+msgstr[0] "Quote %(number)s has been waiting %(days)s day for an answer"
+msgstr[1] "Quote %(number)s has been waiting %(days)s days for an answer"
+
+#, python-format
+msgid "Offerte %(number)s wacht op antwoord"
+msgstr "Quote %(number)s is waiting for an answer"
+
+msgid "verloopt vandaag"
+msgstr "expires today"
+
+#, python-format
+msgid "verloopt over %(days)s dag"
+msgid_plural "verloopt over %(days)s dagen"
+msgstr[0] "expires in %(days)s day"
+msgstr[1] "expires in %(days)s days"
+
+#, python-format
+msgid "Je concept voor %(customer)s staat klaar"
+msgstr "Your draft for %(customer)s is ready"
+
+msgid "Je concept heeft nog geen klant"
+msgstr "Your draft has no customer yet"
+
+msgid "nog niet verstuurd"
+msgstr "not sent yet"
+
+msgid "Afmaken"
+msgstr "Finish"
+
+#, python-format
+msgid "Nog %(count)s factuur te laat"
+msgid_plural "Nog %(count)s facturen te laat"
+msgstr[0] "%(count)s more invoice overdue"
+msgstr[1] "%(count)s more invoices overdue"
+
+msgid "Ze staan bij Facturen onder Openstaand."
+msgstr "They are in Invoices under Outstanding."
+
+#, python-format
+msgid "Nog %(count)s offerte wacht op antwoord"
+msgid_plural "Nog %(count)s offertes wachten op antwoord"
+msgstr[0] "%(count)s more quote is waiting for an answer"
+msgstr[1] "%(count)s more quotes are waiting for an answer"
+
+msgid "Ze staan bij Offertes."
+msgstr "They are in Quotes."
+
+#, python-format
+msgid "Nog %(count)s concept"
+msgid_plural "Nog %(count)s concepten"
+msgstr[0] "%(count)s more draft"
+msgstr[1] "%(count)s more drafts"
+
+msgid "Ze staan bij Facturen onder Concepten."
+msgstr "They are in Invoices under Drafts."
+
+#, python-format
+msgid "%(count)s bonnetje zonder uitgave"
+msgid_plural "%(count)s bonnetjes zonder uitgave"
+msgstr[0] "%(count)s receipt without an expense"
+msgstr[1] "%(count)s receipts without an expense"
+
+msgid "Maak er een uitgave van."
+msgstr "Turn it into an expense."
+
+msgid "Verwerken"
+msgstr "Process"
+
+#, python-format
+msgid "%(count)s uitgave om na te kijken"
+msgid_plural "%(count)s uitgaven om na te kijken"
+msgstr[0] "%(count)s expense to check"
+msgstr[1] "%(count)s expenses to check"
+
+msgid "Kijk of het bedrag en de datum kloppen."
+msgstr "Check that the amount and the date are right."
+
+msgid "Nakijken"
+msgstr "To check"
+
 msgid "Huismus kon de nieuwe versie niet controleren. Er is niets veranderd."
 msgstr "Huismus couldn't verify the new version. Nothing has changed."
 
@@ -1547,15 +1655,6 @@ msgstr "A KvK number is 8 digits."
 
 msgid "Een Nederlandse postcode ziet er zo uit: “1234 AB”."
 msgstr "A Dutch postal code looks like “1234 AB”."
-
-msgid "Goedemorgen"
-msgstr "Good morning"
-
-msgid "Goedemiddag"
-msgstr "Good afternoon"
-
-msgid "Goedenavond"
-msgstr "Good evening"
 
 #, python-format
 msgid ""
@@ -3927,12 +4026,6 @@ msgstr "Set up backups"
 msgid "Naar Back-ups"
 msgstr "To Backups"
 
-msgid "Verder werken"
-msgstr "Continue"
-
-msgid "zonder klant"
-msgstr "without customer"
-
 msgid "Hoe gebruik je Huismus?"
 msgstr "How do you use Huismus?"
 
@@ -3982,14 +4075,9 @@ msgid_plural "%(counter)s velden hebben aandacht nodig:"
 msgstr[0] "One field needs attention:"
 msgstr[1] "%(counter)s fields need attention:"
 
-msgid "Verwerken"
-msgstr "Process"
-
-msgid "Bonnetjes zonder uitgave"
-msgstr "Receipts without an expense"
-
-msgid "Nakijken"
-msgstr "To check"
+#, python-format
+msgid "Omzet per maand in %(year)s"
+msgstr "Revenue per month in %(year)s"
 
 msgid "zoeken"
 msgstr "search"
@@ -3997,28 +4085,11 @@ msgstr "search"
 msgid "Sluiten"
 msgstr "Close"
 
-msgid "verloopt vandaag"
-msgstr "expires today"
+msgid "Te doen"
+msgstr "To do"
 
-#, python-format
-msgid "verloopt over %(days)s dag"
-msgid_plural "verloopt over %(days)s dagen"
-msgstr[0] "expires in %(days)s day"
-msgstr[1] "expires in %(days)s days"
-
-#, python-format
-msgid "geldig tot %(date)s"
-msgstr "valid until %(date)s"
-
-msgid ""
-"Verzonden offertes zonder antwoord. Na de geldigheidsdatum staan ze bij "
-"Offertes onder Afgewezen of verlopen."
-msgstr ""
-"Sent quotes without a reply. After the expiry date you find them in Quotes "
-"under Declined or expired."
-
-msgid "Geen offertes die op antwoord wachten."
-msgstr "No quotes waiting for a reply."
+msgid "Er wacht niets op je."
+msgstr "Nothing is waiting for you."
 
 msgid "Uitleg bij de versie van Huismus die je nu gebruikt."
 msgstr "Explanations for the version of Huismus you're using now."
@@ -4112,20 +4183,26 @@ msgstr ""
 msgid "Huismus %(version)s is gevonden en wordt gedownload."
 msgstr "Found Huismus %(version)s. It's being downloaded."
 
-msgid "Bekijken"
-msgstr "View"
+msgid "Dit jaar"
+msgstr "This year"
 
 #, python-format
-msgid "Omzet %(year)s"
-msgstr "Revenue %(year)s"
+msgid "Omzet in %(year)s"
+msgstr "Revenue in %(year)s"
+
+msgid "Nog te ontvangen"
+msgstr "Still to come in"
+
+msgid "Niets openstaand"
+msgstr "Nothing outstanding"
 
 #, python-format
-msgid "Kosten zonder btw %(costs)s"
-msgstr "Costs excluding VAT %(costs)s"
+msgid "%(count)s te laat"
+msgstr "%(count)s overdue"
 
 #, python-format
-msgid "Kosten %(costs)s"
-msgstr "Costs %(costs)s"
+msgid "%(revenue)s van %(limit)s"
+msgstr "%(revenue)s of %(limit)s"
 
 #, python-format
 msgid "%(percent)s%% van je KOR-grens"
@@ -4136,14 +4213,12 @@ msgid "Nog %(remaining)s tot de grens"
 msgstr "%(remaining)s left until the limit"
 
 #, python-format
-msgid "waarvan %(count)s te laat"
-msgid_plural "waarvan %(count)s te laat"
-msgstr[0] "of which %(count)s overdue"
-msgstr[1] "of which %(count)s overdue"
-
-#, python-format
 msgid "Winst %(year)s"
 msgstr "Profit %(year)s"
+
+#, python-format
+msgid "Kosten zonder btw %(costs)s"
+msgstr "Costs excluding VAT %(costs)s"
 
 msgid "Laatste facturen"
 msgstr "Latest invoices"
@@ -4153,6 +4228,9 @@ msgstr "All invoices"
 
 msgid "Nummer"
 msgstr "Number"
+
+msgid "Datum"
+msgstr "Date"
 
 msgid "Status"
 msgstr "Status"
@@ -4560,10 +4638,6 @@ msgstr "Imported"
 msgid "uitgegeven op %(date)s"
 msgstr "issued on %(date)s"
 
-#
-msgid "Herinnering sturen"
-msgstr "Send reminder"
-
 msgid "Creditnota maken…"
 msgstr "Create credit note…"
 
@@ -4827,9 +4901,6 @@ msgstr "Quote number"
 
 msgid "bij verzenden"
 msgstr "when sent"
-
-msgid "Datum"
-msgstr "Date"
 
 msgid "Geldig tot"
 msgstr "Valid until"
@@ -5370,6 +5441,9 @@ msgstr "Want to use Dropbox or WebDAV? Set it up at Backups first."
 msgid "Huismus haalt dan niets meer op. De bonnetjes die er al zijn, blijven."
 msgstr "Huismus stops picking up receipts. Receipts it already has stay."
 
+msgid "Bonnetjes zonder uitgave"
+msgstr "Receipts without an expense"
+
 #, python-format
 msgid "Uit de map %(place)s."
 msgstr "From the folder %(place)s."
@@ -5862,10 +5936,6 @@ msgid "KOR-instellingen"
 msgstr "KOR settings"
 
 #, python-format
-msgid "Omzet in %(year)s"
-msgstr "Revenue in %(year)s"
-
-#, python-format
 msgid "van %(limit)s, je KOR-grens"
 msgstr "of %(limit)s, your KOR limit"
 
@@ -5957,10 +6027,6 @@ msgstr "Profit"
 
 msgid "omzet min kosten"
 msgstr "revenue minus costs"
-
-#, python-format
-msgid "%(revenue)s van %(limit)s"
-msgstr "%(revenue)s of %(limit)s"
 
 #, python-format
 msgid "Gemeten met je huidige KOR-grens van %(limit)s."
@@ -6803,26 +6869,54 @@ msgstr ""
 "If you have a Raspberry Pi, a NAS, your own server or a VPS, you can also "
 "run Huismus in Docker. That is for people who are handy with that."
 
+#~ msgid "Goedemorgen"
+#~ msgstr "Good morning"
+
+#~ msgid "Goedemiddag"
+#~ msgstr "Good afternoon"
+
+#~ msgid "Goedenavond"
+#~ msgstr "Good evening"
+
+#~ msgid "Verder werken"
+#~ msgstr "Continue"
+
+#~ msgid "zonder klant"
+#~ msgstr "without customer"
+
+#, python-format
+#~ msgid "geldig tot %(date)s"
+#~ msgstr "valid until %(date)s"
+
+#~ msgid ""
+#~ "Verzonden offertes zonder antwoord. Na de geldigheidsdatum staan ze bij "
+#~ "Offertes onder Afgewezen of verlopen."
+#~ msgstr ""
+#~ "Sent quotes without a reply. After the expiry date you find them in "
+#~ "Quotes under Declined or expired."
+
+#~ msgid "Geen offertes die op antwoord wachten."
+#~ msgstr "No quotes waiting for a reply."
+
+#, python-format
+#~ msgid "Omzet %(year)s"
+#~ msgstr "Revenue %(year)s"
+
+#, python-format
+#~ msgid "Kosten %(costs)s"
+#~ msgstr "Costs %(costs)s"
+
+#, python-format
+#~ msgid "waarvan %(count)s te laat"
+#~ msgid_plural "waarvan %(count)s te laat"
+#~ msgstr[0] "of which %(count)s overdue"
+#~ msgstr[1] "of which %(count)s overdue"
+
 #~ msgid "Wacht op betaling"
 #~ msgstr "Waiting for payment"
 
-#~ msgid "Nog niet verstuurd"
-#~ msgstr "Not sent yet"
-
-#, python-format
-#~ msgid "Je hebt nog %(count)s concept:"
-#~ msgid_plural "Je hebt nog %(count)s concepten, waaronder:"
-#~ msgstr[0] "You still have %(count)s draft:"
-#~ msgstr[1] "You still have %(count)s drafts, including:"
-
 #~ msgid "geldigheid voorbij"
 #~ msgstr "no longer valid"
-
-#, python-format
-#~ msgid "%(count)s dag te laat"
-#~ msgid_plural "%(count)s dagen te laat"
-#~ msgstr[0] "%(count)s day overdue"
-#~ msgstr[1] "%(count)s days overdue"
 
 #, python-format
 #~ msgid ""
@@ -6869,9 +6963,6 @@ msgstr ""
 #, python-format
 #~ msgid "%(amount)s is te laat"
 #~ msgstr "%(amount)s is overdue"
-
-#~ msgid "Niets openstaand"
-#~ msgstr "Nothing outstanding"
 
 #~ msgid "Vandaag te betalen"
 #~ msgstr "Due today"
@@ -7357,9 +7448,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Contacts with invoices or quotes are never deleted. You can archive them "
 #~ "instead."
-
-#~ msgid "Nog geen contacten"
-#~ msgstr "No contacts yet"
 
 #~ msgid "Nog geen contact"
 #~ msgstr "No contact yet"

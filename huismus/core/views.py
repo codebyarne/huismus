@@ -34,8 +34,9 @@ from . import (
     updates,
 )
 from .backup_views import sign_in_again
-from .dashboard import onboarding_steps, outstanding_invoices
+from .dashboard import month_bars, onboarding_steps, outstanding_invoices
 from .onboarding import STEPS
+from .todo import build_todo
 
 
 class LoginView(auth_views.LoginView):
@@ -71,18 +72,10 @@ class LoginView(auth_views.LoginView):
         return response
 
 
-def _greeting(now):
-    if now.hour < 12:
-        return _("Goedemorgen")
-    if now.hour < 18:
-        return _("Goedemiddag")
-    return _("Goedenavond")
-
-
 @login_required
 def home(request):
-    """Overzicht: what's outstanding, this year's figures, the latest
-    invoices and quotes waiting for an answer. Until there are contacts or
+    """Overzicht: this year's revenue per month, what's outstanding, the
+    list "Te doen" (core.todo) and the latest invoices. Until there are contacts or
     documents, a welcome with the Moneybird import and a checklist."""
     first_time = sample_data.is_empty()
     updated_to = _updated_to(first_time)
@@ -101,7 +94,16 @@ def home(request):
     now = timezone.localtime()
     to_check_count, tray_count = batch.counts()
     today = now.date()
+    outstanding = outstanding_invoices()
+    overview = compute_year_overview(today.year)
     sent_quotes = Document.objects.filter(kind="quote", status="sent").select_related("contact")
+    waiting_quotes = [
+        (quote, expiry_hint(quote, today=today))
+        for quote in sent_quotes.order_by("expiry_date", "pk")
+        # Past its date a quote reads as expired and is under Offertes.
+        if quote.shown_status == "sent"
+    ]
+    drafts = Document.objects.filter(kind="invoice", status="draft").select_related("contact")
     return render(
         request,
         "core/home.html",
@@ -110,31 +112,28 @@ def home(request):
             # No invoice or credit note in any status yet: one card to make the
             # first, in place of the invoice figures (#186).
             "has_invoices": Document.objects.filter(kind__in=["invoice", "credit_note"]).exists(),
-            "greeting": _greeting(now),
             "today": today,
-            "outstanding": outstanding_invoices(),
+            "outstanding": outstanding,
             "year": today.year,
-            "overview": compute_year_overview(today.year),
+            "overview": overview,
+            # The year overview's revenue per month, as bars (#215).
+            "month_bars": month_bars(overview.monthly_revenue_cents, current_month=today.month),
             "kor_limit": kor_limit_status(today.year),
-            "drafts": Document.objects.filter(kind="invoice", status="draft").select_related(
-                "contact"
+            "todo": build_todo(
+                overdue=outstanding["overdue"],
+                waiting_quotes=waiting_quotes,
+                drafts=drafts,
+                tray_count=tray_count,
+                to_check_count=to_check_count,
+                today=today,
             ),
             "latest_invoices": Document.objects.filter(kind="invoice", status="issued")
             .with_payment_totals()
             .order_by("-issue_date", "-pk")[:5],
-            "waiting_quotes": [
-                (quote, expiry_hint(quote, today=today))
-                for quote in sent_quotes.order_by("expiry_date", "pk")
-                # Past its date a quote reads as expired and is under Offertes.
-                if quote.shown_status == "sent"
-            ],
             **_backup_context(now),
             **_update_notices(request),
             "updated_to": updated_to,
             **new_receipts_context(),
-            # What waits in Verwerken, for the card on the overview.
-            "to_check_count": to_check_count,
-            "tray_count": tray_count,
         },
     )
 

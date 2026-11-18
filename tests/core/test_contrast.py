@@ -29,6 +29,9 @@ PAIRS = [
     ("text-muted", "surface-2"),
     ("bad", "bad-bg"),
     ("bad", "surface"),
+    ("text", "bad-bg"),  # a row "te laat" in Te doen on the overview
+    ("bad-ink", "bad-bg"),  # and its second line
+    ("on-danger", "danger"),  # its button "Herinnering sturen" and its icon
     ("warn", "warn-bg"),
     ("ok", "ok-bg"),
     ("accent-ink", "accent-soft"),
@@ -47,6 +50,8 @@ GRAPHIC_PAIRS = [
     ("primary", "surface"),  # the revenue bar
     ("hero-bar", "hero"),  # the KOR bar on the eye-catcher
     ("hero-text", "hero"),  # that bar close to the limit or over it
+    ("hero-ahead", "hero"),  # the dashed line of a month still to come
+    ("bad", "surface"),  # the KOR bar over the limit, in its own tile
 ]
 # The yellow cost bar has no edge (the owner, 2026-11-15): its amounts are in
 # the table right below the chart.

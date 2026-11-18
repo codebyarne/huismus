@@ -21,7 +21,8 @@ At the top of the quote you see which step it's in. Got an answer? Record it
 with **Accept** or **Decline**. Already know there won't be an answer? Choose
 **Mark as expired**.
 
-On the overview, **Awaiting reply** lists the quotes that are still open. Once
+On the overview, **To do** lists the quotes that are still waiting for an
+answer, and for how long. Once
 a sent quote has run out, it shows as **Expired** under **Declined or
 expired** by itself, and leaves the overview. If the customer says yes or no
 after all, record it on the quote with **Accept** or **Decline**.

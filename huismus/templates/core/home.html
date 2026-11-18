@@ -40,12 +40,13 @@
 </section>
 
 {% else %}
-<div class="page-head">
+{% comment %}On a phone only the title: the date and "Uitgave" make way, so the first thing to do is in view without scrolling (#189). The + has "Uitgave" there.{% endcomment %}
+<div class="page-head page-head-overview">
     <div class="titles">
-        <span class="small muted">{{ today|date:"l j F Y"|capfirst }}</span>
-        <h1>{{ greeting }}{% if user.first_name %}, {{ user.first_name }}{% endif %}</h1>
+        <h1>{% translate "Overzicht" %}</h1>
+        <span class="muted wide-only">{{ today|date:"l j F" }}</span>
     </div>
-    <div class="actions">
+    <div class="actions wide-only">
         <a class="btn btn-secondary" href="{% url 'expenses:create' %}"><svg class="i" aria-hidden="true"><use href="#receipt"></use></svg>{% translate "Uitgave" %}</a>
     </div>
 </div>
@@ -98,60 +99,58 @@
 </div>
 
 {% if has_invoices %}
-{% comment %}One deep petrol block per screen (design "Helder"): here the year's revenue, with what is still to come in and the profit beside it.{% endcomment %}
-<div class="hero-row" style="margin-bottom:var(--s-6)">
+{% comment %}One deep petrol block per screen (design "Helder"): the year's revenue with a bar per month (#215). Beside it what is still to come in and the KOR limit; without the KOR the profit.{% endcomment %}
+<section class="hero-row" aria-label="{% translate 'Dit jaar' %}">
     <div class="card kpi kpi-hero">
-        <span class="kpi-label">{% blocktranslate %}Omzet {{ year }}{% endblocktranslate %}</span>
+        <span class="kpi-label">{% blocktranslate %}Omzet in {{ year }}{% endblocktranslate %}</span>
         <span class="kpi-value">{{ overview.revenue_cents|money }}</span>
-        <span class="kpi-sub">{% if overview.shows_input_vat %}{% blocktranslate with costs=overview.expenses_cents|money %}Kosten zonder btw {{ costs }}{% endblocktranslate %}{% else %}{% blocktranslate with costs=overview.expenses_cents|money %}Kosten {{ costs }}{% endblocktranslate %}{% endif %}</span>
-        {% if kor_limit %}
-        <span class="progress is-kor{% if kor_limit.level == 'near' %} is-warn{% elif kor_limit.level == 'over' %} is-bad{% endif %}" style="margin-top:var(--s-2)" aria-hidden="true"><span style="width:{{ kor_limit.bar_percent }}%"></span></span>
-        <span class="kpi-sub">{% blocktranslate with percent=kor_limit.percent %}{{ percent }}% van je KOR-grens{% endblocktranslate %}</span>
-        {% if kor_limit.remaining_cents %}<span class="kpi-sub">{% blocktranslate with remaining=kor_limit.remaining_cents|money %}Nog {{ remaining }} tot de grens{% endblocktranslate %}</span>{% endif %}
-        {% endif %}
+        {% include "core/_month_bars.html" %}
     </div>
     <div class="hero-side">
-        <a class="card kpi" href="{% url 'documents:list' %}?tab=openstaand&amp;jaar=alle" style="text-decoration:none;color:inherit">
-            <span class="kpi-label">{% translate "Openstaand" %}</span>
+        <a class="card kpi kpi-due" id="nog-te-ontvangen" href="{% url 'documents:list' %}?tab=openstaand&amp;jaar=alle">
+            <span class="kpi-label">{% translate "Nog te ontvangen" %}</span>
             <span class="kpi-value">{{ outstanding.total_cents|money }}</span>
-            <span class="kpi-sub">{% blocktranslate count count=outstanding.count %}{{ count }} factuur{% plural %}{{ count }} facturen{% endblocktranslate %}{% if outstanding.overdue_count %}, {% blocktranslate count count=outstanding.overdue_count %}waarvan {{ count }} te laat{% plural %}waarvan {{ count }} te laat{% endblocktranslate %}{% endif %} →</span>
+            <span class="kpi-sub">{% if not outstanding.count %}{% translate "Niets openstaand" %}{% else %}{% if outstanding.overdue_count %}<span class="late-dot" aria-hidden="true"></span>{% endif %}{% blocktranslate count count=outstanding.count %}{{ count }} factuur{% plural %}{{ count }} facturen{% endblocktranslate %}{% if outstanding.overdue_count %}, {% blocktranslate with count=outstanding.overdue_count %}{{ count }} te laat{% endblocktranslate %}{% endif %}{% endif %}</span>
         </a>
-        <a class="card kpi" href="{% url 'reports:year_overview' %}" style="text-decoration:none;color:inherit">
+        {% if kor_limit %}
+        <a class="card kpi kpi-kor" id="kor-grens" href="{% url 'reports:year_overview' %}?jaar={{ year }}">
+            <span class="kpi-head"><span class="kpi-label">{% translate "KOR-grens" %}</span><span class="kpi-sub">{% blocktranslate with revenue=kor_limit.revenue_cents|money limit=kor_limit.limit_cents|money %}{{ revenue }} van {{ limit }}{% endblocktranslate %}</span></span>
+            <span class="progress is-kor{% if kor_limit.level == 'over' %} is-bad{% endif %}" role="img" aria-label="{% blocktranslate with percent=kor_limit.percent %}{{ percent }}% van je KOR-grens{% endblocktranslate %}"><span style="width:{{ kor_limit.bar_percent }}%"></span></span>
+            {% if kor_limit.remaining_cents %}<span class="kpi-sub kpi-more">{% blocktranslate with remaining=kor_limit.remaining_cents|money %}Nog {{ remaining }} tot de grens{% endblocktranslate %}</span>{% endif %}
+        </a>
+        {% else %}
+        <a class="card kpi" id="winst" href="{% url 'reports:year_overview' %}?jaar={{ year }}">
             <span class="kpi-label">{% blocktranslate %}Winst {{ year }}{% endblocktranslate %}</span>
             <span class="kpi-value">{{ overview.profit_cents|money }}</span>
-            <span class="kpi-sub">{% translate "Naar het jaaroverzicht" %} →</span>
+            <span class="kpi-sub">{% blocktranslate with costs=overview.expenses_cents|money %}Kosten zonder btw {{ costs }}{% endblocktranslate %}</span>
         </a>
-    </div>
-</div>
-<div class="split split-wide">
-    <section class="card">
-        <div class="card-head"><h2>{% translate "Laatste facturen" %}</h2><a class="small" href="{% url 'documents:list' %}">{% translate "Alle facturen" %}</a></div>
-        {% if latest_invoices %}
-        <div class="table-wrap">
-            <table class="table stackable stackable-narrow table-oneline">
-                <thead><tr><th>{% translate "Klant" %}</th><th class="w-min">{% translate "Nummer" %}</th><th class="w-min">{% translate "Status" %}</th><th class="r w-min">{% translate "Bedrag" %}</th></tr></thead>
-                <tbody>
-                    {% for invoice in latest_invoices %}
-                    <tr class="is-link">
-                        <td data-cell="primary"><a class="row-link" href="{% url 'documents:edit' invoice.pk %}" title="{{ invoice|contact_name }}">{{ invoice|contact_name }}</a></td>
-                        <td data-cell="secondary" class="num muted w-min">{{ invoice.number }}</td>
-                        <td data-cell="status">{% if invoice.is_overdue %}{% include "documents/_pill_overdue.html" with doc=invoice %}{% else %}<span class="pill pill-{{ invoice.payment_state }}">{{ invoice.payment_state|payment_state_label|capfirst }}</span>{% endif %}</td>
-                        <td data-cell="amount" class="r amount">{{ invoice.total_cents|money }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        {% else %}
-        <div class="card-pad small muted">{% translate "Je hebt nog geen facturen uitgegeven." %}</div>
         {% endif %}
-    </section>
-    <div class="stack" style="gap:var(--s-5)">
-        {% include "core/_waiting_quotes.html" %}
-        {% if drafts %}{% include "core/_drafts_card.html" %}{% endif %}
-        {% if tray_count or to_check_count %}{% include "core/_process_card.html" %}{% endif %}
     </div>
-</div>
+</section>
+{% include "core/_todo.html" %}
+<section class="section" aria-labelledby="laatste-facturen">
+    <div class="section-head"><h2 id="laatste-facturen">{% translate "Laatste facturen" %}</h2><a href="{% url 'documents:list' %}">{% translate "Alle facturen" %}</a></div>
+    {% if latest_invoices %}
+    <div class="table-wrap">
+        <table class="table table-sheet stackable stackable-narrow table-oneline">
+            <thead><tr><th class="w-min">{% translate "Nummer" %}</th><th>{% translate "Klant" %}</th><th class="w-min">{% translate "Datum" %}</th><th class="w-min">{% translate "Status" %}</th><th class="r w-min">{% translate "Bedrag" %}</th></tr></thead>
+            <tbody>
+                {% for invoice in latest_invoices %}
+                <tr class="is-link">
+                    <td data-cell="secondary" class="num muted w-min">{{ invoice.number }}</td>
+                    <td data-cell="primary"><a class="row-link" href="{% url 'documents:edit' invoice.pk %}" title="{{ invoice|contact_name }}">{{ invoice|contact_name }}</a></td>
+                    <td data-cell="hide" class="muted w-min">{{ invoice.issue_date|date:"SHORT_DATE_FORMAT" }}</td>
+                    <td data-cell="status">{% if invoice.is_overdue %}{% include "documents/_pill_overdue.html" with doc=invoice %}{% else %}<span class="pill pill-{{ invoice.payment_state }}">{{ invoice.payment_state|payment_state_label|capfirst }}</span>{% endif %}</td>
+                    <td data-cell="amount" class="r amount">{{ invoice.total_cents|money }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="small muted">{% translate "Je hebt nog geen facturen uitgegeven." %}</p>
+    {% endif %}
+</section>
 {% else %}
 <section class="card" id="nog-geen-facturen" style="margin-bottom:var(--s-6)">
     <div class="empty">
@@ -170,12 +169,8 @@
         <span class="kpi-sub">{% translate "Naar je uitgaven" %} →</span>
     </a>
 </div>
-{% comment %}The same cards in the same order as beside "Laatste facturen" above.{% endcomment %}
-<div class="stack" style="gap:var(--s-5)">
-    {% if waiting_quotes %}{% include "core/_waiting_quotes.html" %}{% endif %}
-    {% if drafts %}{% include "core/_drafts_card.html" %}{% endif %}
-    {% if tray_count or to_check_count %}{% include "core/_process_card.html" %}{% endif %}
-</div>
+{% comment %}Without invoices there can still be a quote, a draft or a receipt waiting.{% endcomment %}
+{% if todo.items %}{% include "core/_todo.html" %}{% endif %}
 {% endif %}
 {% if last_backup %}
 <p class="small muted" id="laatste-back-up" style="margin-top:var(--s-4)">{% blocktranslate with moment=last_backup|moment %}Laatste back-up: {{ moment }}{% endblocktranslate %}</p>

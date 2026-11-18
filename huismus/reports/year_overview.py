@@ -27,7 +27,7 @@ cash-basis view instead.
 from dataclasses import dataclass, field
 
 from django.db.models import Sum
-from django.db.models.functions import ExtractQuarter
+from django.db.models.functions import ExtractMonth, ExtractQuarter
 from django.utils.translation import gettext_lazy as _
 
 from huismus.business.models import Settings
@@ -68,6 +68,9 @@ class YearOverview:
     input_vat_cents: int = 0
     # The KOR is off: costs are without VAT and input VAT is shown.
     shows_input_vat: bool = False
+    # January first. The quarters' and the year's revenue are sums of these
+    # (the bars on the overview, #215): one count, read three ways.
+    monthly_revenue_cents: list[int] = field(default_factory=lambda: [0] * 12)
     quarters: list[QuarterTotals] = field(default_factory=list)
     by_category: list[CategoryTotal] = field(default_factory=list)
 
@@ -81,13 +84,34 @@ class YearOverview:
         return _("Kosten zonder btw") if self.shows_input_vat else _("Kosten")
 
 
-def _totals_by_quarter(queryset, date_field: str, amount_field: str) -> dict[int, int]:
+def _totals_by_period(queryset, date_field: str, amount_field: str, extract) -> dict[int, int]:
+    """Sums per quarter (ExtractQuarter) or month (ExtractMonth) number."""
     rows = (
-        queryset.annotate(quarter=ExtractQuarter(date_field))
-        .values("quarter")
+        queryset.annotate(period=extract(date_field))
+        .values("period")
         .annotate(total=Sum(amount_field))
     )
-    return {row["quarter"]: row["total"] or 0 for row in rows}
+    return {row["period"]: row["total"] or 0 for row in rows}
+
+
+def _totals_by_quarter(queryset, date_field: str, amount_field: str) -> dict[int, int]:
+    return _totals_by_period(queryset, date_field, amount_field, ExtractQuarter)
+
+
+def _revenue_by_month(year: int) -> list[int]:
+    """Revenue per month, January first: issued invoices minus issued
+    credit notes, by issue date. A credit note reduces recognised revenue,
+    not a separate expense line (invariant-adjacent to how documents.totals
+    treats a credit note as crediting an invoice, not billing against it),
+    so a month can be below zero."""
+    issued = Document.objects.filter(status="issued", issue_date__year=year)
+    invoices = _totals_by_period(
+        issued.filter(kind="invoice"), "issue_date", "subtotal_cents", ExtractMonth
+    )
+    credit_notes = _totals_by_period(
+        issued.filter(kind="credit_note"), "issue_date", "subtotal_cents", ExtractMonth
+    )
+    return [invoices.get(month, 0) - credit_notes.get(month, 0) for month in range(1, 13)]
 
 
 def _totals_by_category(lines, amount_field: str = "amount_cents") -> dict[str | None, int]:
@@ -96,16 +120,7 @@ def _totals_by_category(lines, amount_field: str = "amount_cents") -> dict[str |
 
 
 def compute_year_overview(year: int) -> YearOverview:
-    invoice_totals = _totals_by_quarter(
-        Document.objects.filter(kind="invoice", status="issued", issue_date__year=year),
-        "issue_date",
-        "subtotal_cents",
-    )
-    credit_note_totals = _totals_by_quarter(
-        Document.objects.filter(kind="credit_note", status="issued", issue_date__year=year),
-        "issue_date",
-        "subtotal_cents",
-    )
+    monthly_revenue = _revenue_by_month(year)
     expense_totals = _totals_by_quarter(
         Expense.objects.filter(date__year=year), "date", "amount_cents"
     )
@@ -122,11 +137,8 @@ def compute_year_overview(year: int) -> YearOverview:
     quarters = [
         QuarterTotals(
             quarter=q,
-            # A credit note reduces recognised revenue, not a separate
-            # expense line (invariant-adjacent to how documents.totals
-            # treats a credit note as crediting an invoice, not billing
-            # against it).
-            revenue_cents=invoice_totals.get(q, 0) - credit_note_totals.get(q, 0),
+            # The quarter's three months.
+            revenue_cents=sum(monthly_revenue[(q - 1) * 3 : q * 3]),
             expenses_cents=expense_totals.get(q, 0) - input_vat.get(q, 0),
             input_vat_cents=input_vat.get(q, 0),
         )
@@ -156,6 +168,7 @@ def compute_year_overview(year: int) -> YearOverview:
         expenses_cents=sum(q.expenses_cents for q in quarters),
         input_vat_cents=sum(q.input_vat_cents for q in quarters),
         shows_input_vat=shows_input_vat,
+        monthly_revenue_cents=monthly_revenue,
         quarters=quarters,
         by_category=by_category,
     )
