@@ -184,15 +184,24 @@
     </div>
 </section>
 
-{% if features.next_up %}
-<section class="wrap">
-    <p class="next-strip">
-        <span class="next-dot" aria-hidden="true"></span>
-        <span class="next-text">{% blocktranslate with name=features.next_up.1 month=features.next_up.0|date:"F Y" %}Komt eraan: {{ name }}. Verwacht in {{ month }}.{% endblocktranslate %}</span>
-        <a class="more" href="{{ features_url }}">{% translate "Alle functies" %} <span aria-hidden="true">→</span></a>
-    </p>
+<section class="wrap checklist" aria-labelledby="alles-erin">
+    <div class="section-head">
+        <p class="kicker">{% translate "Functies" %}</p>
+        <h2 id="alles-erin">{% translate "Alles wat je boekhouding nodig heeft" %}</h2>
+        <p class="lede">{% blocktranslate count count=features.now_count %}Huismus is een complete boekhouding voor zzp’ers: {{ count }} functie werkt nu, en wat nog ontbreekt staat op de lijst.{% plural %}Huismus is een complete boekhouding voor zzp’ers: {{ count }} functies werken nu, en wat nog ontbreekt staat op de lijst.{% endblocktranslate %}</p>
+    </div>
+    <div class="check-groups">
+        {% for group, items in features.groups %}
+        <div class="check-group">
+            <h3>{{ group }}</h3>
+            <ul>
+                {% for feature in items %}<li{% if feature.later %} class="is-later"{% endif %}>{% if feature.later %}<span class="later">{% translate "Later" %}</span>{% else %}<svg class="i" width="18" height="18" aria-label="{% translate 'Werkt nu' %}" role="img"><use href="#check"></use></svg>{% endif %}<span>{{ feature.name }}</span></li>{% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+    <p class="checklist-more"><a class="more" href="{{ features_url }}">{% translate "Alle functies, met uitleg" %} <span aria-hidden="true">→</span></a></p>
 </section>
-{% endif %}
 
 <section class="wrap duo" aria-label="{% translate 'Waarom Huismus, en op een eigen server' %}">
     <div class="tile">

@@ -1,54 +1,34 @@
 {% extends "site/base.html" %}
 {% load i18n %}
 
-{% block title %}{% translate "Wat Huismus kan, en wat er komt" %} — Huismus{% endblock %}
-{% block og_title %}{% translate "Wat Huismus kan, en wat er komt" %}{% endblock %}
-{% block description %}{% translate "Alles wat Huismus nu kan, van facturen en bonnetjes tot je btw-aangifterapport, en wat je wanneer kunt verwachten." %}{% endblock %}
+{% block title %}{% translate "Alles wat Huismus kan" %} — Huismus{% endblock %}
+{% block og_title %}{% translate "Alles wat Huismus kan" %}{% endblock %}
+{% block description %}{% translate "Alles wat Huismus kan, van facturen en bonnetjes tot je btw-aangifterapport en je export, en wat later komt." %}{% endblock %}
 {% block main_class %}wrap features-page{% endblock %}
 
 {% block content %}
-{% comment %}Everything Huismus does and what is coming, from the same list as the block on the home page (huismus/core/site_features.py).{% endcomment %}
+{% comment %}Everything a bookkeeping needs, with a check or Later, from the same list as the overview on the home page (huismus/core/site_features.py).{% endcomment %}
 <div class="page-intro">
-    <h1>{% translate "Wat Huismus kan, en wat er komt" %}</h1>
-    <p class="lede">{% translate "Huismus groeit snel. Hier staat alles wat er nu in zit, en wat je wanneer kunt verwachten." %}</p>
-    <p class="jumps"><a class="more" href="#kan-nu">{% translate "Kan nu" %} <span aria-hidden="true">↓</span></a><a class="more" href="#komt-eraan">{% translate "Komt eraan" %} <span aria-hidden="true">↓</span></a></p>
+    <h1>{% translate "Alles wat Huismus kan" %}</h1>
+    <p class="lede">{% translate "Alles wat je van een volwassen boekhouding mag verwachten, op één pagina. Met een vinkje werkt het nu, met Later staat het op de lijst." %}</p>
+    <p class="feature-count"><span><svg class="i" width="18" height="18" aria-hidden="true"><use href="#check"></use></svg>{% blocktranslate count count=features.now_count %}{{ count }} functie werkt nu{% plural %}{{ count }} functies werken nu{% endblocktranslate %}</span><span><span class="later">{% translate "Later" %}</span>{% blocktranslate count count=features.later_count %}{{ count }} staat op de lijst{% plural %}{{ count }} staan op de lijst{% endblocktranslate %}</span></p>
 </div>
 
-<section class="features-now" id="kan-nu" aria-labelledby="kan-nu-kop">
-    <h2 class="big" id="kan-nu-kop">{% translate "Kan nu" %}</h2>
-    {% for group, items in features.now %}
+<section class="features-now" aria-label="{% translate 'Alle functies' %}">
+    {% for group, items in features.groups %}
     <div class="feature-row">
-        <h3>{{ group }}</h3>
+        <h2>{{ group }}</h2>
         <ul>
             {% for feature in items %}
-            <li><strong>{% if feature.help %}<a href="{% if language == 'nl' %}/hulp/{% else %}/en/help/{% endif %}{{ feature.help }}/">{{ feature.name }} <span aria-hidden="true">→</span></a>{% else %}{{ feature.name }}{% endif %}</strong>{% if feature.text %}<span>{{ feature.text }}</span>{% endif %}</li>
+            <li{% if feature.later %} class="is-later"{% endif %}>{% if feature.later %}<span class="later">{% translate "Later" %}</span>{% else %}<svg class="i" width="18" height="18" aria-label="{% translate 'Werkt nu' %}" role="img"><use href="#check"></use></svg>{% endif %}<div><strong>{% if feature.help %}<a href="{% if language == 'nl' %}/hulp/{% else %}/en/help/{% endif %}{{ feature.help }}/">{{ feature.name }} <span aria-hidden="true">→</span></a>{% else %}{{ feature.name }}{% endif %}</strong>{% if feature.text %}<span>{{ feature.text }}</span>{% endif %}</div></li>
             {% endfor %}
         </ul>
     </div>
     {% endfor %}
+    <p class="small muted">{% blocktranslate with url=help.nieuw %}Later is geen datum. Wat af is, staat bij <a href="{{ url }}">Wat is er nieuw</a>.{% endblocktranslate %}</p>
 </section>
 
-<section class="features-coming" id="komt-eraan" aria-labelledby="komt-eraan-kop">
-    <h2 class="big" id="komt-eraan-kop">{% translate "Komt eraan" %}</h2>
-    <ol class="months">
-        {% for month, items in features.coming %}
-        <li{% if forloop.first %} class="is-next"{% endif %}>
-            <span class="when">{% blocktranslate with month=month|date:"F Y" %}Verwacht in {{ month }}{% endblocktranslate %}</span>
-            <ul>
-                {% for feature in items %}<li><strong>{{ feature.name }}</strong><span>{{ feature.text }}</span></li>{% endfor %}
-            </ul>
-        </li>
-        {% endfor %}
-    </ol>
-    <p class="small muted">{% blocktranslate with url=help.nieuw %}Een maand is een verwachting. Wat af is, staat bij <a href="{{ url }}">Wat is er nieuw</a>.{% endblocktranslate %}</p>
-</section>
-
-<section class="trio" aria-label="{% translate 'Later, misschien en niet' %}">
-    <div>
-        <h2>{% translate "Later, zonder maand" %}</h2>
-        <ul>{% for feature in features.later %}<li>{{ feature.name }}</li>{% endfor %}</ul>
-        <p class="small muted">{% translate "Hier hangt nog geen maand aan." %}</p>
-    </div>
+<section class="trio duo-two" aria-label="{% translate 'Misschien en niet' %}">
     <div>
         <h2>{% translate "Misschien later" %}</h2>
         <ul>{% for feature in features.maybe %}<li>{{ feature.name }}</li>{% endfor %}</ul>

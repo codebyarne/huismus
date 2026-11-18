@@ -46,19 +46,8 @@ def _read(out, address):
     return page
 
 
-@pytest.fixture(scope="module", autouse=True)
-def _not_yet_past():
-    """build_site refuses a month of Komt eraan that is over (a release has to
-    update site_features.py). The tests must not turn red on 1 January for
-    that, so they build as if no month were past."""
-    from unittest import mock
-
-    with mock.patch.object(site.site_features, "months_in_the_past", return_value=[]):
-        yield
-
-
 @pytest.fixture(scope="module")
-def out(tmp_path_factory, _not_yet_past):
+def out(tmp_path_factory):
     out = tmp_path_factory.mktemp("site")
     call_command("build_site", str(out))
     return out
@@ -214,11 +203,11 @@ def test_the_mac_steps_link_to_privacy_and_security(out, language):
 
 
 @pytest.mark.parametrize("language", help.LANGUAGES)
-def test_functies_shows_the_whole_list_and_the_home_page_what_comes_first(out, language):
-    """One list (core/site_features.py): every feature and every month on
-    Functies, in the language of the page; the home page points at it with
-    what comes first and its month."""
-    from django.utils.formats import date_format
+def test_functies_and_the_home_page_show_the_whole_list_with_a_check_or_later(out, language):
+    """One list (core/site_features.py), to show how complete Huismus is:
+    every feature on both pages, in the language of the page, and as many
+    "Later" labels as features that come later. No months (the owner,
+    2026-11-18)."""
     from django.utils.html import escape
 
     from huismus.core import site_features
@@ -226,30 +215,20 @@ def test_functies_shows_the_whole_list_and_the_home_page_what_comes_first(out, l
     home = (out / site.home_url(language).strip("/") / "index.html").read_text()
     features = (out / site.features_url(language).strip("/") / "index.html").read_text()
     with translation.override(language):
-        names = [str(f.name) for _group, items in site_features.NOW for f in items]
-        names += [str(f.name) for _month, items in site_features.COMING for f in items]
-        months = [date_format(month, "F Y") for month, _items in site_features.COMING]
-        first_month, first_items = site_features.COMING[0]
-        first = str(first_items[0].name)
-        first_month = date_format(first_month, "F Y")
-    for text in names + months:
-        assert escape(text) in features, text
-    assert escape(first[:1].lower() + first[1:]) in home
-    assert first_month in home
-    assert f'href="{site.features_url(language)}"' in home
-
-
-def test_the_months_of_what_is_coming_follow_each_other():
-    from huismus.core import site_features
-
-    months = [month for month, _items in site_features.COMING]
-    assert months == sorted(set(months)) and all(month.day == 1 for month in months)
+        names = [str(f.name) for _group, items in site_features.FEATURES for f in items]
+        later = str(translation.gettext("Later"))
+    _now, coming = site_features.counts()
+    for page in (home, features):
+        for name in names:
+            assert escape(name) in page, name
+        assert page.count(f'<span class="later">{later}</span>') >= coming
+    assert "Verwacht in" not in features and "Expected in" not in features
 
 
 def test_every_help_link_of_a_feature_is_a_help_page():
     from huismus.core import site_features
 
-    for _group, items in site_features.NOW:
+    for _group, items in site_features.FEATURES:
         for feature in items:
             assert not feature.help or feature.help in site.TOPICS, feature.name
 
@@ -346,19 +325,6 @@ def test_with_less_motion_an_animation_stands_still(out):
             still = f"/beelden/{name}.{language}.light.still.webp"
             assert still in html
             assert (out / still.lstrip("/")).exists()
-
-
-def test_a_month_in_the_past_stops_the_build(tmp_path, monkeypatch):
-    from datetime import date
-
-    from huismus.core import site_features
-
-    monkeypatch.setattr(site_features, "COMING", ((date(2020, 1, 1), ()),))
-    monkeypatch.setattr(
-        site_features, "months_in_the_past", site_features.__dict__["_months_in_the_past"]
-    )
-    with pytest.raises(CommandError, match="2020-01"):
-        call_command("build_site", str(tmp_path / "site"))
 
 
 def test_every_picture_that_comes_with_the_site_is_on_a_page(out):

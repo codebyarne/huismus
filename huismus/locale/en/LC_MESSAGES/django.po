@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-18 21:35+0100\n"
+"POT-Creation-Date: 2026-11-18 21:41+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -13,6 +13,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Later"
+msgstr "Later"
 
 msgid "Huismus werkt zichzelf bij…"
 msgstr "Huismus is updating…"
@@ -1533,6 +1536,30 @@ msgstr "Payment reminder"
 msgid "Bij een factuur die te laat is, met de factuur als bijlage."
 msgstr "For an overdue invoice, with the invoice attached."
 
+msgid "Periodieke facturen"
+msgstr "Recurring invoices"
+
+msgid "Zoals elke maand dezelfde."
+msgstr "Such as the same one every month."
+
+msgid "Uren bijhouden"
+msgstr "Track hours"
+
+msgid "En daar een factuur van maken."
+msgstr "And turn them into an invoice."
+
+msgid "Artikelen"
+msgstr "Products"
+
+msgid "Vaste regels met prijs en btw-tarief."
+msgstr "Fixed lines with a price and VAT rate."
+
+msgid "E-factuur als bijlage"
+msgstr "E-invoice as an attachment"
+
+msgid "Een factuur die het boekhoudpakket van je klant kan inlezen."
+msgstr "An invoice your customer’s bookkeeping software can read."
+
 msgid "Uitgaven"
 msgstr "Expenses"
 
@@ -1559,6 +1586,15 @@ msgstr "Categories"
 
 msgid "Je deelt je kosten in zoals jij dat wilt."
 msgstr "You sort your costs the way you want."
+
+msgid "Kilometers"
+msgstr "Mileage"
+
+msgid "Je ritten bij je administratie."
+msgstr "Your trips, with your records."
+
+msgid "Investeringen en afschrijving"
+msgstr "Investments and depreciation"
 
 msgid "Btw en jaar"
 msgstr "VAT and your year"
@@ -1598,6 +1634,18 @@ msgstr "Year overview"
 msgid "Je omzet, je kosten en wat je overhoudt, ook per kwartaal."
 msgstr "Your revenue, your costs and what is left, per quarter too."
 
+msgid "Winst-en-verliesrekening"
+msgstr "Profit and loss statement"
+
+msgid "Per jaar."
+msgstr "Per year."
+
+msgid "Je bankafschrift inlezen"
+msgstr "Import your bank statement"
+
+msgid "Zodat je ziet welke factuur betaald is."
+msgstr "So you see which invoice has been paid."
+
 msgid "Overstappen en bewaren"
 msgstr "Switching and backups"
 
@@ -1622,6 +1670,25 @@ msgstr "Export as CSV with PDFs and receipts"
 
 msgid "Eén ZIP-bestand dat ook zonder Huismus opent."
 msgstr "One ZIP file that opens without Huismus too."
+
+msgid "Importeren uit andere pakketten en uit Excel"
+msgstr "Import from other packages and from Excel"
+
+msgid "Met één importbestand, ook als je niet van Moneybird komt."
+msgstr "With one import file, even if you’re not coming from Moneybird."
+
+msgid "Auditfile voor je boekhouder"
+msgstr "Audit file for your accountant"
+
+msgid "Het bestand dat boekhoudpakketten van boekhouders inlezen."
+msgstr "The file accountants’ bookkeeping software reads."
+
+msgid ""
+"Back-ups rechtstreeks naar Google Drive en OneDrive, ook zonder hun app op "
+"je computer"
+msgstr ""
+"Backups straight to Google Drive and OneDrive, also without their app on "
+"your computer"
 
 msgid "De app"
 msgstr "The app"
@@ -1661,87 +1728,14 @@ msgstr ""
 "ChatGPT, Claude or Gemini works with your records. Issuing or emailing only "
 "happens when you approve it."
 
-msgid "Importeren uit andere pakketten en uit Excel"
-msgstr "Import from other packages and from Excel"
-
-msgid "Met één importbestand, ook als je niet van Moneybird komt."
-msgstr "With one import file, even if you’re not coming from Moneybird."
-
-msgid "Uitleg per pakket om over te stappen"
-msgstr "A guide per package for switching"
-
-msgid "Stap voor stap, van exporteren tot nakijken."
-msgstr "Step by step, from exporting to checking."
-
-msgid "Je bankafschrift inlezen"
-msgstr "Import your bank statement"
-
-msgid "Zodat je ziet welke factuur betaald is."
-msgstr "So you see which invoice has been paid."
-
-msgid "Winst-en-verliesrekening"
-msgstr "Profit and loss statement"
-
-msgid "Per jaar."
-msgstr "Per year."
-
-msgid "Auditfile voor je boekhouder"
-msgstr "Audit file for your accountant"
-
-msgid "Het bestand dat boekhoudpakketten van boekhouders inlezen."
-msgstr "The file accountants’ bookkeeping software reads."
-
-msgid "Periodieke facturen"
-msgstr "Recurring invoices"
-
-msgid "Zoals elke maand dezelfde."
-msgstr "Such as the same one every month."
-
 msgid "Huismus op je telefoon via je eigen wifi"
 msgstr "Huismus on your phone over your own Wi-Fi"
 
 msgid "Ook als Huismus op je Mac of pc staat."
 msgstr "Also when Huismus is on your Mac or PC."
 
-msgid "E-factuur als bijlage"
-msgstr "E-invoice as an attachment"
-
-msgid "Een factuur die het boekhoudpakket van je klant kan inlezen."
-msgstr "An invoice your customer’s bookkeeping software can read."
-
-msgid "Uren bijhouden"
-msgstr "Track hours"
-
-msgid "En daar een factuur van maken."
-msgstr "And turn them into an invoice."
-
-msgid "Kilometers"
-msgstr "Mileage"
-
-msgid "Je ritten bij je administratie."
-msgstr "Your trips, with your records."
-
-msgid "Artikelen"
-msgstr "Products"
-
-msgid "Vaste regels met prijs en btw-tarief."
-msgstr "Fixed lines with a price and VAT rate."
-
-msgid "Rechtstreeks importeren uit meer pakketten"
-msgstr "Import directly from more packages"
-
 msgid "Huismus in de Microsoft Store"
 msgstr "Huismus in the Microsoft Store"
-
-msgid "Investeringen en afschrijving"
-msgstr "Investments and depreciation"
-
-msgid ""
-"Back-ups rechtstreeks naar Google Drive en OneDrive, ook zonder hun app op "
-"je computer"
-msgstr ""
-"Backups straight to Google Drive and OneDrive, also without their app on "
-"your computer"
 
 msgid "Een betaallink op je factuur"
 msgstr "A payment link on your invoice"
@@ -4047,9 +4041,6 @@ msgstr "This takes about a minute."
 msgid "Wat is er nieuw in %(version)s?"
 msgstr "What's new in %(version)s?"
 
-msgid "Later"
-msgstr "Later"
-
 #, python-format
 msgid "Je gebruikt Huismus %(version)s."
 msgstr "You're using Huismus %(version)s."
@@ -4359,8 +4350,8 @@ msgstr "Nothing is waiting for you."
 msgid "Uitleg bij de versie van Huismus die je nu gebruikt."
 msgstr "Explanations for the version of Huismus you're using now."
 
-msgid "Wat Huismus kan, en wat er komt"
-msgstr "What Huismus can do, and what is coming"
+msgid "Alles wat Huismus kan"
+msgstr "Everything Huismus does"
 
 msgid "Welkom bij Huismus"
 msgstr "Welcome to Huismus"
@@ -6833,45 +6824,47 @@ msgid "Aan de slag"
 msgstr "Getting started"
 
 msgid ""
-"Alles wat Huismus nu kan, van facturen en bonnetjes tot je btw-"
-"aangifterapport, en wat je wanneer kunt verwachten."
+"Alles wat Huismus kan, van facturen en bonnetjes tot je btw-aangifterapport "
+"en je export, en wat later komt."
 msgstr ""
-"Everything Huismus does today, from invoices and receipts to your VAT return"
-" report, and what to expect when."
+"Everything Huismus does, from invoices and receipts to your VAT return "
+"report and your export, and what comes later."
 
 msgid ""
-"Huismus groeit snel. Hier staat alles wat er nu in zit, en wat je wanneer "
-"kunt verwachten."
+"Alles wat je van een volwassen boekhouding mag verwachten, op één pagina. "
+"Met een vinkje werkt het nu, met Later staat het op de lijst."
 msgstr ""
-"Huismus is growing fast. Here is everything it does today, and what to "
-"expect when."
+"Everything you can expect of a full bookkeeping package, on one page. With a"
+" check it works today; with Later it is on the list."
 
-msgid "Kan nu"
+#, python-format
+msgid "%(count)s functie werkt nu"
+msgid_plural "%(count)s functies werken nu"
+msgstr[0] "%(count)s feature works today"
+msgstr[1] "%(count)s features work today"
+
+#, python-format
+msgid "%(count)s staat op de lijst"
+msgid_plural "%(count)s staan op de lijst"
+msgstr[0] "%(count)s is on the list"
+msgstr[1] "%(count)s are on the list"
+
+msgid "Alle functies"
+msgstr "All features"
+
+msgid "Werkt nu"
 msgstr "Works today"
 
-msgid "Komt eraan"
-msgstr "Coming up"
-
-#, python-format
-msgid "Verwacht in %(month)s"
-msgstr "Expected in %(month)s"
-
 #, python-format
 msgid ""
-"Een maand is een verwachting. Wat af is, staat bij <a href=\"%(url)s\">Wat "
-"is er nieuw</a>."
+"Later is geen datum. Wat af is, staat bij <a href=\"%(url)s\">Wat is er "
+"nieuw</a>."
 msgstr ""
-"The months are estimates. What is finished is listed under <a "
+"Later is not a date. What is finished is listed under <a "
 "href=\"%(url)s\">What’s new</a>."
 
-msgid "Later, misschien en niet"
-msgstr "Later, maybe and not"
-
-msgid "Later, zonder maand"
-msgstr "Later, without a month"
-
-msgid "Hier hangt nog geen maand aan."
-msgstr "There is no month for these yet."
+msgid "Misschien en niet"
+msgstr "Maybe and not"
 
 msgid "Misschien later"
 msgstr "Maybe later"
@@ -7216,12 +7209,25 @@ msgstr ""
 msgid "Zo koppel je een AI-assistent"
 msgstr "How to connect an AI assistant"
 
-#, python-format
-msgid "Komt eraan: %(name)s. Verwacht in %(month)s."
-msgstr "Coming up: %(name)s. Expected in %(month)s."
+msgid "Alles wat je boekhouding nodig heeft"
+msgstr "Everything your bookkeeping needs"
 
-msgid "Alle functies"
-msgstr "All features"
+#, python-format
+msgid ""
+"Huismus is een complete boekhouding voor zzp’ers: %(count)s functie werkt "
+"nu, en wat nog ontbreekt staat op de lijst."
+msgid_plural ""
+"Huismus is een complete boekhouding voor zzp’ers: %(count)s functies werken "
+"nu, en wat nog ontbreekt staat op de lijst."
+msgstr[0] ""
+"Huismus is a complete bookkeeping package for freelancers: %(count)s feature"
+" works today, and what is still missing is on the list."
+msgstr[1] ""
+"Huismus is a complete bookkeeping package for freelancers: %(count)s "
+"features work today, and what is still missing is on the list."
+
+msgid "Alle functies, met uitleg"
+msgstr "All features, explained"
 
 msgid "Waarom Huismus, en op een eigen server"
 msgstr "Why Huismus, and on your own server"
@@ -7409,6 +7415,45 @@ msgid ""
 msgstr ""
 "Huismus is made in the Netherlands. You can read about its maker and their "
 "other work on <a href=\"https://www.arnekrijnsen.com\">arnekrijnsen.com</a>."
+
+#~ msgid "Uitleg per pakket om over te stappen"
+#~ msgstr "A guide per package for switching"
+
+#~ msgid "Stap voor stap, van exporteren tot nakijken."
+#~ msgstr "Step by step, from exporting to checking."
+
+#~ msgid "Rechtstreeks importeren uit meer pakketten"
+#~ msgstr "Import directly from more packages"
+
+#~ msgid "Wat Huismus kan, en wat er komt"
+#~ msgstr "What Huismus can do, and what is coming"
+
+#~ msgid ""
+#~ "Huismus groeit snel. Hier staat alles wat er nu in zit, en wat je wanneer "
+#~ "kunt verwachten."
+#~ msgstr ""
+#~ "Huismus is growing fast. Here is everything it does today, and what to "
+#~ "expect when."
+
+#~ msgid "Kan nu"
+#~ msgstr "Works today"
+
+#~ msgid "Komt eraan"
+#~ msgstr "Coming up"
+
+#, python-format
+#~ msgid "Verwacht in %(month)s"
+#~ msgstr "Expected in %(month)s"
+
+#~ msgid "Later, zonder maand"
+#~ msgstr "Later, without a month"
+
+#~ msgid "Hier hangt nog geen maand aan."
+#~ msgstr "There is no month for these yet."
+
+#, python-format
+#~ msgid "Komt eraan: %(name)s. Verwacht in %(month)s."
+#~ msgstr "Coming up: %(name)s. Expected in %(month)s."
 
 #~ msgid "Open"
 #~ msgstr "Open"

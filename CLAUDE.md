@@ -119,9 +119,8 @@ De release-PR (versie in `pyproject.toml`) zet bovenaan `docs/hulp/nieuw.nl.md` 
 `nieuw.en.md` wat de gebruiker er nu mee kan, volgens `docs/schrijfwijzer.md`:
 wat je ziet of doet, niet hoe het gebouwd is; interne wijzigingen (tests, CI) laat
 je weg. Die pagina staat onder Hulp in elke installatie. Dezelfde PR werkt het
-functieoverzicht van de site bij (`huismus/core/site_features.py`): wat af is gaat
-naar "Kan nu", en een maand die niet gehaald wordt schuift op, zodat er nooit een
-maand in het verleden staat.
+functieoverzicht van de site bij (`huismus/core/site_features.py`): wat af is,
+krijgt een vinkje in plaats van "Later".
 Kwam er sinds de vorige release alleen documentatie bij, dan is er geen release.
 
 Tussendoor alleen een release voor een bug die facturen, nummers of gegevens
