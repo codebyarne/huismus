@@ -45,3 +45,13 @@ huismus/locale/*/LC_MESSAGES/*.mo
 /build/
 /dist/
 _site/
+
+# Promofilms (scripts/promo/film/): de pakketten van Remotion, en wat
+# scripts/promo-film.sh daar neerzet: de opgenomen schermen, de proefstem, de
+# muziek en een kopie van de letters en het logo van de app. Een eigen opname
+# van de stem of eigen muziek blijft ook buiten git.
+scripts/promo/film/node_modules/
+scripts/promo/film/public/opname/
+scripts/promo/film/public/huisstijl/
+scripts/promo/film/stem/
+scripts/promo/film/muziek.*

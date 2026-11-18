@@ -1,0 +1,116 @@
+{
+  "proefstem": { "stem": "Xander", "tempo": 175 },
+  "shots": [
+    {
+      "id": "01-huismus",
+      "start": 0,
+      "duur": 5.5,
+      "stemVanaf": 0.9,
+      "regels": [
+        {
+          "nl": "Dit is Huismus. Je boekhouding, op je eigen computer.",
+          "en": "This is Huismus. Your bookkeeping, on your own computer."
+        }
+      ]
+    },
+    {
+      "id": "02-voor-wie",
+      "start": 5.5,
+      "duur": 7.5,
+      "stemVanaf": 0.5,
+      "regels": [
+        {
+          "nl": "Een gratis app voor zzp’ers die hun boekhouding zelf doen.",
+          "zeg": "Een gratis app voor zzp'ers die hun boekhouding zelf doen.",
+          "en": "A free app for freelancers who do their own bookkeeping."
+        },
+        { "nl": "Zonder abonnement en zonder account.", "en": "No subscription and no account." }
+      ]
+    },
+    {
+      "id": "03-overstappen",
+      "start": 13,
+      "duur": 10.5,
+      "stemVanaf": 0.5,
+      "regels": [
+        { "nl": "Kom je van Moneybird? Neem al je jaren mee.", "en": "Coming from Moneybird? Bring all your past years with you." },
+        {
+          "nl": "Huismus rekent eerst elke factuur na, tot op de cent, en laat zien wat afwijkt.",
+          "en": "Huismus first checks every invoice, to the cent, and shows you any differences."
+        },
+        { "nl": "Dan pas importeer je.", "en": "Only then do you import." }
+      ]
+    },
+    {
+      "id": "04-factuur",
+      "start": 23.5,
+      "duur": 8.5,
+      "stemVanaf": 0.5,
+      "regels": [
+        { "nl": "Een factuur maak je zo: kies een klant en typ wat je deed.", "en": "This is how you make an invoice: pick a customer and type what you did." },
+        {
+          "nl": "Huismus rekent het totaal uit en geeft hem een nummer.",
+          "en": "Huismus adds up the total and numbers the invoice."
+        }
+      ]
+    },
+    {
+      "id": "05-bonnetjes",
+      "start": 32,
+      "duur": 7,
+      "stemVanaf": 0.5,
+      "regels": [
+        { "nl": "Bonnetjes zet je als foto in een map.", "en": "Drop photos of your receipts in a folder." },
+        { "nl": "Huismus haalt ze op, en jij kijkt ze na.", "en": "Huismus picks them up, and you check them." }
+      ]
+    },
+    {
+      "id": "06-jaar",
+      "start": 39,
+      "duur": 11,
+      "stemVanaf": 0.5,
+      "regels": [
+        {
+          "nl": "Je ziet je omzet, je kosten en je winst van het hele jaar.",
+          "en": "You see your revenue, costs and profit for the whole year."
+        },
+        {
+          "nl": "Met de KOR zie je hoe ver je van je grens bent.",
+          "zeg": "Met de kor zie je hoe ver je van je grens bent.",
+          "en": "With the KOR you see how far you are from your threshold."
+        },
+        {
+          "nl": "Zonder KOR staan je btw-bedragen per kwartaal klaar.",
+          "zeg": "Zonder kor staan je btw-bedragen per kwartaal klaar.",
+          "en": "Without the KOR your VAT amounts are ready each quarter."
+        }
+      ]
+    },
+    {
+      "id": "07-van-jou",
+      "start": 50,
+      "duur": 6.5,
+      "stemVanaf": 0.5,
+      "regels": [
+        { "nl": "Alles staat op je eigen computer.", "en": "Everything is on your own computer." },
+        {
+          "nl": "Je gegevens gaan alleen ergens heen als jij dat aanzet.",
+          "en": "Your data only goes somewhere when you switch that on."
+        }
+      ]
+    },
+    {
+      "id": "08-download",
+      "start": 56.5,
+      "duur": 6.5,
+      "stemVanaf": 0.6,
+      "regels": [
+        {
+          "nl": "Download Huismus gratis, voor Mac en Windows, op mijnhuismus.nl.",
+          "zeg": "Download Huismus gratis, voor Mac en Windows, op mijn huismus punt N L.",
+          "en": "Download Huismus for free, for Mac and Windows, at mijnhuismus.nl."
+        }
+      ]
+    }
+  ]
+}
