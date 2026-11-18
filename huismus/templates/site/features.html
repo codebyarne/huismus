@@ -16,17 +16,14 @@
 
 <section class="features-now" id="kan-nu" aria-labelledby="kan-nu-kop">
     <h2 id="kan-nu-kop">{% translate "Kan nu" %}</h2>
+    {% comment %}Two columns of about the same length: Factureren and De app left, the rest right. On a phone they follow each other.{% endcomment %}
     <div class="feature-groups">
-        {% for group, items in features.now %}
-        <div class="leaf feature-group">
-            <h3>{{ group }}</h3>
-            <ul>
-                {% for feature in items %}
-                <li><svg class="i" aria-hidden="true"><use href="#check"></use></svg><div><strong>{{ feature.name }}</strong>{% if feature.text %}<span>{{ feature.text }}{% if feature.help %} <a href="{% if language == 'nl' %}/hulp/{% else %}/en/help/{% endif %}{{ feature.help }}/" aria-label="{% blocktranslate with name=feature.name %}Meer over: {{ name }}{% endblocktranslate %}">{% translate "Zo werkt het" %} <span aria-hidden="true">→</span></a>{% endif %}</span>{% endif %}</div></li>
-                {% endfor %}
-            </ul>
+        <div class="feature-column">
+            {% for group, items in features.now %}{% if forloop.first or forloop.last %}{% include "site/_feature_group.html" %}{% endif %}{% endfor %}
         </div>
-        {% endfor %}
+        <div class="feature-column">
+            {% for group, items in features.now %}{% if not forloop.first and not forloop.last %}{% include "site/_feature_group.html" %}{% endif %}{% endfor %}
+        </div>
     </div>
 </section>
 
@@ -64,8 +61,6 @@
 </section>
 
 <section class="band band-final" id="download">
-    <h2>{% translate "Probeer Huismus" %}</h2>
-    <p class="lede">{% translate "Gratis, zonder account. Je administratie blijft op je eigen computer." %}</p>
-    {% include "site/_downloads.html" with on_petrol=True %}
+    {% include "site/_final.html" %}
 </section>
 {% endblock %}

@@ -24,6 +24,6 @@ zit het bonnetje, met het nummer van de uitgave ervoor.
 ## Wat er nog niet is
 
 Een XAF-auditfile, het bestand dat veel boekhoudprogramma's inlezen, maakt
-Huismus nog niet. Je boekhouder werkt dus met de CSV's en de pdf's. Wat er
-nog meer komt, lees je op
+Huismus nog niet. Je boekhouder werkt dus met de CSV's en de pdf's. De
+auditfile staat op de planning. Wanneer, lees je op
 [mijnhuismus.nl/functies](https://mijnhuismus.nl/functies/#komt-eraan).

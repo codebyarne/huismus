@@ -129,11 +129,14 @@ def download_url(platform: str) -> str:
 
 
 def media_files() -> list[Path]:
+    """Every picture of the app; a still also as the app shows it on a phone
+    (….phone.webp), for a narrow screen."""
     return [
-        MEDIA_DIR / f"{name}.{language}.{scheme}.webp"
+        MEDIA_DIR / f"{name}.{language}.{scheme}{kind}.webp"
         for name in MEDIA
         for language in help.LANGUAGES
         for scheme in ("light", "dark")
+        for kind in (("", ".phone") if name in STILLS else ("",))
     ]
 
 
@@ -239,7 +242,12 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
         page = help.render(slug, language, link=lambda s, a: help_url(language, s, a))
         pages[help_url(language, slug)] = (
             "site/help_page.html",
-            {"nav": "help", "switch_url": help_url(other, slug), "page": page},
+            {
+                "nav": "help",
+                "switch_url": help_url(other, slug),
+                "page": page,
+                "summary": help.summary(slug, language),
+            },
         )
     return pages
 
@@ -309,7 +317,8 @@ def build(out: Path) -> list[str]:
         shutil.copy(path, out / "beelden" / path.name)
     for name in STILLS:
         for path in MEDIA_DIR.glob(f"{name}.*.webp"):
-            _small(path, out / "beelden" / f"{path.stem}.{SMALL_WIDTH}.webp")
+            if not path.stem.endswith(".phone"):
+                _small(path, out / "beelden" / f"{path.stem}.{SMALL_WIDTH}.webp")
     for path in photo_files():
         shutil.copy(path, out / "beelden" / "fotos" / path.name)
     for language in help.LANGUAGES:

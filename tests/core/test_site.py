@@ -67,6 +67,10 @@ def test_every_link_inside_the_site_lands_on_a_page_and_heading(out):
                 continue
             if link == site.MAC_PRIVACY_SETTINGS:
                 continue
+            if link.startswith("mailto:"):
+                # "Mail jezelf de link": no address, only this site's own address.
+                assert link.startswith("mailto:?") and site.DOMAIN in link, (address, link)
+                continue
             if not link.startswith("/"):
                 # Another site, or a help file that core.help didn't turn into a page.
                 # Meebouwen links to the developer docs in the repository on purpose.

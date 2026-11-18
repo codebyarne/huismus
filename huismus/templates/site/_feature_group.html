@@ -1,0 +1,9 @@
+{% load i18n %}{% comment %}One group of what Huismus can do on Functies: group, items (core/site_features.py). A feature with a help page is a link to it.{% endcomment %}
+<div class="leaf feature-group">
+    <h3>{{ group }}</h3>
+    <ul>
+        {% for feature in items %}
+        <li><svg class="i" aria-hidden="true"><use href="#check"></use></svg><div><strong>{% if feature.help %}<a href="{% if language == 'nl' %}/hulp/{% else %}/en/help/{% endif %}{{ feature.help }}/">{{ feature.name }} <span aria-hidden="true">→</span></a>{% else %}{{ feature.name }}{% endif %}</strong>{% if feature.text %}<span>{{ feature.text }}</span>{% endif %}</div></li>
+        {% endfor %}
+    </ul>
+</div>

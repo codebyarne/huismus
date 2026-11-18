@@ -42,6 +42,9 @@ FIXTURE = ROOT / "tests" / "fixtures" / "moneybird-example-data" / "lindeboom_co
 TOKEN = "site"
 # The size of the desktop app's window, sharp on a retina screen.
 VIEWPORT = {"width": 1280, "height": 800}
+# The same screens as a phone shows them, for a visitor on a phone: a desktop
+# screen shrunk to 350 px can't be read.
+PHONE = {"width": 390, "height": 760}
 SCALE = 2
 # Animations have many frames, so fewer pixels each.
 ANIMATION_WIDTH = 1280
@@ -94,6 +97,8 @@ def _prepare(work: Path) -> tuple[Path, Path, Path]:
         _manage(_env(folder, releases), "migrate", "--verbosity", "0")
     env = _env(administration, releases)
     _manage(env, "demo_data", "--yes", "--site")
+    # No "Huismus is bijgewerkt naar …" on the overview: it dates the picture.
+    _manage(env, "shell", "-c", "from huismus.core import updates; updates.seen()")
     # A backup folder with a backup in it, as after the first day.
     _manage(
         env,
@@ -157,10 +162,14 @@ class Camera:
         self.page.goto(self.base + path)
         self.page.wait_for_load_state("networkidle")
 
-    def still(self, name: str, path: str | None = None) -> None:
-        if path:
+    def still(self, name: str, path: str) -> None:
+        """The screen at `path`, as the desktop app's window and as a phone."""
+        for viewport, kind in ((PHONE, ".phone"), (VIEWPORT, "")):
+            self.page.set_viewport_size(viewport)
             self.go(path)
-        _image(self.page.screenshot()).save(self._file(name), quality=82, method=6)
+            _image(self.page.screenshot()).save(
+                self.out / f"{name}.{self.suffix}{kind}.webp", quality=82, method=6
+            )
 
     def animation(self, name: str, steps) -> None:
         """steps: (an action or None, how long its frame shows, in ms)."""

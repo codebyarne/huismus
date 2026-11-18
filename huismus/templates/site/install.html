@@ -2,6 +2,8 @@
 {% load i18n %}
 
 {% block title %}{% translate "Installeren" %} — Huismus{% endblock %}
+{% block og_title %}{% translate "Installeren" %} — Huismus{% endblock %}
+{% block description %}{% translate "Download Huismus voor Mac of Windows en lees hoe je de app de eerste keer opent." %}{% endblock %}
 {% block main_class %}wrap site-narrow{% endblock %}
 
 {% block content %}
@@ -25,7 +27,7 @@
     <h2>{% translate "Daarna" %}</h2>
     <ul>
         <li>{% translate "Begin je nieuw? Vul in vier stappen je bedrijfsgegevens in." %}</li>
-        <li>{% translate "Kom je van Moneybird? Importeer je hele administratie in één keer." %}</li>
+        <li>{% translate "Kom je van Moneybird? Importeer je klanten, facturen, offertes en uitgaven in één keer." %}</li>
         <li>{% blocktranslate %}Eerst rondkijken? Kies <strong>Probeer met nepdata</strong>: Huismus vult zich met verzonnen facturen, die je er met één knop weer uithaalt.{% endblocktranslate %}</li>
         <li>{% translate "Kies een map voor je back-ups, bijvoorbeeld in iCloud Drive of OneDrive." %}</li>
         <li>{% translate "Bonnetjes vanaf je telefoon? Kies een bonnetjesmap die meesynchroniseert." %}</li>
@@ -35,7 +37,7 @@
 
 <section class="card card-pad stack">
     <h2>{% translate "Liever zelf draaien op een server?" %}</h2>
-    <p class="muted">{% translate "Heb je een Raspberry Pi, een NAS, een eigen server of een VPS, dan kun je Huismus ook in Docker draaien. Dat is voor wie daar handig mee is." %}</p>
+    <p class="muted">{% translate "Heb je een Raspberry Pi, een NAS, een eigen server of een VPS, dan kun je Huismus ook in Docker draaien. Dat is iets voor wie al met Docker werkt." %}</p>
     <p><a href="{{ help.docker }}">{% translate "Installeren met Docker" %} →</a> · <a href="{{ help.vps }}">{% translate "Op een VPS" %} →</a></p>
 </section>
 {% endblock %}

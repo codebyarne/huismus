@@ -12,20 +12,21 @@
         <span class="eyebrow">{% translate "Voor zzp’ers, met of zonder KOR" %}</span>
         <h1>{% translate "Je boekhouding op je eigen computer" %}</h1>
         <p class="lede">{% translate "Huismus is een gratis app voor je facturen, offertes en bonnetjes, met de bedragen voor je btw-aangifte. Kom je van Moneybird? Neem al je jaren mee, tot op de cent." %}</p>
-        {% include "site/_downloads.html" %}
+        {% include "site/_downloads.html" with try_hint=True %}
     </div>
     <div class="hero-shot">
         <svg class="perch" aria-hidden="true"><use href="#mus-vogel"></use></svg>
         {% translate "Het overzicht van Huismus: de omzet van dit jaar tegenover de KOR-grens, wat openstaat, de winst en de laatste facturen." as alt %}
-        {% include "site/_beeld.html" with name="overzicht" alt=alt still=True eager=True sizes="(min-width: 900px) 660px, 100vw" %}
+        {% include "site/_beeld.html" with name="overzicht" alt=alt still=True eager=True sizes="(min-width: 1024px) 620px, 100vw" %}
     </div>
     <figure class="hero-photo">
-        {% translate "Een meubelmaker schuurt een stoel in haar werkplaats. Op de werkbank staat een laptop met Huismus open." as alt %}
+        {% translate "Een meubelmaker met een stofmasker op schuurt een stoel in haar werkplaats. Op de werkbank staat een laptop met Huismus open." as alt %}
         {% include "site/_foto.html" with name="werkplaats" alt=alt small=800 large=1600 width=1600 height=640 sizes="(min-width: 1264px) 1200px, 100vw" %}
     </figure>
 </section>
 
-<section class="wrap" aria-label="{% translate 'Waarom Huismus' %}">
+<section class="wrap facts-block" aria-label="{% translate 'Waarom Huismus' %}">
+    <div class="facts-leaf">
     <ul class="facts">
         <li><svg class="i" aria-hidden="true"><use href="#wallet"></use></svg>{% translate "Geen abonnement" %}</li>
         <li><svg class="i" aria-hidden="true"><use href="#users"></use></svg>{% translate "Geen account" %}</li>
@@ -33,6 +34,7 @@
         <li><svg class="i" aria-hidden="true"><use href="#calendar"></use></svg>{% translate "Geen einddatum" %}</li>
     </ul>
     <p class="facts-note">{% blocktranslate %}Huismus is gratis en open source. <a href="{{ repository }}">De broncode staat openbaar.</a>{% endblocktranslate %}</p>
+    </div>
 </section>
 
 <section class="wrap" id="overstappen">
@@ -44,7 +46,7 @@
                 <a class="more" href="{{ help.moneybird }}">{% translate "Zo stap je over" %} <span aria-hidden="true">→</span></a>
             </div>
             <figure class="band-photo">
-                {% translate "Een man zit ’s avonds aan de keukentafel achter een laptop met Huismus open. Naast hem ligt een stapel papieren." as alt %}
+                {% translate "Een man zit aan de keukentafel bij een bureaulamp, achter een laptop met Huismus open. Naast hem ligt een stapel papieren." as alt %}
                 {% include "site/_foto.html" with name="keukentafel" alt=alt small=600 large=1200 width=1200 height=800 sizes="(min-width: 900px) 520px, 100vw" %}
             </figure>
         </div>
@@ -62,12 +64,12 @@
                 <li>
                     <span class="step-n" aria-hidden="true">2</span>
                     <div><h3>{% translate "Eerst een proefdraai" %}</h3>
-                    <p>{% translate "Huismus rekent elke factuur na en vergelijkt elk totaal, tot op de cent. Er wordt nog niets opgeslagen." %}</p></div>
+                    <p>{% translate "Huismus rekent elke factuur na en vergelijkt elk totaal, tot op de cent. Wijkt er een af, dan zie je welke en hoeveel. Er wordt nog niets opgeslagen." %}</p></div>
                 </li>
                 <li>
                     <span class="step-n" aria-hidden="true">3</span>
                     <div><h3>{% translate "Importeer" %}</h3>
-                    <p>{% translate "Klopt alles, dan zet Huismus het erin. Je oude jaren staan daarna op je eigen computer, zonder abonnement." %}</p></div>
+                    <p>{% translate "Daarna importeer je, en Huismus zet alles erin. Je oude jaren staan dan op je eigen computer, zonder abonnement." %}</p></div>
                 </li>
             </ol>
         </div>
@@ -75,6 +77,7 @@
         <p class="band-note"><span class="when when-on-petrol">{% blocktranslate with month=first.0|date:"F Y" %}Verwacht in {{ month }}{% endblocktranslate %}</span>{% translate "Importeren uit andere pakketten en uit Excel." %}</p>
         {% endwith %}
     </div>
+    <p class="band-after">{% translate "Begin je nieuw? Dan vul je in vier stappen je bedrijfsgegevens in." %} <a class="more" href="{{ help.beginnen }}">{% translate "Aan de slag" %} <span aria-hidden="true">→</span></a></p>
 </section>
 
 <section class="wrap halves">
@@ -149,9 +152,9 @@
     <div class="people">
         {% translate "Een fotograaf knielt in een park en stelt haar camera in." as alt %}
         {% include "site/_foto.html" with name="fotograaf" alt=alt small=360 large=720 width=720 height=720 sizes="(min-width: 1264px) 384px, 32vw" %}
-        {% translate "Een hovenier legt een schop achter in zijn bus." as alt %}
+        {% translate "Een hovenier laadt gereedschap achter in zijn bus." as alt %}
         {% include "site/_foto.html" with name="hovenier" alt=alt small=360 large=720 width=720 height=720 sizes="(min-width: 1264px) 384px, 32vw" %}
-        {% translate "Een tekstschrijver schrijft aan een bureau bij het raam." as alt %}
+        {% translate "Een vrouw schrijft in een notitieboek aan een bureau bij het raam, met boeken om zich heen." as alt %}
         {% include "site/_foto.html" with name="schrijver" alt=alt small=360 large=720 width=720 height=720 sizes="(min-width: 1264px) 384px, 32vw" %}
     </div>
     <div class="duo">
@@ -222,10 +225,7 @@
 
 <section class="wrap" id="download">
     <div class="band band-final">
-        <div class="gutter" aria-hidden="true"><svg class="gutter-bird"><use href="#mus-vogel"></use></svg></div>
-        <h2>{% translate "Probeer Huismus" %}</h2>
-        <p class="lede">{% translate "Gratis, zonder account. Je administratie blijft op je eigen computer." %}</p>
-        {% include "site/_downloads.html" with on_petrol=True %}
+        {% include "site/_final.html" %}
     </div>
 </section>
 {% endblock %}

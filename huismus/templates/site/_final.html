@@ -1,0 +1,5 @@
+{% load i18n %}{% comment %}The closing band of the home page and Functies: the sparrow on the gutter and the download buttons.{% endcomment %}
+<div class="gutter" aria-hidden="true"><svg class="gutter-bird"><use href="#mus-vogel"></use></svg></div>
+<h2>{% translate "Probeer Huismus" %}</h2>
+<p class="lede">{% translate "Gratis, zonder account. Je administratie blijft op je eigen computer." %}</p>
+{% include "site/_downloads.html" with on_petrol=True %}

@@ -11,4 +11,6 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 export PATH="/opt/homebrew/bin:$HOME/.local/bin:$PATH"
+# Zonder gecompileerde vertalingen is de Engelse app Nederlands.
+uv run python manage.py compilemessages --ignore=.venv > /dev/null
 uv run python scripts/site_beelden.py docs/site
