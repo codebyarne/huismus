@@ -25,6 +25,11 @@ Archief: de oplevering uit Claude Design van september 2026 staat in
 `archief/2026-09-claude-design/`. `ronde-3/` bevat de gekeurde designs van
 ronde 3 (met een eigen schets-CSS, `hm.css`). Beide zijn naslag, geen bron.
 
+Het logo "Tegel" staat in `icons/`: `tegel.svg` (licht), `tegel-donker.svg`, `tegel-klein.svg`
+(vereenvoudigd, voor een tabblad) en `mus.svg` (de losse mus van een lege toestand). In de app
+komt het uit `icons.svg#mus`; `scripts/make_app_icons.py` maakt er de app-iconen van. De letters
+(Inter en Bricolage Grotesque, SIL OFL 1.1) staan in `huismus/core/static/core/fonts/`.
+
 Ronde 7 is het concept voor de site in de nieuwe huisstijl: `ronde-7/site-prompt.md`
 (de prompt voor Claude Design) en `ronde-7/fotos.md` (de foto's van mensen).
 

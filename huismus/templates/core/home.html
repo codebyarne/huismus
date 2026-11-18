@@ -11,7 +11,7 @@
 {% if first_time %}
 <section class="card" style="margin-bottom:var(--s-5)">
     <div class="empty" style="padding-bottom:var(--s-8)">
-        <div class="empty-art"><svg class="mark" width="72" height="72" aria-hidden="true"><use href="#mus"></use></svg></div>
+        <div class="empty-art"><svg class="mark" width="72" height="72" aria-hidden="true"><use href="#mus-vogel"></use></svg></div>
         <h1 style="font-size:var(--fs-2xl)">{% translate "Welkom bij Huismus" %}</h1>
         <p>{% translate "Begin je nieuw? Dan vul je in vier stappen in wat Huismus nodig heeft voor je eerste factuur." %} {% translate "Kom je van Moneybird? Neem dan in één keer al je klanten, facturen en offertes mee." %} {% translate "Huismus doet eerst een proefdraai en slaat pas iets op als jij dat kiest." %}</p>
         <div class="row" style="justify-content:center;gap:var(--s-3);flex-wrap:wrap">
@@ -98,26 +98,30 @@
 </div>
 
 {% if has_invoices %}
-<div class="grid-3" style="margin-bottom:var(--s-6)">
-    <a class="card kpi kpi-hero" href="{% url 'documents:list' %}?tab=openstaand&amp;jaar=alle" style="text-decoration:none">
-        <span class="kpi-label">{% translate "Openstaand" %}</span>
-        <span class="kpi-value">{{ outstanding.total_cents|money }}</span>
-        <span class="kpi-sub">{% blocktranslate count count=outstanding.count %}{{ count }} factuur{% plural %}{{ count }} facturen{% endblocktranslate %}{% if outstanding.overdue_count %}, {% blocktranslate count count=outstanding.overdue_count %}waarvan {{ count }} te laat{% plural %}waarvan {{ count }} te laat{% endblocktranslate %}{% endif %} →</span>
-    </a>
-    <div class="card kpi">
+{% comment %}One deep petrol block per screen (design "Helder"): here the year's revenue, with what is still to come in and the profit beside it.{% endcomment %}
+<div class="hero-row" style="margin-bottom:var(--s-6)">
+    <div class="card kpi kpi-hero">
         <span class="kpi-label">{% blocktranslate %}Omzet {{ year }}{% endblocktranslate %}</span>
         <span class="kpi-value">{{ overview.revenue_cents|money }}</span>
         <span class="kpi-sub">{% if overview.shows_input_vat %}{% blocktranslate with costs=overview.expenses_cents|money %}Kosten zonder btw {{ costs }}{% endblocktranslate %}{% else %}{% blocktranslate with costs=overview.expenses_cents|money %}Kosten {{ costs }}{% endblocktranslate %}{% endif %}</span>
         {% if kor_limit %}
         <span class="progress is-kor{% if kor_limit.level == 'near' %} is-warn{% elif kor_limit.level == 'over' %} is-bad{% endif %}" style="margin-top:var(--s-2)" aria-hidden="true"><span style="width:{{ kor_limit.bar_percent }}%"></span></span>
         <span class="kpi-sub">{% blocktranslate with percent=kor_limit.percent %}{{ percent }}% van je KOR-grens{% endblocktranslate %}</span>
+        {% if kor_limit.remaining_cents %}<span class="kpi-sub">{% blocktranslate with remaining=kor_limit.remaining_cents|money %}Nog {{ remaining }} tot de grens{% endblocktranslate %}</span>{% endif %}
         {% endif %}
     </div>
-    <a class="card kpi" href="{% url 'reports:year_overview' %}" style="text-decoration:none;color:inherit">
-        <span class="kpi-label">{% blocktranslate %}Winst {{ year }}{% endblocktranslate %}</span>
-        <span class="kpi-value">{{ overview.profit_cents|money }}</span>
-        <span class="kpi-sub">{% translate "Naar het jaaroverzicht" %} →</span>
-    </a>
+    <div class="hero-side">
+        <a class="card kpi" href="{% url 'documents:list' %}?tab=openstaand&amp;jaar=alle" style="text-decoration:none;color:inherit">
+            <span class="kpi-label">{% translate "Openstaand" %}</span>
+            <span class="kpi-value">{{ outstanding.total_cents|money }}</span>
+            <span class="kpi-sub">{% blocktranslate count count=outstanding.count %}{{ count }} factuur{% plural %}{{ count }} facturen{% endblocktranslate %}{% if outstanding.overdue_count %}, {% blocktranslate count count=outstanding.overdue_count %}waarvan {{ count }} te laat{% plural %}waarvan {{ count }} te laat{% endblocktranslate %}{% endif %} →</span>
+        </a>
+        <a class="card kpi" href="{% url 'reports:year_overview' %}" style="text-decoration:none;color:inherit">
+            <span class="kpi-label">{% blocktranslate %}Winst {{ year }}{% endblocktranslate %}</span>
+            <span class="kpi-value">{{ overview.profit_cents|money }}</span>
+            <span class="kpi-sub">{% translate "Naar het jaaroverzicht" %} →</span>
+        </a>
+    </div>
 </div>
 <div class="split split-wide">
     <section class="card">
@@ -151,7 +155,7 @@
 {% else %}
 <section class="card" id="nog-geen-facturen" style="margin-bottom:var(--s-6)">
     <div class="empty">
-        <div class="empty-art"><svg class="mark" width="72" height="72" aria-hidden="true"><use href="#mus"></use></svg></div>
+        <div class="empty-art"><svg class="mark" width="72" height="72" aria-hidden="true"><use href="#mus-vogel"></use></svg></div>
         <h2>{% translate "Nog geen facturen" %}</h2>
         <p>{% translate "Maak je eerste factuur. Of zet je administratie over uit Moneybird." %}</p>
         <a class="btn btn-primary btn-lg" href="{% url 'documents:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Eerste factuur maken" %}</a>

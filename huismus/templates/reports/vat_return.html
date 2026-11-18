@@ -26,7 +26,7 @@
 <p class="hint-banner is-info" id="kor-aan" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{{ kor_note }} <a class="num" href="{% url 'business:topic' 'kor' %}">{% translate "KOR-instellingen" %} →</a></span></p>
 <div class="split-rev" id="kor-omzet" style="margin-bottom:var(--s-5)">
     {% if kor_year.limit %}
-    <section class="card kpi aside-first" id="kor-grens">
+    <section class="card kpi kpi-hero aside-first" id="kor-grens">
         <span class="kpi-label">{% blocktranslate with year=kor_year.year %}Omzet in {{ year }}{% endblocktranslate %}</span>
         <span class="kpi-value">{{ kor_year.limit.revenue_cents|money }}</span>
         <span class="muted">{% blocktranslate with limit=kor_year.limit.limit_cents|money %}van {{ limit }}, je KOR-grens{% endblocktranslate %}</span>

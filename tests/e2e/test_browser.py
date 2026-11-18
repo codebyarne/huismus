@@ -356,10 +356,10 @@ def test_the_paper_of_a_document_stays_white_in_dark(app, contact):
 
     assert _background(app) != "rgb(255, 255, 255)"  # the page around it is dark
     assert style("article.paper", "backgroundColor") == "rgb(255, 255, 255)"
-    assert style("article.paper", "color") == "rgb(42, 37, 32)"
+    assert style("article.paper", "color") == "rgb(12, 35, 37)"
     # What you type on the paper is dark on white too.
     assert style("article.paper .input", "backgroundColor") == "rgb(255, 255, 255)"
-    assert style("article.paper .input", "color") == "rgb(42, 37, 32)"
+    assert style("article.paper .input", "color") == "rgb(12, 35, 37)"
 
 
 def test_a_chosen_theme_beats_the_system_and_stays_after_a_reload(app, browser):
