@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-17 08:13+0100\n"
+"POT-Creation-Date: 2026-11-18 15:36+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2164,7 +2164,6 @@ msgstr "Fill in the VAT amount. No VAT paid? Then fill in 0."
 msgid "Kies het btw-tarief."
 msgstr "Choose the VAT rate."
 
-#, python-format
 msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
 msgstr "With 0% or no VAT, the VAT amount is € 0.00."
 
@@ -2239,7 +2238,6 @@ msgstr "Saved. Huismus picks up new receipts from %(place)s by itself."
 msgid "Bonnetje verwijderd."
 msgstr "Receipt deleted."
 
-#, python-format
 msgid "0% of geen btw"
 msgstr "0% or no VAT"
 
@@ -2879,7 +2877,6 @@ msgstr "Supplies/services subject to the high VAT rate"
 msgid "Leveringen/diensten belast met laag tarief"
 msgstr "Supplies/services subject to the low VAT rate"
 
-#, python-format
 msgid "Leveringen/diensten belast met 0% of niet bij u belast"
 msgstr "Supplies/services taxed at 0% or not taxed to you"
 
@@ -4119,12 +4116,6 @@ msgid "Bekijken"
 msgstr "View"
 
 #, python-format
-msgid "waarvan %(count)s te laat"
-msgid_plural "waarvan %(count)s te laat"
-msgstr[0] "of which %(count)s overdue"
-msgstr[1] "of which %(count)s overdue"
-
-#, python-format
 msgid "Omzet %(year)s"
 msgstr "Revenue %(year)s"
 
@@ -4139,6 +4130,16 @@ msgstr "Costs %(costs)s"
 #, python-format
 msgid "%(percent)s%% van je KOR-grens"
 msgstr "%(percent)s%% of your KOR limit"
+
+#, python-format
+msgid "Nog %(remaining)s tot de grens"
+msgstr "%(remaining)s left until the limit"
+
+#, python-format
+msgid "waarvan %(count)s te laat"
+msgid_plural "waarvan %(count)s te laat"
+msgstr[0] "of which %(count)s overdue"
+msgstr[1] "of which %(count)s overdue"
 
 #, python-format
 msgid "Winst %(year)s"

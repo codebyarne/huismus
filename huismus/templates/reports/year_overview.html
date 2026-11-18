@@ -36,6 +36,7 @@
         <span>{% blocktranslate with percent=kor_limit.percent %}{{ percent }}% van je KOR-grens{% endblocktranslate %}</span>
         <span class="amount">{% blocktranslate with revenue=kor_limit.revenue_cents|money limit=kor_limit.limit_cents|money %}{{ revenue }} van {{ limit }}{% endblocktranslate %}</span>
     </div>
+    {% if kor_limit.remaining_cents %}<p class="muted" style="margin-top:var(--s-2)">{% blocktranslate with remaining=kor_limit.remaining_cents|money %}Nog {{ remaining }} tot de grens{% endblocktranslate %}</p>{% endif %}
     {% if year != this_year %}<p class="muted small" style="margin-top:var(--s-2)">{% blocktranslate with limit=kor_limit.limit_cents|money %}Gemeten met je huidige KOR-grens van {{ limit }}.{% endblocktranslate %}</p>{% endif %}
 </section>
 {% endif %}

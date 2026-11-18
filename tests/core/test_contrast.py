@@ -36,12 +36,18 @@ PAIRS = [
     ("draft", "surface"),
     ("panel-text", "panel"),
     ("panel-muted", "panel"),
+    ("hero-text", "hero"),
+    ("hero-muted", "hero"),
+    ("mark-bird", "mark-tile"),
     ("text", "warn-bg"),
 ]
 
 # (graphic, surface it stands on): bars and edges need 3 : 1 (WCAG 1.4.11).
 GRAPHIC_PAIRS = [
     ("primary", "surface"),  # the revenue bar
+    ("hero-bar", "hero"),  # the KOR bar on the eye-catcher
+    ("accent", "hero"),  # that bar close to the limit
+    ("hero-bad", "hero"),  # and over it
 ]
 # The yellow cost bar has no edge (the owner, 2026-11-15): its amounts are in
 # the table right below the chart.

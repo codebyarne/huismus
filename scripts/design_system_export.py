@@ -85,12 +85,14 @@ COMPONENTS = {
         "kaarten; elke cel krijgt `data-cell`.\n\n"
         "- Concepten tonen `Concept` in plaats van een nummer.\n"
         "- Bedragen rechts, met tabulaire cijfers.\n"
-        "- De KPI-kaart (`.kpi-hero`) is er één per scherm: openstaand.",
+        "- De blikvanger (`.kpi-hero`) is er één per scherm: een diep petrol vlak "
+        "met het grootste bedrag.",
     ),
     "leeg": (
         "EmptyState",
         "Inhoud",
-        "Lege toestand: de mus, één zin wat hier komt, en de actie om te beginnen.",
+        "Lege toestand: de losse mus op de dakgoot, één zin wat hier komt, en de "
+        "actie om te beginnen.",
     ),
     "dialoog": (
         "Dialog",
@@ -149,21 +151,14 @@ COVER = """<!-- @dsCard height=288 -->
   </svg>
   <p class="name">Huismus</p>
   <p class="tag">Facturen voor zzp'ers onder de KOR. Petrol en snavelgeel
-    op warme neutralen.</p>
+    op koel, bijna wit.</p>
 </div>
 """
 
-LOGO = "mus"  # the one symbol in icons.svg that is the mark, not an icon
-# A standalone SVG knows neither currentColor nor the page's tokens: the sparrow's
-# parts and the icons' ink get the light value of these tokens instead.
-# The wing has a token of its own (--mark-wing), so its override in icons.svg is
-# named --mark-wing-fill: a name can't fall back on itself.
-MARK_TOKENS = {
-    "mark-body": "primary",
-    "mark-accent": "accent",
-    "mark-wing-fill": "mark-wing",
-    "mark-eye": "surface",
-}
+LOGO = "mus"  # the one symbol in icons.svg that is the logo, not an icon
+# A standalone SVG knows neither currentColor nor the page's tokens: the logo's
+# parts (var(--mark-tile) and so on) and the icons' ink get the light value of
+# their token instead.
 ICON_INK_TOKEN = "text"
 
 
@@ -301,7 +296,11 @@ def tokens(commit):
         },
         "type": {
             "fonts": [],
-            "families": {"sans": t["font-sans"].strip(), "mono": t["font-mono"].strip()},
+            "families": {
+                "sans": t["font-sans"].strip(),
+                "display": t["font-display"].strip(),
+                "mono": t["font-mono"].strip(),
+            },
             "groups": [{"name": "Tekst", "family": "sans", "styles": styles}],
         },
         "spacing": {
@@ -350,11 +349,10 @@ def standalone_svg(name, symbol):
     body = re.sub(r"^<symbol[^>]*>|</symbol>$", "", symbol)
     attrs = re.search(r"<symbol([^>]*)>", symbol).group(1).replace(f' id="{name}"', "")
     attrs = attrs.replace('stroke="currentColor"', f'stroke="{_light(ICON_INK_TOKEN)}"')
-    for var, token in MARK_TOKENS.items():
-        body = re.sub(rf"var\(--{var},var\(--[\w-]+\)\)", _light(token), body)
+    body = re.sub(r"var\(--([\w-]+)\)", lambda m: _light(m.group(1)), body)
     svg = f'<svg xmlns="http://www.w3.org/2000/svg"{attrs}>{body}</svg>\n'
     if "var(" in svg or "currentColor" in svg:
-        sys.exit(f"icons.svg#{name} uses a colour this script can't fill in; extend MARK_TOKENS.")
+        sys.exit(f"icons.svg#{name} uses a colour that is no token of huismus.css.")
     return svg
 
 
@@ -389,8 +387,8 @@ def readme(commit):
     return f"""# Huismus
 
 Self-hosted facturatie voor Nederlandse zzp'ers onder de KOR. Eén gebruiker, op een
-Raspberry Pi, laptop en telefoon. Richting **Verfijnd**: petrol en snavelgeel op
-warme neutralen.
+Raspberry Pi, laptop en telefoon. Richting **Helder**: petrol en snavelgeel op
+koel, bijna wit; de inhoud op één wit vel, één diep petrol blikvanger per scherm.
 
 > Dit Design System is een **kopie**. De bron is `huismus/core/static/core/huismus.css` in
 > `codebyarne/huismus`, de componenten staan op `docs/design/componenten.html`.
@@ -403,7 +401,7 @@ warme neutralen.
    KOR-grens: een gekleurd vlak (`--bad-bg`, `--warn-bg`). Betaald, definitief,
    afgerond: alleen een vinkje of slotje in `--text-muted`. Zo valt het ene belangrijke op.
 2. **Petrol.** `--primary` (petrol) voor acties, `--accent` (snavelgeel) voor
-   highlights en herinneringen, warme neutralen (`--bg`, `--surface`)
+   highlights en herinneringen, koele neutralen (`--bg`, `--surface`)
    voor de rest. Geen nieuwe kleuren of lettertypes zonder besluit.
 3. **Snavelgeel is nooit een knop.**
 4. **Uitgegeven is definitief.** Geen invoervelden, een slotje. Concepten hebben geen nummer.
@@ -419,16 +417,18 @@ onder een factuur is de tekst van de gebruiker zelf. Engels komt via vertalingen
 
 ## Letters
 
-De systeemletter (`--font-sans`): geen webfonts, werkt offline. Cijfers in bedragen
-tabulair. Nummerformaten en code in `--font-mono`.
+Inter voor tekst (`--font-sans`), Bricolage Grotesque voor koppen en grote bedragen
+(`--font-display`). Beide zitten als bestanden in de app (`components/fonts/`, SIL OFL 1.1):
+er wordt niets van buiten geladen. Cijfers in bedragen tabulair. Nummerformaten en code
+in `--font-mono`.
 
 ## Iconen
 
 Lijniconen op een raster van 24, lijndikte 1,8, ronde uiteinden, in `currentColor`.
 In de app komen ze uit één sprite (`huismus/templates/icons.svg`). De bestanden hier hebben
 een vaste inkt (`--text` licht, {_light(ICON_INK_TOKEN)}) omdat een losse afbeelding geen
-`currentColor` kent. De mus is het merkteken: lijf `--primary`, vleugel `--mark-wing`,
-snavel `--accent`.
+`currentColor` kent. Het logo is de mus op de tegel: tegel `--mark-tile`, mus `--mark-bird`, vleugel
+`--mark-wing`, snavel `--accent`. De losse mus (`mus-vogel`) is voor een lege toestand.
 
 ## Domeinregels in de UI
 {domain}
@@ -457,6 +457,8 @@ def export(out, commit):
     )
     (project / "README.md").write_text(readme(commit), encoding="utf-8")
     shutil.copy(CSS, project / "components" / "bundle.css")
+    # The letters the CSS loads: url("fonts/...") beside it.
+    shutil.copytree(CSS.parent / "fonts", project / "components" / "fonts")
     sections = _sections()
     for section_id, (name, _, guide) in COMPONENTS.items():
         folder = project / "components" / name
@@ -475,8 +477,8 @@ def export(out, commit):
     )
     (project / "assets" / "Logos").mkdir(parents=True)
     (project / "assets" / "Logos" / "README.md").write_text(
-        "# Logo\n\nDe mus: lijf `--primary`, vleugel `--mark-wing`, snavel `--accent`, "
-        "oog `--surface`.\n",
+        "# Logo\n\nDe mus op de tegel: tegel `--mark-tile`, mus `--mark-bird`, vleugel "
+        "`--mark-wing`, snavel `--accent`. In donker een mint tegel met een donkere mus.\n",
         encoding="utf-8",
     )
     for group, names in (("Logos", [LOGO]), ("Icons", [n for n in symbols if n != LOGO])):

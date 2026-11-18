@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-17 08:13+0100\n"
+"POT-Creation-Date: 2026-11-18 15:36+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2066,7 +2066,6 @@ msgstr ""
 msgid "Kies het btw-tarief."
 msgstr ""
 
-#, python-format
 msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
 msgstr ""
 
@@ -2140,7 +2139,6 @@ msgstr ""
 msgid "Bonnetje verwijderd."
 msgstr ""
 
-#, python-format
 msgid "0% of geen btw"
 msgstr ""
 
@@ -2705,7 +2703,6 @@ msgstr ""
 msgid "Leveringen/diensten belast met laag tarief"
 msgstr ""
 
-#, python-format
 msgid "Leveringen/diensten belast met 0% of niet bij u belast"
 msgstr ""
 
@@ -3846,12 +3843,6 @@ msgid "Bekijken"
 msgstr ""
 
 #, python-format
-msgid "waarvan %(count)s te laat"
-msgid_plural "waarvan %(count)s te laat"
-msgstr[0] ""
-msgstr[1] ""
-
-#, python-format
 msgid "Omzet %(year)s"
 msgstr ""
 
@@ -3866,6 +3857,16 @@ msgstr ""
 #, python-format
 msgid "%(percent)s%% van je KOR-grens"
 msgstr ""
+
+#, python-format
+msgid "Nog %(remaining)s tot de grens"
+msgstr ""
+
+#, python-format
+msgid "waarvan %(count)s te laat"
+msgid_plural "waarvan %(count)s te laat"
+msgstr[0] ""
+msgstr[1] ""
 
 #, python-format
 msgid "Winst %(year)s"
