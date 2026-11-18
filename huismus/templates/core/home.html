@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n money documents_tags backups %}
+{% load i18n money documents_tags backups notices %}
 
 {% block title %}{% translate "Overzicht" %} — Huismus{% endblock %}
 {% comment %}Making an invoice is the overview's main action, once there is one: until then the welcome or "Eerste factuur maken" is.{% endcomment %}
@@ -57,7 +57,7 @@
 {% if kor_limit and kor_limit.level != "ok" %}
 <a class="hint-banner {% if kor_limit.level == 'over' %}is-bad{% else %}is-warn{% endif %}" id="kor-melding" href="{% url 'reports:year_overview' %}?jaar={{ year }}" style="margin-bottom:var(--s-4)">
     <svg class="i" aria-hidden="true"><use href="#alert"></use></svg>
-    <span>{% if kor_limit.level == "over" %}{% blocktranslate with revenue=kor_limit.revenue_cents|money limit=kor_limit.limit_cents|money %}Je omzet in {{ year }} ({{ revenue }}) is hoger dan je KOR-grens van {{ limit }}.{% endblocktranslate %}{% else %}{% blocktranslate with revenue=kor_limit.revenue_cents|money percent=kor_limit.percent limit=kor_limit.limit_cents|money %}Je omzet in {{ year }} is {{ revenue }}: {{ percent }}% van je KOR-grens van {{ limit }}.{% endblocktranslate %}{% endif %}</span>
+    <span>{% lead %}{% if kor_limit.level == "over" %}{% blocktranslate with revenue=kor_limit.revenue_cents|money limit=kor_limit.limit_cents|money %}Je omzet in {{ year }} ({{ revenue }}) is hoger dan je KOR-grens van {{ limit }}.{% endblocktranslate %}{% else %}{% blocktranslate with revenue=kor_limit.revenue_cents|money percent=kor_limit.percent limit=kor_limit.limit_cents|money %}Je omzet in {{ year }} is {{ revenue }}: {{ percent }}% van je KOR-grens van {{ limit }}.{% endblocktranslate %}{% endif %}{% endlead %}</span>
     <span class="spacer"></span>
     <span>{% translate "Naar het jaaroverzicht" %} →</span>
 </a>

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n backups %}
+{% load i18n backups notices %}
 
 {% block title %}{{ cloud.service_label }} — {% translate "Back-ups" %} — Huismus{% endblock %}
 {% block content_class %}content-narrow{% endblock %}
@@ -16,7 +16,7 @@
 </div>
 
 {% if cloud_failure is not None %}
-<p class="hint-banner is-bad" id="cloud-mislukt" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% blocktranslate with moment=cloud.last_failure_at|moment service=cloud.service_label %}De back-up van {{ moment }} kon niet naar {{ service }}.{% endblocktranslate %} {{ cloud_failure }}</span></p>
+<p class="hint-banner is-bad" id="cloud-mislukt" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% lead %}{% blocktranslate with moment=cloud.last_failure_at|moment service=cloud.service_label %}De back-up van {{ moment }} kon niet naar {{ service }}.{% endblocktranslate %} {{ cloud_failure }}{% endlead %}</span></p>
 {% endif %}
 
 <section class="card settings-section" id="cloud">

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n notices %}
 
 {% block title %}{% translate "AI-assistenten" %} — {% translate "Instellingen" %} — Huismus{% endblock %}
 {% block content_class %}content-narrow{% endblock %}
@@ -24,7 +24,7 @@
         <div class="row" style="justify-content:space-between"><h2>Claude</h2>{% include "business/_assistant_status.html" %}</div>
         <p class="small muted">{% translate "Werk met Claude aan je administratie, in de Claude-app op deze computer." %}</p>
         {% if claude_missing %}
-        <p class="hint-banner is-warn" id="claude-ontbreekt"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% blocktranslate with link='<a href="'|add:claude_download_url|add:'">claude.ai/download</a>'|safe %}De Claude-app staat niet op deze computer. Download hem op {{ link }} en kies daarna opnieuw Koppel met Claude.{% endblocktranslate %}</span></p>
+        <p class="hint-banner is-warn" id="claude-ontbreekt"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% lead %}{% blocktranslate with link='<a href="'|add:claude_download_url|add:'">claude.ai/download</a>'|safe %}De Claude-app staat niet op deze computer. Download hem op {{ link }} en kies daarna opnieuw Koppel met Claude.{% endblocktranslate %}{% endlead %}</span></p>
         {% endif %}
         <form method="post" class="row" style="flex-wrap:wrap;gap:var(--s-2)">
             {% csrf_token %}
