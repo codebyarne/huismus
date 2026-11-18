@@ -32,6 +32,9 @@ komt het uit `icons.svg#mus`; `scripts/make_app_icons.py` maakt er de app-iconen
 
 Ronde 7 is het concept voor de site in de nieuwe huisstijl: `ronde-7/site-prompt.md`
 (de prompt voor Claude Design) en `ronde-7/fotos.md` (de foto's van mensen).
+Ronde 8 is datzelfde concept in "Helder", zoals het gebouwd is: `ronde-8/README.md`.
+`icons/logo.svg` en `logo-donker.svg` zijn het logo met het woord "Huismus" als één
+tekening (`scripts/make_wordmark.py`).
 
 ## Een nieuw design maken
 

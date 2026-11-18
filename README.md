@@ -1,11 +1,15 @@
 # Huismus
 
+<picture><source media="(prefers-color-scheme: dark)" srcset="docs/design/icons/logo-donker.svg"><img src="docs/design/icons/logo.svg" alt="Het logo van Huismus" width="186" height="48"></picture>
+
 Huismus is boekhouding voor Nederlandse zzp'ers, met of zonder KOR. Je maakt
 er offertes, facturen en creditnota's mee als pdf, en je legt je uitgaven vast
 met het bonnetje erbij, ook vanuit een map die meesynchroniseert met je
 telefoon. Reken je btw, dan zie je per kwartaal de bedragen voor je
 btw-aangifte. Kom je van Moneybird, dan neem je al je jaren mee. Meer op
 [mijnhuismus.nl](https://mijnhuismus.nl).
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="docs/site/overzicht.nl.dark.webp"><img src="docs/site/overzicht.nl.light.webp" alt="Het overzicht van Huismus: de omzet van dit jaar tegenover de KOR-grens, wat openstaat, de winst en de laatste facturen." width="640"></picture>
 
 Huismus draait bij jou: als app op je Mac of Windows-pc, of in één
 Docker-container op een Raspberry Pi, een NAS of een andere server. Je

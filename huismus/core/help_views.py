@@ -5,8 +5,9 @@
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import render
+from django.utils.translation import get_language
 
-from . import feedback_views, help, updates
+from . import feedback_views, help, site, updates
 
 
 @login_required
@@ -15,7 +16,11 @@ def index(request):
         (group.title, [(slug, help.title(slug), help.summary(slug)) for slug in group.topics])
         for group in help.groups()
     ]
-    return render(request, "core/help_index.html", {"groups": groups})
+    return render(
+        request,
+        "core/help_index.html",
+        {"groups": groups, "features_url": site.features_overview_url(get_language())},
+    )
 
 
 @login_required

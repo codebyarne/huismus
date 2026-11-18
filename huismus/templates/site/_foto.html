@@ -1,0 +1,2 @@
+{% comment %}A photo of someone at work from docs/site/fotos/ (scripts/site_fotos.py). name, alt, small and large (the two widths), width and height (of the large one), sizes.{% endcomment %}
+<img class="photo" src="/beelden/fotos/{{ name }}.{{ large }}.webp" srcset="/beelden/fotos/{{ name }}.{{ small }}.webp {{ small }}w, /beelden/fotos/{{ name }}.{{ large }}.webp {{ large }}w" sizes="{{ sizes }}" width="{{ width }}" height="{{ height }}" alt="{{ alt }}" loading="lazy" decoding="async">
