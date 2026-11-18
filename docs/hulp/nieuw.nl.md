@@ -5,6 +5,30 @@ wat je er nu mee kunt. De nieuwste staat bovenaan.
 
 Na een nieuwe versie wijst een melding op het overzicht je hierheen.
 
+## 0.1.5, 18 november 2026
+
+- **Een nieuw, helder uiterlijk.** Huismus is lichter en rustiger: het menu staat
+  los, je werk staat op één wit vel, en per scherm valt er één ding op. Met een
+  nieuw logo: een witte mus op een petrol tegel.
+- **Het overzicht zegt wat er te doen is.** Bovenaan staat **Te doen**: een
+  factuur die te laat is, een offerte die op antwoord wacht, een concept dat
+  klaarstaat. Daaronder je omzet per maand, wat je nog moet ontvangen, en bij de
+  KOR hoeveel er nog onder je grens past.
+- **Een betaalherinnering sturen.** Bij een factuur die te laat is kies je
+  **Herinnering sturen**. De mail gaat via je eigen mail, met de factuur als
+  bijlage. De factuur zegt ook hoeveel dagen hij te laat is.
+- **Lijsten sorteren.** Facturen, Offertes, Uitgaven en Klanten sorteer je op
+  elke kolom.
+- **Verlopen offertes.** Een verzonden offerte waarvan de datum voorbij is, heet
+  overal **Verlopen**.
+- **Eerst de foto.** Werk je met Huismus op je telefoon, dan begint een nieuwe
+  uitgave met de camera.
+- **Je volgende nummer kiezen.** Bij **Instellingen → Facturen en nummering**
+  zet je het volgende factuur- en offertenummer zelf, zolang Huismus er nog geen
+  heeft uitgegeven. Handig als je ergens anders vandaan komt.
+- **Alles wat Huismus kan** staat nu op de site, met wat er later bij komt. Je
+  vindt de link onderaan **Hulp**.
+
 ## 0.1.4, 13 november 2026
 
 - **Bonnetjes onderweg.** Bewaar een foto van een bonnetje op je telefoon in je
