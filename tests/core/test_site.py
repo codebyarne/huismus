@@ -96,6 +96,10 @@ def test_every_link_inside_the_site_lands_on_a_page_and_heading(out):
             path, _hash, anchor = link.partition("#")
             # "/?#overstappen": on the home page a real navigation, so the menu closes.
             path = path.split("?")[0]
+            if path.startswith("/beelden/"):
+                # "Download de film", for a browser that can't play it: the file itself.
+                assert (out / path.strip("/")).is_file(), (address, link)
+                continue
             assert (out / path.strip("/") / "index.html").exists(), (address, link)
             if anchor:
                 assert anchor in _read(out, path).ids, (address, link)
@@ -360,3 +364,36 @@ def test_why_huismus_exists_has_a_page_the_home_page_and_every_foot_link_to(out,
     home = _read(out, site.home_url(language))
     assert why in home.links
     assert why in _read(out, site.help_url(language)).links
+
+
+def test_the_films_are_on_the_dutch_home_page_and_the_receipts_help(out):
+    """scripts/promo-film.sh site makes them. A film and its still come with
+    the site, and nothing of it loads or plays until the visitor presses play."""
+    for path in site.film_files():
+        assert path.exists(), f"{path.name}: draai ./scripts/promo-film.sh site"
+        assert (out / "beelden" / path.name).exists()
+    home = (out / "index.html").read_text()
+    receipts = (out / site.help_url("nl", "bonnetjes").strip("/") / "index.html").read_text()
+    for page, name in ((home, "overzicht"), (receipts, "bonnetjes")):
+        (video,) = re.findall(r"<video [^>]*>", page)
+        assert f'poster="/beelden/film-{name}.nl.webp"' in video
+        assert "controls" in video and 'preload="none"' in video
+        assert "autoplay" not in video
+        assert re.search(r'aria-label="[^"]{20,}"', video)
+        assert f'<source src="/beelden/film-{name}.nl.mp4" type="video/mp4">' in page
+    # Any other help page has no film.
+    assert (
+        "<video"
+        not in (out / site.help_url("nl", "facturen").strip("/") / "index.html").read_text()
+    )
+
+
+def test_the_english_pages_have_no_film_while_the_films_are_dutch(out):
+    for page in (out / "en").rglob("index.html"):
+        assert "<video" not in page.read_text(), page
+
+
+def test_a_film_is_small_enough_for_a_phone_on_the_road():
+    for path in site.film_files():
+        limit = 4_000_000 if path.suffix == ".mp4" else 100_000
+        assert path.stat().st_size < limit, path.name

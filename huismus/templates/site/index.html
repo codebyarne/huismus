@@ -65,6 +65,18 @@
     </div>
 </section>
 
+{% if film %}
+<section class="wrap film-block" aria-labelledby="film-kop">
+    <div class="section-head">
+        <p class="kicker">{% translate "Film" context "kicker" %}</p>
+        <h2 id="film-kop">{% translate "Huismus in één minuut" %}</h2>
+        <p class="lede">{% translate "Wat Huismus is en wat je ermee doet. Met muziek en ondertitels." %}</p>
+    </div>
+    {% translate "Film van een minuut: wat Huismus is, voor wie, en wat je ermee doet. Met muziek en ondertitels, zonder stem." as label %}
+    {% include "site/_film.html" with name="overzicht" label=label %}
+</section>
+{% endif %}
+
 <section class="wrap" id="overstappen" aria-labelledby="overstappen-kop">
     <div class="band">
         <div class="band-text band-intro">

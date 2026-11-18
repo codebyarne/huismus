@@ -66,6 +66,14 @@ ANIMATIONS = ("factuur-maken", "importeren")
 DETAILS = ("kor", "jaar")
 MEDIA = STILLS + PHONE_STILLS + ANIMATIONS + DETAILS
 MEDIA_DIR = Path(settings.BASE_DIR) / "docs" / "site"
+# The films (scripts/promo-film.sh site), each as film-<name>.nl.mp4 with the
+# still it shows until you press play (….webp). Their titles and the app in
+# them are Dutch, so only the Dutch pages show them, until there is an English
+# film (huismus-intern/besluiten.md, 2026-11-18).
+FILMS = ("overzicht", "bonnetjes")
+FILM_LANGUAGE = "nl"
+# The help page that shows a film above its text: {topic: film}.
+FILM_WITH_HELP = {"bonnetjes": "bonnetjes"}
 # A still is 2560 px wide, for a sharp screen; a phone gets this width.
 SMALL_WIDTH = 1280
 # The photos of people at work (scripts/site_fotos.py), each in two widths.
@@ -151,6 +159,14 @@ def media_files() -> list[Path]:
     ]
 
 
+def film_files() -> list[Path]:
+    return [
+        MEDIA_DIR / f"film-{name}.{FILM_LANGUAGE}.{kind}"
+        for name in FILMS
+        for kind in ("mp4", "webp")
+    ]
+
+
 # The photos with the app on the laptop: one per language (scripts/site_fotos.py).
 PHOTOS_WITH_SCREEN = ("werkplaats", "keukentafel")
 
@@ -225,6 +241,7 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
                 "help": _help_links(language),
                 "features": _features(),
                 "shot": _shot_sizes(),
+                "film": language == FILM_LANGUAGE,
             },
         ),
         features_url(language): (
@@ -296,6 +313,7 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
                 "switch_url": help_url(other, slug),
                 "page": page,
                 "summary": _short(help.summary(slug, language)),
+                "film": FILM_WITH_HELP.get(slug) if language == FILM_LANGUAGE else None,
             },
         )
     return pages
@@ -372,6 +390,8 @@ def build(out: Path) -> list[str]:
     for name in ANIMATIONS:
         for path in MEDIA_DIR.glob(f"{name}.*.webp"):
             _last_frame(path, out / "beelden" / f"{path.stem}.still.webp")
+    for path in film_files():
+        shutil.copy(path, out / "beelden" / path.name)
     for path in photo_files():
         shutil.copy(path, out / "beelden" / "fotos" / path.name)
     for language in help.LANGUAGES:

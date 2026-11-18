@@ -1,0 +1,8 @@
+{% load i18n %}{% comment %}A film from docs/site/ (scripts/promo-film.sh site). name, label (what a screen reader calls it), caption (optional, under it). Nothing plays or loads until the visitor presses play: only the still is fetched. Dutch only, so only on Dutch pages (core.site.FILMS).{% endcomment %}
+<figure class="film">
+    <video controls preload="none" playsinline poster="/beelden/film-{{ name }}.nl.webp" width="1280" height="720" aria-label="{{ label }}">
+        <source src="/beelden/film-{{ name }}.nl.mp4" type="video/mp4">
+        <p>{% translate "Je browser speelt deze film niet af." %} <a href="/beelden/film-{{ name }}.nl.mp4">{% translate "Download de film" %}</a></p>
+    </video>
+    {% if caption %}<figcaption>{{ caption }}</figcaption>{% endif %}
+</figure>

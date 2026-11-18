@@ -7416,6 +7416,31 @@ msgstr ""
 "Huismus is made in the Netherlands. You can read about its maker and their "
 "other work on <a href=\"https://www.arnekrijnsen.com\">arnekrijnsen.com</a>."
 
+msgid "Je browser speelt deze film niet af."
+msgstr "Your browser can't play this video."
+
+msgid "Download de film"
+msgstr "Download the video"
+
+msgctxt "kicker"
+msgid "Film"
+msgstr "Video"
+
+msgid "Huismus in één minuut"
+msgstr "Huismus in one minute"
+
+msgid "Wat Huismus is en wat je ermee doet. Met muziek en ondertitels."
+msgstr "What Huismus is and what you do with it. With music and subtitles."
+
+msgid "Film van een minuut: wat Huismus is, voor wie, en wat je ermee doet. Met muziek en ondertitels, zonder stem."
+msgstr "A one-minute video: what Huismus is, who it is for, and what you do with it. With music and subtitles, without a voice."
+
+msgid "Film van een halve minuut: foto's van bonnetjes gaan naar een map, Huismus leest ze, en in Verwerken kijk je ze na."
+msgstr "A half-minute video: photos of receipts go into a folder, Huismus reads them, and you check them in Process."
+
+msgid "Van foto tot uitgave in een halve minuut. In de film leest een AI-dienst de bonnetjes. Die kies je zelf, en hij staat uit tot jij hem aanzet."
+msgstr "From photo to expense in half a minute. In the video an AI service reads the receipts. You choose it yourself, and it stays off until you switch it on."
+
 #~ msgid "Uitleg per pakket om over te stappen"
 #~ msgstr "A guide per package for switching"
 
