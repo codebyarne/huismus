@@ -82,6 +82,7 @@
   --hero-muted:    light-dark(#B5E4E1, #B5E4E1);
   --hero-bar:      light-dark(#5FC9C4, #5FC9C4);
   --hero-track:    light-dark(#2B6B6D, #2B6B6D);
+  --hero-ahead:    light-dark(#5FA9A7, #5FA9A7);  /* een maand die nog komt: een stippellijn */
 
   /* Het menu op een breed scherm: los op de achtergrond, het huidige scherm als wit kaartje */
   --panel:         light-dark(#F1F5F4, #061415);
@@ -96,6 +97,7 @@
   --warn:     light-dark(#33494B, #C5D6D5);  --warn-bg:  light-dark(#E9EFEE, #1B3536);  /* opletten is neutraal, geen amber */
   --bad:      light-dark(#B4184F, #FF7BA5);  --bad-bg:   light-dark(#FCEBF1, #3A1322);
   --draft:    light-dark(#4A5F61, #A9C0BF);  --draft-bg: light-dark(#E9EFEE, #1B3536);
+  --bad-ink:  light-dark(#6B2440, #F2B6CB);  /* de tweede regel op een rij "te laat" */
   --danger:       light-dark(#B4184F, #FF7BA5);
   --danger-hover: light-dark(#8E123E, #FFA3C0);
   --on-danger:    light-dark(#FFFFFF, #2A0A16);
@@ -837,6 +839,100 @@ a.kpi-hero:hover { color: var(--hero-text); background: color-mix(in oklab, var(
 .hero-row > .hero-side { display: grid; gap: var(--s-4); }
 @media (max-width: 980px) { .hero-row { grid-template-columns: minmax(0, 1fr); } .hero-row > .hero-side { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .hero-row > .hero-side { grid-template-columns: minmax(0, 1fr); } .kpi-hero { padding: var(--s-6) var(--s-5) var(--s-5); } }
+
+/* Overzicht (ontwerp "Helder", #189 en #215): twaalf staafjes in de blikvanger, twee tegels
+   ernaast, de lijst "Te doen" en de laatste facturen los op het vel. */
+.hero-row { margin-bottom: var(--s-8); }
+.hero-row .kpi-hero { justify-content: flex-start; gap: var(--s-1); padding-bottom: var(--s-6); }
+.hero-row .kpi-hero .kpi-label { font-size: var(--fs-md); }
+.hero-row .kpi-hero .kpi-value { font-size: clamp(2rem, 6cqi + 1rem, 4rem); line-height: 1; }
+.hero-side > .kpi { border-radius: var(--r-xl); padding: var(--s-5) var(--s-6); justify-content: center; color: inherit; text-decoration: none; }
+.hero-side > a.kpi:hover { background: var(--surface-2); color: inherit; }
+.hero-side .kpi-label, .hero-side .kpi-sub { font-size: var(--fs-md); }
+.hero-side .kpi-sub { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.late-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--bad); flex: none; }
+.kpi-head { display: flex; align-items: baseline; justify-content: space-between; gap: 4px var(--s-3); flex-wrap: wrap; }
+.kpi-kor { gap: 10px; }
+.kpi-kor .progress { height: 10px; }
+/* De staafjes: de hoogte (--v, hele procenten van de beste maand) komt van de server. */
+.months { display: flex; flex-direction: column; gap: 8px; margin-top: var(--s-6); }
+.month-bars, .month-names { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 10px; }
+.month-bars { align-items: end; height: 112px; }
+.month-bar { height: max(calc(var(--v) * 1%), 4px); border-radius: 8px; background: var(--hero-bar); }
+.month-bar.is-current { background: var(--hero-text); }
+.month-bar.is-ahead { height: 8px; background: none; border: 1.5px dashed var(--hero-ahead); }
+.month-names { text-align: center; font-size: var(--fs-xs); color: var(--hero-muted); }
+.month-names .is-current { color: var(--hero-text); font-weight: var(--fw-semibold); }
+.month-letter { display: none; }
+/* Een deel van de pagina zonder kaart eromheen: kop, eventueel een link rechts, dan de inhoud. */
+.section { margin-bottom: var(--s-8); }
+.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-4); margin-bottom: var(--s-3); }
+.section-head h2 { display: flex; align-items: center; gap: 10px; font-size: 1.375rem; }
+.section-head > a { font-weight: var(--fw-semibold); text-decoration: none; }
+.count-badge { min-width: 24px; height: 24px; padding: 0 7px; border-radius: var(--r-pill); background: var(--text); color: var(--surface); font-family: var(--font-body); font-size: var(--fs-sm); line-height: 24px; text-align: center; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.todo { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.todo-item { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-4); padding: 14px 16px 14px 14px; border-radius: 18px; background: var(--surface-2); }
+.todo-icon { width: 44px; height: 44px; flex: none; border-radius: 14px; display: grid; place-items: center; background: light-dark(var(--surface), var(--surface-3)); color: var(--primary); }
+.todo-icon .i { width: 22px; height: 22px; }
+.todo-text { flex: 1 1 260px; min-width: 0; display: flex; flex-direction: column; overflow-wrap: anywhere; }
+.todo-title { font-weight: var(--fw-semibold); color: var(--text); text-decoration: none; }
+a.todo-title:hover { color: var(--text); text-decoration: underline; }
+.todo-detail { color: var(--text-muted); }
+.todo-item .btn .i { display: none; }
+.todo-item.is-late { background: var(--bad-bg); }
+.todo-item.is-late .todo-icon { background: var(--danger); color: var(--on-danger); }
+.todo-item.is-late .todo-detail { color: var(--bad-ink); }
+.todo-none { margin: 0; padding: 14px 16px; border-radius: 18px; background: var(--surface-2); color: var(--text-muted); }
+/* De tabel los op het vel: geen kaart, de eerste en laatste kolom tegen de rand. */
+.table-sheet th:first-child, .table-sheet td:first-child { padding-left: 0; }
+.table-sheet th:last-child, .table-sheet td:last-child { padding-right: 0; }
+.table-sheet th { border-bottom: 0; }
+.table-sheet td { border-bottom: 0; border-top: 1px solid var(--border); padding-block: 14px; }
+.table-sheet .amount { font-weight: var(--fw-semibold); }
+@media (max-width: 760px) {
+  /* Op de telefoon is een rij in zijn geheel aan te tikken, met een pijltje; alleen "te laat"
+     houdt een knop, over de hele breedte. */
+  .todo-item { gap: 12px; padding: 12px 14px; border-radius: 20px; background: var(--surface); flex-wrap: nowrap; }
+  .todo-icon { background: var(--primary-soft); }
+  .todo-text { flex: 1 1 0; }
+  .todo-go { flex: none; width: 24px; height: 24px; min-height: 0; padding: 0; border: 0; background: none; color: var(--text-muted); position: static; }
+  .todo-go:hover { background: none; }
+  .todo-go > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .todo-item .todo-go .i { display: block; }
+  /* Het tikvlak is de hele rij (::after, tegen de li aan). Een ingedrukte knop verschuift
+     (.btn:active) en zou dan zelf de maat van dat vlak worden: de tik viel ernaast. */
+  .todo-go::after { content: ""; position: absolute; inset: 0; border-radius: 20px; }
+  .todo-go:active { transform: none; }
+  .todo-item.is-late { flex-wrap: wrap; padding: 14px; }
+  .todo-item.is-late .btn { flex: 1 1 100%; height: 44px; border-radius: 14px; }
+  .todo-none { background: var(--surface); border-radius: 20px; }
+  .section > .table-wrap { background: var(--surface); border-radius: 20px; padding: 0 14px; }
+  .section, .hero-row { margin-bottom: var(--s-5); }
+  .page-head-overview { margin-bottom: var(--s-3); }
+  .page-head-overview .wide-only { display: none; }
+}
+@media (max-width: 560px) {
+  .month-bars, .month-names { gap: 6px; }
+  .month-bars { height: 60px; }
+  .month-bar { border-radius: 5px; }
+  .month-bar.is-ahead { height: 6px; }
+  .month-short { display: none; }
+  .month-letter { display: inline; }
+  .months { gap: 6px; margin-top: var(--s-4); }
+  /* "Nog te ontvangen" sluit aan op de blikvanger: één regel onderin het petrol vlak. */
+  .hero-row .kpi-hero { border-radius: var(--r-xl) var(--r-xl) 0 0; padding-bottom: var(--s-4); }
+  .hero-row > .hero-side { gap: var(--s-3); margin-top: calc(-1 * var(--s-4)); }
+  .hero-side > .kpi-due { flex-direction: row; align-items: center; justify-content: space-between; border: 0; border-radius: 0 0 var(--r-xl) var(--r-xl); background: var(--hero); color: var(--hero-text); position: relative; padding: 14px var(--s-5) var(--s-5); }
+  .hero-side > a.kpi-due:hover { background: var(--hero); color: var(--hero-text); }
+  .kpi-due::before { content: ""; position: absolute; left: var(--s-5); right: var(--s-5); top: 0; border-top: 1px solid var(--hero-track); }
+  .kpi-due .kpi-label { color: var(--hero-muted); }
+  .kpi-due .kpi-value { font-family: var(--font-body); font-size: var(--fs-md); letter-spacing: 0; }
+  .kpi-due .kpi-sub { display: none; }
+  .hero-side > .kpi:not(.kpi-due) { padding: 14px var(--s-4); border-radius: var(--r-lg); }
+  .kpi-kor .kpi-label { color: var(--text); font-weight: var(--fw-semibold); }
+  .kpi-kor .progress { height: 8px; }
+  .kpi-kor .kpi-more { display: none; }
+}
 /* A notice is one slim, quiet row, the same neutral tint for every kind; only its icon says
    which kind it is, and what to do is a petrol link at the end (design "Helder", board
    "Meldingen", the owner, 2026-11-18: no yellow, smaller and calmer). */

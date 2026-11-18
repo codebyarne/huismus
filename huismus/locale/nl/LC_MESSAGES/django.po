@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-18 15:36+0100\n"
+"POT-Creation-Date: 2026-11-18 17:25+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1432,6 +1432,113 @@ msgstr ""
 msgid "gisteren %(time)s"
 msgstr ""
 
+msgid "Bekijken"
+msgstr ""
+
+#, python-format
+msgid "Factuur %(number)s is te laat sinds %(date)s"
+msgstr ""
+
+#, python-format
+msgid "Factuur %(number)s is %(days)s dag te laat"
+msgid_plural "Factuur %(number)s is %(days)s dagen te laat"
+msgstr[0] "Factuur %(number)s is %(days)s dag te laat"
+msgstr[1] "Factuur %(number)s is %(days)s dagen te laat"
+
+#, python-format
+msgid "laatste herinnering: %(date)s"
+msgstr ""
+
+msgid "Herinnering sturen"
+msgstr ""
+
+#, python-format
+msgid "Offerte %(number)s wacht sinds %(date)s op antwoord"
+msgstr ""
+
+#, python-format
+msgid "Offerte %(number)s wacht %(days)s dag op antwoord"
+msgid_plural "Offerte %(number)s wacht %(days)s dagen op antwoord"
+msgstr[0] "Offerte %(number)s wacht %(days)s dag op antwoord"
+msgstr[1] "Offerte %(number)s wacht %(days)s dagen op antwoord"
+
+#, python-format
+msgid "Offerte %(number)s wacht op antwoord"
+msgstr ""
+
+msgid "verloopt vandaag"
+msgstr ""
+
+#, python-format
+msgid "verloopt over %(days)s dag"
+msgid_plural "verloopt over %(days)s dagen"
+msgstr[0] ""
+msgstr[1] ""
+
+#, python-format
+msgid "Je concept voor %(customer)s staat klaar"
+msgstr ""
+
+msgid "Je concept heeft nog geen klant"
+msgstr ""
+
+msgid "nog niet verstuurd"
+msgstr ""
+
+msgid "Afmaken"
+msgstr ""
+
+#, python-format
+msgid "Nog %(count)s factuur te laat"
+msgid_plural "Nog %(count)s facturen te laat"
+msgstr[0] "Nog %(count)s factuur te laat"
+msgstr[1] "Nog %(count)s facturen te laat"
+
+msgid "Ze staan bij Facturen onder Openstaand."
+msgstr ""
+
+#, python-format
+msgid "Nog %(count)s offerte wacht op antwoord"
+msgid_plural "Nog %(count)s offertes wachten op antwoord"
+msgstr[0] "Nog %(count)s offerte wacht op antwoord"
+msgstr[1] "Nog %(count)s offertes wachten op antwoord"
+
+msgid "Ze staan bij Offertes."
+msgstr ""
+
+#, python-format
+msgid "Nog %(count)s concept"
+msgid_plural "Nog %(count)s concepten"
+msgstr[0] "Nog %(count)s concept"
+msgstr[1] "Nog %(count)s concepten"
+
+msgid "Ze staan bij Facturen onder Concepten."
+msgstr ""
+
+#, python-format
+msgid "%(count)s bonnetje zonder uitgave"
+msgid_plural "%(count)s bonnetjes zonder uitgave"
+msgstr[0] "%(count)s bonnetje zonder uitgave"
+msgstr[1] "%(count)s bonnetjes zonder uitgave"
+
+msgid "Maak er een uitgave van."
+msgstr ""
+
+msgid "Verwerken"
+msgstr ""
+
+#, python-format
+msgid "%(count)s uitgave om na te kijken"
+msgid_plural "%(count)s uitgaven om na te kijken"
+msgstr[0] "%(count)s uitgave om na te kijken"
+msgstr[1] "%(count)s uitgaven om na te kijken"
+
+msgid "Kijk of het bedrag en de datum kloppen."
+msgstr ""
+
+msgid "Nakijken"
+msgstr ""
+
 msgid "Huismus kon de nieuwe versie niet controleren. Er is niets veranderd."
 msgstr ""
 
@@ -1476,15 +1583,6 @@ msgid "Een KvK-nummer bestaat uit 8 cijfers."
 msgstr ""
 
 msgid "Een Nederlandse postcode ziet er zo uit: “1234 AB”."
-msgstr ""
-
-msgid "Goedemorgen"
-msgstr ""
-
-msgid "Goedemiddag"
-msgstr ""
-
-msgid "Goedenavond"
 msgstr ""
 
 #, python-format
@@ -3673,12 +3771,6 @@ msgstr ""
 msgid "Naar Back-ups"
 msgstr ""
 
-msgid "Verder werken"
-msgstr ""
-
-msgid "zonder klant"
-msgstr ""
-
 msgid "Hoe gebruik je Huismus?"
 msgstr ""
 
@@ -3725,13 +3817,8 @@ msgid_plural "%(counter)s velden hebben aandacht nodig:"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Verwerken"
-msgstr ""
-
-msgid "Bonnetjes zonder uitgave"
-msgstr ""
-
-msgid "Nakijken"
+#, python-format
+msgid "Omzet per maand in %(year)s"
 msgstr ""
 
 msgid "zoeken"
@@ -3740,25 +3827,10 @@ msgstr ""
 msgid "Sluiten"
 msgstr ""
 
-msgid "verloopt vandaag"
+msgid "Te doen"
 msgstr ""
 
-#, python-format
-msgid "verloopt over %(days)s dag"
-msgid_plural "verloopt over %(days)s dagen"
-msgstr[0] ""
-msgstr[1] ""
-
-#, python-format
-msgid "geldig tot %(date)s"
-msgstr ""
-
-msgid ""
-"Verzonden offertes zonder antwoord. Na de geldigheidsdatum staan ze bij "
-"Offertes onder Afgewezen of verlopen."
-msgstr ""
-
-msgid "Geen offertes die op antwoord wachten."
+msgid "Er wacht niets op je."
 msgstr ""
 
 msgid "Uitleg bij de versie van Huismus die je nu gebruikt."
@@ -3839,19 +3911,25 @@ msgstr ""
 msgid "Huismus %(version)s is gevonden en wordt gedownload."
 msgstr ""
 
-msgid "Bekijken"
+msgid "Dit jaar"
 msgstr ""
 
 #, python-format
-msgid "Omzet %(year)s"
+msgid "Omzet in %(year)s"
+msgstr ""
+
+msgid "Nog te ontvangen"
+msgstr ""
+
+msgid "Niets openstaand"
 msgstr ""
 
 #, python-format
-msgid "Kosten zonder btw %(costs)s"
+msgid "%(count)s te laat"
 msgstr ""
 
 #, python-format
-msgid "Kosten %(costs)s"
+msgid "%(revenue)s van %(limit)s"
 msgstr ""
 
 #, python-format
@@ -3863,13 +3941,11 @@ msgid "Nog %(remaining)s tot de grens"
 msgstr ""
 
 #, python-format
-msgid "waarvan %(count)s te laat"
-msgid_plural "waarvan %(count)s te laat"
-msgstr[0] ""
-msgstr[1] ""
+msgid "Winst %(year)s"
+msgstr ""
 
 #, python-format
-msgid "Winst %(year)s"
+msgid "Kosten zonder btw %(costs)s"
 msgstr ""
 
 msgid "Laatste facturen"
@@ -3879,6 +3955,9 @@ msgid "Alle facturen"
 msgstr ""
 
 msgid "Nummer"
+msgstr ""
+
+msgid "Datum"
 msgstr ""
 
 msgid "Status"
@@ -4266,9 +4345,6 @@ msgstr ""
 msgid "uitgegeven op %(date)s"
 msgstr ""
 
-msgid "Herinnering sturen"
-msgstr ""
-
 msgid "Creditnota maken…"
 msgstr ""
 
@@ -4502,9 +4578,6 @@ msgid "Offertenummer"
 msgstr ""
 
 msgid "bij verzenden"
-msgstr ""
-
-msgid "Datum"
 msgstr ""
 
 msgid "Geldig tot"
@@ -5017,6 +5090,9 @@ msgstr ""
 msgid "Huismus haalt dan niets meer op. De bonnetjes die er al zijn, blijven."
 msgstr ""
 
+msgid "Bonnetjes zonder uitgave"
+msgstr ""
+
 #, python-format
 msgid "Uit de map %(place)s."
 msgstr ""
@@ -5462,10 +5538,6 @@ msgid "KOR-instellingen"
 msgstr ""
 
 #, python-format
-msgid "Omzet in %(year)s"
-msgstr ""
-
-#, python-format
 msgid "van %(limit)s, je KOR-grens"
 msgstr ""
 
@@ -5549,10 +5621,6 @@ msgid "Winst"
 msgstr ""
 
 msgid "omzet min kosten"
-msgstr ""
-
-#, python-format
-msgid "%(revenue)s van %(limit)s"
 msgstr ""
 
 #, python-format
@@ -6236,9 +6304,3 @@ msgid ""
 "Heb je een Raspberry Pi, een NAS, een eigen server of een VPS, dan kun je "
 "Huismus ook in Docker draaien. Dat is voor wie daar handig mee is."
 msgstr ""
-
-#, python-format
-#~ msgid "%(count)s dag te laat"
-#~ msgid_plural "%(count)s dagen te laat"
-#~ msgstr[0] "%(count)s dag te laat"
-#~ msgstr[1] "%(count)s dagen te laat"

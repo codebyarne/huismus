@@ -1,6 +1,12 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
+from datetime import date
+
 import pytest
+from hypothesis import given
+from hypothesis import settings as hypothesis_settings
+from hypothesis import strategies as st
+from hypothesis.extra.django import TestCase as HypothesisTestCase
 
 from huismus.contacts.models import Contact
 from huismus.documents.models import Document
@@ -177,3 +183,75 @@ def test_revenue_is_without_vat():
     overview = compute_year_overview(2026)
     assert overview.revenue_cents == 90000
     assert overview.quarters[0].revenue_cents == 90000
+
+
+# The overview's bars (#215): revenue per month, from the same sums as the
+# quarters and the year.
+
+
+def test_revenue_per_month_puts_each_document_in_its_month():
+    _issued_invoice(issue_date="2026-01-31", total_cents=1000)
+    _issued_invoice(issue_date="2026-02-01", total_cents=2000)
+    _issued_invoice(issue_date="2026-12-31", total_cents=4000)
+    _issued_credit_note(issue_date="2026-02-15", total_cents=500)
+    _issued_invoice(issue_date="2025-12-31", total_cents=9999)  # another year
+    _issued_invoice(issue_date="2027-01-01", total_cents=9999)  # another year
+    Document.objects.create(
+        kind="invoice", status="draft", contact=_contact(), issue_date="2026-03-01", total_cents=7
+    )
+
+    overview = compute_year_overview(2026)
+
+    assert overview.monthly_revenue_cents == [1000, 1500, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4000]
+
+
+def test_a_month_with_more_credited_than_invoiced_is_negative():
+    _issued_credit_note(issue_date="2026-05-10", total_cents=300)
+
+    overview = compute_year_overview(2026)
+
+    assert overview.monthly_revenue_cents[4] == -300
+    assert overview.revenue_cents == -300
+
+
+class RevenuePerMonthProperty(HypothesisTestCase):
+    """Whatever was issued: the twelve months add up to the year, and each
+    quarter is its three months. One count, three ways to read it."""
+
+    @hypothesis_settings(max_examples=40, deadline=None)
+    @given(
+        st.lists(
+            st.tuples(
+                st.sampled_from(["invoice", "credit_note"]),
+                st.dates(min_value=date(2025, 12, 1), max_value=date(2027, 1, 31)),
+                st.integers(min_value=0, max_value=5_000_000),
+            ),
+            max_size=25,
+        )
+    )
+    def test_months_add_up_to_the_quarters_and_the_year(self, documents):
+        contact = _contact()
+        for position, (kind, issue_date, cents) in enumerate(documents):
+            Document.objects.create(
+                kind=kind,
+                status="issued",
+                number=f"N-{position}",
+                contact=contact,
+                issue_date=issue_date,
+                subtotal_cents=cents,
+                total_cents=cents,
+            )
+
+        overview = compute_year_overview(2026)
+        months = overview.monthly_revenue_cents
+
+        expected = [0] * 12
+        for kind, issue_date, cents in documents:
+            if issue_date.year == 2026:
+                expected[issue_date.month - 1] += cents if kind == "invoice" else -cents
+        assert months == expected
+        assert all(isinstance(cents, int) for cents in months)
+        assert sum(months) == overview.revenue_cents
+        for quarter in overview.quarters:
+            first = (quarter.quarter - 1) * 3
+            assert quarter.revenue_cents == sum(months[first : first + 3])
