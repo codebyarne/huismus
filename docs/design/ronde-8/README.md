@@ -32,6 +32,7 @@ het herontwerp hieronder (huismus-intern/besluiten.md, 2026-11-18).
 | Kop van de homepage | gecentreerd, één kolom; de kop groter (tot 88 px), de vier punten als één regel met vinkjes |
 | Het overzicht | groot op een petrol vlak (tot 1120 px breed), onderaan afgesneden; op de telefoon het telefoonscherm |
 | Voor wie | de vijf foto's samen, de meubelmaker over de hele breedte, elk met alleen het beroep eronder; de twee zinnen over de KOR als tekst |
+| Film (19 november, alleen Nederlands) | tussen "Voor wie" en "Overstappen": de kicker "Film", de kop "Huismus in één minuut" en de overzichtsfilm, gecentreerd, hooguit 960 px breed; altijd donker, zoals het deelplaatje; speelt pas als je op afspelen drukt. De bonnetjesfilm staat boven het hulpstuk "Bonnetjes onderweg" |
 | Overstappen | de petrol band zonder foto; links tekst en de drie stappen, rechts de animatie |
 | Van jou | zonder wit vel; de kaart met schakelaars als object |
 | Het hele jaar | een wit vlak tot de rand met vier kaarten van ongelijke breedte, elk met een leesbaar stuk van de app: de factuur maken, Uitgaven op de telefoon, de KOR-grens met de kwartalen, het jaar met de knop CSV downloaden |

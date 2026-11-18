@@ -6792,3 +6792,29 @@ msgid ""
 "Huismus wordt gemaakt in Nederland. Over de maker en wat die nog meer doet, "
 "lees je op <a href=\"https://www.arnekrijnsen.com\">arnekrijnsen.com</a>."
 msgstr ""
+
+msgid "Je browser speelt deze film niet af."
+msgstr ""
+
+msgid "Download de film"
+msgstr ""
+
+msgctxt "kicker"
+msgid "Film"
+msgstr ""
+
+msgid "Huismus in één minuut"
+msgstr ""
+
+msgid "Wat Huismus is en wat je ermee doet. Met muziek en ondertitels."
+msgstr ""
+
+msgid "Film van een minuut: wat Huismus is, voor wie, en wat je ermee doet. Met muziek en ondertitels, zonder stem."
+msgstr ""
+
+msgid "Film van een halve minuut: foto's van bonnetjes gaan naar een map, Huismus leest ze, en in Verwerken kijk je ze na."
+msgstr ""
+
+msgid "Van foto tot uitgave in een halve minuut. In de film leest een AI-dienst de bonnetjes. Die kies je zelf, en hij staat uit tot jij hem aanzet."
+msgstr ""
+

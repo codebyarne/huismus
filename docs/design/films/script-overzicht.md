@@ -49,4 +49,6 @@ ondertitels schuiven mee met hoe lang de opname duurt. Is een opname langer dan 
 shot, dan stopt het script en zegt het hoeveel.
 
 De versie zonder stem (`huismus-overzicht-zonder-stem.mp4`, muziek en ondertitels in
-beeld) is bedoeld voor de site zolang de stem een proefstem is.
+beeld) staat op de site zolang de stem een proefstem is: op de Nederlandse homepage, onder
+"Voor wie" (`./scripts/promo-film.sh site` maakt de webversie in `docs/site/`). Komt de
+echte stem, dan vervangt die versie de film zonder stem, met de ondertitels als `<track>`.

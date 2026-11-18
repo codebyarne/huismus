@@ -387,3 +387,14 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
   .foot-top { flex-direction: column; align-items: flex-start; }
   .bento-shot { padding-left: var(--s-5); }
 }
+
+/* ---------- Films ---------- */
+/* Always dark, like the picture a shared link shows: an object with round corners.
+   The border keeps its edge visible on the dark site. */
+.film { margin: 0; }
+.film video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 14px; background: #061415; box-shadow: 0 0 0 1px var(--border-strong), var(--sh-window); }
+.film video:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+.film figcaption { margin-top: var(--s-3); color: var(--text-muted); font-size: var(--fs-sm); }
+.film-block { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.film-block .section-head { align-items: center; }
+.film-block .film { width: 100%; max-width: 960px; }
