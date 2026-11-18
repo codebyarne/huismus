@@ -4191,7 +4191,7 @@ msgid "Omzet in %(year)s"
 msgstr "Revenue in %(year)s"
 
 msgid "Nog te ontvangen"
-msgstr "Still to come in"
+msgstr "Still to receive"
 
 msgid "Niets openstaand"
 msgstr "Nothing outstanding"
