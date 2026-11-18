@@ -21,6 +21,7 @@ Addresses: Dutch at the root, English under /en/.
     /functies/          /en/features/
     /hulp/              /en/help/
     /hulp/<onderwerp>/  /en/help/<topic>/
+    /waarom/            /en/why/
     /meebouwen/         /en/contribute/
     /download/<mac|windows>/  /en/download/<mac|windows>/
 
@@ -116,6 +117,10 @@ def switching_url(language: str) -> str:
     """Overstappen in the menu: the block on the home page, until the page
     Overstappen exists (huismus-intern/besluiten.md, 2026-11-13)."""
     return home_url(language) + "#overstappen"
+
+
+def why_url(language: str) -> str:
+    return "/waarom/" if language == "nl" else "/en/why/"
 
 
 def contribute_url(language: str) -> str:
@@ -259,6 +264,10 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
             )
             for name, platform in PLATFORMS.items()
         },
+        why_url(language): (
+            "site/why.html",
+            {"nav": "why", "switch_url": why_url(other)},
+        ),
         contribute_url(language): (
             "site/contribute.html",
             {"nav": "contribute", "switch_url": contribute_url(other)},
@@ -311,6 +320,7 @@ def _links(language: str) -> dict[str, str]:
         "help_index_url": help_url(language),
         "install_url": install_url(language),
         "contribute_url": contribute_url(language),
+        "why_url": why_url(language),
     }
 
 

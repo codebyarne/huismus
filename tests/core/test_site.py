@@ -78,6 +78,7 @@ def test_every_link_inside_the_site_lands_on_a_page_and_heading(out):
     addresses = [site.home_url(lang) for lang in help.LANGUAGES]
     addresses += [site.install_url(lang) for lang in help.LANGUAGES]
     addresses += [site.features_url(lang) for lang in help.LANGUAGES]
+    addresses += [site.why_url(lang) for lang in help.LANGUAGES]
     addresses += [site.contribute_url(lang) for lang in help.LANGUAGES]
     addresses += [
         site.download_page_url(lang, n) for lang in help.LANGUAGES for n in site.PLATFORMS
@@ -382,3 +383,14 @@ def test_a_help_page_is_described_in_whole_words():
     assert site._short(text) == "Eerste zin is kort."
     assert site._short("woord " * 60).endswith("woord…")
     assert len(site._short("woord " * 60)) <= 160
+
+
+@pytest.mark.parametrize("language", help.LANGUAGES)
+def test_why_huismus_exists_has_a_page_the_home_page_and_every_foot_link_to(out, language):
+    """Who makes Huismus and why (the owner, 2026-11-18)."""
+    why = site.why_url(language)
+    page = (out / why.strip("/") / "index.html").read_text()
+    assert "https://www.arnekrijnsen.com" in page
+    home = _read(out, site.home_url(language))
+    assert why in home.links
+    assert why in _read(out, site.help_url(language)).links
