@@ -173,7 +173,7 @@ def test_above_the_limit_the_banner_says_so(logged_in, settings_filled):
     assert response.context["kor_limit"].level == "over"
     page = response.content.decode()
     assert "hoger dan je KOR-grens" in page
-    # Only over the limit the bar is red, and nothing is left to count down.
+    # Only over the limit the bar changes (dark), and nothing is left to count down.
     assert 'class="progress is-kor is-bad"' in page
     assert "tot de grens" not in page
 

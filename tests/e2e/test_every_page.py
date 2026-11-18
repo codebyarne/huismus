@@ -583,14 +583,21 @@ ACTIONS_JS = """
     if (!menu || menu.matches(":popover-open")) return false;
     return [...document.querySelectorAll(`[popovertarget="${menu.id}"]`)].some(visible);
   };
+  // The same place by another road counts: the overview's "Uitgave" is in the + on a phone (#189).
+  const places = new Set([...document.querySelectorAll("a[href]")]
+    .filter(reachable).map((el) => el.getAttribute("href")));
   const out = [];
   for (const el of document.querySelectorAll("a[href], button")) {
     if (el.closest(nav) || el.closest("dialog") || el.hasAttribute("popovertarget")) continue;
     // One line: a notice's link stands beside its text on a wide screen and runs on in it
-    // on a phone, so innerText has a line break in one and a space in the other.
-    const name = (el.getAttribute("aria-label") || el.innerText || "").replace(/\s+/g, " ").trim();
+    // on a phone: a line break in one and a space in the other.
+    // textContent, not innerText: a tile that hides a line on a phone is still the same action.
+    const name = (el.getAttribute("aria-label") || el.textContent || "").replace(/\s+/g, " ").trim();
     const where = el.getAttribute("href") || el.getAttribute("formaction") || "";
-    out.push({key: `${name} ${where}`.trim(), visible: visible(el), reachable: reachable(el)});
+    out.push({
+      key: `${name} ${where}`.trim(), visible: visible(el),
+      reachable: reachable(el) || places.has(where),
+    });
   }
   return out;
 }
