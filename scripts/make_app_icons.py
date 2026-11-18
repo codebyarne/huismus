@@ -16,6 +16,7 @@ Uses the Chromium that the browser tests already need; no extra dependency
 
 import os
 import re
+import sys
 from pathlib import Path
 
 from playwright.sync_api import sync_playwright
@@ -25,7 +26,8 @@ MARK = ROOT / "docs" / "design" / "icons" / "tegel.svg"
 OUT = ROOT / "huismus" / "core" / "static" / "core" / "icons"
 
 # The bird inside tegel.svg: everything in its <g>, drawn on a 48x48 grid
-# where it spans 3.6 to 45.5 across and 8.5 to 41 down.
+# where it spans 3.6 to 45.5 across and 8.5 to 41 down. These numbers belong
+# to the shapes in tegel.svg: redraw the bird, and measure it again.
 BIRD = "3.6 8.5 41.9 32.5"
 
 # name: (size in px, width of the bird as a share of the icon). All of them
@@ -57,8 +59,11 @@ PAGE = """<!DOCTYPE html>
 def _parts():
     """The tile's colour and the bird as an SVG of its own."""
     logo = MARK.read_text(encoding="utf-8")
-    background = re.search(r'<rect[^>]*fill="(#[0-9A-Fa-f]{6})"', logo).group(1)
-    bird = re.search(r"<g[^>]*>(.*)</g>", logo, flags=re.S).group(1)
+    tiles = re.findall(r'<rect[^>]*fill="(#[0-9A-Fa-f]{6})"', logo)
+    birds = re.findall(r"<g[^>]*>(.*?)</g>", logo, flags=re.S)
+    if len(tiles) != 1 or len(birds) != 1:
+        sys.exit(f"{MARK} must hold one <rect> (the tile) and one <g> (the bird).")
+    background, bird = tiles[0], birds[0]
     svg = f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{BIRD}">{bird}</svg>'
     return background, svg
 

@@ -74,7 +74,8 @@
   --mark-bird:     light-dark(#FFFFFF, #06201F);
   --mark-wing:     light-dark(#5FC9C4, #0D6B6E);
 
-  /* De blikvanger: één diep petrol vlak per scherm, hetzelfde in licht en donker */
+  /* De blikvanger: één diep petrol vlak per scherm, hetzelfde in licht en donker. Toch als
+     light-dark(): tests/core/test_contrast.py meet elk token in die vorm, in beide thema's. */
   --hero:          light-dark(#0B4F51, #0B4F51);
   --hero-text:     light-dark(#FFFFFF, #FFFFFF);
   --hero-muted:    light-dark(#B5E4E1, #B5E4E1);
@@ -198,8 +199,7 @@ a:hover { color: var(--primary-hover); }
 .nav a[aria-current="page"], .nav a.is-active { background: var(--panel-current); color: var(--panel-text); font-weight: var(--fw-semibold); box-shadow: var(--sh-1); }
 .nav a[aria-current="page"] .i, .nav a.is-active .i { color: var(--primary); }
 .nav .sub { display: flex; flex-direction: column; gap: 1px; margin: 2px 0 6px; }
-.nav .sub a { min-height: 32px; padding-left: 39px; font-size: var(--fs-sm); }
-.nav .sub a { padding-left: 43px; }
+.nav .sub a { min-height: 32px; padding-left: 43px; font-size: var(--fs-sm); }
 .nav .sub a[aria-current="page"] { background: none; box-shadow: none; color: var(--panel-text); text-decoration: underline; text-underline-offset: 4px; }
 .sidebar-search {
   display: flex; align-items: center; gap: 10px; height: 38px; padding: 0 10px; border-radius: var(--r-md);
@@ -823,7 +823,8 @@ input[type="search"]::-webkit-search-cancel-button {
 .kpi-sub { font-size: var(--fs-sm); color: var(--text-muted); }
 /* De blikvanger: het ene diep petrol vlak van een scherm, met het grootste bedrag
    (ontwerp "Helder", de eigenaar, 2026-11-18). Eén per scherm. */
-.kpi-hero { background: var(--hero); color: var(--hero-text); border-color: transparent; border-radius: var(--r-xl); padding: var(--s-8) var(--s-8) var(--s-6); gap: var(--s-2); justify-content: center; }
+/* A container of its own: the amount's size (cqi) follows the block's width, wherever it stands. */
+.kpi-hero { container-type: inline-size; background: var(--hero); color: var(--hero-text); border-color: transparent; border-radius: var(--r-xl); padding: var(--s-8) var(--s-8) var(--s-6); gap: var(--s-2); justify-content: center; }
 .kpi-hero .kpi-label, .kpi-hero .kpi-sub, .kpi-hero .muted { color: var(--hero-muted); }
 .kpi-hero .kpi-value { font-size: clamp(2.25rem, 5cqi + 1rem, 4rem); font-weight: var(--fw-semibold); letter-spacing: -0.03em; line-height: 1.05; }
 .kpi-hero .progress { background: var(--hero-track); height: 10px; margin-top: var(--s-3); }
@@ -833,9 +834,8 @@ input[type="search"]::-webkit-search-cancel-button {
 a.kpi-hero:hover { color: var(--hero-text); background: color-mix(in oklab, var(--hero) 92%, #000); }
 .kpi-hero :focus-visible, a.kpi-hero:focus-visible { outline-color: var(--hero-text); }
 /* Overzicht: de blikvanger breed, twee cijfers ernaast onder elkaar. */
-.hero-row { display: grid; grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr); gap: var(--s-4); container-type: inline-size; }
+.hero-row { display: grid; grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr); gap: var(--s-4); }
 .hero-row > .hero-side { display: grid; gap: var(--s-4); }
-.hero-row .kpi-hero { container-type: inline-size; }
 @media (max-width: 980px) { .hero-row { grid-template-columns: minmax(0, 1fr); } .hero-row > .hero-side { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .hero-row > .hero-side { grid-template-columns: minmax(0, 1fr); } .kpi-hero { padding: var(--s-6) var(--s-5) var(--s-5); } }
 /* A notice is a quiet block like the other cards: no border, no stripe. Its kind
