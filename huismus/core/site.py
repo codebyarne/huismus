@@ -169,8 +169,6 @@ def social_image(language: str) -> Path:
 
 
 def _features() -> dict:
-    other = site_features.OTHER_PACKAGES
-    month = site_features.expected(other)
     next_up = None
     if site_features.COMING:
         first_month, items = site_features.COMING[0]
@@ -179,7 +177,6 @@ def _features() -> dict:
         next_up = (first_month, name[:1].lower() + name[1:])
     return {
         "next_up": next_up,
-        "switching": (month, other) if month else None,
         "now": site_features.NOW,
         "coming": site_features.COMING,
         "later": site_features.LATER,

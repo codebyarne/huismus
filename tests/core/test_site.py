@@ -346,17 +346,6 @@ def test_a_month_in_the_past_stops_the_build(tmp_path, monkeypatch):
         call_command("build_site", str(tmp_path / "site"))
 
 
-def test_the_month_under_overstappen_is_that_of_importing_from_other_packages(out):
-    from django.utils.formats import date_format
-
-    from huismus.core import site_features
-
-    month = site_features.expected(site_features.OTHER_PACKAGES)
-    home = (out / "index.html").read_text()
-    with translation.override("nl"):
-        assert f"Verwacht in {date_format(month, 'F Y')}</span>Importeren uit andere" in home
-
-
 def test_every_picture_that_comes_with_the_site_is_on_a_page(out):
     """No megabytes nobody sees."""
     pages = " ".join(path.read_text() for path in out.rglob("index.html"))
