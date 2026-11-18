@@ -27,15 +27,40 @@ de app, maak ze dan opnieuw en commit ze:
 ./scripts/site-beelden.sh
 ```
 
-Een promofilmpje (16 seconden in een lus, 1920×1080 mp4, voor LinkedIn en
-dergelijke): een nieuwe factuur krijgt een klant en een regel, en wordt
-uitgegeven. Van dezelfde verzonnen administratie, met een camera die in- en
-uitzoomt en een klik- of toetsgeluid bij elke klik en toets (CC0, van Kenney). Komt in `~/Downloads`,
-niet in de repo. Muziek eronder is optioneel (let op de licentie):
+Twee promofilms (1920×1080 mp4, donker, in de huisstijl van de app en de site),
+van dezelfde verzonnen administratie. Ze komen in `~/Downloads/huismus-films/`,
+niet in de repo:
 
 ```
-./scripts/promo-film.sh
-./scripts/promo-film.sh ~/Downloads/huismus-factuur.mp4 muziek.mp3
+./scripts/promo-film.sh              # allebei
+./scripts/promo-film.sh bonnetjes    # 29 seconden, zonder stem
+./scripts/promo-film.sh overzicht    # 63 seconden, met stem en ondertitels
+```
+
+- **bonnetjes:** een dag bonnetjes gaat als foto naar je cloudmap, Huismus haalt
+  ze op en leest ze, en in Verwerken zeg je drie keer "Klopt". De AI-dienst is
+  een nepservertje in het script: er gaat niets naar buiten.
+- **overzicht:** wat Huismus is, voor wie, en wat je ermee doet, in het verhaal
+  van de homepage. Het script staat in
+  [`design/films/script-overzicht.md`](design/films/script-overzicht.md). Je
+  krijgt drie versies (met stem, met stem en Nederlandse ondertitels in beeld,
+  zonder stem met muziek en ondertitels) en losse ondertitels in het Nederlands
+  en Engels (`.vtt`). De stem is een proefstem van macOS; een eigen opname per
+  shot zet je in `scripts/promo/film/stem/`, zie het script.
+
+`scripts/promo_film.py` neemt de echte schermen op, Remotion monteert ze
+(`scripts/promo/film/`, draait op Node en hoort niet bij de app), en
+`scripts/promo_geluid.py` maakt de stem, de ondertitels en de muziek. De letters
+en het logo komen uit de app zelf. Het klikgeluid is CC0, van Kenney. Bij elke
+film schrijft het script om de drie seconden een beeld naar `stills/`, om na te
+kijken.
+
+De oudere film van een factuur maken, met een camera boven de browser en een
+klik- of toetsgeluid bij elke klik en toets, bestaat nog. Muziek eronder is
+optioneel (let op de licentie):
+
+```
+./scripts/promo-film.sh factuur ~/Downloads/huismus-factuur.mp4 muziek.mp3
 ```
 
 Zelf bekijken:
