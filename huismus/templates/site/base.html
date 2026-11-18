@@ -69,6 +69,7 @@
         <p class="foot-line">{% translate "Gratis en open source, gemaakt in Nederland." %}</p>
         <nav class="foot-nav" aria-label="{% translate 'Voet' %}">
             <a href="{{ features_url }}">{% translate "Functies" %}</a>
+            <a href="{{ why_url }}"{% if nav == "why" %} aria-current="page"{% endif %}>{% translate "Waarom Huismus" %}</a>
             <a href="{{ install_url }}">{% translate "Installeren" %}</a>
             <a href="{{ help_index_url }}">{% translate "Hulp" %}</a>
             <a href="{{ contribute_url }}">{% translate "Meebouwen" %}</a>

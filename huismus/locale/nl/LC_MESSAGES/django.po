@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-18 20:17+0100\n"
+"POT-Creation-Date: 2026-11-18 21:35+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -6049,6 +6049,9 @@ msgstr ""
 msgid "Voet"
 msgstr ""
 
+msgid "Waarom Huismus"
+msgstr ""
+
 msgid "Broncode"
 msgstr ""
 
@@ -6368,9 +6371,6 @@ msgid ""
 "tot op de cent."
 msgstr ""
 
-msgid "Waarom Huismus"
-msgstr ""
-
 msgid "Geen abonnement"
 msgstr ""
 
@@ -6628,21 +6628,22 @@ msgstr ""
 msgid "Alle functies"
 msgstr ""
 
-msgid "Open en op een eigen server"
+msgid "Waarom Huismus, en op een eigen server"
 msgstr ""
 
-msgid "Open"
+msgid "Waarom"
 msgstr ""
 
-msgid "Open, en gemaakt in Nederland"
+msgid "Eén keer goed, voor iedereen"
 msgstr ""
 
 msgid ""
-"De broncode staat openbaar, dus iedereen kan zien hoe Huismus rekent. Hulp "
-"is welkom: code, vertalingen, testen op Windows, of een goed idee."
+"Een boekhouding heb je nodig. Huismus maakt hem één keer goed, gratis voor "
+"iedereen, in plaats van dat ieder zijn eigen programma door een AI laat "
+"bouwen. De broncode staat openbaar, en iedereen kan meebouwen."
 msgstr ""
 
-msgid "Zo bouw je mee"
+msgid "Waarom Huismus bestaat"
 msgstr ""
 
 msgid "Liever op een eigen server?"
@@ -6699,4 +6700,75 @@ msgid ""
 msgstr ""
 
 msgid "Op een VPS"
+msgstr ""
+
+msgid ""
+"Een boekhouding heb je nodig als zzp’er. Huismus maakt hem één keer goed, "
+"gratis voor iedereen, en iedereen kan meebouwen."
+msgstr ""
+
+msgid ""
+"Elke zzp’er heeft een boekhouding nodig. Daarom hoort hij er voor iedereen "
+"te zijn: gratis, eenvoudig en van jezelf."
+msgstr ""
+
+msgid "Boekhouden voor iedereen"
+msgstr ""
+
+msgid ""
+"Facturen maken, bonnetjes bewaren, de bedragen voor je btw-aangifte bij "
+"elkaar zoeken: elke zzp’er doet het, of je nu meubels maakt, foto’s of "
+"teksten. Het is gereedschap, net als je zaag of je camera."
+msgstr ""
+
+msgid ""
+"Gereedschap dat iedereen nodig heeft, hoort geen abonnement te kosten. "
+"Huismus is gratis, zonder einddatum en zonder account, en je administratie "
+"staat op je eigen computer."
+msgstr ""
+
+msgid "Eén keer goed, in plaats van duizend keer"
+msgstr ""
+
+msgid ""
+"Met AI kan tegenwoordig iedereen software laten maken. Dat is mooi, maar het "
+"is niet gratis: elk stuk code dat een AI schrijft, kost rekenkracht in een "
+"datacenter, met de stroom en de koeling die daarbij horen."
+msgstr ""
+
+msgid ""
+"Als elke zzp’er zijn eigen boekhoudprogramma laat bouwen, gebeurt hetzelfde "
+"werk duizenden keren, voor iets wat iedereen hetzelfde nodig heeft. Het is "
+"zuiniger als één programma goed gemaakt wordt en iedereen het gebruikt."
+msgstr ""
+
+msgid ""
+"Ook Huismus wordt met hulp van AI gebouwd. Juist daarom: dat werk gebeurt "
+"hier één keer, en dan heeft iedereen het."
+msgstr ""
+
+msgid "Iedereen kan meebouwen"
+msgstr ""
+
+msgid ""
+"De broncode staat openbaar, dus iedereen kan zien hoe Huismus rekent. Mis je "
+"iets en ben je handig, dan bouw je het zelf, en dan heeft iedereen er wat "
+"aan. Dat kan code zijn, maar ook een vertaling, een test op Windows of een "
+"goed idee."
+msgstr ""
+
+msgid ""
+"Zo blijft Huismus ook van iedereen. Stopt de maker ooit, dan opent je export "
+"nog steeds zonder Huismus, en kan iedereen met de code verder."
+msgstr ""
+
+msgid "Zo bouw je mee"
+msgstr ""
+
+msgid "Wie Huismus maakt"
+msgstr ""
+
+msgid ""
+"Huismus wordt gemaakt in Nederland. Over de maker en wat die nog meer doet, "
+"lees je op <a href=\"https://www.arnekrijnsen.com\">arnekrijnsen.com</a>."
 msgstr ""
