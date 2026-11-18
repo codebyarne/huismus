@@ -34,7 +34,13 @@ os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
 # A skipped or aborted view transition only means no animation (hidden tab,
 # a click or resize during a transition); it is not a bug in the page.
 # The last one is WebKit's wording for a transition a newer one replaced.
-IGNORED = ("ViewTransition", "Transition was aborted", "view transition aborted")
+IGNORED = (
+    "ViewTransition",
+    "Transition was aborted",
+    "view transition aborted",
+    # WebKit's words for the same, when a test resizes the window during one.
+    "Skipping view transition",
+)
 
 PASSWORD = "e2e-wachtwoord-123"
 
