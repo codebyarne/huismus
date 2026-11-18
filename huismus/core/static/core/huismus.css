@@ -838,29 +838,31 @@ a.kpi-hero:hover { color: var(--hero-text); background: color-mix(in oklab, var(
 .hero-row > .hero-side { display: grid; gap: var(--s-4); }
 @media (max-width: 980px) { .hero-row { grid-template-columns: minmax(0, 1fr); } .hero-row > .hero-side { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .hero-row > .hero-side { grid-template-columns: minmax(0, 1fr); } .kpi-hero { padding: var(--s-6) var(--s-5) var(--s-5); } }
-/* A notice is a quiet block like the other cards: no border, no stripe. Its kind
-   shows only in the round icon; the link is petrol, and red only for a real
-   problem (huismus-intern/besluiten.md, 2026-10-30; the owner, 2026-11-15). */
+/* A notice is one slim, quiet row, the same neutral tint for every kind; only its icon says
+   which kind it is, and what to do is a petrol link at the end (design "Helder", board
+   "Meldingen", the owner, 2026-11-18: no yellow, smaller and calmer). */
 .hint-banner {
-  --hb-ink: var(--accent-ink); --hb-chip: var(--accent-soft); --hb-link: var(--primary-ink);
-  display: flex; align-items: center; gap: var(--s-3); padding: 12px var(--s-5) 12px var(--s-3);
-  border-radius: var(--r-lg); background: var(--surface); color: var(--text);
-  border: 1px solid var(--border); font-weight: var(--fw-medium); text-decoration: none;
+  --hb-ink: var(--text-muted);
+  display: flex; align-items: center; gap: var(--s-3); min-height: 44px; padding: 8px 14px;
+  border-radius: 14px; background: var(--surface-2); color: var(--text); text-decoration: none;
   transition: background .15s;
 }
-a.hint-banner:hover, div.hint-banner:has(> a):hover { color: var(--text); background: var(--surface-2); }
+a.hint-banner:hover, div.hint-banner:has(> a):hover { color: var(--text); background: var(--surface-3); }
 /* A notice with a close button is a div: its link covers the whole block, the close button stays on top. */
 div.hint-banner:has(> a) { position: relative; }
 div.hint-banner > a::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
 div.hint-banner > form { position: relative; z-index: 1; }
-.hint-banner > .i { box-sizing: content-box; width: 18px; height: 18px; padding: 8px; border-radius: var(--r-md); color: var(--hb-ink); background: var(--hb-chip); flex: none; }
+.hint-banner > .i { width: 20px; height: 20px; color: var(--hb-ink); flex: none; }
 .hint-banner .spacer { flex: 1; }
-.hint-banner .spacer + span, .hint-banner a { color: var(--hb-link); font-weight: var(--fw-semibold); }
-.hint-banner.is-warn { --hb-ink: var(--warn); --hb-chip: var(--warn-bg); }
-.hint-banner.is-bad { --hb-ink: var(--bad); --hb-chip: var(--bad-bg); --hb-link: var(--bad); }
-/* Information that isn't a task, like a new version (desktop app). */
-.hint-banner.is-info { --hb-ink: var(--primary-ink); --hb-chip: var(--primary-soft); }
-.hint-banner > form { display: flex; margin: -6px calc(-1 * var(--s-2)) -6px 0; }
+.hint-banner .spacer + span, .hint-banner a { color: var(--primary-ink); font-weight: var(--fw-semibold); text-decoration: none; white-space: nowrap; }
+/* News (a new version, "bijgewerkt"): a petrol icon. A warning: its icon in the text colour. */
+.hint-banner.is-info { --hb-ink: var(--primary); }
+.hint-banner.is-warn { --hb-ink: var(--text); }
+/* A problem: a filled disc with an exclamation mark in the text colour, whatever icon the
+   template gives it. Never raspberry: that is only for "te laat". */
+.hint-banner.is-bad > .i { background: var(--text); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20ZM10.9 7.1a1.1 1.1 0 0 1 2.2 0v5.8a1.1 1.1 0 0 1-2.2 0ZM12 15.4a1.2 1.2 0 1 0 0 2.4a1.2 1.2 0 1 0 0-2.4Z'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20ZM10.9 7.1a1.1 1.1 0 0 1 2.2 0v5.8a1.1 1.1 0 0 1-2.2 0ZM12 15.4a1.2 1.2 0 1 0 0 2.4a1.2 1.2 0 1 0 0-2.4Z'/%3E%3C/svg%3E") center / contain no-repeat; }
+.hint-banner.is-bad > .i > use { display: none; }
+.hint-banner > form { display: flex; margin: -4px -10px -4px 0; }
 
 .checklist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
 .checklist li { display: flex; align-items: center; gap: var(--s-3); padding: 12px 0; border-top: 1px solid var(--border); }
@@ -1186,14 +1188,16 @@ form > div > .settings-section .card-head { border-bottom: 0; padding-bottom: 0;
 .legend-dot.is-cost { background: var(--accent); }
 /* Sneltoetsen bestaan alleen met een toetsenbord: niet tonen op touch. */
 @media (hover: none) { .shortcut-hint { display: none; } }
-/* Phone: the icon stays beside the first line, the link wraps below the text. */
+/* Phone: a white row on the background; the text runs on over as many lines as it needs, with
+   the link at its end. The icon stays beside the first line, the close button top right. */
 @media (max-width: 760px) {
-  .hint-banner { flex-wrap: wrap; align-items: flex-start; }
+  .hint-banner { display: block; position: relative; min-height: 0; padding: 10px 14px 10px 44px; border-radius: 16px; background: var(--surface); }
+  .hint-banner > .i { position: absolute; left: 14px; top: 11px; }
   .hint-banner .spacer { display: none; }
-  .hint-banner > .spacer ~ span:not(.spacer) { flex-basis: 100%; padding-left: calc(34px + var(--s-3)); }
-  .hint-banner > .i + span { flex: 1 1 0; min-width: 0; }
-  /* The close button stays beside the first line, the link goes below. */
-  .hint-banner > .spacer ~ a { order: 1; flex-basis: 100%; padding-left: calc(34px + var(--s-3)); }
+  .hint-banner > form, div.hint-banner > form { position: absolute; top: 2px; right: 2px; margin: 0; }
+  .hint-banner:has(> form) { padding-right: 44px; }
+  a.hint-banner:hover, div.hint-banner:has(> a):hover { background: var(--surface); }
+}
 }
 
 /* Grote schermen: het ontwerp is gemaakt voor een laptop (± 1440 px). Daarboven
@@ -1275,22 +1279,11 @@ form > div > .settings-section .card-head { border-bottom: 0; padding-bottom: 0;
 .pill-paid::before { width: 9px; height: 5px; }
 .pill-unpaid { --pill-bg: var(--surface); --pill-fg: var(--text); box-shadow: inset 0 0 0 1px var(--border-strong); padding-inline: 10px; font-weight: var(--fw-semibold); }
 .pill-partial { --pill-bg: var(--warn-bg); --pill-fg: var(--warn); padding-inline: 10px; font-weight: var(--fw-semibold); }
-/* The notices on Overzicht (design review, 2026-11-16). A warning is a slim tinted strip, not a
-   white card like the figures below it; news is a quiet line of text. */
-.notices { display: flex; flex-direction: column; gap: var(--s-2); margin-bottom: var(--s-5); }
+/* The notices on Overzicht: a short stack above the figures. */
+.notices { display: flex; flex-direction: column; gap: 6px; margin-bottom: var(--s-5); }
 .notices:not(:has(.hint-banner)) { display: none; }
 .notices > div:not(.hint-banner) { display: contents; }
 .notices .hint-banner { margin: 0 !important; }
-.notices .hint-banner.is-warn, .notices .hint-banner.is-bad { padding: 8px var(--s-4) 8px var(--s-2); border-radius: var(--r-md); background: var(--hb-chip); border-color: color-mix(in oklab, var(--hb-ink) 22%, transparent); }
-.notices .hint-banner.is-warn > .i, .notices .hint-banner.is-bad > .i { background: none; padding: 4px; }
-.notices a.hint-banner.is-warn:hover, .notices a.hint-banner.is-bad:hover { background: color-mix(in oklab, var(--hb-chip) 86%, var(--hb-ink)); }
-.notices .hint-banner.is-warn .spacer + span { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
-.notices .hint-banner.is-bad { font-weight: var(--fw-semibold); }
-.notices .hint-banner.is-info { padding: 2px var(--s-2); gap: var(--s-2); border: 0; background: none; font-size: var(--fs-sm); color: var(--text-muted); }
-.notices .hint-banner.is-info > .i { background: none; padding: 0; width: 16px; height: 16px; }
-.notices .hint-banner.is-info .spacer { display: none; }
-.notices a.hint-banner.is-info:hover, .notices div.hint-banner.is-info:has(> a):hover { background: none; color: var(--text); }
-@media (min-width: 761px) { .hint-banner .spacer + span, .hint-banner .spacer ~ a { white-space: nowrap; } }
 /* A column heading that sorts the list: a faint arrow says it can, a clear one shows the direction. */
 .th-sort { display: inline-flex; align-items: center; gap: 4px; color: inherit; text-decoration: none; border-radius: 4px; }
 .th-sort::after { content: "↕"; font-size: 11px; opacity: .3; transition: opacity .12s; }

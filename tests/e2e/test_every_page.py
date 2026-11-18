@@ -586,7 +586,9 @@ ACTIONS_JS = """
   const out = [];
   for (const el of document.querySelectorAll("a[href], button")) {
     if (el.closest(nav) || el.closest("dialog") || el.hasAttribute("popovertarget")) continue;
-    const name = (el.getAttribute("aria-label") || el.innerText || "").trim();
+    // One line: a notice's link stands beside its text on a wide screen and runs on in it
+    // on a phone, so innerText has a line break in one and a space in the other.
+    const name = (el.getAttribute("aria-label") || el.innerText || "").replace(/\s+/g, " ").trim();
     const where = el.getAttribute("href") || el.getAttribute("formaction") || "";
     out.push({key: `${name} ${where}`.trim(), visible: visible(el), reachable: reachable(el)});
   }
