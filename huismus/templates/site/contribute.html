@@ -2,6 +2,8 @@
 {% load i18n %}
 
 {% block title %}{% translate "Meebouwen" %} — Huismus{% endblock %}
+{% block og_title %}{% translate "Meebouwen" %} — Huismus{% endblock %}
+{% block description %}{% translate "Huismus is open source. Zo help je mee met code, vertalingen of testen." %}{% endblock %}
 {% block main_class %}wrap site-narrow{% endblock %}
 
 {% block content %}
@@ -24,7 +26,7 @@
     <ul>
         <li>{% blocktranslate %}<strong>Django en SQLite:</strong> één proces en één databasebestand. Een back-up is een kopie van een map.{% endblocktranslate %}</li>
         <li>{% blocktranslate %}<strong>HTMX en gewone CSS:</strong> schermen komen van de server. Geen JS-framework en geen build-stap; elk formulier werkt ook zonder JavaScript.{% endblocktranslate %}</li>
-        <li>{% blocktranslate %}<strong>WeasyPrint</strong> voor de pdf's.{% endblocktranslate %}</li>
+        <li>{% blocktranslate %}<strong>WeasyPrint</strong> voor de pdf’s.{% endblocktranslate %}</li>
         <li>{% blocktranslate %}<strong>pywebview en PyInstaller</strong> voor de app op Mac en Windows, <strong>Docker</strong> voor een server of Raspberry Pi.{% endblocktranslate %}</li>
         <li>{% blocktranslate %}<strong>pytest en Playwright:</strong> de browsertests draaien in Chromium, WebKit en Firefox.{% endblocktranslate %}</li>
     </ul>
@@ -33,7 +35,7 @@
 <section class="card card-pad help-text">
     <h2>{% translate "Waar je mee kunt helpen" %}</h2>
     <ul>
-        <li>{% blocktranslate %}<strong>Testen op Windows:</strong> Huismus wordt op een Mac gemaakt. Elke melding van iets wat op Windows raar doet, helpt.{% endblocktranslate %}</li>
+        <li>{% blocktranslate %}<strong>Testen op Windows:</strong> Huismus wordt op een Mac gemaakt. Meld het als iets op Windows anders werkt.{% endblocktranslate %}</li>
         <li>{% blocktranslate %}<strong>Vertalingen:</strong> Nederlands is de brontaal. Loop de Engelse teksten na, of voeg een taal toe.{% endblocktranslate %}</li>
         <li>{% blocktranslate %}<strong>Bugs en wensen:</strong> open een issue. Kom je van Moneybird en gaat er iets mis bij het importeren, beschrijf het dan zonder echte gegevens.{% endblocktranslate %}</li>
         <li>{% blocktranslate %}<strong>Code:</strong> kies een issue, of begin bij iets kleins. Voor iets groters bespreek je eerst de aanpak in een issue.{% endblocktranslate %}</li>
@@ -42,7 +44,7 @@
 
 <section class="card card-pad help-text">
     <h2>{% translate "Zo begin je" %}</h2>
-    <p>{% blocktranslate %}Je hebt Python 3.12 of nieuwer nodig, <a href="https://docs.astral.sh/uv/">uv</a> en Pango voor de pdf's (op een Mac: <code>brew install pango</code>).{% endblocktranslate %}</p>
+    <p>{% blocktranslate %}Je hebt Python 3.12 of nieuwer nodig, <a href="https://docs.astral.sh/uv/">uv</a> en Pango voor de pdf’s (op een Mac: <code>brew install pango</code>).{% endblocktranslate %}</p>
 <pre><code>git clone {{ repository }}.git
 cd huismus
 uv sync
@@ -67,7 +69,7 @@ uv sync
 <section class="card card-pad help-text" id="ondertekening">
     {% comment %}The code signing policy SignPath Foundation asks for (signpath.org/terms), linked from the foot of every page.{% endcomment %}
     <h2>{% translate "Ondertekening" %}</h2>
-    <p>{% translate "We hebben gratis ondertekening van de Windows-versie aangevraagd bij SignPath Foundation. Tot die er is, is de Windows-versie niet ondertekend. Zo gaat het dan:" %}</p>
+    <p>{% translate "We hebben gratis ondertekening van de Windows-versie aangevraagd bij SignPath Foundation. Tot die er is, is de Windows-versie niet ondertekend. Zo gaat het als de ondertekening er is:" %}</p>
     <ul>
         <li>{% blocktranslate %}<strong>Gebouwd uit deze broncode:</strong> elke versie wordt in GitHub Actions gebouwd uit de code op GitHub. Pas daarna wordt hij ondertekend.{% endblocktranslate %}</li>
         <li>{% blocktranslate %}<strong>Auteurs en reviewers:</strong> <a href="{{ repository }}/graphs/contributors">iedereen die meebouwt</a>. Elke wijziging komt binnen via een pull request.{% endblocktranslate %}</li>
@@ -80,7 +82,7 @@ uv sync
     <h2>{% translate "Afspraken" %}</h2>
     <ul>
         <li>{% blocktranslate %}<strong>Eén onderwerp per commit</strong>, met een conventioneel commitbericht (<code>feat(...)</code>, <code>fix(...)</code>).{% endblocktranslate %}</li>
-        <li>{% blocktranslate %}<strong>Tests eerst</strong> voor alles wat met totalen, nummers of creditnota's te maken heeft.{% endblocktranslate %}</li>
+        <li>{% blocktranslate %}<strong>Tests eerst</strong> voor alles wat met totalen, nummers of creditnota’s te maken heeft.{% endblocktranslate %}</li>
         <li>{% blocktranslate %}<strong>Teksten via gettext</strong>, in het Nederlands en het Engels.{% endblocktranslate %}</li>
         <li>{% blocktranslate %}<strong>Een DCO in plaats van een CLA:</strong> onderteken je commits met <code>git commit -s</code>. De licentie is AGPL-3.0-or-later.{% endblocktranslate %}</li>
     </ul>

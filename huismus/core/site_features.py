@@ -84,7 +84,7 @@ NOW = (
             Feature(
                 _("KOR met je grens in beeld"),
                 _(
-                    "Jouw KOR-tekst onder elke factuur, en op het overzicht hoe ver je "
+                    "Jouw KOR-tekst op elke factuur, en op het overzicht hoe ver je "
                     "van je grens bent."
                 ),
                 "kor-en-btw",

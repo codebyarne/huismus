@@ -1499,8 +1499,8 @@ msgid "KOR met je grens in beeld"
 msgstr ""
 
 msgid ""
-"Jouw KOR-tekst onder elke factuur, en op het overzicht hoe ver je van je "
-"grens bent."
+"Jouw KOR-tekst op elke factuur, en op het overzicht hoe ver je van je grens "
+"bent."
 msgstr ""
 
 msgid "Btw per regel, ook verlegd"
@@ -5901,7 +5901,7 @@ msgstr ""
 msgid "Pagina niet gevonden"
 msgstr ""
 
-msgid "Deze pagina bestaat niet (meer)."
+msgid "Deze pagina bestaat niet. Begin op de homepage of zoek in de hulp."
 msgstr ""
 
 msgid "Naar de homepage"
@@ -5913,10 +5913,27 @@ msgstr ""
 msgid "Download voor Windows"
 msgstr ""
 
+msgid "Huismus installeer je op je Mac of pc."
+msgstr ""
+
+msgid "Mail jezelf de link"
+msgstr ""
+
 msgid "macOS 15 of nieuwer met een Apple-chip · Windows 10 of nieuwer"
 msgstr ""
 
 msgid "Zo open je hem de eerste keer"
+msgstr ""
+
+msgid ""
+"Eerst rondkijken? Kies bij de eerste start <strong>Probeer met nepdata</"
+"strong>."
+msgstr ""
+
+msgid "Probeer Huismus"
+msgstr ""
+
+msgid "Gratis, zonder account. Je administratie blijft op je eigen computer."
 msgstr ""
 
 msgid "Op een Mac"
@@ -5956,14 +5973,14 @@ msgstr ""
 
 msgid ""
 "Dan blokkeert Smart App Control van Windows 11 de app, omdat hij niet "
-"ondertekend is. Zet het uit: <strong>Windows-beveiliging › App- en "
-"browserbeheer › Instellingen voor Smart App Control › Uit</strong>, en open "
-"het bestand opnieuw."
+"ondertekend is. Zet Smart App Control uit: <strong>Windows-beveiliging › "
+"App- en browserbeheer › Instellingen voor Smart App Control › Uit</strong>, "
+"en open het bestand opnieuw."
 msgstr ""
 
 msgid ""
-"Laat het uit zolang je Huismus gebruikt, anders blokkeert Windows de app "
-"weer. Je levert er wat bescherming mee in."
+"Laat Smart App Control uit zolang je Huismus gebruikt, anders blokkeert "
+"Windows de app weer. Je levert er wat bescherming mee in."
 msgstr ""
 
 msgid "Meer over de desktop-app"
@@ -5990,8 +6007,8 @@ msgid "Huismus: je boekhouding op je eigen computer"
 msgstr ""
 
 msgid ""
-"Boekhouden voor zzp’ers, met of zonder KOR: facturen, bonnetjes en je btw-"
-"aangifte. Gratis en open source."
+"Boekhouden voor zzp’ers, met of zonder KOR: facturen, bonnetjes en de "
+"bedragen voor je btw-aangifte. Gratis en open source."
 msgstr ""
 
 msgid ""
@@ -6045,6 +6062,9 @@ msgstr ""
 msgid "Deze site telt bezoeken met GoatCounter, zonder cookies."
 msgstr ""
 
+msgid "Huismus is open source. Zo help je mee met code, vertalingen of testen."
+msgstr ""
+
 msgid "Voor ontwikkelaars"
 msgstr ""
 
@@ -6076,7 +6096,7 @@ msgid ""
 "framework en geen build-stap; elk formulier werkt ook zonder JavaScript."
 msgstr ""
 
-msgid "<strong>WeasyPrint</strong> voor de pdf's."
+msgid "<strong>WeasyPrint</strong> voor de pdf’s."
 msgstr ""
 
 msgid ""
@@ -6093,8 +6113,8 @@ msgid "Waar je mee kunt helpen"
 msgstr ""
 
 msgid ""
-"<strong>Testen op Windows:</strong> Huismus wordt op een Mac gemaakt. Elke "
-"melding van iets wat op Windows raar doet, helpt."
+"<strong>Testen op Windows:</strong> Huismus wordt op een Mac gemaakt. Meld "
+"het als iets op Windows anders werkt."
 msgstr ""
 
 msgid ""
@@ -6117,7 +6137,7 @@ msgstr ""
 
 msgid ""
 "Je hebt Python 3.12 of nieuwer nodig, <a href=\"https://docs.astral.sh/uv/"
-"\">uv</a> en Pango voor de pdf's (op een Mac: <code>brew install pango</"
+"\">uv</a> en Pango voor de pdf’s (op een Mac: <code>brew install pango</"
 "code>)."
 msgstr ""
 
@@ -6181,7 +6201,7 @@ msgstr ""
 msgid ""
 "We hebben gratis ondertekening van de Windows-versie aangevraagd bij "
 "SignPath Foundation. Tot die er is, is de Windows-versie niet ondertekend. "
-"Zo gaat het dan:"
+"Zo gaat het als de ondertekening er is:"
 msgstr ""
 
 msgid ""
@@ -6218,7 +6238,7 @@ msgstr ""
 
 msgid ""
 "<strong>Tests eerst</strong> voor alles wat met totalen, nummers of "
-"creditnota's te maken heeft."
+"creditnota’s te maken heeft."
 msgstr ""
 
 msgid "<strong>Teksten via gettext</strong>, in het Nederlands en het Engels."
@@ -6248,7 +6268,7 @@ msgstr ""
 
 msgid ""
 "Begin je nieuw? Vul in vier stappen je bedrijfsgegevens in. Kom je van "
-"Moneybird? Importeer je hele administratie in één keer."
+"Moneybird? Importeer je klanten, facturen, offertes en uitgaven in één keer."
 msgstr ""
 
 msgid "Aan de slag"
@@ -6268,10 +6288,6 @@ msgid "Kan nu"
 msgstr ""
 
 msgid "Komt eraan"
-msgstr ""
-
-#, python-format
-msgid "Meer over: %(name)s"
 msgstr ""
 
 #, python-format
@@ -6307,10 +6323,9 @@ msgstr ""
 msgid "Huismus telt wat jij invult."
 msgstr ""
 
-msgid "Probeer Huismus"
-msgstr ""
-
-msgid "Gratis, zonder account. Je administratie blijft op je eigen computer."
+msgid ""
+"Uitleg bij Huismus: beginnen, overstappen, facturen, bonnetjes, btw en back-"
+"ups."
 msgstr ""
 
 #, python-format
@@ -6337,8 +6352,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Een meubelmaker schuurt een stoel in haar werkplaats. Op de werkbank staat "
-"een laptop met Huismus open."
+"Een meubelmaker met een stofmasker op schuurt een stoel in haar werkplaats. "
+"Op de werkbank staat een laptop met Huismus open."
 msgstr ""
 
 msgid "Waarom Huismus"
@@ -6375,8 +6390,8 @@ msgid "Zo stap je over"
 msgstr ""
 
 msgid ""
-"Een man zit ’s avonds aan de keukentafel achter een laptop met Huismus open. "
-"Naast hem ligt een stapel papieren."
+"Een man zit aan de keukentafel bij een bureaulamp, achter een laptop met "
+"Huismus open. Naast hem ligt een stapel papieren."
 msgstr ""
 
 msgid ""
@@ -6394,19 +6409,22 @@ msgid "Eerst een proefdraai"
 msgstr ""
 
 msgid ""
-"Huismus rekent elke factuur na en vergelijkt elk totaal, tot op de cent. Er "
-"wordt nog niets opgeslagen."
+"Huismus rekent elke factuur na en vergelijkt elk totaal, tot op de cent. "
+"Wijkt er een af, dan zie je welke en hoeveel. Er wordt nog niets opgeslagen."
 msgstr ""
 
 msgid "Importeer"
 msgstr ""
 
 msgid ""
-"Klopt alles, dan zet Huismus het erin. Je oude jaren staan daarna op je "
-"eigen computer, zonder abonnement."
+"Daarna importeer je, en Huismus zet alles erin. Je oude jaren staan dan op "
+"je eigen computer, zonder abonnement."
 msgstr ""
 
 msgid "Importeren uit andere pakketten en uit Excel."
+msgstr ""
+
+msgid "Begin je nieuw? Dan vul je in vier stappen je bedrijfsgegevens in."
 msgstr ""
 
 msgid "Je administratie is van jou"
@@ -6535,10 +6553,12 @@ msgstr ""
 msgid "Een fotograaf knielt in een park en stelt haar camera in."
 msgstr ""
 
-msgid "Een hovenier legt een schop achter in zijn bus."
+msgid "Een hovenier laadt gereedschap achter in zijn bus."
 msgstr ""
 
-msgid "Een tekstschrijver schrijft aan een bureau bij het raam."
+msgid ""
+"Een vrouw schrijft in een notitieboek aan een bureau bij het raam, met "
+"boeken om zich heen."
 msgstr ""
 
 msgid "Met de KOR"
@@ -6596,6 +6616,11 @@ msgstr ""
 msgid "Installeren met Docker"
 msgstr ""
 
+msgid ""
+"Download Huismus voor Mac of Windows en lees hoe je de app de eerste keer "
+"opent."
+msgstr ""
+
 msgid "Huismus installeren"
 msgstr ""
 
@@ -6607,7 +6632,9 @@ msgstr ""
 msgid "Begin je nieuw? Vul in vier stappen je bedrijfsgegevens in."
 msgstr ""
 
-msgid "Kom je van Moneybird? Importeer je hele administratie in één keer."
+msgid ""
+"Kom je van Moneybird? Importeer je klanten, facturen, offertes en uitgaven "
+"in één keer."
 msgstr ""
 
 msgid ""
@@ -6628,7 +6655,7 @@ msgstr ""
 
 msgid ""
 "Heb je een Raspberry Pi, een NAS, een eigen server of een VPS, dan kun je "
-"Huismus ook in Docker draaien. Dat is voor wie daar handig mee is."
+"Huismus ook in Docker draaien. Dat is iets voor wie al met Docker werkt."
 msgstr ""
 
 msgid "Op een VPS"

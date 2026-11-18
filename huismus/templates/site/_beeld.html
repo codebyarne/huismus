@@ -1,8 +1,10 @@
-{% comment %}A picture of the app from docs/site/ (scripts/site-beelden.sh), light or dark as the visitor's system is. name, alt; still for a screenshot (it also has a smaller file for a narrow screen), not for an animation; sizes as on an img; eager for the first one on a page.{% endcomment %}
-<figure class="shot">
+{% comment %}A picture of the app from docs/site/ (scripts/site-beelden.sh), light or dark as the visitor's system is. name, alt; still for a screenshot (a narrow screen gets the app as a phone shows it, a wide one a smaller file when that is enough), not for an animation; sizes as on an img; eager for the first one on a page.{% endcomment %}
+<figure class="shot{% if still %} has-phone{% endif %}">
     <picture>
-        {% if still %}<source media="(prefers-color-scheme: dark)" srcset="/beelden/{{ name }}.{{ language }}.dark.1280.webp 1280w, /beelden/{{ name }}.{{ language }}.dark.webp 2560w" sizes="{{ sizes|default:'(min-width: 900px) 600px, 100vw' }}">
-        <img src="/beelden/{{ name }}.{{ language }}.light.webp" srcset="/beelden/{{ name }}.{{ language }}.light.1280.webp 1280w, /beelden/{{ name }}.{{ language }}.light.webp 2560w" sizes="{{ sizes|default:'(min-width: 900px) 600px, 100vw' }}" width="1280" height="800" alt="{{ alt }}"{% if eager %} fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async">
+        {% if still %}<source media="(max-width: 640px) and (prefers-color-scheme: dark)" srcset="/beelden/{{ name }}.{{ language }}.dark.phone.webp" width="390" height="760">
+        <source media="(max-width: 640px)" srcset="/beelden/{{ name }}.{{ language }}.light.phone.webp" width="390" height="760">
+        <source media="(prefers-color-scheme: dark)" srcset="/beelden/{{ name }}.{{ language }}.dark.1280.webp 1280w, /beelden/{{ name }}.{{ language }}.dark.webp 2560w" sizes="{{ sizes|default:'(min-width: 641px) 560px, 100vw' }}" width="1280" height="800">
+        <img src="/beelden/{{ name }}.{{ language }}.light.webp" srcset="/beelden/{{ name }}.{{ language }}.light.1280.webp 1280w, /beelden/{{ name }}.{{ language }}.light.webp 2560w" sizes="{{ sizes|default:'(min-width: 641px) 560px, 100vw' }}" width="1280" height="800" alt="{{ alt }}"{% if eager %} fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async">
         {% else %}<source media="(prefers-color-scheme: dark)" srcset="/beelden/{{ name }}.{{ language }}.dark.webp">
         <img src="/beelden/{{ name }}.{{ language }}.light.webp" width="1280" height="800" alt="{{ alt }}" loading="lazy" decoding="async">{% endif %}
     </picture>
