@@ -229,10 +229,13 @@ MAYBE = (
 )
 
 
-def months_in_the_past(today: date) -> list[date]:
+def _months_in_the_past(today: date) -> list[date]:
     """The months of COMING before this month. The site says "Verwacht in
     november" in December otherwise; build_site refuses (CLAUDE.md, Releases)."""
     return [month for month, _items in COMING if month < today.replace(day=1)]
+
+
+months_in_the_past = _months_in_the_past
 
 
 NEVER = (
