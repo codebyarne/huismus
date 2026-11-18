@@ -8,7 +8,8 @@
 #   ./scripts/promo-film.sh bonnetjes    # bonnetjes naar je cloudmap, Huismus leest ze, jij zegt Klopt (29 s)
 #   ./scripts/promo-film.sh overzicht    # wat Huismus is en wat je ermee doet, met stem (63 s)
 #   ./scripts/promo-film.sh overzicht ergens/anders
-#   ./scripts/promo-film.sh site         # allebei, en de films op de site (docs/site/film-*) opnieuw: commit die
+#   ./scripts/promo-film.sh site         # allebei, en de films op de site (docs/site/film-*) opnieuw, zonder geluid: commit die
+#   ./scripts/promo-film.sh site-met-geluid   # hetzelfde, met het geluid erbij (pas als de eigenaar het gehoord heeft)
 #   ./scripts/promo-film.sh factuur [bestand.mp4] [muziek.mp3]   # een factuur maken, met een camera boven de browser
 #
 # Standaard naar ~/Downloads/huismus-films/:
@@ -47,9 +48,9 @@ if [ "$film" = factuur ]; then
     exec "${python[@]}" scripts/promo_film.py factuur "${2:-$HOME/Downloads/huismus-films/huismus-factuur.mp4}" "${@:3}"
 fi
 case "$film" in
-    alle | site) films=(bonnetjes overzicht) ;;
+    alle | site | site-met-geluid) films=(bonnetjes overzicht) ;;
     bonnetjes | overzicht) films=("$film") ;;
-    *) echo "promo-film.sh [bonnetjes|overzicht|site|factuur] [map]" >&2; exit 2 ;;
+    *) echo "promo-film.sh [bonnetjes|overzicht|site|site-met-geluid|factuur] [map]" >&2; exit 2 ;;
 esac
 site="$film"
 out="${2:-$HOME/Downloads/huismus-films}"
@@ -108,17 +109,21 @@ done
 # (docs/site/film-<name>.nl.mp4: 1280x720, small, starts playing before it is
 # all there) and the still it shows until you press play, taken from
 # <poster.mp4> at <second>. Dutch only: the titles and the screens are Dutch.
+# Without a sound track, unless this was called as site-met-geluid: nobody
+# has listened to the music yet (owner, 2026-11-19).
 web() {
+    local sound=(-an)
+    [ "$site" = site-met-geluid ] && sound=(-c:a aac -b:a 96k)
     "$ffmpeg" -hide_banner -y -loglevel error -i "$1" -vf scale=1280:-2 -c:v libx264 -crf 28 \
-        -preset slow -pix_fmt yuv420p -c:a aac -b:a 96k -movflags +faststart "docs/site/film-$2.nl.mp4"
+        -preset slow -pix_fmt yuv420p "${sound[@]}" -movflags +faststart "docs/site/film-$2.nl.mp4"
     "$ffmpeg" -hide_banner -y -loglevel error -ss "$4" -i "$3" -frames:v 1 -vf scale=1280:-2 \
         -c:v libwebp -quality 82 "docs/site/film-$2.nl.webp"
     echo "docs/site/film-$2.nl.mp4"
 }
 
-if [ "$site" = site ]; then
-    # Without the voice while that is a trial voice: music and subtitles. The
-    # still is from the version without subtitles in the picture.
+if [ "$site" = site ] || [ "$site" = site-met-geluid ]; then
+    # The version without the voice, while that is a trial voice: subtitles in
+    # the picture. The still is from the version without them.
     web "$out/huismus-overzicht-zonder-stem.mp4" overzicht "$out/huismus-overzicht.mp4" 11
     web "$out/huismus-bonnetjes.mp4" bonnetjes "$out/huismus-bonnetjes.mp4" 1.1
 fi

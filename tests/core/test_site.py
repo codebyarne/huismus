@@ -395,5 +395,13 @@ def test_the_english_pages_have_no_film_while_the_films_are_dutch(out):
 
 def test_a_film_is_small_enough_for_a_phone_on_the_road():
     for path in site.film_files():
-        limit = 4_000_000 if path.suffix == ".mp4" else 100_000
+        limit = 3_000_000 if path.suffix == ".mp4" else 100_000
         assert path.stat().st_size < limit, path.name
+
+
+def test_the_films_on_the_site_have_no_sound_until_the_owner_has_heard_it():
+    """Owner, 2026-11-19: ./scripts/promo-film.sh site leaves the sound track
+    out. Made with site-met-geluid, an mp4 has an AAC track ("mp4a")."""
+    for path in site.film_files():
+        if path.suffix == ".mp4":
+            assert b"mp4a" not in path.read_bytes(), path.name

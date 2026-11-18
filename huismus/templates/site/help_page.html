@@ -16,7 +16,7 @@
 
 {% if film %}
 {% comment %}Only here, not in the help inside the app: the film is a file of the site.{% endcomment %}
-{% translate "Film van een halve minuut: foto's van bonnetjes gaan naar een map, Huismus leest ze, en in Verwerken kijk je ze na." as label %}
+{% translate "Film van een halve minuut, zonder geluid: foto's van bonnetjes gaan naar een map, Huismus leest ze, en in Verwerken kijk je ze na." as label %}
 {% translate "Van foto tot uitgave in een halve minuut. In de film leest een AI-dienst de bonnetjes. Die kies je zelf, en hij staat uit tot jij hem aanzet." as caption %}
 {% include "site/_film.html" with name=film label=label caption=caption %}
 {% endif %}
