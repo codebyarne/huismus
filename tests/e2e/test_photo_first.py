@@ -83,6 +83,10 @@ def test_opnieuw_and_only_the_photo(phone):
     _camera(phone, lambda: phone.get_by_role("link", name="Nieuwe uitgave").first.tap())
     expect(phone.locator("h1")).to_have_text("Nieuwe uitgave")
     first = Attachment.objects.get().pk
+    # "Opnieuw" sends the photo from app.js. The heading can be there before
+    # the page's script runs; on a slow runner the photo was then taken with
+    # nobody to send it (Firefox in CI, twice on 2026-11-18).
+    phone.wait_for_load_state("load")
 
     _camera(phone, lambda: phone.locator(".photo-again label").tap())
     expect(phone).not_to_have_url(phone.base + f"/uitgaven/nieuw/foto/{first}/")
