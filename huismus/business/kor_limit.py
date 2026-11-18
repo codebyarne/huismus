@@ -35,6 +35,12 @@ class KorLimitStatus:
         return min(self.percent, 100)
 
     @property
+    def remaining_cents(self) -> int:
+        """How much revenue still fits under the limit: never below zero,
+        never more than the limit itself."""
+        return max(self.limit_cents - max(self.revenue_cents, 0), 0)
+
+    @property
     def level(self) -> str:
         """ "over" above the limit, "near" from the warning percentage up
         to and including the limit, otherwise "ok"."""
