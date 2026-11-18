@@ -156,15 +156,19 @@ NOW = (
     ),
 )
 
+# Under Overstappen on the home page: what someone who doesn't come from
+# Moneybird waits for. While it is in COMING, the band says in which month.
+OTHER_PACKAGES = Feature(
+    _("Importeren uit andere pakketten en uit Excel"),
+    _("Met één importbestand, ook als je niet van Moneybird komt."),
+)
+
 # (the first day of the month it is expected in, what).
 COMING = (
     (
         date(2026, 12, 1),
         (
-            Feature(
-                _("Importeren uit andere pakketten en uit Excel"),
-                _("Met één importbestand, ook als je niet van Moneybird komt."),
-            ),
+            OTHER_PACKAGES,
             Feature(
                 _("Uitleg per pakket om over te stappen"),
                 _("Stap voor stap, van exporteren tot nakijken."),
@@ -215,6 +219,18 @@ MAYBE = (
     Feature(_("Een betaallink op je factuur")),
     Feature(_("Een koppeling met je bank")),
 )
+
+
+def expected(feature: Feature) -> date | None:
+    """The month `feature` is expected in, or None once it is no longer coming."""
+    return next((month for month, items in COMING if feature in items), None)
+
+
+def months_in_the_past(today: date) -> list[date]:
+    """The months of COMING before this month. The site says "Verwacht in
+    november" in December otherwise; build_site refuses (CLAUDE.md, Releases)."""
+    return [month for month, _items in COMING if month < today.replace(day=1)]
+
 
 NEVER = (
     Feature(_("Salarissen")),

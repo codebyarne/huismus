@@ -3,97 +3,121 @@
 
 {% block title %}{% translate "Huismus: je boekhouding op je eigen computer" %}{% endblock %}
 {% block main_class %}home{% endblock %}
-{% block head %}<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Huismus","url":"https://{{ domain }}{{ home_url }}","applicationCategory":"BusinessApplication","operatingSystem":"macOS, Windows, Linux","softwareVersion":"{{ version }}","inLanguage":["nl","en"],"license":"https://www.gnu.org/licenses/agpl-3.0.html","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}</script>{% endblock %}
+{% block head %}<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Huismus","url":"https://{{ domain }}{{ home_url }}","applicationCategory":"BusinessApplication","operatingSystem":"macOS, Windows, Linux","softwareVersion":"{{ version }}","inLanguage":["nl","en"],"license":"https://www.gnu.org/licenses/agpl-3.0.html","image":"https://{{ domain }}/delen.{{ language }}.png","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}</script>{% endblock %}
 
 {% block content %}
-{% comment %}The home page (docs/design/ronde-8/): what sets Huismus apart first (you bring all your years, it is yours, it is free), then a compact tour, who it is for and what is coming. One next step: download.{% endcomment %}
+{% comment %}The home page (docs/design/ronde-8/, redesign of 2026-11-18): one headline, the app large on a petrol stage, who it is for, switching, privacy, the year in four parts, and one next step: download.{% endcomment %}
 <section class="hero wrap">
-    <div class="hero-text">
-        <span class="eyebrow">{% translate "Voor zzp’ers, met of zonder KOR" %}</span>
-        <h1>{% translate "Je boekhouding op je eigen computer" %}</h1>
-        <p class="lede">{% translate "Huismus is een gratis app voor je facturen, offertes en bonnetjes, met de bedragen voor je btw-aangifte. Kom je van Moneybird? Neem al je jaren mee, tot op de cent." %}</p>
-        {% include "site/_downloads.html" with try_hint=True %}
-    </div>
-    <div class="hero-shot">
-        <svg class="perch" aria-hidden="true"><use href="#mus-vogel"></use></svg>
-        {% translate "Het overzicht van Huismus: de omzet van dit jaar tegenover de KOR-grens, wat openstaat, de winst en de laatste facturen." as alt %}
-        {% include "site/_beeld.html" with name="overzicht" alt=alt still=True eager=True sizes="(min-width: 1024px) 620px, 100vw" %}
-    </div>
-    <figure class="hero-photo">
-        {% translate "Een meubelmaker met een stofmasker op schuurt een stoel in haar werkplaats. Op de werkbank staat een laptop met Huismus open." as alt %}
-        {% include "site/_foto.html" with name="werkplaats" alt=alt small=800 large=1600 width=1600 height=640 sizes="(min-width: 1264px) 1200px, 100vw" %}
-    </figure>
-</section>
-
-<section class="wrap facts-block" aria-label="{% translate 'Waarom Huismus' %}">
-    <div class="facts-leaf">
-    <ul class="facts">
-        <li><svg class="i" aria-hidden="true"><use href="#wallet"></use></svg>{% translate "Geen abonnement" %}</li>
-        <li><svg class="i" aria-hidden="true"><use href="#users"></use></svg>{% translate "Geen account" %}</li>
-        <li><svg class="i" aria-hidden="true"><use href="#file"></use></svg>{% translate "Zoveel facturen als je wilt" %}</li>
-        <li><svg class="i" aria-hidden="true"><use href="#calendar"></use></svg>{% translate "Geen einddatum" %}</li>
+    <span class="eyebrow">{% translate "Voor zzp’ers, met of zonder KOR" %}</span>
+    <h1>{% blocktranslate %}Je boekhouding op <span class="underline">je eigen computer</span>{% endblocktranslate %}</h1>
+    <p class="lede">{% translate "Huismus is een gratis app voor je facturen, offertes en bonnetjes, met de bedragen voor je btw-aangifte. Kom je van Moneybird? Neem al je jaren mee, tot op de cent." %}</p>
+    {% include "site/_downloads.html" with try_hint=True %}
+    <ul class="facts" aria-label="{% translate 'Waarom Huismus' %}">
+        <li><svg class="i" width="18" height="18" aria-hidden="true"><use href="#check"></use></svg>{% translate "Geen abonnement" %}</li>
+        <li><svg class="i" width="18" height="18" aria-hidden="true"><use href="#check"></use></svg>{% translate "Geen account" %}</li>
+        <li><svg class="i" width="18" height="18" aria-hidden="true"><use href="#check"></use></svg>{% translate "Zoveel facturen als je wilt" %}</li>
+        <li><svg class="i" width="18" height="18" aria-hidden="true"><use href="#check"></use></svg>{% translate "Geen einddatum" %}</li>
     </ul>
-    <p class="facts-note">{% blocktranslate %}Huismus is gratis en open source. <a href="{{ repository }}">De broncode staat openbaar.</a>{% endblocktranslate %}</p>
+</section>
+
+<section class="wrap stage-wrap" aria-label="{% translate 'Het overzicht van Huismus' %}">
+    <div class="stage">
+        {% translate "Het overzicht van Huismus: de omzet van dit jaar per maand, wat je nog moet ontvangen, de KOR-grens en wat er te doen is, zoals een factuur die te laat is." as alt %}
+        {% include "site/_beeld.html" with name="overzicht" alt=alt still=True eager=True sizes="(min-width: 1264px) 1120px, 92vw" %}
     </div>
 </section>
 
-<section class="wrap" id="overstappen">
+<section class="wrap who" aria-labelledby="voor-wie">
+    <div class="section-head">
+        <p class="kicker">{% translate "Voor wie" %}</p>
+        <h2 id="voor-wie">{% translate "Voor zzp’ers die hun boekhouding zelf doen" %}</h2>
+    </div>
+    <div class="people">
+        <figure class="person person-main">
+            {% translate "Een meubelmaker met een stofmasker op schuurt een stoel in haar werkplaats. Op de werkbank staat een laptop met Huismus open." as alt %}
+            {% include "site/_foto.html" with name="werkplaats" screen=True alt=alt small=800 large=1600 width=1600 height=640 sizes="(min-width: 1264px) 1200px, 100vw" %}
+            <figcaption>{% translate "Meubelmaker" %}</figcaption>
+        </figure>
+        <figure class="person">
+            {% translate "Een fotograaf knielt in een park en stelt haar camera in." as alt %}
+            {% include "site/_foto.html" with name="fotograaf" alt=alt small=360 large=720 width=720 height=720 sizes="(min-width: 1264px) 288px, (min-width: 901px) 24vw, 50vw" %}
+            <figcaption>{% translate "Fotograaf" %}</figcaption>
+        </figure>
+        <figure class="person">
+            {% translate "Een hovenier laadt gereedschap achter in zijn bus." as alt %}
+            {% include "site/_foto.html" with name="hovenier" alt=alt small=360 large=720 width=720 height=720 sizes="(min-width: 1264px) 288px, (min-width: 901px) 24vw, 50vw" %}
+            <figcaption>{% translate "Hovenier" %}</figcaption>
+        </figure>
+        <figure class="person">
+            {% translate "Een vrouw schrijft in een notitieboek aan een bureau bij het raam, met boeken om zich heen." as alt %}
+            {% include "site/_foto.html" with name="schrijver" alt=alt small=360 large=720 width=720 height=720 sizes="(min-width: 1264px) 288px, (min-width: 901px) 24vw, 50vw" %}
+            <figcaption>{% translate "Tekstschrijver" %}</figcaption>
+        </figure>
+        <figure class="person">
+            {% translate "Een man zit aan de keukentafel bij een bureaulamp, achter een laptop met Huismus open. Naast hem ligt een stapel papieren." as alt %}
+            {% include "site/_foto.html" with name="keukentafel" screen=True alt=alt small=600 large=1200 width=1200 height=800 sizes="(min-width: 1264px) 288px, (min-width: 901px) 24vw, 50vw" %}
+            <figcaption>{% translate "Aan de keukentafel" %}</figcaption>
+        </figure>
+    </div>
+    <div class="kor-lines">
+        <p><strong>{% translate "Met de KOR" %}</strong> {% translate "Jouw KOR-tekst op elke factuur, en je ziet hoe ver je van je grens bent." %}</p>
+        <p><strong>{% translate "Zonder de KOR" %}</strong> {% translate "Btw op je facturen, ook verlegd, en de btw van elk bonnetje vastgelegd." %}</p>
+    </div>
+</section>
+
+<section class="wrap" id="overstappen" aria-labelledby="overstappen-kop">
     <div class="band">
         <div class="halves">
             <div class="band-text">
-                <h2>{% translate "Neem al je jaren mee" %}</h2>
+                <p class="kicker">{% translate "Overstappen" %}</p>
+                <h2 id="overstappen-kop">{% translate "Neem al je jaren mee" %}</h2>
                 <p class="lede">{% translate "Je oude administratie hoeft niet achter te blijven. Huismus neemt je klanten, facturen, offertes en uitgaven uit Moneybird één op één over, met de pdf’s en de bonnetjes. Je factuurnummers lopen gewoon door." %}</p>
                 <a class="more" href="{{ help.moneybird }}">{% translate "Zo stap je over" %} <span aria-hidden="true">→</span></a>
+                <ol class="moves">
+                    <li>
+                        <span class="step-n" aria-hidden="true">1</span>
+                        <div><h3>{% translate "Exporteer alles" %}</h3>
+                        <p>{% translate "Je downloadt je administratie uit Moneybird." %}</p></div>
+                    </li>
+                    <li>
+                        <span class="step-n" aria-hidden="true">2</span>
+                        <div><h3>{% translate "Eerst een proefdraai" %}</h3>
+                        <p>{% translate "Huismus rekent elke factuur na en vergelijkt elk totaal, tot op de cent. Wijkt er een af, dan zie je welke en hoeveel. Er wordt nog niets opgeslagen." %}</p></div>
+                    </li>
+                    <li>
+                        <span class="step-n" aria-hidden="true">3</span>
+                        <div><h3>{% translate "Importeer" %}</h3>
+                        <p>{% translate "Daarna importeer je, en Huismus zet alles erin. Je oude jaren staan dan op je eigen computer, zonder abonnement." %}</p></div>
+                    </li>
+                </ol>
             </div>
-            <figure class="band-photo">
-                {% translate "Een man zit aan de keukentafel bij een bureaulamp, achter een laptop met Huismus open. Naast hem ligt een stapel papieren." as alt %}
-                {% include "site/_foto.html" with name="keukentafel" alt=alt small=600 large=1200 width=1200 height=800 sizes="(min-width: 900px) 520px, 100vw" %}
-            </figure>
-        </div>
-        <div class="halves halves-moves">
             <div class="band-shot">
                 {% translate "Animatie: een export uit Moneybird kiezen, de proefdraai bekijken en importeren." as alt %}
                 {% include "site/_beeld.html" with name="importeren" alt=alt %}
+                {% if features.switching %}
+                <p class="band-note"><span class="when when-on-petrol">{% blocktranslate with month=features.switching.0|date:"F Y" %}Verwacht in {{ month }}{% endblocktranslate %}</span>{{ features.switching.1.name }}</p>
+                {% endif %}
             </div>
-            <ol class="moves">
-                <li>
-                    <span class="step-n" aria-hidden="true">1</span>
-                    <div><h3>{% translate "Exporteer alles" %}</h3>
-                    <p>{% translate "Je downloadt je administratie uit Moneybird." %}</p></div>
-                </li>
-                <li>
-                    <span class="step-n" aria-hidden="true">2</span>
-                    <div><h3>{% translate "Eerst een proefdraai" %}</h3>
-                    <p>{% translate "Huismus rekent elke factuur na en vergelijkt elk totaal, tot op de cent. Wijkt er een af, dan zie je welke en hoeveel. Er wordt nog niets opgeslagen." %}</p></div>
-                </li>
-                <li>
-                    <span class="step-n" aria-hidden="true">3</span>
-                    <div><h3>{% translate "Importeer" %}</h3>
-                    <p>{% translate "Daarna importeer je, en Huismus zet alles erin. Je oude jaren staan dan op je eigen computer, zonder abonnement." %}</p></div>
-                </li>
-            </ol>
         </div>
-        {% with first=features.coming.0 %}
-        <p class="band-note"><span class="when when-on-petrol">{% blocktranslate with month=first.0|date:"F Y" %}Verwacht in {{ month }}{% endblocktranslate %}</span>{% translate "Importeren uit andere pakketten en uit Excel." %}</p>
-        {% endwith %}
     </div>
     <p class="band-after">{% translate "Begin je nieuw? Dan vul je in vier stappen je bedrijfsgegevens in." %} <a class="more" href="{{ help.beginnen }}">{% translate "Aan de slag" %} <span aria-hidden="true">→</span></a></p>
 </section>
 
-<section class="wrap halves">
+<section class="wrap halves privacy" aria-labelledby="van-jou">
     <div class="prose">
-        <h2>{% translate "Je administratie is van jou" %}</h2>
+        <p class="kicker">{% translate "Privacy" %}</p>
+        <h2 id="van-jou">{% translate "Je administratie is van jou" %}</h2>
         <p class="lede">{% translate "Er is geen Huismus-server en geen account. Alles staat op je eigen computer. Je gegevens gaan alleen ergens heen als jij dat aanzet. Verder kijkt Huismus alleen of er een nieuwe versie is, en dat kun je uitzetten." %}</p>
         <ul class="ticks">
-            <li><svg class="i" aria-hidden="true"><use href="#check"></use></svg><span>{% translate "Elke dag een back-up, in een map die jij kiest, zolang Huismus open staat." %}</span></li>
-            <li><svg class="i" aria-hidden="true"><use href="#check"></use></svg><span>{% translate "Je export opent ook zonder Huismus: gewone CSV-bestanden, pdf’s en bonnetjes." %}</span></li>
-            <li><svg class="i" aria-hidden="true"><use href="#check"></use></svg><span>{% translate "Een uitgegeven factuur staat vast: een eigen nummer, zonder gaten in de reeks." %}</span></li>
+            <li><svg class="i" width="18" height="18" aria-hidden="true"><use href="#check"></use></svg><span>{% translate "Elke dag een back-up, in een map die jij kiest, zolang Huismus open staat." %}</span></li>
+            <li><svg class="i" width="18" height="18" aria-hidden="true"><use href="#check"></use></svg><span>{% translate "Je export opent ook zonder Huismus: gewone CSV-bestanden, pdf’s en bonnetjes." %}</span></li>
+            <li><svg class="i" width="18" height="18" aria-hidden="true"><use href="#check"></use></svg><span>{% translate "Een uitgegeven factuur staat vast: een eigen nummer, zonder gaten in de reeks." %}</span></li>
         </ul>
         <a class="more" href="{{ help.gegevens }}">{% translate "Wat er met je gegevens gebeurt" %} <span aria-hidden="true">→</span></a>
     </div>
-    <div class="leaf yours">
+    <div class="yours">
         <div class="yours-home">
-            <svg class="i" aria-hidden="true"><use href="#home"></use></svg>
+            <svg class="i" width="18" height="18" aria-hidden="true"><use href="#home"></use></svg>
             <div><strong>{% translate "Jouw computer" %}</strong><span>{% translate "Hier staat je hele administratie." %}</span></div>
         </div>
         <ul class="toggles">
@@ -105,125 +129,88 @@
     </div>
 </section>
 
-<section class="wrap">
-    <div class="leaf">
+<section class="year" aria-labelledby="hele-jaar">
+    <div class="wrap">
         <div class="section-head">
-            <h2>{% translate "Alles voor je boekhouding, het hele jaar" %}</h2>
-            <p class="lede">{% translate "De klanten en bedragen op de beelden zijn verzonnen." %}</p>
+            <p class="kicker">{% translate "Het hele jaar" context "kicker" %}</p>
+            <h2 id="hele-jaar">{% translate "Alles voor je boekhouding, het hele jaar" %}</h2>
         </div>
-        <div class="tour">
-            <article class="tour-item">
-                {% translate "Animatie: een regel toevoegen aan een conceptfactuur, de factuur uitgeven en een betaling registreren." as alt %}
-                {% include "site/_beeld.html" with name="factuur-maken" alt=alt %}
-                <h3>{% translate "Facturen en offertes" %}</h3>
-                <p>{% translate "Kies een klant, typ wat je deed en Huismus rekent het totaal uit. Een offerte zet je met één klik om naar een factuur." %}</p>
-                <a class="more" href="{{ help.facturen }}">{% translate "Zo maak je een factuur" %} <span aria-hidden="true">→</span></a>
+        <div class="bento">
+            <article class="bento-item bento-wide">
+                <div class="bento-text">
+                    <h3>{% translate "Facturen en offertes" %}</h3>
+                    <p>{% translate "Kies een klant, typ wat je deed en Huismus rekent het totaal uit. Een offerte zet je met één klik om naar een factuur." %}</p>
+                    <a class="more" href="{{ help.facturen }}">{% translate "Zo maak je een factuur" %} <span aria-hidden="true">→</span></a>
+                </div>
+                <div class="bento-shot">
+                    {% translate "Animatie: een regel toevoegen aan een conceptfactuur, de factuur uitgeven en een betaling registreren." as alt %}
+                    {% include "site/_beeld.html" with name="factuur-maken" alt=alt %}
+                </div>
             </article>
-            <article class="tour-item">
-                {% translate "De lijst met uitgaven, met per uitgave de datum, de leverancier, de categorie en het bedrag." as alt %}
-                {% include "site/_beeld.html" with name="uitgaven" alt=alt still=True %}
-                <h3>{% translate "Bonnetjes" %}</h3>
-                <p>{% translate "Zet een foto in een map die meesynchroniseert, ook vanaf je telefoon. Huismus haalt hem op en kan hem laten lezen. Jij kijkt na." %}</p>
-                <a class="more" href="{{ help.bonnetjes }}">{% translate "Meer over bonnetjes" %} <span aria-hidden="true">→</span></a>
+            <article class="bento-item bento-phone">
+                <div class="bento-text">
+                    <h3>{% translate "Bonnetjes" %}</h3>
+                    <p>{% translate "Zet een foto in een map die meesynchroniseert, ook vanaf je telefoon. Huismus haalt hem op en kan hem laten lezen. Jij kijkt na." %}</p>
+                    <a class="more" href="{{ help.bonnetjes }}">{% translate "Meer over bonnetjes" %} <span aria-hidden="true">→</span></a>
+                </div>
+                <div class="bento-shot">
+                    {% translate "Uitgaven op een telefoon: een lijst met per uitgave de leverancier, de datum en het bedrag." as alt %}
+                    {% include "site/_detail.html" with name="uitgaven" kind=".phone" alt=alt width=390 height=760 %}
+                </div>
             </article>
-            <article class="tour-item">
-                {% translate "Het jaaroverzicht met de omzet, de kosten, de winst en de KOR-grens, en de omzet per kwartaal." as alt %}
-                {% include "site/_beeld.html" with name="jaaroverzicht" alt=alt still=True %}
-                <h3>{% translate "Btw en KOR" %}</h3>
-                <p>{% translate "Met de KOR zie je hoe ver je van je grens bent. Zonder de KOR zie je per kwartaal de bedragen per rubriek, klaar om over te nemen." %}</p>
-                <a class="more" href="{{ help.kor_en_btw }}">{% translate "Meer over KOR en btw" %} <span aria-hidden="true">→</span></a>
+            <article class="bento-item">
+                <div class="bento-text">
+                    <h3>{% translate "Btw en KOR" %}</h3>
+                    <p>{% translate "Met de KOR zie je hoe ver je van je grens bent. Zonder de KOR zie je per kwartaal de bedragen per rubriek, klaar om over te nemen." %}</p>
+                    <a class="more" href="{{ help.kor_en_btw }}">{% translate "Meer over KOR en btw" %} <span aria-hidden="true">→</span></a>
+                </div>
+                <div class="bento-shot">
+                    {% translate "De KOR-grens: de omzet van dit jaar tegenover de grens, en daaronder de omzet en de kosten per kwartaal." as alt %}
+                    {% include "site/_detail.html" with name="kor" alt=alt width=1040 height=620 %}
+                </div>
             </article>
-            <article class="tour-item">
-                {% translate "Het overzicht van de instellingen, met onder meer je bedrijfsgegevens, back-ups en exporteren." as alt %}
-                {% include "site/_beeld.html" with name="instellingen" alt=alt still=True %}
-                <h3>{% translate "Jaaroverzicht en export" %}</h3>
-                <p>{% translate "Omzet, kosten en winst op één scherm. Voor je boekhouder download je alles in één keer." %}</p>
-                <a class="more" href="{{ help.boekhouder }}">{% translate "Voor je boekhouder" %} <span aria-hidden="true">→</span></a>
+            <article class="bento-item bento-wide">
+                <div class="bento-text">
+                    <h3>{% translate "Jaaroverzicht en export" %}</h3>
+                    <p>{% translate "Omzet, kosten en winst op één scherm. Voor je boekhouder download je alles in één keer." %}</p>
+                    <a class="more" href="{{ help.boekhouder }}">{% translate "Voor je boekhouder" %} <span aria-hidden="true">→</span></a>
+                </div>
+                <div class="bento-shot">
+                    {% translate "Het jaaroverzicht: de omzet, de kosten en de winst van dit jaar, met de knoppen CSV downloaden en Exporteren." as alt %}
+                    {% include "site/_detail.html" with name="jaar" alt=alt width=1040 height=300 %}
+                </div>
             </article>
         </div>
-        <p class="tour-note">{% blocktranslate with url=help.ai_assistenten %}Werk je met Claude of een andere AI-assistent? <a href="{{ url }}">Die kun je koppelen.</a> Een factuur uitgeven of mailen gebeurt pas als jij op de knop drukt.{% endblocktranslate %}</p>
+        <p class="year-note">{% translate "De klanten en bedragen op de beelden zijn verzonnen." %} {% blocktranslate with url=help.ai_assistenten %}Werk je met Claude of een andere AI-assistent? <a href="{{ url }}">Die kun je koppelen.</a> Een factuur uitgeven of mailen gebeurt pas als jij op de knop drukt.{% endblocktranslate %}</p>
     </div>
 </section>
 
+{% if features.next_up %}
 <section class="wrap">
-    <div class="section-head">
-        <h2>{% translate "Voor zzp’ers die hun boekhouding zelf doen" %}</h2>
+    <a class="next-strip" href="{{ features_url }}">
+        <span class="next-dot" aria-hidden="true"></span>
+        <span class="next-text">{% blocktranslate with name=features.next_up.1 month=features.next_up.0|date:"F Y" %}Komt eraan: {{ name }}. Verwacht in {{ month }}.{% endblocktranslate %}</span>
+        <span class="more">{% translate "Alle functies" %} <span aria-hidden="true">→</span></span>
+    </a>
+</section>
+{% endif %}
+
+<section class="wrap duo" aria-label="{% translate 'Open en op een eigen server' %}">
+    <div class="tile">
+        <p class="kicker">{% translate "Open" %}</p>
+        <h3>{% translate "Open, en gemaakt in Nederland" %}</h3>
+        <p>{% translate "De broncode staat openbaar, dus iedereen kan zien hoe Huismus rekent. Hulp is welkom: code, vertalingen, testen op Windows, of een goed idee." %}</p>
+        <a class="btn btn-secondary" href="{{ contribute_url }}">{% translate "Zo bouw je mee" %}</a>
     </div>
-    <div class="people">
-        {% translate "Een fotograaf knielt in een park en stelt haar camera in." as alt %}
-        {% include "site/_foto.html" with name="fotograaf" alt=alt small=360 large=720 width=720 height=720 sizes="(min-width: 1264px) 384px, 32vw" %}
-        {% translate "Een hovenier laadt gereedschap achter in zijn bus." as alt %}
-        {% include "site/_foto.html" with name="hovenier" alt=alt small=360 large=720 width=720 height=720 sizes="(min-width: 1264px) 384px, 32vw" %}
-        {% translate "Een vrouw schrijft in een notitieboek aan een bureau bij het raam, met boeken om zich heen." as alt %}
-        {% include "site/_foto.html" with name="schrijver" alt=alt small=360 large=720 width=720 height=720 sizes="(min-width: 1264px) 384px, 32vw" %}
-    </div>
-    <div class="duo">
-        <div class="tile">
-            <h3>{% translate "Met de KOR" %}</h3>
-            <p>{% translate "Jouw KOR-tekst op elke factuur, en je ziet hoe ver je van je grens bent." %}</p>
-        </div>
-        <div class="tile">
-            <h3>{% translate "Zonder de KOR" %}</h3>
-            <p>{% translate "Btw op je facturen, ook verlegd, en de btw van elk bonnetje vastgelegd." %}</p>
-        </div>
+    <div class="tile">
+        <p class="kicker">Docker</p>
+        <h3>{% translate "Liever op een eigen server?" %}</h3>
+        <p>{% translate "Huismus draait ook op een Raspberry Pi of NAS, met Docker. Je opent hem dan in de browser, ook op je telefoon." %}</p>
+        <a class="more" href="{{ help.docker }}">{% translate "Installeren met Docker" %} <span aria-hidden="true">→</span></a>
     </div>
 </section>
 
-<section class="wrap" id="functies">
-    <div class="leaf">
-        <div class="section-head">
-            <h2>{% translate "Wat Huismus kan, en wat er komt" %}</h2>
-            <p class="lede">{% translate "Huismus groeit snel. Hier staat wat er nu in zit en wat je wanneer kunt verwachten." %}</p>
-        </div>
-        <div class="halves halves-top">
-            <div class="can">
-                <h3><svg class="i" aria-hidden="true"><use href="#check-circle"></use></svg>{% translate "Kan nu" %}</h3>
-                <dl>
-                    {% for group, items in features.now %}
-                    <div><dt>{{ group }}</dt><dd>{% for feature in items %}{{ feature.name }}{% if not forloop.last %} · {% endif %}{% endfor %}</dd></div>
-                    {% endfor %}
-                </dl>
-            </div>
-            <div class="coming">
-                <h3>{% translate "Komt eraan" %}</h3>
-                <ol class="months">
-                    {% for month, items in features.coming %}
-                    <li{% if forloop.first %} class="is-next"{% endif %}>
-                        <span class="when">{% blocktranslate with month=month|date:"F Y" %}Verwacht in {{ month }}{% endblocktranslate %}</span>
-                        <p>{% for feature in items %}{{ feature.name }}{% if not forloop.last %} · {% endif %}{% endfor %}</p>
-                    </li>
-                    {% endfor %}
-                </ol>
-                <p class="small muted">{% translate "Een maand is een verwachting. Wat af is, staat bij “Wat is er nieuw”." %}</p>
-                <p class="links"><a class="more" href="{{ features_url }}">{% translate "Alle functies" %} <span aria-hidden="true">→</span></a><a class="more" href="{{ help.nieuw }}">{% translate "Wat is er nieuw" %} <span aria-hidden="true">→</span></a></p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="wrap">
-    <div class="open">
-        <div class="prose">
-            <h2>{% translate "Open, en gemaakt in Nederland" %}</h2>
-            <p class="lede">{% translate "De broncode staat openbaar, dus iedereen kan zien hoe Huismus rekent. Hulp is welkom: code, vertalingen, testen op Windows, of een goed idee." %}</p>
-        </div>
-        <a class="btn btn-secondary btn-lg" href="{{ contribute_url }}">{% translate "Zo bouw je mee" %}</a>
-    </div>
-    <div class="duo">
-        <div class="tile">
-            <h3>{% translate "Eerst rondkijken?" %}</h3>
-            <p>{% blocktranslate %}Kies bij de eerste start <strong>Probeer met nepdata</strong>. Huismus vult zich met een verzonnen administratie van negen jaar, en met één knop is hij weer leeg.{% endblocktranslate %}</p>
-            <a class="more" href="{{ help.beginnen }}">{% translate "Aan de slag" %} <span aria-hidden="true">→</span></a>
-        </div>
-        <div class="tile">
-            <h3>{% translate "Liever op een eigen server?" %}</h3>
-            <p>{% translate "Huismus draait ook op een Raspberry Pi of NAS, met Docker. Je opent hem dan in de browser, ook op je telefoon." %}</p>
-            <a class="more" href="{{ help.docker }}">{% translate "Installeren met Docker" %} <span aria-hidden="true">→</span></a>
-        </div>
-    </div>
-</section>
-
-<section class="wrap" id="download">
+<section class="wrap" id="downloaden">
     <div class="band band-final">
         {% include "site/_final.html" %}
     </div>

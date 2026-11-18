@@ -57,6 +57,8 @@ def _screen_mask(photo: Image.Image, seed: tuple[int, int]) -> Image.Image:
 def _fit(points: list[tuple[float, float]]) -> tuple[float, float]:
     """v = a·u + b through the points, twice, the second time without the
     points that lie far off (a hand, a reflection)."""
+    if len(points) < 2:
+        raise ValueError("Geen rand van het scherm gevonden: kies een ander punt op het scherm.")
     for _ in range(2):
         n = len(points)
         su = sum(u for u, _ in points)
@@ -147,8 +149,8 @@ def on_laptop(photo: Image.Image, screen: Image.Image, seed: tuple[int, int]) ->
     return Image.composite(lit, photo, ImageChops.multiply(inside, free))
 
 
-def _screen(media: Path, name: str, frame: int) -> Image.Image:
-    with Image.open(media / f"{name}.nl.light.webp") as picture:
+def _screen(media: Path, name: str, frame: int, language: str) -> Image.Image:
+    with Image.open(media / f"{name}.{language}.light.webp") as picture:
         picture.seek(frame)
         return picture.convert("RGB").resize(SCREEN, Image.LANCZOS)
 
@@ -157,15 +159,17 @@ def main(media: Path) -> None:
     out = media / "fotos"
     out.mkdir(parents=True, exist_ok=True)
     for name, (source, widths, laptop) in SITE_PHOTOS.items():
-        photo = Image.open(PHOTOS / source).convert("RGB")
-        if laptop:
-            picture, frame, seed = laptop
-            photo = on_laptop(photo, _screen(media, picture, frame), seed)
-        for width in widths:
-            height = round(photo.height * width / photo.width)
-            photo.resize((width, height), Image.LANCZOS).save(
-                out / f"{name}.{width}.webp", quality=78, method=6
-            )
+        original = Image.open(PHOTOS / source).convert("RGB")
+        # A photo with the app on it, once per language: <name>.<nl|en>.<width>.webp.
+        for language in ("nl", "en") if laptop else ("",):
+            photo = original
+            if laptop:
+                picture, frame, seed = laptop
+                photo = on_laptop(original, _screen(media, picture, frame, language), seed)
+            for width in widths:
+                height = round(photo.height * width / photo.width)
+                file = ".".join(part for part in (name, language, str(width), "webp") if part)
+                photo.resize((width, height), Image.LANCZOS).save(out / file, quality=78, method=6)
         print(f"foto {name}: klaar", flush=True)
 
 

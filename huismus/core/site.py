@@ -30,6 +30,7 @@ Visits are counted only when COUNTER_VARIABLE holds a GoatCounter code: a
 
 import os
 import shutil
+from datetime import date
 from pathlib import Path
 
 from django.conf import settings
@@ -57,9 +58,13 @@ MAC_PRIVACY_SETTINGS = "x-apple.systempreferences:com.apple.settings.PrivacySecu
 # Empty: the site counts nothing (besluit 2026-11-03).
 COUNTER_VARIABLE = "HUISMUS_SITE_COUNTER"
 # The pictures in docs/site/, each as <name>.<nl|en>.<light|dark>.webp.
-STILLS = ("overzicht", "uitgaven", "jaaroverzicht", "ai", "instellingen", "welkom")
-ANIMATIONS = ("factuur-maken", "offerte-omzetten", "importeren")
-MEDIA = STILLS + ANIMATIONS
+STILLS = ("overzicht",)
+# Only as a phone shows them.
+PHONE_STILLS = ("uitgaven",)
+ANIMATIONS = ("factuur-maken", "importeren")
+# Parts of a screen, shown large (Camera.detail in scripts/site_beelden.py).
+DETAILS = ("kor", "jaar")
+MEDIA = STILLS + PHONE_STILLS + ANIMATIONS + DETAILS
 MEDIA_DIR = Path(settings.BASE_DIR) / "docs" / "site"
 # A still is 2560 px wide, for a sharp screen; a phone gets this width.
 SMALL_WIDTH = 1280
@@ -136,16 +141,25 @@ def media_files() -> list[Path]:
         for name in MEDIA
         for language in help.LANGUAGES
         for scheme in ("light", "dark")
-        for kind in (("", ".phone") if name in STILLS else ("",))
+        for kind in (
+            ("", ".phone") if name in STILLS else (".phone",) if name in PHONE_STILLS else ("",)
+        )
     ]
+
+
+# The photos with the app on the laptop: one per language (scripts/site_fotos.py).
+PHOTOS_WITH_SCREEN = ("werkplaats", "keukentafel")
 
 
 def photo_files() -> list[Path]:
-    return [
-        MEDIA_DIR / "fotos" / f"{name}.{width}.webp"
-        for name, widths in PHOTOS.items()
-        for width in widths
-    ]
+    files = []
+    for name, widths in PHOTOS.items():
+        languages = help.LANGUAGES if name in PHOTOS_WITH_SCREEN else ("",)
+        for language in languages:
+            for width in widths:
+                parts = (name, language, str(width), "webp")
+                files.append(MEDIA_DIR / "fotos" / ".".join(p for p in parts if p))
+    return files
 
 
 def social_image(language: str) -> Path:
@@ -155,7 +169,17 @@ def social_image(language: str) -> Path:
 
 
 def _features() -> dict:
+    other = site_features.OTHER_PACKAGES
+    month = site_features.expected(other)
+    next_up = None
+    if site_features.COMING:
+        first_month, items = site_features.COMING[0]
+        name = str(items[0].name)
+        # In the middle of a sentence: "Komt eraan: importeren uit …".
+        next_up = (first_month, name[:1].lower() + name[1:])
     return {
+        "next_up": next_up,
+        "switching": (month, other) if month else None,
         "now": site_features.NOW,
         "coming": site_features.COMING,
         "later": site_features.LATER,
@@ -272,6 +296,13 @@ def build(out: Path) -> list[str]:
 
     Only an empty folder or an earlier site (it has a CNAME) is emptied, so a
     wrong folder, like the repository itself, is refused rather than wiped."""
+    past = site_features.months_in_the_past(date.today())
+    if past:
+        months = ", ".join(month.strftime("%Y-%m") for month in past)
+        raise ValueError(
+            f"Komt eraan noemt een maand die voorbij is ({months}): "
+            "werk huismus/core/site_features.py bij."
+        )
     if out.exists() and any(out.iterdir()):
         if not (out / "CNAME").exists():
             raise ValueError(f"{out} is niet leeg en geen eerdere site.")
@@ -319,6 +350,9 @@ def build(out: Path) -> list[str]:
         for path in MEDIA_DIR.glob(f"{name}.*.webp"):
             if not path.stem.endswith(".phone"):
                 _small(path, out / "beelden" / f"{path.stem}.{SMALL_WIDTH}.webp")
+    for name in ANIMATIONS:
+        for path in MEDIA_DIR.glob(f"{name}.*.webp"):
+            _last_frame(path, out / "beelden" / f"{path.stem}.still.webp")
     for path in photo_files():
         shutil.copy(path, out / "beelden" / "fotos" / path.name)
     for language in help.LANGUAGES:
@@ -340,6 +374,14 @@ def _small(still: Path, target: Path) -> None:
     with Image.open(still) as picture:
         height = round(picture.height * SMALL_WIDTH / picture.width)
         picture.resize((SMALL_WIDTH, height), Image.LANCZOS).save(target, quality=80, method=6)
+
+
+def _last_frame(animation: Path, target: Path) -> None:
+    """With "minder beweging" a visitor gets the end of an animation as a
+    still: the paid invoice, the finished import (WCAG 2.2.2)."""
+    with Image.open(animation) as picture:
+        picture.seek(picture.n_frames - 1)
+        picture.convert("RGB").save(target, quality=80, method=6)
 
 
 def _for_search_engines(out: Path, addresses: list[str]) -> None:
