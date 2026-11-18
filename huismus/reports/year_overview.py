@@ -94,16 +94,10 @@ def _totals_by_period(queryset, date_field: str, amount_field: str, extract) -> 
     return {row["period"]: row["total"] or 0 for row in rows}
 
 
-def _totals_by_quarter(queryset, date_field: str, amount_field: str) -> dict[int, int]:
-    return _totals_by_period(queryset, date_field, amount_field, ExtractQuarter)
-
-
 def _revenue_by_month(year: int) -> list[int]:
     """Revenue per month, January first: issued invoices minus issued
-    credit notes, by issue date. A credit note reduces recognised revenue,
-    not a separate expense line (invariant-adjacent to how documents.totals
-    treats a credit note as crediting an invoice, not billing against it),
-    so a month can be below zero."""
+    credit notes, by issue date. A credit note takes off revenue, so a
+    month can be below zero."""
     issued = Document.objects.filter(status="issued", issue_date__year=year)
     invoices = _totals_by_period(
         issued.filter(kind="invoice"), "issue_date", "subtotal_cents", ExtractMonth
@@ -121,15 +115,15 @@ def _totals_by_category(lines, amount_field: str = "amount_cents") -> dict[str |
 
 def compute_year_overview(year: int) -> YearOverview:
     monthly_revenue = _revenue_by_month(year)
-    expense_totals = _totals_by_quarter(
-        Expense.objects.filter(date__year=year), "date", "amount_cents"
+    expense_totals = _totals_by_period(
+        Expense.objects.filter(date__year=year), "date", "amount_cents", ExtractQuarter
     )
     shows_input_vat = not Settings.load().kor_enabled
     input_vat_lines = ExpenseLine.objects.filter(
         expense__date__year=year, vat_rate__in=INPUT_VAT_RATES
     )
     input_vat = (
-        _totals_by_quarter(input_vat_lines, "expense__date", "vat_info_cents")
+        _totals_by_period(input_vat_lines, "expense__date", "vat_info_cents", ExtractQuarter)
         if shows_input_vat
         else {}
     )

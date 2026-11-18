@@ -583,8 +583,9 @@ ACTIONS_JS = """
     if (!menu || menu.matches(":popover-open")) return false;
     return [...document.querySelectorAll(`[popovertarget="${menu.id}"]`)].some(visible);
   };
-  // The same place by another road counts: the overview's "Uitgave" is in the + on a phone (#189).
-  const places = new Set([...document.querySelectorAll("a[href]")]
+  // Moved into one of the phone's own menus counts as reachable: the overview's "Uitgave"
+  // is in the + there (#189). Only those menus: any other link to the same place doesn't.
+  const places = new Set([...document.querySelectorAll("#plus-menu a[href], #meer-menu a[href]")]
     .filter(reachable).map((el) => el.getAttribute("href")));
   const out = [];
   for (const el of document.querySelectorAll("a[href], button")) {
