@@ -39,7 +39,7 @@ NOW = (
             ),
             Feature(
                 _("Offertes, met één klik naar een factuur"),
-                _("Verstuur een offerte en zet hem om als je klant ja zegt."),
+                _("Verzend een offerte en zet hem om als je klant ja zegt."),
                 "offertes",
             ),
             Feature(
@@ -91,7 +91,9 @@ NOW = (
             ),
             Feature(
                 _("Btw per regel, ook verlegd"),
-                _("Op je facturen, en de btw van elk bonnetje leg je vast."),
+                _(
+                    "Op je facturen kies je per regel het tarief. Van elk bonnetje leg je de btw vast."
+                ),
                 "kor-en-btw",
             ),
             Feature(
@@ -123,7 +125,7 @@ NOW = (
             ),
             Feature(
                 _("Export als CSV met pdf’s en bonnetjes"),
-                _("Eén ZIP-bestand, dat ook zonder Huismus opent."),
+                _("Eén ZIP-bestand dat ook zonder Huismus opent."),
                 "exporteren",
             ),
         ),
@@ -149,7 +151,10 @@ NOW = (
             Feature(_("Nederlands en Engels"), _("De app en je facturen.")),
             Feature(
                 _("AI-assistent koppelen"),
-                _("Een factuur uitgeven of mailen gebeurt pas als jij op de knop drukt."),
+                _(
+                    "ChatGPT, Claude of Gemini werkt met je administratie. Uitgeven of "
+                    "mailen gebeurt pas als jij het goedkeurt."
+                ),
                 "ai-assistenten",
             ),
         ),
@@ -180,7 +185,10 @@ COMING = (
         (
             Feature(_("Je bankafschrift inlezen"), _("Zodat je ziet welke factuur betaald is.")),
             Feature(_("Winst-en-verliesrekening"), _("Per jaar.")),
-            Feature(_("Auditfile voor je boekhouder"), _("Je administratie in één bestand.")),
+            Feature(
+                _("Auditfile voor je boekhouder"),
+                _("Het bestand dat boekhoudpakketten van boekhouders inlezen."),
+            ),
             Feature(_("Periodieke facturen"), _("Zoals elke maand dezelfde.")),
         ),
     ),
@@ -191,7 +199,10 @@ COMING = (
                 _("Huismus op je telefoon via je eigen wifi"),
                 _("Ook als Huismus op je Mac of pc staat."),
             ),
-            Feature(_("E-factuur als bijlage"), _("Een factuur die een pakket kan inlezen.")),
+            Feature(
+                _("E-factuur als bijlage"),
+                _("Een factuur die het boekhoudpakket van je klant kan inlezen."),
+            ),
             Feature(_("Uren bijhouden"), _("En daar een factuur van maken.")),
         ),
     ),

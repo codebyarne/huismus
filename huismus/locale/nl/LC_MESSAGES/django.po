@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-18 19:55+0100\n"
+"POT-Creation-Date: 2026-11-18 20:06+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1444,7 +1444,7 @@ msgstr ""
 msgid "Offertes, met één klik naar een factuur"
 msgstr ""
 
-msgid "Verstuur een offerte en zet hem om als je klant ja zegt."
+msgid "Verzend een offerte en zet hem om als je klant ja zegt."
 msgstr ""
 
 msgid "Betalingen, ook in delen"
@@ -1506,7 +1506,9 @@ msgstr ""
 msgid "Btw per regel, ook verlegd"
 msgstr ""
 
-msgid "Op je facturen, en de btw van elk bonnetje leg je vast."
+msgid ""
+"Op je facturen kies je per regel het tarief. Van elk bonnetje leg je de btw "
+"vast."
 msgstr ""
 
 msgid "Btw-aangifterapport per kwartaal"
@@ -1543,7 +1545,7 @@ msgstr ""
 msgid "Export als CSV met pdf’s en bonnetjes"
 msgstr ""
 
-msgid "Eén ZIP-bestand, dat ook zonder Huismus opent."
+msgid "Eén ZIP-bestand dat ook zonder Huismus opent."
 msgstr ""
 
 msgid "De app"
@@ -1577,7 +1579,9 @@ msgstr ""
 msgid "AI-assistent koppelen"
 msgstr ""
 
-msgid "Een factuur uitgeven of mailen gebeurt pas als jij op de knop drukt."
+msgid ""
+"ChatGPT, Claude of Gemini werkt met je administratie. Uitgeven of mailen "
+"gebeurt pas als jij het goedkeurt."
 msgstr ""
 
 msgid "Importeren uit andere pakketten en uit Excel"
@@ -1607,7 +1611,7 @@ msgstr ""
 msgid "Auditfile voor je boekhouder"
 msgstr ""
 
-msgid "Je administratie in één bestand."
+msgid "Het bestand dat boekhoudpakketten van boekhouders inlezen."
 msgstr ""
 
 msgid "Periodieke facturen"
@@ -1625,7 +1629,7 @@ msgstr ""
 msgid "E-factuur als bijlage"
 msgstr ""
 
-msgid "Een factuur die een pakket kan inlezen."
+msgid "Een factuur die het boekhoudpakket van je klant kan inlezen."
 msgstr ""
 
 msgid "Uren bijhouden"
@@ -5901,22 +5905,22 @@ msgstr ""
 msgid "Pagina niet gevonden"
 msgstr ""
 
-msgid "Deze pagina bestaat niet. Begin op de homepage of zoek in de hulp."
+msgid "Deze pagina bestaat niet. Begin op de homepage of kijk bij Hulp."
 msgstr ""
 
 msgid "Naar de homepage"
-msgstr ""
-
-msgid "Download voor Mac"
-msgstr ""
-
-msgid "Download voor Windows"
 msgstr ""
 
 msgid "Huismus installeer je op je Mac of pc."
 msgstr ""
 
 msgid "Mail jezelf de link"
+msgstr ""
+
+msgid "Download voor Mac"
+msgstr ""
+
+msgid "Download voor Windows"
 msgstr ""
 
 msgid "macOS 15 of nieuwer met een Apple-chip · Windows 10 of nieuwer"
@@ -5952,6 +5956,9 @@ msgid ""
 "Ga naar <a href=\"%(url)s\"><strong>Systeeminstellingen › Privacy en "
 "beveiliging</strong></a> en scrol naar beneden. Klik bij Huismus op "
 "<strong>Toch openen</strong>."
+msgstr ""
+
+msgid "Bevestig met <strong>Toch openen</strong> en je wachtwoord."
 msgstr ""
 
 msgid "Op Windows"
@@ -6053,9 +6060,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Gratis ondertekening van de Windows-versie aangevraagd bij SignPath "
-"Foundation. <a href=\"%(contribute_url)s#ondertekening\">Hoe we "
-"ondertekenen</a>"
+"Gratis ondertekening van de Windows-versie is aangevraagd bij SignPath "
+"Foundation. <a href=\"%(contribute_url)s#ondertekening\">Ondertekening</a>"
 msgstr ""
 
 msgid "Deze site telt bezoeken met GoatCounter, zonder cookies."
@@ -6076,7 +6082,7 @@ msgid ""
 "staan in de code en in de tests."
 msgstr ""
 
-msgid "Naar de code op GitHub"
+msgid "Bekijk de code op GitHub"
 msgstr ""
 
 msgid "Bekijk de issues"
@@ -6087,7 +6093,7 @@ msgstr ""
 
 msgid ""
 "<strong>Django en SQLite:</strong> één proces en één databasebestand. Een "
-"back-up is een kopie van een map."
+"back-up is één bestand."
 msgstr ""
 
 msgid ""
@@ -6175,13 +6181,14 @@ msgid ""
 msgstr ""
 
 msgid ""
-"<strong>Uitgegeven is vast:</strong> een uitgegeven factuur verandert niet "
-"meer. Corrigeren doe je met een creditnota."
+"<strong>Uitgegeven is vast:</strong> een uitgegeven factuur verandert niet. "
+"Corrigeren doe je met een creditnota. De enige uitzondering is <strong>Toch "
+"bewerken</strong>: de factuur gaat terug naar concept, met hetzelfde nummer."
 msgstr ""
 
 msgid ""
-"<strong>Nummers zonder gaten:</strong> een nummer krijgt een factuur pas bij "
-"het uitgeven."
+"<strong>Nummers zonder gaten:</strong> een factuur krijgt pas een nummer als "
+"je hem uitgeeft."
 msgstr ""
 
 msgid ""
@@ -6198,9 +6205,9 @@ msgid "Ondertekening"
 msgstr ""
 
 msgid ""
-"We hebben gratis ondertekening van de Windows-versie aangevraagd bij "
-"SignPath Foundation. Tot die er is, is de Windows-versie niet ondertekend. "
-"Zo gaat het als de ondertekening er is:"
+"Gratis ondertekening van de Windows-versie is aangevraagd bij SignPath "
+"Foundation. Tot die er is, is de Windows-versie niet ondertekend. Zo gaat "
+"het als de ondertekening er is:"
 msgstr ""
 
 msgid ""
@@ -6223,7 +6230,7 @@ msgstr ""
 
 msgid ""
 "<strong>Privacy:</strong> Huismus stuurt niets naar andere systemen, tenzij "
-"jij erom vraagt. De enige uitzondering: eens per dag kijkt het of er een "
+"jij erom vraagt. De enige uitzondering: eens per dag kijkt Huismus of er een "
 "nieuwe versie is. Dat zet je uit bij Instellingen → Updates."
 msgstr ""
 
@@ -6244,7 +6251,7 @@ msgid "<strong>Teksten via gettext</strong>, in het Nederlands en het Engels."
 msgstr ""
 
 msgid ""
-"<strong>Een DCO in plaats van een CLA:</strong> onderteken je commits met "
+"<strong>Een DCO in plaats van een CLA:</strong> teken je commits af met "
 "<code>git commit -s</code>. De licentie is AGPL-3.0-or-later."
 msgstr ""
 
@@ -6259,7 +6266,20 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Begint hij niet vanzelf? <a href=\"%(file_url)s\">Download hem dan hier</a>."
+"Begint hij niet vanzelf? <a href=\"%(file_url)s\">Download Huismus voor Mac</"
+"a>."
+msgstr ""
+
+#, python-format
+msgid ""
+"Begint hij niet vanzelf? <a href=\"%(file_url)s\">Download Huismus voor "
+"Windows</a>."
+msgstr ""
+
+msgid "Voor macOS 15 of nieuwer, op een Mac met een Apple-chip."
+msgstr ""
+
+msgid "Voor Windows 10 of nieuwer."
 msgstr ""
 
 msgid "Daarna"
@@ -6421,7 +6441,7 @@ msgstr ""
 msgid "Zonder de KOR"
 msgstr ""
 
-msgid "Btw op je facturen, ook verlegd, en de btw van elk bonnetje vastgelegd."
+msgid "Btw op je facturen, ook verlegd. Van elk bonnetje leg je de btw vast."
 msgstr ""
 
 msgid "Neem al je jaren mee"
@@ -6447,7 +6467,7 @@ msgstr ""
 
 msgid ""
 "Huismus rekent elke factuur na en vergelijkt elk totaal, tot op de cent. "
-"Wijkt er een af, dan zie je welke en hoeveel. Er wordt nog niets opgeslagen."
+"Wijkt er een af, dan zie je welke en hoeveel. Huismus slaat nog niets op."
 msgstr ""
 
 msgid "Importeer"
@@ -6512,6 +6532,9 @@ msgstr ""
 msgid "Een bonnetje naar een AI-dienst die jij kiest"
 msgstr ""
 
+msgid "Je administratie aan een AI-assistent die jij koppelt"
+msgstr ""
+
 msgid "Kijken of er een nieuwe versie is"
 msgstr ""
 
@@ -6543,7 +6566,8 @@ msgstr ""
 
 msgid ""
 "Zet een foto in een map die meesynchroniseert, ook vanaf je telefoon. "
-"Huismus haalt hem op en kan hem laten lezen. Jij kijkt na."
+"Huismus haalt hem op, en een AI-dienst die jij kiest kan hem lezen. Jij "
+"kijkt na."
 msgstr ""
 
 msgid "Meer over bonnetjes"
@@ -6586,11 +6610,12 @@ msgstr ""
 msgid "De klanten en bedragen op de beelden zijn verzonnen."
 msgstr ""
 
-#, python-format
 msgid ""
-"Werk je met Claude of een andere AI-assistent? <a href=\"%(url)s\">Die kun "
-"je koppelen.</a> Een factuur uitgeven of mailen gebeurt pas als jij op de "
-"knop drukt."
+"Werk je met Claude of een andere AI-assistent? Koppel hem aan Huismus. Een "
+"factuur uitgeven of mailen gebeurt pas als jij het goedkeurt."
+msgstr ""
+
+msgid "Zo koppel je een AI-assistent"
 msgstr ""
 
 #, python-format
@@ -6637,8 +6662,8 @@ msgid "Huismus installeren"
 msgstr ""
 
 msgid ""
-"Download de app, en open hem de eerste keer zoals hieronder. Daarna start "
-"hij gewoon."
+"Download de app en open hem de eerste keer zoals hieronder. Daarna start hij "
+"gewoon."
 msgstr ""
 
 msgid "Begin je nieuw? Vul in vier stappen je bedrijfsgegevens in."

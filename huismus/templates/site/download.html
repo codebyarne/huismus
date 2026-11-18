@@ -10,7 +10,8 @@
 <div class="page-head">
     <div class="titles">
         <h1>{% translate "Je download begint" %}</h1>
-        <p class="lede">{% blocktranslate %}Begint hij niet vanzelf? <a href="{{ file_url }}">Download hem dan hier</a>.{% endblocktranslate %}</p>
+        <p class="lede">{% if platform == "mac" %}{% blocktranslate %}Begint hij niet vanzelf? <a href="{{ file_url }}">Download Huismus voor Mac</a>.{% endblocktranslate %}{% else %}{% blocktranslate %}Begint hij niet vanzelf? <a href="{{ file_url }}">Download Huismus voor Windows</a>.{% endblocktranslate %}{% endif %}</p>
+        <p class="small muted">{% if platform == "mac" %}{% translate "Voor macOS 15 of nieuwer, op een Mac met een Apple-chip." %}{% else %}{% translate "Voor Windows 10 of nieuwer." %}{% endif %}</p>
     </div>
 </div>
 
@@ -21,6 +22,6 @@
 <section class="card card-pad help-text">
     <h2>{% translate "Daarna" %}</h2>
     <p>{% translate "Begin je nieuw? Vul in vier stappen je bedrijfsgegevens in. Kom je van Moneybird? Importeer je klanten, facturen, offertes en uitgaven in één keer." %}</p>
-    <p class="small"><a href="{{ help.beginnen }}">{% translate "Aan de slag" %} →</a></p>
+    <p><a class="btn btn-primary btn-lg" href="{{ help.beginnen }}">{% translate "Aan de slag" %}</a></p>
 </section>
 {% endblock %}
