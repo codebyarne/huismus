@@ -1,5 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
+from urllib.parse import urlencode
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -8,10 +10,20 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from huismus.business.models import Settings
+from huismus.core.sorting import chosen_sort, sort_headers, sorted_rows
 from huismus.documents.models import Document
 
 from .forms import ContactForm, ContactPersonFormSet
 from .models import Contact
+
+# What a column of the customer list sorts on. The name as the list shows it
+# (the company, else the person), so people and companies sort together. A
+# customer number sorts as text: "K10" before "K9".
+CONTACT_SORT_KEYS = {
+    "naam": lambda c: c.display_name.casefold(),
+    "klantnummer": lambda c: c.customer_number.casefold(),
+    "plaats": lambda c: c.city.casefold(),
+}
 
 
 @login_required
@@ -34,10 +46,19 @@ def contact_list(request):
             | Q(email__icontains=query)
             | Q(city__icontains=query)
         )
+    sort = chosen_sort(request, CONTACT_SORT_KEYS)
+    contacts = sorted_rows(list(contacts), sort, CONTACT_SORT_KEYS)
+
+    def list_url(value):
+        params = {"archived": "1" if show_archived else "", "q": query, "sorteer": value}
+        return "?" + urlencode({k: v for k, v in params.items() if v})
+
     return render(
         request,
         "contacts/list.html",
         {
+            "sort": sort_headers(sort, CONTACT_SORT_KEYS, list_url),
+            "sorted_by": sort,
             "contacts": contacts,
             "query": query,
             "show_archived": show_archived,

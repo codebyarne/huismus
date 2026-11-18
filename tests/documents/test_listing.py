@@ -6,7 +6,14 @@ from types import SimpleNamespace
 
 import pytest
 
-from huismus.documents.listing import contact_name, in_tab, matches_search
+from huismus.documents.listing import (
+    contact_name,
+    grouped,
+    in_tab,
+    invoice_group,
+    matches_search,
+    waiting_label,
+)
 
 
 def _doc(**fields):
@@ -71,6 +78,7 @@ def test_matches_search_on_number_or_customer(query, expected):
 from datetime import date, timedelta  # noqa: E402
 
 from huismus.documents.listing import expiry_hint, in_quote_tab  # noqa: E402
+from huismus.documents.models import Document  # noqa: E402
 
 
 @pytest.mark.parametrize(
@@ -87,7 +95,7 @@ from huismus.documents.listing import expiry_hint, in_quote_tab  # noqa: E402
     ],
 )
 def test_in_quote_tab(status, tab, expected):
-    assert in_quote_tab(_doc(kind="quote", status=status), tab) is expected
+    assert in_quote_tab(Document(kind="quote", status=status), tab) is expected
 
 
 TODAY = date(2026, 9, 29)
@@ -100,7 +108,7 @@ TODAY = date(2026, 9, 29)
         ("sent", TODAY + timedelta(days=7), ("soon", 7)),
         ("sent", TODAY + timedelta(days=8), None),
         ("sent", TODAY, ("soon", 0)),
-        ("sent", TODAY - timedelta(days=1), ("past", None)),
+        ("sent", TODAY - timedelta(days=1), None),  # reads as expired: no hint
         ("sent", None, None),
         ("accepted", TODAY - timedelta(days=1), None),  # only waiting quotes get a hint
         ("draft", TODAY + timedelta(days=2), None),
@@ -109,3 +117,55 @@ TODAY = date(2026, 9, 29)
 def test_expiry_hint(status, expiry, expected):
     quote = _doc(kind="quote", status=status, expiry_date=expiry)
     assert expiry_hint(quote, today=TODAY) == expected
+
+
+@pytest.mark.parametrize(
+    ("document", "group"),
+    [
+        (_doc(is_overdue=True), "te-laat"),
+        (_doc(payment_state="partial", is_overdue=True), "te-laat"),
+        (_doc(is_overdue=False), "wacht"),
+        (_doc(payment_state="partial", is_overdue=False), "wacht"),
+        (_doc(status="draft", payment_state=None, is_overdue=False), "concept"),
+        (_doc(payment_state="paid", is_overdue=False), "betaald"),
+        (_doc(payment_state="credited", is_overdue=False), "betaald"),
+        (_doc(kind="credit_note", payment_state=None, is_overdue=False), "creditnotas"),
+        (_doc(kind="credit_note", status="draft", payment_state=None, is_overdue=False), "concept"),
+    ],
+)
+def test_invoice_group(document, group):
+    assert invoice_group(document) == group
+
+
+def test_grouped_keeps_the_order_within_a_group_and_puts_groups_in_order():
+    paid_new = _doc(payment_state="paid", is_overdue=False, number="5")
+    late = _doc(is_overdue=True, number="4")
+    waiting = _doc(is_overdue=False, number="3")
+    paid_old = _doc(payment_state="paid", is_overdue=False, number="2")
+    draft = _doc(status="draft", payment_state=None, is_overdue=False, number="")
+
+    rows = grouped([paid_new, late, waiting, paid_old, draft])
+
+    assert [d.number for d in rows] == ["4", "3", "", "5", "2"]
+    assert [d.group for d in rows] == ["te-laat", "wacht", "concept", "betaald", "betaald"]
+
+
+LABEL_TODAY = date(2026, 11, 15)
+
+
+@pytest.mark.parametrize(
+    ("state", "due_in", "label"),
+    [
+        ("unpaid", 4, "Nog 4 dagen"),
+        ("unpaid", 1, "Nog 1 dag"),
+        ("unpaid", 0, "Vandaag te betalen"),
+        ("unpaid", None, "Onbetaald"),
+        ("partial", 4, "Deels betaald, nog 4 dagen"),
+        ("partial", 0, "Deels betaald, vandaag te betalen"),
+        ("partial", None, "Deels betaald"),
+    ],
+)
+def test_waiting_label(state, due_in, label):
+    due = None if due_in is None else LABEL_TODAY + timedelta(days=due_in)
+    document = _doc(payment_state=state, due_date=due)
+    assert str(waiting_label(document, LABEL_TODAY)) == label

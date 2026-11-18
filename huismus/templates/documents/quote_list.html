@@ -20,14 +20,14 @@
 {% if not has_any %}
 <div class="card">
     <div class="empty">
-        <div class="empty-art"><svg class="mark" width="56" height="56" aria-hidden="true"><use href="#mus"></use></svg></div>
+        <div class="empty-art"><svg class="mark" width="56" height="56" aria-hidden="true"><use href="#mus-vogel"></use></svg></div>
         <h2>{% translate "Nog geen offertes" %}</h2>
         <p>{% translate "Maak een offerte, verstuur hem als PDF en zet hem om naar een factuur zodra de klant ja zegt." %}</p>
         <div class="row"><a class="btn btn-primary" href="{% url 'quotes:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Maak je eerste offerte" %}</a></div>
     </div>
 </div>
 {% else %}
-<section class="card">
+<section class="card list-card">
     <nav class="tabs" id="offertes-tabs" aria-label="{% translate 'Filter' %}" style="padding:0 var(--s-3)">
         {% for t in tabs %}
         <a class="tab" href="{{ t.url }}"{% if t.slug == tab %} aria-current="page"{% endif %}>{{ t.label }} <span class="count">{{ t.count }}</span></a>
@@ -35,14 +35,18 @@
     </nav>
     <form class="toolbar" role="search" method="get"
           hx-get="{% url 'quotes:list' %}" hx-trigger="input changed delay:300ms from:input[name=q]"
-          hx-target="#offertes-resultaat" hx-select="#offertes-resultaat" hx-select-oob="#offertes-tabs"
+          hx-target="#offertes-resultaat" hx-select="#offertes-resultaat" hx-select-oob="#offertes-tabs,#sorteer-menu,#sorteer-knop"
           hx-swap="outerHTML" hx-push-url="true">
         <input type="hidden" name="tab" value="{{ tab }}">
+        {% if sorted_by %}<input type="hidden" name="sorteer" value="{{ sorted_by }}">{% endif %}
         <label class="input-affix">
             <span class="sr-only">{% translate "Zoeken in offertes" %}</span>
             <svg class="i" aria-hidden="true"><use href="#search"></use></svg>
             <input class="input input-sm" type="search" name="q" value="{{ query }}" placeholder="{% translate 'Zoek op nummer of klant' %}" autocomplete="off">
         </label>
+        {% comment %}Stacked (phone) the list has no column headings: the same sort links sit in this menu.{% endcomment %}
+        <button type="button" class="btn btn-secondary btn-sm sort-menu-btn{% if sorted_by %} is-active{% endif %}" id="sorteer-knop" popovertarget="sorteer-menu">{% translate "Sorteren" %}</button>
+        <div id="sorteer-menu" class="menu" popover="auto">{% include "core/_sort_item.html" with col=sort.klant label=_("Klant") %}{% include "core/_sort_item.html" with col=sort.nummer label=_("Nummer") %}{% include "core/_sort_item.html" with col=sort.geldig label=_("Geldig tot") %}{% include "core/_sort_item.html" with col=sort.status label=_("Status") %}{% include "core/_sort_item.html" with col=sort.totaal label=_("Totaal") %}</div>
         <noscript><button type="submit" class="btn btn-sm">{% translate "Zoeken" %}</button></noscript>
     </form>
     <div id="offertes-resultaat">
@@ -51,24 +55,20 @@
             <table class="table stackable">
                 <thead>
                     <tr>
-                        <th>{% translate "Nummer" %}</th>
-                        <th>{% translate "Klant" %}</th>
-                        <th>{% translate "Status" %}</th>
-                        <th>{% translate "Geldig tot" %}</th>
-                        <th class="r">{% translate "Totaal" %}</th>
+                        {% include "core/_sort_th.html" with col=sort.klant label=_("Klant") %}
+                        {% include "core/_sort_th.html" with col=sort.nummer label=_("Nummer") %}
+                        {% include "core/_sort_th.html" with col=sort.geldig label=_("Geldig tot") %}
+                        {% include "core/_sort_th.html" with col=sort.status label=_("Status") %}
+                        {% include "core/_sort_th.html" with col=sort.totaal label=_("Totaal") cls="r" %}
                     </tr>
                 </thead>
                 <tbody>
                     {% for quote, hint in quotes %}
                     <tr class="is-link">
-                        <td data-cell="secondary">
-                            {% if quote.number %}<span class="num">{{ quote.number }}</span>{% else %}<span class="draft-no">{% translate "Concept" %}</span>{% endif %}
-                            {% if hint.0 == "soon" %}<span class="due-hint"><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% if hint.1 == 0 %}{% translate "verloopt vandaag" %}{% else %}{% blocktranslate count days=hint.1 %}verloopt over {{ days }} dag{% plural %}verloopt over {{ days }} dagen{% endblocktranslate %}{% endif %}</span>
-                            {% elif hint.0 == "past" %}<span class="due-hint is-past"><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% translate "geldigheid voorbij" %}</span>{% endif %}
-                        </td>
                         <td data-cell="primary"><a class="row-link" href="{% url 'quotes:edit' quote.pk %}">{{ quote|contact_name|default:_("Nog geen klant") }}</a></td>
-                        <td data-cell="status"><span class="pill pill-{{ quote.status|quote_pill }}">{{ quote.get_status_display|capfirst }}</span></td>
-                        <td data-cell="hide" class="num">{% if quote.expiry_date %}{{ quote.expiry_date|date:"SHORT_DATE_FORMAT" }}{% else %}<span class="muted">·</span>{% endif %}</td>
+                        <td data-cell="secondary" class="num muted">{% if quote.number %}{{ quote.number }}{% else %}<span class="draft-no">{% translate "Concept" %}</span>{% endif %}</td>
+                        <td data-cell="hide" class="num muted">{% if quote.expiry_date %}{{ quote.expiry_date|date:"SHORT_DATE_FORMAT" }}{% endif %}</td>
+                        <td data-cell="status">{% comment %}The status as every screen shows it (Document.shown_status): a sent quote reads as "Verlopen" after its date.{% endcomment %}<span class="status-hint"><span class="pill pill-{{ quote.shown_status|quote_pill }}">{{ quote.get_shown_status_display|capfirst }}</span>{% if hint.0 == "soon" %}<span class="due-hint"><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% if hint.1 == 0 %}{% translate "verloopt vandaag" %}{% else %}{% blocktranslate count days=hint.1 %}verloopt over {{ days }} dag{% plural %}verloopt over {{ days }} dagen{% endblocktranslate %}{% endif %}</span>{% endif %}</span></td>
                         <td data-cell="amount" class="r amount">{{ quote.total_cents|money }}</td>
                     </tr>
                     {% endfor %}
@@ -84,6 +84,6 @@
         {% endif %}
     </div>
 </section>
-<p class="small muted" style="margin-top:var(--s-3)">{% translate "Verloopt een verzonden offerte binnen 7 dagen, dan zie je dat in de lijst. Is hij verlopen, zet hem dan op de offertepagina op verlopen." %}</p>
+<p class="small muted" style="margin-top:var(--s-3)">{% translate "Verloopt een verzonden offerte binnen 7 dagen, dan zie je dat in de lijst. Na de geldigheidsdatum staat hij bij Afgewezen of verlopen. Het antwoord van de klant kun je dan nog vastleggen." %}</p>
 {% endif %}
 {% endblock %}

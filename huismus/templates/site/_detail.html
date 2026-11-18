@@ -1,0 +1,5 @@
+{% comment %}A part of a screen of the app, shown large (scripts/site_beelden.py: Camera.detail, or a still as a phone shows it). name, kind (".phone" for the phone screen, else empty), alt, width and height of the picture.{% endcomment %}
+<picture class="detail">
+    <source media="(prefers-color-scheme: dark)" srcset="/beelden/{{ name }}.{{ language }}.dark{{ kind }}.webp">
+    <img src="/beelden/{{ name }}.{{ language }}.light{{ kind }}.webp" width="{{ width }}" height="{{ height }}" alt="{{ alt }}" loading="lazy" decoding="async">
+</picture>

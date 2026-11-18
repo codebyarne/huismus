@@ -40,12 +40,15 @@ ophaalt. Zie [Bonnetjes onderweg](bonnetjes.nl.md).
 
 Via **Categorieën** op de pagina Uitgaven maak, hernoem en sorteer je je
 categorieën. De volgorde bepaalt hoe ze in keuzelijsten en in het
-jaaroverzicht staan.
+jaaroverzicht staan. Klik op een categorie om de uitgaven erin te zien, van
+alle jaren.
 
 ## Zoeken en het jaaroverzicht
 
 Bovenaan de lijst zoek je op leverancier of omschrijving, en filter je op
-jaar en categorie.
+jaar en categorie. Klik op **Datum**, **Leverancier** of **Bedrag** boven de
+lijst om erop te sorteren; nog een keer klikken draait de volgorde om. Op een
+telefoon doe je dat met **Sorteren**.
 
 Onder **Rapporten → Jaaroverzicht** staan per jaar je omzet, je kosten en het
 verschil, ook per kwartaal. Gebruik je de KOR niet, dan zijn dat je kosten

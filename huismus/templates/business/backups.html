@@ -8,7 +8,7 @@
 {% comment %}The three places for backups as equal rows (huismus-intern/besluiten.md, 2026-11-01; design docs/design/ronde-5/). Each row opens the place's own page: business:backups_folder, _dropbox, _webdav.{% endcomment %}
 <div class="page-head">
     <div class="titles">
-        <a class="small" href="{% url 'business:overview' %}">← {% translate "Instellingen" %}</a>
+        <a class="back" href="{% url 'business:overview' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Instellingen" %}</a>
         <h1>{% translate "Back-ups" %}</h1>
         <p class="lede">{% if last_success %}{% blocktranslate with moment=last_success|moment %}Laatste back-up: {{ moment }}{% endblocktranslate %}{% else %}{% translate "Nog geen back-up." %}{% endif %}</p>
     </div>

@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """The invoice list (M8): tabs, search, year filter, overdue, "Meer laden"."""
 
+import re
 from datetime import date, timedelta
 
 import pytest
@@ -117,17 +118,38 @@ def test_year_filter_defaults_to_all_years_and_keeps_drafts(client_in):
     assert _get(client_in).context["years"] == [TODAY.year, TODAY.year - 1]
 
 
-def test_overdue_invoice_shows_vervallen(client_in):
+def test_overdue_invoice_shows_how_many_days_late(client_in):
     _invoice(
         "Te laat BV", issue_date=TODAY - timedelta(days=40), due_date=TODAY - timedelta(days=10)
     )
     html = _get(client_in).content.decode()
     explanation = "Vervaldatum voorbij en nog niet volledig betaald."
     # Explained where the label stands: a tooltip, and for screen readers.
-    assert f'class="pill pill-overdue" title="{explanation}">Vervallen<' in html
+    # One pill, "Te laat", with how late beside it (huismus-intern/besluiten.md, 2026-11-15).
+    assert f'class="pill pill-overdue no-dot" title="{explanation}">Te laat<' in html
+    assert '<span class="overdue-since">10 dagen</span>' in html
     assert f'<span class="sr-only">: {explanation}</span>' in html
     english = client_in.get(reverse("documents:list"), HTTP_ACCEPT_LANGUAGE="en").content.decode()
     assert 'title="Past the due date and not fully paid yet.">Overdue<' in english
+    assert '<span class="overdue-since">10 days</span>' in english
+
+
+def test_an_invoice_a_hundred_days_late_says_since_when(client_in):
+    _invoice(
+        "Lang te laat BV",
+        issue_date=TODAY - timedelta(days=130),
+        due_date=TODAY - timedelta(days=100),
+    )
+    html = _get(client_in).content.decode()
+    assert "sinds " in html
+    assert "100 dagen" not in html
+
+
+def test_invoice_one_day_late_says_dag(client_in):
+    _invoice(
+        "Net te laat BV", issue_date=TODAY - timedelta(days=15), due_date=TODAY - timedelta(days=1)
+    )
+    assert '<span class="overdue-since">1 dag</span>' in _get(client_in).content.decode()
 
 
 def test_the_search_shortcut_is_hinted_only_on_pages_with_a_search_field(client_in):
@@ -164,3 +186,26 @@ def test_query_count_does_not_grow_with_the_number_of_invoices(
         _invoice(f"Klant {number}", paid=5000)
     with django_assert_max_num_queries(8):
         _get(client_in)
+
+
+def test_the_list_orders_invoices_by_what_needs_you_first(client_in):
+    """#186: te laat, wacht op betaling, nog niet verstuurd, betaald, in
+    that order. Without a heading per group: the Status column says it
+    (the owner, 2026-11-17)."""
+    _invoice("Studio Noordwind", due_date=TODAY + timedelta(days=4))
+    _invoice("Atelier De Vries", paid=10000)
+    _invoice("Bouwbedrijf Van Dijk", due_date=TODAY - timedelta(days=12))
+    _invoice("Vandaag BV", due_date=TODAY)
+    _draft("Bakkerij Jansen BV")
+
+    html = client_in.get(reverse("documents:list")).content.decode().replace("\xa0", " ")
+
+    names = ["Bouwbedrijf Van Dijk", "Studio Noordwind", "Bakkerij Jansen BV", "Atelier De Vries"]
+    positions = [html.index(name) for name in names]
+    assert positions == sorted(positions)
+    assert html.index("Bouwbedrijf Van Dijk") < html.index("Vandaag BV") < positions[2]
+    assert len(re.findall(r"<table", html)) == 1
+    assert "group-row" not in html
+    assert '<span class="overdue-since">12 dagen</span>' in html
+    assert "Nog 4 dagen" in html
+    assert "Vandaag te betalen" in html

@@ -386,3 +386,41 @@ def test_a_receipt_taken_meanwhile_is_not_used_twice(client, user, monkeypatch):
 def test_an_unknown_receipt_goes_back_to_verwerken(client, user):
     response = client.get(_make(999))
     assert response.url == reverse("expenses:process")
+
+
+def test_a_look_that_ends_while_the_page_is_made_leaves_a_page_that_asks_again(
+    client, tmp_path, monkeypatch
+):
+    """Found in CI (tests/e2e/test_receipts_folder.py, now and then): the
+    status was read first and "is a look running?" asked after it. A look
+    that ended in between gave a page with the old red line and nothing
+    that asked again."""
+    get_user_model().objects.create_user(username="freelancer", password="s3cret-pass")
+    client.login(username="freelancer", password="s3cret-pass")
+    folder = tmp_path / "bonnetjes"
+    folder.mkdir()
+    inbox.choose_folder(folder)
+    folder.rename(tmp_path / "weg")
+    inbox.fetch()
+    assert inbox.load().failed
+    (tmp_path / "weg").rename(folder)
+
+    # A look runs; it ends (and records its success) right after the page
+    # has read the status.
+    running = {"look": True}
+    real_load = inbox.load
+
+    def load_then_the_look_ends():
+        status = real_load()
+        if running["look"]:
+            running["look"] = False
+            inbox.fetch()
+        return status
+
+    monkeypatch.setattr(inbox, "fetching", lambda: running["look"])
+    monkeypatch.setattr(inbox, "load", load_then_the_look_ends)
+
+    page = client.get(reverse("business:receipts_folder")).content.decode()
+
+    stale = 'id="ophalen-mislukt"' in page and 'hx-trigger="every 3s"' not in page
+    assert not stale

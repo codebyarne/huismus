@@ -253,6 +253,27 @@ CUT_OFF_TABS = """() => [...document.querySelectorAll('.tab')]
     .map(el => el.innerText.trim())"""
 
 
+# A menu (popover) whose button is in sight must open inside the window:
+# "Sorteren" on Klanten and Offertes hung half off the left edge of a phone
+# (#204). Opened and closed here in one go; layout is worked out at once.
+# That measures the place the CSS gives it. Where app.js places the menu (a
+# browser without anchor positioning) it does so after the menu has opened:
+# test_on_a_phone_sorteren_opens_its_menu_under_the_button covers that.
+MENUS_OFF_SCREEN = """() => [...document.querySelectorAll('[popover]')]
+    .filter(menu => {
+        const button = document.querySelector(`[popovertarget="${menu.id}"]`);
+        if (!button || !button.checkVisibility() || menu.matches(':popover-open')) return false;
+        menu.showPopover();
+        const box = menu.getBoundingClientRect();
+        menu.hidePopover();
+        const page = document.documentElement;
+        // 1px slack: positions are fractions and round differently.
+        return box.left < -1 || box.top < -1
+            || box.right > page.clientWidth + 1 || box.bottom > page.clientHeight + 1;
+    })
+    .map(menu => menu.id)"""
+
+
 def _problems_on(page, path, language, dutch, data):
     problems = []
     response = page.goto(page.base + path)
@@ -331,6 +352,9 @@ def _problems_on(page, path, language, dutch, data):
     cut_off_tabs = page.evaluate(CUT_OFF_TABS)
     if cut_off_tabs:
         problems.append(f"tab afgeknipt: {sorted(set(cut_off_tabs))}")
+    off_screen = page.evaluate(MENUS_OFF_SCREEN)
+    if off_screen:
+        problems.append(f"menu opent buiten beeld: {sorted(off_screen)}")
     return problems
 
 
@@ -559,12 +583,23 @@ ACTIONS_JS = """
     if (!menu || menu.matches(":popover-open")) return false;
     return [...document.querySelectorAll(`[popovertarget="${menu.id}"]`)].some(visible);
   };
+  // Moved into one of the phone's own menus counts as reachable: the overview's "Uitgave"
+  // is in the + there (#189). Only those menus: any other link to the same place doesn't.
+  const places = new Set([...document.querySelectorAll("#plus-menu a[href], #meer-menu a[href]")]
+    .filter(reachable).map((el) => el.getAttribute("href")));
   const out = [];
   for (const el of document.querySelectorAll("a[href], button")) {
     if (el.closest(nav) || el.closest("dialog") || el.hasAttribute("popovertarget")) continue;
-    const name = (el.getAttribute("aria-label") || el.innerText || "").trim();
+    // One line: a notice's link stands beside its text on a wide screen and runs on in it
+    // on a phone: a line break in one and a space in the other.
+    // textContent, not innerText: a tile that hides a line on a phone is still the same action.
+    const text = el.getAttribute("aria-label") || el.textContent || "";
+    const name = text.replace(/\s+/g, " ").trim();
     const where = el.getAttribute("href") || el.getAttribute("formaction") || "";
-    out.push({key: `${name} ${where}`.trim(), visible: visible(el), reachable: reachable(el)});
+    out.push({
+      key: `${name} ${where}`.trim(), visible: visible(el),
+      reachable: reachable(el) || places.has(where),
+    });
   }
   return out;
 }

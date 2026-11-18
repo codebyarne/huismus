@@ -16,12 +16,26 @@ class _Page(HTMLParser):
     def __init__(self):
         super().__init__()
         self.links: list[str] = []
-        self.ids: set[str] = set()
+        # A list, not a set: an id twice is a link that jumps to the wrong one.
+        self.id_list: list[str] = []
+        self.h1s = 0
+        self.sources: list[str] = []
+
+    @property
+    def ids(self) -> set[str]:
+        return set(self.id_list)
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
         if "id" in attrs:
-            self.ids.add(attrs["id"])
+            self.id_list.append(attrs["id"])
+        if tag == "h1":
+            self.h1s += 1
+        for name in ("src", "srcset"):
+            if attrs.get(name):
+                self.sources += [part.split()[0] for part in attrs[name].split(",")]
+        if tag == "link" and attrs.get("rel") in ("stylesheet", "preload", "icon"):
+            self.sources.append(attrs["href"])
         if tag == "a" and "href" in attrs:
             self.links.append(attrs["href"])
 
@@ -52,6 +66,8 @@ def test_every_link_inside_the_site_lands_on_a_page_and_heading(out):
     """Also the links between help files (`back-ups.nl.md#…` in docs/hulp/)."""
     addresses = [site.home_url(lang) for lang in help.LANGUAGES]
     addresses += [site.install_url(lang) for lang in help.LANGUAGES]
+    addresses += [site.features_url(lang) for lang in help.LANGUAGES]
+    addresses += [site.why_url(lang) for lang in help.LANGUAGES]
     addresses += [site.contribute_url(lang) for lang in help.LANGUAGES]
     addresses += [
         site.download_page_url(lang, n) for lang in help.LANGUAGES for n in site.PLATFORMS
@@ -66,6 +82,10 @@ def test_every_link_inside_the_site_lands_on_a_page_and_heading(out):
                 continue
             if link == site.MAC_PRIVACY_SETTINGS:
                 continue
+            if link.startswith("mailto:"):
+                # "Mail jezelf de link": no address, only this site's own address.
+                assert link.startswith("mailto:?") and site.DOMAIN in link, (address, link)
+                continue
             if not link.startswith("/"):
                 # Another site, or a help file that core.help didn't turn into a page.
                 # Meebouwen links to the developer docs in the repository on purpose.
@@ -74,6 +94,8 @@ def test_every_link_inside_the_site_lands_on_a_page_and_heading(out):
                 assert ".md" not in link or in_repository, (address, link)
                 continue
             path, _hash, anchor = link.partition("#")
+            # "/?#overstappen": on the home page a real navigation, so the menu closes.
+            path = path.split("?")[0]
             assert (out / path.strip("/") / "index.html").exists(), (address, link)
             if anchor:
                 assert anchor in _read(out, path).ids, (address, link)
@@ -178,3 +200,163 @@ def test_a_folder_that_is_not_a_site_is_never_emptied(tmp_path):
 def test_the_mac_steps_link_to_privacy_and_security(out, language):
     for address in (site.install_url(language), site.download_page_url(language, "mac")):
         assert site.MAC_PRIVACY_SETTINGS in _read(out, address).links, address
+
+
+@pytest.mark.parametrize("language", help.LANGUAGES)
+def test_functies_and_the_home_page_show_the_whole_list_with_a_check_or_later(out, language):
+    """One list (core/site_features.py), to show how complete Huismus is:
+    every feature on both pages, in the language of the page, and as many
+    "Later" labels as features that come later. No months (the owner,
+    2026-11-18)."""
+    from django.utils.html import escape
+
+    from huismus.core import site_features
+
+    home = (out / site.home_url(language).strip("/") / "index.html").read_text()
+    features = (out / site.features_url(language).strip("/") / "index.html").read_text()
+    with translation.override(language):
+        names = [str(f.name) for _group, items in site_features.FEATURES for f in items]
+        later = str(translation.gettext("Later"))
+    _now, coming = site_features.counts()
+    for page in (home, features):
+        for name in names:
+            assert escape(name) in page, name
+        assert page.count(f'<span class="later">{later}</span>') >= coming
+    assert "Verwacht in" not in features and "Expected in" not in features
+
+
+def test_every_help_link_of_a_feature_is_a_help_page():
+    from huismus.core import site_features
+
+    for _group, items in site_features.FEATURES:
+        for feature in items:
+            assert not feature.help or feature.help in site.TOPICS, feature.name
+
+
+def test_nothing_is_loaded_from_another_site(out):
+    """Letters, pictures and styles come with the site: no CDN, no web fonts
+    from elsewhere, no script."""
+    for name in site._FONTS:
+        assert (out / "fonts" / name).exists()
+    for language in help.LANGUAGES:
+        for address in (site.home_url(language), site.features_url(language)):
+            html = (out / address.strip("/") / "index.html").read_text()
+            sources = re.findall(r'(?:src|srcset)="([^"]+)"', html)
+            sources += re.findall(
+                r'<link rel="(?:stylesheet|preload|icon)[^>]*href="([^"]+)"', html
+            )
+            assert sources and all(source.startswith("/") for source in sources), sources
+            assert "<script src" not in html
+
+
+def test_every_photo_is_there_in_both_widths(out):
+    """scripts/site-beelden.sh makes them (scripts/site_fotos.py); a photo
+    with the app on the laptop shows it in the language of the page."""
+    homes = " ".join(
+        (out / site.home_url(lang).strip("/") / "index.html").read_text() for lang in help.LANGUAGES
+    )
+    for path in site.photo_files():
+        assert path.exists(), f"{path.name}: draai ./scripts/site-beelden.sh"
+        assert (out / "beelden" / "fotos" / path.name).exists()
+        assert f"/beelden/fotos/{path.name}" in homes
+    for language in help.LANGUAGES:
+        home = (out / site.home_url(language).strip("/") / "index.html").read_text()
+        for name in site.PHOTOS_WITH_SCREEN:
+            assert f"/beelden/fotos/{name}.{language}." in home
+
+
+def test_every_picture_on_a_page_has_a_description(out):
+    for language in help.LANGUAGES:
+        html = (out / site.home_url(language).strip("/") / "index.html").read_text()
+        images = re.findall(r"<img [^>]*>", html)
+        assert len(images) >= 10
+        for image in images:
+            assert re.search(r'alt="[^"]{20,}"', image), image
+
+
+def test_a_search_engine_finds_every_page_but_the_downloads(out):
+    sitemap = (out / "sitemap.xml").read_text()
+    assert f"https://{site.DOMAIN}/functies/" in sitemap and "/download/" not in sitemap
+    assert "sitemap.xml" in (out / "robots.txt").read_text()
+    download = (out / "download" / "mac" / "index.html").read_text()
+    assert '<meta name="robots" content="noindex">' in download
+    home = (out / "index.html").read_text()
+    assert f'<link rel="canonical" href="https://{site.DOMAIN}/">' in home
+    assert f'hreflang="en" href="https://{site.DOMAIN}/en/"' in home
+
+
+def _every_address(out):
+    """Every page the build wrote, by its address."""
+    addresses = []
+    for path in out.rglob("index.html"):
+        folder = path.parent.relative_to(out).as_posix()
+        addresses.append("/" if folder == "." else f"/{folder}/")
+    return sorted(addresses)
+
+
+def test_no_page_has_an_id_twice_or_more_than_one_main_heading(out):
+    """The icons (icons.svg) are on every page with ids like download and
+    menu: a heading or a section with the same id is never jumped to."""
+    for address in _every_address(out):
+        page = _read(out, address)
+        twice = {i for i in page.id_list if page.id_list.count(i) > 1}
+        assert not twice, (address, twice)
+        assert page.h1s == 1, address
+
+
+def test_no_page_loads_anything_from_another_site(out):
+    for address in _every_address(out):
+        page = _read(out, address)
+        outside = [s for s in page.sources if not s.startswith("/")]
+        assert outside == [], (address, outside)
+
+
+def test_a_description_fits_in_a_search_result(out):
+    for address in _every_address(out):
+        html = (out / address.strip("/") / "index.html").read_text()
+        description = re.search(r'<meta name="description" content="([^"]*)"', html).group(1)
+        assert 50 <= len(description) <= 160, (address, len(description))
+
+
+def test_with_less_motion_an_animation_stands_still(out):
+    for language in help.LANGUAGES:
+        html = (out / site.home_url(language).strip("/") / "index.html").read_text()
+        for name in ("factuur-maken", "importeren"):
+            still = f"/beelden/{name}.{language}.light.still.webp"
+            assert still in html
+            assert (out / still.lstrip("/")).exists()
+
+
+def test_every_picture_that_comes_with_the_site_is_on_a_page(out):
+    """No megabytes nobody sees."""
+    pages = " ".join(path.read_text() for path in out.rglob("index.html"))
+    for path in (out / "beelden").rglob("*.webp"):
+        assert f"/beelden/{path.relative_to(out / 'beelden')}" in pages, path.name
+
+
+def test_on_the_home_page_each_jump_in_the_menu_has_its_own_address(out):
+    """A popover stays open on a jump within the same page, and the site has no
+    JS: on the home page each menu link to a block is a navigation of its own,
+    so choosing one closes the menu, also after the other."""
+    page = _read(out, "/")
+    jumps = [link for link in page.links if link.startswith("/?")]
+    assert len(jumps) == len(set(jumps)) == 2, jumps
+
+
+def test_a_help_page_is_described_in_whole_words():
+    assert site._short("Kort.") == "Kort."
+    text = "Eerste zin is kort. " + "Tweede zin is veel te lang " * 10 + "."
+    assert site._short(text) == "Eerste zin is kort."
+    assert site._short("woord " * 60).endswith("woord…")
+    assert len(site._short("woord " * 60)) <= 160
+
+
+@pytest.mark.parametrize("language", help.LANGUAGES)
+def test_why_huismus_exists_has_a_page_the_home_page_and_every_foot_link_to(out, language):
+    """Who makes Huismus and why (the owner, 2026-11-18)."""
+    why = site.why_url(language)
+    page = (out / why.strip("/") / "index.html").read_text()
+    assert "https://www.arnekrijnsen.com" in page
+    home = _read(out, site.home_url(language))
+    assert why in home.links
+    assert why in _read(out, site.help_url(language)).links

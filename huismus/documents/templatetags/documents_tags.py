@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
 from django import template
+from django.utils import timezone
 from django.utils.translation import gettext
 from django.utils.translation import gettext_lazy as _
 
@@ -29,10 +30,10 @@ def contact_name(document):
 # Quote status -> pill class in huismus.css (§7).
 QUOTE_PILLS = {
     "draft": "concept",
-    "sent": "sent",
-    "accepted": "accepted",
-    "declined": "rejected",
-    "expired": "expired",
+    "sent": "quote-sent",
+    "accepted": "quote-accepted",
+    "declined": "quote-declined",
+    "expired": "quote-expired",
 }
 
 
@@ -115,3 +116,9 @@ def subtract(cents, other_cents):
     """cents − other_cents, for amounts that are a plain difference of two
     stored values ("Nog te crediteren" = invoice total − credited)."""
     return (cents or 0) - (other_cents or 0)
+
+
+@register.filter
+def waiting_label(document):
+    """listing.waiting_label for today."""
+    return listing.waiting_label(document, timezone.localdate())

@@ -20,11 +20,11 @@ from django.urls import reverse
 from django.utils.translation import get_language
 from django.utils.translation import gettext as _
 
-# --bg and --surface in huismus.css (light): the splash screen behind the
-# icon while the app starts, and the title bar, which on a phone sits
-# above the white top bar. base.html has the dark ones for theme-color.
-BACKGROUND_COLOR = "#FBF8F3"
-THEME_COLOR = "#FFFFFF"
+# --bg in huismus.css (light): the splash screen behind the icon while the
+# app starts, and the title bar, which on a phone sits above the top bar.
+# base.html has the dark ones for theme-color.
+BACKGROUND_COLOR = "#F1F5F4"
+THEME_COLOR = "#F1F5F4"
 
 
 def manifest(request):

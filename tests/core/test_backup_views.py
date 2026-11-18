@@ -286,13 +286,16 @@ def _overview(client):
 def test_banner_without_a_folder(desktop):
     page = _overview(desktop)
     assert 'id="back-upmelding"' in page
-    assert "Je hebt nog geen back-up. Kies een map, dan gaat het vanzelf." in page
+    assert "<strong>Je hebt nog geen back-up.</strong> Kies een map, dan gaat het vanzelf." in page
 
 
 def test_banner_without_a_folder_in_english(desktop):
     desktop.cookies["django_language"] = "en"
     page = _overview(desktop)
-    assert "You have no backup yet. Choose a folder, and it happens by itself." in page
+    assert (
+        "<strong>You have no backup yet.</strong>"
+        " Choose a folder, and it happens by itself." in page
+    )
 
 
 # On Docker you first link a folder into the container yourself (`-v …:/backups`),
@@ -304,7 +307,8 @@ def test_banner_on_docker_without_a_linked_folder_says_to_link_one(docker, tmp_p
 
     page = _overview(docker)
     assert (
-        "Je hebt nog geen back-up. Huismus in Docker ziet alleen mappen die je eraan koppelt."
+        "<strong>Je hebt nog geen back-up.</strong>"
+        " Huismus in Docker ziet alleen mappen die je eraan koppelt."
         " Koppel eerst een map, bijvoorbeeld van je NAS of een USB-schijf." in page
     )
     assert "Kies een map, dan gaat het vanzelf." not in page
@@ -313,7 +317,8 @@ def test_banner_on_docker_without_a_linked_folder_says_to_link_one(docker, tmp_p
     docker.cookies["django_language"] = "en"
     page = _overview(docker)
     assert (
-        "You have no backup yet. In Docker, Huismus only sees folders you link to it."
+        "<strong>You have no backup yet.</strong>"
+        " In Docker, Huismus only sees folders you link to it."
         " Link a folder first, for example on your NAS or a USB drive." in page
     )
     assert "Set up backups" in page
@@ -321,12 +326,18 @@ def test_banner_on_docker_without_a_linked_folder_says_to_link_one(docker, tmp_p
 
 def test_banner_on_docker_with_a_linked_folder_says_to_choose_it(docker):
     page = _overview(docker)
-    assert "Je hebt nog geen back-up. Kies de gekoppelde map, dan gaat het vanzelf." in page
+    assert (
+        "<strong>Je hebt nog geen back-up.</strong>"
+        " Kies de gekoppelde map, dan gaat het vanzelf." in page
+    )
     assert "Back-ups instellen" in page
 
     docker.cookies["django_language"] = "en"
     page = _overview(docker)
-    assert "You have no backup yet. Choose the linked folder, and it happens by itself." in page
+    assert (
+        "<strong>You have no backup yet.</strong>"
+        " Choose the linked folder, and it happens by itself." in page
+    )
 
 
 def test_banner_after_a_failure_names_the_folder(desktop, drive):

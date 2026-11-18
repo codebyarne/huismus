@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n money %}
+{% load i18n money notices %}
 
 {% block title %}{% translate "Btw-aangifte" %}{% if not report.kor_on %} {{ period_name }}{% endif %} — Huismus{% endblock %}
 
@@ -23,12 +23,29 @@
 {% include "reports/_tabs.html" with current="vat_return" %}
 
 {% if report.kor_on %}
-<p class="hint-banner is-info" id="kor-aan"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{{ kor_note }} <a class="num" href="{% url 'business:topic' 'kor' %}">{% translate "KOR-instellingen" %} →</a></span></p>
+<p class="hint-banner is-info" id="kor-aan" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{{ kor_note }} <a class="num" href="{% url 'business:topic' 'kor' %}">{% translate "KOR-instellingen" %} →</a></span></p>
+<div class="split-rev" id="kor-omzet" style="margin-bottom:var(--s-5)">
+    {% if kor_year.limit %}
+    <section class="card kpi kpi-hero aside-first" id="kor-grens">
+        <span class="kpi-label">{% blocktranslate with year=kor_year.year %}Omzet in {{ year }}{% endblocktranslate %}</span>
+        <span class="kpi-value">{{ kor_year.limit.revenue_cents|money }}</span>
+        <span class="muted">{% blocktranslate with limit=kor_year.limit.limit_cents|money %}van {{ limit }}, je KOR-grens{% endblocktranslate %}</span>
+        <div class="progress is-kor{% if kor_year.limit.level == 'near' %} is-warn{% elif kor_year.limit.level == 'over' %} is-bad{% endif %}" style="margin-top:var(--s-3)" aria-hidden="true"><span style="width:{{ kor_year.limit.bar_percent }}%"></span></div>
+    </section>
+    {% endif %}
+    <section class="card">
+        <div class="card-head"><h2>{% translate "Per kwartaal" %}</h2></div>
+        <table class="table">
+            <caption class="sr-only">{% blocktranslate with year=kor_year.year %}Omzet per kwartaal in {{ year }}{% endblocktranslate %}</caption>
+            <tbody>{% for quarter in kor_year.quarters %}<tr><th scope="row" style="font-weight:inherit">{{ quarter.months }}</th><td class="r amount">{% if quarter.revenue_cents is None %}<span class="muted">—</span>{% else %}{{ quarter.revenue_cents|money }}{% endif %}</td></tr>{% endfor %}</tbody>
+        </table>
+    </section>
+</div>
 {% else %}
 <p class="muted" style="margin-bottom:var(--s-4)">{% translate "De omzet en btw uit je facturen en uitgaven, per rubriek." %}</p>
 
 {% if report.not_counted %}
-<a class="hint-banner is-warn" href="#niet-meegeteld" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% blocktranslate with count=report.not_counted %}Niet meegeteld: {{ count }}.{% endblocktranslate %}</span><span class="spacer"></span><span>{% translate "Bekijk wat en waarom" %} →</span></a>
+<a class="hint-banner is-warn" href="#niet-meegeteld" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% lead %}{% blocktranslate with count=report.not_counted %}Niet meegeteld: {{ count }}.{% endblocktranslate %}{% endlead %}</span><span class="spacer"></span><span>{% translate "Bekijk wat en waarom" %} →</span></a>
 {% endif %}
 
 {% if report.is_empty %}<p class="muted" style="margin-bottom:var(--s-4)">{% translate "Geen facturen of uitgaven in deze periode." %}</p>{% endif %}

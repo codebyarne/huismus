@@ -3,6 +3,7 @@
 
 {% block title %}{% translate "Facturen" %} — Huismus{% endblock %}
 
+{% comment %}The page's own "Nieuwe factuur" is its petrol button (the owner, 2026-11-15), so the panel's and the phone's + stay quiet here.{% endcomment %}
 {% block main_attrs %} data-shortcut-new="{% url 'documents:create' %}"{% endblock %}
 {% block shortcut_search %}{% include "core/_shortcut_search.html" %}{% endblock %}
 
@@ -12,15 +13,15 @@
         <h1>{% translate "Facturen" %}</h1>
         <p class="lede">{% translate "Facturen en creditnota's. Een uitgegeven factuur staat vast. Corrigeren doe je met een creditnota." %}</p>
     </div>
-    <div class="actions">
+    {% if has_any %}<div class="actions">
         <a class="btn btn-primary" href="{% url 'documents:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuwe factuur" %}</a>
-    </div>
+    </div>{% endif %}
 </div>
 
 {% if not has_any %}
 <div class="card">
     <div class="empty">
-        <div class="empty-art"><svg class="mark" width="56" height="56" aria-hidden="true"><use href="#mus"></use></svg></div>
+        <div class="empty-art"><svg class="mark" width="56" height="56" aria-hidden="true"><use href="#mus-vogel"></use></svg></div>
         <h2>{% translate "Nog geen facturen" %}</h2>
         <p>{% translate "Maak je eerste factuur. Hij blijft een concept tot je hem uitgeeft." %}</p>
         <div class="row">
@@ -30,7 +31,7 @@
     </div>
 </div>
 {% else %}
-<section class="card">
+<section class="card list-card">
     <nav class="tabs" id="facturen-tabs" aria-label="{% translate 'Filter' %}" style="padding:0 var(--s-3)">
         {% for t in tabs %}
         <a class="tab" href="{{ t.url }}"{% if t.slug == tab %} aria-current="page"{% endif %}>{{ t.label }} <span class="count">{{ t.count }}</span></a>
@@ -41,9 +42,10 @@
     in sync without replacing the search field the user is typing in.{% endcomment %}
     <form class="toolbar" role="search" method="get"
           hx-get="{% url 'documents:list' %}" hx-trigger="input changed delay:300ms from:input[name=q], change from:select"
-          hx-target="#facturen-resultaat" hx-select="#facturen-resultaat" hx-select-oob="#facturen-tabs"
+          hx-target="#facturen-resultaat" hx-select="#facturen-resultaat" hx-select-oob="#facturen-tabs,#sorteer-menu,#sorteer-knop"
           hx-swap="outerHTML" hx-push-url="true">
         <input type="hidden" name="tab" value="{{ tab }}">
+        {% if sorted_by %}<input type="hidden" name="sorteer" value="{{ sorted_by }}">{% endif %}
         <label class="input-affix">
             <span class="sr-only">{% translate "Zoeken in facturen" %}</span>
             <svg class="i" aria-hidden="true"><use href="#search"></use></svg>
@@ -53,42 +55,42 @@
             {% for y in years %}<option value="{{ y }}"{% if y == year %} selected{% endif %}>{{ y }}</option>{% endfor %}
             <option value="alle"{% if year is None %} selected{% endif %}>{% translate "Alle jaren" %}</option>
         </select>
+        {% comment %}Stacked (phone) the list has no column headings: the same sort links sit in this menu.{% endcomment %}
+        <button type="button" class="btn btn-secondary btn-sm sort-menu-btn{% if sorted_by %} is-active{% endif %}" id="sorteer-knop" popovertarget="sorteer-menu">{% translate "Sorteren" %}</button>
+        <div id="sorteer-menu" class="menu" popover="auto">{% include "core/_sort_item.html" with col=sort.klant label=_("Klant") %}{% include "core/_sort_item.html" with col=sort.nummer label=_("Nummer") %}{% include "core/_sort_item.html" with col=sort.datum label=_("Datum") %}{% include "core/_sort_item.html" with col=sort.status label=_("Status") %}{% include "core/_sort_item.html" with col=sort.bedrag label=_("Bedrag") %}</div>
         <noscript><button type="submit" class="btn btn-sm">{% translate "Zoeken" %}</button></noscript>
     </form>
     <div id="facturen-resultaat">
         {% if documents %}
+        {% comment %}One table. The rows come in the order of INVOICE_GROUPS (te laat first, betaald last) but without a heading per group: the Status column already says it (the owner, 2026-11-17).{% endcomment %}
         <div class="table-wrap">
             <table class="table stackable">
                 <thead>
                     <tr>
-                        <th>{% translate "Nummer" %}</th>
-                        <th>{% translate "Soort" %}</th>
-                        <th>{% translate "Klant" %}</th>
-                        <th>{% translate "Status" %}</th>
-                        <th class="r">{% translate "Totaal" %}</th>
-                        <th class="r">{% translate "Betaalstatus" %}</th>
+                        {% include "core/_sort_th.html" with col=sort.klant label=_("Klant") %}
+                        {% include "core/_sort_th.html" with col=sort.nummer label=_("Nummer") %}
+                        {% include "core/_sort_th.html" with col=sort.datum label=_("Datum") %}
+                        {% include "core/_sort_th.html" with col=sort.status label=_("Status") %}
+                        {% include "core/_sort_th.html" with col=sort.bedrag label=_("Bedrag") cls="r" %}
                     </tr>
                 </thead>
                 <tbody>
                     {% for document in documents %}
                     <tr class="is-link">
-                        <td data-cell="secondary" class="num">{% if document.number %}{{ document.number }}{% else %}<span class="draft-no">{% translate "Concept" %}</span>{% endif %}</td>
-                        <td data-cell="hide">{% if document.kind == "credit_note" %}<span class="pill pill-credit">{% translate "Creditnota" %}</span>{% else %}{% translate "Factuur" %}{% endif %}</td>
                         <td data-cell="primary">
                             <a class="row-link" href="{% url 'documents:edit' document.pk %}">{{ document|contact_name|default:_("Nog geen klant") }}</a>
-                            {% if document.source %}<span class="pill pill-import" style="margin-left:6px">{% translate "Geïmporteerd" %}</span>{% endif %}
+                            {% if document.source %}<span class="small muted imported">{% translate "Geïmporteerd" %}</span>{% endif %}
                         </td>
-                        <td data-cell="{% if document.status == 'draft' %}status{% else %}hide{% endif %}">
-                            {% if document.status == "draft" %}<span class="pill pill-concept">{% translate "Concept" %}</span>
-                            {% else %}<span class="pill pill-final"><svg class="i" aria-hidden="true"><use href="#lock"></use></svg>{% translate "Definitief" %}</span>{% endif %}
+                        <td data-cell="secondary" class="num muted">{{ document.number }}</td>
+                        <td data-cell="hide" class="num muted">{{ document.issue_date|date:"SHORT_DATE_FORMAT" }}</td>
+                        <td data-cell="status">
+                            {% if document.group == "concept" %}<span class="pill pill-concept">{% translate "Concept" %}</span>
+                            {% elif document.group == "creditnotas" %}<span class="pill pill-credit">{% translate "Creditnota" %}</span>
+                            {% elif document.group == "te-laat" %}{% include "documents/_pill_overdue.html" with doc=document %}
+                            {% elif document.group == "wacht" %}<span class="pill pill-{{ document.payment_state }}">{{ document|waiting_label }}</span>
+                            {% else %}<span class="pill pill-{{ document.payment_state }}">{{ document.payment_state|payment_state_label|capfirst }}</span>{% endif %}
                         </td>
                         <td data-cell="amount" class="r amount">{% if document.kind == "credit_note" %}&minus;&nbsp;{% endif %}{{ document.total_cents|money }}</td>
-                        <td data-cell="{% if document.status == 'draft' %}hide{% else %}status{% endif %}" class="r">
-                            {% if document.kind == "credit_note" %}<span class="pill pill-credit">{% translate "Creditnota" %}</span>
-                            {% elif document.is_overdue %}{% include "documents/_pill_overdue.html" %}
-                            {% elif document.payment_state %}<span class="pill pill-{{ document.payment_state }}">{{ document.payment_state|payment_state_label|capfirst }}</span>
-                            {% else %}<span class="muted">·</span>{% endif %}
-                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -112,6 +114,6 @@
         {% endif %}
     </div>
 </section>
-<p class="small muted" style="margin-top:var(--s-3)"><span class="pill pill-overdue" style="height:20px;font-size:11px">{% translate "Vervallen" %}</span> {% translate "betekent: vervaldatum voorbij en nog niet volledig betaald." %}</p>
+<p class="small muted" style="margin-top:var(--s-3)">{% translate "Te laat betekent: vervaldatum voorbij en nog niet volledig betaald." %}</p>
 {% endif %}
 {% endblock %}

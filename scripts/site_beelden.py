@@ -9,6 +9,10 @@ Writes <name>.<nl|en>.<light|dark>.webp for every name in site.MEDIA: a
 screenshot, or a short animation (an animated WebP plays like a GIF, without
 JS, and is far smaller). tests/core/test_site.py checks that all are there.
 
+It also makes the picture a shared link shows (delen.<nl|en>.png: the logo,
+the headline and the overview in dark, one designed plate) and, through
+scripts/site_fotos.py, the photos with the app on the laptop's screen.
+
 Huismus runs as the desktop app does (HUISMUS_DESKTOP=true), in a temporary
 folder away from data/, on a small made-up administration
 (huismus/core/site_data.py). The animations issue invoices, so every round
@@ -25,22 +29,47 @@ import subprocess
 import sys
 import tempfile
 import time
+import urllib.error
 import urllib.request
 from contextlib import contextmanager
 from pathlib import Path
 
+import site_fotos
 from PIL import Image
-from playwright.sync_api import Page, sync_playwright
+from playwright.sync_api import Browser, Page, sync_playwright
 
 ROOT = Path(__file__).resolve().parent.parent
 FIXTURE = ROOT / "tests" / "fixtures" / "moneybird-example-data" / "lindeboom_communicatie_2021.zip"
 TOKEN = "site"
 # The size of the desktop app's window, sharp on a retina screen.
 VIEWPORT = {"width": 1280, "height": 800}
+# The same screens as a phone shows them, for a visitor on a phone: a desktop
+# screen shrunk to 350 px can't be read.
+PHONE = {"width": 390, "height": 760}
+# A part of a screen (Camera.detail): narrower, so the part is shown larger.
+DETAIL = {"width": 1040, "height": 900}
 SCALE = 2
 # Animations have many frames, so fewer pixels each.
 ANIMATION_WIDTH = 1280
 LOCALES = {"nl": "nl-NL", "en": "en-GB"}
+# The headline of the site's home page, on the picture a shared link shows.
+HEADLINES = {
+    "nl": "Je boekhouding op je eigen computer",
+    "en": "Your bookkeeping on your own computer",
+}
+FONTS = ROOT / "huismus" / "core" / "static" / "core" / "fonts"
+SHARE_PLATE = """<!doctype html><meta charset="utf-8"><style>
+@font-face {{ font-family: "Bricolage Grotesque"; font-weight: 200 800;
+  src: url("{font}") format("woff2"); }}
+body {{ margin: 0; width: 1200px; height: 630px; overflow: hidden; position: relative;
+  background: #061415; color: #EAF4F3; }}
+.logo {{ position: absolute; left: 72px; top: 72px; }}
+.logo svg {{ display: block; width: auto; height: 64px; }}
+h1 {{ position: absolute; left: 72px; top: 200px; width: 520px; margin: 0;
+  font: 700 78px/1.02 "Bricolage Grotesque", sans-serif; letter-spacing: -0.032em; }}
+img {{ position: absolute; left: 640px; top: 96px; width: 920px; border-radius: 18px;
+  border: 1px solid #1F3B3C; box-shadow: 0 30px 80px rgb(0 0 0 / .55); }}
+</style><div class="logo">{logo}</div><h1>{headline}</h1><img src="{shot}">"""
 
 
 def _env(data: Path, releases: Path) -> dict:
@@ -71,6 +100,8 @@ def _prepare(work: Path) -> tuple[Path, Path, Path]:
         _manage(_env(folder, releases), "migrate", "--verbosity", "0")
     env = _env(administration, releases)
     _manage(env, "demo_data", "--yes", "--site")
+    # No "Huismus is bijgewerkt naar …" on the overview: it dates the picture.
+    _manage(env, "shell", "-c", "from huismus.core import updates; updates.seen()")
     # A backup folder with a backup in it, as after the first day.
     _manage(
         env,
@@ -108,8 +139,12 @@ def server(pristine: Path, releases: Path):
                 try:
                     urllib.request.urlopen(url + "/offline/", timeout=1)
                     break
+                except urllib.error.HTTPError:
+                    break  # It answers (the desktop app refuses a browser without its token).
                 except OSError:
                     time.sleep(0.2)
+            else:
+                raise RuntimeError(f"Huismus start niet op {url}.")
             yield url
         finally:
             process.terminate()
@@ -134,10 +169,32 @@ class Camera:
         self.page.goto(self.base + path)
         self.page.wait_for_load_state("networkidle")
 
-    def still(self, name: str, path: str | None = None) -> None:
-        if path:
+    def still(self, name: str, path: str, desktop: bool = True) -> None:
+        """The screen at `path`, as a phone shows it and (unless not
+        `desktop`) as the desktop app's window."""
+        for viewport, kind in ((PHONE, ".phone"), (VIEWPORT, ""))[: 2 if desktop else 1]:
+            self.page.set_viewport_size(viewport)
             self.go(path)
-        _image(self.page.screenshot()).save(self._file(name), quality=82, method=6)
+            _image(self.page.screenshot()).save(
+                self.out / f"{name}.{self.suffix}{kind}.webp", quality=82, method=6
+            )
+
+    def detail(self, name: str, path: str, first: str, last: str) -> None:
+        """A part of a screen, from the top of `first` to the bottom of `last`
+        (CSS selectors), so it can be shown large enough to read."""
+        self.page.set_viewport_size(DETAIL)
+        self.go(path)
+        top = self.page.locator(first).first.bounding_box()
+        bottom = self.page.locator(last).first.bounding_box()
+        margin = 14  # less than the gap between two cards: nothing of the next one shows
+        clip = {
+            "x": top["x"] - margin,
+            "y": top["y"] - margin,
+            "width": max(top["width"], bottom["width"]) + 2 * margin,
+            "height": bottom["y"] + bottom["height"] - top["y"] + 2 * margin,
+        }
+        png = self.page.screenshot(clip=clip, full_page=True)
+        _image(png).save(self._file(name), quality=84, method=6)
 
     def animation(self, name: str, steps) -> None:
         """steps: (an action or None, how long its frame shows, in ms)."""
@@ -165,29 +222,13 @@ class Camera:
 
 def administration(camera: Camera) -> None:
     page = camera.page
-    for name, path in [
-        ("overzicht", "/"),
-        ("facturen", "/facturen/"),
-        ("offertes", "/offertes/"),
-        ("uitgaven", "/uitgaven/"),
-        ("jaaroverzicht", "/rapporten/jaaroverzicht/"),
-        ("ai", "/instellingen/ai-assistenten/"),
-        ("instellingen", "/instellingen/"),
-    ]:
-        camera.still(name, path)
-
-    # A quote that waits for an answer becomes a draft invoice.
-    camera.go("/offertes/")
-    quote = page.locator("tr:has(.pill-sent) a").first.get_attribute("href")
-    camera.go(quote)
-    camera.animation(
-        "offerte-omzetten",
-        [
-            (None, 1600),
-            (lambda: page.locator("[command=show-modal][commandfor=omzetten]").click(), 1600),
-            (lambda: page.locator("#omzetten [type=submit]").click(), 2600),
-        ],
-    )
+    camera.still("overzicht", "/")
+    camera.still("uitgaven", "/uitgaven/", desktop=False)
+    # Parts that match the headings on the site: the KOR limit with the
+    # quarters, and the year with its totals and the CSV download.
+    camera.detail("kor", "/rapporten/jaaroverzicht/", "#kor-grens", "section:has(.chart)")
+    camera.detail("jaar", "/rapporten/jaaroverzicht/", ".page-head", ".grid-3")
+    camera.page.set_viewport_size(VIEWPORT)
 
     # The draft on the overview: a line more, issue it, and it gets paid.
     camera.go("/facturen/")
@@ -224,7 +265,6 @@ def administration(camera: Camera) -> None:
 
 def empty(camera: Camera) -> None:
     page = camera.page
-    camera.still("welkom", "/")
     camera.go("/importeren/")
 
     def choose():
@@ -239,6 +279,29 @@ def empty(camera: Camera) -> None:
             (lambda: page.locator("button[form=doorvoeren]").click(), 3600),
         ],
     )
+
+
+def share_image(browser: Browser, out: Path, language: str) -> None:
+    """delen.<language>.png, 1200 × 630: what LinkedIn and chat apps show with
+    a link to the site. Dark, with nothing on it but the logo and the headline
+    (huismus-intern/besluiten.md, 2026-11-18)."""
+    page = browser.new_page(viewport={"width": 1200, "height": 630})
+    plate = out / "delen.html"
+    plate.write_text(
+        SHARE_PLATE.format(
+            font=(FONTS / "bricolage-grotesque-latin-opsz-normal.woff2").as_uri(),
+            logo=(ROOT / "docs" / "design" / "icons" / "logo-donker.svg").read_text(),
+            headline=HEADLINES[language],
+            shot=(out / f"overzicht.{language}.dark.webp").resolve().as_uri(),
+        ),
+        encoding="utf-8",
+    )
+    page.goto(plate.resolve().as_uri())
+    page.evaluate("document.fonts.ready")
+    page.wait_for_load_state("networkidle")
+    page.screenshot(path=out / f"delen.{language}.png")
+    page.close()
+    plate.unlink()
 
 
 def main(out: Path) -> None:
@@ -266,7 +329,9 @@ def main(out: Path) -> None:
                         scene(Camera(page, url, out, f"{language}.{scheme}"))
                         context.close()
                         print(f"{language} {scheme} {scene.__name__}: klaar", flush=True)
+            share_image(browser, out, language)
             browser.close()
+    site_fotos.main(out)
 
 
 if __name__ == "__main__":
