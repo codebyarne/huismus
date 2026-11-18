@@ -5,6 +5,29 @@ version, what you can do with it now. The newest is at the top.
 
 After a new version, a notice on the overview points you here.
 
+## 0.1.5, 18 November 2026
+
+- **A new, clear look.** Huismus is lighter and calmer: the menu stands on its
+  own, your work is on one white sheet, and on each screen one thing stands out.
+  With a new logo: a white sparrow on a petrol tile.
+- **The overview says what to do.** At the top is **To do**: an invoice that is
+  overdue, a quote waiting for an answer, a draft that is ready. Below it your
+  revenue per month, what you still have to receive, and with the KOR how much
+  still fits under your limit.
+- **Send a payment reminder.** For an overdue invoice, choose **Send reminder**.
+  It goes through your own email, with the invoice attached. The invoice also
+  says how many days overdue it is.
+- **Sort your lists.** Sort Invoices, Quotes, Expenses and Customers by any
+  column.
+- **Expired quotes.** A sent quote past its date reads **Expired** everywhere.
+- **Photo first.** When you use Huismus on your phone, a new expense starts with
+  the camera.
+- **Choose your next number.** Under **Settings → Invoices and numbering** you
+  set the next invoice and quote number yourself, as long as Huismus hasn't
+  issued one yet. Handy when you come from somewhere else.
+- **Everything Huismus does** is now on the site, with what comes later. You
+  find the link at the bottom of **Help**.
+
 ## 0.1.4, 13 November 2026
 
 - **Receipts on the road.** Save a photo of a receipt on your phone in your
