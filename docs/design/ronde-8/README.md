@@ -18,6 +18,38 @@ python3 -m http.server 8791 --directory /tmp/huismus-site
 
 en open http://localhost:8791/.
 
+## Herontwerp (18 november, na de eerste reviews)
+
+De eerste bouw volgde ronde 7 op de voet. Een art director die de site niet maakte, vond
+dat hij nog niet leest als een verzorgde marketingsite: geen blikvanger in het eerste
+scherm, de app te klein om te lezen, tien keer hetzelfde witte vel, hele vensters met
+steeds dezelfde zijbalk, en het functieoverzicht dubbel. De `product-owner`-agent keurde
+het herontwerp hieronder (huismus-intern/besluiten.md, 2026-11-18).
+
+| Blok | Nu |
+|---|---|
+| Kop van de pagina | blijft staan bij scrollen, half doorzichtig; taalkeuze zonder vlag |
+| Kop van de homepage | gecentreerd, één kolom; de kop groter (tot 88 px), de vier punten als één regel met vinkjes |
+| Het overzicht | groot op een petrol vlak (tot 1120 px breed), onderaan afgesneden; op de telefoon het telefoonscherm |
+| Voor wie | de vijf foto's samen, de meubelmaker over de hele breedte, elk met alleen het beroep eronder; de twee zinnen over de KOR als tekst |
+| Overstappen | de petrol band zonder foto; links tekst en de drie stappen, rechts de animatie |
+| Van jou | zonder wit vel; de kaart met schakelaars als object |
+| Het hele jaar | een wit vlak tot de rand met vier kaarten van ongelijke breedte, elk met een leesbaar stuk van de app: de factuur maken, Uitgaven op de telefoon, de KOR-grens met de kwartalen, het jaar met de knop CSV downloaden |
+| Functies | van de homepage af; een strook "Komt eraan: … Verwacht in …" naar de pagina Functies |
+| Open en eigen server | twee kaarten naast elkaar |
+| Slot | de mus op de dakgoot en de downloadknoppen |
+| Kickers | een klein kopje boven elke grote kop: Voor wie, Overstappen, Privacy, Het hele jaar, Open |
+| Functies (pagina) | "Kan nu" als rijen (groep links, functies rechts), "Komt eraan" als vier kolommen |
+| Gewone pagina's | de leeskolom gecentreerd; Hulp als lijst per groep; Installeren met Mac en Windows naast elkaar |
+
+**Framboos** (`#B4184F`, in donker `#FF7BA5`, op petrol `#FF9DBE`) is de tweede kleur naast
+petrol, hooguit één keer per scherm: de streep onder "je eigen computer" in de kop (alleen
+versiering), de markering "Verwacht in …" op de petrol band, de stip in de strook naar
+Functies en de eerstvolgende maand op Functies. Niet op knoppen, koppen, vlakken, iconen,
+links, het logo, het menu of de voet, en niet op Hulp, Installeren en Meebouwen. De app
+verandert hiervoor niet: daar blijft framboos de kleur van "te laat" (advies van de
+PO-agent; de vraag gaat mee naar de eigenaar).
+
 ## Wat blijft van ronde 7
 
 - Het verhaal en de volgorde: de kop met foto 1 en het overzicht, de vier punten,
@@ -37,7 +69,7 @@ en open http://localhost:8791/.
 | Petrol band | over de volle breedte | een vel met ronde hoeken binnen de pagina, `#0B4F51` |
 | Letters | systeemletters, koppen rond | koppen in Bricolage Grotesque, tekst in Inter, als bestanden mee |
 | Logo | de mus naast het woord, als tekst | de tegel met het woord als één tekening (`../icons/logo.svg`) |
-| De mus | op de schermafdruk en in het slot, de oude tekening | dezelfde plekken, de nieuwe ronde mus, stil |
+| De mus | op de schermafdruk en in het slot, de oude tekening | alleen in het slot, de nieuwe ronde mus, stil |
 | Menu | een balk met een rand | los op de achtergrond; het huidige scherm als wit kaartje, zoals in de app |
 | Schermen op de foto's | de app met het donkere menu | het overzicht en de proefdraai in "Helder" |
 | Deelplaatje | een uitsnede van het overzicht, licht | één plaat in donker: logo, kop en het overzicht |

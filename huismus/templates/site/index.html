@@ -60,8 +60,8 @@
         </figure>
     </div>
     <div class="kor-lines">
-        <p><strong>{% translate "Met de KOR" %}</strong> {% translate "Jouw KOR-tekst op elke factuur, en je ziet hoe ver je van je grens bent." %}</p>
-        <p><strong>{% translate "Zonder de KOR" %}</strong> {% translate "Btw op je facturen, ook verlegd, en de btw van elk bonnetje vastgelegd." %}</p>
+        <p><strong>{% translate "Met de KOR" %}<span class="sr-only">:</span></strong> {% translate "Jouw KOR-tekst op elke factuur, en je ziet hoe ver je van je grens bent." %}</p>
+        <p><strong>{% translate "Zonder de KOR" %}<span class="sr-only">:</span></strong> {% translate "Btw op je facturen, ook verlegd. Van elk bonnetje leg je de btw vast." %}</p>
     </div>
 </section>
 
@@ -82,7 +82,7 @@
                     <li>
                         <span class="step-n" aria-hidden="true">2</span>
                         <div><h3>{% translate "Eerst een proefdraai" %}</h3>
-                        <p>{% translate "Huismus rekent elke factuur na en vergelijkt elk totaal, tot op de cent. Wijkt er een af, dan zie je welke en hoeveel. Er wordt nog niets opgeslagen." %}</p></div>
+                        <p>{% translate "Huismus rekent elke factuur na en vergelijkt elk totaal, tot op de cent. Wijkt er een af, dan zie je welke en hoeveel. Huismus slaat nog niets op." %}</p></div>
                     </li>
                     <li>
                         <span class="step-n" aria-hidden="true">3</span>
@@ -94,9 +94,6 @@
             <div class="band-shot">
                 {% translate "Animatie: een export uit Moneybird kiezen, de proefdraai bekijken en importeren." as alt %}
                 {% include "site/_beeld.html" with name="importeren" alt=alt %}
-                {% if features.switching %}
-                <p class="band-note"><span class="when when-on-petrol">{% blocktranslate with month=features.switching.0|date:"F Y" %}Verwacht in {{ month }}{% endblocktranslate %}</span>{{ features.switching.1.name }}</p>
-                {% endif %}
             </div>
         </div>
     </div>
@@ -124,6 +121,7 @@
             <li><span class="toggle" aria-hidden="true"></span><div><strong>{% translate "Je back-up naar je eigen cloud" %}</strong><span>{% translate "Uit, tot jij het aanzet" %}</span></div></li>
             <li><span class="toggle" aria-hidden="true"></span><div><strong>{% translate "Een factuur via je eigen mail" %}</strong><span>{% translate "Uit, tot jij het aanzet" %}</span></div></li>
             <li><span class="toggle" aria-hidden="true"></span><div><strong>{% translate "Een bonnetje naar een AI-dienst die jij kiest" %}</strong><span>{% translate "Uit, tot jij het aanzet" %}</span></div></li>
+            <li><span class="toggle" aria-hidden="true"></span><div><strong>{% translate "Je administratie aan een AI-assistent die jij koppelt" %}</strong><span>{% translate "Uit, tot jij het aanzet" %}</span></div></li>
             <li><span class="toggle is-on" aria-hidden="true"></span><div><strong>{% translate "Kijken of er een nieuwe versie is" %}</strong><span>{% translate "Aan, en dat kun je uitzetten" %}</span></div></li>
         </ul>
     </div>
@@ -150,7 +148,7 @@
             <article class="bento-item bento-phone">
                 <div class="bento-text">
                     <h3>{% translate "Bonnetjes" %}</h3>
-                    <p>{% translate "Zet een foto in een map die meesynchroniseert, ook vanaf je telefoon. Huismus haalt hem op en kan hem laten lezen. Jij kijkt na." %}</p>
+                    <p>{% translate "Zet een foto in een map die meesynchroniseert, ook vanaf je telefoon. Huismus haalt hem op, en een AI-dienst die jij kiest kan hem lezen. Jij kijkt na." %}</p>
                     <a class="more" href="{{ help.bonnetjes }}">{% translate "Meer over bonnetjes" %} <span aria-hidden="true">→</span></a>
                 </div>
                 <div class="bento-shot">
@@ -181,17 +179,18 @@
                 </div>
             </article>
         </div>
-        <p class="year-note">{% translate "De klanten en bedragen op de beelden zijn verzonnen." %} {% blocktranslate with url=help.ai_assistenten %}Werk je met Claude of een andere AI-assistent? <a href="{{ url }}">Die kun je koppelen.</a> Een factuur uitgeven of mailen gebeurt pas als jij op de knop drukt.{% endblocktranslate %}</p>
+        <p class="year-note">{% translate "De klanten en bedragen op de beelden zijn verzonnen." %}</p>
+        <p class="year-ai"><svg class="i" width="18" height="18" aria-hidden="true"><use href="#sparkles"></use></svg><span>{% translate "Werk je met Claude of een andere AI-assistent? Koppel hem aan Huismus. Een factuur uitgeven of mailen gebeurt pas als jij het goedkeurt." %} <a class="more" href="{{ help.ai_assistenten }}">{% translate "Zo koppel je een AI-assistent" %} <span aria-hidden="true">→</span></a></span></p>
     </div>
 </section>
 
 {% if features.next_up %}
 <section class="wrap">
-    <a class="next-strip" href="{{ features_url }}">
+    <p class="next-strip">
         <span class="next-dot" aria-hidden="true"></span>
         <span class="next-text">{% blocktranslate with name=features.next_up.1 month=features.next_up.0|date:"F Y" %}Komt eraan: {{ name }}. Verwacht in {{ month }}.{% endblocktranslate %}</span>
-        <span class="more">{% translate "Alle functies" %} <span aria-hidden="true">→</span></span>
-    </a>
+        <a class="more" href="{{ features_url }}">{% translate "Alle functies" %} <span aria-hidden="true">→</span></a>
+    </p>
 </section>
 {% endif %}
 
@@ -200,7 +199,7 @@
         <p class="kicker">{% translate "Open" %}</p>
         <h3>{% translate "Open, en gemaakt in Nederland" %}</h3>
         <p>{% translate "De broncode staat openbaar, dus iedereen kan zien hoe Huismus rekent. Hulp is welkom: code, vertalingen, testen op Windows, of een goed idee." %}</p>
-        <a class="btn btn-secondary" href="{{ contribute_url }}">{% translate "Zo bouw je mee" %}</a>
+        <a class="more" href="{{ contribute_url }}">{% translate "Zo bouw je mee" %} <span aria-hidden="true">→</span></a>
     </div>
     <div class="tile">
         <p class="kicker">Docker</p>
