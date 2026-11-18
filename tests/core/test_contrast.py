@@ -46,8 +46,7 @@ PAIRS = [
 GRAPHIC_PAIRS = [
     ("primary", "surface"),  # the revenue bar
     ("hero-bar", "hero"),  # the KOR bar on the eye-catcher
-    ("accent", "hero"),  # that bar close to the limit
-    ("hero-bad", "hero"),  # and over it
+    ("hero-text", "hero"),  # that bar close to the limit or over it
 ]
 # The yellow cost bar has no edge (the owner, 2026-11-15): its amounts are in
 # the table right below the chart.

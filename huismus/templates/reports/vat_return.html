@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n money %}
+{% load i18n money notices %}
 
 {% block title %}{% translate "Btw-aangifte" %}{% if not report.kor_on %} {{ period_name }}{% endif %} — Huismus{% endblock %}
 
@@ -45,7 +45,7 @@
 <p class="muted" style="margin-bottom:var(--s-4)">{% translate "De omzet en btw uit je facturen en uitgaven, per rubriek." %}</p>
 
 {% if report.not_counted %}
-<a class="hint-banner is-warn" href="#niet-meegeteld" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% blocktranslate with count=report.not_counted %}Niet meegeteld: {{ count }}.{% endblocktranslate %}</span><span class="spacer"></span><span>{% translate "Bekijk wat en waarom" %} →</span></a>
+<a class="hint-banner is-warn" href="#niet-meegeteld" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% lead %}{% blocktranslate with count=report.not_counted %}Niet meegeteld: {{ count }}.{% endblocktranslate %}{% endlead %}</span><span class="spacer"></span><span>{% translate "Bekijk wat en waarom" %} →</span></a>
 {% endif %}
 
 {% if report.is_empty %}<p class="muted" style="margin-bottom:var(--s-4)">{% translate "Geen facturen of uitgaven in deze periode." %}</p>{% endif %}

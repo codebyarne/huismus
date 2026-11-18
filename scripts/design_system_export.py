@@ -47,8 +47,8 @@ COMPONENTS = {
         "StatusLabel",
         "Status",
         "Statuslabels (`.pill`): een vlak alleen als er iets moet gebeuren.\n\n"
-        "- Vol vlak: te laat (framboos, met het aantal dagen), Deels betaald (amber), "
-        "Geïmporteerd (snavelgeel).\n"
+        "- Vol vlak: te laat (framboos, met het aantal dagen). Deels betaald: een "
+        "randje met een half gevulde stip. Geïmporteerd: een neutraal vlak.\n"
         "- Gewone tekst met een open stip: Onbetaald, Verzonden. Concept: een "
         "gestippeld randje.\n"
         "- Rustig, zonder vlak: Definitief (slotje), Betaald en Geaccepteerd "
@@ -59,13 +59,13 @@ COMPONENTS = {
     "meldingen": (
         "Notice",
         "Status",
-        "Meldingen. Op het overzicht een rustige kaart (`.hint-banner`) met een "
-        "gekleurde streep en een gekleurd icoon; alleen de link rechts in de "
-        "statuskleur.\n\n"
-        "- `.is-bad` (rood): over de KOR-grens, iets is mislukt.\n"
-        "- `.is-warn` (amber): let op.\n"
-        "- `.is-info` (petrol): informatie, zoals een nieuwe versie.\n"
-        "- Zonder klasse (snavelgeel): een herinnering, zoals een open concept.\n"
+        "Meldingen. Een melding (`.hint-banner`) is één smalle regel in dezelfde "
+        "neutrale tint; alleen het icoon zegt de soort, de link aan het eind is "
+        "petrol. Geen geel, geen framboos.\n\n"
+        "- `.is-bad`: een gevuld rondje met een uitroepteken (over de KOR-grens, mislukt).\n"
+        "- `.is-warn`: een driehoek in de tekstkleur.\n"
+        "- `.is-info`: een petrol icoon (nieuws, zoals een nieuwe versie).\n"
+        "- Zonder klasse: een grijs icoon.\n"
         "- Na een actie: `.flash` bovenaan de pagina of `.toast` rechtsboven; "
         "foutmeldingen blijven staan.",
     ),
@@ -150,7 +150,7 @@ COVER = """<!-- @dsCard height=288 -->
     <rect class="sky" x="528" y="216" width="72" height="24" rx="12"/>
   </svg>
   <p class="name">Huismus</p>
-  <p class="tag">Facturen voor zzp'ers onder de KOR. Petrol en snavelgeel
+  <p class="tag">Facturen voor zzp'ers onder de KOR. Petrol
     op koel, bijna wit.</p>
 </div>
 """
@@ -394,7 +394,7 @@ def readme(commit):
     return f"""# Huismus
 
 Self-hosted facturatie voor Nederlandse zzp'ers onder de KOR. Eén gebruiker, op een
-Raspberry Pi, laptop en telefoon. Richting **Helder**: petrol en snavelgeel op
+Raspberry Pi, laptop en telefoon. Richting **Helder**: petrol op
 koel, bijna wit; de inhoud op één wit vel, één diep petrol blikvanger per scherm.
 
 > Dit Design System is een **kopie**. De bron is `huismus/core/static/core/huismus.css` in
@@ -407,10 +407,10 @@ koel, bijna wit; de inhoud op één wit vel, één diep petrol blikvanger per sc
 1. **Kleur alleen waar je iets moet doen; de rest is rustig.** Te laat, over de
    KOR-grens: een gekleurd vlak (`--bad-bg`, `--warn-bg`). Betaald, definitief,
    afgerond: alleen een vinkje of slotje in `--text-muted`. Zo valt het ene belangrijke op.
-2. **Petrol.** `--primary` (petrol) voor acties, `--accent` (snavelgeel) voor
-   highlights en herinneringen, koele neutralen (`--bg`, `--surface`)
-   voor de rest. Geen nieuwe kleuren of lettertypes zonder besluit.
-3. **Snavelgeel is nooit een knop.**
+2. **Petrol.** `--primary` (petrol) voor acties en voor wat goed ging, koele neutralen
+   (`--bg`, `--surface`) voor de rest. Geen geel in de app: `--accent` is alleen de snavel.
+   Geen nieuwe kleuren of lettertypes zonder besluit.
+3. **Framboos alleen voor te laat en voor fouten.**
 4. **Uitgegeven is definitief.** Geen invoervelden, een slotje. Concepten hebben geen nummer.
 5. **Licht en donker, telefoon en laptop.** Alles werkt op 360 px, in beide thema's, en
    haalt WCAG AA. Elk formulier werkt zonder JavaScript; totalen komen van de server.

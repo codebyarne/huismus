@@ -242,7 +242,7 @@ def test_a_failed_upload_shows_on_the_page_and_the_overview(signed_in, dav):
     assert ">Mislukt<" in row and "Het wachtwoord werd geweigerd." in row
     assert 'id="cloud-mislukt"' in manage and "kon niet naar WebDAV." in manage
     assert "Opnieuw instellen" in manage
-    assert "kon niet naar WebDAV. Het wachtwoord werd geweigerd." in home
+    assert "kon niet naar WebDAV.</strong> Het wachtwoord werd geweigerd." in home
 
 
 def test_restore_from_the_cloud(signed_in, dav):

@@ -65,10 +65,11 @@
   --primary-ink:   light-dark(#0A5A5D, #8ADBD6);
   --ring:          light-dark(rgb(13 107 110 / .32), rgb(95 201 196 / .42));
 
-  /* Accent: snavelgeel (highlights, hints, de KOR-balk; nooit voor knoppen) */
+  /* Snavelgeel is alleen de snavel van de mus: geen geel in de app zelf (de eigenaar, 2026-11-18).
+     Wat vroeger geel was (een hint, opletten) is nu een rustig neutraal vlak. */
   --accent:        light-dark(#F5A623, #F5A623);
-  --accent-soft:   light-dark(#FDF0D5, #33270F);
-  --accent-ink:    light-dark(#855000, #FFC766);
+  --accent-soft:   light-dark(#E9EFEE, #1B3536);
+  --accent-ink:    light-dark(#4A5F61, #A9C0BF);
   /* Het logo "Tegel": een witte mus op een petrol tegel; in donker een donkere mus op mint */
   --mark-tile:     light-dark(#0D6B6E, #5FC9C4);
   --mark-bird:     light-dark(#FFFFFF, #06201F);
@@ -81,7 +82,6 @@
   --hero-muted:    light-dark(#B5E4E1, #B5E4E1);
   --hero-bar:      light-dark(#5FC9C4, #5FC9C4);
   --hero-track:    light-dark(#2B6B6D, #2B6B6D);
-  --hero-bad:      light-dark(#FF7BA5, #FF7BA5);  /* de balk op de blikvanger, over de grens */
 
   /* Het menu op een breed scherm: los op de achtergrond, het huidige scherm als wit kaartje */
   --panel:         light-dark(#F1F5F4, #061415);
@@ -92,8 +92,8 @@
   --panel-line:    light-dark(#D5DFDE, #1F3B3C);
 
   /* Status: alleen "te laat" kleurt, in framboos */
-  --ok:       light-dark(#1E7A45, #7AD6A0);  --ok-bg:    light-dark(#E2F3E8, #1D3326);
-  --warn:     light-dark(#855000, #FFC766);  --warn-bg:  light-dark(#FDF0D5, #33270F);
+  --ok:       light-dark(#0A5A5D, #8ADBD6);  --ok-bg:    light-dark(#E6F4F3, #123537);  /* gelukt is petrol, geen groen */
+  --warn:     light-dark(#33494B, #C5D6D5);  --warn-bg:  light-dark(#E9EFEE, #1B3536);  /* opletten is neutraal, geen amber */
   --bad:      light-dark(#B4184F, #FF7BA5);  --bad-bg:   light-dark(#FCEBF1, #3A1322);
   --draft:    light-dark(#4A5F61, #A9C0BF);  --draft-bg: light-dark(#E9EFEE, #1B3536);
   --danger:       light-dark(#B4184F, #FF7BA5);
@@ -551,7 +551,7 @@ input[type="search"]::-webkit-search-cancel-button {
 /* Te laat: het enige volle vlak in een lijst, in framboos (ontwerp "Helder"). */
 .pill-overdue   { --pill-bg: var(--danger); --pill-fg: var(--on-danger); }
 .pill-overdue::before { display: none; }
-.pill-check { --pill-bg: var(--warn-bg); --pill-fg: var(--warn); }
+.pill-check { --pill-bg: var(--primary-soft); --pill-fg: var(--primary-ink); }  /* iets te doen: zacht petrol */
 .pill-partial { --pill-bg: transparent; --pill-fg: var(--text); padding-inline: 0; font-weight: var(--fw-medium); }  /* loopt nog: alleen "te laat" krijgt kleur */
 .pill-partial::before { background: linear-gradient(90deg, currentColor 50%, transparent 50%); box-shadow: inset 0 0 0 1.5px currentColor; }
 .pill-import    { --pill-bg: var(--accent-soft); --pill-fg: var(--accent-ink); }
@@ -578,13 +578,13 @@ input[type="search"]::-webkit-search-cancel-button {
 .proposal { display: inline-flex; align-items: center; height: 18px; padding: 0 6px; border-radius: 4px; font: 700 10px/1 var(--font-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--accent-ink); background: var(--accent-soft); border: 1px dashed color-mix(in oklab, var(--accent-ink) 45%, transparent); vertical-align: middle; }
 
 /* ---------- 8. Meldingen ---------- */
-.flash { --f-fg: var(--primary-ink); --f-bg: var(--primary-soft); display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; border-radius: var(--r-md); background: var(--f-bg); color: var(--text); border: 1px solid color-mix(in oklab, var(--f-fg) 22%, transparent); }
+/* After an action: the same quiet row as a notice (.hint-banner); only an error keeps a tint. */
+.flash { --f-fg: var(--primary); --f-bg: var(--surface-2); display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border-radius: 14px; background: var(--f-bg); color: var(--text); }
 .flash > .i { color: var(--f-fg); margin-top: 2px; }
 .flash .flash-body { flex: 1; display: flex; flex-direction: column; gap: 2px; }
 .flash strong { font-weight: var(--fw-semibold); }
-.flash-success { --f-fg: var(--ok); --f-bg: var(--ok-bg); }
-.flash-info    { --f-fg: var(--primary-ink); --f-bg: var(--primary-soft); }
-.flash-warning { --f-fg: var(--warn); --f-bg: var(--warn-bg); }
+.flash-success, .flash-info { --f-fg: var(--primary); }
+.flash-warning { --f-fg: var(--text); }
 .flash-error   { --f-fg: var(--bad); --f-bg: var(--bad-bg); }
 .toasts { position: fixed; z-index: 100; top: 16px; right: 16px; display: flex; flex-direction: column; gap: 8px; width: min(380px, calc(100% - 32px)); }
 .toast { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border-radius: var(--r-md); background: var(--surface); border: 1px solid var(--border); box-shadow: var(--sh-pop); animation: hm-toast-in .28s var(--ease); }
@@ -742,7 +742,7 @@ input[type="search"]::-webkit-search-cancel-button {
   backdrop-filter: blur(10px); border-top: 1px solid var(--border);
 }
 .actionbar .status { display: flex; align-items: center; gap: 8px; margin-right: auto; font-size: var(--fs-sm); color: var(--text-muted); }
-.actionbar .dot-unsaved { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.actionbar .dot-unsaved { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); }
 /* Het totaal in de balk: alleen op de telefoon, daar staat het rijtje totalen vaak buiten beeld. */
 .actionbar-total { display: none; }
 @media (max-width: 760px) {
@@ -781,8 +781,8 @@ input[type="search"]::-webkit-search-cancel-button {
 .progress { height: 8px; border-radius: var(--r-pill); background: var(--surface-3); overflow: hidden; }
 .progress > span { display: block; height: 100%; border-radius: inherit; background: var(--text-muted); }
 .progress.is-kor > span { background: var(--primary); }  /* de KOR-balk: petrol tot hij waarschuwt */
-.progress.is-warn > span { background: var(--warn); }
-.progress.is-bad > span { background: var(--bad); }
+/* Close to the limit or over it: the bar in the text colour; the notice above says which. */
+.progress.is-warn > span, .progress.is-bad > span { background: var(--text); }
 
 .steps { list-style: none; margin: 0; padding: 0; display: flex; align-items: center; gap: 0; counter-reset: step; flex-wrap: wrap; row-gap: 10px; }
 .step { display: flex; align-items: center; gap: 8px; font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--text-muted); white-space: nowrap; }
@@ -829,8 +829,7 @@ input[type="search"]::-webkit-search-cancel-button {
 .kpi-hero .kpi-value { font-size: clamp(1.75rem, 5cqi + 1rem, 4rem); font-weight: var(--fw-semibold); letter-spacing: -0.03em; line-height: 1.05; }
 .kpi-hero .progress { background: var(--hero-track); height: 10px; margin-top: var(--s-3); }
 .kpi-hero .progress > span, .kpi-hero .progress.is-kor > span { background: var(--hero-bar); }
-.kpi-hero .progress.is-warn > span { background: var(--accent); }
-.kpi-hero .progress.is-bad > span { background: var(--hero-bad); }
+.kpi-hero .progress.is-warn > span, .kpi-hero .progress.is-bad > span { background: var(--hero-text); }
 a.kpi-hero:hover { color: var(--hero-text); background: color-mix(in oklab, var(--hero) 92%, #000); }
 .kpi-hero :focus-visible, a.kpi-hero:focus-visible { outline-color: var(--hero-text); }
 /* Overzicht: de blikvanger breed, twee cijfers ernaast onder elkaar. */
@@ -853,6 +852,8 @@ div.hint-banner:has(> a) { position: relative; }
 div.hint-banner > a::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
 div.hint-banner > form { position: relative; z-index: 1; }
 .hint-banner > .i { width: 20px; height: 20px; color: var(--hb-ink); flex: none; }
+/* A warning's first sentence, when more follows ({% lead %}, huismus/core/templatetags/notices.py). */
+.hint-banner strong { font-weight: var(--fw-semibold); }
 .hint-banner .spacer { flex: 1; }
 .hint-banner .spacer + span, .hint-banner a { color: var(--primary-ink); font-weight: var(--fw-semibold); text-decoration: none; white-space: nowrap; }
 /* News (a new version, "bijgewerkt"): a petrol icon. A warning: its icon in the text colour. */
@@ -878,18 +879,18 @@ div.hint-banner > form { position: relative; z-index: 1; }
 .chart-col { display: grid; grid-template-rows: 1fr 28px; background-image: linear-gradient(var(--border) 1px, transparent 1px); background-size: 100% calc((100% - 28px) / 4); }
 .chart-bars { display: flex; align-items: flex-end; justify-content: center; gap: 6px; border-bottom: 1.5px solid var(--border-strong); }
 .chart-bar { width: min(34%, 38px); height: calc(var(--v) * 1%); border-radius: 6px 6px 2px 2px; background: var(--primary); position: relative; transition: height .4s var(--ease); }
-/* Geel zonder rand, zoals de andere gele balken; de bedragen staan in de tabel eronder (de eigenaar, 2026-11-15). */
-.chart-bar.is-cost { background: var(--accent); }
+/* Costs are a soft petrol beside the revenue's full petrol; the amounts are in the table below. */
+.chart-bar.is-cost { background: color-mix(in oklab, var(--primary) 40%, var(--surface)); }
 .chart-bar.is-empty { height: 2px; background: var(--border-strong); }
 .chart-label { display: grid; place-items: center; font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--text-muted); }
 .legend { display: flex; gap: var(--s-4); font-size: var(--fs-sm); color: var(--text-muted); }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
 .legend i { width: 10px; height: 10px; border-radius: 3px; background: var(--primary); }
-.legend i.is-cost { background: var(--accent); }
+.legend i.is-cost { background: color-mix(in oklab, var(--primary) 40%, var(--surface)); }
 .hbars { display: flex; flex-direction: column; gap: 14px; }
 .hbar { display: grid; grid-template-columns: minmax(120px, 190px) minmax(0, 1fr) 96px; gap: var(--s-3); align-items: center; font-size: var(--fs-sm); }
 .hbar-track { height: 10px; border-radius: var(--r-pill); background: var(--surface-2); overflow: hidden; }
-.hbar-fill { height: 100%; width: calc(var(--v) * 1%); border-radius: inherit; background: var(--accent); }
+.hbar-fill { height: 100%; width: calc(var(--v) * 1%); border-radius: inherit; background: var(--primary); }
 .hbar .amount { font-weight: var(--fw-semibold); }
 @media (max-width: 560px) { .hbar { grid-template-columns: 1fr auto; } .hbar-track { grid-column: 1 / -1; grid-row: 2; } }
 .year-nav { display: inline-flex; align-items: center; gap: 4px; padding: 3px; border: 1px solid var(--border); border-radius: var(--r-pill); background: var(--surface); }
@@ -1000,7 +1001,7 @@ div.hint-banner > form { position: relative; z-index: 1; }
 .how-to li::before { content: counter(how); width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--primary-soft); color: var(--primary-ink); font-weight: var(--fw-bold); font-size: var(--fs-xs); }
 .celebrate { position: relative; display: grid; justify-items: center; text-align: center; gap: var(--s-3); padding: var(--s-10) var(--s-6) var(--s-8); overflow: hidden; }
 .celebrate .burst { position: absolute; inset: 0; pointer-events: none; }
-.celebrate .burst i { position: absolute; width: 8px; height: 8px; border-radius: 2px; background: var(--accent); opacity: .9; animation: hm-float 2.4s var(--ease) both; }
+.celebrate .burst i { position: absolute; width: 8px; height: 8px; border-radius: 2px; background: var(--mark-wing); opacity: .9; animation: hm-float 2.4s var(--ease) both; }
 .celebrate .burst i:nth-child(3n) { background: var(--primary); border-radius: 50%; }
 .celebrate .burst i:nth-child(4n) { background: var(--ok); width: 6px; height: 12px; }
 @keyframes hm-float { from { translate: 0 30px; opacity: 0; } 30% { opacity: 1; } to { translate: 0 -10px; opacity: 0; } }
@@ -1185,7 +1186,7 @@ form > div > .settings-section .card-head { border-bottom: 0; padding-bottom: 0;
 .card.is-highlighted { border-color: var(--primary); box-shadow: 0 0 0 3px var(--ring); }
 /* Kleurblokje in een KPI-label, gelijk aan de legenda van de grafiek. */
 .legend-dot { width: 10px; height: 10px; border-radius: 3px; background: var(--primary); }
-.legend-dot.is-cost { background: var(--accent); }
+.legend-dot.is-cost { background: color-mix(in oklab, var(--primary) 40%, var(--surface)); }
 /* Sneltoetsen bestaan alleen met een toetsenbord: niet tonen op touch. */
 @media (hover: none) { .shortcut-hint { display: none; } }
 /* Phone: a white row on the background; the text runs on over as many lines as it needs, with
@@ -1274,11 +1275,11 @@ form > div > .settings-section .card-head { border-bottom: 0; padding-bottom: 0;
 .pill-quote-expired { --pill-bg: var(--draft-bg); --pill-fg: var(--draft); }
 .pill-quote-expired::before { background: transparent; box-shadow: inset 0 0 0 1.5px currentColor; }
 /* An invoice's payment status is a pill too, like a quote's (the owner, 2026-11-16):
-   petrol once paid, an outline while it waits, amber when part is in. "Te laat" stays red. */
+   petrol once paid, an outline while it waits, the same with a half-filled dot when part is in (no amber: the owner, 2026-11-18). "Te laat" stays red. */
 .pill-paid { --pill-bg: var(--primary-soft); --pill-fg: var(--primary-ink); padding-inline: 10px; font-weight: var(--fw-semibold); }
 .pill-paid::before { width: 9px; height: 5px; }
 .pill-unpaid { --pill-bg: var(--surface); --pill-fg: var(--text); box-shadow: inset 0 0 0 1px var(--border-strong); padding-inline: 10px; font-weight: var(--fw-semibold); }
-.pill-partial { --pill-bg: var(--warn-bg); --pill-fg: var(--warn); padding-inline: 10px; font-weight: var(--fw-semibold); }
+.pill-partial { --pill-bg: var(--surface); --pill-fg: var(--text); box-shadow: inset 0 0 0 1px var(--border-strong); padding-inline: 10px; font-weight: var(--fw-semibold); }  /* an outline like "wacht", with a half-filled dot */
 /* The notices on Overzicht: a short stack above the figures. */
 .notices { display: flex; flex-direction: column; gap: 6px; margin-bottom: var(--s-5); }
 .notices:not(:has(.hint-banner)) { display: none; }

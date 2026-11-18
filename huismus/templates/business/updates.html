@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n notices %}
 
 {% block title %}{% translate "Updates" %} — {% translate "Instellingen" %} — Huismus{% endblock %}
 {% block content_class %}content-narrow{% endblock %}
@@ -19,7 +19,7 @@
 </section>
 {% else %}
 {% if problem %}
-<p class="hint-banner is-bad" id="bijwerken-mislukt" role="alert" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{{ problem }}{% if download_by_hand and release %} <a href="{{ release.page_url }}" target="_blank" rel="noopener">{% translate "Nieuwe versie downloaden" %}</a>{% endif %}</span></p>
+<p class="hint-banner is-bad" id="bijwerken-mislukt" role="alert" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% lead %}{{ problem }}{% if download_by_hand and release %} <a href="{{ release.page_url }}" target="_blank" rel="noopener">{% translate "Nieuwe versie downloaden" %}</a>{% endif %}{% endlead %}</span></p>
 {% endif %}
 
 {% if release %}

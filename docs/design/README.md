@@ -69,7 +69,7 @@ Ronde 7 is het concept voor de site in de nieuwe huisstijl: `ronde-7/site-prompt
 4. **Concepten hebben geen nummer**: `<span class="draft-no">Concept</span>`
    of "bij uitgeven".
 5. **Betaalstatus wordt afgeleid**: `.pill-unpaid` (wit met een randje, open
-   stip), `.pill-partial` (amber vlak), `.pill-paid` (petrol vlak met een
+   stip), `.pill-partial` (hetzelfde randje, half gevulde stip), `.pill-paid` (petrol vlak met een
    vinkje), `.pill-credited`; voorbij de vervaldatum `.pill-overdue` ("Te laat",
    warm rood vlak). Offertes: `.pill-quote-sent` (wit met een randje),
    `.pill-quote-accepted` (petrol), `.pill-quote-declined` (rood),
@@ -78,10 +78,10 @@ Ronde 7 is het concept voor de site in de nieuwe huisstijl: `ronde-7/site-prompt
    primair.
 7. **De import is standaard een proefdraai.** Het rapport stelt gerust of wijst
    precies aan wat afwijkt.
-8. **Meldingen op het overzicht** zijn rustige kaarten (`.hint-banner`): kleur
-   alleen in de streep, het icoon en de link. Rood (`.is-bad`) boven de
-   KOR-grens of als iets mislukt, amber (`.is-warn`) om op te letten, petrol
-   (`.is-info`) voor informatie, snavelgeel (geen klasse) voor een herinnering.
+8. **Meldingen** (`.hint-banner`) zijn smalle regels in één neutrale tint; alleen
+   het icoon zegt de soort: een gevuld rondje met een uitroepteken (`.is-bad`), een
+   driehoek (`.is-warn`), petrol (`.is-info`) voor nieuws, grijs voor de rest. De
+   link aan het eind is petrol. Geen geel in de app.
 9. **KOR**: de hint `.kor-note` in de editor; de tekst zelf, die de gebruiker
    in Instellingen zet, onder elke factuur.
 10. **Totalen komen van de server**, elk formulier werkt zonder JavaScript.
