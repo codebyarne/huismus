@@ -164,3 +164,12 @@ def test_the_limit_counts_revenue_without_vat():
     status = kor_limit_status(2026)
     assert status.revenue_cents == 2_000_000
     assert status.level == "near"
+
+
+def test_remaining_is_the_limit_minus_revenue_and_never_below_zero():
+    # Shown as "Nog ... tot de grens" on the overview (the owner, 2026-11-18).
+    assert KorLimitStatus(1_438_000, 2_000_000, 80).remaining_cents == 562_000
+    assert KorLimitStatus(2_000_000, 2_000_000, 80).remaining_cents == 0
+    assert KorLimitStatus(2_500_000, 2_000_000, 80).remaining_cents == 0
+    # A year of credit notes only: the whole limit is left, not more.
+    assert KorLimitStatus(-10_000, 2_000_000, 80).remaining_cents == 2_000_000
