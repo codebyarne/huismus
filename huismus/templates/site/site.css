@@ -153,6 +153,9 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .band a:not(.btn) { color: var(--hero-text); }
 .band :focus-visible, .band .btn:focus-visible { outline: 3px solid #FFFFFF; outline-offset: 3px; box-shadow: none; }
 .band .halves { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; }
+.band-intro { max-width: 46rem; }
+.band-steps .moves { margin: 0; }
+.band-steps .moves li:first-child { border-top: 0; padding-top: 0; }
 .band-text { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-5); }
 .band-shot { display: flex; flex-direction: column; gap: var(--s-4); max-width: 640px; width: 100%; justify-self: end; }
 .band-shot .shot img { box-shadow: 0 24px 60px -20px rgb(0 0 0 / .55), 0 0 0 1px rgb(255 255 255 / .1); }
@@ -323,6 +326,14 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .help-index .settings-topics a.card:hover h3 { color: var(--primary-ink); }
 .help-index .topic-intro { display: block !important; font-size: var(--fs-md) !important; }
 
+/* Een laptop met een laag scherm: de kop iets compacter, zodat de app in beeld komt. */
+@media (min-width: 641px) and (max-height: 860px) {
+  .hero { gap: var(--s-3); padding-top: var(--s-6); }
+  .hero h1 { font-size: clamp(2.5rem, 1rem + 3.4vw, 4rem); }
+  .home > .stage-wrap { margin-top: calc(var(--section-gap) * -0.82); }
+  .stage .shot { top: 28px; }
+}
+
 /* ---------- Smaller ---------- */
 @media (max-width: 900px) {
   .halves, .band .halves, .install-pair { grid-template-columns: minmax(0, 1fr); }
@@ -361,7 +372,8 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
   .downloads-phone { display: flex; flex-direction: column; align-self: stretch; gap: var(--s-3); }
   .downloads-phone .btn { width: 100%; }
   .band-final .downloads .btn-on-petrol { --btn-bg: transparent; --btn-fg: #FFFFFF; --btn-bd: var(--hero-bar); }
-  .hero .downloads .btn { --btn-bg: var(--surface); --btn-fg: var(--text); --btn-bd: var(--border-strong); }
+  .downloads .btn-primary { --btn-bg: var(--surface); --btn-fg: var(--text); --btn-bd: var(--border-strong); }
+  .downloads-note { text-wrap: wrap; align-self: stretch; }
   .bento-shot .shot img { width: 640px; margin-left: -127px; }
   .band-shot .shot { overflow: hidden; border-radius: 14px; }
   .band-shot .shot img { width: 640px; max-width: none; margin-left: -127px; border-radius: 0; }
