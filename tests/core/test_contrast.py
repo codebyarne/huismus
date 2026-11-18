@@ -51,7 +51,7 @@ GRAPHIC_PAIRS = [
     ("hero-bar", "hero"),  # the KOR bar on the eye-catcher
     ("hero-text", "hero"),  # that bar close to the limit or over it
     ("hero-ahead", "hero"),  # the dashed line of a month still to come
-    ("bad", "surface"),  # the KOR bar over the limit, in its own tile
+    ("text", "surface"),  # the KOR bar over the limit, in its own tile
 ]
 # The yellow cost bar has no edge (the owner, 2026-11-15): its amounts are in
 # the table right below the chart.
