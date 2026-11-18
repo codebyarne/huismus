@@ -1,181 +1,263 @@
 /* SPDX-FileCopyrightText: 2026 Huismus contributors
    SPDX-License-Identifier: AGPL-3.0-or-later */
-/* De Huismus-site (huismus/core/site.py): alleen de opmaak die de app niet
-   heeft (kop, voet, downloadknoppen). Kleuren, kaarten, knoppen en de
-   hulptekst komen uit huismus.css. */
+/* De Huismus-site (huismus/core/site.py) in de richting "Helder" (docs/design/ronde-8/).
+   Kleuren, letters, knoppen, kaarten en de hulptekst komen uit huismus.css; hier staat
+   alleen wat een site meer heeft dan de app: de kop, de homepage, Functies en de voet. */
 
+:root {
+  --gutter: clamp(16px, 4vw, 32px);
+  --site-max: 1200px;
+  --section-gap: clamp(64px, 9vw, 128px);
+  --band-r: clamp(20px, 3vw, 32px);
+}
+html { scroll-behavior: smooth; scroll-padding-top: var(--s-6); }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 .site { display: flex; flex-direction: column; min-height: 100vh; }
-.site-head, .site-main, .site-foot { width: 100%; max-width: var(--content-max); margin: 0 auto; padding-inline: var(--s-6); }
-.site-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-4); flex-wrap: wrap; padding-block: var(--s-5); }
-.site-head .brand { padding-inline: 0; }
-.site-nav { display: flex; align-items: center; gap: var(--s-1) var(--s-5); flex-wrap: wrap; font-weight: var(--fw-medium); }
-.site-nav a { color: var(--text-muted); text-decoration: none; }
-.site-nav a:hover, .site-nav a[aria-current="page"] { color: var(--text); }
-.site-nav a[aria-current="page"] { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 6px; }
-.site-main { flex: 1; display: flex; flex-direction: column; gap: var(--s-6); padding-block: var(--s-6) var(--s-12); }
-.site-main.site-narrow { max-width: calc(820px + 2 * var(--s-6)); }
-.site-main > .page-head { margin-bottom: 0; }
-.site-foot { display: flex; flex-direction: column; gap: var(--s-2); padding-block: var(--s-6) var(--s-8); border-top: 1px solid var(--border); }
+.wrap { width: 100%; max-width: calc(var(--site-max) + 2 * var(--gutter)); margin-inline: auto; padding-inline: var(--gutter); }
+.skip-link { position: absolute; left: var(--gutter); top: -80px; z-index: 10; padding: 10px 16px; border-radius: var(--r-md); background: var(--surface); color: var(--text); box-shadow: var(--sh-pop); }
+.skip-link:focus { top: var(--s-3); }
 
-.hero { gap: var(--s-4); padding-block: var(--s-6) var(--s-2); }
-.hero h1 { font-size: var(--fs-3xl); }
-.hero .lede { font-size: var(--fs-lg); }
-.downloads { display: flex; gap: var(--s-3); flex-wrap: wrap; margin-top: var(--s-2); }
-.help-text h3 { margin-top: var(--s-2); }
+/* ---------- Kop ---------- */
+.site-head { display: flex; align-items: center; gap: var(--s-2) var(--s-4); padding-block: var(--s-5); }
+.site-logo { display: inline-flex; flex: none; color: var(--text); border-radius: 10px; }
+.site-logo:hover { color: var(--text); }
+.site-logo .logo { display: block; width: auto; height: 40px; }
+/* Het menu is een popover (voor de telefoon). Op een breed scherm staat het gewoon in de rij:
+   wat de browser een popover meegeeft (vast, gecentreerd, een rand) gaat er hier af. */
+.site-nav { position: static; inset: auto; display: flex; align-items: center; gap: 2px; width: auto; height: auto; margin: 0 0 0 auto; padding: 0; border: 0; background: none; color: inherit; overflow: visible; font-weight: var(--fw-medium); }
+.site-nav a:not(.btn) { padding: 9px 12px; border-radius: 10px; color: var(--panel-muted); text-decoration: none; }
+.site-nav a:not(.btn):hover { background: var(--panel-hover); color: var(--text); }
+.site-nav a[aria-current="page"]:not(.btn) { background: var(--panel-current); color: var(--text); box-shadow: var(--sh-1); }
+.site-nav .btn { margin-left: var(--s-3); }
+.nav-toggle { display: none; }
 
-@media (max-width: 640px) {
-  .site-head, .site-main, .site-foot { padding-inline: var(--s-4); }
-  .site-main.site-narrow { max-width: none; }
-  .hero h1 { font-size: var(--fs-2xl); }
-  .downloads { flex-direction: column; }
-  .downloads .btn { width: 100%; }
-}
-
-/* De rondleiding op de home (site/index.html). Kaarten, pills, knoppen en
-   meldingen zijn die van de app; hier alleen de indeling. */
-.site-nav .btn { color: var(--on-primary); }
-.site-nav .btn:hover { color: var(--on-primary); }
-.site-main { gap: var(--s-12); }
-.site-main.site-narrow { gap: var(--s-6); }
-.section-head { display: flex; flex-direction: column; gap: var(--s-2); margin-bottom: var(--s-6); }
-.section-head h2, .final h2, .try h2 { font-size: var(--fs-2xl); }
-
-.hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s-10); align-items: center; padding-block: var(--s-6) 0; }
-.hero-text { gap: var(--s-4); align-items: flex-start; }
-.hero-text .lede { font-size: var(--fs-lg); }
-
-.shot { margin: 0; }
-.shot img { display: block; width: 100%; height: auto; border-radius: var(--r-lg); border: 1px solid var(--border); box-shadow: var(--sh-2, var(--sh-1)); background: var(--surface); }
-
-.promises { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4); }
-.promises .card { display: flex; flex-direction: column; gap: var(--s-2); }
-.promises .i-lg, .contribute-call > .i-lg { color: var(--primary); }
-.promises h2 { font-size: var(--fs-md); }
-
-.tour { display: flex; flex-direction: column; gap: var(--s-12); }
-.tour-row { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: var(--s-10); align-items: center; }
-.tour .tour-row:nth-of-type(even) { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); }
-.tour .tour-row:nth-of-type(even) .tour-text { order: 2; }
-.tour-text { display: flex; flex-direction: column; gap: var(--s-3); align-items: flex-start; }
-.tour-text h3 { font-size: var(--fs-xl); }
-.tour-text p { color: var(--text-muted); }
-
-.routes-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-4); }
-.route { align-items: flex-start; }
-.route.is-main { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary), var(--sh-1); }
-.checks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--s-2); }
-.checks li { display: flex; gap: var(--s-2); align-items: flex-start; }
-.checks .i { color: var(--ok); margin-top: 3px; flex: none; }
-
-.contribute-call { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--s-5); align-items: center; }
-.contribute-call h2 { font-size: var(--fs-lg); }
-
-.final { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--s-4); padding: var(--s-10) var(--s-6); border-radius: var(--r-lg); background: var(--primary-soft); }
-.final .downloads { justify-content: center; }
-
-.help-text pre { overflow-x: auto; padding: var(--s-4); border-radius: var(--r-md); background: var(--surface-2); font-size: var(--fs-sm); }
-
-@media (max-width: 900px) {
-  .hero, .tour-row, .tour .tour-row:nth-of-type(even) { grid-template-columns: minmax(0, 1fr); gap: var(--s-5); }
-  .tour .tour-row:nth-of-type(even) .tour-text { order: 0; }
-  .promises, .routes-grid { grid-template-columns: minmax(0, 1fr); }
-  .contribute-call { grid-template-columns: minmax(0, 1fr); }
-}
-@media (max-width: 640px) {
-  .site-main { gap: var(--s-10); }
-  /* Logo en vlag op de eerste regel, het menu eronder. */
-  .lang-switch { order: 1; margin-left: auto; }
-  .site-nav { order: 2; width: 100%; margin-left: 0; }
-  .site-nav .btn { display: none; }
-}
-.site-main .titles .pill { align-self: flex-start; }
-.counter { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
-
-/* De taalkeuze rechtsboven: de ronde vlag en code van de huidige taal; een
-   klik opent een menuutje (popover, zonder JS) met de andere taal. */
-.site-nav { margin-left: auto; }
-.lang-switch { anchor-name: --taal; display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 10px; border: 0; border-radius: 8px; background: none; color: var(--text); font: 600 var(--fs-sm)/1 var(--font-sans); cursor: pointer; }
-.lang-switch:hover, .lang-switch:focus-visible { background: var(--surface-2); }
+/* De taalkeuze: de ronde vlag en code van de huidige taal; een klik opent een menuutje
+   (popover, zonder JS) met de andere taal. */
+.lang-switch { anchor-name: --taal; display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 10px; border: 0; border-radius: 10px; background: none; color: var(--text); font: 600 var(--fs-sm)/1 var(--font-sans); cursor: pointer; }
+.lang-switch:hover { background: var(--panel-hover); }
 .lang-switch .i { width: 14px; height: 14px; color: var(--text-muted); }
 .lang-menu { position-anchor: --taal; inset: auto; top: anchor(bottom); right: anchor(right); margin-top: 6px; min-width: 180px; }
-@supports not (anchor-name: --taal) { .lang-menu { inset: 64px var(--s-6) auto auto; } }
+@supports not (anchor-name: --taal) { .lang-menu { inset: 68px var(--gutter) auto auto; } }
 .lang-menu .muted { margin-left: auto; font-weight: var(--fw-regular); }
 .flag { width: 20px; height: 20px; border-radius: 50%; box-shadow: 0 0 0 1px rgb(0 0 0 / .12); flex: none; }
 .btn .os { width: 18px; height: 18px; }
 
-/* Het vogeltje van het logo (site/_mus.html). Op de home zit het op de rand
-   van de schermafbeelding: het pikt, hupt, en vliegt af en toe weg en terug.
-   Onderaan vliegt het binnen terwijl je scrolt en landt het op een dakgoot.
-   Zittend zie je de ingevouwen vleugel, vliegend flappert de opgeslagen
-   vleugel. Alleen CSS; met "minder beweging" zit het stil. */
-.hero-shot { position: relative; }
-.mus { position: absolute; z-index: 1; display: block; width: 46px; height: 46px; pointer-events: none; }
-.mus-body { display: block; width: 100%; height: 100%; transform-origin: 50% 100%; }
-.mus svg { display: block; width: 100%; height: 100%; overflow: visible; fill: var(--primary); }
-.mus .mus-accent { fill: var(--accent); }
-.mus .mus-eye { fill: var(--surface); }
-.mus .mus-wing-up { opacity: 0; transform-box: view-box; transform-origin: 10.8px 14px; }
-.mus .mus-wing { transform-box: view-box; transform-origin: 11.5px 14.6px; }
-@keyframes mus-flap { from { transform: rotate(-6deg); } to { transform: scaleY(-.75) rotate(10deg); } }
+@media (max-width: 920px) {
+  /* Zonder popovers: het menu als een rij die omloopt, onder het logo. */
+  .site-head { flex-wrap: wrap; }
+  .site-nav { order: 3; flex-wrap: wrap; width: 100%; margin: 0; }
+  .site-nav .btn { margin-left: auto; }
+  .lang-switch { margin-left: auto; }
+  @supports selector(:popover-open) {
+    .site-head { flex-wrap: nowrap; }
+    .nav-toggle { display: inline-flex; margin-left: auto; }
+    .lang-switch { margin-left: 0; }
+    .site-nav { position: fixed; inset: 76px var(--gutter) auto var(--gutter); flex-direction: column; align-items: stretch; flex-wrap: nowrap; gap: 2px; width: auto; padding: var(--s-3); border: 1px solid var(--border); border-radius: var(--r-lg); background: var(--surface); color: var(--text); box-shadow: var(--sh-pop); }
+    .site-nav:not(:popover-open) { display: none; }
+    .site-nav::backdrop { background: var(--overlay); }
+    .site-nav a:not(.btn) { padding: 14px 12px; font-size: var(--fs-lg); color: var(--text); }
+    .site-nav a[aria-current="page"]:not(.btn) { background: var(--surface-2); box-shadow: none; }
+    .site-nav .btn { height: 48px; margin: var(--s-2) 0 0; }
+  }
+}
 
-/* Bovenaan: een rondje van 18 seconden. */
-.mus-hero { top: -68px; right: calc(50% - 23px); animation: mus-hero-route 18s ease-in-out infinite; }
-.mus-hero .mus-body { animation: mus-hero-pose 18s ease-in-out infinite; }
-.mus-hero .mus-wing-up { animation: mus-flap .16s ease-in-out infinite alternate, mus-hero-flying 18s step-end infinite; }
-.mus-hero .mus-wing { animation: mus-hero-sitting 18s step-end infinite; }
-@keyframes mus-hero-route {
-  0%, 52% { transform: none; opacity: 1; }
-  54% { transform: translate(-8px, -10px) rotate(-6deg); }           /* opstijgen */
-  62% { transform: translate(240px, -200px) rotate(-14deg) scale(.8); opacity: 1; }
-  63% { opacity: 0; }
-  72% { transform: translate(-520px, -160px) rotate(8deg) scale(.8); opacity: 0; }
-  73% { opacity: 1; }
-  84% { transform: translate(-30px, -18px) rotate(10deg); }
-  87% { transform: none; }                                           /* landen */
-  100% { transform: none; opacity: 1; }
-}
-@keyframes mus-hero-pose {
-  0%, 12%, 52%, 87%, 100% { transform: none; }
-  14% { transform: rotate(14deg); } 16% { transform: rotate(4deg); } 18% { transform: rotate(14deg); } 20% { transform: none; }  /* pikken */
-  32% { transform: scaleY(.92); } 34% { transform: translateY(-12px) rotate(-6deg); } 36% { transform: scaleY(.94); } 38% { transform: none; }  /* hupje */
-  88% { transform: scaleY(.9); } 90% { transform: none; }            /* neerkomen */
-}
-@keyframes mus-hero-flying { 0% { opacity: 0; } 53% { opacity: 1; } 87% { opacity: 0; } }
-@keyframes mus-hero-sitting { 0% { opacity: 1; } 53% { opacity: 0; } 87% { opacity: 1; } }
+/* ---------- Gewone pagina's (Hulp, Installeren, Meebouwen) ---------- */
+.site-main { flex: 1; display: flex; flex-direction: column; gap: var(--s-6); padding-block: var(--s-6) var(--section-gap); }
+.site-main.site-narrow { max-width: calc(820px + 2 * var(--gutter)); }
+.site-main > .page-head { margin-bottom: 0; }
+.site-main .page-head h1 { font-size: clamp(2rem, 4vw, 2.75rem); }
+.site-main .titles .pill, .site-main .titles .eyebrow { align-self: flex-start; }
+.downloads { display: flex; gap: var(--s-3); flex-wrap: wrap; }
+.downloads-note { color: var(--text-muted); }
+.help-text h3 { margin-top: var(--s-2); }
+.help-text pre { overflow-x: auto; padding: var(--s-4); border-radius: var(--r-md); background: var(--surface-2); font-size: var(--fs-sm); }
+.counter { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.eyebrow { display: inline-flex; align-items: center; min-height: 28px; padding: 2px 12px; border-radius: var(--r-pill); background: var(--primary-soft); color: var(--primary-ink); font-size: var(--fs-sm); font-weight: var(--fw-semibold); }
 
-/* Onderaan: binnenvliegen, aan het scrollen gekoppeld. Browsers zonder
-   scroll-animaties tonen het vogeltje gewoon op de goot. */
-.mus-gutter { position: relative; width: 120px; height: 56px; margin-bottom: calc(-1 * var(--s-2)); view-timeline: --mus-goot block; }
-.mus-gutter::after { content: ""; position: absolute; left: 4px; right: 4px; bottom: 4px; height: 4px; border-radius: 2px; background: var(--border-strong); }
-.mus-goot { left: 37px; bottom: 7px; }
-.mus-goot .mus-body { animation: mus-idle 7s ease-in-out 2.5s infinite; }
-@keyframes mus-idle {
-  0%, 52%, 100% { transform: none; }
-  55% { transform: rotate(14deg); } 58% { transform: rotate(4deg); } 61% { transform: rotate(14deg); } 64% { transform: none; }
-  76% { transform: scaleY(.92); } 80% { transform: translateY(-12px) rotate(-6deg); } 84% { transform: scaleY(.94); } 87% { transform: none; }
-}
-@supports (animation-timeline: view()) {
-  .mus-goot { animation: mus-goot-route linear both; animation-timeline: --mus-goot; animation-range: entry 0% cover 50%; }
-  .mus-goot .mus-wing-up { animation: mus-flap .16s ease-in-out infinite alternate, mus-goot-flying linear both; animation-timeline: auto, --mus-goot; animation-range: normal, entry 0% cover 50%; }
-  .mus-goot .mus-wing { animation: mus-goot-sitting linear both; animation-timeline: --mus-goot; animation-range: entry 0% cover 50%; }
-}
-@keyframes mus-goot-route {
-  0% { transform: translate(-320px, -150px) rotate(-12deg) scale(.8); }
-  55% { transform: translate(-110px, -70px) rotate(-6deg) scale(.92); }
-  92% { transform: translate(-6px, -8px) rotate(8deg); }
-  100% { transform: none; }
-}
-@keyframes mus-goot-flying { 0%, 94% { opacity: 1; } 95%, 100% { opacity: 0; } }
-@keyframes mus-goot-sitting { 0%, 94% { opacity: 0; } 95%, 100% { opacity: 1; } }
+/* ---------- Bouwstenen van de homepage ---------- */
+.home, .features-page { gap: var(--section-gap); font-size: 1.0625rem; line-height: 1.6; }
+.home { padding-top: 0; }
+.home h2, .features-page h1, .features-page > section > h2, .features-coming h2 { font-family: var(--font-display); font-weight: var(--fw-bold); font-size: clamp(1.9rem, 3.8vw, 3rem); line-height: 1.08; letter-spacing: -0.025em; }
+.home h3, .features-page h3 { font-family: var(--font-display); font-weight: var(--fw-semibold); font-size: 1.375rem; letter-spacing: -0.01em; }
+.home .lede, .features-page .lede { max-width: 36em; font-size: clamp(1.0625rem, 1.5vw, 1.1875rem); color: var(--text-muted); }
+.home .btn-lg, .features-page .btn-lg { height: 52px; padding: 0 22px; font-size: 1.0625rem; }
+.section-head { display: flex; flex-direction: column; gap: var(--s-3); margin-bottom: clamp(24px, 4vw, 48px); }
+.prose { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-5); }
+.halves { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(28px, 5vw, 72px); align-items: center; }
+.halves-top { align-items: start; }
+.leaf { padding: clamp(24px, 4.5vw, 64px); border-radius: var(--band-r); background: var(--surface); }
+.more { display: inline-flex; gap: 6px; font-weight: var(--fw-semibold); text-decoration: none; }
+.more:hover { text-decoration: underline; }
+.more span { transition: transform .15s var(--ease); }
+.more:hover span { transform: translateX(3px); }
+.shot { margin: 0; }
+.shot img { display: block; width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); box-shadow: var(--sh-paper); }
+.photo { display: block; width: 100%; height: auto; object-fit: cover; border-radius: var(--band-r); background: var(--surface-3); }
+.ticks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--s-3); }
+.ticks li { display: flex; gap: var(--s-3); align-items: flex-start; }
+.ticks .i { width: 22px; height: 22px; margin-top: 3px; color: var(--primary); stroke-width: 2.2; }
+.duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-6); }
+.tile { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-2); padding: clamp(20px, 3vw, 32px); border-radius: var(--r-xl); background: var(--surface); }
+.tile p { color: var(--text-muted); }
+.tile .more { margin-top: var(--s-2); }
+.when { display: inline-flex; align-items: center; min-height: 26px; padding: 2px 12px; border-radius: var(--r-pill); background: var(--primary-soft); color: var(--primary-ink); font-size: var(--fs-sm); font-weight: var(--fw-semibold); white-space: nowrap; }
 
-@media (prefers-reduced-motion: reduce) {
-  .mus, .mus .mus-body, .mus .mus-wing-up, .mus .mus-wing { animation: none !important; }
-}
+/* ---------- 1. Kop van de homepage ---------- */
+.hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(28px, 4vw, 56px) clamp(32px, 5vw, 64px); align-items: center; padding-top: clamp(16px, 4vw, 56px); }
+.hero-text { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-5); }
+.hero h1 { font-weight: var(--fw-bold); font-size: clamp(2.5rem, 5.6vw, 4.25rem); line-height: 1.02; letter-spacing: -0.032em; }
+.hero .lede { font-size: clamp(1.0625rem, 1.6vw, 1.25rem); }
+.hero .downloads { margin-top: var(--s-2); }
+.hero-shot { position: relative; padding-top: 34px; }
+/* De mus zit op de rand van het overzicht: een tekening, het logo staat bovenaan. */
+.perch { position: absolute; top: 0; left: 40px; width: 46px; height: 36px; overflow: visible; }
+.hero-photo { grid-column: 1 / -1; margin: 0; }
+.hero-photo .photo { aspect-ratio: 5 / 2; }
+
+/* ---------- 2. Vier punten ---------- */
+.facts { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, auto); justify-content: space-between; gap: var(--s-4) var(--s-6); }
+.facts li { display: flex; align-items: center; gap: var(--s-3); font: var(--fw-semibold) clamp(1.0625rem, 1.6vw, 1.3125rem)/1.2 var(--font-display); letter-spacing: -0.01em; white-space: nowrap; }
+.facts .i { width: 26px; height: 26px; color: var(--primary); }
+.facts-note { margin-top: var(--s-5); color: var(--text-muted); }
+
+/* ---------- 3. Overstappen: de petrol band ---------- */
+.band { display: flex; flex-direction: column; gap: clamp(28px, 4.5vw, 56px); padding: clamp(24px, 5vw, 72px); border-radius: var(--band-r); background: var(--hero); color: var(--hero-text); }
+.band .lede { color: var(--hero-muted); }
+.band a:not(.btn) { color: var(--hero-text); }
+.band :focus-visible { outline: 3px solid #FFFFFF; outline-offset: 3px; box-shadow: none; }
+.band-text { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-5); }
+.band-photo { margin: 0; }
+.band-photo .photo { aspect-ratio: 3 / 2; border-radius: var(--r-xl); }
+.band-shot { max-width: 640px; }
+.band-shot .shot img { border-color: transparent; box-shadow: 0 18px 40px -18px rgb(0 0 0 / .5); }
+.moves { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.moves li { display: grid; grid-template-columns: 52px minmax(0, 1fr); align-items: start; padding-block: var(--s-5); border-top: 1px solid var(--hero-track); }
+.moves li:first-child { border-top: 0; padding-top: 0; }
+.moves li:last-child { padding-bottom: 0; }
+.step-n { font: var(--fw-bold) 2.75rem/1 var(--font-display); color: var(--hero-bar); }
+.moves h3 { color: var(--hero-text); }
+.moves p { margin-top: 4px; color: var(--hero-muted); }
+.band-note { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-3); color: var(--hero-muted); font-size: var(--fs-md); }
+.when-on-petrol { background: #FFFFFF; color: #0A5A5D; }
+
+/* ---------- 4. Van jou: wat er naar buiten gaat ---------- */
+.yours { display: flex; flex-direction: column; gap: var(--s-4); padding: clamp(20px, 3vw, 36px); }
+.yours-home { display: flex; align-items: center; gap: var(--s-4); padding: var(--s-4) var(--s-5); border-radius: var(--r-lg); background: var(--primary-soft); color: var(--primary-ink); }
+.yours-home .i { width: 30px; height: 30px; }
+.yours-home div, .toggles div { display: flex; flex-direction: column; min-width: 0; }
+.yours-home strong { font: var(--fw-semibold) 1.25rem/1.25 var(--font-display); }
+.yours-home span { font-size: var(--fs-md); }
+.toggles { list-style: none; margin: 0; padding: 0; }
+.toggles li { display: flex; align-items: center; gap: var(--s-4); padding-block: 14px; border-top: 1px solid var(--border); }
+.toggles li:first-child { border-top: 0; }
+.toggles strong { font-weight: var(--fw-semibold); }
+.toggles div span { font-size: var(--fs-sm); color: var(--text-muted); }
+.toggle { position: relative; flex: none; width: 42px; height: 24px; border-radius: var(--r-pill); background: var(--surface-3); border: 1px solid var(--border-strong); }
+.toggle::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border-strong); }
+.toggle.is-on { background: var(--primary); border-color: transparent; }
+.toggle.is-on::after { left: auto; right: 3px; top: 3px; width: 16px; height: 16px; background: var(--on-primary); border-color: transparent; }
+
+/* ---------- 5. Het hele jaar ---------- */
+.tour { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(32px, 5vw, 64px) clamp(24px, 4vw, 56px); }
+.tour-item { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-3); }
+.tour-item .shot { align-self: stretch; margin-bottom: var(--s-3); }
+.tour-item .shot img { box-shadow: var(--sh-2); }
+.tour-item p { color: var(--text-muted); }
+.tour-note { margin-top: clamp(28px, 4vw, 48px); padding-top: var(--s-5); border-top: 1px solid var(--border); color: var(--text-muted); font-size: var(--fs-md); max-width: none; }
+
+/* ---------- 6. Voor wie ---------- */
+.people { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(8px, 2vw, 24px); margin-bottom: clamp(8px, 2vw, 24px); }
+.people .photo { aspect-ratio: 1; border-radius: clamp(14px, 2.4vw, 24px); }
+
+/* ---------- 7. Kan nu, komt eraan ---------- */
+.can h3, .coming h3 { display: flex; align-items: center; gap: var(--s-2); margin-bottom: var(--s-5); font-size: 1.5rem; }
+.can h3 .i { width: 24px; height: 24px; color: var(--primary); }
+.can dl { margin: 0; display: flex; flex-direction: column; }
+.can dl > div { padding-block: var(--s-4); border-top: 1px solid var(--border); }
+.can dt { font-weight: var(--fw-semibold); }
+.can dd { margin: 2px 0 0; color: var(--text-muted); font-size: 1rem; }
+.coming { display: flex; flex-direction: column; gap: var(--s-4); }
+.coming h3 { margin-bottom: var(--s-1); }
+.months { list-style: none; margin: 0 0 0 7px; padding: 0 0 0 24px; border-left: 2px solid var(--primary); display: flex; flex-direction: column; gap: var(--s-6); }
+.months > li { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-2); }
+.months > li::before { content: ""; position: absolute; left: -33px; top: 5px; width: 16px; height: 16px; border-radius: 50%; background: var(--surface); border: 2px solid var(--primary); }
+.months > .is-next::before { background: var(--primary); }
+.months > .is-next .when { background: var(--primary); color: var(--on-primary); }
+.months p { color: var(--text-muted); font-size: 1rem; }
+.months > .is-next p { color: var(--text); font-size: inherit; }
+.links { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-6); }
+
+/* ---------- 8. Open ---------- */
+.open { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s-6) var(--s-12); margin-bottom: clamp(32px, 5vw, 56px); }
+.open .prose { flex: 1 1 420px; max-width: 44em; gap: var(--s-4); }
+
+/* ---------- 10. Slot ---------- */
+.band-final { align-items: center; gap: var(--s-5); text-align: center; }
+.band-final .downloads { justify-content: center; margin-top: var(--s-2); }
+.band-final .downloads-note { color: var(--hero-muted); }
+.btn-on-petrol { --btn-bg: #FFFFFF; --btn-fg: #0B4F51; --btn-bd: transparent; }
+.btn-on-petrol:hover { background: #DDF2F0; }
+.btn-on-petrol-quiet { --btn-bg: transparent; --btn-fg: #FFFFFF; --btn-bd: var(--hero-bar); }
+.btn-on-petrol-quiet:hover { background: rgb(255 255 255 / .12); }
+/* De mus op de dakgoot: wit op petrol, in licht en donker hetzelfde. */
+.gutter { --primary: #FFFFFF; --mark-wing: #5FC9C4; --surface: #0B4F51; position: relative; width: 132px; height: 58px; }
+.gutter::after { content: ""; position: absolute; inset: auto 0 0; height: 5px; border-radius: 3px; background: var(--hero-bar); }
+.gutter-bird { position: absolute; left: 40px; bottom: 5px; width: 54px; height: 42px; overflow: visible; }
+
+/* ---------- Voet ---------- */
+.site-foot { display: flex; flex-direction: column; gap: var(--s-4); padding-block: var(--s-8) var(--s-10); border-top: 1px solid var(--border); }
+.foot-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s-3) var(--s-8); }
+.foot-line { font-weight: var(--fw-medium); }
+.foot-nav { display: flex; flex-wrap: wrap; gap: 0 var(--s-5); margin-inline: -4px; }
+.foot-nav a { padding: 8px 4px; color: var(--text-muted); }
+.foot-nav a:hover { color: var(--text); }
+.foot-small { display: flex; flex-direction: column; gap: var(--s-1); }
+
+/* ---------- Functies ---------- */
+.features-page { padding-top: clamp(16px, 4vw, 56px); }
+.page-intro { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-5); max-width: 46rem; }
+.features-page h1 { font-size: clamp(2.25rem, 5vw, 3.5rem); }
+.jumps { display: flex; flex-wrap: wrap; gap: var(--s-3); }
+.features-now > h2 { margin-bottom: var(--s-6); }
+.feature-groups { columns: 2; column-gap: var(--s-6); }
+.feature-group { display: flex; flex-direction: column; gap: var(--s-4); margin-bottom: var(--s-6); padding: clamp(20px, 3vw, 36px); break-inside: avoid; }
+.feature-group ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--s-4); }
+.feature-group li { display: flex; gap: var(--s-3); align-items: flex-start; }
+.feature-group .i { width: 20px; height: 20px; margin-top: 4px; color: var(--primary); stroke-width: 2.2; }
+.feature-group li div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.feature-group strong, .months-wide strong { font-weight: var(--fw-semibold); }
+.feature-group span, .months-wide ul span { color: var(--text-muted); font-size: 1rem; }
+.feature-group a { white-space: nowrap; }
+.features-coming { display: flex; flex-direction: column; gap: var(--s-6); }
+.months-wide { gap: var(--s-8); }
+.months-wide ul { list-style: none; margin: var(--s-1) 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-4) var(--s-8); align-self: stretch; }
+.months-wide ul li { display: flex; flex-direction: column; gap: 2px; }
+.trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-6); }
+.trio h2 { font-family: var(--font-display); font-size: 1.375rem; }
+.trio ul { margin: var(--s-2) 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: var(--s-1); }
+
+/* ---------- Smaller ---------- */
 @media (max-width: 900px) {
-  .mus-hero { top: -58px; right: calc(50% - 22px); width: 44px; height: 44px; }
-  .hero-shot { margin-top: var(--s-12); }
+  .hero, .halves, .duo, .tour, .trio { grid-template-columns: minmax(0, 1fr); }
+  .hero { gap: var(--s-8); }
+  .halves-moves .band-shot { order: 2; }
+  .facts { grid-template-columns: repeat(2, auto); justify-content: start; gap: var(--s-4) var(--s-8); }
+  .feature-groups { columns: 1; }
+  .months-wide ul { grid-template-columns: minmax(0, 1fr); }
 }
-
-/* Het logo bovenaan: groter dan in de zijbalk van de app. */
-.site-head .brand { gap: 10px; font-size: var(--fs-xl); }
-.site-head .brand .mark { width: 40px; height: 40px; }
+@media (max-width: 640px) {
+  .site-head { gap: var(--s-1); padding-block: var(--s-4); }
+  .site-logo .logo { height: 34px; }
+  .nav-toggle { padding: 0 12px; }
+  .lang-switch { padding: 0 6px; }
+  .lang-switch .i { display: none; }
+  .downloads { flex-direction: column; align-self: stretch; }
+  .downloads .btn { width: 100%; }
+  .hero-photo .photo { aspect-ratio: 16 / 10; object-position: 24% 50%; }
+  .facts { grid-template-columns: minmax(0, 1fr); }
+  .facts li { white-space: normal; }
+  .moves li { grid-template-columns: 40px minmax(0, 1fr); padding-block: var(--s-4); }
+  .step-n { font-size: 2rem; }
+  .open .btn { width: 100%; }
+  .foot-top { flex-direction: column; align-items: flex-start; }
+}

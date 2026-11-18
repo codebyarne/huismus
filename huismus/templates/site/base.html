@@ -1,37 +1,54 @@
 {% load i18n %}<!DOCTYPE html>
-{% comment %}The Huismus site (huismus/core/site.py): static pages, no JS, the app's own stylesheet and components.{% endcomment %}
+{% comment %}The Huismus site (huismus/core/site.py): static pages, no JS, the tokens and components of the app's own stylesheet in the direction "Helder" (docs/design/ronde-8/).{% endcomment %}
 <html lang="{{ language }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Huismus{% endblock %}</title>
-    <meta name="description" content="{% translate 'Boekhouden voor zzp’ers, met of zonder KOR: facturen, bonnetjes en je btw-aangifte. Neem al je jaren mee uit Moneybird. Gratis, en je administratie blijft op je eigen computer.' %}">
-    <meta property="og:title" content="{% translate 'Huismus: je boekhouding op je eigen computer' %}">
+    <meta name="description" content="{% block description %}{% translate 'Boekhouden voor zzp’ers, met of zonder KOR: facturen, bonnetjes en de bedragen voor je btw-aangifte. Neem al je jaren mee uit Moneybird. Gratis, en je administratie blijft op je eigen computer.' %}{% endblock %}">
+    {% if nav == "download" or nav == "404" %}<meta name="robots" content="noindex">
+    {% else %}<link rel="canonical" href="https://{{ domain }}{{ address }}">
+    {% if switch_url %}<link rel="alternate" hreflang="{{ language }}" href="https://{{ domain }}{{ address }}">
+    <link rel="alternate" hreflang="{{ other_language }}" href="https://{{ domain }}{{ switch_url }}">
+    <link rel="alternate" hreflang="x-default" href="https://{{ domain }}{% if language == 'nl' %}{{ address }}{% else %}{{ switch_url }}{% endif %}">{% endif %}{% endif %}
+    <meta property="og:site_name" content="Huismus">
+    <meta property="og:title" content="{% block og_title %}{% translate 'Huismus: je boekhouding op je eigen computer' %}{% endblock %}">
     <meta property="og:description" content="{% translate 'Boekhouden voor zzp’ers, met of zonder KOR: facturen, bonnetjes en je btw-aangifte. Gratis en open source.' %}">
+    <meta property="og:url" content="https://{{ domain }}{{ address }}">
     <meta property="og:image" content="https://{{ domain }}/delen.{{ language }}.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="{% translate 'Het logo van Huismus, de kop “Je boekhouding op je eigen computer” en het overzicht van de app.' %}">
     <meta property="og:type" content="website">
+    <meta property="og:locale" content="{% if language == 'nl' %}nl_NL{% else %}en_GB{% endif %}">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <meta name="theme-color" content="#FBF8F3" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#191613" media="(prefers-color-scheme: dark)">
-    <link rel="stylesheet" href="/huismus.css">
+    <meta name="theme-color" content="#F1F5F4" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#061415" media="(prefers-color-scheme: dark)">
+    {% for font in fonts %}<link rel="preload" href="/fonts/{{ font }}" as="font" type="font/woff2" crossorigin>
+    {% endfor %}<link rel="stylesheet" href="/huismus.css">
     <link rel="stylesheet" href="/site.css">
     {% block head %}{% endblock %}
 </head>
 <body class="site">
+<a class="skip-link" href="#inhoud">{% translate "Naar de inhoud" %}</a>
 {% include "icons.svg" %}
 {% include "site/_site_icons.svg" %}
-<header class="site-head">
-    <a class="brand" href="{{ home_url }}"><svg class="mark" width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17C4 11.5 8.5 9.3 13.6 10c4.6.7 6.4 5.2 3 8.4-3 2.7-9.6 2.8-12.6-1.4Z" fill="var(--primary)"/><path d="M4.2 17 1 21.4l6-1.8Z" fill="var(--primary)"/><circle cx="15.4" cy="8.6" r="4.4" fill="var(--primary)"/><path d="M19.4 7.6 22.6 8.8l-3.2 1.1Z" fill="var(--accent)"/></svg>Huismus</a>
-    <nav class="site-nav" aria-label="{% translate 'Hoofdmenu' %}">
-        <a href="{{ home_url }}#rondleiding"{% if nav == "home" %} aria-current="page"{% endif %}>{% translate "Rondleiding" %}</a>
+<header class="site-head wrap">
+    <a class="site-logo" href="{{ home_url }}"{% if nav == "home" %} aria-current="page"{% endif %}>{% include "site/_logo.html" %}</a>
+    {% comment %}One menu: a row on a wide screen, and on a phone a popover the button opens (no JS). A browser without popovers shows it as a row that wraps.{% endcomment %}
+    <button class="btn nav-toggle" type="button" popovertarget="site-nav"><svg class="i" aria-hidden="true"><use href="#menu"></use></svg>{% translate "Menu" %}</button>
+    <nav class="site-nav" id="site-nav" popover aria-label="{% translate 'Hoofdmenu' %}">
+        <a href="{{ switching_url }}">{% translate "Overstappen" %}</a>
+        <a href="{{ features_url }}"{% if nav == "features" %} aria-current="page"{% endif %}>{% translate "Functies" %}</a>
         <a href="{{ help_index_url }}"{% if nav == "help" %} aria-current="page"{% endif %}>{% translate "Hulp" %}</a>
+        <a href="{{ install_url }}"{% if nav == "install" %} aria-current="page"{% endif %}>{% translate "Installeren" %}</a>
         <a href="{{ contribute_url }}"{% if nav == "contribute" %} aria-current="page"{% endif %}>{% translate "Meebouwen" %}</a>
-        <a class="btn btn-primary btn-sm" href="{{ home_url }}#download"><svg class="i" aria-hidden="true"><use href="#download"></use></svg>{% translate "Download" %}</a>
+        <a class="btn btn-primary" href="{{ home_url }}#download"><svg class="i" aria-hidden="true"><use href="#download"></use></svg>{% translate "Download" %}</a>
     </nav>
     {% if switch_url %}
-    {% comment %}The language switch, top right: the round flag and code of this page's language; it opens a small menu (popover, no JS) with this page in the other language.{% endcomment %}
+    {% comment %}The language switch: the round flag and code of this page's language; it opens a small menu (popover, no JS) with this page in the other language.{% endcomment %}
     <button class="lang-switch" type="button" popovertarget="taal-menu" aria-label="{% translate 'Taal' %}: {% if language == 'nl' %}Nederlands{% else %}English{% endif %}">
         <svg class="flag" aria-hidden="true"><use href="#flag-{% if language == 'nl' %}nl{% else %}gb{% endif %}"></use></svg>{{ language|upper }}<svg class="i" aria-hidden="true"><use href="#chevron-down"></use></svg>
     </button>
@@ -41,14 +58,26 @@
     </div>
     {% endif %}
 </header>
-<main class="site-main {% block main_class %}{% endblock %}">
+<main class="site-main {% block main_class %}wrap{% endblock %}" id="inhoud">
 {% block content %}{% endblock %}
 </main>
-<footer class="site-foot small muted">
-    <p>{% blocktranslate %}Gratis en open source, gemaakt in Nederland. Huismus valt onder de <a href="{{ repository }}/blob/main/LICENSE">AGPL-3.0</a>.{% endblocktranslate %}</p>
-    {% if counter %}<p>{% translate "Deze site telt bezoeken met GoatCounter, zonder cookies." %}</p>{% endif %}
-    <p>{% blocktranslate %}Gratis ondertekening van de Windows-versie aangevraagd bij SignPath Foundation. <a href="{{ contribute_url }}#ondertekening">Hoe we ondertekenen</a>{% endblocktranslate %}</p>
-    <p><a href="{{ install_url }}">{% translate "Installeren" %}</a> · <a href="{{ help_index_url }}">{% translate "Hulp" %}</a> · <a href="{{ contribute_url }}">{% translate "Meebouwen" %}</a> · <a href="{{ repository }}">{% translate "Broncode" %}</a> · <a href="{{ repository }}/releases">{% translate "Alle versies" %}</a></p>
+<footer class="site-foot wrap">
+    <div class="foot-top">
+        <p class="foot-line">{% translate "Gratis en open source, gemaakt in Nederland." %}</p>
+        <nav class="foot-nav" aria-label="{% translate 'Voet' %}">
+            <a href="{{ features_url }}">{% translate "Functies" %}</a>
+            <a href="{{ install_url }}">{% translate "Installeren" %}</a>
+            <a href="{{ help_index_url }}">{% translate "Hulp" %}</a>
+            <a href="{{ contribute_url }}">{% translate "Meebouwen" %}</a>
+            <a href="{{ repository }}">{% translate "Broncode" %}</a>
+            <a href="{{ repository }}/releases">{% translate "Alle versies" %}</a>
+        </nav>
+    </div>
+    <div class="foot-small small muted">
+        <p>{% blocktranslate %}Huismus valt onder de <a href="{{ repository }}/blob/main/LICENSE">AGPL-3.0</a>.{% endblocktranslate %}</p>
+        <p>{% blocktranslate %}Gratis ondertekening van de Windows-versie aangevraagd bij SignPath Foundation. <a href="{{ contribute_url }}#ondertekening">Hoe we ondertekenen</a>{% endblocktranslate %}</p>
+        {% if counter %}<p>{% translate "Deze site telt bezoeken met GoatCounter, zonder cookies." %}</p>{% endif %}
+    </div>
 </footer>
 {% comment %}GoatCounter's counter without JS (site.COUNTER_VARIABLE): one image per page, the address of the page and nothing else.{% endcomment %}
 {% if counter %}<img class="counter" src="https://{{ counter }}.goatcounter.com/count?p={{ address|urlencode:'' }}" alt="" width="1" height="1">{% endif %}

@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block title %}{% if platform == "mac" %}{% translate "Download voor Mac" %}{% else %}{% translate "Download voor Windows" %}{% endif %} — Huismus{% endblock %}
-{% block main_class %}site-narrow{% endblock %}
+{% block main_class %}wrap site-narrow{% endblock %}
 {% comment %}A button's landing page (site.download_page_url): the browser starts the download from the newest release, and meanwhile the page shows how to open the app the first time.{% endcomment %}
 {% block head %}<meta http-equiv="refresh" content="0; url={{ file_url }}">{% endblock %}
 

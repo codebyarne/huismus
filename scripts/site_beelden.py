@@ -9,6 +9,10 @@ Writes <name>.<nl|en>.<light|dark>.webp for every name in site.MEDIA: a
 screenshot, or a short animation (an animated WebP plays like a GIF, without
 JS, and is far smaller). tests/core/test_site.py checks that all are there.
 
+It also makes the picture a shared link shows (delen.<nl|en>.png: the logo,
+the headline and the overview in dark, one designed plate) and, through
+scripts/site_fotos.py, the photos with the app on the laptop's screen.
+
 Huismus runs as the desktop app does (HUISMUS_DESKTOP=true), in a temporary
 folder away from data/, on a small made-up administration
 (huismus/core/site_data.py). The animations issue invoices, so every round
@@ -29,8 +33,9 @@ import urllib.request
 from contextlib import contextmanager
 from pathlib import Path
 
+import site_fotos
 from PIL import Image
-from playwright.sync_api import Page, sync_playwright
+from playwright.sync_api import Browser, Page, sync_playwright
 
 ROOT = Path(__file__).resolve().parent.parent
 FIXTURE = ROOT / "tests" / "fixtures" / "moneybird-example-data" / "lindeboom_communicatie_2021.zip"
@@ -41,6 +46,24 @@ SCALE = 2
 # Animations have many frames, so fewer pixels each.
 ANIMATION_WIDTH = 1280
 LOCALES = {"nl": "nl-NL", "en": "en-GB"}
+# The headline of the site's home page, on the picture a shared link shows.
+HEADLINES = {
+    "nl": "Je boekhouding op je eigen computer",
+    "en": "Your bookkeeping on your own computer",
+}
+FONTS = ROOT / "huismus" / "core" / "static" / "core" / "fonts"
+SHARE_PLATE = """<!doctype html><meta charset="utf-8"><style>
+@font-face {{ font-family: "Bricolage Grotesque"; font-weight: 200 800;
+  src: url("{font}") format("woff2"); }}
+body {{ margin: 0; width: 1200px; height: 630px; overflow: hidden; position: relative;
+  background: #061415; color: #EAF4F3; }}
+.logo {{ position: absolute; left: 72px; top: 72px; }}
+.logo svg {{ display: block; width: auto; height: 64px; }}
+h1 {{ position: absolute; left: 72px; top: 200px; width: 520px; margin: 0;
+  font: 700 78px/1.02 "Bricolage Grotesque", sans-serif; letter-spacing: -0.032em; }}
+img {{ position: absolute; left: 640px; top: 96px; width: 920px; border-radius: 18px;
+  border: 1px solid #1F3B3C; box-shadow: 0 30px 80px rgb(0 0 0 / .55); }}
+</style><div class="logo">{logo}</div><h1>{headline}</h1><img src="{shot}">"""
 
 
 def _env(data: Path, releases: Path) -> dict:
@@ -167,8 +190,6 @@ def administration(camera: Camera) -> None:
     page = camera.page
     for name, path in [
         ("overzicht", "/"),
-        ("facturen", "/facturen/"),
-        ("offertes", "/offertes/"),
         ("uitgaven", "/uitgaven/"),
         ("jaaroverzicht", "/rapporten/jaaroverzicht/"),
         ("ai", "/instellingen/ai-assistenten/"),
@@ -178,7 +199,7 @@ def administration(camera: Camera) -> None:
 
     # A quote that waits for an answer becomes a draft invoice.
     camera.go("/offertes/")
-    quote = page.locator("tr:has(.pill-sent) a").first.get_attribute("href")
+    quote = page.locator("tr:has(.pill-quote-sent) a").first.get_attribute("href")
     camera.go(quote)
     camera.animation(
         "offerte-omzetten",
@@ -241,6 +262,29 @@ def empty(camera: Camera) -> None:
     )
 
 
+def share_image(browser: Browser, out: Path, language: str) -> None:
+    """delen.<language>.png, 1200 × 630: what LinkedIn and chat apps show with
+    a link to the site. Dark, with nothing on it but the logo and the headline
+    (huismus-intern/besluiten.md, 2026-11-18)."""
+    page = browser.new_page(viewport={"width": 1200, "height": 630})
+    plate = out / "delen.html"
+    plate.write_text(
+        SHARE_PLATE.format(
+            font=(FONTS / "bricolage-grotesque-latin-opsz-normal.woff2").as_uri(),
+            logo=(ROOT / "docs" / "design" / "icons" / "logo-donker.svg").read_text(),
+            headline=HEADLINES[language],
+            shot=(out / f"overzicht.{language}.dark.webp").resolve().as_uri(),
+        ),
+        encoding="utf-8",
+    )
+    page.goto(plate.resolve().as_uri())
+    page.evaluate("document.fonts.ready")
+    page.wait_for_load_state("networkidle")
+    page.screenshot(path=out / f"delen.{language}.png")
+    page.close()
+    plate.unlink()
+
+
 def main(out: Path) -> None:
     out.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory() as work, sync_playwright() as playwright:
@@ -266,7 +310,9 @@ def main(out: Path) -> None:
                         scene(Camera(page, url, out, f"{language}.{scheme}"))
                         context.close()
                         print(f"{language} {scheme} {scene.__name__}: klaar", flush=True)
+            share_image(browser, out, language)
             browser.close()
+    site_fotos.main(out)
 
 
 if __name__ == "__main__":

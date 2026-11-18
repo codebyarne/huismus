@@ -52,6 +52,7 @@ def test_every_link_inside_the_site_lands_on_a_page_and_heading(out):
     """Also the links between help files (`back-ups.nl.md#…` in docs/hulp/)."""
     addresses = [site.home_url(lang) for lang in help.LANGUAGES]
     addresses += [site.install_url(lang) for lang in help.LANGUAGES]
+    addresses += [site.features_url(lang) for lang in help.LANGUAGES]
     addresses += [site.contribute_url(lang) for lang in help.LANGUAGES]
     addresses += [
         site.download_page_url(lang, n) for lang in help.LANGUAGES for n in site.PLATFORMS
@@ -178,3 +179,83 @@ def test_a_folder_that_is_not_a_site_is_never_emptied(tmp_path):
 def test_the_mac_steps_link_to_privacy_and_security(out, language):
     for address in (site.install_url(language), site.download_page_url(language, "mac")):
         assert site.MAC_PRIVACY_SETTINGS in _read(out, address).links, address
+
+
+@pytest.mark.parametrize("language", help.LANGUAGES)
+def test_the_home_page_and_functies_show_the_same_list(out, language):
+    """One list (core/site_features.py): every feature and every month is on
+    both pages, in the language of the page."""
+    from django.utils.formats import date_format
+    from django.utils.html import escape
+
+    from huismus.core import site_features
+
+    home = (out / site.home_url(language).strip("/") / "index.html").read_text()
+    features = (out / site.features_url(language).strip("/") / "index.html").read_text()
+    with translation.override(language):
+        names = [str(f.name) for _group, items in site_features.NOW for f in items]
+        names += [str(f.name) for _month, items in site_features.COMING for f in items]
+        months = [date_format(month, "F Y") for month, _items in site_features.COMING]
+    for text in names + months:
+        assert escape(text) in home, text
+        assert escape(text) in features, text
+
+
+def test_the_months_of_what_is_coming_follow_each_other():
+    from huismus.core import site_features
+
+    months = [month for month, _items in site_features.COMING]
+    assert months == sorted(set(months)) and all(month.day == 1 for month in months)
+
+
+def test_every_help_link_of_a_feature_is_a_help_page():
+    from huismus.core import site_features
+
+    for _group, items in site_features.NOW:
+        for feature in items:
+            assert not feature.help or feature.help in site.TOPICS, feature.name
+
+
+def test_nothing_is_loaded_from_another_site(out):
+    """Letters, pictures and styles come with the site: no CDN, no web fonts
+    from elsewhere, no script."""
+    for name in site._FONTS:
+        assert (out / "fonts" / name).exists()
+    for language in help.LANGUAGES:
+        for address in (site.home_url(language), site.features_url(language)):
+            html = (out / address.strip("/") / "index.html").read_text()
+            sources = re.findall(r'(?:src|srcset)="([^"]+)"', html)
+            sources += re.findall(
+                r'<link rel="(?:stylesheet|preload|icon)[^>]*href="([^"]+)"', html
+            )
+            assert sources and all(source.startswith("/") for source in sources), sources
+            assert "<script src" not in html
+
+
+def test_every_photo_is_there_in_both_widths(out):
+    """scripts/site-beelden.sh makes them (scripts/site_fotos.py)."""
+    home = (out / "index.html").read_text()
+    for path in site.photo_files():
+        assert path.exists(), f"{path.name}: draai ./scripts/site-beelden.sh"
+        assert (out / "beelden" / "fotos" / path.name).exists()
+        assert f"/beelden/fotos/{path.name}" in home
+
+
+def test_every_picture_on_a_page_has_a_description(out):
+    for language in help.LANGUAGES:
+        html = (out / site.home_url(language).strip("/") / "index.html").read_text()
+        images = re.findall(r"<img [^>]*>", html)
+        assert len(images) >= 10
+        for image in images:
+            assert re.search(r'alt="[^"]{20,}"', image), image
+
+
+def test_a_search_engine_finds_every_page_but_the_downloads(out):
+    sitemap = (out / "sitemap.xml").read_text()
+    assert f"https://{site.DOMAIN}/functies/" in sitemap and "/download/" not in sitemap
+    assert "sitemap.xml" in (out / "robots.txt").read_text()
+    download = (out / "download" / "mac" / "index.html").read_text()
+    assert '<meta name="robots" content="noindex">' in download
+    home = (out / "index.html").read_text()
+    assert f'<link rel="canonical" href="https://{site.DOMAIN}/">' in home
+    assert f'hreflang="en" href="https://{site.DOMAIN}/en/"' in home
