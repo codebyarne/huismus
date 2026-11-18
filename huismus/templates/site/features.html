@@ -11,25 +11,26 @@
 <div class="page-intro">
     <h1>{% translate "Wat Huismus kan, en wat er komt" %}</h1>
     <p class="lede">{% translate "Huismus groeit snel. Hier staat alles wat er nu in zit, en wat je wanneer kunt verwachten." %}</p>
-    <p class="jumps"><a class="btn btn-secondary" href="#kan-nu">{% translate "Kan nu" %}</a><a class="btn btn-secondary" href="#komt-eraan">{% translate "Komt eraan" %}</a></p>
+    <p class="jumps"><a class="more" href="#kan-nu">{% translate "Kan nu" %} <span aria-hidden="true">↓</span></a><a class="more" href="#komt-eraan">{% translate "Komt eraan" %} <span aria-hidden="true">↓</span></a></p>
 </div>
 
 <section class="features-now" id="kan-nu" aria-labelledby="kan-nu-kop">
-    <h2 id="kan-nu-kop">{% translate "Kan nu" %}</h2>
-    {% comment %}Two columns of about the same length: Factureren and De app left, the rest right. On a phone they follow each other.{% endcomment %}
-    <div class="feature-groups">
-        <div class="feature-column">
-            {% for group, items in features.now %}{% if forloop.first or forloop.last %}{% include "site/_feature_group.html" %}{% endif %}{% endfor %}
-        </div>
-        <div class="feature-column">
-            {% for group, items in features.now %}{% if not forloop.first and not forloop.last %}{% include "site/_feature_group.html" %}{% endif %}{% endfor %}
-        </div>
+    <h2 class="big" id="kan-nu-kop">{% translate "Kan nu" %}</h2>
+    {% for group, items in features.now %}
+    <div class="feature-row">
+        <h3>{{ group }}</h3>
+        <ul>
+            {% for feature in items %}
+            <li><strong>{% if feature.help %}<a href="{% if language == 'nl' %}/hulp/{% else %}/en/help/{% endif %}{{ feature.help }}/">{{ feature.name }} <span aria-hidden="true">→</span></a>{% else %}{{ feature.name }}{% endif %}</strong>{% if feature.text %}<span>{{ feature.text }}</span>{% endif %}</li>
+            {% endfor %}
+        </ul>
     </div>
+    {% endfor %}
 </section>
 
-<section class="leaf features-coming" id="komt-eraan" aria-labelledby="komt-eraan-kop">
-    <h2 id="komt-eraan-kop">{% translate "Komt eraan" %}</h2>
-    <ol class="months months-wide">
+<section class="features-coming" id="komt-eraan" aria-labelledby="komt-eraan-kop">
+    <h2 class="big" id="komt-eraan-kop">{% translate "Komt eraan" %}</h2>
+    <ol class="months">
         {% for month, items in features.coming %}
         <li{% if forloop.first %} class="is-next"{% endif %}>
             <span class="when">{% blocktranslate with month=month|date:"F Y" %}Verwacht in {{ month }}{% endblocktranslate %}</span>
@@ -43,24 +44,24 @@
 </section>
 
 <section class="trio" aria-label="{% translate 'Later, misschien en niet' %}">
-    <div class="tile">
+    <div>
         <h2>{% translate "Later, zonder maand" %}</h2>
         <ul>{% for feature in features.later %}<li>{{ feature.name }}</li>{% endfor %}</ul>
         <p class="small muted">{% translate "Hier hangt nog geen maand aan." %}</p>
     </div>
-    <div class="tile">
+    <div>
         <h2>{% translate "Misschien later" %}</h2>
         <ul>{% for feature in features.maybe %}<li>{{ feature.name }}</li>{% endfor %}</ul>
         <p class="small muted">{% translate "Hierover is nog niets besloten. Een deel vraagt een dienst op internet, en dat komt pas als het veilig en eenvoudig kan." %}</p>
     </div>
-    <div class="tile">
+    <div>
         <h2>{% translate "Doet Huismus niet" %}</h2>
         <ul>{% for feature in features.never %}<li>{{ feature.name }}</li>{% endfor %}</ul>
         <p class="small muted">{% translate "Huismus telt wat jij invult." %}</p>
     </div>
 </section>
 
-<section class="band band-final" id="download">
+<section class="band band-final" id="downloaden">
     {% include "site/_final.html" %}
 </section>
 {% endblock %}

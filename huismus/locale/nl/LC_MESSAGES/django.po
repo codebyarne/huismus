@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-18 19:34+0100\n"
+"POT-Creation-Date: 2026-11-18 19:55+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -5999,8 +5999,7 @@ msgstr ""
 
 msgid ""
 "Boekhouden voor zzp’ers, met of zonder KOR: facturen, bonnetjes en de "
-"bedragen voor je btw-aangifte. Neem al je jaren mee uit Moneybird. Gratis, "
-"en je administratie blijft op je eigen computer."
+"bedragen voor je btw-aangifte. Gratis, en alles blijft op je eigen computer."
 msgstr ""
 
 msgid "Huismus: je boekhouding op je eigen computer"
@@ -6337,23 +6336,13 @@ msgstr ""
 msgid "Voor zzp’ers, met of zonder KOR"
 msgstr ""
 
-msgid "Je boekhouding op je eigen computer"
+msgid "Je boekhouding op <span class=\"underline\">je eigen computer</span>"
 msgstr ""
 
 msgid ""
 "Huismus is een gratis app voor je facturen, offertes en bonnetjes, met de "
 "bedragen voor je btw-aangifte. Kom je van Moneybird? Neem al je jaren mee, "
 "tot op de cent."
-msgstr ""
-
-msgid ""
-"Het overzicht van Huismus: de omzet van dit jaar tegenover de KOR-grens, wat "
-"openstaat, de winst en de laatste facturen."
-msgstr ""
-
-msgid ""
-"Een meubelmaker met een stofmasker op schuurt een stoel in haar werkplaats. "
-"Op de werkbank staat een laptop met Huismus open."
 msgstr ""
 
 msgid "Waarom Huismus"
@@ -6371,10 +6360,68 @@ msgstr ""
 msgid "Geen einddatum"
 msgstr ""
 
-#, python-format
+msgid "Het overzicht van Huismus"
+msgstr ""
+
 msgid ""
-"Huismus is gratis en open source. <a href=\"%(repository)s\">De broncode "
-"staat openbaar.</a>"
+"Het overzicht van Huismus: de omzet van dit jaar per maand, wat je nog moet "
+"ontvangen, de KOR-grens en wat er te doen is, zoals een factuur die te laat "
+"is."
+msgstr ""
+
+msgid "Voor wie"
+msgstr ""
+
+msgid "Voor zzp’ers die hun boekhouding zelf doen"
+msgstr ""
+
+msgid ""
+"Een meubelmaker met een stofmasker op schuurt een stoel in haar werkplaats. "
+"Op de werkbank staat een laptop met Huismus open."
+msgstr ""
+
+msgid "Meubelmaker"
+msgstr ""
+
+msgid "Een fotograaf knielt in een park en stelt haar camera in."
+msgstr ""
+
+msgid "Fotograaf"
+msgstr ""
+
+msgid "Een hovenier laadt gereedschap achter in zijn bus."
+msgstr ""
+
+msgid "Hovenier"
+msgstr ""
+
+msgid ""
+"Een vrouw schrijft in een notitieboek aan een bureau bij het raam, met "
+"boeken om zich heen."
+msgstr ""
+
+msgid "Tekstschrijver"
+msgstr ""
+
+msgid ""
+"Een man zit aan de keukentafel bij een bureaulamp, achter een laptop met "
+"Huismus open. Naast hem ligt een stapel papieren."
+msgstr ""
+
+msgid "Aan de keukentafel"
+msgstr ""
+
+msgid "Met de KOR"
+msgstr ""
+
+msgid ""
+"Jouw KOR-tekst op elke factuur, en je ziet hoe ver je van je grens bent."
+msgstr ""
+
+msgid "Zonder de KOR"
+msgstr ""
+
+msgid "Btw op je facturen, ook verlegd, en de btw van elk bonnetje vastgelegd."
 msgstr ""
 
 msgid "Neem al je jaren mee"
@@ -6387,16 +6434,6 @@ msgid ""
 msgstr ""
 
 msgid "Zo stap je over"
-msgstr ""
-
-msgid ""
-"Een man zit aan de keukentafel bij een bureaulamp, achter een laptop met "
-"Huismus open. Naast hem ligt een stapel papieren."
-msgstr ""
-
-msgid ""
-"Animatie: een export uit Moneybird kiezen, de proefdraai bekijken en "
-"importeren."
 msgstr ""
 
 msgid "Exporteer alles"
@@ -6421,10 +6458,15 @@ msgid ""
 "je eigen computer, zonder abonnement."
 msgstr ""
 
-msgid "Importeren uit andere pakketten en uit Excel."
+msgid ""
+"Animatie: een export uit Moneybird kiezen, de proefdraai bekijken en "
+"importeren."
 msgstr ""
 
 msgid "Begin je nieuw? Dan vul je in vier stappen je bedrijfsgegevens in."
+msgstr ""
+
+msgid "Privacy"
 msgstr ""
 
 msgid "Je administratie is van jou"
@@ -6476,15 +6518,11 @@ msgstr ""
 msgid "Aan, en dat kun je uitzetten"
 msgstr ""
 
+msgctxt "kicker"
+msgid "Het hele jaar"
+msgstr ""
+
 msgid "Alles voor je boekhouding, het hele jaar"
-msgstr ""
-
-msgid "De klanten en bedragen op de beelden zijn verzonnen."
-msgstr ""
-
-msgid ""
-"Animatie: een regel toevoegen aan een conceptfactuur, de factuur uitgeven en "
-"een betaling registreren."
 msgstr ""
 
 msgid "Facturen en offertes"
@@ -6499,8 +6537,8 @@ msgid "Zo maak je een factuur"
 msgstr ""
 
 msgid ""
-"De lijst met uitgaven, met per uitgave de datum, de leverancier, de "
-"categorie en het bedrag."
+"Animatie: een regel toevoegen aan een conceptfactuur, de factuur uitgeven en "
+"een betaling registreren."
 msgstr ""
 
 msgid ""
@@ -6512,8 +6550,8 @@ msgid "Meer over bonnetjes"
 msgstr ""
 
 msgid ""
-"Het jaaroverzicht met de omzet, de kosten, de winst en de KOR-grens, en de "
-"omzet per kwartaal."
+"Uitgaven op een telefoon: een lijst met per uitgave de leverancier, de datum "
+"en het bedrag."
 msgstr ""
 
 msgid "Btw en KOR"
@@ -6528,8 +6566,8 @@ msgid "Meer over KOR en btw"
 msgstr ""
 
 msgid ""
-"Het overzicht van de instellingen, met onder meer je bedrijfsgegevens, back-"
-"ups en exporteren."
+"De KOR-grens: de omzet van dit jaar tegenover de grens, en daaronder de "
+"omzet en de kosten per kwartaal."
 msgstr ""
 
 msgid "Jaaroverzicht en export"
@@ -6540,6 +6578,14 @@ msgid ""
 "in één keer."
 msgstr ""
 
+msgid ""
+"Het jaaroverzicht: de omzet, de kosten en de winst van dit jaar, met de "
+"knoppen CSV downloaden en Exporteren."
+msgstr ""
+
+msgid "De klanten en bedragen op de beelden zijn verzonnen."
+msgstr ""
+
 #, python-format
 msgid ""
 "Werk je met Claude of een andere AI-assistent? <a href=\"%(url)s\">Die kun "
@@ -6547,42 +6593,17 @@ msgid ""
 "knop drukt."
 msgstr ""
 
-msgid "Voor zzp’ers die hun boekhouding zelf doen"
-msgstr ""
-
-msgid "Een fotograaf knielt in een park en stelt haar camera in."
-msgstr ""
-
-msgid "Een hovenier laadt gereedschap achter in zijn bus."
-msgstr ""
-
-msgid ""
-"Een vrouw schrijft in een notitieboek aan een bureau bij het raam, met "
-"boeken om zich heen."
-msgstr ""
-
-msgid "Met de KOR"
-msgstr ""
-
-msgid ""
-"Jouw KOR-tekst op elke factuur, en je ziet hoe ver je van je grens bent."
-msgstr ""
-
-msgid "Zonder de KOR"
-msgstr ""
-
-msgid "Btw op je facturen, ook verlegd, en de btw van elk bonnetje vastgelegd."
-msgstr ""
-
-msgid ""
-"Huismus groeit snel. Hier staat wat er nu in zit en wat je wanneer kunt "
-"verwachten."
-msgstr ""
-
-msgid "Een maand is een verwachting. Wat af is, staat bij “Wat is er nieuw”."
+#, python-format
+msgid "Komt eraan: %(name)s. Verwacht in %(month)s."
 msgstr ""
 
 msgid "Alle functies"
+msgstr ""
+
+msgid "Open en op een eigen server"
+msgstr ""
+
+msgid "Open"
 msgstr ""
 
 msgid "Open, en gemaakt in Nederland"
@@ -6594,15 +6615,6 @@ msgid ""
 msgstr ""
 
 msgid "Zo bouw je mee"
-msgstr ""
-
-msgid "Eerst rondkijken?"
-msgstr ""
-
-msgid ""
-"Kies bij de eerste start <strong>Probeer met nepdata</strong>. Huismus vult "
-"zich met een verzonnen administratie van negen jaar, en met één knop is hij "
-"weer leeg."
 msgstr ""
 
 msgid "Liever op een eigen server?"

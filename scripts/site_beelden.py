@@ -29,6 +29,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import urllib.error
 import urllib.request
 from contextlib import contextmanager
 from pathlib import Path
@@ -45,6 +46,8 @@ VIEWPORT = {"width": 1280, "height": 800}
 # The same screens as a phone shows them, for a visitor on a phone: a desktop
 # screen shrunk to 350 px can't be read.
 PHONE = {"width": 390, "height": 760}
+# A part of a screen (Camera.detail): narrower, so the part is shown larger.
+DETAIL = {"width": 1040, "height": 900}
 SCALE = 2
 # Animations have many frames, so fewer pixels each.
 ANIMATION_WIDTH = 1280
@@ -136,8 +139,12 @@ def server(pristine: Path, releases: Path):
                 try:
                     urllib.request.urlopen(url + "/offline/", timeout=1)
                     break
+                except urllib.error.HTTPError:
+                    break  # It answers (the desktop app refuses a browser without its token).
                 except OSError:
                     time.sleep(0.2)
+            else:
+                raise RuntimeError(f"Huismus start niet op {url}.")
             yield url
         finally:
             process.terminate()
@@ -162,14 +169,32 @@ class Camera:
         self.page.goto(self.base + path)
         self.page.wait_for_load_state("networkidle")
 
-    def still(self, name: str, path: str) -> None:
-        """The screen at `path`, as the desktop app's window and as a phone."""
-        for viewport, kind in ((PHONE, ".phone"), (VIEWPORT, "")):
+    def still(self, name: str, path: str, desktop: bool = True) -> None:
+        """The screen at `path`, as a phone shows it and (unless not
+        `desktop`) as the desktop app's window."""
+        for viewport, kind in ((PHONE, ".phone"), (VIEWPORT, ""))[: 2 if desktop else 1]:
             self.page.set_viewport_size(viewport)
             self.go(path)
             _image(self.page.screenshot()).save(
                 self.out / f"{name}.{self.suffix}{kind}.webp", quality=82, method=6
             )
+
+    def detail(self, name: str, path: str, first: str, last: str) -> None:
+        """A part of a screen, from the top of `first` to the bottom of `last`
+        (CSS selectors), so it can be shown large enough to read."""
+        self.page.set_viewport_size(DETAIL)
+        self.go(path)
+        top = self.page.locator(first).first.bounding_box()
+        bottom = self.page.locator(last).first.bounding_box()
+        margin = 14  # less than the gap between two cards: nothing of the next one shows
+        clip = {
+            "x": top["x"] - margin,
+            "y": top["y"] - margin,
+            "width": max(top["width"], bottom["width"]) + 2 * margin,
+            "height": bottom["y"] + bottom["height"] - top["y"] + 2 * margin,
+        }
+        png = self.page.screenshot(clip=clip, full_page=True)
+        _image(png).save(self._file(name), quality=84, method=6)
 
     def animation(self, name: str, steps) -> None:
         """steps: (an action or None, how long its frame shows, in ms)."""
@@ -197,27 +222,13 @@ class Camera:
 
 def administration(camera: Camera) -> None:
     page = camera.page
-    for name, path in [
-        ("overzicht", "/"),
-        ("uitgaven", "/uitgaven/"),
-        ("jaaroverzicht", "/rapporten/jaaroverzicht/"),
-        ("ai", "/instellingen/ai-assistenten/"),
-        ("instellingen", "/instellingen/"),
-    ]:
-        camera.still(name, path)
-
-    # A quote that waits for an answer becomes a draft invoice.
-    camera.go("/offertes/")
-    quote = page.locator("tr:has(.pill-quote-sent) a").first.get_attribute("href")
-    camera.go(quote)
-    camera.animation(
-        "offerte-omzetten",
-        [
-            (None, 1600),
-            (lambda: page.locator("[command=show-modal][commandfor=omzetten]").click(), 1600),
-            (lambda: page.locator("#omzetten [type=submit]").click(), 2600),
-        ],
-    )
+    camera.still("overzicht", "/")
+    camera.still("uitgaven", "/uitgaven/", desktop=False)
+    # Parts that match the headings on the site: the KOR limit with the
+    # quarters, and the year with its totals and the CSV download.
+    camera.detail("kor", "/rapporten/jaaroverzicht/", "#kor-grens", "section:has(.chart)")
+    camera.detail("jaar", "/rapporten/jaaroverzicht/", ".page-head", ".grid-3")
+    camera.page.set_viewport_size(VIEWPORT)
 
     # The draft on the overview: a line more, issue it, and it gets paid.
     camera.go("/facturen/")
@@ -254,7 +265,6 @@ def administration(camera: Camera) -> None:
 
 def empty(camera: Camera) -> None:
     page = camera.page
-    camera.still("welkom", "/")
     camera.go("/importeren/")
 
     def choose():

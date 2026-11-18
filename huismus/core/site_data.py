@@ -156,14 +156,15 @@ def _expenses(today: date) -> None:
         create_expense(
             [ExpenseLineInput("", 7139, None, software)],
             date=today - timedelta(days=15 + 30 * month),
-            supplier="Adobe",
-            description="Creative Cloud",
+            # Made-up names, like the customers: the site says so under the pictures.
+            supplier="Pixelwerk Software",
+            description="Abonnement ontwerpprogramma",
         )
     for days_ago, amount in [(20, 1840), (88, 2260), (160, 1840)]:
         create_expense(
             [ExpenseLineInput("", amount, None, travel)],
             date=today - timedelta(days=days_ago),
-            supplier="NS",
+            supplier="Spoorwegen",
             description="Treinkaartje naar klant",
         )
     create_expense(
