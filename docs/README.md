@@ -27,16 +27,30 @@ de app, maak ze dan opnieuw en commit ze:
 ./scripts/site-beelden.sh
 ```
 
-Een promofilmpje (16 seconden in een lus, 1920×1080 mp4, voor LinkedIn en
-dergelijke): een nieuwe factuur krijgt een klant en een regel, en wordt
-uitgegeven. Van dezelfde verzonnen administratie, met een camera die in- en
-uitzoomt en een klik- of toetsgeluid bij elke klik en toets (CC0, van Kenney). Komt in `~/Downloads`,
-niet in de repo. Muziek eronder is optioneel (let op de licentie):
+Promofilmpjes (rond de twintig seconden in een lus, 1920×1080 mp4, voor
+LinkedIn en dergelijke), van dezelfde verzonnen administratie. Ze komen in
+`~/Downloads`, niet in de repo.
+
+- `bonnetjes` (27 s): een dag vol bonnetjes gaat naar je eigen cloudmap,
+  Huismus leest ze met je eigen AI, en jij kijkt ze na in Verwerken. Daarna
+  het vogeltje dat wegvliegt. De schermen zijn echt: `scripts/promo_film.py
+  opname` neemt ze op uit Huismus (de AI-dienst is een nepservertje in het
+  script, er gaat niets naar buiten). [Remotion](https://www.remotion.dev/)
+  in `scripts/promo/film/` monteert ze, met titels en bewegingen in de
+  kleuren van Huismus. Remotion draait op Node en hoort niet bij de app; de
+  eerste keer installeert `npm` het in die map.
+- `factuur` (18 s): een nieuwe factuur krijgt een klant en een regel, en
+  wordt uitgegeven. Gefilmd met een camera die in- en uitzoomt en een klik-
+  of toetsgeluid bij elke klik en toets (CC0, van Kenney).
 
 ```
-./scripts/promo-film.sh
-./scripts/promo-film.sh ~/Downloads/huismus-factuur.mp4 muziek.mp3
+./scripts/promo-film.sh bonnetjes
+./scripts/promo-film.sh factuur
+./scripts/promo-film.sh factuur ~/Downloads/huismus-factuur.mp4 muziek.mp3
 ```
+
+De bonnetjesfilm aanpassen gaat het snelst in Remotion Studio, met de
+schermen van de laatste opname: `cd scripts/promo/film && npm run studio`.
 
 Zelf bekijken:
 
