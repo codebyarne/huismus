@@ -36,6 +36,10 @@ if (!CSS.supports("position-area: bottom")) {
     if (!button) return;
     const box = button.getBoundingClientRect();
     const left = box.right - menu.offsetWidth;
+    // At once: with "reduce motion" on, huismus.css gives every change a
+    // transition of 1 ms, and WebKit then showed the menu for a moment where
+    // it was the time before.
+    menu.style.transition = "none";
     menu.style.inset = `${box.bottom + 6}px auto auto ${left < 0 ? box.left : left}px`;
   };
   // Neither event bubbles: capture. The menu's width is only known once it
