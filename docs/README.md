@@ -56,14 +56,15 @@ film schrijft het script om de drie seconden een beeld naar `stills/`, om na te
 kijken.
 
 Op de site staan ze als kleine versies (1280×720) in `docs/site/film-*.nl.mp4`, elk
-met een stilstaand beeld: de overzichtsfilm zonder stem op de homepage, onder
+met een stilstaand beeld en zonder geluid: de overzichtsfilm op de homepage, onder
 "Voor wie", en de bonnetjesfilm boven het hulpstuk "Bonnetjes onderweg". Alleen
 op de Nederlandse pagina's, want de koppen en de app in de films zijn
 Nederlands. Er speelt niets vanzelf. Ziet een scherm er anders uit, maak ze dan
 opnieuw en commit ze:
 
 ```
-./scripts/promo-film.sh site
+./scripts/promo-film.sh site               # zonder geluid
+./scripts/promo-film.sh site-met-geluid    # pas als het geluid beluisterd is
 ```
 
 De oudere film van een factuur maken, met een camera boven de browser en een

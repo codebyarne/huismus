@@ -50,5 +50,6 @@ shot, dan stopt het script en zegt het hoeveel.
 
 De versie zonder stem (`huismus-overzicht-zonder-stem.mp4`, muziek en ondertitels in
 beeld) staat op de site zolang de stem een proefstem is: op de Nederlandse homepage, onder
-"Voor wie" (`./scripts/promo-film.sh site` maakt de webversie in `docs/site/`). Komt de
+"Voor wie" (`./scripts/promo-film.sh site` maakt de webversie in `docs/site/`). Die webversie
+heeft geen geluid tot de eigenaar de muziek gehoord heeft (`site-met-geluid` neemt het mee). Komt de
 echte stem, dan vervangt die versie de film zonder stem, met de ondertitels als `<track>`.
