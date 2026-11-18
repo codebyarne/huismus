@@ -31,7 +31,6 @@ Visits are counted only when COUNTER_VARIABLE holds a GoatCounter code: a
 
 import os
 import shutil
-from datetime import date
 from pathlib import Path
 
 from django.conf import settings
@@ -99,8 +98,8 @@ def whats_new_url(language: str) -> str:
 
 
 def features_overview_url(language: str | None) -> str:
-    """The page Functies on the site, for the app's Hulp: what Huismus can do
-    and what is coming, with the months, is only there."""
+    """The page Functies on the site, for the app's Hulp: everything Huismus
+    can do and what comes later is only there."""
     language = "en" if (language or "")[:2] == "en" else "nl"
     return f"https://{DOMAIN}{features_url(language)}"
 
@@ -199,17 +198,11 @@ def _short(text: str, limit: int = 160) -> str:
 
 
 def _features() -> dict:
-    next_up = None
-    if site_features.COMING:
-        first_month, items = site_features.COMING[0]
-        name = str(items[0].name)
-        # In the middle of a sentence: "Komt eraan: importeren uit …".
-        next_up = (first_month, name[:1].lower() + name[1:])
+    now, later = site_features.counts()
     return {
-        "next_up": next_up,
-        "now": site_features.NOW,
-        "coming": site_features.COMING,
-        "later": site_features.LATER,
+        "groups": site_features.FEATURES,
+        "now_count": now,
+        "later_count": later,
         "maybe": site_features.MAYBE,
         "never": site_features.NEVER,
     }
@@ -329,13 +322,6 @@ def build(out: Path) -> list[str]:
 
     Only an empty folder or an earlier site (it has a CNAME) is emptied, so a
     wrong folder, like the repository itself, is refused rather than wiped."""
-    past = site_features.months_in_the_past(date.today())
-    if past:
-        months = ", ".join(month.strftime("%Y-%m") for month in past)
-        raise ValueError(
-            f"Komt eraan noemt een maand die voorbij is ({months}): "
-            "werk huismus/core/site_features.py bij."
-        )
     if out.exists() and any(out.iterdir()):
         if not (out / "CNAME").exists():
             raise ValueError(f"{out} is niet leeg en geen eerdere site.")

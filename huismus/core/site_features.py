@@ -1,17 +1,17 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""What Huismus can do and what is coming: the one list behind the block on
-the site's home page and the page Functies (huismus/core/site.py), so both
-always say the same (huismus-intern/besluiten.md, 2026-11-17).
+"""Everything a bookkeeping for a freelancer needs, and whether Huismus does it
+now or later: the one list behind the overview on the site's home page and the
+page Functies (huismus/core/site.py), so both always say the same.
 
-A month is an expectation the owner made public, so it is a promise: only
-what waits for nothing outside the code gets one. The release PR moves what
-is finished to NOW and shifts a month that will not be made (CLAUDE.md,
-Releases), so no month in the past is ever shown.
+The point is to show how complete Huismus is: every feature you would expect
+of a full bookkeeping package is here, with a check when it works today and
+"Later" when it is on the list (the owner, 2026-11-18; it replaces the months
+of 2026-11-17). "Later" is not a date. The release PR gives what is finished
+its check (CLAUDE.md, Releases).
 """
 
 from dataclasses import dataclass
-from datetime import date
 
 from django.utils.translation import gettext_lazy as _
 
@@ -22,9 +22,15 @@ class Feature:
     text: str = ""
     # The help topic that explains it (docs/hulp/<slug>.*.md).
     help: str = ""
+    # On the list, not in Huismus yet.
+    later: bool = False
 
 
-NOW = (
+def _later(name, text=""):
+    return Feature(name, text, later=True)
+
+
+FEATURES = (
     (
         _("Factureren"),
         (
@@ -55,6 +61,13 @@ NOW = (
                 _("Betaalherinnering"),
                 _("Bij een factuur die te laat is, met de factuur als bijlage."),
             ),
+            _later(_("Periodieke facturen"), _("Zoals elke maand dezelfde.")),
+            _later(_("Uren bijhouden"), _("En daar een factuur van maken.")),
+            _later(_("Artikelen"), _("Vaste regels met prijs en btw-tarief.")),
+            _later(
+                _("E-factuur als bijlage"),
+                _("Een factuur die het boekhoudpakket van je klant kan inlezen."),
+            ),
         ),
     ),
     (
@@ -76,6 +89,8 @@ NOW = (
                 "bonnetjes",
             ),
             Feature(_("Categorieën"), _("Je deelt je kosten in zoals jij dat wilt.")),
+            _later(_("Kilometers"), _("Je ritten bij je administratie.")),
+            _later(_("Investeringen en afschrijving")),
         ),
     ),
     (
@@ -106,6 +121,8 @@ NOW = (
                 _("Jaaroverzicht"),
                 _("Je omzet, je kosten en wat je overhoudt, ook per kwartaal."),
             ),
+            _later(_("Winst-en-verliesrekening"), _("Per jaar.")),
+            _later(_("Je bankafschrift inlezen"), _("Zodat je ziet welke factuur betaald is.")),
         ),
     ),
     (
@@ -128,6 +145,20 @@ NOW = (
                 _("Export als CSV met pdf’s en bonnetjes"),
                 _("Eén ZIP-bestand dat ook zonder Huismus opent."),
                 "exporteren",
+            ),
+            _later(
+                _("Importeren uit andere pakketten en uit Excel"),
+                _("Met één importbestand, ook als je niet van Moneybird komt."),
+            ),
+            _later(
+                _("Auditfile voor je boekhouder"),
+                _("Het bestand dat boekhoudpakketten van boekhouders inlezen."),
+            ),
+            _later(
+                _(
+                    "Back-ups rechtstreeks naar Google Drive en OneDrive, ook zonder hun app "
+                    "op je computer"
+                )
             ),
         ),
     ),
@@ -158,88 +189,30 @@ NOW = (
                 ),
                 "ai-assistenten",
             ),
-        ),
-    ),
-)
-
-# (the first day of the month it is expected in, what).
-COMING = (
-    (
-        date(2026, 12, 1),
-        (
-            Feature(
-                _("Importeren uit andere pakketten en uit Excel"),
-                _("Met één importbestand, ook als je niet van Moneybird komt."),
-            ),
-            Feature(
-                _("Uitleg per pakket om over te stappen"),
-                _("Stap voor stap, van exporteren tot nakijken."),
-            ),
-        ),
-    ),
-    (
-        date(2027, 1, 1),
-        (
-            Feature(_("Je bankafschrift inlezen"), _("Zodat je ziet welke factuur betaald is.")),
-            Feature(_("Winst-en-verliesrekening"), _("Per jaar.")),
-            Feature(
-                _("Auditfile voor je boekhouder"),
-                _("Het bestand dat boekhoudpakketten van boekhouders inlezen."),
-            ),
-            Feature(_("Periodieke facturen"), _("Zoals elke maand dezelfde.")),
-        ),
-    ),
-    (
-        date(2027, 2, 1),
-        (
-            Feature(
+            _later(
                 _("Huismus op je telefoon via je eigen wifi"),
                 _("Ook als Huismus op je Mac of pc staat."),
             ),
-            Feature(
-                _("E-factuur als bijlage"),
-                _("Een factuur die het boekhoudpakket van je klant kan inlezen."),
-            ),
-            Feature(_("Uren bijhouden"), _("En daar een factuur van maken.")),
-        ),
-    ),
-    (
-        date(2027, 3, 1),
-        (
-            Feature(_("Kilometers"), _("Je ritten bij je administratie.")),
-            Feature(_("Artikelen"), _("Vaste regels met prijs en btw-tarief.")),
+            _later(_("Huismus in de Microsoft Store")),
         ),
     ),
 )
 
-# Coming, but no month hangs on it yet.
-LATER = (
-    Feature(_("Rechtstreeks importeren uit meer pakketten")),
-    Feature(_("Huismus in de Microsoft Store")),
-    Feature(_("Investeringen en afschrijving")),
-    Feature(
-        _("Back-ups rechtstreeks naar Google Drive en OneDrive, ook zonder hun app op je computer")
-    ),
-)
-
-# Nothing is decided about these (SPEC.md section 1).
+# Nothing is decided about these (SPEC.md section 1), so they are not "Later".
 MAYBE = (
     Feature(_("Een betaallink op je factuur")),
     Feature(_("Een koppeling met je bank")),
 )
-
-
-def _months_in_the_past(today: date) -> list[date]:
-    """The months of COMING before this month. The site says "Verwacht in
-    november" in December otherwise; build_site refuses (CLAUDE.md, Releases)."""
-    return [month for month, _items in COMING if month < today.replace(day=1)]
-
-
-months_in_the_past = _months_in_the_past
-
 
 NEVER = (
     Feature(_("Salarissen")),
     Feature(_("Een webshop")),
     Feature(_("Belastingadvies")),
 )
+
+
+def counts() -> tuple[int, int]:
+    """(how many work today, how many come later)."""
+    every = [feature for _group, items in FEATURES for feature in items]
+    later = sum(feature.later for feature in every)
+    return len(every) - later, later

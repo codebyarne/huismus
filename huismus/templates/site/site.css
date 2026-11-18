@@ -104,7 +104,6 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .tile p:not(.kicker) { color: var(--text-muted); }
 .tile .btn, .tile .more { margin-top: var(--s-2); }
 .duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-6); }
-.when { display: inline-flex; align-items: center; gap: 8px; min-height: 26px; padding: 2px 12px; border-radius: var(--r-pill); background: var(--primary-soft); color: var(--primary-ink); font-size: var(--fs-sm); font-weight: var(--fw-semibold); white-space: nowrap; }
 .downloads { display: flex; gap: var(--s-3); flex-wrap: wrap; }
 .downloads-note { color: var(--text-muted); text-wrap: balance; }
 .phone-only, .downloads-phone { display: none; }
@@ -167,7 +166,6 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .moves p { margin-top: 4px; color: var(--hero-muted); font-size: 1rem; }
 .band-note { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-3); color: var(--hero-muted); font-size: var(--fs-md); }
 /* Framboos op petrol: 4,8 : 1. */
-.when-on-petrol { background: var(--site-accent-on-petrol); color: #3A0A1C; }
 .band-after { margin-top: var(--s-5); padding-inline: clamp(8px, 1.5vw, 24px); color: var(--text-muted); font-size: var(--fs-md); }
 
 /* 4. Van jou. */
@@ -215,15 +213,18 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .year-ai .i { margin-top: 4px; color: var(--primary); flex: none; }
 .year-note + .year-ai { margin-top: var(--s-6); }
 
-/* 6. Strook naar Functies, met de framboos stip van wat eerst komt. */
-.next-strip { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-4); margin: 0; padding: var(--s-5) var(--s-6); border-radius: var(--r-xl); border: 1px solid var(--border-strong); }
-.next-dot { flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--site-accent); }
-.next-text { flex: 1 1 200px; font-weight: var(--fw-medium); }
-.next-strip { flex-wrap: nowrap; }
-.next-strip .more { flex: none; }
-@media (max-width: 640px) { .next-strip { flex-wrap: wrap; align-items: baseline; } .next-strip .more { flex-basis: 100%; padding-left: 26px; } }
-.next-strip .more { color: var(--primary-ink); }
-.home > .wrap:has(.next-strip), .home > .duo { margin-top: calc(var(--section-gap) * -0.5); }
+/* 6. Alles wat erin zit: een lijst met vinkjes, wat later komt rustig erbij. */
+.check-groups { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-8) var(--s-8); }
+.check-group h3 { margin-bottom: var(--s-3); padding-bottom: var(--s-3); border-bottom: 1px solid var(--border); }
+.check-group ul, .feature-row ul { list-style: none; margin: 0; padding: 0; }
+.check-group ul { display: flex; flex-direction: column; gap: var(--s-2); }
+.check-group li { display: flex; align-items: flex-start; gap: var(--s-2); font-size: 1rem; line-height: 1.45; }
+.check-group li .i, .feature-row li > .i, .feature-count .i { flex: none; margin-top: 2px; color: var(--primary); stroke-width: 2.6; }
+.check-group li.is-later, .feature-row li.is-later strong { color: var(--text-muted); }
+/* "Later": een stil labeltje, geen kleur die schreeuwt. */
+.later { flex: none; display: inline-flex; align-items: center; height: 20px; margin-top: 1px; padding: 0 7px; border-radius: var(--r-pill); background: var(--surface-3); color: var(--text-muted); font-size: 0.6875rem; font-weight: var(--fw-semibold); letter-spacing: .02em; text-transform: uppercase; }
+.checklist-more { margin-top: clamp(24px, 3vw, 40px); }
+.home > .duo { margin-top: calc(var(--section-gap) * -0.5); }
 
 /* 8. Slot. */
 .band-final { align-items: center; gap: var(--s-5); text-align: center; }
@@ -262,24 +263,18 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .feature-row { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--s-4) var(--s-8); padding-block: var(--s-8); border-top: 1px solid var(--border); }
 .feature-row h3 { position: sticky; top: calc(var(--head-h) + var(--s-6)); align-self: start; }
 .feature-row ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-5) var(--s-8); }
-.feature-row li { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.feature-row li { display: flex; align-items: flex-start; gap: var(--s-3); min-width: 0; }
+.feature-row li > div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.feature-row h2 { position: sticky; top: calc(var(--head-h) + var(--s-6)); align-self: start; font-family: var(--font-display); font-size: 1.5rem; }
+.feature-count { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-6); font-weight: var(--fw-semibold); }
+.feature-count > span { display: inline-flex; align-items: center; gap: var(--s-2); }
+.feature-count .later { margin-top: 0; }
+.duo-two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .feature-row strong { font-weight: var(--fw-semibold); }
 .feature-row strong a { color: inherit; text-decoration: none; }
 .feature-row strong a:hover { color: var(--primary-ink); text-decoration: underline; }
 .feature-row strong a span { color: var(--primary-ink); }
-.feature-row li > span { color: var(--text-muted); font-size: 1rem; }
-.months { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-8) var(--s-6); }
-.months > li { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-3); padding-top: var(--s-6); border-top: 2px solid var(--border-strong); }
-.months > li::before { content: ""; position: absolute; top: -9px; left: 0; width: 16px; height: 16px; border-radius: 50%; background: var(--bg); border: 2px solid var(--primary); }
-/* De eerstvolgende maand: framboos. */
-.months > .is-next { border-top-color: var(--site-accent); }
-.months > .is-next::before { background: var(--site-accent); border-color: var(--site-accent); }
-.months > .is-next .when { background: color-mix(in srgb, var(--site-accent) 12%, transparent); color: var(--site-accent); }
-.months ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--s-4); }
-.months ul li { display: flex; flex-direction: column; gap: 2px; }
-.months strong { font-weight: var(--fw-semibold); }
-.months ul span { color: var(--text-muted); font-size: 1rem; }
-.features-coming > .small { margin-top: var(--s-6); }
+.feature-row li span:not(.later) { color: var(--text-muted); font-size: 1rem; }
 .trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-8); }
 .trio > div { padding-top: var(--s-5); border-top: 1px solid var(--border); }
 .trio h2 { font-family: var(--font-display); font-size: 1.375rem; }
@@ -344,8 +339,8 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
   .halves, .band .halves, .install-pair { grid-template-columns: minmax(0, 1fr); }
   .band-shot { justify-self: stretch; }
   .feature-row, .help-index .help-group { grid-template-columns: minmax(0, 1fr); }
-  .feature-row h3 { position: static; }
-  .months { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .feature-row h2 { position: static; }
+  .check-groups { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .bento-item, .bento-wide { grid-column: span 12; }
   .trio { grid-template-columns: minmax(0, 1fr); gap: var(--s-6); }
   .people { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -353,7 +348,7 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
   .person .photo { aspect-ratio: 1; }
 }
 @media (max-width: 640px) {
-  .duo, .kor-lines, .feature-row ul, .months { grid-template-columns: minmax(0, 1fr); }
+  .duo, .kor-lines, .feature-row ul, .check-groups, .duo-two { grid-template-columns: minmax(0, 1fr); }
   .site { --head-h: 60px; }
   .site-head { gap: var(--s-1); }
   .site-logo .logo { height: 32px; }
@@ -371,7 +366,6 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
   .hero h1, .hero .eyebrow { align-self: center; }
   .facts { display: grid; grid-template-columns: auto auto; justify-content: center; gap: var(--s-1) var(--s-4); text-align: left; }
   .band-after .more { min-height: 0; padding-block: 12px; margin-block: -12px; }
-  .feature-row h3 { font-size: 1.5rem; }
   .install-pair { grid-template-columns: minmax(0, 1fr); }
   /* Op een telefoon kun je Huismus niet installeren: mailen is hier de eerste stap. */
   .downloads-phone { display: flex; flex-direction: column; align-self: stretch; gap: var(--s-3); }
