@@ -98,7 +98,7 @@
         <main class="content main-content {% block content_class %}{% endblock %}"{% block main_attrs %}{% endblock %}>
             {% if sample_data_in_use and user.is_authenticated and request.resolver_match.url_name != 'sample_data_clear' %}
             {% comment %}On every page while the sample data is in use, except the one it leads to (huismus/core/sample_data.py).{% endcomment %}
-            <a class="hint-banner is-info" id="nepdata-melding" href="{% url 'sample_data_clear' %}" style="margin-bottom:var(--s-4)">
+            <a class="hint-banner" id="nepdata-melding" href="{% url 'sample_data_clear' %}" style="margin-bottom:var(--s-4)">
                 <svg class="i" aria-hidden="true"><use href="#info"></use></svg>
                 <span>{% translate "Dit is een voorbeeld met verzonnen gegevens. Wat je hier maakt, verdwijnt bij leegmaken." %}</span>
                 <span class="spacer"></span>
