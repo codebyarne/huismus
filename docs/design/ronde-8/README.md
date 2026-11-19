@@ -45,11 +45,11 @@ het herontwerp hieronder (huismus-intern/besluiten.md, 2026-11-18).
 
 **Wit en framboos** (eigenaar, 2026-11-19: de site oogde te groen). De pagina is wit; een
 vlak dat los moet komen (een kaart, het blok "Het hele jaar") krijgt een lichte, bijna
-neutrale tint (`#F4F6F6`). Er is nog één petrol band: Overstappen.
+neutrale tint (`#F4F6F6`). Petrol banden zijn er twee: Overstappen en het slot "Probeer Huismus".
 
 Framboos (`#B4184F`, zacht `#FCEBF1`, op petrol `#FF9DBE`) is de tweede kleur naast petrol.
-Groot op drie plekken: de woorden "je eigen computer" in de kop, het zachte kader om het
-overzicht eronder, en het slot "Probeer Huismus" als framboos band. Klein waar het
+Groot op twee plekken: de woorden "je eigen computer" in de kop en het zachte kader om het
+overzicht eronder. Een framboos slot is gebouwd en afgekeurd; het slot is petrol. Klein waar het
 terugkomt: het labeltje boven de kop, de kopjes boven de koppen, de cijfers van de stappen
 in Overstappen, de pijltjes achter links en de vinkjes bij functies die er nu zijn (wit op een
 framboos rondje, op de homepage en op Functies). Knoppen, links en de andere vinkjes blijven petrol. In de
