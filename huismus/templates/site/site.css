@@ -14,10 +14,10 @@
      (eigenaar, 2026-11-19: de site oogde te groen). Donker blijft zoals het was. */
   --bg: light-dark(#FFFFFF, #061415);
   --site-tint: light-dark(#F4F6F6, #0E2627);
-  /* Framboos: de tweede kleur van de site. Groot op drie plekken: de woorden "je eigen
-     computer" in de kop, het zachte kader om het overzicht en het slot. Klein waar het
+  /* Framboos: de tweede kleur van de site. Groot op twee plekken: de woorden "je eigen
+     computer" in de kop en het zachte kader om het overzicht. Klein waar het
      terugkomt: de kopjes boven de koppen, de cijfers van de stappen, de pijltjes. Niet op
-     knoppen: die blijven petrol (eigenaar, 2026-11-19). In de app blijft framboos "te laat";
+     knoppen en niet op het slot: die blijven petrol (eigenaar, 2026-11-19). In de app blijft framboos "te laat";
      wie de app heeft, komt niet meer op de site. Verving "hooguit één keer per scherm". */
   --site-accent: light-dark(#B4184F, #FF7BA5);
   --site-accent-hover: light-dark(#8E123E, #FFA3C0);
@@ -246,12 +246,8 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .checklist-more { margin-top: clamp(24px, 3vw, 40px); }
 .home > .duo { margin-top: calc(var(--section-gap) * -0.5); }
 
-/* 8. Slot: de ene framboos band van de site, naast de ene petrol band (Overstappen).
-   Wit op framboos is 6,6 : 1, de zachte tekst 5,2 : 1. */
-.band-final { --hero: #B4184F; --hero-muted: #FFD9E6; --hero-bar: #FF9DBE; align-items: center; gap: var(--s-5); text-align: center; }
-.band-final .btn-on-petrol { --btn-fg: #8E123E; }
-.band-final .btn-on-petrol:hover { background: #FFE3EC; }
-.band-final .gutter { --surface: #B4184F; --mark-wing: #FF9DBE; }
+/* 8. Slot: petrol, zoals Overstappen (eigenaar, 2026-11-19: een framboos slot is afgekeurd). */
+.band-final { align-items: center; gap: var(--s-5); text-align: center; }
 .band-final h2 { font: var(--fw-bold) clamp(2.125rem, 1.2rem + 3.4vw, 3.5rem)/1.04 var(--font-display); letter-spacing: -0.03em; }
 .band-final .lede { color: var(--hero-muted); font-size: clamp(1.0625rem, 1rem + .35vw, 1.25rem); }
 .band-final .downloads { justify-content: center; margin-top: var(--s-2); }
