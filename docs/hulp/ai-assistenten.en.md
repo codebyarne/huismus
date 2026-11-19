@@ -7,7 +7,7 @@ you only connect it.
 
 ## What an assistant can do
 
-- **Read:** the overview (revenue this year, your KOR limit, what's open
+- **Read:** the overview (revenue this year, your limit for the small business scheme (KOR), what's open
   and what's overdue), find and open invoices, credit notes and quotes,
   find customers, expenses per year, and the VAT return of a quarter, month
   or year, with what isn't counted. It can't read settings, PDFs,

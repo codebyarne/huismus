@@ -1,4 +1,4 @@
-# KOR and VAT
+# Small business scheme (KOR) and VAT
 
 Huismus works with and without the small business scheme (KOR). If you use the
 KOR, your invoices carry no VAT. If you do charge VAT, you choose the rate per

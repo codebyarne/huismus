@@ -417,13 +417,11 @@ def test_the_site_is_always_light(out):
 @pytest.mark.parametrize("language", help.LANGUAGES)
 def test_the_kor_is_written_out_before_it_is_called_kor(out, language):
     """Not everyone knows the KOR (the owner, 2026-11-19): on every page of the
-    site the first KOR a visitor meets is the whole name, with KOR after it.
-    Not on the help pages: they are the manual of the app (docs/hulp/)."""
+    site, the help included, the first KOR a visitor meets is the whole name,
+    with KOR after it."""
     whole = {"nl": "kleineondernemersregeling (KOR)", "en": "small business scheme (KOR)"}
     for address in _every_address(out):
-        if address.startswith("/en/") != (language == "en") or "/hulp/" in address:
-            continue
-        if address.startswith("/en/help/"):
+        if address.startswith("/en/") != (language == "en"):
             continue
         html = (out / address.strip("/") / "index.html").read_text()
         body = html[html.index("<body") :]

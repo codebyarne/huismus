@@ -16,7 +16,7 @@ jij downloadt.
   **CSV downloaden**.
 - **De btw-aangifte**, als je btw rekent: de bedragen per rubriek. Open
   **Rapporten → Btw-aangifte**, kies de periode en klik op **CSV downloaden**.
-  Zie [KOR en btw](kor-en-btw.nl.md#btw-aangifte).
+  Zie [Kleineondernemersregeling (KOR) en btw](kor-en-btw.nl.md#btw-aangifte).
 
 De pdf's in de export zijn dezelfde als die je klant kreeg. Bij elke uitgave
 zit het bonnetje, met het nummer van de uitgave ervoor.

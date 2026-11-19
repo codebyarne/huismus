@@ -1,4 +1,4 @@
-# KOR en btw
+# Kleineondernemersregeling (KOR) en btw
 
 Huismus werkt met en zonder de kleineondernemersregeling (KOR). Gebruik je de
 KOR, dan staat er geen btw op je facturen. Reken je wel btw, dan kies je per

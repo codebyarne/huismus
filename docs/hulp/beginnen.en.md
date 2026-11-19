@@ -11,8 +11,9 @@ Huismus needs for your first invoice:
 
 1. **Business:** your business name, address, KvK number and IBAN. This goes
    on every invoice and quote.
-2. **KOR:** whether you use the small business scheme (KOR), and if so the
-   text that goes under your invoices. More in [KOR and VAT](kor-en-btw.en.md).
+2. **Small business scheme (KOR):** whether you use it, and if so the text
+   that goes under your invoices. More in
+   [Small business scheme (KOR) and VAT](kor-en-btw.en.md).
 3. **Invoices:** your default payment term and how Huismus numbers your
    invoices and quotes. The default is usually fine. Coming from another
    package? Enter the sequence number that follows your last invoice, so

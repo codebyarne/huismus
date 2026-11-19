@@ -135,7 +135,7 @@ uitgave, met de reden erbij, als:
 - het niet goed leesbaar is, of geen bonnetje is;
 - er meer bonnetjes op staan;
 - er geen totaal op staat, of de bedragen niet optellen tot het totaal;
-- de btw er niet bij staat, terwijl je de KOR niet gebruikt;
+- de btw er niet bij staat, terwijl je de kleineondernemersregeling (KOR) niet gebruikt;
 - het lijkt op een uitgave die je al hebt: dezelfde dag en hetzelfde bedrag.
 
 Maak die uitgave dan zelf, met **Uitgave maken**. Huismus stuurt hetzelfde

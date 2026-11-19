@@ -10,7 +10,7 @@ Klik bij **Uitgaven** op **Nieuwe uitgave**, of op het overzicht op
 regel het bedrag en een categorie.
 
 Vul het bruto bedrag in: wat je echt betaald hebt, inclusief eventuele btw.
-Gebruik je de KOR, dan is de btw optioneel. Wil je hem erbij zien, vul hem dan
+Gebruik je de kleineondernemersregeling (KOR), dan is de btw optioneel. Wil je hem erbij zien, vul hem dan
 ook in. Dat is alleen ter informatie en telt nergens mee.
 
 Gebruik je de KOR niet, dan vul je bij elke regel de btw in zoals op het
