@@ -57,7 +57,8 @@ niet meer op de site. Dit verving de regel van 2026-11-18 ("hooguit één keer p
 
 Verder (eigenaar, 2026-11-19): de foto's hebben geen bijschrift meer (de beschrijving staat
 in de alt-tekst), Waarom en Functies hebben foto's tussen de tekst, en het menu begint met
-Home.
+Home. Het deelplaatje (`docs/site/delen.*.png`) is licht, met dezelfde framboos woorden en
+het zachte kader.
 
 ## Wat blijft van ronde 7
 
