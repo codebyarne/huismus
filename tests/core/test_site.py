@@ -364,14 +364,14 @@ def test_why_huismus_exists_has_a_page_the_home_page_and_every_foot_link_to(out,
 
 
 def test_the_films_are_on_the_dutch_home_page_and_the_receipts_help(out):
-    """scripts/promo-film.sh site makes them. A film and its still come with
-    the site, and nothing of it loads or plays until the visitor presses play."""
+    """A film and its still come with the site, and nothing of it loads or
+    plays until the visitor presses play."""
     for path in site.film_files():
-        assert path.exists(), f"{path.name}: draai ./scripts/promo-film.sh site"
+        assert path.exists(), f"{path.name}: zie docs/README.md, Films"
         assert (out / "beelden" / path.name).exists()
     home = (out / "index.html").read_text()
     receipts = (out / site.help_url("nl", "bonnetjes").strip("/") / "index.html").read_text()
-    for page, name in ((home, "overzicht"), (receipts, "bonnetjes")):
+    for page, name in ((home, "rondleiding"), (receipts, "bonnetjes")):
         (video,) = re.findall(r"<video [^>]*>", page)
         assert f'poster="/beelden/film-{name}.nl.webp"' in video
         assert "controls" in video and 'preload="none"' in video
@@ -396,12 +396,34 @@ def test_a_film_is_small_enough_for_a_phone_on_the_road():
         assert path.stat().st_size < limit, path.name
 
 
-def test_the_films_on_the_site_have_no_sound_until_the_owner_has_heard_it():
+def test_a_film_on_the_site_has_sound_only_once_the_owner_has_heard_it():
     """Owner, 2026-11-19: ./scripts/promo-film.sh site leaves the sound track
-    out. Made with site-met-geluid, an mp4 has an AAC track ("mp4a")."""
+    out; an mp4 with one has an AAC track ("mp4a"). The tour has a voice the
+    owner has heard (site.FILMS_WITH_VOICE)."""
     for path in site.film_files():
         if path.suffix == ".mp4":
-            assert b"mp4a" not in path.read_bytes(), path.name
+            voiced = any(f"film-{name}." in path.name for name in site.FILMS_WITH_VOICE)
+            assert (b"mp4a" in path.read_bytes()) == voiced, path.name
+
+
+def test_a_film_with_a_voice_has_its_words_as_captions(out):
+    """Who can't hear the voice, or has the sound off, reads along: a text
+    track in Dutch, shown from the start. A film without a voice has none."""
+    home = (out / "index.html").read_text()
+    receipts = (out / site.help_url("nl", "bonnetjes").strip("/") / "index.html").read_text()
+    for name in site.FILMS_WITH_VOICE:
+        captions = (out / "beelden" / f"film-{name}.nl.vtt").read_text(encoding="utf-8")
+        assert captions.startswith("WEBVTT\n")
+        cues = re.findall(r"^(\d\d:\d\d\.\d{3}) --> (\d\d:\d\d\.\d{3})$", captions, re.M)
+        assert len(cues) > 10
+        # In order, and never two at once.
+        times = [time for cue in cues for time in cue]
+        assert times == sorted(times)
+        assert (
+            f'<track kind="captions" srclang="nl" label="Nederlands" '
+            f'src="/beelden/film-{name}.nl.vtt" default>'
+        ) in home
+    assert "<track" not in receipts
 
 
 def test_the_site_is_always_light(out):

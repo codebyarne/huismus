@@ -48,8 +48,7 @@ de stilte voor en na een opname gaat eraf, elk shot wordt even hard gemaakt, en 
 ondertitels schuiven mee met hoe lang de opname duurt. Is een opname langer dan zijn
 shot, dan stopt het script en zegt het hoeveel.
 
-De versie zonder stem (`huismus-overzicht-zonder-stem.mp4`, muziek en ondertitels in
-beeld) staat op de site zolang de stem een proefstem is: op de Nederlandse homepage, onder
-"Voor wie" (`./scripts/promo-film.sh site` maakt de webversie in `docs/site/`). Die webversie
-heeft geen geluid tot de eigenaar de muziek gehoord heeft (`site-met-geluid` neemt het mee). Komt de
-echte stem, dan vervangt die versie de film zonder stem, met de ondertitels als `<track>`.
+Deze film staat niet meer op de site. Op de Nederlandse homepage, onder "Voor wie", staat
+sinds 2026-11-19 de rondleiding met een echte stem ([`rondleiding.md`](rondleiding.md)).
+De overzichtsfilm blijft te maken met `./scripts/promo-film.sh overzicht`, voor
+plekken buiten de site.

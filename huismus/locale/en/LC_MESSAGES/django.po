@@ -7010,8 +7010,8 @@ msgstr "Video"
 msgid "Huismus in één minuut"
 msgstr "Huismus in one minute"
 
-msgid "Film van een minuut: wat Huismus is, voor wie, en wat je ermee doet. Met ondertitels, zonder geluid."
-msgstr "A one-minute video: what Huismus is, who it is for, and what you do with it. With subtitles, without sound."
+msgid "Film van ruim een minuut: een rondleiding door Huismus, van factuur tot jaaroverzicht. Met stem, muziek en ondertitels."
+msgstr "A video of just over a minute: a tour of Huismus, from invoice to year overview. With a voice-over, music and subtitles."
 
 msgid "Neem al je jaren mee"
 msgstr "Bring all your years with you"
