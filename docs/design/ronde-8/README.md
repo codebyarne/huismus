@@ -61,6 +61,10 @@ in de alt-tekst), Waarom en Functies hebben foto's tussen de tekst, en het menu 
 Home. Het deelplaatje (`docs/site/delen.*.png`) is licht, met dezelfde framboos woorden en
 het zachte kader.
 
+De mus in het slot beweegt zoals aan het eind van de rondleiding (eigenaar, 2026-11-19): de
+goot groeit, de mus hupt er in drie stuiters op en maakt daarna om de zes seconden een blij
+hupje met een vleugelslag. Alleen CSS, en niet voor wie minder beweging vraagt.
+
 ## Wat blijft van ronde 7
 
 - Het verhaal en de volgorde: de kop met foto 1 en het overzicht, de vier punten,

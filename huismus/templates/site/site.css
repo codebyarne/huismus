@@ -256,10 +256,45 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .btn-on-petrol:hover { background: #DDF2F0; }
 .btn-on-petrol-quiet { --btn-bg: transparent; --btn-fg: #FFFFFF; --btn-bd: var(--hero-bar); }
 .btn-on-petrol-quiet:hover { background: rgb(255 255 255 / .12); }
-/* De mus op de dakgoot: wit op petrol, in licht en donker hetzelfde. */
-.gutter { --primary: #FFFFFF; --mark-wing: #5FC9C4; --surface: #0B4F51; position: relative; width: 150px; height: 74px; }
+/* De mus op de dakgoot: wit op petrol. Hij beweegt zoals aan het slot van de rondleiding
+   (docs/design/films/rondleiding.md): de goot groeit, de mus hupt er in drie stuiters van
+   links op, en daarna maakt hij om de zes seconden een blij hupje met een vleugelslag. Alleen
+   CSS (de site heeft geen JS), en niet voor wie minder beweging vraagt. */
+.gutter { position: relative; width: 150px; height: 74px; }
 .gutter::after { content: ""; position: absolute; inset: auto 0 0; height: 5px; border-radius: 3px; background: var(--hero-bar); }
-.gutter-bird { position: absolute; left: 42px; bottom: 5px; width: 70px; height: 56px; overflow: visible; }
+.gutter-hop { position: absolute; left: 42px; bottom: 5px; width: 70px; height: 56px; }
+.gutter-bird { display: block; width: 100%; height: 100%; overflow: visible; transform-origin: 50% 100%; }
+.gutter-wing { transform-origin: 14px 27px; }
+@media (prefers-reduced-motion: no-preference) {
+  .gutter::after { animation: goot-groeit .5s var(--ease) backwards; }
+  .gutter-hop { animation: mus-komt 1.2s linear .3s backwards; }
+  .gutter-bird { animation: mus-stuitert 1.2s .3s backwards, mus-blij 6s 1.6s infinite; }
+  .gutter-wing { animation: mus-vleugel 6s 1.6s infinite; }
+}
+@keyframes goot-groeit { from { transform: scaleX(0); } }
+@keyframes mus-komt { from { transform: translateX(-56px); } }
+/* Drie stuiters, elk lager: omhoog remt hij af, omlaag versnelt hij, en bij het neerkomen veert hij in. */
+@keyframes mus-stuitert {
+  0% { opacity: 0; transform: translateY(0) rotate(-10deg) scale(1.1, .9); animation-timing-function: ease-out; }
+  6% { opacity: 1; }
+  16.6% { transform: translateY(-46px) rotate(0deg) scale(1); animation-timing-function: ease-in; }
+  33.3% { transform: translateY(0) rotate(8deg) scale(1.1, .9); animation-timing-function: ease-out; }
+  50% { transform: translateY(-28px) rotate(0deg) scale(1); animation-timing-function: ease-in; }
+  66.6% { transform: translateY(0) rotate(6deg) scale(1.1, .9); animation-timing-function: ease-out; }
+  83.3% { transform: translateY(-14px) rotate(0deg) scale(1); animation-timing-function: ease-in; }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes mus-blij {
+  0%, 15% { transform: none; animation-timing-function: ease-out; }
+  20% { transform: translateY(-22px) rotate(-8deg); animation-timing-function: ease-in; }
+  25% { transform: none; animation-timing-function: ease-out; }
+  29% { transform: translateY(-11px); animation-timing-function: ease-in; }
+  33%, 100% { transform: none; }
+}
+@keyframes mus-vleugel {
+  0%, 15%, 18%, 21%, 24%, 27%, 30%, 33%, 100% { transform: none; }
+  16.5%, 19.5%, 22.5%, 25.5%, 28.5%, 31.5% { transform: rotate(-38deg); }
+}
 
 /* ---------- Voet ---------- */
 .site-foot { display: flex; flex-direction: column; gap: var(--s-4); padding-block: 0 var(--s-10); }
