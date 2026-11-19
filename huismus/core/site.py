@@ -69,12 +69,18 @@ MEDIA_DIR = Path(settings.BASE_DIR) / "docs" / "site"
 # The site is always light, whatever the visitor's system is (the owner,
 # 2026-11-19, huismus-intern/besluiten.md).
 SITE_SCHEMES = ("light",)
-# The films (scripts/promo-film.sh site), each as film-<name>.nl.mp4 with the
-# still it shows until you press play (….webp). Their titles and the app in
-# them are Dutch, so only the Dutch pages show them, until there is an English
-# film (huismus-intern/besluiten.md, 2026-11-18).
-FILMS = ("overzicht", "bonnetjes")
+# The films, each as film-<name>.nl.mp4 with the still it shows until you
+# press play (….webp). Their titles and the app in them are Dutch, so only the
+# Dutch pages show them, until there is an English film
+# (huismus-intern/besluiten.md, 2026-11-18). "rondleiding" is the tour of the
+# app with a voice (docs/design/films/rondleiding.md); "bonnetjes" comes from
+# scripts/promo-film.sh site.
+FILMS = ("rondleiding", "bonnetjes")
 FILM_LANGUAGE = "nl"
+# The films with a voice and music, which the owner has heard
+# (huismus-intern/besluiten.md, 2026-11-19): each has its words as captions
+# too (….vtt). Every other film on the site has no sound track.
+FILMS_WITH_VOICE = ("rondleiding",)
 # The help page that shows a film above its text: {topic: film}.
 FILM_WITH_HELP = {"bonnetjes": "bonnetjes"}
 # A still is 2560 px wide, for a sharp screen; a phone gets this width.
@@ -168,7 +174,7 @@ def film_files() -> list[Path]:
     return [
         MEDIA_DIR / f"film-{name}.{FILM_LANGUAGE}.{kind}"
         for name in FILMS
-        for kind in ("mp4", "webp")
+        for kind in ("mp4", "webp", *(("vtt",) if name in FILMS_WITH_VOICE else ()))
     ]
 
 

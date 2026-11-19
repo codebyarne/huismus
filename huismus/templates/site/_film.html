@@ -1,7 +1,8 @@
-{% load i18n %}{% comment %}A film from docs/site/ (scripts/promo-film.sh site). name, label (what a screen reader calls it), caption (optional, under it). Nothing plays or loads until the visitor presses play: only the still is fetched. The films on the site have no sound track until the owner has heard the sound (scripts/promo-film.sh). Dutch only, so only on Dutch pages (core.site.FILMS).{% endcomment %}
+{% load i18n %}{% comment %}A film from docs/site/. name, label (what a screen reader calls it), caption (optional, under it), captions (True for a film with a voice: its words as a text track, shown from the start). Nothing plays or loads until the visitor presses play: only the still is fetched. A film has a sound track only once the owner has heard it (core.site.FILMS_WITH_VOICE). Dutch only, so only on Dutch pages (core.site.FILMS).{% endcomment %}
 <figure class="film">
     <video controls preload="none" playsinline poster="/beelden/film-{{ name }}.nl.webp" width="1280" height="720" aria-label="{{ label }}">
         <source src="/beelden/film-{{ name }}.nl.mp4" type="video/mp4">
+        {% if captions %}<track kind="captions" srclang="nl" label="Nederlands" src="/beelden/film-{{ name }}.nl.vtt" default>{% endif %}
         <p>{% translate "Je browser speelt deze film niet af." %} <a href="/beelden/film-{{ name }}.nl.mp4">{% translate "Download de film" %}</a></p>
     </video>
     {% if caption %}<figcaption>{{ caption }}</figcaption>{% endif %}

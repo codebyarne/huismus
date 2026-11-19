@@ -71,8 +71,8 @@
         <p class="kicker">{% translate "Film" context "kicker" %}</p>
         <h2 id="film-kop">{% translate "Huismus in één minuut" %}</h2>
     </div>
-    {% translate "Film van een minuut: wat Huismus is, voor wie, en wat je ermee doet. Met ondertitels, zonder geluid." as label %}
-    {% include "site/_film.html" with name="overzicht" label=label %}
+    {% translate "Film van ruim een minuut: een rondleiding door Huismus, van factuur tot jaaroverzicht. Met stem, muziek en ondertitels." as label %}
+    {% include "site/_film.html" with name="rondleiding" label=label captions=True %}
 </section>
 {% endif %}
 

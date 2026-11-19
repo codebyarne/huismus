@@ -55,17 +55,25 @@ en het logo komen uit de app zelf. Het klikgeluid is CC0, van Kenney. Bij elke
 film schrijft het script om de drie seconden een beeld naar `stills/`, om na te
 kijken.
 
-Op de site staan ze als kleine versies (1280×720) in `docs/site/film-*.nl.mp4`, elk
-met een stilstaand beeld en zonder geluid: de overzichtsfilm op de homepage, onder
-"Voor wie", en de bonnetjesfilm boven het hulpstuk "Bonnetjes onderweg". Alleen
-op de Nederlandse pagina's, want de koppen en de app in de films zijn
-Nederlands. Er speelt niets vanzelf. Ziet een scherm er anders uit, maak ze dan
-opnieuw en commit ze:
+Op de site staan twee films als kleine versies (1280×720) in
+`docs/site/film-*.nl.mp4`, elk met een stilstaand beeld. Alleen op de
+Nederlandse pagina's, want de koppen en de app in de films zijn Nederlands. Er
+speelt niets vanzelf.
 
-```
-./scripts/promo-film.sh site               # zonder geluid
-./scripts/promo-film.sh site-met-geluid    # pas als het geluid beluisterd is
-```
+- **Homepage, onder "Voor wie":** de rondleiding door de app (70 seconden), met
+  stem, muziek en losse ondertitels (`film-rondleiding.nl.vtt`). Wat erin
+  gezegd wordt en hoe je hem opnieuw maakt:
+  [`design/films/rondleiding.md`](design/films/rondleiding.md).
+- **Boven het hulpstuk "Bonnetjes onderweg":** de bonnetjesfilm, zonder geluid.
+  Ziet een scherm er anders uit, maak hem dan opnieuw en commit hem:
+
+  ```
+  ./scripts/promo-film.sh site               # zonder geluid
+  ./scripts/promo-film.sh site-met-geluid    # pas als het geluid beluisterd is
+  ```
+
+Een film krijgt op de site pas geluid als de eigenaar het gehoord heeft
+(`FILMS_WITH_VOICE` in `huismus/core/site.py`).
 
 De oudere film van een factuur maken, met een camera boven de browser en een
 klik- of toetsgeluid bij elke klik en toets, bestaat nog. Muziek eronder is

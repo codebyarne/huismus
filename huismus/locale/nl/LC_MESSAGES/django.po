@@ -6474,7 +6474,7 @@ msgstr ""
 msgid "Huismus in één minuut"
 msgstr ""
 
-msgid "Film van een minuut: wat Huismus is, voor wie, en wat je ermee doet. Met ondertitels, zonder geluid."
+msgid "Film van ruim een minuut: een rondleiding door Huismus, van factuur tot jaaroverzicht. Met stem, muziek en ondertitels."
 msgstr ""
 
 msgid "Neem al je jaren mee"

@@ -8,7 +8,7 @@
 #   ./scripts/promo-film.sh bonnetjes    # bonnetjes naar je cloudmap, Huismus leest ze, jij zegt Klopt (29 s)
 #   ./scripts/promo-film.sh overzicht    # wat Huismus is en wat je ermee doet, met stem (63 s)
 #   ./scripts/promo-film.sh overzicht ergens/anders
-#   ./scripts/promo-film.sh site         # allebei, en de films op de site (docs/site/film-*) opnieuw, zonder geluid: commit die
+#   ./scripts/promo-film.sh site         # allebei, en de bonnetjesfilm op de site (docs/site/film-bonnetjes.*) opnieuw, zonder geluid: commit die
 #   ./scripts/promo-film.sh site-met-geluid   # hetzelfde, met het geluid erbij (pas als de eigenaar het gehoord heeft)
 #   ./scripts/promo-film.sh factuur [bestand.mp4] [muziek.mp3]   # een factuur maken, met een camera boven de browser
 #
@@ -122,8 +122,8 @@ web() {
 }
 
 if [ "$site" = site ] || [ "$site" = site-met-geluid ]; then
-    # The version without the voice, while that is a trial voice: subtitles in
-    # the picture. The still is from the version without them.
-    web "$out/huismus-overzicht-zonder-stem.mp4" overzicht "$out/huismus-overzicht.mp4" 11
+    # Only the receipts film: the film on the home page is the tour with a
+    # real voice (docs/design/films/rondleiding.md), not the overview film
+    # with its trial voice.
     web "$out/huismus-bonnetjes.mp4" bonnetjes "$out/huismus-bonnetjes.mp4" 1.1
 fi
