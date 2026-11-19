@@ -42,6 +42,7 @@
     <button class="btn nav-toggle" type="button" popovertarget="site-nav"><span class="nav-open"><svg class="i" width="18" height="18" aria-hidden="true"><use href="#menu"></use></svg>{% translate "Menu" %}</span><span class="nav-close"><svg class="i" width="18" height="18" aria-hidden="true"><use href="#x"></use></svg>{% translate "Sluiten" %}</span></button>
     <nav class="site-nav" id="site-nav" popover aria-label="{% translate 'Hoofdmenu' %}">
         {% comment %}On the home page itself these two are a real navigation, each to an address of its own ("?naar=…#…"), so the menu on a phone closes when you choose one, also the second time (a popover stays open on a jump within the page, and the site has no JS).{% endcomment %}
+        <a href="{{ home_url }}"{% if nav == "home" %} aria-current="page"{% endif %}>{% translate "Home" %}</a>
         <a href="{% if nav == 'home' %}{{ home_url }}?naar=overstappen#overstappen{% else %}{{ switching_url }}{% endif %}">{% translate "Overstappen" %}</a>
         <a href="{{ features_url }}"{% if nav == "features" %} aria-current="page"{% endif %}>{% translate "Functies" %}</a>
         <a href="{{ help_index_url }}"{% if nav == "help" %} aria-current="page"{% endif %}>{% translate "Hulp" %}</a>

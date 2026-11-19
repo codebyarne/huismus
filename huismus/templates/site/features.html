@@ -14,6 +14,11 @@
     <p class="feature-count"><span><svg class="i" width="18" height="18" aria-hidden="true"><use href="#check"></use></svg>{% blocktranslate count count=features.now_count %}{{ count }} functie werkt nu{% plural %}{{ count }} functies werken nu{% endblocktranslate %}</span><span><span class="later">{% translate "Binnenkort verwacht" %}</span>{% blocktranslate count count=features.later_count %}{{ count }} staat op de lijst{% plural %}{{ count }} staan op de lijst{% endblocktranslate %}</span></p>
 </div>
 
+<figure class="page-photo page-photo-wide">
+    {% translate "Een meubelmaker met een stofmasker op schuurt een stoel in haar werkplaats. Op de werkbank staat een laptop met Huismus open." as alt %}
+    {% include "site/_foto.html" with name="werkplaats" screen=True alt=alt small=800 large=1600 width=1600 height=640 sizes="(min-width: 1264px) 1200px, 100vw" %}
+</figure>
+
 <section class="features-now" aria-label="{% translate 'Alle functies' %}">
     {% for group, items in features.groups %}
     <div class="feature-row">
