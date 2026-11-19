@@ -7,7 +7,7 @@
  * The screens are real: scripts/promo_film.py takes them from Huismus on
  * made-up data (public/opname/, with opname.json saying where things are on
  * them). This file only edits them: titles, moves and highlights, in
- * Huismus's own look (huismus.ts: "Helder" in dark, the logo "Tegel").
+ * Huismus's own look (huismus.ts: "Helder" in light, the logo "Tegel").
  */
 import React from "react";
 import { AbsoluteFill, Audio, Img, interpolate, Sequence, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
@@ -63,7 +63,7 @@ const Title: React.FC<{ lines: string[]; from: number; to: number; top?: number 
   );
 };
 
-/** A caption card over the screen, bottom left, with a mint bar. */
+/** A caption card over the screen, bottom left, with a petrol bar. */
 const Caption: React.FC<{ text: string; from: number; to: number }> = ({ text, from, to }) => {
   const frame = useCurrentFrame();
   const opacity = fadeInOut(frame, from, to, 10);
@@ -75,7 +75,7 @@ const Caption: React.FC<{ text: string; from: number; to: number }> = ({ text, f
         left: 72,
         bottom: 64,
         padding: "22px 34px 22px 30px",
-        background: C.surface2,
+        background: C.surface,
         border: `1px solid ${C.borderStrong}`,
         borderRadius: 20,
         boxShadow: SHADOW,
@@ -124,7 +124,7 @@ const Receipts: React.FC = () => {
               width: 760,
               transformOrigin: "0 0",
               transform: `scale(${scale}) rotate(${fan[i].r * (1 - go)}deg)`,
-              filter: "drop-shadow(0 30px 40px rgba(0,0,0,.5))",
+              filter: "drop-shadow(0 30px 40px rgba(12,35,37,.22))",
               opacity: go > 0.98 ? 0 : 1,
             }}
           />
@@ -315,7 +315,7 @@ const AppWindow: React.FC = () => {
             width: photo[2] * 0.64,
             height: 52,
             borderRadius: 10,
-            background: C.primary,
+            background: C.mint,
             mixBlendMode: "multiply",
             opacity: 0.55 * fadeInOut(frame, i1 + 70, i1 + 150, 10),
           }}

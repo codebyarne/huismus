@@ -22,8 +22,7 @@
   the receipts and opname.json (where things are on the screens) go into
   `folder`.
 
-Everything is filmed in dark, as the picture a shared link shows
-(scripts/site_beelden.py): the owner likes dark best for what goes outside.
+Everything is filmed in light, as the site is (owner, 2026-11-19).
 
 The server, the made-up administration and the login are those of
 scripts/site_beelden.py. Huismus really reads the receipts, through the
@@ -799,7 +798,7 @@ def main(name: str, out: Path, music: Path | None) -> None:
             device_scale_factor=SCALE,
             locale="nl-NL",
             timezone_id="Europe/Amsterdam",
-            color_scheme="dark",
+            color_scheme="light",
             reduced_motion="reduce",
             # Huismus allows only its own scripts and styles; the drawn
             # pointer is laid over it for the film alone.

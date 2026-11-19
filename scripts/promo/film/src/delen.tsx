@@ -32,16 +32,16 @@ export function camera(frame: number, keys: Cam[]) {
   };
 }
 
-/** The logo "Tegel" with the word, as on the site in dark (docs/design/icons/). */
+/** The logo "Tegel" with the word, as on the site (docs/design/icons/). */
 export const Logo: React.FC<{ height: number; style?: React.CSSProperties }> = ({ height, style }) => (
-  <Img src={huisstijl("logo-donker.svg")} style={{ height, width: "auto", display: "block", ...style }} />
+  <Img src={huisstijl("logo.svg")} style={{ height, width: "auto", display: "block", ...style }} />
 );
 
 export const Tegel: React.FC<{ size: number }> = ({ size }) => (
-  <Img src={huisstijl("tegel-donker.svg")} style={{ width: size, height: size, display: "block" }} />
+  <Img src={huisstijl("tegel.svg")} style={{ width: size, height: size, display: "block" }} />
 );
 
-/** A mint ring around a box on the screen, drawn in screen pixels. */
+/** A petrol ring around a box on the screen, drawn in screen pixels. */
 export const Ring: React.FC<{ box: Box; from: number; to: number; pad?: number; radius?: number }> = ({
   box,
   from,
@@ -63,7 +63,7 @@ export const Ring: React.FC<{ box: Box; from: number; to: number; pad?: number; 
         height: h + 2 * (pad + grow),
         borderRadius: radius + grow,
         border: `3px solid ${C.primary}`,
-        boxShadow: "0 0 0 7px rgba(95, 201, 196, 0.22)",
+        boxShadow: "0 0 0 7px rgba(13, 107, 110, 0.2)",
         opacity,
       }}
     />
@@ -145,7 +145,7 @@ export const Toast: React.FC<{ text: string; from: number; to: number }> = ({ te
   );
 };
 
-/** A tick in a mint circle, for a short list of points. */
+/** A petrol tick in a soft circle, for a short list of points. */
 export const Check: React.FC<{ size: number }> = ({ size }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" style={{ flex: "none" }}>
     <circle cx="12" cy="12" r="11" fill={C.primarySoft} />
@@ -153,5 +153,5 @@ export const Check: React.FC<{ size: number }> = ({ size }) => (
   </svg>
 );
 
-/** The film's background: the app's dark, a little lighter where the eye goes. */
-export const BACKGROUND = `radial-gradient(1500px 1000px at 72% 30%, #0D2829 0%, ${C.bg} 58%, #030B0C 100%)`;
+/** The film's background: the app's light, a little lighter where the eye goes. */
+export const BACKGROUND = `radial-gradient(1500px 1000px at 72% 30%, #FFFFFF 0%, ${C.bg} 58%, ${C.surface3} 100%)`;
