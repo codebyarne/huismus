@@ -81,6 +81,11 @@ FILM_LANGUAGE = "nl"
 # (huismus-intern/besluiten.md, 2026-11-19): each has its words as captions
 # too (….vtt). Every other film on the site has no sound track.
 FILMS_WITH_VOICE = ("rondleiding",)
+# The films that also come sharp (….hd.mp4, 1920x1080) for a wide screen; a
+# phone gets the small one (the owner, 2026-11-19).
+FILMS_SHARP = ("rondleiding",)
+# From this width of the window a browser takes the sharp film.
+FILM_SHARP_FROM = 1000
 # The help page that shows a film above its text: {topic: film}.
 FILM_WITH_HELP = {"bonnetjes": "bonnetjes"}
 # A still is 2560 px wide, for a sharp screen; a phone gets this width.
@@ -174,7 +179,12 @@ def film_files() -> list[Path]:
     return [
         MEDIA_DIR / f"film-{name}.{FILM_LANGUAGE}.{kind}"
         for name in FILMS
-        for kind in ("mp4", "webp", *(("vtt",) if name in FILMS_WITH_VOICE else ()))
+        for kind in (
+            "mp4",
+            "webp",
+            *(("vtt",) if name in FILMS_WITH_VOICE else ()),
+            *(("hd.mp4",) if name in FILMS_SHARP else ()),
+        )
     ]
 
 
@@ -253,6 +263,7 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
                 "features": _features(),
                 "shot": _shot_sizes(),
                 "film": language == FILM_LANGUAGE,
+                "film_sharp_from": FILM_SHARP_FROM,
             },
         ),
         features_url(language): (

@@ -391,9 +391,30 @@ def test_the_english_pages_have_no_film_while_the_films_are_dutch(out):
 
 
 def test_a_film_is_small_enough_for_a_phone_on_the_road():
+    """The sharp film, which only a wide screen takes, may be larger."""
     for path in site.film_files():
-        limit = 3_000_000 if path.suffix == ".mp4" else 100_000
+        if path.name.endswith(".hd.mp4"):
+            limit = 8_000_000
+        else:
+            limit = 3_000_000 if path.suffix == ".mp4" else 100_000
         assert path.stat().st_size < limit, path.name
+
+
+def test_a_wide_screen_gets_the_sharp_film_and_a_phone_the_small_one(out):
+    """The browser takes the first source that fits: the sharp one only from
+    a wide window, the small one otherwise. No script chooses."""
+    home = (out / "index.html").read_text()
+    for name in site.FILMS_SHARP:
+        assert (out / "beelden" / f"film-{name}.nl.hd.mp4").exists()
+        sharp = (
+            f'<source src="/beelden/film-{name}.nl.hd.mp4" type="video/mp4" '
+            f'media="(min-width: {site.FILM_SHARP_FROM}px)">'
+        )
+        small = f'<source src="/beelden/film-{name}.nl.mp4" type="video/mp4">'
+        assert sharp in home and small in home
+        assert home.index(sharp) < home.index(small)
+    receipts = (out / site.help_url("nl", "bonnetjes").strip("/") / "index.html").read_text()
+    assert ".hd.mp4" not in receipts
 
 
 def test_a_film_on_the_site_has_sound_only_once_the_owner_has_heard_it():

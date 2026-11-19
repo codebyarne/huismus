@@ -38,7 +38,8 @@ komen van ElevenLabs (stem "Roos"), een betaalde dienst; daarom staan het
 script, de opname van de stem en de muziek voorlopig in
 `huismus-intern/promo-video/`, met de stappen in de README daar.
 
-Verandert een scherm uit de film, maak hem dan daar opnieuw en zet drie
-bestanden in `docs/site/`: `film-rondleiding.nl.mp4` (1280×720, onder de 3 MB),
-`film-rondleiding.nl.webp` (het stilstaande beeld) en `film-rondleiding.nl.vtt`
-(de ondertitels). Verandert de tekst, wijzig hem dan ook in de tabel hierboven.
+Verandert een scherm uit de film, maak hem dan daar opnieuw en zet vier
+bestanden in `docs/site/`: `film-rondleiding.nl.mp4` (1280×720, onder de 3 MB,
+voor een telefoon), `film-rondleiding.nl.hd.mp4` (1920×1080, onder de 8 MB,
+voor een breed scherm), `film-rondleiding.nl.webp` (het stilstaande beeld) en
+`film-rondleiding.nl.vtt` (de ondertitels). Verandert de tekst, wijzig hem dan ook in de tabel hierboven.

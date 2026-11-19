@@ -61,7 +61,9 @@ Nederlandse pagina's, want de koppen en de app in de films zijn Nederlands. Er
 speelt niets vanzelf.
 
 - **Homepage, onder "Voor wie":** de rondleiding door de app (70 seconden), met
-  stem, muziek en losse ondertitels (`film-rondleiding.nl.vtt`). Wat erin
+  stem, muziek en losse ondertitels (`film-rondleiding.nl.vtt`). Een breed
+  scherm krijgt de scherpe versie (`film-rondleiding.nl.hd.mp4`, 1920×1080),
+  een telefoon de kleine. Wat erin
   gezegd wordt en hoe je hem opnieuw maakt:
   [`design/films/rondleiding.md`](design/films/rondleiding.md).
 - **Boven het hulpstuk "Bonnetjes onderweg":** de bonnetjesfilm, zonder geluid.
