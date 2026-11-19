@@ -134,7 +134,7 @@ expense, with the reason, when:
 - it isn't clear enough, or isn't a receipt;
 - there's more than one receipt on it;
 - there's no total on it, or the amounts don't add up to the total;
-- the VAT isn't on it, while you don't use the KOR;
+- the VAT isn't on it, while you don't use the small business scheme (KOR);
 - it looks like an expense you already have: the same day and the same amount.
 
 Make that expense yourself, with **Create expense**. Huismus never sends the

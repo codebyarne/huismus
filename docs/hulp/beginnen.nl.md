@@ -11,9 +11,9 @@ in wat Huismus nodig heeft voor je eerste factuur:
 
 1. **Bedrijf:** je bedrijfsnaam, adres, KvK-nummer en IBAN. Dit komt op elke
    factuur en offerte.
-2. **KOR:** of je de kleineondernemersregeling gebruikt, en zo ja de tekst
-   die onder je facturen komt. Meer daarover in
-   [KOR en btw](kor-en-btw.nl.md).
+2. **Kleineondernemersregeling (KOR):** of je hem gebruikt, en zo ja de
+   tekst die onder je facturen komt. Meer daarover in
+   [Kleineondernemersregeling (KOR) en btw](kor-en-btw.nl.md).
 3. **Facturen:** je standaard betalingstermijn en hoe Huismus je facturen
    en offertes nummert. Meestal is de standaard goed. Kom je uit een ander
    pakket, vul dan het volgnummer in dat na je laatste factuur komt. Dan

@@ -12,7 +12,7 @@ After a new version, a notice on the overview points you here.
   With a new logo: a white sparrow on a petrol tile.
 - **The overview says what to do.** At the top is **To do**: an invoice that is
   overdue, a quote waiting for an answer, a draft that is ready. Below it your
-  revenue per month, what you still have to receive, and with the KOR how much
+  revenue per month, what you still have to receive, and with the small business scheme (KOR) how much
   still fits under your limit.
 - **Send a payment reminder.** For an overdue invoice, choose **Send reminder**.
   It goes through your own email, with the invoice attached. The invoice also

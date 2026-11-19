@@ -15,7 +15,7 @@ your accountant doesn't log in, but works with what you download.
   **Download CSV**.
 - **The VAT return**, if you charge VAT: the amounts per box. Open
   **Reports → VAT return**, choose the period and click **Download CSV**.
-  See [KOR and VAT](kor-en-btw.en.md#vat-return).
+  See [Small business scheme (KOR) and VAT](kor-en-btw.en.md#vat-return).
 
 The PDFs in the export are the same ones your client received. Each expense
 has its receipt, named after the expense's number.

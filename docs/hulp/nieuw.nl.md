@@ -13,7 +13,7 @@ Na een nieuwe versie wijst een melding op het overzicht je hierheen.
 - **Het overzicht zegt wat er te doen is.** Bovenaan staat **Te doen**: een
   factuur die te laat is, een offerte die op antwoord wacht, een concept dat
   klaarstaat. Daaronder je omzet per maand, wat je nog moet ontvangen, en bij de
-  KOR hoeveel er nog onder je grens past.
+  kleineondernemersregeling (KOR) hoeveel er nog onder je grens past.
 - **Een betaalherinnering sturen.** Bij een factuur die te laat is kies je
   **Herinnering sturen**. De mail gaat via je eigen mail, met de factuur als
   bijlage. De factuur zegt ook hoeveel dagen hij te laat is.

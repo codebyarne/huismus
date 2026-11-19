@@ -7,7 +7,7 @@ de app van de assistent. In Huismus koppel je hem alleen.
 
 ## Wat een assistent kan
 
-- **Lezen:** het overzicht (omzet dit jaar, je KOR-grens, wat openstaat en
+- **Lezen:** het overzicht (omzet dit jaar, je grens voor de kleineondernemersregeling (KOR), wat openstaat en
   wat te laat is), facturen, creditnota's en offertes zoeken en openen,
   klanten zoeken, de uitgaven per jaar en de btw-aangifte van een kwartaal,
   maand of jaar, met wat niet meegeteld is. Instellingen, pdf's, mailteksten

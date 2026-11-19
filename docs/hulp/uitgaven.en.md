@@ -10,7 +10,8 @@ Fill in the date, the supplier and a description, and for each line the
 amount and a category.
 
 Fill in the gross amount: what you actually paid, including any VAT. If you
-use the KOR, the VAT is optional. If you want to see it, fill it in as well.
+use the small business scheme (KOR), the VAT is optional. If you want to see
+it, fill it in as well.
 It's for information only and isn't counted anywhere.
 
 Don't use the KOR? Then fill in the VAT on every line as on the receipt, and
