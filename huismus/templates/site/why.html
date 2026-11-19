@@ -16,10 +16,23 @@
     </div>
 </div>
 
+<figure class="page-photo">
+    {% translate "Een man zit aan de keukentafel bij een bureaulamp, achter een laptop met Huismus open. Naast hem ligt een stapel papieren." as alt %}
+    {% include "site/_foto.html" with name="keukentafel" screen=True alt=alt small=600 large=1200 width=1200 height=800 sizes="(min-width: 792px) 760px, 100vw" %}
+</figure>
+
 <section class="why-part">
     <h2>{% translate "Boekhouden voor iedereen" %}</h2>
     <p>{% translate "Facturen maken, bonnetjes bewaren, de bedragen voor je btw-aangifte bij elkaar zoeken: elke zzp’er doet het, of je nu meubels maakt, foto’s of teksten. Het is gereedschap, net als je zaag of je camera." %}</p>
     <p>{% translate "Gereedschap dat iedereen nodig heeft, hoort geen abonnement te kosten. Huismus is gratis, zonder einddatum en zonder account, en je administratie staat op je eigen computer." %}</p>
+    <div class="photo-row">
+        {% translate "Een fotograaf knielt in een park en stelt haar camera in." as alt %}
+        {% include "site/_foto.html" with name="fotograaf" alt=alt small=360 large=720 width=720 height=720 sizes="(min-width: 792px) 243px, 33vw" %}
+        {% translate "Een hovenier laadt gereedschap achter in zijn bus." as alt %}
+        {% include "site/_foto.html" with name="hovenier" alt=alt small=360 large=720 width=720 height=720 sizes="(min-width: 792px) 243px, 33vw" %}
+        {% translate "Een vrouw schrijft in een notitieboek aan een bureau bij het raam, met boeken om zich heen." as alt %}
+        {% include "site/_foto.html" with name="schrijver" alt=alt small=360 large=720 width=720 height=720 sizes="(min-width: 792px) 243px, 33vw" %}
+    </div>
 </section>
 
 <section class="why-part">

@@ -31,7 +31,7 @@ het herontwerp hieronder (huismus-intern/besluiten.md, 2026-11-18).
 | Kop van de pagina | blijft staan bij scrollen, half doorzichtig; taalkeuze zonder vlag |
 | Kop van de homepage | gecentreerd, één kolom; de kop groter (tot 88 px), de vier punten als één regel met vinkjes |
 | Het overzicht | groot op een petrol vlak (tot 1120 px breed), onderaan afgesneden; op de telefoon het telefoonscherm |
-| Voor wie | de vijf foto's samen, de meubelmaker over de hele breedte, elk met alleen het beroep eronder; de twee zinnen over de KOR als tekst |
+| Voor wie | de vijf foto's samen, de meubelmaker over de hele breedte, zonder bijschrift; de twee zinnen over de KOR als tekst |
 | Film (19 november, alleen Nederlands) | tussen "Voor wie" en "Overstappen": de kicker "Film", de kop "Huismus in één minuut" en de overzichtsfilm, gecentreerd, hooguit 960 px breed; altijd donker, zoals het deelplaatje; speelt pas als je op afspelen drukt. De bonnetjesfilm staat boven het hulpstuk "Bonnetjes onderweg" |
 | Overstappen | de petrol band zonder foto; links tekst en de drie stappen, rechts de animatie |
 | Van jou | zonder wit vel; de kaart met schakelaars als object |
@@ -48,12 +48,16 @@ vlak dat los moet komen (een kaart, het kader om het overzicht in de kop, het bl
 jaar") krijgt een lichte, bijna neutrale tint (`#F4F6F6`). Petrol vlakken zijn er nog twee:
 de band Overstappen en het slot.
 
-Framboos (`#B4184F`, op petrol `#FF9DBE`) is de tweede kleur naast petrol, voor kleine
-dingen die terugkomen: de kopjes boven de koppen, de cijfers van de stappen in Overstappen
-en de streep onder "je eigen computer" in de kop (alleen versiering). Niet op knoppen,
-vlakken, iconen, links, het logo, het menu of de voet. De app verandert hiervoor niet: daar
-blijft framboos de kleur van "te laat". Dit verving de regel van 2026-11-18 ("hooguit één
-keer per scherm").
+Framboos (`#B4184F`, op petrol `#FF9DBE`) is de tweede kleur naast petrol, voor wat mag
+opvallen: de hoofdknop (Download), het labeltje boven de kop, de kopjes boven de koppen, de
+cijfers van de stappen in Overstappen en de streep onder "je eigen computer". Links, vinkjes
+en iconen blijven petrol. In de app blijft framboos de kleur van "te laat"; dat schuurt
+niet, want wie de app heeft, komt niet meer op de site. Dit verving de regel van 2026-11-18
+("hooguit één keer per scherm").
+
+Verder (eigenaar, 2026-11-19): de foto's hebben geen bijschrift meer (de beschrijving staat
+in de alt-tekst), Waarom en Functies hebben foto's tussen de tekst, en het menu begint met
+Home.
 
 ## Wat blijft van ronde 7
 

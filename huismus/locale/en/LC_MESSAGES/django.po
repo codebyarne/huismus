@@ -3361,6 +3361,9 @@ msgstr "New invoice"
 msgid "Hoofdmenu"
 msgstr "Main menu"
 
+msgid "Home"
+msgstr "Home"
+
 msgid "Overzicht"
 msgstr "Overview"
 
@@ -6953,20 +6956,11 @@ msgstr ""
 "A furniture maker wearing a dust mask sands a chair in her workshop. A "
 "laptop with Huismus open stands on the workbench."
 
-msgid "Meubelmaker"
-msgstr "Furniture maker"
-
 msgid "Een fotograaf knielt in een park en stelt haar camera in."
 msgstr "A photographer kneels in a park and adjusts her camera."
 
-msgid "Fotograaf"
-msgstr "Photographer"
-
 msgid "Een hovenier laadt gereedschap achter in zijn bus."
 msgstr "A gardener loads tools into the back of his van."
-
-msgid "Hovenier"
-msgstr "Gardener"
 
 msgid ""
 "Een vrouw schrijft in een notitieboek aan een bureau bij het raam, met "
@@ -6974,18 +6968,12 @@ msgid ""
 msgstr ""
 "A woman writes in a notebook at a desk by the window, with books around her."
 
-msgid "Tekstschrijver"
-msgstr "Copywriter"
-
 msgid ""
 "Een man zit aan de keukentafel bij een bureaulamp, achter een laptop met "
 "Huismus open. Naast hem ligt een stapel papieren."
 msgstr ""
 "A man sits at the kitchen table by a desk lamp, at a laptop with Huismus "
 "open. A pile of papers lies next to him."
-
-msgid "Aan de keukentafel"
-msgstr "At the kitchen table"
 
 msgid "Met de kleineondernemersregeling (KOR)"
 msgstr "With the small business scheme (KOR)"

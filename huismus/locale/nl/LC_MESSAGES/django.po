@@ -3174,6 +3174,9 @@ msgstr ""
 msgid "Hoofdmenu"
 msgstr ""
 
+msgid "Home"
+msgstr "Home"
+
 msgid "Overzicht"
 msgstr ""
 
@@ -6423,19 +6426,10 @@ msgid ""
 "Op de werkbank staat een laptop met Huismus open."
 msgstr ""
 
-msgid "Meubelmaker"
-msgstr ""
-
 msgid "Een fotograaf knielt in een park en stelt haar camera in."
 msgstr ""
 
-msgid "Fotograaf"
-msgstr ""
-
 msgid "Een hovenier laadt gereedschap achter in zijn bus."
-msgstr ""
-
-msgid "Hovenier"
 msgstr ""
 
 msgid ""
@@ -6443,15 +6437,9 @@ msgid ""
 "boeken om zich heen."
 msgstr ""
 
-msgid "Tekstschrijver"
-msgstr ""
-
 msgid ""
 "Een man zit aan de keukentafel bij een bureaulamp, achter een laptop met "
 "Huismus open. Naast hem ligt een stapel papieren."
-msgstr ""
-
-msgid "Aan de keukentafel"
 msgstr ""
 
 msgid "Met de kleineondernemersregeling (KOR)"

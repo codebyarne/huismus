@@ -14,10 +14,14 @@
      (eigenaar, 2026-11-19: de site oogde te groen). Donker blijft zoals het was. */
   --bg: light-dark(#FFFFFF, #061415);
   --site-tint: light-dark(#F4F6F6, #0E2627);
-  /* Framboos: de tweede kleur, voor kleine dingen die terugkomen: de kopjes boven de koppen,
-     de cijfers van de stappen en de streep in de kop. Niet op knoppen of vlakken: in de app
-     is framboos "te laat" (eigenaar, 2026-11-19; verving "hooguit één keer per scherm"). */
+  /* Framboos: de tweede kleur van de site, voor wat mag opvallen: de knop waarmee je
+     downloadt, de kopjes boven de koppen, de cijfers van de stappen en de streep in de kop.
+     In de app blijft framboos "te laat"; wie de app heeft, komt niet meer op de site
+     (eigenaar, 2026-11-19; verving "hooguit één keer per scherm"). */
   --site-accent: light-dark(#B4184F, #FF7BA5);
+  --site-accent-hover: light-dark(#8E123E, #FFA3C0);
+  --site-accent-soft: light-dark(#FCEBF1, #3A1322);
+  --site-accent-ink: light-dark(#8E123E, #F2B6CB);
   --site-accent-on-petrol: #FF9DBE;  /* op petrol: 4,8 : 1 */
   /* Gedempte tekst iets donkerder dan in de app: op een site lees je langere stukken. */
   --text-muted: light-dark(#4A5F61, #9DB5B4);
@@ -34,6 +38,9 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .skip-link { position: absolute; left: var(--gutter); top: -80px; z-index: 30; padding: 10px 16px; border-radius: var(--r-md); background: var(--surface); color: var(--text); }
 .skip-link:focus { top: var(--s-3); box-shadow: var(--sh-pop); }
 .site .btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; box-shadow: none; }
+/* De hoofdknop van de site is framboos: wit op framboos is 6,6 : 1. */
+.site .btn-primary { --btn-bg: var(--site-accent); --btn-fg: light-dark(#FFFFFF, #2A0A16); }
+.site .btn-primary:hover { background: var(--site-accent-hover); }
 .site :focus-visible { scroll-margin-block: calc(var(--head-h) + var(--s-4)) var(--s-4); }
 .site svg.i { width: 18px; height: 18px; }
 
@@ -88,7 +95,7 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 /* ---------- Bouwstenen ---------- */
 .site-main { flex: 1; display: flex; flex-direction: column; gap: var(--s-6); padding-block: clamp(24px, 5vw, 64px) var(--s-16); font-size: 1.0625rem; line-height: 1.6; }
 .kicker { margin: 0; color: var(--site-accent); font-size: 0.8125rem; font-weight: var(--fw-semibold); letter-spacing: .08em; text-transform: uppercase; }
-.eyebrow { display: inline-flex; align-items: center; min-height: 28px; padding: 2px 12px; border-radius: var(--r-pill); background: var(--primary-soft); color: var(--primary-ink); font-size: var(--fs-sm); font-weight: var(--fw-semibold); }
+.eyebrow { display: inline-flex; align-items: center; min-height: 28px; padding: 2px 12px; border-radius: var(--r-pill); background: var(--site-accent-soft); color: var(--site-accent-ink); font-size: var(--fs-sm); font-weight: var(--fw-semibold); }
 .home h2, .features-page h2.big { font-family: var(--font-display); font-weight: var(--fw-bold); font-size: clamp(2.125rem, 1.2rem + 3.4vw, 3.5rem); line-height: 1.04; letter-spacing: -0.03em; text-wrap: balance; }
 .home h3, .features-page h3 { font-family: var(--font-display); font-weight: var(--fw-semibold); font-size: clamp(1.25rem, 1.1rem + .5vw, 1.5rem); line-height: 1.2; letter-spacing: -0.012em; }
 .home .lede, .features-page .lede, .site-main .page-head .lede { max-width: 36em; font-size: clamp(1.0625rem, 1rem + .35vw, 1.25rem); line-height: 1.5; color: var(--text-muted); }
@@ -114,6 +121,14 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .downloads-note { color: var(--text-muted); text-wrap: balance; }
 .phone-only, .downloads-phone { display: none; }
 .counter { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+/* Een foto tussen de tekst van een gewone pagina; drie kleine naast elkaar in een rij. */
+.page-photo { margin: 0; }
+.page-photo .photo { aspect-ratio: 16 / 9; }
+.page-photo-wide .photo { aspect-ratio: 5 / 2; }
+.features-page > .page-photo { margin-block: calc(var(--section-gap) * -0.5); }
+.photo-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(8px, 2vw, 16px); margin-top: var(--s-4); }
+.photo-row .photo { aspect-ratio: 1; border-radius: var(--r-lg); }
 
 /* ---------- Homepage ---------- */
 .home { gap: var(--section-gap); padding-top: 0; padding-bottom: var(--s-16); }
@@ -144,7 +159,6 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 /* 2. Voor wie: de meubelmaker over de hele breedte, de anderen in een rij eronder. */
 .people { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(12px, 2vw, 24px); }
 .person { position: relative; margin: 0; display: flex; flex-direction: column; gap: var(--s-2); min-width: 0; }
-.person figcaption { color: var(--text-muted); font-size: var(--fs-sm); font-weight: var(--fw-medium); }
 .person .photo { aspect-ratio: 4 / 5; }
 .person-main { grid-column: 1 / -1; }
 .person-main .photo { aspect-ratio: 5 / 2; }
@@ -389,7 +403,6 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
   .moves li { grid-template-columns: 40px minmax(0, 1fr); }
   .step-n { width: 28px; font-size: 2rem; }
   .people { gap: 10px; }
-  .person figcaption { font-size: var(--fs-xs); }
   .foot-top { flex-direction: column; align-items: flex-start; }
   .bento-shot { padding-left: var(--s-5); }
 }
