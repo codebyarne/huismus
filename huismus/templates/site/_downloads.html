@@ -1,11 +1,12 @@
-{% load i18n %}{% comment %}The two download buttons: always the newest release (site.download_url). on_petrol: on the deep petrol band, where the buttons are white. try_hint: the line about looking around first. On a narrow screen, most likely a phone, you can't install Huismus: there the first step is a button that mails the address of this site to yourself (a mailto without an address: nothing goes to a server), and the download buttons are second.{% endcomment %}
-<div class="downloads-phone">
+{% load i18n %}{% comment %}The two download buttons: always the newest release (site.download_url). on_petrol: on the deep petrol band, where the buttons are white. try_hint: the line about looking around first. Which systems it runs on is said on the install page and on the page a button leads to, not under every pair of buttons (the owner, 2026-11-19). On a narrow screen, most likely a phone, you can't install Huismus: there the first step is the film of one minute on a page that has it, or the list of what Huismus does, and the download buttons are second.{% endcomment %}
+{% if nav != "install" %}<div class="downloads-phone">
     <p class="downloads-note">{% translate "Huismus installeer je op je Mac of pc." %}</p>
-    <a class="btn btn-lg {% if on_petrol %}btn-on-petrol{% else %}btn-primary{% endif %}" href="mailto:?subject=Huismus&amp;body=https%3A%2F%2F{{ domain }}{{ home_url|urlencode:'' }}"><svg class="i" width="18" height="18" aria-hidden="true"><use href="#mail"></use></svg>{% translate "Mail jezelf de link" %}</a>
-</div>
+    {% if nav == "home" and film %}<a class="btn btn-lg {% if on_petrol %}btn-on-petrol{% else %}btn-primary{% endif %}" href="#film-kop"><svg class="i" width="18" height="18" aria-hidden="true"><use href="#play"></use></svg>{% translate "Bekijk Huismus in één minuut" %}</a>
+    {% elif nav != "features" %}<a class="btn btn-lg {% if on_petrol %}btn-on-petrol{% else %}btn-primary{% endif %}" href="{{ features_url }}">{% translate "Bekijk wat Huismus kan" %}</a>{% endif %}
+</div>{% endif %}
 <div class="downloads">
     <a class="btn btn-lg {% if on_petrol %}btn-on-petrol{% else %}btn-primary{% endif %}" href="{{ mac_url }}"><svg class="i os" width="18" height="18" aria-hidden="true"><use href="#os-apple"></use></svg>{% translate "Download voor Mac" %}</a>
     <a class="btn btn-lg {% if on_petrol %}btn-on-petrol-quiet{% else %}btn-secondary{% endif %}" href="{{ windows_url }}"><svg class="i os" width="18" height="18" aria-hidden="true"><use href="#os-windows"></use></svg>{% translate "Download voor Windows" %}</a>
 </div>
-<p class="downloads-note small">{% translate "macOS 15 of nieuwer met een Apple-chip · Windows 10 of nieuwer" %}{% if nav != "install" %} · <a href="{{ install_url }}">{% translate "Zo open je hem de eerste keer" %}</a>{% endif %}</p>
+{% if nav == "install" %}<p class="downloads-note small">{% translate "macOS 15 of nieuwer met een Apple-chip · Windows 10 of nieuwer" %}</p>{% endif %}
 {% if try_hint %}<p class="downloads-note small">{% blocktranslate %}Eerst rondkijken? Kies bij de eerste start <strong>Probeer met nepdata</strong>.{% endblocktranslate %}</p>{% endif %}

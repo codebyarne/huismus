@@ -82,10 +82,6 @@ def test_every_link_inside_the_site_lands_on_a_page_and_heading(out):
                 continue
             if link == site.MAC_PRIVACY_SETTINGS:
                 continue
-            if link.startswith("mailto:"):
-                # "Mail jezelf de link": no address, only this site's own address.
-                assert link.startswith("mailto:?") and site.DOMAIN in link, (address, link)
-                continue
             if not link.startswith("/"):
                 # Another site, or a help file that core.help didn't turn into a page.
                 # Meebouwen links to the developer docs in the repository on purpose.
@@ -131,6 +127,7 @@ def test_every_picture_of_the_app_is_there_in_both_languages_and_themes(out):
     """scripts/site-beelden.sh makes them; a missing one is a broken image."""
     for path in site.media_files():
         assert path.exists(), f"{path.name}: draai ./scripts/site-beelden.sh"
+    for path in site.media_files(site.SITE_SCHEMES):
         assert (out / "beelden" / path.name).exists()
     for language in help.LANGUAGES:
         html = (out / site.home_url(language).strip("/") / "index.html").read_text()
@@ -147,7 +144,7 @@ def test_install_and_contribute_have_a_page_in_both_languages(out, language):
 
 def test_the_english_pages_are_in_english(out):
     html = (out / "en" / "index.html").read_text(encoding="utf-8")
-    assert '<html lang="en">' in html and "Download for Mac" in html
+    assert '<html lang="en"' in html and "Download for Mac" in html
     assert "Download voor Mac" not in html
     help_page = (out / "en" / "help" / "back-ups" / "index.html").read_text(encoding="utf-8")
     assert "<h1>Backups</h1>" in help_page
@@ -210,7 +207,7 @@ def test_the_mac_steps_link_to_privacy_and_security(out, language):
 def test_functies_and_the_home_page_show_the_whole_list_with_a_check_or_later(out, language):
     """One list (core/site_features.py), to show how complete Huismus is:
     every feature on both pages, in the language of the page, and as many
-    "Later" labels as features that come later. No months (the owner,
+    "Binnenkort verwacht" labels as features that come later. No months (the owner,
     2026-11-18)."""
     from django.utils.html import escape
 
@@ -220,7 +217,7 @@ def test_functies_and_the_home_page_show_the_whole_list_with_a_check_or_later(ou
     features = (out / site.features_url(language).strip("/") / "index.html").read_text()
     with translation.override(language):
         names = [str(f.name) for _group, items in site_features.FEATURES for f in items]
-        later = str(translation.gettext("Later"))
+        later = str(translation.gettext("Binnenkort verwacht"))
     _now, coming = site_features.counts()
     for page in (home, features):
         for name in names:
@@ -405,3 +402,34 @@ def test_the_films_on_the_site_have_no_sound_until_the_owner_has_heard_it():
     for path in site.film_files():
         if path.suffix == ".mp4":
             assert b"mp4a" not in path.read_bytes(), path.name
+
+
+def test_the_site_is_always_light(out):
+    """Whatever the visitor's system is (the owner, 2026-11-19): no page and no
+    picture follows a dark system."""
+    for address in _every_address(out):
+        html = (out / address.strip("/") / "index.html").read_text()
+        assert 'data-theme="light"' in html, address
+        assert "prefers-color-scheme: dark" not in html, address
+        assert ".dark." not in html, address
+
+
+@pytest.mark.parametrize("language", help.LANGUAGES)
+def test_the_kor_is_written_out_before_it_is_called_kor(out, language):
+    """Not everyone knows the KOR (the owner, 2026-11-19): on every page of the
+    site the first KOR a visitor meets is the whole name, with KOR after it.
+    Not on the help pages: they are the manual of the app (docs/hulp/)."""
+    whole = {"nl": "kleineondernemersregeling (KOR)", "en": "small business scheme (KOR)"}
+    for address in _every_address(out):
+        if address.startswith("/en/") != (language == "en") or "/hulp/" in address:
+            continue
+        if address.startswith("/en/help/"):
+            continue
+        html = (out / address.strip("/") / "index.html").read_text()
+        body = html[html.index("<body") :]
+        if "KOR" in body:
+            first = body.index("KOR")
+            assert body[: first + 4].lower().endswith(whole[language].lower()), (
+                address,
+                body[first - 80 : first + 10],
+            )
