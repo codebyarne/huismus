@@ -14,10 +14,11 @@
      (eigenaar, 2026-11-19: de site oogde te groen). Donker blijft zoals het was. */
   --bg: light-dark(#FFFFFF, #061415);
   --site-tint: light-dark(#F4F6F6, #0E2627);
-  /* Framboos: de tweede kleur van de site, voor wat mag opvallen: de knop waarmee je
-     downloadt, de kopjes boven de koppen, de cijfers van de stappen en de streep in de kop.
-     In de app blijft framboos "te laat"; wie de app heeft, komt niet meer op de site
-     (eigenaar, 2026-11-19; verving "hooguit één keer per scherm"). */
+  /* Framboos: de tweede kleur van de site. Groot op drie plekken: de woorden "je eigen
+     computer" in de kop, het zachte kader om het overzicht en het slot. Klein waar het
+     terugkomt: de kopjes boven de koppen, de cijfers van de stappen, de pijltjes. Niet op
+     knoppen: die blijven petrol (eigenaar, 2026-11-19). In de app blijft framboos "te laat";
+     wie de app heeft, komt niet meer op de site. Verving "hooguit één keer per scherm". */
   --site-accent: light-dark(#B4184F, #FF7BA5);
   --site-accent-hover: light-dark(#8E123E, #FFA3C0);
   --site-accent-soft: light-dark(#FCEBF1, #3A1322);
@@ -38,9 +39,6 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .skip-link { position: absolute; left: var(--gutter); top: -80px; z-index: 30; padding: 10px 16px; border-radius: var(--r-md); background: var(--surface); color: var(--text); }
 .skip-link:focus { top: var(--s-3); box-shadow: var(--sh-pop); }
 .site .btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; box-shadow: none; }
-/* De hoofdknop van de site is framboos: wit op framboos is 6,6 : 1. */
-.site .btn-primary { --btn-bg: var(--site-accent); --btn-fg: light-dark(#FFFFFF, #2A0A16); }
-.site .btn-primary:hover { background: var(--site-accent-hover); }
 .site :focus-visible { scroll-margin-block: calc(var(--head-h) + var(--s-4)) var(--s-4); }
 .site svg.i { width: 18px; height: 18px; }
 
@@ -104,7 +102,8 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .halves { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(32px, 5vw, 80px); align-items: center; }
 .more { display: inline-flex; align-items: center; gap: 6px; font-weight: var(--fw-semibold); text-decoration: none; }
 .more:hover { text-decoration: underline; }
-.more span { transition: transform .15s var(--ease); }
+.more span { color: var(--site-accent); transition: transform .15s var(--ease); }
+.band .more span { color: var(--site-accent-on-petrol); }
 .more:hover span { transform: translateX(3px); }
 .shot { margin: 0; }
 .shot img { display: block; width: 100%; height: auto; border-radius: 14px; background: var(--surface); box-shadow: var(--sh-window); }
@@ -138,8 +137,8 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 /* 1. Kop: gecentreerd, één kolom. */
 .hero { display: flex; flex-direction: column; align-items: center; gap: var(--s-4); padding-top: clamp(32px, 4vw, 56px); text-align: center; }
 .hero h1 { max-width: 16ch; font-weight: var(--fw-bold); font-size: clamp(2.5rem, 1.4rem + 4.2vw, 4.75rem); line-height: .98; letter-spacing: -0.035em; text-wrap: balance; }
-/* Alleen versiering: zonder de streep leest de kop hetzelfde. */
-.hero .underline { text-decoration: underline; text-decoration-color: var(--site-accent); text-decoration-thickness: .07em; text-underline-offset: .14em; text-decoration-skip-ink: none; }
+/* Alleen versiering: zonder de kleur leest de kop hetzelfde. */
+.hero .underline { color: var(--site-accent); }
 .hero .lede { max-width: 34em; }
 .hero .downloads { justify-content: center; margin-top: var(--s-2); }
 .hero .downloads-note { text-wrap: wrap; }
@@ -148,10 +147,10 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .facts li { display: inline-flex; align-items: center; gap: 6px; }
 .facts .i { width: 16px; height: 16px; color: var(--primary); stroke-width: 2.6; }
 
-/* Het overzicht op een licht vlak (donker: petrol): het steekt erboven uit en wordt
+/* Het overzicht op een zacht framboos vlak (donker: petrol): het steekt erboven uit en wordt
    onderaan afgesneden. In het beeld zit al een petrol vlak, dus het kader blijft stil. */
 .home > .stage-wrap { margin-top: calc(var(--section-gap) * -0.7); }
-.stage { position: relative; overflow: hidden; height: clamp(320px, 42vw, 600px); border-radius: var(--band-r); background: light-dark(var(--site-tint), #083D3F); }
+.stage { position: relative; overflow: hidden; height: clamp(320px, 42vw, 600px); border-radius: var(--band-r); background: linear-gradient(light-dark(var(--site-accent-soft), #083D3F), light-dark(#FFF7FA, #083D3F)); }
 .stage .shot { position: absolute; left: 50%; top: clamp(32px, 4vw, 56px); width: min(1120px, 92%); transform: translateX(-50%); -webkit-mask-image: linear-gradient(#000 calc(100% - 120px), transparent calc(100% - 20px)); mask-image: linear-gradient(#000 calc(100% - 120px), transparent calc(100% - 20px)); }
 .stage .shot picture, .stage .shot img { display: block; }
 .stage .shot img { box-shadow: light-dark(0 30px 80px -20px rgb(12 35 37 / .28), 0 30px 80px -20px rgb(0 0 0 / .5)), 0 0 0 1px light-dark(rgb(12 35 37 / .08), rgb(255 255 255 / .1)); }
@@ -246,8 +245,12 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .checklist-more { margin-top: clamp(24px, 3vw, 40px); }
 .home > .duo { margin-top: calc(var(--section-gap) * -0.5); }
 
-/* 8. Slot. */
-.band-final { align-items: center; gap: var(--s-5); text-align: center; }
+/* 8. Slot: de ene framboos band van de site, naast de ene petrol band (Overstappen).
+   Wit op framboos is 6,6 : 1, de zachte tekst 5,2 : 1. */
+.band-final { --hero: #B4184F; --hero-muted: #FFD9E6; --hero-bar: #FF9DBE; align-items: center; gap: var(--s-5); text-align: center; }
+.band-final .btn-on-petrol { --btn-fg: #8E123E; }
+.band-final .btn-on-petrol:hover { background: #FFE3EC; }
+.band-final .gutter { --surface: #B4184F; --mark-wing: #FF9DBE; }
 .band-final h2 { font: var(--fw-bold) clamp(2.125rem, 1.2rem + 3.4vw, 3.5rem)/1.04 var(--font-display); letter-spacing: -0.03em; }
 .band-final .lede { color: var(--hero-muted); font-size: clamp(1.0625rem, 1rem + .35vw, 1.25rem); }
 .band-final .downloads { justify-content: center; margin-top: var(--s-2); }

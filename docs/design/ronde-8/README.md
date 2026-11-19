@@ -44,16 +44,16 @@ het herontwerp hieronder (huismus-intern/besluiten.md, 2026-11-18).
 | Gewone pagina's | de leeskolom gecentreerd; Hulp als lijst per groep; Installeren met Mac en Windows naast elkaar |
 
 **Wit en framboos** (eigenaar, 2026-11-19: de site oogde te groen). De pagina is wit; een
-vlak dat los moet komen (een kaart, het kader om het overzicht in de kop, het blok "Het hele
-jaar") krijgt een lichte, bijna neutrale tint (`#F4F6F6`). Petrol vlakken zijn er nog twee:
-de band Overstappen en het slot.
+vlak dat los moet komen (een kaart, het blok "Het hele jaar") krijgt een lichte, bijna
+neutrale tint (`#F4F6F6`). Er is nog één petrol band: Overstappen.
 
-Framboos (`#B4184F`, op petrol `#FF9DBE`) is de tweede kleur naast petrol, voor wat mag
-opvallen: de hoofdknop (Download), het labeltje boven de kop, de kopjes boven de koppen, de
-cijfers van de stappen in Overstappen en de streep onder "je eigen computer". Links, vinkjes
-en iconen blijven petrol. In de app blijft framboos de kleur van "te laat"; dat schuurt
-niet, want wie de app heeft, komt niet meer op de site. Dit verving de regel van 2026-11-18
-("hooguit één keer per scherm").
+Framboos (`#B4184F`, zacht `#FCEBF1`, op petrol `#FF9DBE`) is de tweede kleur naast petrol.
+Groot op drie plekken: de woorden "je eigen computer" in de kop, het zachte kader om het
+overzicht eronder, en het slot "Probeer Huismus" als framboos band. Klein waar het
+terugkomt: het labeltje boven de kop, de kopjes boven de koppen, de cijfers van de stappen
+in Overstappen en de pijltjes achter links. Knoppen, links en vinkjes blijven petrol. In de
+app blijft framboos de kleur van "te laat"; dat schuurt niet, want wie de app heeft, komt
+niet meer op de site. Dit verving de regel van 2026-11-18 ("hooguit één keer per scherm").
 
 Verder (eigenaar, 2026-11-19): de foto's hebben geen bijschrift meer (de beschrijving staat
 in de alt-tekst), Waarom en Functies hebben foto's tussen de tekst, en het menu begint met
