@@ -72,7 +72,7 @@
         <h2 id="film-kop">{% translate "Huismus in één minuut" %}</h2>
     </div>
     {% translate "Film van ruim een minuut: een rondleiding door Huismus, van factuur tot jaaroverzicht. Met stem, muziek en ondertitels." as label %}
-    {% include "site/_film.html" with name="rondleiding" label=label captions=True %}
+    {% include "site/_film.html" with name="rondleiding" label=label captions=True sharp_from=film_sharp_from %}
 </section>
 {% endif %}
 
