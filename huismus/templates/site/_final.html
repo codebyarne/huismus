@@ -1,5 +1,6 @@
 {% load i18n %}{% comment %}The closing band of the home page and Functies: the sparrow on the gutter and the download buttons.{% endcomment %}
-<div class="gutter" aria-hidden="true"><svg class="gutter-bird"><use href="#mus-vogel"></use></svg></div>
+{% comment %}The sparrow is drawn here and not with <use>, so its wing can flap (site.css, "De mus op de dakgoot"): it hops in as in the tour film, CSS only.{% endcomment %}
+<div class="gutter" aria-hidden="true"><div class="gutter-hop"><svg class="gutter-bird" viewBox="2 7 45 35" preserveAspectRatio="xMidYMax meet"><path d="M11 30 3.6 17.4c-.8-1.4.2-2.4 1.6-2L18 19Z" fill="#FFFFFF"/><circle cx="22" cy="28" r="13" fill="#FFFFFF"/><circle cx="31" cy="17" r="8.5" fill="#FFFFFF"/><path d="M38.5 14 45.5 17.3 38.5 20.5Z" fill="#F5A623"/><path class="gutter-wing" d="M12.5 27.5c4.5-6 13.5-6 18.5-.5-4.5 7-14 7.5-18.5.5Z" fill="#5FC9C4"/><circle cx="33.5" cy="15.5" r="1.7" fill="#0B4F51"/></svg></div></div>
 <h2>{% translate "Probeer Huismus" %}</h2>
 <p class="lede">{% translate "Gratis, zonder account. Je administratie blijft op je eigen computer." %}</p>
 {% include "site/_downloads.html" with on_petrol=True try_hint=True %}
