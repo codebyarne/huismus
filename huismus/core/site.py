@@ -66,6 +66,9 @@ ANIMATIONS = ("factuur-maken", "importeren")
 DETAILS = ("kor", "jaar")
 MEDIA = STILLS + PHONE_STILLS + ANIMATIONS + DETAILS
 MEDIA_DIR = Path(settings.BASE_DIR) / "docs" / "site"
+# The site is always light, whatever the visitor's system is (the owner,
+# 2026-11-19, huismus-intern/besluiten.md).
+SITE_SCHEMES = ("light",)
 # The films (scripts/promo-film.sh site), each as film-<name>.nl.mp4 with the
 # still it shows until you press play (….webp). Their titles and the app in
 # them are Dutch, so only the Dutch pages show them, until there is an English
@@ -145,14 +148,16 @@ def download_url(platform: str) -> str:
     return f"{REPOSITORY}/releases/latest/download/{LATEST_ASSETS[platform]}"
 
 
-def media_files() -> list[Path]:
+def media_files(schemes: tuple[str, ...] = ("light", "dark")) -> list[Path]:
     """Every picture of the app; a still also as the app shows it on a phone
-    (….phone.webp), for a narrow screen."""
+    (….phone.webp), for a narrow screen. scripts/site-beelden.sh makes them
+    light and dark (the dark ones for the picture a shared link shows); the
+    site itself is always light (SITE_SCHEMES)."""
     return [
         MEDIA_DIR / f"{name}.{language}.{scheme}{kind}.webp"
         for name in MEDIA
         for language in help.LANGUAGES
-        for scheme in ("light", "dark")
+        for scheme in schemes
         for kind in (
             ("", ".phone") if name in STILLS else (".phone",) if name in PHONE_STILLS else ("",)
         )
@@ -381,14 +386,14 @@ def build(out: Path) -> list[str]:
             encoding="utf-8",
         )
     (out / "beelden" / "fotos").mkdir(parents=True)
-    for path in media_files():
+    for path in media_files(SITE_SCHEMES):
         shutil.copy(path, out / "beelden" / path.name)
     for name in STILLS:
-        for path in MEDIA_DIR.glob(f"{name}.*.webp"):
+        for path in MEDIA_DIR.glob(f"{name}.*.light.webp"):
             if not path.stem.endswith(".phone"):
                 _small(path, out / "beelden" / f"{path.stem}.{SMALL_WIDTH}.webp")
     for name in ANIMATIONS:
-        for path in MEDIA_DIR.glob(f"{name}.*.webp"):
+        for path in MEDIA_DIR.glob(f"{name}.*.light.webp"):
             _last_frame(path, out / "beelden" / f"{path.stem}.still.webp")
     for path in film_files():
         shutil.copy(path, out / "beelden" / path.name)
