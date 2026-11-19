@@ -1,11 +1,12 @@
 {% load i18n %}<!DOCTYPE html>
 {% comment %}The Huismus site (huismus/core/site.py): static pages, no JS, the tokens and components of the app's own stylesheet in the direction "Helder" (docs/design/ronde-8/).{% endcomment %}
-<html lang="{{ language }}">
+{% comment %}Always light, whatever the visitor's system is (the owner, 2026-11-19): a site to read in daylight. The app itself keeps following the system.{% endcomment %}
+<html lang="{{ language }}" data-theme="light">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Huismus{% endblock %}</title>
-    <meta name="description" content="{% filter truncatechars:160 %}{% block description %}{% translate 'Boekhouden voor zzp’ers, met of zonder KOR: facturen, bonnetjes en de bedragen voor je btw-aangifte. Gratis, en alles blijft op je eigen computer.' %}{% endblock %}{% endfilter %}">
+    <meta name="description" content="{% filter truncatechars:160 %}{% block description %}{% translate 'Boekhouden voor zzp’ers: facturen, bonnetjes en de bedragen voor je btw-aangifte. Gratis, en alles blijft op je eigen computer.' %}{% endblock %}{% endfilter %}">
     {% if nav == "download" or nav == "404" %}<meta name="robots" content="noindex">
     {% else %}<link rel="canonical" href="https://{{ domain }}{{ address }}">
     {% if switch_url %}<link rel="alternate" hreflang="{{ language }}" href="https://{{ domain }}{{ address }}">
@@ -13,7 +14,7 @@
     <link rel="alternate" hreflang="x-default" href="https://{{ domain }}{% if language == 'nl' %}{{ address }}{% else %}{{ switch_url }}{% endif %}">{% endif %}{% endif %}
     <meta property="og:site_name" content="Huismus">
     <meta property="og:title" content="{% block og_title %}{% translate 'Huismus: je boekhouding op je eigen computer' %}{% endblock %}">
-    <meta property="og:description" content="{% filter truncatechars:160 %}{% block og_description %}{% translate 'Boekhouden voor zzp’ers, met of zonder KOR: facturen, bonnetjes en de bedragen voor je btw-aangifte. Gratis en open source.' %}{% endblock %}{% endfilter %}">
+    <meta property="og:description" content="{% filter truncatechars:160 %}{% block og_description %}{% translate 'Boekhouden voor zzp’ers: facturen, bonnetjes en de bedragen voor je btw-aangifte. Gratis en open source.' %}{% endblock %}{% endfilter %}">
     {% if nav != "404" %}<meta property="og:url" content="https://{{ domain }}{{ address }}">{% endif %}
     <meta property="og:image" content="https://{{ domain }}/delen.{{ language }}.png">
     <meta property="og:image:width" content="1200">
@@ -24,8 +25,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <meta name="theme-color" content="#F1F5F4" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#061415" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#F1F5F4">
     {% for font in fonts %}<link rel="preload" href="/fonts/{{ font }}" as="font" type="font/woff2" crossorigin>
     {% endfor %}<link rel="stylesheet" href="/huismus.css">
     <link rel="stylesheet" href="/site.css">
@@ -79,7 +79,6 @@
     </div>
     <div class="foot-small small muted">
         <p>{% blocktranslate %}Huismus valt onder de <a href="{{ repository }}/blob/main/LICENSE">AGPL-3.0</a>.{% endblocktranslate %}</p>
-        <p>{% blocktranslate %}Gratis ondertekening van de Windows-versie is aangevraagd bij SignPath Foundation. <a href="{{ contribute_url }}#ondertekening">Ondertekening</a>{% endblocktranslate %}</p>
         {% if counter %}<p>{% translate "Deze site telt bezoeken met GoatCounter, zonder cookies." %}</p>{% endif %}
     </div>
 </footer>
