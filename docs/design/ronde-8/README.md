@@ -43,13 +43,17 @@ het herontwerp hieronder (huismus-intern/besluiten.md, 2026-11-18).
 | Functies (pagina) | "Kan nu" als rijen (groep links, functies rechts), "Komt eraan" als vier kolommen |
 | Gewone pagina's | de leeskolom gecentreerd; Hulp als lijst per groep; Installeren met Mac en Windows naast elkaar |
 
-**Framboos** (`#B4184F`, in donker `#FF7BA5`, op petrol `#FF9DBE`) is de tweede kleur naast
-petrol, hooguit één keer per scherm: de streep onder "je eigen computer" in de kop (alleen
-versiering), de markering "Verwacht in …" op de petrol band, de stip in de strook naar
-Functies en de eerstvolgende maand op Functies. Niet op knoppen, koppen, vlakken, iconen,
-links, het logo, het menu of de voet, en niet op Hulp, Installeren en Meebouwen. De app
-verandert hiervoor niet: daar blijft framboos de kleur van "te laat" (advies van de
-PO-agent; de vraag gaat mee naar de eigenaar).
+**Wit en framboos** (eigenaar, 2026-11-19: de site oogde te groen). De pagina is wit; een
+vlak dat los moet komen (een kaart, het kader om het overzicht in de kop, het blok "Het hele
+jaar") krijgt een lichte, bijna neutrale tint (`#F4F6F6`). Petrol vlakken zijn er nog twee:
+de band Overstappen en het slot.
+
+Framboos (`#B4184F`, op petrol `#FF9DBE`) is de tweede kleur naast petrol, voor kleine
+dingen die terugkomen: de kopjes boven de koppen, de cijfers van de stappen in Overstappen
+en de streep onder "je eigen computer" in de kop (alleen versiering). Niet op knoppen,
+vlakken, iconen, links, het logo, het menu of de voet. De app verandert hiervoor niet: daar
+blijft framboos de kleur van "te laat". Dit verving de regel van 2026-11-18 ("hooguit één
+keer per scherm").
 
 ## Wat blijft van ronde 7
 

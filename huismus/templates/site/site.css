@@ -10,9 +10,15 @@
   --site-max: 1200px;
   --section-gap: clamp(80px, 9vw, 128px);
   --band-r: clamp(20px, 3vw, 32px);
-  /* Framboos: hooguit één keer per scherm, voor wat mag opvallen (besluit 2026-11-18). */
+  /* De pagina is wit; een vlak dat los moet komen krijgt een lichte, bijna neutrale tint
+     (eigenaar, 2026-11-19: de site oogde te groen). Donker blijft zoals het was. */
+  --bg: light-dark(#FFFFFF, #061415);
+  --site-tint: light-dark(#F4F6F6, #0E2627);
+  /* Framboos: de tweede kleur, voor kleine dingen die terugkomen: de kopjes boven de koppen,
+     de cijfers van de stappen en de streep in de kop. Niet op knoppen of vlakken: in de app
+     is framboos "te laat" (eigenaar, 2026-11-19; verving "hooguit één keer per scherm"). */
   --site-accent: light-dark(#B4184F, #FF7BA5);
-  --site-accent-on-petrol: #FF9DBE;
+  --site-accent-on-petrol: #FF9DBE;  /* op petrol: 4,8 : 1 */
   /* Gedempte tekst iets donkerder dan in de app: op een site lees je langere stukken. */
   --text-muted: light-dark(#4A5F61, #9DB5B4);
   /* Donker: een vlak dat los komt van de achtergrond, met een randje. */
@@ -32,9 +38,9 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .site svg.i { width: 18px; height: 18px; }
 
 /* ---------- Kop: blijft staan, half doorzichtig ---------- */
-.site-top { position: sticky; top: 0; z-index: 20; background: light-dark(rgb(241 245 244 / .94), rgb(6 20 21 / .94)); border-bottom: 1px solid light-dark(rgb(12 35 37 / .07), rgb(255 255 255 / .07)); }
+.site-top { position: sticky; top: 0; z-index: 20; background: light-dark(rgb(255 255 255 / .94), rgb(6 20 21 / .94)); border-bottom: 1px solid light-dark(rgb(12 35 37 / .07), rgb(255 255 255 / .07)); }
 @supports (backdrop-filter: blur(12px)) {
-  .site-top { background: light-dark(rgb(241 245 244 / .82), rgb(6 20 21 / .82)); backdrop-filter: saturate(1.4) blur(12px); -webkit-backdrop-filter: saturate(1.4) blur(12px); }
+  .site-top { background: light-dark(rgb(255 255 255 / .82), rgb(6 20 21 / .82)); backdrop-filter: saturate(1.4) blur(12px); -webkit-backdrop-filter: saturate(1.4) blur(12px); }
 }
 .site-head { display: flex; align-items: center; gap: var(--s-2) var(--s-4); min-height: var(--head-h); }
 .site-logo { display: inline-flex; align-items: center; min-height: 44px; flex: none; color: var(--text); border-radius: 10px; }
@@ -44,7 +50,7 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .site-nav { position: static; inset: auto; display: flex; align-items: center; gap: 2px; width: auto; height: auto; margin: 0 0 0 auto; padding: 0; border: 0; background: none; color: inherit; overflow: visible; font-size: var(--fs-md); font-weight: var(--fw-medium); }
 .site-nav a:not(.btn) { padding: 9px 12px; border-radius: 10px; color: var(--text); opacity: .82; text-decoration: none; }
 .site-nav a:not(.btn):hover { background: var(--panel-hover); opacity: 1; }
-.site-nav a[aria-current="page"]:not(.btn) { background: var(--panel-current); opacity: 1; box-shadow: var(--sh-1); }
+.site-nav a[aria-current="page"]:not(.btn) { background: var(--site-tint); opacity: 1; }
 .site-nav .btn { margin-left: var(--s-3); }
 .nav-toggle { display: none; }
 .nav-open { display: contents; }
@@ -81,7 +87,7 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 
 /* ---------- Bouwstenen ---------- */
 .site-main { flex: 1; display: flex; flex-direction: column; gap: var(--s-6); padding-block: clamp(24px, 5vw, 64px) var(--s-16); font-size: 1.0625rem; line-height: 1.6; }
-.kicker { margin: 0; color: var(--primary-ink); font-size: 0.8125rem; font-weight: var(--fw-semibold); letter-spacing: .08em; text-transform: uppercase; }
+.kicker { margin: 0; color: var(--site-accent); font-size: 0.8125rem; font-weight: var(--fw-semibold); letter-spacing: .08em; text-transform: uppercase; }
 .eyebrow { display: inline-flex; align-items: center; min-height: 28px; padding: 2px 12px; border-radius: var(--r-pill); background: var(--primary-soft); color: var(--primary-ink); font-size: var(--fs-sm); font-weight: var(--fw-semibold); }
 .home h2, .features-page h2.big { font-family: var(--font-display); font-weight: var(--fw-bold); font-size: clamp(2.125rem, 1.2rem + 3.4vw, 3.5rem); line-height: 1.04; letter-spacing: -0.03em; text-wrap: balance; }
 .home h3, .features-page h3 { font-family: var(--font-display); font-weight: var(--fw-semibold); font-size: clamp(1.25rem, 1.1rem + .5vw, 1.5rem); line-height: 1.2; letter-spacing: -0.012em; }
@@ -100,7 +106,7 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .ticks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--s-3); }
 .ticks li { display: flex; gap: var(--s-3); align-items: flex-start; }
 .ticks .i { margin-top: 4px; color: var(--primary); stroke-width: 2.4; }
-.tile { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-3); padding: clamp(24px, 3vw, 40px); border-radius: var(--r-xl); background: var(--surface); box-shadow: inset 0 0 0 1px var(--site-edge); }
+.tile { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-3); padding: clamp(24px, 3vw, 40px); border-radius: var(--r-xl); background: var(--site-tint); box-shadow: inset 0 0 0 1px var(--site-edge); }
 .tile p:not(.kicker) { color: var(--text-muted); }
 .tile .btn, .tile .more { margin-top: var(--s-2); }
 .duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-6); }
@@ -127,12 +133,13 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .facts li { display: inline-flex; align-items: center; gap: 6px; }
 .facts .i { width: 16px; height: 16px; color: var(--primary); stroke-width: 2.6; }
 
-/* Het overzicht op een petrol vlak: het steekt erboven uit en wordt onderaan afgesneden. */
+/* Het overzicht op een licht vlak (donker: petrol): het steekt erboven uit en wordt
+   onderaan afgesneden. In het beeld zit al een petrol vlak, dus het kader blijft stil. */
 .home > .stage-wrap { margin-top: calc(var(--section-gap) * -0.7); }
-.stage { position: relative; overflow: hidden; height: clamp(320px, 42vw, 600px); border-radius: var(--band-r); background: #083D3F; }
+.stage { position: relative; overflow: hidden; height: clamp(320px, 42vw, 600px); border-radius: var(--band-r); background: light-dark(var(--site-tint), #083D3F); }
 .stage .shot { position: absolute; left: 50%; top: clamp(32px, 4vw, 56px); width: min(1120px, 92%); transform: translateX(-50%); -webkit-mask-image: linear-gradient(#000 calc(100% - 120px), transparent calc(100% - 20px)); mask-image: linear-gradient(#000 calc(100% - 120px), transparent calc(100% - 20px)); }
 .stage .shot picture, .stage .shot img { display: block; }
-.stage .shot img { box-shadow: 0 30px 80px -20px rgb(0 0 0 / .5), 0 0 0 1px rgb(255 255 255 / .1); }
+.stage .shot img { box-shadow: light-dark(0 30px 80px -20px rgb(12 35 37 / .28), 0 30px 80px -20px rgb(0 0 0 / .5)), 0 0 0 1px light-dark(rgb(12 35 37 / .08), rgb(255 255 255 / .1)); }
 
 /* 2. Voor wie: de meubelmaker over de hele breedte, de anderen in een rij eronder. */
 .people { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(12px, 2vw, 24px); }
@@ -147,7 +154,7 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 
 /* 3. Overstappen: de petrol band. */
 .band { display: flex; flex-direction: column; gap: clamp(28px, 4.5vw, 56px); padding: clamp(28px, 5vw, 72px); border-radius: var(--band-r); background: var(--hero); color: var(--hero-text); }
-.band .kicker { color: var(--hero-bar); }
+.band .kicker { color: var(--site-accent-on-petrol); }
 .band .lede { color: var(--hero-muted); }
 .band a:not(.btn) { color: var(--hero-text); }
 .band :focus-visible, .band .btn:focus-visible { outline: 3px solid #FFFFFF; outline-offset: 3px; box-shadow: none; }
@@ -161,11 +168,10 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .moves { list-style: none; margin: var(--s-2) 0 0; padding: 0; display: flex; flex-direction: column; align-self: stretch; }
 .moves li { display: grid; grid-template-columns: 52px minmax(0, 1fr); align-items: start; padding-block: var(--s-4); border-top: 1px solid var(--hero-track); }
 .moves li:last-child { padding-bottom: 0; }
-.step-n { width: 36px; text-align: center; font: var(--fw-bold) 2.5rem/1 var(--font-display); color: var(--hero-bar); }
+.step-n { width: 36px; text-align: center; font: var(--fw-bold) 2.5rem/1 var(--font-display); color: var(--site-accent-on-petrol); }
 .moves h3 { color: var(--hero-text); }
 .moves p { margin-top: 4px; color: var(--hero-muted); font-size: 1rem; }
 .band-note { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-3); color: var(--hero-muted); font-size: var(--fs-md); }
-/* Framboos op petrol: 4,8 : 1. */
 .band-after { margin-top: var(--s-5); padding-inline: clamp(8px, 1.5vw, 24px); color: var(--text-muted); font-size: var(--fs-md); }
 
 /* 4. Van jou. */
@@ -186,10 +192,10 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .toggle.is-on { background: var(--primary); border-color: transparent; }
 .toggle.is-on::after { left: auto; right: 3px; top: 3px; width: 16px; height: 16px; background: var(--on-primary); border-color: transparent; }
 
-/* 5. Het hele jaar: een wit vlak tot aan de rand, met vier kaarten. */
-.year { padding-block: clamp(64px, 8vw, 112px); background: var(--surface); border-block: 1px solid var(--site-edge); }
+/* 5. Het hele jaar: een getint vlak tot aan de rand, met vier witte kaarten. */
+.year { padding-block: clamp(64px, 8vw, 112px); background: var(--site-tint); border-block: 1px solid var(--site-edge); }
 .bento { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--s-6); }
-.bento-item { display: flex; flex-direction: column; overflow: hidden; border-radius: var(--r-xl); background: light-dark(var(--bg), #12302F); box-shadow: inset 0 0 0 1px var(--site-edge); grid-column: span 5; }
+.bento-item { display: flex; flex-direction: column; overflow: hidden; border-radius: var(--r-xl); background: light-dark(#FFFFFF, #12302F); box-shadow: inset 0 0 0 1px var(--site-edge); grid-column: span 5; }
 .bento-wide { grid-column: span 7; }
 .bento-text { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-2); padding: clamp(24px, 3vw, 36px) clamp(24px, 3vw, 36px) var(--s-6); }
 .bento-text p { color: var(--text-muted); }
@@ -287,14 +293,14 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .site-main .page-head h1 { font-weight: var(--fw-bold); font-size: clamp(2.25rem, 1.5rem + 3.2vw, 3.5rem); line-height: 1.04; letter-spacing: -0.03em; }
 .site-main .titles > a.small:first-child { display: inline-flex; align-items: center; min-height: 44px; }
 .site-main .titles .eyebrow { align-self: flex-start; }
-/* De kaarten van de app, hier als witte vellen zonder rand. */
-.site-main .card { border-color: transparent; border-radius: var(--r-xl); box-shadow: inset 0 0 0 1px var(--site-edge); }
+/* De kaarten van de app, hier als lichte vellen zonder rand. */
+.site-main .card { background: var(--site-tint); border-color: transparent; border-radius: var(--r-xl); box-shadow: inset 0 0 0 1px var(--site-edge); }
 .site-main .card-pad { padding: clamp(24px, 3.4vw, 40px); }
 .site-main .help-text { gap: var(--s-4); }
 .site-main .help-text h2 { margin-top: var(--s-8); font-size: 1.5rem; }
 .site-main .help-text h2:first-child { margin-top: 0; }
 .site-main .help-text pre code { white-space: pre-wrap; overflow-wrap: anywhere; }
-.site-main .help-text pre { white-space: pre-wrap; overflow-wrap: anywhere; padding: var(--s-4); border-radius: var(--r-md); background: var(--surface-2); font-size: var(--fs-sm); }
+.site-main .help-text pre { white-space: pre-wrap; overflow-wrap: anywhere; padding: var(--s-4); border-radius: var(--r-md); background: var(--bg); font-size: var(--fs-sm); }
 .site-main .flash .small { font-size: var(--fs-md); }
 .site-main .card h2 { font-family: var(--font-display); font-size: 1.375rem; }
 .site-main .flash { background: var(--primary-soft); }
@@ -305,7 +311,7 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .install-pair .card-pad { padding: var(--s-6); }
 .site-main.contribute-page > .row { gap: var(--s-3); }
 .contribute-page .help-text.card { padding: var(--s-8) 0; border-radius: 0; background: none; box-shadow: none; border-top: 1px solid var(--border); }
-.contribute-page .help-text pre { background: var(--surface); box-shadow: inset 0 0 0 1px var(--site-edge); }
+.contribute-page .help-text pre { background: var(--site-tint); box-shadow: inset 0 0 0 1px var(--site-edge); }
 .why-part { display: flex; flex-direction: column; gap: var(--s-4); padding-top: var(--s-8); border-top: 1px solid var(--border); }
 .why-part h2 { font-family: var(--font-display); font-weight: var(--fw-bold); font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem); letter-spacing: -0.02em; }
 .why-part p { max-width: 62ch; }
