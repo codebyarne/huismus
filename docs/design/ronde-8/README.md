@@ -51,7 +51,8 @@ Framboos (`#B4184F`, zacht `#FCEBF1`, op petrol `#FF9DBE`) is de tweede kleur na
 Groot op drie plekken: de woorden "je eigen computer" in de kop, het zachte kader om het
 overzicht eronder, en het slot "Probeer Huismus" als framboos band. Klein waar het
 terugkomt: het labeltje boven de kop, de kopjes boven de koppen, de cijfers van de stappen
-in Overstappen en de pijltjes achter links. Knoppen, links en vinkjes blijven petrol. In de
+in Overstappen, de pijltjes achter links en de vinkjes bij functies die er nu zijn (wit op een
+framboos rondje, op de homepage en op Functies). Knoppen, links en de andere vinkjes blijven petrol. In de
 app blijft framboos de kleur van "te laat"; dat schuurt niet, want wie de app heeft, komt
 niet meer op de site. Dit verving de regel van 2026-11-18 ("hooguit één keer per scherm").
 

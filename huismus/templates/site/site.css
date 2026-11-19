@@ -238,7 +238,8 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .check-group ul, .feature-row ul { list-style: none; margin: 0; padding: 0; }
 .check-group ul { display: flex; flex-direction: column; gap: var(--s-2); }
 .check-group li { display: flex; align-items: flex-start; gap: var(--s-2); font-size: 1rem; line-height: 1.45; }
-.check-group li .i, .feature-row li > .i, .feature-count .i { flex: none; margin-top: 2px; color: var(--primary); stroke-width: 2.6; }
+/* Wat er nu is, krijgt een wit vinkje op een framboos rondje: zo valt het op naast wat nog komt (eigenaar, 2026-11-19). */
+.check-group li .i, .feature-row li > .i, .feature-count .i { flex: none; margin-top: 2px; box-sizing: border-box; width: 20px; height: 20px; padding: 4px; border-radius: 50%; background: var(--site-accent); color: #FFFFFF; stroke-width: 3.4; }
 .check-group li.is-later, .feature-row li.is-later strong { color: var(--text-muted); }
 /* "Binnenkort verwacht": een stil labeltje, geen kleur die schreeuwt. */
 .later { flex: none; display: inline-flex; align-items: center; height: 20px; margin-top: 1px; padding: 0 7px; border-radius: var(--r-pill); background: var(--surface-3); color: var(--text-muted); font-size: 0.6875rem; font-weight: var(--fw-semibold); letter-spacing: .02em; text-transform: uppercase; }
