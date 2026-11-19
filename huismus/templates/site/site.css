@@ -221,7 +221,7 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .check-group li { display: flex; align-items: flex-start; gap: var(--s-2); font-size: 1rem; line-height: 1.45; }
 .check-group li .i, .feature-row li > .i, .feature-count .i { flex: none; margin-top: 2px; color: var(--primary); stroke-width: 2.6; }
 .check-group li.is-later, .feature-row li.is-later strong { color: var(--text-muted); }
-/* "Later": een stil labeltje, geen kleur die schreeuwt. */
+/* "Binnenkort verwacht": een stil labeltje, geen kleur die schreeuwt. */
 .later { flex: none; display: inline-flex; align-items: center; height: 20px; margin-top: 1px; padding: 0 7px; border-radius: var(--r-pill); background: var(--surface-3); color: var(--text-muted); font-size: 0.6875rem; font-weight: var(--fw-semibold); letter-spacing: .02em; text-transform: uppercase; }
 .checklist-more { margin-top: clamp(24px, 3vw, 40px); }
 .home > .duo { margin-top: calc(var(--section-gap) * -0.5); }
@@ -367,7 +367,7 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
   .facts { display: grid; grid-template-columns: auto auto; justify-content: center; gap: var(--s-1) var(--s-4); text-align: left; }
   .band-after .more { min-height: 0; padding-block: 12px; margin-block: -12px; }
   .install-pair { grid-template-columns: minmax(0, 1fr); }
-  /* Op een telefoon kun je Huismus niet installeren: mailen is hier de eerste stap. */
+  /* Op een telefoon kun je Huismus niet installeren: de film of de functies zijn hier de eerste stap. */
   .downloads-phone { display: flex; flex-direction: column; align-self: stretch; gap: var(--s-3); }
   .downloads-phone .btn { width: 100%; }
   .band-final .downloads .btn-on-petrol { --btn-bg: transparent; --btn-fg: #FFFFFF; --btn-bd: var(--hero-bar); }

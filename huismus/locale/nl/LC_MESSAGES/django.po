@@ -15,7 +15,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Later"
+msgid "Binnenkort verwacht"
 msgstr ""
 
 msgid "Huismus werkt zichzelf bij…"
@@ -1533,7 +1533,7 @@ msgstr ""
 msgid "Btw en jaar"
 msgstr ""
 
-msgid "KOR met je grens in beeld"
+msgid "Kleineondernemersregeling (KOR), met je grens in beeld"
 msgstr ""
 
 msgid ""
@@ -2415,6 +2415,7 @@ msgstr ""
 msgid "Kies het btw-tarief."
 msgstr ""
 
+#, python-format
 msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
 msgstr ""
 
@@ -2488,6 +2489,7 @@ msgstr ""
 msgid "Bonnetje verwijderd."
 msgstr ""
 
+#, python-format
 msgid "0% of geen btw"
 msgstr ""
 
@@ -3044,6 +3046,7 @@ msgstr ""
 msgid "Leveringen/diensten belast met laag tarief"
 msgstr ""
 
+#, python-format
 msgid "Leveringen/diensten belast met 0% of niet bij u belast"
 msgstr ""
 
@@ -3794,6 +3797,9 @@ msgstr ""
 
 #, python-format
 msgid "Wat is er nieuw in %(version)s?"
+msgstr ""
+
+msgid "Later"
 msgstr ""
 
 #, python-format
@@ -5919,7 +5925,10 @@ msgstr ""
 msgid "Huismus installeer je op je Mac of pc."
 msgstr ""
 
-msgid "Mail jezelf de link"
+msgid "Bekijk Huismus in één minuut"
+msgstr ""
+
+msgid "Bekijk wat Huismus kan"
 msgstr ""
 
 msgid "Download voor Mac"
@@ -5931,12 +5940,15 @@ msgstr ""
 msgid "macOS 15 of nieuwer met een Apple-chip · Windows 10 of nieuwer"
 msgstr ""
 
-msgid "Zo open je hem de eerste keer"
-msgstr ""
-
 msgid ""
 "Eerst rondkijken? Kies bij de eerste start <strong>Probeer met "
 "nepdata</strong>."
+msgstr ""
+
+msgid "Je browser speelt deze film niet af."
+msgstr ""
+
+msgid "Download de film"
 msgstr ""
 
 msgid "Probeer Huismus"
@@ -6010,16 +6022,16 @@ msgid "Huismus heeft geen betaalde handtekening van Apple of Microsoft."
 msgstr ""
 
 msgid ""
-"Boekhouden voor zzp’ers, met of zonder KOR: facturen, bonnetjes en de "
-"bedragen voor je btw-aangifte. Gratis, en alles blijft op je eigen computer."
+"Boekhouden voor zzp’ers: facturen, bonnetjes en de bedragen voor je btw-"
+"aangifte. Gratis, en alles blijft op je eigen computer."
 msgstr ""
 
 msgid "Huismus: je boekhouding op je eigen computer"
 msgstr ""
 
 msgid ""
-"Boekhouden voor zzp’ers, met of zonder KOR: facturen, bonnetjes en de "
-"bedragen voor je btw-aangifte. Gratis en open source."
+"Boekhouden voor zzp’ers: facturen, bonnetjes en de bedragen voor je btw-"
+"aangifte. Gratis en open source."
 msgstr ""
 
 msgid ""
@@ -6067,12 +6079,6 @@ msgstr ""
 msgid ""
 "Huismus valt onder de <a "
 "href=\"%(repository)s/blob/main/LICENSE\">AGPL-3.0</a>."
-msgstr ""
-
-#, python-format
-msgid ""
-"Gratis ondertekening van de Windows-versie is aangevraagd bij SignPath "
-"Foundation. <a href=\"%(contribute_url)s#ondertekening\">Ondertekening</a>"
 msgstr ""
 
 msgid "Deze site telt bezoeken met GoatCounter, zonder cookies."
@@ -6219,9 +6225,7 @@ msgid "Ondertekening"
 msgstr ""
 
 msgid ""
-"Gratis ondertekening van de Windows-versie is aangevraagd bij SignPath "
-"Foundation. Tot die er is, is de Windows-versie niet ondertekend. Zo gaat "
-"het als de ondertekening er is:"
+"De Windows-versie is nog niet ondertekend. Zo gaat het als hij dat wel is:"
 msgstr ""
 
 msgid ""
@@ -6369,7 +6373,13 @@ msgid ""
 "<strong>Hulp</strong>."
 msgstr ""
 
-msgid "Voor zzp’ers, met of zonder KOR"
+msgid "Film van een halve minuut, zonder geluid: foto's van bonnetjes gaan naar een map, Huismus leest ze, en in Verwerken kijk je ze na."
+msgstr ""
+
+msgid "Van foto tot uitgave in een halve minuut. In de film leest een AI-dienst de bonnetjes. Die kies je zelf, en hij staat uit tot jij hem aanzet."
+msgstr ""
+
+msgid "Voor zzp’ers"
 msgstr ""
 
 msgid "Je boekhouding op <span class=\"underline\">je eigen computer</span>"
@@ -6398,8 +6408,8 @@ msgstr ""
 
 msgid ""
 "Het overzicht van Huismus: de omzet van dit jaar per maand, wat je nog moet "
-"ontvangen, de KOR-grens en wat er te doen is, zoals een factuur die te laat "
-"is."
+"ontvangen, de grens van de kleineondernemersregeling (KOR) en wat er te doen "
+"is, zoals een factuur die te laat is."
 msgstr ""
 
 msgid "Voor wie"
@@ -6444,7 +6454,7 @@ msgstr ""
 msgid "Aan de keukentafel"
 msgstr ""
 
-msgid "Met de KOR"
+msgid "Met de kleineondernemersregeling (KOR)"
 msgstr ""
 
 msgid ""
@@ -6457,13 +6467,22 @@ msgstr ""
 msgid "Btw op je facturen, ook verlegd. Van elk bonnetje leg je de btw vast."
 msgstr ""
 
+msgctxt "kicker"
+msgid "Film"
+msgstr ""
+
+msgid "Huismus in één minuut"
+msgstr ""
+
+msgid "Film van een minuut: wat Huismus is, voor wie, en wat je ermee doet. Met ondertitels, zonder geluid."
+msgstr ""
+
 msgid "Neem al je jaren mee"
 msgstr ""
 
 msgid ""
-"Je oude administratie hoeft niet achter te blijven. Huismus neemt je "
-"klanten, facturen, offertes en uitgaven uit Moneybird één op één over, met "
-"de pdf’s en de bonnetjes. Je factuurnummers lopen gewoon door."
+"Huismus neemt je klanten, facturen, offertes en uitgaven uit Moneybird één "
+"op één over, met pdf’s en bonnetjes. Je factuurnummers lopen door."
 msgstr ""
 
 msgid "Zo stap je over"
@@ -6478,17 +6497,13 @@ msgstr ""
 msgid "Eerst een proefdraai"
 msgstr ""
 
-msgid ""
-"Huismus rekent elke factuur na en vergelijkt elk totaal, tot op de cent. "
-"Wijkt er een af, dan zie je welke en hoeveel. Huismus slaat nog niets op."
+msgid "Huismus rekent elk totaal na, tot op de cent, en slaat nog niets op."
 msgstr ""
 
 msgid "Importeer"
 msgstr ""
 
-msgid ""
-"Daarna importeer je, en Huismus zet alles erin. Je oude jaren staan dan op "
-"je eigen computer, zonder abonnement."
+msgid "Klopt alles? Dan zet Huismus het erin."
 msgstr ""
 
 msgid ""
@@ -6506,9 +6521,8 @@ msgid "Je administratie is van jou"
 msgstr ""
 
 msgid ""
-"Er is geen Huismus-server en geen account. Alles staat op je eigen computer."
-" Je gegevens gaan alleen ergens heen als jij dat aanzet. Verder kijkt "
-"Huismus alleen of er een nieuwe versie is, en dat kun je uitzetten."
+"Geen server, geen account. Alles staat op je eigen computer en gaat alleen "
+"ergens heen als jij dat aanzet."
 msgstr ""
 
 msgid ""
@@ -6580,8 +6594,7 @@ msgstr ""
 
 msgid ""
 "Zet een foto in een map die meesynchroniseert, ook vanaf je telefoon. "
-"Huismus haalt hem op, en een AI-dienst die jij kiest kan hem lezen. Jij "
-"kijkt na."
+"Huismus haalt hem op."
 msgstr ""
 
 msgid "Meer over bonnetjes"
@@ -6592,7 +6605,7 @@ msgid ""
 " en het bedrag."
 msgstr ""
 
-msgid "Btw en KOR"
+msgid "Btw en kleineondernemersregeling"
 msgstr ""
 
 msgid ""
@@ -6658,9 +6671,8 @@ msgid "Eén keer goed, voor iedereen"
 msgstr ""
 
 msgid ""
-"Een boekhouding heb je nodig. Huismus maakt hem één keer goed, gratis voor "
-"iedereen, in plaats van dat ieder zijn eigen programma door een AI laat "
-"bouwen. De broncode staat openbaar, en iedereen kan meebouwen."
+"Huismus maakt een boekhouding één keer goed, gratis voor iedereen. De "
+"broncode is openbaar en iedereen kan meebouwen."
 msgstr ""
 
 msgid "Waarom Huismus bestaat"
@@ -6792,29 +6804,3 @@ msgid ""
 "Huismus wordt gemaakt in Nederland. Over de maker en wat die nog meer doet, "
 "lees je op <a href=\"https://www.arnekrijnsen.com\">arnekrijnsen.com</a>."
 msgstr ""
-
-msgid "Je browser speelt deze film niet af."
-msgstr ""
-
-msgid "Download de film"
-msgstr ""
-
-msgctxt "kicker"
-msgid "Film"
-msgstr ""
-
-msgid "Huismus in één minuut"
-msgstr ""
-
-msgid "Wat Huismus is en wat je ermee doet. Met ondertitels."
-msgstr ""
-
-msgid "Film van een minuut: wat Huismus is, voor wie, en wat je ermee doet. Met ondertitels, zonder geluid."
-msgstr ""
-
-msgid "Film van een halve minuut, zonder geluid: foto's van bonnetjes gaan naar een map, Huismus leest ze, en in Verwerken kijk je ze na."
-msgstr ""
-
-msgid "Van foto tot uitgave in een halve minuut. In de film leest een AI-dienst de bonnetjes. Die kies je zelf, en hij staat uit tot jij hem aanzet."
-msgstr ""
-

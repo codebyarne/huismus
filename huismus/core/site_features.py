@@ -6,8 +6,9 @@ page Functies (huismus/core/site.py), so both always say the same.
 
 The point is to show how complete Huismus is: every feature you would expect
 of a full bookkeeping package is here, with a check when it works today and
-"Later" when it is on the list (the owner, 2026-11-18; it replaces the months
-of 2026-11-17). "Later" is not a date. The release PR gives what is finished
+"Binnenkort verwacht" when it is on the list (the owner, 2026-11-19; it
+replaced "Later" of 2026-11-18, which replaced the months of 2026-11-17). It is
+not a date. The release PR gives what is finished
 its check (CLAUDE.md, Releases).
 """
 
@@ -97,7 +98,7 @@ FEATURES = (
         _("Btw en jaar"),
         (
             Feature(
-                _("KOR met je grens in beeld"),
+                _("Kleineondernemersregeling (KOR), met je grens in beeld"),
                 _(
                     "Jouw KOR-tekst op elke factuur, en op het overzicht hoe ver je "
                     "van je grens bent."

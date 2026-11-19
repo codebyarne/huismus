@@ -8,7 +8,7 @@
 {% block content %}
 {% comment %}The home page (docs/design/ronde-8/, redesign of 2026-11-18): one headline, the app large on a petrol stage, who it is for, switching, privacy, the year in four parts, and one next step: download.{% endcomment %}
 <section class="hero wrap">
-    <span class="eyebrow">{% translate "Voor zzp’ers, met of zonder KOR" %}</span>
+    <span class="eyebrow">{% translate "Voor zzp’ers" %}</span>
     <h1>{% blocktranslate %}Je boekhouding op <span class="underline">je eigen computer</span>{% endblocktranslate %}</h1>
     <p class="lede">{% translate "Huismus is een gratis app voor je facturen, offertes en bonnetjes, met de bedragen voor je btw-aangifte. Kom je van Moneybird? Neem al je jaren mee, tot op de cent." %}</p>
     {% include "site/_downloads.html" with try_hint=True %}
@@ -22,7 +22,7 @@
 
 <section class="wrap stage-wrap" aria-label="{% translate 'Het overzicht van Huismus' %}">
     <div class="stage">
-        {% translate "Het overzicht van Huismus: de omzet van dit jaar per maand, wat je nog moet ontvangen, de KOR-grens en wat er te doen is, zoals een factuur die te laat is." as alt %}
+        {% translate "Het overzicht van Huismus: de omzet van dit jaar per maand, wat je nog moet ontvangen, de grens van de kleineondernemersregeling (KOR) en wat er te doen is, zoals een factuur die te laat is." as alt %}
         {% include "site/_beeld.html" with name="overzicht" alt=alt still=True eager=True sizes="(min-width: 1264px) 1120px, 92vw" %}
     </div>
 </section>
@@ -60,7 +60,7 @@
         </figure>
     </div>
     <div class="kor-lines">
-        <p><strong>{% translate "Met de KOR" %}<span class="sr-only">:</span></strong> {% translate "Jouw KOR-tekst op elke factuur, en je ziet hoe ver je van je grens bent." %}</p>
+        <p><strong>{% translate "Met de kleineondernemersregeling (KOR)" %}<span class="sr-only">:</span></strong> {% translate "Jouw KOR-tekst op elke factuur, en je ziet hoe ver je van je grens bent." %}</p>
         <p><strong>{% translate "Zonder de KOR" %}<span class="sr-only">:</span></strong> {% translate "Btw op je facturen, ook verlegd. Van elk bonnetje leg je de btw vast." %}</p>
     </div>
 </section>
@@ -70,7 +70,6 @@
     <div class="section-head">
         <p class="kicker">{% translate "Film" context "kicker" %}</p>
         <h2 id="film-kop">{% translate "Huismus in één minuut" %}</h2>
-        <p class="lede">{% translate "Wat Huismus is en wat je ermee doet. Met ondertitels." %}</p>
     </div>
     {% translate "Film van een minuut: wat Huismus is, voor wie, en wat je ermee doet. Met ondertitels, zonder geluid." as label %}
     {% include "site/_film.html" with name="overzicht" label=label %}
@@ -82,7 +81,7 @@
         <div class="band-text band-intro">
             <p class="kicker">{% translate "Overstappen" %}</p>
             <h2 id="overstappen-kop">{% translate "Neem al je jaren mee" %}</h2>
-            <p class="lede">{% translate "Je oude administratie hoeft niet achter te blijven. Huismus neemt je klanten, facturen, offertes en uitgaven uit Moneybird één op één over, met de pdf’s en de bonnetjes. Je factuurnummers lopen gewoon door." %}</p>
+            <p class="lede">{% translate "Huismus neemt je klanten, facturen, offertes en uitgaven uit Moneybird één op één over, met pdf’s en bonnetjes. Je factuurnummers lopen door." %}</p>
             <a class="more" href="{{ help.moneybird }}">{% translate "Zo stap je over" %} <span aria-hidden="true">→</span></a>
         </div>
         <div class="halves band-steps">
@@ -95,12 +94,12 @@
                     <li>
                         <span class="step-n" aria-hidden="true">2</span>
                         <div><h3>{% translate "Eerst een proefdraai" %}</h3>
-                        <p>{% translate "Huismus rekent elke factuur na en vergelijkt elk totaal, tot op de cent. Wijkt er een af, dan zie je welke en hoeveel. Huismus slaat nog niets op." %}</p></div>
+                        <p>{% translate "Huismus rekent elk totaal na, tot op de cent, en slaat nog niets op." %}</p></div>
                     </li>
                     <li>
                         <span class="step-n" aria-hidden="true">3</span>
                         <div><h3>{% translate "Importeer" %}</h3>
-                        <p>{% translate "Daarna importeer je, en Huismus zet alles erin. Je oude jaren staan dan op je eigen computer, zonder abonnement." %}</p></div>
+                        <p>{% translate "Klopt alles? Dan zet Huismus het erin." %}</p></div>
                     </li>
                 </ol>
             <div class="band-shot">
@@ -116,7 +115,7 @@
     <div class="prose">
         <p class="kicker">{% translate "Privacy" %}</p>
         <h2 id="van-jou">{% translate "Je administratie is van jou" %}</h2>
-        <p class="lede">{% translate "Er is geen Huismus-server en geen account. Alles staat op je eigen computer. Je gegevens gaan alleen ergens heen als jij dat aanzet. Verder kijkt Huismus alleen of er een nieuwe versie is, en dat kun je uitzetten." %}</p>
+        <p class="lede">{% translate "Geen server, geen account. Alles staat op je eigen computer en gaat alleen ergens heen als jij dat aanzet." %}</p>
         <ul class="ticks">
             <li><svg class="i" width="18" height="18" aria-hidden="true"><use href="#check"></use></svg><span>{% translate "Elke dag een back-up, in een map die jij kiest, zolang Huismus open staat." %}</span></li>
             <li><svg class="i" width="18" height="18" aria-hidden="true"><use href="#check"></use></svg><span>{% translate "Je export opent ook zonder Huismus: gewone CSV-bestanden, pdf’s en bonnetjes." %}</span></li>
@@ -160,7 +159,7 @@
             <article class="bento-item bento-phone">
                 <div class="bento-text">
                     <h3>{% translate "Bonnetjes" %}</h3>
-                    <p>{% translate "Zet een foto in een map die meesynchroniseert, ook vanaf je telefoon. Huismus haalt hem op, en een AI-dienst die jij kiest kan hem lezen. Jij kijkt na." %}</p>
+                    <p>{% translate "Zet een foto in een map die meesynchroniseert, ook vanaf je telefoon. Huismus haalt hem op." %}</p>
                     <a class="more" href="{{ help.bonnetjes }}">{% translate "Meer over bonnetjes" %} <span aria-hidden="true">→</span></a>
                 </div>
                 <div class="bento-shot">
@@ -170,7 +169,7 @@
             </article>
             <article class="bento-item">
                 <div class="bento-text">
-                    <h3>{% translate "Btw en KOR" %}</h3>
+                    <h3>{% translate "Btw en kleineondernemersregeling" %}</h3>
                     <p>{% translate "Met de KOR zie je hoe ver je van je grens bent. Zonder de KOR zie je per kwartaal de bedragen per rubriek, klaar om over te nemen." %}</p>
                     <a class="more" href="{{ help.kor_en_btw }}">{% translate "Meer over KOR en btw" %} <span aria-hidden="true">→</span></a>
                 </div>
@@ -207,7 +206,7 @@
         <div class="check-group">
             <h3>{{ group }}</h3>
             <ul>
-                {% for feature in items %}<li{% if feature.later %} class="is-later"{% endif %}>{% if feature.later %}<span class="later">{% translate "Later" %}</span>{% else %}<svg class="i" width="18" height="18" aria-label="{% translate 'Werkt nu' %}" role="img"><use href="#check"></use></svg>{% endif %}<span>{{ feature.name }}</span></li>{% endfor %}
+                {% for feature in items %}<li{% if feature.later %} class="is-later"{% endif %}>{% if feature.later %}<span class="later">{% translate "Binnenkort verwacht" %}</span>{% else %}<svg class="i" width="18" height="18" aria-label="{% translate 'Werkt nu' %}" role="img"><use href="#check"></use></svg>{% endif %}<span>{{ feature.name }}</span></li>{% endfor %}
             </ul>
         </div>
         {% endfor %}
@@ -219,7 +218,7 @@
     <div class="tile">
         <p class="kicker">{% translate "Waarom" %}</p>
         <h3>{% translate "Eén keer goed, voor iedereen" %}</h3>
-        <p>{% translate "Een boekhouding heb je nodig. Huismus maakt hem één keer goed, gratis voor iedereen, in plaats van dat ieder zijn eigen programma door een AI laat bouwen. De broncode staat openbaar, en iedereen kan meebouwen." %}</p>
+        <p>{% translate "Huismus maakt een boekhouding één keer goed, gratis voor iedereen. De broncode is openbaar en iedereen kan meebouwen." %}</p>
         <a class="more" href="{{ why_url }}">{% translate "Waarom Huismus bestaat" %} <span aria-hidden="true">→</span></a>
     </div>
     <div class="tile">

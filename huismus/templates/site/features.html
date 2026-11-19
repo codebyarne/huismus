@@ -11,7 +11,7 @@
 <div class="page-intro">
     <h1>{% translate "Alles wat Huismus kan" %}</h1>
     <p class="lede">{% translate "Alles wat je van een volwassen boekhouding mag verwachten, op één pagina. Met een vinkje werkt het nu, met Later staat het op de lijst." %}</p>
-    <p class="feature-count"><span><svg class="i" width="18" height="18" aria-hidden="true"><use href="#check"></use></svg>{% blocktranslate count count=features.now_count %}{{ count }} functie werkt nu{% plural %}{{ count }} functies werken nu{% endblocktranslate %}</span><span><span class="later">{% translate "Later" %}</span>{% blocktranslate count count=features.later_count %}{{ count }} staat op de lijst{% plural %}{{ count }} staan op de lijst{% endblocktranslate %}</span></p>
+    <p class="feature-count"><span><svg class="i" width="18" height="18" aria-hidden="true"><use href="#check"></use></svg>{% blocktranslate count count=features.now_count %}{{ count }} functie werkt nu{% plural %}{{ count }} functies werken nu{% endblocktranslate %}</span><span><span class="later">{% translate "Binnenkort verwacht" %}</span>{% blocktranslate count count=features.later_count %}{{ count }} staat op de lijst{% plural %}{{ count }} staan op de lijst{% endblocktranslate %}</span></p>
 </div>
 
 <section class="features-now" aria-label="{% translate 'Alle functies' %}">
@@ -20,7 +20,7 @@
         <h2>{{ group }}</h2>
         <ul>
             {% for feature in items %}
-            <li{% if feature.later %} class="is-later"{% endif %}>{% if feature.later %}<span class="later">{% translate "Later" %}</span>{% else %}<svg class="i" width="18" height="18" aria-label="{% translate 'Werkt nu' %}" role="img"><use href="#check"></use></svg>{% endif %}<div><strong>{% if feature.help %}<a href="{% if language == 'nl' %}/hulp/{% else %}/en/help/{% endif %}{{ feature.help }}/">{{ feature.name }} <span aria-hidden="true">→</span></a>{% else %}{{ feature.name }}{% endif %}</strong>{% if feature.text %}<span>{{ feature.text }}</span>{% endif %}</div></li>
+            <li{% if feature.later %} class="is-later"{% endif %}>{% if feature.later %}<span class="later">{% translate "Binnenkort verwacht" %}</span>{% else %}<svg class="i" width="18" height="18" aria-label="{% translate 'Werkt nu' %}" role="img"><use href="#check"></use></svg>{% endif %}<div><strong>{% if feature.help %}<a href="{% if language == 'nl' %}/hulp/{% else %}/en/help/{% endif %}{{ feature.help }}/">{{ feature.name }} <span aria-hidden="true">→</span></a>{% else %}{{ feature.name }}{% endif %}</strong>{% if feature.text %}<span>{{ feature.text }}</span>{% endif %}</div></li>
             {% endfor %}
         </ul>
     </div>
