@@ -4,7 +4,7 @@ Wat Huismus is, voor wie, en wat je ermee doet, in ongeveer een minuut. De film 
 het verhaal van de homepage (`huismus/templates/site/index.html`): wat het is, voor wie,
 overstappen, het hele jaar (factuur, bonnetjes, btw en jaar), privacy, downloaden.
 
-- **Beeld:** 1920×1080, donker, in "Helder" met het logo "Tegel". Links de kop van het
+- **Beeld:** 1920×1080, licht, in "Helder" met het logo "Tegel". Links de kop van het
   shot met drie punten, rechts het echte scherm van Huismus op nepdata.
 - **Stem:** Nederlands, je en jij, volgens `docs/schrijfwijzer.md`. Niets over wet of
   belasting: de film zegt wat je op het scherm ziet.

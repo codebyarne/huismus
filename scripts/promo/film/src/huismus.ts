@@ -1,27 +1,28 @@
 // SPDX-FileCopyrightText: 2026 Huismus contributors
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Huismus's own look, "Helder" in dark (huismus/core/static/core/huismus.css):
-// the films are dark, as the picture a shared link shows.
+// Huismus's own look, "Helder" in light (huismus/core/static/core/huismus.css):
+// the films are light, as the site is (owner, 2026-11-19).
 import { continueRender, delayRender, Easing, staticFile } from "remotion";
 
 export const C = {
-  bg: "#061415",
-  surface: "#0C2122",
-  surface2: "#122A2B",
-  surface3: "#1B3536",
-  border: "#1F3B3C",
-  borderStrong: "#35595A",
-  text: "#EAF4F3",
-  muted: "#8FA8A7",
-  primary: "#5FC9C4", // mint: petrol in dark
-  onPrimary: "#06201F",
-  primarySoft: "#123537",
-  primaryInk: "#8ADBD6",
+  bg: "#F1F5F4",
+  surface: "#FFFFFF",
+  surface2: "#F4F7F6",
+  surface3: "#E6EEED",
+  border: "#E1E8E7",
+  borderStrong: "#C3D0CF",
+  text: "#0C2325",
+  muted: "#5E7274",
+  primary: "#0D6B6E", // petrol
+  onPrimary: "#FFFFFF",
+  primarySoft: "#E6F4F3",
+  primaryInk: "#0A5A5D",
+  mint: "#5FC9C4", // petrol's light sister: a marker over a photo
   hero: "#0B4F51",
   heroMuted: "#B5E4E1",
   paper: "#FFFFFF",
   // The site's second colour (docs/design/ronde-8/README.md): at most once a screen.
-  framboos: "#FF7BA5",
+  framboos: "#B4184F",
 };
 
 export const FONT = '"Inter", ui-sans-serif, system-ui, sans-serif';
@@ -29,7 +30,7 @@ export const DISPLAY = `"Bricolage Grotesque", ${FONT}`;
 
 // One curve for every move: quick start, long soft landing.
 export const EASE = Easing.bezier(0.25, 0.1, 0.1, 1);
-export const SHADOW = "0 30px 80px rgba(0, 0, 0, 0.55), 0 6px 18px rgba(0, 0, 0, 0.30)";
+export const SHADOW = "0 30px 80px rgba(12, 35, 37, 0.18), 0 6px 18px rgba(12, 35, 37, 0.08)";
 
 /** What scripts/promo-film.sh copies into public/huisstijl/: the app's own
  * letters and the logo "Tegel", so the films never have a copy of their own. */

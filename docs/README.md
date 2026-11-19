@@ -27,7 +27,7 @@ de app, maak ze dan opnieuw en commit ze:
 ./scripts/site-beelden.sh
 ```
 
-Twee promofilms (1920×1080 mp4, donker, in de huisstijl van de app en de site),
+Twee promofilms (1920×1080 mp4, licht, in de huisstijl van de app en de site),
 van dezelfde verzonnen administratie. Ze komen in `~/Downloads/huismus-films/`,
 niet in de repo:
 

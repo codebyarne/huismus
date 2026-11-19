@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Maak de promofilms van Huismus opnieuw (1920x1080 mp4, donker, in de
+# Maak de promofilms van Huismus opnieuw (1920x1080 mp4, licht, in de
 # huisstijl van de app en de site). Draai dit als een scherm in een film er
 # anders uit is gaan zien. Duurt een paar minuten per film.
 #
@@ -60,8 +60,8 @@ out="$(cd "$out" && pwd)"
 remotion=scripts/promo/film
 # The app's own letters and logo: the films have no copy of their own.
 mkdir -p "$remotion/public/huisstijl"
-cp huismus/core/static/core/fonts/*.woff2 docs/design/icons/logo-donker.svg \
-    docs/design/icons/tegel-donker.svg "$remotion/public/huisstijl/"
+cp huismus/core/static/core/fonts/*.woff2 docs/design/icons/logo.svg \
+    docs/design/icons/tegel.svg "$remotion/public/huisstijl/"
 "${python[@]}" scripts/promo_film.py opname "$remotion/public/opname"
 # Both films are in one Remotion project, so the overview film's sound is
 # always made: its subtitles are part of the code Remotion bundles.
