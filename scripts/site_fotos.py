@@ -21,7 +21,7 @@ from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
 ROOT = Path(__file__).resolve().parent.parent
 PHOTOS = ROOT / "docs" / "design" / "ronde-7" / "fotos"
-SCREEN = (1280, 800)
+SUPERSAMPLE = 4
 
 # name on the site: (the photo, widths, and for a laptop: the picture of the
 # app, which frame of it, a point on the empty screen).
@@ -133,8 +133,18 @@ def _perspective(corners: list[tuple[float, float]], size: tuple[int, int]) -> l
 def on_laptop(photo: Image.Image, screen: Image.Image, seed: tuple[int, int]) -> Image.Image:
     mask = _screen_mask(photo, seed)
     corners = _corners(mask)
-    coefficients = _perspective(corners, screen.size)
-    placed = screen.transform(photo.size, Image.PERSPECTIVE, coefficients, Image.BICUBIC)
+    # Image.transform does not smooth when it shrinks, so small text came out
+    # grainy: draw the screen SUPERSAMPLE times larger and shrink that.
+    left = int(min(x for x, _ in corners))
+    top = int(min(y for _, y in corners))
+    width = int(max(x for x, _ in corners)) + 2 - left
+    height = int(max(y for _, y in corners)) + 2 - top
+    big_corners = [((x - left) * SUPERSAMPLE, (y - top) * SUPERSAMPLE) for x, y in corners]
+    coefficients = _perspective(big_corners, screen.size)
+    big_size = (width * SUPERSAMPLE, height * SUPERSAMPLE)
+    drawn = screen.transform(big_size, Image.PERSPECTIVE, coefficients, Image.BICUBIC)
+    placed = Image.new("RGB", photo.size)
+    placed.paste(drawn.resize((width, height), Image.LANCZOS), (left, top))
     # The light of the photo on the screen: the empty screen, blurred, as a
     # gentle shade over the picture, and a little of its grey mixed in.
     light = photo.filter(ImageFilter.GaussianBlur(12))
@@ -152,7 +162,8 @@ def on_laptop(photo: Image.Image, screen: Image.Image, seed: tuple[int, int]) ->
 def _screen(media: Path, name: str, frame: int, language: str) -> Image.Image:
     with Image.open(media / f"{name}.{language}.light.webp") as picture:
         picture.seek(frame)
-        return picture.convert("RGB").resize(SCREEN, Image.LANCZOS)
+        # As large as it is (a still is 2560 px wide): on_laptop shrinks it once.
+        return picture.convert("RGB")
 
 
 def main(media: Path) -> None:
@@ -169,7 +180,7 @@ def main(media: Path) -> None:
             for width in widths:
                 height = round(photo.height * width / photo.width)
                 file = ".".join(part for part in (name, language, str(width), "webp") if part)
-                photo.resize((width, height), Image.LANCZOS).save(out / file, quality=78, method=6)
+                photo.resize((width, height), Image.LANCZOS).save(out / file, quality=86, method=6)
         print(f"foto {name}: klaar", flush=True)
 
 
