@@ -743,8 +743,11 @@ const wideScreen = window.matchMedia("(min-width: 981px)");
 // The browser's PDF viewer takes the cursor once it has started, a moment
 // after the frame loaded: whoever was typing the amount by then, typed the
 // rest into the PDF (#137). Until VIEWER_STARTS_MS after the frame's load,
-// focus that lands on the frame goes back to where it was.
+// focus that lands on the frame goes back to where it was. A frame that
+// never loads stops being watched after LOAD_WAIT_MS. Call this before the
+// frame gets its src.
 const VIEWER_STARTS_MS = 2000;
+const LOAD_WAIT_MS = 15000;
 function keepFocusHere(frame) {
   // A field can have the cursor already, from before this script ran.
   let last = document.activeElement === document.body ? null : document.activeElement;
@@ -764,7 +767,15 @@ function keepFocusHere(frame) {
     document.removeEventListener("focusin", remember);
     window.removeEventListener("blur", giveBack);
   };
-  frame.addEventListener("load", () => setTimeout(stop, VIEWER_STARTS_MS), { once: true });
+  const giveUp = setTimeout(stop, LOAD_WAIT_MS);
+  frame.addEventListener(
+    "load",
+    () => {
+      clearTimeout(giveUp);
+      setTimeout(stop, VIEWER_STARTS_MS);
+    },
+    { once: true },
+  );
 }
 
 function showReceiptPdfs(root) {
@@ -905,7 +916,8 @@ document.addEventListener("click", (event) => {
 });
 
 // A photo taken before this script ran (a slow phone or connection, #227):
-// its change event had nobody listening, so it is sent now.
+// its change event had nobody listening, so it is sent now. So is one
+// that failed to send and is still in its field after a reload.
 for (const input of document.querySelectorAll("input[type=file][data-camera]")) {
   if (input.files.length) {
     sendPhoto(input.form, input.files[0]);
