@@ -9,12 +9,15 @@ import io
 import random
 
 import pytest
+from django.core.files.uploadedfile import SimpleUploadedFile
 from PIL import Image
 from playwright.sync_api import expect
 
 from huismus.core.demo_receipts import _pdf, _photo
 from huismus.core.models import Attachment
 from huismus.expenses.models import Expense, ExpenseCategory
+from huismus.expenses.photo_views import SOURCE
+from huismus.expenses.receipts import sha256_of
 from tests.e2e.conftest import IGNORED
 
 pytestmark = pytest.mark.django_db(transaction=True)
@@ -142,15 +145,17 @@ def test_opnieuw_and_only_the_photo(phone):
 def test_opnieuw_before_the_script_runs_still_sends_the_photo(phone):
     # #227: on a slow phone "Opnieuw" was tapped before app.js had loaded;
     # the photo was taken, nobody sent it, and the page just stayed.
-    phone.goto(phone.base + "/uitgaven/")
-    _camera(phone, lambda: phone.get_by_role("link", name="Nieuwe uitgave").first.tap())
-    expect(phone.locator("h1")).to_have_text("Nieuwe uitgave")
-    first = Attachment.objects.get().pk
+    photo = SimpleUploadedFile("IMG_3000.jpg", PHOTO["buffer"], content_type="image/jpeg")
+    first = Attachment.objects.create(
+        file=photo, kind="receipt", sha256=sha256_of(photo), source=SOURCE
+    ).pk
 
-    # The same page again, with app.js held back as on a slow connection.
+    # app.js held back as on a slow connection. This is the browser's first
+    # page: a script it has loaded before comes from its cache, past the
+    # route (WebKit on a reload).
     held = []
     phone.route("**/app*.js", lambda route: held.append(route))
-    phone.reload(wait_until="commit")
+    phone.goto(phone.base + f"/uitgaven/nieuw/foto/{first}/", wait_until="commit")
     with phone.expect_file_chooser() as chooser:
         phone.locator(".photo-again label").tap()
     chooser.value.set_files(PHOTO)
