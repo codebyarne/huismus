@@ -9079,11 +9079,6 @@ msgstr "Record"
 msgid "Zo haal je je afschrift bij de bank"
 msgstr "How to get your statement from the bank"
 
-msgid ""
-"Download het afschrift in je internetbankieren als CAMT.053 of MT940. Kies de"
-" periode sinds je vorige keer; een periode die overlapt is geen probleem."
-msgstr ""
-
 msgid "Bankafschrift inlezen"
 msgstr "Import bank statement"
 
@@ -9171,3 +9166,29 @@ msgstr "Paid too much"
 
 msgid "uit bankafschrift: %(name)s"
 msgstr "from bank statement: %(name)s"
+
+msgid ""
+"Kies CAMT.053 als je bank het heeft, anders MT940. Kies de periode sinds de "
+"vorige keer; overlappen is geen probleem."
+msgstr ""
+"Choose CAMT.053 if your bank has it, otherwise MT940. Choose the period since"
+" last time; an overlap is fine."
+
+msgid "Mijn ING Zakelijk, bij het downloaden het bestandstype kiezen."
+msgstr "Mijn ING Zakelijk, choosing the file type when you download."
+
+msgid ""
+"Een particuliere rekening bij ING geeft alleen CSV en pdf. Die leest Huismus "
+"niet; registreer een betaling dan op de factuur."
+msgstr ""
+"A personal ING account only gives CSV and PDF. Huismus doesn't read those; "
+"record a payment on the invoice instead."
+
+msgid "de transacties downloaden als CAMT.053"
+msgstr "download the transactions as CAMT.053"
+
+msgid "Een zip is goed."
+msgstr "A zip is fine."
+
+msgid "Meer uitleg per bank"
+msgstr "More about each bank"

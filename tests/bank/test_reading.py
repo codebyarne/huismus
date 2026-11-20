@@ -288,3 +288,26 @@ def test_the_file_is_kept_once_in_the_data_folder():
     assert path.read_bytes() == data
     _read(data, name="../nov.xml")
     assert len(list(reading.archive_dir().iterdir())) == 1
+
+
+@pytest.mark.parametrize(
+    "name", ["mt940-ing.sta", "mt940-rabobank.swi", "mt940-abnamro.sta", "mt940-triodos.sta"]
+)
+def test_mt940_of_every_bank_reads(name):
+    result = _read((FIXTURES / name).read_bytes(), name=name)
+    assert result.new >= 1
+    assert all(t.amount_cents > 0 for t in BankTransaction.objects.all())
+
+
+def test_an_mt940_line_books_like_a_camt_one():
+    customer = Contact.objects.create(company_name="Bakkerij De Korst")
+    document = Document.objects.create(kind="invoice", status="draft", contact=customer)
+    DocumentLine.objects.create(
+        document=document, description="Brood", quantity="1", unit_price_cents=121000
+    )
+    invoice = issue(document)
+    data = (
+        (FIXTURES / "mt940-abnamro.sta").read_bytes().replace(b"2026-015", invoice.number.encode())
+    )
+    _read(data, name="abn.sta")
+    assert Payment.objects.get().document == invoice

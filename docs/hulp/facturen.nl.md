@@ -47,6 +47,9 @@ Op de factuur zie je de betaalstatus: onbetaald, deels betaald, betaald of
 te laat. Is er betaald, klik dan op **Betaling registreren**. Het bedrag
 staat al ingevuld met wat er nog openstaat. Een deel betalen kan ook.
 
+Veel betalingen tegelijk? Lees je bankafschrift in, dan boekt Huismus ze
+zelf. Zie [Bankafschrift inlezen](bankafschrift.nl.md).
+
 Het overzicht laat zien wat er in totaal openstaat en welke facturen te laat
 zijn.
 

@@ -65,6 +65,8 @@ GROUPS = (
         _("Het hele jaar"),
         (
             "facturen",
+            # Right after Facturen: it is a page of Facturen (#77).
+            "bankafschrift",
             "offertes",
             "mailen",
             "uitgaven",
