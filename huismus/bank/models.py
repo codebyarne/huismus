@@ -75,6 +75,9 @@ class BankTransaction(TimestampedModel):
     # (reading.fingerprint): reading it again changes nothing.
     fingerprint = models.CharField(_("vingerafdruk"), max_length=64, unique=True)
     state = models.CharField(_("status"), max_length=20, choices=State.choices)
+    # Only for a line that waits: Huismus's proposal (PROPOSED), or the
+    # invoice a payment was undone from (OPEN). A booked line has its
+    # invoice through `payment`.
     proposed_document = models.ForeignKey(
         Document,
         on_delete=models.SET_NULL,

@@ -8,30 +8,34 @@ Huismus booked from it, and every line that still waits (from any
 statement). Every action is a plain POST that comes back to the page.
 """
 
+from dataclasses import dataclass
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext as _
-from django.utils.translation import ngettext
+from django.utils.translation import gettext_lazy, ngettext
 from django.views.decorators.http import require_POST
 
 from huismus.documents.models import Document
 
 from . import reading
 from .lines import StatementLine, StatementReadError
-from .matching import match
+from .matching import OpenInvoice, match
 from .models import BankStatement, BankTransaction
 
 State = BankTransaction.State
 
 MAX_UPLOAD_BYTES = 50 * 1024 * 1024
 
-NOT_A_STATEMENT = _(
+# Lazy: translated in the language of the request, not when Python loads this.
+NOT_A_STATEMENT = gettext_lazy(
     "Huismus herkent dit bestand niet als bankafschrift. "
     "Download het bij je bank als CAMT.053 of MT940."
 )
+TOO_BIG = gettext_lazy("Dit bestand is groter dan 50 MB. Kies bij je bank een kortere periode.")
 
 
 def summary_text(summary: dict) -> str:
@@ -91,31 +95,47 @@ def _as_line(transaction) -> StatementLine:
     )
 
 
-def _waiting(open_invoices):
-    """The lines that wait for the user, each with what the page needs."""
+@dataclass
+class Waiting:
+    """A line that waits for the user, with what the page shows of it."""
+
+    line: BankTransaction
+    # The open invoices to choose from, the ones that fit first.
+    choices: list[OpenInvoice]
+    several_numbers: bool = False
+    # For Klopt dit?: the proposed invoice, and how much the payment is
+    # more (positive) or less (negative) than what is open on it.
+    proposal: OpenInvoice | None = None
+    difference_cents: int = 0
+
+    @property
+    def short_cents(self) -> int:
+        return -self.difference_cents
+
+
+def _waiting(open_invoices) -> tuple[list[Waiting], list[Waiting]]:
+    """The lines that wait: (Klopt dit?, Zelf kiezen). The proposal is the
+    stored one; matching runs again only to order the choices, since what is
+    open changed since the statement was read."""
     by_pk = {invoice.pk: invoice for invoice in open_invoices}
     proposed, to_choose = [], []
-    lines = BankTransaction.objects.waiting().select_related("proposed_document")
-    for line in lines:
+    for line in BankTransaction.objects.waiting():
         found = match(_as_line(line), open_invoices)
-        first = [by_pk[line.proposed_document_id]] if line.proposed_document_id in by_pk else []
-        if found.invoice:
-            first.append(found.invoice)
-        ordered = []
+        stored = by_pk.get(line.proposed_document_id)
+        first = [stored] if stored else []
+        first += [found.invoice] if found.invoice else []
+        choices = []
         for invoice in first + list(found.candidates) + open_invoices:
-            if invoice not in ordered:
-                ordered.append(invoice)
-        line.choices = ordered
-        line.several_numbers = found.several_numbers
-        proposal = by_pk.get(line.proposed_document_id)
-        if line.state == State.PROPOSED and proposal is not None:
-            line.proposal = proposal
-            line.difference_cents = line.amount_cents - proposal.outstanding_cents
-            line.short_cents = -line.difference_cents
-            proposed.append(line)
+            if invoice not in choices:
+                choices.append(invoice)
+        item = Waiting(line, choices, several_numbers=found.several_numbers)
+        if line.state == State.PROPOSED and stored is not None:
+            item.proposal = stored
+            item.difference_cents = line.amount_cents - stored.outstanding_cents
+            proposed.append(item)
         else:
             # A proposal whose invoice was paid meanwhile is a line to choose for.
-            to_choose.append(line)
+            to_choose.append(item)
     return proposed, to_choose
 
 
@@ -124,8 +144,10 @@ def statement_page(request):
     error = None
     if request.method == "POST":
         upload = request.FILES.get("bestand")
-        if upload is None or upload.size > MAX_UPLOAD_BYTES:
+        if upload is None:
             error = NOT_A_STATEMENT
+        elif upload.size > MAX_UPLOAD_BYTES:
+            error = TOO_BIG
         else:
             try:
                 result = reading.read_statement(upload.name, upload.read())
@@ -140,6 +162,9 @@ def statement_page(request):
                     return redirect("bank:statement")
                 return redirect(f"{reverse('bank:statement')}?afschrift={result.statement.pk}")
 
+    # ?afschrift= is where reading a file redirects to: then the page opens
+    # with its summary. Without it, the latest statement's bookings show,
+    # without a summary.
     statement = None
     requested = request.GET.get("afschrift", "")
     if requested.isdigit():
@@ -149,7 +174,7 @@ def statement_page(request):
 
     open_invoices = reading.open_invoices()
     proposed, to_choose = _waiting(open_invoices)
-    booked = already = []
+    booked, already = [], []
     if statement is not None:
         lines = statement.transactions.select_related("payment__document", "proposed_document")
         booked = [t for t in lines if t.state in (State.BOOKED, State.CONFIRMED)]
@@ -224,6 +249,8 @@ def _book(request, line, invoice):
     try:
         reading.book(line, invoice)
     except ValueError:
+        # Booked meanwhile (another tab, a double click).
+        messages.error(request, _("Deze bijschrijving is al geboekt."))
         return
     messages.success(
         request, _("Betaling geboekt op factuur %(number)s.") % {"number": invoice.number}
@@ -236,6 +263,7 @@ def undo(request, pk):
     try:
         reading.undo(_line(pk))
     except ValueError:
+        messages.error(request, _("Deze betaling was al teruggedraaid."))
         return _back(request)
     messages.success(request, _("Betaling teruggedraaid. Hij staat weer bij Zelf kiezen."))
     return _back(request)
@@ -247,7 +275,8 @@ def skip(request, pk):
     try:
         reading.skip(_line(pk))
     except ValueError:
-        pass
+        pass  # already skipped or booked: nothing left to skip
+
     return _back(request)
 
 
@@ -255,8 +284,8 @@ def skip(request, pk):
 @require_POST
 def skip_all(request):
     _proposed, to_choose = _waiting(reading.open_invoices())
-    for line in to_choose:
-        reading.skip(line)
+    for item in to_choose:
+        reading.skip(item.line)
     return _back(request)
 
 
@@ -266,5 +295,5 @@ def restore(request, pk):
     try:
         reading.unskip(_line(pk))
     except ValueError:
-        pass
+        pass  # already back: nothing to restore
     return _back(request)

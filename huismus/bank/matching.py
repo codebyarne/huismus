@@ -101,25 +101,52 @@ def _knows_payer(invoice: OpenInvoice, line: StatementLine) -> bool:
     return any(name_fits(name, line.counterparty_name) for name in invoice.names if name)
 
 
+def fits_without_amount(line: StatementLine, invoice: OpenInvoice) -> bool:
+    """The line points to this invoice by its number or by its customer,
+    whatever the amount: to recognise a payment already in Huismus
+    (reading._payment_already_there)."""
+    text = f"{line.description} {line.reference}"
+    if invoice.number and _long_enough(invoice.number):
+        if number_pattern(invoice.number).search(text):
+            return True
+    return _knows_payer(invoice, line)
+
+
+def _unique(invoices) -> tuple[OpenInvoice, ...]:
+    result = []
+    for invoice in invoices:
+        if invoice not in result:
+            result.append(invoice)
+    return tuple(result)
+
+
 def match(line: StatementLine, open_invoices: list[OpenInvoice]) -> Match:
     text = f"{line.description} {line.reference}"
+    # Every invoice whose number is in the text, and of those the numbers
+    # long enough to be proof (a "15" is in too many texts).
     named = [i for i in open_invoices if i.number and number_pattern(i.number).search(text)]
-    by_number = [i for i in named if _long_enough(i.number)]
-    if len(by_number) == 1 and len(named) == 1:
-        invoice = by_number[0]
+    proof = [i for i in named if _long_enough(i.number)]
+
+    # Step 1, by number: exactly one number in the text and it is proof.
+    # Sure when the amount is what is open, else likely.
+    if len(named) == 1 and len(proof) == 1:
+        invoice = proof[0]
         kind = SURE if invoice.outstanding_cents == line.amount_cents else LIKELY
         return Match(kind, invoice)
-    if len(by_number) > 1:
+    # More than one invoice named: one transfer for several, the user's.
+    if len(proof) > 1:
         return Match(CHOOSE, candidates=tuple(named), several_numbers=True)
 
+    # Step 2, by amount and payer: exactly one invoice with this open
+    # amount whose customer's name or IBAN is the payer's.
     by_amount = [i for i in open_invoices if i.outstanding_cents == line.amount_cents]
     by_payer = [i for i in open_invoices if _knows_payer(i, line)]
     both = [i for i in by_amount if i in by_payer]
     if len(both) == 1:
         return Match(LIKELY, both[0])
-    # A short number in the text is no proof, but the best lead there is.
-    candidates = []
-    for invoice in named + (both or by_amount + by_payer):
-        if invoice not in candidates:
-            candidates.append(invoice)
-    return Match(CHOOSE, candidates=tuple(candidates))
+
+    # Step 3, the user chooses. First the invoices named by a short number
+    # (no proof, but the best lead), then those that fit on amount and
+    # payer, then on amount or payer alone.
+    leads = both if both else by_amount + by_payer
+    return Match(CHOOSE, candidates=_unique(named + leads))

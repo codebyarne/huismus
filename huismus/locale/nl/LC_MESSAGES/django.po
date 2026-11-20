@@ -7442,3 +7442,12 @@ msgstr "Een zip is goed."
 
 msgid "Meer uitleg per bank"
 msgstr "Meer uitleg per bank"
+
+msgid "Dit bestand is groter dan 50 MB. Kies bij je bank een kortere periode."
+msgstr "Dit bestand is groter dan 50 MB. Kies bij je bank een kortere periode."
+
+msgid "Deze bijschrijving is al geboekt."
+msgstr "Deze bijschrijving is al geboekt."
+
+msgid "Deze betaling was al teruggedraaid."
+msgstr "Deze betaling was al teruggedraaid."

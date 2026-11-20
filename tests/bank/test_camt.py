@@ -75,3 +75,10 @@ def test_an_amount_with_more_than_two_decimals_is_refused():
     data = (FIXTURES / "camt053-001-08.xml").read_bytes().replace(b"605.00", b"605.001")
     with pytest.raises(StatementReadError):
         camt.read(data)
+
+
+def test_a_batch_whose_parts_dont_add_up_is_one_line():
+    data = (FIXTURES / "camt053-001-02.xml").read_bytes().replace(b"200.00", b"199.99")
+    lines = camt.read(data).lines
+    assert [line.amount_cents for line in lines] == [121000, 30000]
+    assert lines[1].description == "Verzamelbetaling"

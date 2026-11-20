@@ -23,13 +23,13 @@
 <section class="card" id="klopt-dit" aria-labelledby="klopt-dit-titel">
     <div class="card-head"><h2 id="klopt-dit-titel">{% translate "Klopt dit?" %}</h2><span class="small muted">{{ proposed|length }}</span></div>
     <ul class="list">
-        {% for line in proposed %}
+        {% for item in proposed %}{% with line=item.line %}
         <li style="flex-wrap:wrap" id="regel-{{ line.pk }}">
             {% include "bank/_line.html" %}
             <div class="small" style="flex-basis:100%">
-                {% blocktranslate with number=line.proposal.number customer=line.proposal.customer open=line.proposal.outstanding_cents|money %}Factuur {{ number }} · {{ customer }} · open {{ open }}{% endblocktranslate %}
-                {% if line.difference_cents > 0 %}<br><span class="muted">{% blocktranslate with amount=line.difference_cents|money %}{{ amount }} meer dan er open staat.{% endblocktranslate %}</span>
-                {% elif line.short_cents > 0 %}<br><span class="muted">{% blocktranslate with amount=line.short_cents|money %}{{ amount }} minder dan er open staat. De rest blijft open.{% endblocktranslate %}</span>{% endif %}
+                {% blocktranslate with number=item.proposal.number customer=item.proposal.customer open=item.proposal.outstanding_cents|money %}Factuur {{ number }} · {{ customer }} · open {{ open }}{% endblocktranslate %}
+                {% if item.difference_cents > 0 %}<br><span class="muted">{% blocktranslate with amount=item.difference_cents|money %}{{ amount }} meer dan er open staat.{% endblocktranslate %}</span>
+                {% elif item.short_cents > 0 %}<br><span class="muted">{% blocktranslate with amount=item.short_cents|money %}{{ amount }} minder dan er open staat. De rest blijft open.{% endblocktranslate %}</span>{% endif %}
             </div>
             <div class="row" style="flex-basis:100%;gap:var(--s-2)">
                 <form method="post" action="{% url 'bank:confirm' line.pk %}">{% csrf_token %}<input type="hidden" name="terug" value="{{ here }}"><button type="submit" class="btn btn-primary btn-sm">{% translate "Bevestigen" %}</button></form>
@@ -40,7 +40,7 @@
                 {% include "bank/_choose.html" %}
             </details>
         </li>
-        {% endfor %}
+        {% endwith %}{% endfor %}
     </ul>
 </section>
 {% endif %}
@@ -49,13 +49,13 @@
 <section class="card" id="zelf-kiezen" aria-labelledby="zelf-kiezen-titel">
     <div class="card-head"><h2 id="zelf-kiezen-titel">{% translate "Zelf kiezen" %}</h2><span class="small muted">{{ to_choose|length }}</span></div>
     <ul class="list">
-        {% for line in to_choose %}
+        {% for item in to_choose %}{% with line=item.line %}
         <li style="flex-wrap:wrap" id="regel-{{ line.pk }}">
             {% include "bank/_line.html" %}
-            {% if line.several_numbers %}<p class="small muted" style="flex-basis:100%" data-meer-facturen>{% translate "Deze betaling noemt meer dan één factuur. Registreer hem dan zelf op elke factuur en sla hem hier over." %}</p>{% endif %}
+            {% if item.several_numbers %}<p class="small muted" style="flex-basis:100%" data-meer-facturen>{% translate "Deze betaling noemt meer dan één factuur. Registreer hem dan zelf op elke factuur en sla hem hier over." %}</p>{% endif %}
             <div style="flex-basis:100%">{% include "bank/_choose.html" with skip=True %}</div>
         </li>
-        {% endfor %}
+        {% endwith %}{% endfor %}
     </ul>
     <div class="card-foot row">
         <span class="spacer"></span>

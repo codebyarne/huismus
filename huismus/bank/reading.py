@@ -26,14 +26,13 @@ from pathlib import Path
 
 from django.conf import settings
 from django.db import transaction
-from django.db.models import F
 
 from huismus.documents.listing import contact_name
 from huismus.documents.models import Document, Payment
 
 from . import camt, mt940
 from .lines import Statement, StatementLine, StatementReadError, clean_iban
-from .matching import LIKELY, SURE, OpenInvoice, match
+from .matching import LIKELY, SURE, OpenInvoice, fits_without_amount, match
 from .models import BankStatement, BankTransaction
 
 State = BankTransaction.State
@@ -110,11 +109,18 @@ def _parse_zip(data: bytes) -> list[Statement]:
     except zipfile.BadZipFile as exc:
         raise StatementReadError("zip") from exc
     statements = []
-    members = [m for m in archive.infolist() if not m.is_dir()][:_MAX_FILES_IN_ZIP]
+    members = [m for m in archive.infolist() if not m.is_dir()]
+    if len(members) > _MAX_FILES_IN_ZIP:
+        raise StatementReadError("too many files in zip")
     for member in members:
-        if member.file_size > _MAX_FILE_SIZE:
-            continue
-        statement = _parse_one(archive.read(member))
+        # Read at most one byte past the limit: the size in the zip's own
+        # header can lie, what comes out of it can't.
+        with archive.open(member) as file:
+            content = file.read(_MAX_FILE_SIZE + 1)
+        if len(content) > _MAX_FILE_SIZE:
+            raise StatementReadError("file in zip too big")
+        # Anything else in the zip (a read-me) is not a statement: skipped.
+        statement = _parse_one(content)
         if statement is not None:
             statements.append(statement)
     if not statements:
@@ -122,7 +128,7 @@ def _parse_zip(data: bytes) -> list[Statement]:
     return statements
 
 
-def fingerprint(line: StatementLine, occurrence: int) -> str:
+def fingerprint(line: StatementLine, occurrence: int = 0) -> str:
     """The same incoming payment gives the same fingerprint in every
     statement it is in; `occurrence` tells two equal payments on one day
     apart (counted within one file, so an overlapping file counts them the
@@ -145,11 +151,11 @@ def fingerprint(line: StatementLine, occurrence: int) -> str:
 def open_invoices() -> list[OpenInvoice]:
     """Every issued invoice with something still open, with the names and
     IBAN Huismus knows of its customer."""
+    # What is open is Document.outstanding_cents, the one place it is
+    # computed (SPEC.md section 4), on the sums with_payment_totals made.
     rows = (
         Document.objects.filter(kind="invoice", status="issued")
         .with_payment_totals()
-        .annotate(open_cents=F("total_cents") - F("paid_cents") - F("credited_cents"))
-        .filter(open_cents__gt=0)
         .select_related("contact")
         .order_by("issue_date", "pk")
     )
@@ -157,12 +163,13 @@ def open_invoices() -> list[OpenInvoice]:
         OpenInvoice(
             pk=invoice.pk,
             number=invoice.number or "",
-            outstanding_cents=invoice.open_cents,
+            outstanding_cents=invoice.outstanding_cents,
             names=_names(invoice),
             ibans=_ibans(invoice),
             customer=contact_name(invoice),
         )
         for invoice in rows
+        if invoice.outstanding_cents > 0
     ]
 
 
@@ -185,11 +192,11 @@ def _payment_already_there(line: StatementLine) -> Payment | None:
         as_open = OpenInvoice(
             pk=invoice.pk,
             number=invoice.number or "",
-            outstanding_cents=line.amount_cents,
+            outstanding_cents=0,  # not looked at: the amount was compared above
             names=_names(invoice),
             ibans=_ibans(invoice),
         )
-        if match(line, [as_open]).kind in (SURE, LIKELY):
+        if fits_without_amount(line, as_open):
             return payment
     return None
 
@@ -223,23 +230,24 @@ def read_statement(filename: str, data: bytes) -> ReadResult:
         result.not_incoming += statement.not_incoming
         result.other_currency += statement.other_currency
         result.accounts |= statement.accounts
-        seen = Counter()
+        # How often an equal line came before in this file.
+        equal_before = Counter()
         for line in statement.lines:
-            key = fingerprint(line, 0)
-            occurrence = seen[key]
-            seen[key] += 1
-            print_ = fingerprint(line, occurrence)
-            if BankTransaction.objects.filter(fingerprint=print_).exists():
+            occurrence = equal_before[fingerprint(line)]
+            equal_before[fingerprint(line)] += 1
+            line_print = fingerprint(line, occurrence)
+            if BankTransaction.objects.filter(fingerprint=line_print).exists():
                 result.seen_before += 1
                 continue
             if stored.pk is None:
                 stored.save()
-            _store(stored, line, print_, result)
+            _store(stored, line, line_print, result)
     if stored.pk is not None:
         result.statement = stored
         stored.summary = result.summary()
         stored.save(update_fields=["summary", "updated_at"])
-        _keep_file(stored, data)
+        # Only once the lines are in the database: a rollback keeps no file.
+        transaction.on_commit(lambda: _keep_file(stored, data))
     return result
 
 
@@ -262,7 +270,7 @@ def _keep_file(stored: BankStatement, data: bytes):
     os.replace(partial, target)
 
 
-def _store(stored, line: StatementLine, print_: str, result: ReadResult):
+def _store(stored, line: StatementLine, line_print: str, result: ReadResult):
     transaction_ = BankTransaction(
         statement=stored,
         account_iban=line.account_iban,
@@ -273,21 +281,21 @@ def _store(stored, line: StatementLine, print_: str, result: ReadResult):
         description=line.description,
         reference=line.reference[:140],
         bank_reference=line.bank_reference[:140],
-        fingerprint=print_,
+        fingerprint=line_print,
     )
     existing = _payment_already_there(line)
     if existing is not None:
         transaction_.state = State.ALREADY_BOOKED
         transaction_.payment = existing
-        transaction_.proposed_document = existing.document
         transaction_.save()
         result.already_booked.append(transaction_)
         return
+    # Asked anew for every line, not once per file: a payment booked from
+    # the line before changes what is open.
     found = match(line, open_invoices())
     if found.kind == SURE:
         invoice = Document.objects.get(pk=found.invoice.pk)
         transaction_.state = State.BOOKED
-        transaction_.proposed_document = invoice
         transaction_.payment = _book_payment(invoice, line.booked_on, line.amount_cents)
         result.booked.append(transaction_)
     elif found.kind == LIKELY:
@@ -316,7 +324,7 @@ def book(line: BankTransaction, invoice: Document):
     if invoice.kind != "invoice" or invoice.status != "issued":
         raise ValueError("not an issued invoice")
     line.payment = _book_payment(invoice, line.booked_on, line.amount_cents)
-    line.proposed_document = invoice
+    line.proposed_document = None
     line.state = State.CONFIRMED
     line.save()
     return line
@@ -324,28 +332,37 @@ def book(line: BankTransaction, invoice: Document):
 
 @transaction.atomic
 def undo(line: BankTransaction):
-    """Takes back a payment booked from this line; the line waits again.
+    """Takes back a payment booked from this line; the line waits again
+    under Zelf kiezen, booked by Huismus or by the user alike, with the
+    invoice it was on as the first choice (product-owner agent 2026-11-20).
     A payment that was there before the statement is never removed."""
     line = BankTransaction.objects.select_for_update().get(pk=line.pk)
     if line.state not in (State.BOOKED, State.CONFIRMED) or line.payment_id is None:
         raise ValueError("nothing to undo")
     payment = line.payment
     line.payment = None
+    line.proposed_document = payment.document
     line.state = State.OPEN
     line.save()
     payment.delete()
     return line
 
 
+@transaction.atomic
 def skip(line: BankTransaction):
+    line = BankTransaction.objects.select_for_update().get(pk=line.pk)
     if line.state not in (State.PROPOSED, State.OPEN):
         raise ValueError("not waiting")
     line.state = State.SKIPPED
     line.save(update_fields=["state", "updated_at"])
+    return line
 
 
+@transaction.atomic
 def unskip(line: BankTransaction):
+    line = BankTransaction.objects.select_for_update().get(pk=line.pk)
     if line.state != State.SKIPPED:
         raise ValueError("not skipped")
     line.state = State.OPEN
     line.save(update_fields=["state", "updated_at"])
+    return line

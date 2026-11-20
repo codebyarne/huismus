@@ -9192,3 +9192,12 @@ msgstr "A zip is fine."
 
 msgid "Meer uitleg per bank"
 msgstr "More about each bank"
+
+msgid "Dit bestand is groter dan 50 MB. Kies bij je bank een kortere periode."
+msgstr "This file is larger than 50 MB. Choose a shorter period at your bank."
+
+msgid "Deze bijschrijving is al geboekt."
+msgstr "This incoming payment is already recorded."
+
+msgid "Deze betaling was al teruggedraaid."
+msgstr "This payment was already undone."

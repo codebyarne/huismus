@@ -16,9 +16,11 @@ reference and after `//` the bank's. What the payer is and wrote is in
   description as one text.
 - **labels** (ABN AMRO before the slashes): `IBAN: … NAAM: … OMSCHRIJVING: …`.
 
-`:86:` comes in lines of at most 65 characters, filled to the end: a full
-line is joined to the next without a space (a word may be broken), a
-shorter one with a space.
+`:86:` comes in lines of at most 65 characters. ING and Rabobank fill them
+to the end, breaking words (their format descriptions); so a full line is
+joined to the next without a space, a shorter one with a space. A bank
+with other line lengths would get a space too many or too few in a long
+text, never a lost line.
 """
 
 import re
@@ -33,6 +35,9 @@ _LINE_61 = re.compile(
 )
 _IBAN = re.compile(r"^[A-Z]{2}\d{2}[A-Z0-9]{10,30}$")
 _FULL_LINE = 65
+# ING repeats a betalingskenmerk in :61:'s own reference; a betalingskenmerk
+# is 7 to 16 digits (Betaalvereniging, docs/bankafschriften.md).
+_KENMERK_LENGTH = range(7, 17)
 
 # The keywords of the slash dialect at the top level of :86:. REMI's own
 # subfields (USTD, STRD, CDTRREF…) are read inside its value.
@@ -86,6 +91,8 @@ def read(data: bytes) -> Statement:
         elif tag == "86" and pending is not None:
             _finish(pending, lines, statement)
             pending = None
+        # An :86: without a :61: before it is about the statement itself
+        # (ING's /SUM/ totals), not about a transaction.
     _finish(pending, None, statement)
     return statement
 
@@ -125,19 +132,7 @@ def _finish(pending, info_lines, statement: Statement):
         statement.not_incoming += 1
         return
     value_date = _date(found["value"])
-    booked_on = value_date
-    if found["booking"]:
-        month, day = int(found["booking"][:2]), int(found["booking"][2:])
-        year = value_date.year
-        # Booked in January for a value date in December, or the other way.
-        if month == 1 and value_date.month == 12:
-            year += 1
-        elif month == 12 and value_date.month == 1:
-            year -= 1
-        try:
-            booked_on = date(year, month, day)
-        except ValueError as exc:
-            raise StatementReadError(f"date {found['booking']!r}") from exc
+    booked_on = booking_date(value_date, found["booking"]) if found["booking"] else value_date
     payer = _info(_joined(info_lines or []))
     iban = payer.get("iban", "")
     # Rabobank: the payer's IBAN on the line under :61: (ten zeros: none).
@@ -146,8 +141,7 @@ def _finish(pending, info_lines, statement: Statement):
             iban = extra.strip()
     reference = payer.get("reference", "")
     own_reference = (found["ref"] or "").strip()
-    if not reference and own_reference.isdigit() and 7 <= len(own_reference) <= 16:
-        # ING puts the betalingskenmerk in :61: too.
+    if not reference and own_reference.isdigit() and len(own_reference) in _KENMERK_LENGTH:
         reference = own_reference
     statement.lines.append(
         StatementLine(
@@ -161,6 +155,22 @@ def _finish(pending, info_lines, statement: Statement):
             bank_reference=(found["bank"] or "").strip(),
         )
     )
+
+
+def booking_date(value_date: date, mmdd: str) -> date:
+    """:61: gives the booking date without a year: the value date's year,
+    one more when booked in January for a value date in December, one less
+    the other way round."""
+    month, day = int(mmdd[:2]), int(mmdd[2:])
+    year = value_date.year
+    if month == 1 and value_date.month == 12:
+        year += 1
+    elif month == 12 and value_date.month == 1:
+        year -= 1
+    try:
+        return date(year, month, day)
+    except ValueError as exc:
+        raise StatementReadError(f"date {mmdd!r}") from exc
 
 
 def _joined(lines: list[str]) -> str:
@@ -219,6 +229,8 @@ def _slashes(text: str) -> dict:
 
 def _subfields(text: str) -> dict:
     parts = dict((m.group(1), m.group(2)) for m in re.finditer(r">(\d\d)([^>]*)", text))
+    # Triodos cuts one text (name, address, description, kenmerk) into
+    # pieces of 27 characters: joined without a space, as it was.
     description = "".join(parts.get(str(n), "") for n in range(22, 30))
     return {"iban": parts.get("21", "").strip(), "text": description}
 
