@@ -25,7 +25,7 @@ from pathlib import PurePosixPath
 
 from django.db.models import Prefetch, Q
 from django.utils.translation import gettext as _
-from django.utils.translation import pgettext
+from django.utils.translation import gettext_lazy, pgettext
 
 from huismus.business.models import Settings
 from huismus.contacts.models import Contact
@@ -41,7 +41,7 @@ from .export_format import expense_labels, labels
 QUOTE_STATUSES = ["sent", "accepted", "declined", "expired"]
 
 # The names of where a document came from (Document.source).
-SOURCE_NAMES = {"": "Huismus", "moneybird": "Moneybird"}
+SOURCE_NAMES = {"": "Huismus", "moneybird": "Moneybird", "csv": gettext_lazy("CSV-import")}
 
 
 def _exported_documents():
@@ -71,13 +71,13 @@ def _yes_no(value: bool) -> str:
     return _("ja") if value else _("nee")
 
 
-def _percent(rate_bp: int) -> str:
+def percent(rate_bp: int) -> str:
     """Basis points as a percentage: 2100 -> "21", 550 -> "5,5"."""
     whole, remainder = divmod(rate_bp, 100)
     return f"{whole},{remainder:02d}".rstrip("0").rstrip(",")
 
 
-def _payment_state_name(state: str) -> str:
+def payment_state_name(state: str) -> str:
     return {
         "unpaid": pgettext("payment status", "open"),
         "partial": pgettext("payment status", "deels betaald"),
@@ -117,8 +117,8 @@ def _invoices(year):
     header = labels(export_format.INVOICE_COLUMNS)
     for rate in rates:
         header += [
-            _(export_format.RATE_REVENUE) % {"rate": _percent(rate)},
-            _(export_format.RATE_TAX) % {"rate": _percent(rate)},
+            _(export_format.RATE_REVENUE) % {"rate": percent(rate)},
+            _(export_format.RATE_TAX) % {"rate": percent(rate)},
         ]
     header += labels(export_format.INVOICE_COLUMNS_AFTER_RATES)
 
@@ -164,7 +164,7 @@ def _invoices(year):
             if document.kind == "invoice":
                 paid_on = [payment.paid_on for payment in document.payments.all()]
                 row += [
-                    _payment_state_name(document.payment_state),
+                    payment_state_name(document.payment_state),
                     Amount(document.paid_cents),
                     Amount(document.outstanding_cents),
                     max(paid_on, default=None),
@@ -225,7 +225,7 @@ def _lines(documents):
                     line.quantity,
                     line.unit,
                     Amount(sign * line.unit_price_cents),
-                    _percent(line.tax_rate_bp),
+                    percent(line.tax_rate_bp),
                     _yes_no(line.reverse_charge),
                     Amount(sign * cents),
                 ]
@@ -311,7 +311,7 @@ def _expenses(year):
     return expenses, (header, table), (line_header, line_table)
 
 
-def _pdf_folder(kind: str) -> str:
+def pdf_folder(kind: str) -> str:
     return {
         "invoice": pgettext("export folder", "facturen"),
         "credit_note": pgettext("export folder", "creditnotas"),
@@ -356,10 +356,10 @@ def write_zip(file, year: int | None) -> None:
         for document in documents:
             # A "/" in a number would make a folder of it.
             number = document.number.replace("/", "-").replace("\\", "-")
-            path = f"pdf/{_pdf_folder(document.kind)}/{number}.pdf"
+            path = f"pdf/{pdf_folder(document.kind)}/{number}.pdf"
             suffix = 2
             while path in taken:
-                path = f"pdf/{_pdf_folder(document.kind)}/{number}-{suffix}.pdf"
+                path = f"pdf/{pdf_folder(document.kind)}/{number}-{suffix}.pdf"
                 suffix += 1
             taken.add(path)
             archive.writestr(path, _pdf(document), compress_type=zipfile.ZIP_STORED)
