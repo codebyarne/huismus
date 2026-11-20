@@ -1050,19 +1050,9 @@ div.hint-banner > form { position: relative; z-index: 1; }
 }
 /* A new expense on a phone, the photo first (#188, expenses/photo.html):
    the photo with "Opnieuw" on it, then the amount, large. */
-/* A line's category (expenses/_category_field.html): the list with a "+"
-   beside it. With the "+" on, the list makes way for the new category's
-   name and the "+" turns into a cross. Without :has (old browsers) both
-   the list and the name are there. */
-.category-pick { display: flex; gap: var(--s-2); }
-.category-pick > .select, .category-pick > .input { flex: 1; min-width: 0; }
-.category-toggle { flex: none; }
-.category-toggle input { position: absolute; opacity: 0; pointer-events: none; }
-.category-toggle .i { transition: transform .15s var(--ease); }
-.category-toggle:has(input:checked) .i { transform: rotate(45deg); }
-.category-toggle:has(input:focus-visible) { box-shadow: 0 0 0 3px var(--ring); }
-.category-pick:not(:has(.category-toggle input:checked)) > .input { display: none; }
-.category-pick:has(.category-toggle input:checked) > .select { display: none; }
+/* A line's category (expenses/_category_field.html) without JS: the field
+   for a new one's name right under the list. */
+.category-field > .select + .input { margin-top: var(--s-2); }
 
 /* The choice before the camera (base.html, #camera): three wide buttons. */
 .camera-choices { align-items: stretch; }

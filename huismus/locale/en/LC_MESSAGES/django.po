@@ -3416,14 +3416,17 @@ msgstr "Choose a photo or file"
 msgid "Zonder bonnetje"
 msgstr "Without a receipt"
 
-msgid "naam van de nieuwe categorie"
-msgstr "name of the new category"
+msgid "nieuwe categorie"
+msgstr "new category"
 
-msgid "Vul de naam van de nieuwe categorie in."
-msgstr "Fill in the name of the new category."
+msgid "Kies of typ een categorie"
+msgstr "Choose or type a category"
 
-msgid "Naam van de nieuwe categorie"
-msgstr "Name of the new category"
+msgid "Of typ een nieuwe categorie"
+msgstr "Or type a new category"
+
+msgid "Nieuwe categorie. Huismus maakt hem als je opslaat."
+msgstr "New category. Huismus makes it when you save."
 
 msgid "Bonnetje uploaden…"
 msgstr "Uploading receipt…"

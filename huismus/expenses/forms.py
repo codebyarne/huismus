@@ -28,14 +28,14 @@ class ExpenseForm(forms.ModelForm):
 
 class ExpenseLineForm(forms.ModelForm):
     """One line. A category that isn't there yet can be made on the spot
-    (owner, 2026-11-20): the "+" beside the list (add_category, a checkbox
-    drawn as a button; huismus.css swaps the list for a field for the name,
-    without JS). The category is made when the expense is saved
+    (owner, 2026-11-20): its name is typed in new_category. With JS the
+    list and that field are one field to type in (app.js, the combobox);
+    without JS they are a list and a field under it. A name wins over the
+    list. The category is made when the expense is saved
     (category_to_save), never by a form with an error."""
 
-    add_category = forms.BooleanField(label=_("Nieuwe categorie"), required=False)
     new_category = forms.CharField(
-        label=_("naam van de nieuwe categorie"),
+        label=_("nieuwe categorie"),
         required=False,
         max_length=ExpenseCategory._meta.get_field("name").max_length,
     )
@@ -47,7 +47,6 @@ class ExpenseLineForm(forms.ModelForm):
         fields = [
             "description",
             "category",
-            "add_category",
             "new_category",
             "amount_cents",
             "vat_info_cents",
@@ -59,9 +58,16 @@ class ExpenseLineForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["category"].empty_label = _("Geen categorie")
         # expenses/_category_field.html draws these two itself.
-        self.fields["category"].widget.attrs["class"] = "select"
+        self.fields["category"].widget.attrs.update(
+            {"class": "select", "data-combobox": _("Kies of typ een categorie")}
+        )
         self.fields["new_category"].widget.attrs.update(
-            {"class": "input", "aria-label": _("Naam van de nieuwe categorie")}
+            {
+                "class": "input",
+                "data-combobox-new": "",
+                "placeholder": _("Of typ een nieuwe categorie"),
+                "aria-label": _("Nieuwe categorie"),
+            }
         )
         if Settings.load().kor_enabled:
             # Under the KOR the rate is not asked; a stored one stays
@@ -88,14 +94,11 @@ class ExpenseLineForm(forms.ModelForm):
         vat = cleaned.get("vat_info_cents")
         if cleaned.get("vat_rate") == VatRate.ZERO and vat:
             self.add_error("vat_info_cents", _("Bij 0% of geen btw is het btw-bedrag € 0,00."))
-        # The name counts only with the "+" on: the field is out of sight
-        # otherwise, and the list is while it is on.
+        # A name typed wins over the list. One that is there already,
+        # whatever its capitals, is that category.
         name = " ".join(cleaned.get("new_category", "").split())
         cleaned["new_category"] = ""
-        if cleaned.get("add_category"):
-            if not name and "new_category" not in self.errors:
-                self.add_error("new_category", _("Vul de naam van de nieuwe categorie in."))
-            # A name that is there already, whatever its capitals, is that one.
+        if name:
             cleaned["category"] = ExpenseCategory.objects.filter(name__iexact=name).first()
             if cleaned["category"] is None:
                 cleaned["new_category"] = name

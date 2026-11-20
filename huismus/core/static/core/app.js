@@ -126,7 +126,13 @@ document.addEventListener("click", (event) => {
   // it (owner, 2026-11-20); without JS the server does (expenses/views.py).
   const [above, added] = [...forms.children].slice(-2);
   const category = added?.querySelector("select[name$='-category']");
-  if (category && above) category.value = above.querySelector("select[name$='-category']")?.value ?? "";
+  if (category && above) {
+    category.value = above.querySelector("select[name$='-category']")?.value ?? "";
+    const fresh = added.querySelector("input[data-combobox-new]");
+    if (fresh) fresh.value = above.querySelector("input[data-combobox-new]")?.value ?? "";
+  }
+  // The pickers of the new form (enhanceCombobox, below).
+  if (added) enhanceComboboxes(added);
 });
 
 // Busy buttons: the button that sends a form shows its spinner until the
@@ -340,10 +346,16 @@ document.addEventListener("keydown", (event) => {
 // customer): a text field that filters the options, arrow keys and Enter to
 // choose. The <select> stays in the form, hidden, and gets the value, so
 // the form and its live preview work exactly as without JS.
+//
+// With an <input data-combobox-new> beside the select (an expense line's
+// category, expenses/_category_field.html) a text that is no option is a
+// new one: it goes into that input, hidden here, and the server makes it.
 function enhanceCombobox(select) {
   if (select.dataset.comboboxReady || select.disabled) return;
   select.dataset.comboboxReady = "1";
   const options = [...select.options].filter((option) => option.value);
+  const fresh = select.parentElement.querySelector("input[data-combobox-new]");
+  const hint = select.parentElement.querySelector("[data-combobox-new-hint]");
   const wrapper = document.createElement("div");
   wrapper.className = "combo";
   const input = document.createElement("input");
@@ -355,6 +367,11 @@ function enhanceCombobox(select) {
   input.setAttribute("aria-expanded", "false");
   input.setAttribute("aria-label", select.labels[0]?.textContent ?? "");
   input.value = select.selectedOptions[0]?.value ? select.selectedOptions[0].text : "";
+  if (fresh) {
+    fresh.hidden = true;
+    if (fresh.value) input.value = fresh.value;
+    if (hint) hint.hidden = !fresh.value;
+  }
   const list = document.createElement("ul");
   list.className = "combo-list";
   list.id = `${select.id}-opties`;
@@ -371,6 +388,11 @@ function enhanceCombobox(select) {
   const render = () => {
     const query = input.value.trim().toLowerCase();
     shown = options.filter((option) => option.text.toLowerCase().includes(query)).slice(0, 8);
+    // The text itself as a new one, unless it is an option's name.
+    const typed = input.value.trim();
+    if (fresh && typed && !options.some((option) => option.text.toLowerCase() === query)) {
+      shown.push({ text: `${fresh.getAttribute("aria-label")}: ${typed}`, add: typed });
+    }
     active = Math.min(active, Math.max(shown.length - 1, 0));
     list.replaceChildren(
       ...shown.map((option, index) => {
@@ -378,6 +400,7 @@ function enhanceCombobox(select) {
         item.setAttribute("role", "option");
         item.setAttribute("aria-selected", index === active ? "true" : "false");
         item.textContent = option.text;
+        if (option.add) item.className = "combo-action";
         item.addEventListener("mousedown", (event) => {
           event.preventDefault();
           choose(option);
@@ -389,8 +412,10 @@ function enhanceCombobox(select) {
     input.setAttribute("aria-expanded", String(!list.hidden));
   };
   const choose = (option) => {
-    select.value = option.value;
-    input.value = option.text;
+    select.value = option.add ? "" : option.value;
+    input.value = option.add ?? option.text;
+    if (fresh) fresh.value = option.add ?? "";
+    if (hint) hint.hidden = !option.add;
     list.hidden = true;
     input.setAttribute("aria-expanded", "false");
     select.dispatchEvent(new Event("change", { bubbles: true }));
@@ -403,6 +428,14 @@ function enhanceCombobox(select) {
   input.addEventListener("blur", () => {
     list.hidden = true;
     input.setAttribute("aria-expanded", "false");
+    if (fresh) {
+      // What was typed counts: an option by its name, else a new one;
+      // nothing typed is none.
+      const typed = input.value.trim();
+      const same = options.find((option) => option.text.toLowerCase() === typed.toLowerCase());
+      choose(same ?? (typed ? { add: typed } : { value: "", text: "" }));
+      return;
+    }
     // Typed something that isn't a customer: show the chosen one again.
     input.value = select.selectedOptions[0]?.value ? select.selectedOptions[0].text : "";
   });
@@ -718,13 +751,6 @@ function showReceiptPdfs(root) {
 wideScreen.addEventListener("change", () => showReceiptPdfs(document));
 if (window.htmx) window.htmx.onLoad(showReceiptPdfs);
 else showReceiptPdfs(document);
-
-// The "+" beside a line's category (expenses/_category_field.html): on to
-// the field for the new name, or back to the list. huismus.css shows which.
-document.addEventListener("change", (event) => {
-  const pick = event.target.closest?.(".category-toggle")?.parentElement;
-  if (pick) pick.querySelector(event.target.checked ? ".input" : ".select")?.focus();
-});
 
 // The photo first (#188, expenses/photo_views.py): on a phone, a link to the
 // new-expense form opens a choice instead (base.html, #camera): the camera,
