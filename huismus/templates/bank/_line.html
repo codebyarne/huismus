@@ -1,0 +1,6 @@
+{% load i18n money %}{% comment %}One incoming payment: amount, who, when and their text.{% endcomment %}
+<span class="list-icon"><svg class="i i-sm" aria-hidden="true"><use href="#wallet"></use></svg></span>
+<div class="grow">
+    <strong class="num">{{ line.amount_cents|money }}</strong>{% if line.counterparty_name %} · {{ line.counterparty_name }}{% endif %}
+    <div class="small muted" style="overflow-wrap:anywhere">{{ line.booked_on|date:"SHORT_DATE_FORMAT" }}{% if line.description %} · {{ line.description }}{% endif %}</div>
+</div>

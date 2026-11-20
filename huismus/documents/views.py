@@ -525,7 +525,7 @@ def _detail_context(document):
             "credited_cents": invoice.credited_cents,
             "outstanding_cents": outstanding,
             "settled_percent": settled_percent,
-            "payments": invoice.payments.all(),
+            "payments": invoice.payments.select_related("bank_transaction"),
             "credit_notes": Document.objects.filter(
                 kind="credit_note", related_document=invoice
             ).order_by("issue_date", "pk"),

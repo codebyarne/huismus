@@ -16,15 +16,19 @@ amount stays the one sum of payments and credit notes
 
 import hashlib
 import io
+import os
 import re
 import zipfile
 from collections import Counter
 from dataclasses import dataclass, field
 from datetime import timedelta
+from pathlib import Path
 
+from django.conf import settings
 from django.db import transaction
 from django.db.models import F
 
+from huismus.documents.listing import contact_name
 from huismus.documents.models import Document, Payment
 
 from . import camt, mt940
@@ -42,6 +46,11 @@ METHOD = "Overboeking"
 # this many days from the bank's date (by hand, or imported).
 ALREADY_BOOKED_DAYS = 7
 
+# Every statement read in is kept as it was given, once per content: it
+# is the evidence for the payments booked from it (product-owner agent
+# 2026-11-20). Under DATA_DIR, so it goes into every backup.
+ARCHIVE_DIR_NAME = "bankafschriften"
+
 # A ZIP may hold a statement per month; anything else in it is skipped.
 _MAX_FILES_IN_ZIP = 200
 _MAX_FILE_SIZE = 50 * 1024 * 1024
@@ -57,10 +66,22 @@ class ReadResult:
     not_incoming: int = 0
     other_currency: int = 0
     accounts: set[str] = field(default_factory=set)
+    statement: BankStatement | None = None
 
     @property
     def new(self) -> int:
         return len(self.booked) + len(self.proposed) + len(self.open) + len(self.already_booked)
+
+    def summary(self) -> dict:
+        return {
+            "read": self.new,
+            "booked": len(self.booked),
+            "proposed": len(self.proposed),
+            "open": len(self.open),
+            "already_booked": len(self.already_booked),
+            "seen_before": self.seen_before,
+            "accounts": sorted(self.accounts),
+        }
 
 
 def parse(filename: str, data: bytes) -> list[Statement]:
@@ -139,6 +160,7 @@ def open_invoices() -> list[OpenInvoice]:
             outstanding_cents=invoice.open_cents,
             names=_names(invoice),
             ibans=_ibans(invoice),
+            customer=contact_name(invoice),
         )
         for invoice in rows
     ]
@@ -213,7 +235,31 @@ def read_statement(filename: str, data: bytes) -> ReadResult:
             if stored.pk is None:
                 stored.save()
             _store(stored, line, print_, result)
+    if stored.pk is not None:
+        result.statement = stored
+        stored.summary = result.summary()
+        stored.save(update_fields=["summary", "updated_at"])
+        _keep_file(stored, data)
     return result
+
+
+def archive_dir() -> Path:
+    return Path(settings.DATA_DIR) / ARCHIVE_DIR_NAME
+
+
+def archived_path(stored: BankStatement) -> Path:
+    name = re.sub(r'[\\/:*?"<>|]', "_", stored.filename).lstrip(".") or "afschrift"
+    return archive_dir() / f"{stored.sha256[:16]}-{name}"
+
+
+def _keep_file(stored: BankStatement, data: bytes):
+    target = archived_path(stored)
+    if target.exists():
+        return
+    target.parent.mkdir(parents=True, exist_ok=True)
+    partial = target.with_name(target.name + ".deel")
+    partial.write_bytes(data)
+    os.replace(partial, target)
 
 
 def _store(stored, line: StatementLine, print_: str, result: ReadResult):
@@ -259,29 +305,6 @@ def _book_payment(invoice, paid_on, amount_cents) -> Payment:
     payment.full_clean()
     payment.save()
     return payment
-
-
-def candidates(line: BankTransaction) -> list[OpenInvoice]:
-    """The open invoices for a line that waits, the ones that fit first:
-    its proposal, then what matching finds, then the rest by date."""
-    invoices = open_invoices()
-    as_line = StatementLine(
-        account_iban=line.account_iban,
-        booked_on=line.booked_on,
-        amount_cents=line.amount_cents,
-        counterparty_name=line.counterparty_name,
-        counterparty_iban=line.counterparty_iban,
-        description=line.description,
-        reference=line.reference,
-    )
-    found = match(as_line, invoices)
-    first = [i for i in invoices if i.pk == line.proposed_document_id]
-    first += [i for i in ([found.invoice] if found.invoice else []) + list(found.candidates)]
-    ordered = []
-    for invoice in first + invoices:
-        if invoice not in ordered:
-            ordered.append(invoice)
-    return ordered
 
 
 @transaction.atomic

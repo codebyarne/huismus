@@ -148,7 +148,10 @@ the live settings or contact.{% endcomment %}
                 {% for payment in payments %}
                 <li>
                     <span class="list-icon is-ok"><svg class="i i-sm" aria-hidden="true"><use href="#check"></use></svg></span>
-                    <div class="grow"><strong class="num">{{ payment.amount_cents|money }}</strong><div class="small muted">{{ payment.paid_on|date:"SHORT_DATE_FORMAT" }}{% if payment.method %} · {{ payment.method }}{% endif %}{% if payment.note %} · {{ payment.note }}{% endif %}</div></div>
+                    {% with bank=payment.bank_transaction %}
+                    <div class="grow"><strong class="num">{{ payment.amount_cents|money }}</strong><div class="small muted">{{ payment.paid_on|date:"SHORT_DATE_FORMAT" }}{% if payment.method %} · {{ payment.method }}{% endif %}{% if bank %} · {% blocktranslate with name=bank.counterparty_name|default:bank.description|truncatechars:60 %}uit bankafschrift: {{ name }}{% endblocktranslate %}{% endif %}{% if payment.note %} · {{ payment.note }}{% endif %}</div></div>
+                    {% if bank.can_undo %}<form method="post" action="{% url 'bank:undo' bank.pk %}" style="position:relative;z-index:1">{% csrf_token %}<input type="hidden" name="terug" value="{{ request.get_full_path }}"><button type="submit" class="btn btn-ghost btn-sm">{% translate "Terugdraaien" %}</button></form>{% endif %}
+                    {% endwith %}
                 </li>
                 {% endfor %}
             </ul>

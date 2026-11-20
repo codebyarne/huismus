@@ -26,6 +26,9 @@ SURE, LIKELY, CHOOSE = "sure", "likely", "choose"
 
 # Words in a name that say nothing about who it is.
 _LEGAL_FORMS = {"bv", "nv", "vof", "cv", "ez", "eo", "en", "of", "de", "het", "van", "der"}
+# A number with fewer letters and digits than this ("15") is never enough
+# on its own: it is in too many texts (product-owner agent 2026-11-20).
+_MIN_NUMBER_LENGTH = 4
 # Shorter names (after dropping the words above) are never compared: "AB"
 # would be found in half the bank names.
 _MIN_NAME_LENGTH = 4
@@ -40,6 +43,8 @@ class OpenInvoice:
     # snapshot and from the contact as it is now.
     names: tuple[str, ...]
     ibans: tuple[str, ...]
+    # How the page names the customer; not used to match.
+    customer: str = ""
 
 
 @dataclass(frozen=True)
@@ -48,16 +53,28 @@ class Match:
     invoice: OpenInvoice | None = None
     # For CHOOSE: the invoices that fit in part, best first.
     candidates: tuple[OpenInvoice, ...] = ()
+    # The text names more than one open invoice: one transfer for several
+    # (not booked by Huismus; the page says to record it per invoice).
+    several_numbers: bool = False
 
 
 def number_pattern(number: str) -> re.Pattern:
     """An invoice number as it may be typed in a transfer: any case, and
     between its letter and digit groups a dash, dot, slash, space or
-    nothing ("2026-015", "2026015", "2026 015"). Never part of a longer
-    number or word."""
+    nothing ("2026-015", "2026015", "2026 015"). Only as a whole value:
+    never part of a longer word or number, also not one joined by a dash,
+    dot, comma or slash ("2026" is not in "2026-015", "1210" not in
+    "1.210,00")."""
     groups = re.findall(r"[A-Za-z0-9]+", number)
     body = r"[-./ _]?".join(re.escape(g) for g in groups)
-    return re.compile(rf"(?<![A-Za-z0-9]){body}(?![A-Za-z0-9])", re.IGNORECASE)
+    return re.compile(
+        rf"(?<![A-Za-z0-9])(?<![0-9][-./,]){body}(?![A-Za-z0-9])(?![-./,][0-9])",
+        re.IGNORECASE,
+    )
+
+
+def _long_enough(number: str) -> bool:
+    return len(re.sub(r"[^A-Za-z0-9]", "", number)) >= _MIN_NUMBER_LENGTH
 
 
 def _words(name: str) -> list[str]:
@@ -86,18 +103,23 @@ def _knows_payer(invoice: OpenInvoice, line: StatementLine) -> bool:
 
 def match(line: StatementLine, open_invoices: list[OpenInvoice]) -> Match:
     text = f"{line.description} {line.reference}"
-    by_number = [i for i in open_invoices if i.number and number_pattern(i.number).search(text)]
-    if len(by_number) == 1:
+    named = [i for i in open_invoices if i.number and number_pattern(i.number).search(text)]
+    by_number = [i for i in named if _long_enough(i.number)]
+    if len(by_number) == 1 and len(named) == 1:
         invoice = by_number[0]
         kind = SURE if invoice.outstanding_cents == line.amount_cents else LIKELY
         return Match(kind, invoice)
-    if by_number:
-        return Match(CHOOSE, candidates=tuple(by_number))
+    if len(by_number) > 1:
+        return Match(CHOOSE, candidates=tuple(named), several_numbers=True)
 
     by_amount = [i for i in open_invoices if i.outstanding_cents == line.amount_cents]
     by_payer = [i for i in open_invoices if _knows_payer(i, line)]
     both = [i for i in by_amount if i in by_payer]
     if len(both) == 1:
         return Match(LIKELY, both[0])
-    candidates = both or by_amount + [i for i in by_payer if i not in by_amount]
+    # A short number in the text is no proof, but the best lead there is.
+    candidates = []
+    for invoice in named + (both or by_amount + by_payer):
+        if invoice not in candidates:
+            candidates.append(invoice)
     return Match(CHOOSE, candidates=tuple(candidates))

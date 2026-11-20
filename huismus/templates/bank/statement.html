@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load i18n money %}
+
+{% block title %}{% translate "Bankafschrift inlezen" %} — Huismus{% endblock %}
+{% block content_class %}content-wide{% endblock %}
+
+{% block content %}
+{% comment %}Facturen → Bankafschrift inlezen (#77, huismus.bank.views.statement_page). Texts by the product-owner agent, 2026-11-20.{% endcomment %}
+<div class="page-head">
+    <div class="titles">
+        <a class="back" href="{% url 'documents:list' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Facturen" %}</a>
+        <h1>{% translate "Bankafschrift inlezen" %}</h1>
+        <p class="lede">{% translate "Lees het afschrift van je bank in. Huismus kijkt welke facturen betaald zijn en boekt wat zeker is." %}</p>
+    </div>
+</div>
+
+{% if summary %}
+<p class="hint-banner" id="samenvatting" style="margin-bottom:var(--s-5)"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{{ summary }}</span></p>
+{% endif %}
+
+<div class="stack" style="gap:var(--s-5)">
+{% if proposed %}
+<section class="card" id="klopt-dit" aria-labelledby="klopt-dit-titel">
+    <div class="card-head"><h2 id="klopt-dit-titel">{% translate "Klopt dit?" %}</h2><span class="small muted">{{ proposed|length }}</span></div>
+    <ul class="list">
+        {% for line in proposed %}
+        <li style="flex-wrap:wrap" id="regel-{{ line.pk }}">
+            {% include "bank/_line.html" %}
+            <div class="small" style="flex-basis:100%">
+                {% blocktranslate with number=line.proposal.number customer=line.proposal.customer open=line.proposal.outstanding_cents|money %}Factuur {{ number }} · {{ customer }} · open {{ open }}{% endblocktranslate %}
+                {% if line.difference_cents > 0 %}<br><span class="muted">{% blocktranslate with amount=line.difference_cents|money %}{{ amount }} meer dan er open staat.{% endblocktranslate %}</span>
+                {% elif line.short_cents > 0 %}<br><span class="muted">{% blocktranslate with amount=line.short_cents|money %}{{ amount }} minder dan er open staat. De rest blijft open.{% endblocktranslate %}</span>{% endif %}
+            </div>
+            <div class="row" style="flex-basis:100%;gap:var(--s-2)">
+                <form method="post" action="{% url 'bank:confirm' line.pk %}">{% csrf_token %}<input type="hidden" name="terug" value="{{ here }}"><button type="submit" class="btn btn-primary btn-sm">{% translate "Bevestigen" %}</button></form>
+                <form method="post" action="{% url 'bank:skip' line.pk %}">{% csrf_token %}<input type="hidden" name="terug" value="{{ here }}"><button type="submit" class="btn btn-ghost btn-sm">{% translate "Overslaan" %}</button></form>
+            </div>
+            <details style="flex-basis:100%">
+                <summary class="small" style="cursor:pointer">{% translate "Andere factuur" %}</summary>
+                {% include "bank/_choose.html" %}
+            </details>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+
+{% if to_choose %}
+<section class="card" id="zelf-kiezen" aria-labelledby="zelf-kiezen-titel">
+    <div class="card-head"><h2 id="zelf-kiezen-titel">{% translate "Zelf kiezen" %}</h2><span class="small muted">{{ to_choose|length }}</span></div>
+    <ul class="list">
+        {% for line in to_choose %}
+        <li style="flex-wrap:wrap" id="regel-{{ line.pk }}">
+            {% include "bank/_line.html" %}
+            {% if line.several_numbers %}<p class="small muted" style="flex-basis:100%" data-meer-facturen>{% translate "Deze betaling noemt meer dan één factuur. Registreer hem dan zelf op elke factuur en sla hem hier over." %}</p>{% endif %}
+            <div style="flex-basis:100%">{% include "bank/_choose.html" with skip=True %}</div>
+        </li>
+        {% endfor %}
+    </ul>
+    <div class="card-foot row">
+        <span class="spacer"></span>
+        <form method="post" action="{% url 'bank:skip_all' %}">{% csrf_token %}<input type="hidden" name="terug" value="{{ here }}"><button type="submit" class="btn btn-secondary btn-sm">{% translate "Alles overslaan" %}</button></form>
+    </div>
+</section>
+{% endif %}
+
+{% if booked %}
+<section class="card" id="geboekt" aria-labelledby="geboekt-titel">
+    <div class="card-head"><h2 id="geboekt-titel">{% translate "Geboekt" %}</h2><span class="small muted">{{ booked|length }}</span></div>
+    <ul class="list">
+        {% for line in booked %}
+        <li style="flex-wrap:wrap" id="regel-{{ line.pk }}">
+            <span class="list-icon is-ok"><svg class="i i-sm" aria-hidden="true"><use href="#check"></use></svg></span>
+            <div class="grow">
+                <strong class="num">{{ line.amount_cents|money }}</strong> · <a href="{% url 'documents:edit' line.payment.document.pk %}">{% blocktranslate with number=line.payment.document.number %}Factuur {{ number }}{% endblocktranslate %}</a>
+                <div class="small muted" style="overflow-wrap:anywhere">{{ line.booked_on|date:"SHORT_DATE_FORMAT" }}{% if line.counterparty_name %} · {{ line.counterparty_name }}{% endif %}{% if line.description %} · {{ line.description }}{% endif %}</div>
+            </div>
+            <form method="post" action="{% url 'bank:undo' line.pk %}">{% csrf_token %}<input type="hidden" name="terug" value="{{ here }}"><button type="submit" class="btn btn-ghost btn-sm">{% translate "Terugdraaien" %}</button></form>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+
+{% if already %}
+<details class="report" id="al-geboekt">
+    <summary>
+        <span class="r-icon"><svg class="i" aria-hidden="true"><use href="#check"></use></svg></span>
+        <span class="r-title"><strong>{% translate "Stond al geboekt" %}</strong><span>{{ already|length }}</span></span>
+        <svg class="i chev" aria-hidden="true"><use href="#chevron-down"></use></svg>
+    </summary>
+    <ul class="list">
+        {% for line in already %}
+        <li>
+            <div class="grow">
+                <strong class="num">{{ line.amount_cents|money }}</strong> · <a href="{% url 'documents:edit' line.payment.document.pk %}">{% blocktranslate with number=line.payment.document.number %}Factuur {{ number }}{% endblocktranslate %}</a>
+                <div class="small muted" style="overflow-wrap:anywhere">{{ line.booked_on|date:"SHORT_DATE_FORMAT" }}{% if line.counterparty_name %} · {{ line.counterparty_name }}{% endif %}</div>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</details>
+{% endif %}
+
+<div class="split-rev">
+    <form class="stack" method="post" enctype="multipart/form-data" action="{% url 'bank:statement' %}" style="gap:var(--s-4)">
+        {% csrf_token %}
+        {% if error %}<p class="hint-banner is-bad" id="fout" role="alert"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{{ error }}</span></p>{% endif %}
+        <label class="dropzone" data-dropzone>
+            <input type="file" name="bestand" accept=".xml,.sta,.940,.mt940,.swi,.txt,.zip" required data-file-summary="gekozen-afschrift">
+            <span class="dz-icon"><svg class="i i-lg" aria-hidden="true"><use href="#upload"></use></svg></span>
+            <strong>{% translate "Sleep je bankafschrift hierheen" %}</strong>
+            <span class="small">{% translate "CAMT.053 of MT940, of een zip met meer afschriften." %}</span>
+            <span class="btn btn-secondary btn-sm" style="margin-top:var(--s-2)">{% translate "Bestand kiezen" %}</span>
+        </label>
+        <p class="small muted" id="gekozen-afschrift" aria-live="polite"></p>
+        <div><button class="btn btn-primary btn-lg" type="submit">{% translate "Inlezen" %}<span class="spinner"></span></button></div>
+        <p class="small muted">{% translate "Hetzelfde afschrift nog een keer inlezen verandert niets. Elke betaling die Huismus boekt, kun je terugdraaien." %}</p>
+    </form>
+    {% include "bank/_where.html" %}
+</div>
+
+{% if skipped_count %}
+<p class="small"><a href="{% url 'bank:skipped' %}" id="overgeslagen-link">{% blocktranslate with count=skipped_count %}Overgeslagen ({{ count }}){% endblocktranslate %}</a></p>
+{% endif %}
+</div>
+{% endblock %}
