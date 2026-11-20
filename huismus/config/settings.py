@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     "huismus.imports",
     "huismus.expenses",
     "huismus.reports",
+    "huismus.bank",
     "huismus.assistants",
 ]
 
