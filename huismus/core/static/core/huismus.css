@@ -301,7 +301,9 @@ a:hover { color: var(--primary-hover); }
 /* Zonder rand en zonder vlak blijft van de zachte ring van .btn weinig over. Een ghost-knop
    krijgt daarom de volle lijn van een link (:focus-visible bovenaan), ook als hij een label
    om een verborgen vinkje is (#151). */
-.btn-ghost:focus-visible, .btn-ghost:has(input:focus-visible) { outline: 2px solid var(--primary); outline-offset: 2px; box-shadow: none; }
+.btn-ghost:focus-visible, .btn-ghost:has(input:focus-visible) { outline: 2px solid var(--primary); outline-offset: 2px; }
+/* De zachte ring van .btn gaat weg; een label houdt zijn eigen schaduw (.logo-remove). */
+.btn-ghost:focus-visible { box-shadow: none; }
 .btn-danger { --btn-bg: var(--danger); --btn-fg: var(--on-danger); --btn-bd: transparent; }
 .btn-danger:hover { background: var(--danger-hover); }
 .btn-danger:focus-visible { box-shadow: 0 0 0 3px var(--danger-ring); }
@@ -1273,8 +1275,6 @@ form > div > .settings-section .card-head { border-bottom: 0; padding-bottom: 0;
 .logo-slot img { transition: opacity .15s; }
 .logo-slot:has(.logo-remove input:checked) img { opacity: .3; filter: grayscale(1); }
 .logo-remove:has(input:checked) { color: var(--danger); background: var(--bad-bg); }
-/* Bij focus de lijn van .btn-ghost; de schaduw die hem van het logo losmaakt blijft. */
-.logo-remove:has(input:focus-visible) { box-shadow: var(--sh-1); }
 .line-delete:has(input:checked) { color: var(--danger); background: var(--bad-bg); }
 
 /* Factuurpagina: de inline stijlen uit factuur-uitgegeven.html als klassen. */
