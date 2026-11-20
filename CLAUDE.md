@@ -109,7 +109,8 @@ Eerder proberen dan een release kan met de voorproef (besluit eigenaar
 2026-11-20): na elke merge naar `main` die in CI groen is, bouwt de job
 `voorproef` in `ci.yml` het image `ghcr.io/codebyarne/huismus:main`. Dat is
 geen release: `:latest` en de versietags blijven van `release.yml`. De
-voorproef draait naast de echte installatie, op eigen gegevens
+eigenaar draait de voorproef op de echte administratie en gaat bij een
+release door naar die versie; ernaast draaien, op een kopie, kan ook
 (`docs/hulp/docker.nl.md`, "Een voorproef draaien").
 
 We streven naar **een release ongeveer elke twee weken**, zonder vaste dag en

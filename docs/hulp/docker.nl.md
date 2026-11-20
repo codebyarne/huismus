@@ -161,9 +161,35 @@ draai je de voorproef: de image `ghcr.io/codebyarne/huismus:main`. Die
 wordt opnieuw gemaakt na elke wijziging aan Huismus die door alle tests
 komt. Er kan dus iets in zitten wat nog niet goed werkt.
 
-Draai de voorproef daarom naast je gewone Huismus, met eigen gegevens, en
-niet in plaats daarvan. Een voorproef kan de database aanpassen. Daarna kun
-je niet terug naar de gewone versie zonder een back-up terug te zetten.
+Je kunt de voorproef op twee manieren draaien: op je echte administratie,
+of ernaast met een kopie.
+
+### Op je echte administratie
+
+Zo test je het nieuwe in je dagelijkse werk. Naar de volgende versie ga je
+daarna gewoon door: die bevat alles wat in de voorproef zat, dus je
+facturen, uitgaven en nummers blijven staan.
+
+1. Maak een back-up: **Instellingen → Back-ups → Nu back-up maken**.
+2. Zet in `compose.yaml` de regel `image` op
+   `ghcr.io/codebyarne/huismus:main`.
+3. Doe `docker compose pull` en `docker compose up -d`.
+
+De nieuwste voorproef haal je daarna op met dezelfde twee commando's. Is
+de volgende versie uit, zet de regel `image` dan terug op
+`ghcr.io/codebyarne/huismus:0.1` en doe hetzelfde.
+
+Terug naar de versie die je had, voordat de volgende uit is? Dat gaat
+zoals bij [Terug naar de vorige versie](#terug-naar-de-vorige-versie), met
+de back-up uit stap 1. Wat je daarna invoerde, ben je dan kwijt. Een
+factuur die je al verstuurde, staat dan niet meer in je administratie, en
+Huismus geeft het nummer opnieuw uit. Heb je op de voorproef een factuur
+verstuurd, wacht dan liever op de volgende versie.
+
+### Naast je gewone Huismus
+
+Wil je dat risico niet, draai de voorproef dan als tweede Huismus, met
+eigen gegevens. Je gewone Huismus blijft zoals hij is.
 
 Maak een nieuwe map, bijvoorbeeld `huismus-voorproef`, en zet daar dit
 `compose.yaml` in:
