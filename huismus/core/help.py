@@ -42,6 +42,12 @@ class Group:
     topics: tuple[str, ...]
 
 
+# Moving from another package: a page per package with the steps of its own
+# export and instructions for an AI assistant (issue #164, docs/pakketten-export.md).
+PACKAGES = ("rompslomp", "tellow", "e-boekhouden", "jortt", "excel")
+# The part of those instructions that is the same on every package page.
+SHARED_INSTRUCTIONS = {"nl": "Zo vul je het sjabloon:", "en": "How to fill in the template:"}
+
 # The order of the list on /hulp/. A group without topics (on the site: with
 # only Feedback geven) isn't shown, so a group can wait here for its pages.
 GROUPS = (
@@ -51,7 +57,12 @@ GROUPS = (
         # Releases).
         ("beginnen", WHATS_NEW, FEEDBACK),
     ),
-    Group(_("Overstappen"), ("moneybird", "importeren")),
+    Group(
+        _("Overstappen"),
+        # One page per package, each with its own copy of the AI instructions
+        # (issue #164; tests/core/test_help.py keeps the shared part equal).
+        ("moneybird", "importeren", *PACKAGES),
+    ),
     Group(
         _("Het hele jaar"),
         (

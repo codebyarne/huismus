@@ -116,6 +116,11 @@ vullen. Je laat die dienst dan wel je administratie lezen. De proefdraai
 laat zien of het resultaat klopt: elk totaal wordt tot op de cent
 nagerekend.
 
+Per pakket staat er een handleiding met een opdracht die je zo kunt kopiëren:
+[Rompslomp](rompslomp.nl.md), [Tellow](tellow.nl.md),
+[e-Boekhouden.nl](e-boekhouden.nl.md), [Jortt](jortt.nl.md) en
+[Excel](excel.nl.md).
+
 ## Een export uit Huismus importeren
 
 De zip van **Instellingen → Exporteren** heeft dezelfde vorm als het
