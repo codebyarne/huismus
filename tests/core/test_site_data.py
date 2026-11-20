@@ -8,6 +8,7 @@ import pytest
 from django.core.management import CommandError, call_command
 
 from huismus.business.models import Settings
+from huismus.core import site_data
 from huismus.core.site_data import create_site_data
 from huismus.documents.models import Document
 from huismus.expenses.models import Expense, ExpenseLine
@@ -92,3 +93,18 @@ def test_the_command_makes_it_without_the_kor():
 def test_without_the_kor_goes_with_site():
     with pytest.raises(CommandError):
         call_command("demo_data", "--yes", "--zonder-kor")
+
+
+def test_without_the_kor_the_vat_of_every_line_fits_its_rate():
+    """The amounts are typed in by hand (gross and VAT, as on a receipt)."""
+    create_site_data(TODAY, kor=False)
+
+    for line in ExpenseLine.objects.all():
+        net = line.amount_cents - line.vat_info_cents
+        assert abs(net * int(line.vat_rate) / 100 - line.vat_info_cents) < 1, line
+
+
+def test_the_drawn_receipt_says_what_the_expense_says():
+    printed = dict((text, amount) for text, amount, _ in site_data.RECEIPT)
+    assert printed["TOTAAL"] == f"{site_data.RECEIPT_GROSS / 100:.2f}".replace(".", ",")
+    assert printed["Btw 21%"] == f"{site_data.RECEIPT_VAT / 100:.2f}".replace(".", ",")

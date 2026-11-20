@@ -224,14 +224,15 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .bento-wide .bento-shot .detail img { width: 752px; }
 /* De telefoon staat rechtop en wordt onderaan afgesneden. */
 .bento-half { grid-column: span 6; }
-/* Hoger dan de andere kaarten: het bonnetje naast de velden, tot en met bedrag, btw en tarief. */
+/* Een deel dat in zijn geheel moet passen (.detail-whole: een tabel met bedragen rechts, het bonnetje naast de velden): zo breed als de kaart, met ruimte aan beide kanten, niet afgesneden. */
+.bento-shot:has(.detail-whole) { padding-right: clamp(24px, 3vw, 36px); }
+.bento-shot .detail-whole img { width: 100%; max-width: 100%; border-radius: 12px 12px 0 0; }
+/* De twee halve kaarten zijn hoger (600 px beeld): het bonnetje naast de velden, tot en met bedrag, btw en tarief. Dat beeld is hoger dan breed, dus daar bepaalt de hoogte de maat en staat het in het midden. */
 .bento-half .bento-shot { max-height: 600px; }
+.bento-half .bento-shot .detail-whole { display: flex; justify-content: center; }
+.bento-half .bento-shot .detail-whole img { width: auto; height: 600px; }
+/* De animatie (1280 x 800) vult die 600 px bij 960 px breed; de marge schuift het menu van de app uit beeld, in dezelfde verhouding als hierboven (186 op 940). */
 .bento-half .bento-shot .shot img { width: 960px; margin-left: -190px; }
-.bento-half .bento-shot .detail.has-phone { display: flex; justify-content: center; }
-.bento-half .bento-shot .detail.has-phone img { width: auto; height: 600px; }
-/* Een deel dat in zijn geheel moet passen (een tabel met bedragen rechts, het bonnetje naast de velden): zo breed als de kaart, niet afgesneden. */
-.bento-shot:has(.has-phone) { padding-right: clamp(24px, 3vw, 36px); }
-.bento-shot .detail.has-phone img { width: 100%; max-width: 100%; border-radius: 12px 12px 0 0; }
 .year-note { max-width: 70ch; margin-top: clamp(24px, 3vw, 40px); color: var(--text-muted); font-size: var(--fs-md); }
 .year-ai { display: flex; gap: var(--s-3); align-items: flex-start; max-width: 70ch; margin-top: var(--s-4); }
 .year-ai .i { margin-top: 4px; color: var(--primary); flex: none; }
@@ -446,9 +447,10 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
   .foot-top { flex-direction: column; align-items: flex-start; }
   .bento-shot { padding-left: var(--s-5); }
   /* De telefoonversie van een deel is hoog en smal: helemaal tonen, anders valt de uitkomst eraf. */
-  .bento-shot:has(.has-phone) { padding-right: var(--s-5); max-height: none; }
+  .bento-shot:has(.detail-whole) { padding-right: var(--s-5); max-height: none; }
+  /* Smal: de animatie zoals in elke kaart, en het telefoonbeeld weer op de breedte van de kaart. */
   .bento-half .bento-shot .shot img { width: 640px; margin-left: -127px; }
-  .bento-half .bento-shot .detail.has-phone img { width: 100%; height: auto; }
+  .bento-half .bento-shot .detail-whole img { width: 100%; height: auto; }
 }
 
 /* ---------- Films ---------- */

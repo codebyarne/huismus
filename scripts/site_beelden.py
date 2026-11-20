@@ -197,8 +197,9 @@ class Camera:
         ".phone" for the same part as a phone shows it."""
         self.page.set_viewport_size(viewport)
         self.go(path)
-        # A phone's menu bar sticks to the window, so it would lie across the part.
-        self.page.add_style_tag(content=".tabbar { display: none }")
+        if viewport == PHONE:
+            # A phone's menu bar sticks to the window, so it would lie across the part.
+            self.page.add_style_tag(content=".tabbar { display: none }")
         top = self.page.locator(first).first.bounding_box()
         bottom = self.page.locator(last).first.bounding_box()
         margin = 14  # less than the gap between two cards: nothing of the next one shows
@@ -340,7 +341,7 @@ def main(out: Path) -> None:
     with tempfile.TemporaryDirectory() as work, sync_playwright() as playwright:
         administration_dir, with_vat_dir, empty_dir, releases = _prepare(Path(work))
         for language, locale in LOCALES.items():
-            # LANGUAGE: on Linux a date field follows it, not --lang.
+            # LANGUAGE: on Linux a date field follows it, not --lang, in every scene.
             browser = playwright.chromium.launch(
                 args=[f"--lang={locale}"], env=os.environ | {"LANGUAGE": locale.replace("-", "_")}
             )

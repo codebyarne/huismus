@@ -145,6 +145,9 @@ def test_the_home_page_shows_the_app_without_the_kor_too(out, language):
     for name in site.PHONE_DETAILS:
         assert f'src="/beelden/{name}.{language}.light.webp"' in html
         assert f'srcset="/beelden/{name}.{language}.light.phone.webp"' in html
+    # Every picture reserves its room: a size the template can't find is empty.
+    assert 'width=""' not in html
+    assert 'height=""' not in html
 
 
 @pytest.mark.parametrize("language", help.LANGUAGES)
