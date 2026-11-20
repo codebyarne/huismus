@@ -93,7 +93,11 @@ def run_import(source: Path, *, commit: bool, settings_values=None) -> ImportRun
     """An import of whatever `source` holds: a Moneybird export, or files in
     Huismus's own format (imports.csv_pipeline), told apart by what is in
     them. `settings_values` only counts for Moneybird."""
-    exports = read_exports(source)
+    return run_import_of(read_exports(source), commit=commit, settings_values=settings_values)
+
+
+def run_import_of(exports: list[Export], *, commit: bool, settings_values=None) -> ImportRun:
+    """run_import() for exports that were read already."""
     if source_of(exports) == csv_pipeline.SOURCE:
         return csv_pipeline.run_csv_import(exports, commit=commit)
     return _run_import(exports, commit=commit, settings_values=settings_values)
@@ -104,7 +108,7 @@ def source_of(exports: list[Export]) -> str:
     sheet among the files, only a complete CSV table of ours counts: then
     the two are mixed, which Huismus doesn't untangle."""
     csvs = [
-        content
+        (name, content)
         for export in exports
         for name, content in export.files.items()
         if name.lower().endswith(".csv")
@@ -116,9 +120,9 @@ def source_of(exports: list[Export]) -> str:
         if name.lower().endswith(".xlsx")
     )
     if not moneybird:
-        # Moneybird exports sheets; only CSV files can only be meant as ours.
+        # No sheet of Moneybird among the files, but CSV files: our format.
         return csv_pipeline.SOURCE if csvs else SOURCE
-    if any(is_complete(content) for content in csvs):
+    if any(is_complete(name, content) for name, content in csvs):
         raise ImportSourceError(
             _(
                 "Je koos bestanden uit Moneybird en CSV-bestanden van Huismus door elkaar. "

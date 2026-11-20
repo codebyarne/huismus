@@ -7142,3 +7142,13 @@ msgstr ""
 
 msgid "Welke kolommen er zijn en hoe je ze invult"
 msgstr ""
+
+#, python-format
+msgid "Huismus kan de letters in %(file)s niet lezen. Sla het bestand op als CSV (UTF-8)."
+msgstr ""
+
+msgid "Origineel"
+msgstr ""
+
+msgid "De originele PDF blijft bewaard, maar klopt na het bewerken niet meer met de factuur."
+msgstr ""

@@ -47,7 +47,7 @@ def _kinds_in(files: dict[str, bytes]) -> list[FileKind | CsvKind]:
                 if detected.kind in KIND_LABELS and detected.kind not in kinds:
                     kinds.append(detected.kind)
         elif name.lower().endswith(".csv"):
-            kind = kind_of(content)
+            kind = kind_of(name, content)
             if kind is not None and kind not in kinds:
                 kinds.append(kind)
     return kinds

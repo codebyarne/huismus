@@ -137,7 +137,9 @@ def import_contact_persons(persons, report: ContactReport) -> None:
 
 def _contact(customer_number: str) -> Contact | None:
     """The contact with this customer number: the one this import made
-    before, else any other."""
+    before, else the oldest other one. Customer numbers aren't unique in
+    Huismus; with two contacts made by hand under one number, documents go
+    to the first, as the number is all the file says."""
     contacts = Contact.objects.filter(customer_number=customer_number)
     return contacts.filter(source=SOURCE).first() or contacts.order_by("pk").first()
 
@@ -229,13 +231,15 @@ def import_documents(
     documents: list[CsvDocument],
     pdfs: dict[tuple[str, str], bytes],
     *,
+    sequence: str,
     write_attachments: bool,
     number_format: str,
     numbers_label: str,
     invoice_of_quote: dict[str, str] | None = None,
 ) -> DocumentReport:
-    """Quotes, or invoices and credit notes: `documents` in the order to
-    save them in (a credit note after its invoice). `invoice_of_quote`:
+    """Quotes (`sequence` "quote"), or invoices and credit notes
+    ("invoice", the number sequence they share): `documents` in the order
+    to save them in (a credit note after its invoice). `invoice_of_quote`:
     invoice number -> the number of the quote it was made from."""
     report = DocumentReport()
     settings = Settings.load()
@@ -303,7 +307,7 @@ def import_documents(
             )
 
     report.numbering_note = continue_numbering(
-        "quote" if documents and documents[0].kind == "quote" else "invoice",
+        sequence,
         number_format,
         imported_numbers,
         settings,
@@ -356,7 +360,10 @@ def _create(parsed: CsvDocument, contact, settings, related) -> Document:
     document.declined_on = parsed.declined_on
     document.business_snapshot = business_snapshot(settings)
     document.contact_snapshot = snapshot_as_stated(contact, parsed.customer)
-    document.kor_text_snapshot = kor_text_for(document, settings)
+    # No KOR text beside VAT or a "verlegd" line: that document was not
+    # made under the KOR, whatever the settings say now.
+    under_kor = parsed.stated_tax_cents == 0 and not any(line.reverse_charge for line in lines)
+    document.kor_text_snapshot = kor_text_for(document, settings) if under_kor else ""
     document.reverse_charge_text_snapshot = reverse_charge_text_for(document, lines, settings)
     document.subtotal_cents = parsed.stated_subtotal_cents
     document.tax_cents = parsed.stated_tax_cents
@@ -427,13 +434,12 @@ def import_expenses(
             continue
 
         lines = []
-        for line in parsed.lines or [None]:
-            if line is None:
-                # No lines in the file: one line with the whole amount.
-                lines.append(
-                    ExpenseLineInput("", parsed.stated_amount_cents, parsed.stated_vat_cents, None)
-                )
-                continue
+        if not parsed.lines:
+            # No lines in the file: one line with the whole amount.
+            lines.append(
+                ExpenseLineInput("", parsed.stated_amount_cents, parsed.stated_vat_cents, None)
+            )
+        for line in parsed.lines:
             if line.vat_rate_given and not line.vat_rate:
                 report.unknown_vat_rates.append(f"{parsed.label}: {line.vat_rate_given}")
             lines.append(

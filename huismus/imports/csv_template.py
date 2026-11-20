@@ -67,13 +67,20 @@ def _readme() -> str:
     )
 
 
+def _row(columns, cells: dict) -> list:
+    """A row in the order of `columns`, from cells by column key; a
+    column without a cell stays empty."""
+    unknown = set(cells) - {column.key for column in columns}
+    assert not unknown, unknown
+    return [cells.get(column.key) for column in columns]
+
+
 def _files() -> list[tuple[str, list[str], list[list]]]:
     """(file name without .csv, header row, the example rows)."""
     kinds, statuses = dict(DOCUMENT_KIND_CHOICES), dict(STATUS_CHOICES)
     customer_number, customer = "1", _("Voorbeeld BV")
     invoice_number, quote_number = "2026-0001", "2026-001"
-    work, unit = _("Advies"), _("uur")
-    amounts = [Amount(15000), Amount(3150), Amount(18150)]
+    amounts = {"subtotal": Amount(15000), "tax": Amount(3150), "total": Amount(18150)}
     rate = percent(RATE_BP)
 
     invoice_header = labels(export_format.INVOICE_COLUMNS)
@@ -82,81 +89,111 @@ def _files() -> list[tuple[str, list[str], list[list]]]:
         _(export_format.RATE_TAX) % {"rate": rate},
     ]
     invoice_header += labels(export_format.INVOICE_COLUMNS_AFTER_RATES)
-    invoice = [
-        str(kinds["invoice"]),
-        invoice_number,
-        date(2026, 1, 15),
-        date(2026, 1, 29),
-        None,
-        None,
-        customer_number,
-        customer,
-        None,
-        None,
-        "NL",
-        None,
-        "EUR",
-        *amounts,
-        Amount(15000),
-        Amount(3150),
-        None,
-        payment_state_name("paid"),
-        Amount(18150),
-        Amount(0),
-        date(2026, 1, 20),
-        None,
-    ]
-    quote = [
-        quote_number,
-        date(2026, 1, 5),
-        date(2026, 1, 19),
-        customer_number,
-        customer,
-        None,
-        str(statuses["accepted"]),
-        date(2026, 1, 10),
-        None,
-        *amounts,
-        invoice_number,
-    ]
+    invoice = (
+        _row(
+            export_format.INVOICE_COLUMNS,
+            {
+                "kind": str(kinds["invoice"]),
+                "number": invoice_number,
+                "issue_date": date(2026, 1, 15),
+                "due_date": date(2026, 1, 29),
+                "customer_number": customer_number,
+                "customer": customer,
+                "customer_country": "NL",
+                "currency": "EUR",
+                **amounts,
+            },
+        )
+        # "omzet 21%" and "btw 21%".
+        + [Amount(15000), Amount(3150)]
+        + _row(
+            export_format.INVOICE_COLUMNS_AFTER_RATES,
+            {
+                "payment_state": payment_state_name("paid"),
+                "paid": Amount(18150),
+                "outstanding": Amount(0),
+                "paid_on": date(2026, 1, 20),
+            },
+        )
+    )
+    quote = _row(
+        export_format.QUOTE_COLUMNS,
+        {
+            "number": quote_number,
+            "issue_date": date(2026, 1, 5),
+            "expiry_date": date(2026, 1, 19),
+            "customer_number": customer_number,
+            "customer": customer,
+            "status": str(statuses["accepted"]),
+            "accepted_on": date(2026, 1, 10),
+            "invoice": invoice_number,
+            **amounts,
+        },
+    )
     lines = [
-        [str(kinds[kind]), number, 1, work, Decimal(2), unit, Amount(7500), rate, _("nee")]
-        + [Amount(15000)]
+        _row(
+            export_format.LINE_COLUMNS,
+            {
+                "kind": str(kinds[kind]),
+                "number": number,
+                "position": 1,
+                "description": _("Advies"),
+                "quantity": Decimal(2),
+                "unit": _("uur"),
+                "unit_price": Amount(7500),
+                "tax_rate": rate,
+                "reverse_charge": _("nee"),
+                "line_total": Amount(15000),
+            },
+        )
         for kind, number in (("invoice", invoice_number), ("quote", quote_number))
     ]
-    contact = [
-        customer_number,
-        customer,
-        None,
-        None,
-        None,
-        _("Voorbeeldstraat 1"),
-        None,
-        "1234 AB",
-        _("Voorbeeldstad"),
-        "NL",
-        "administratie@voorbeeld.example",
-        None,
-        None,
-        None,
-        None,
-        None,
-        14,
-        None,
-        _("nee"),
-    ]
-    person = [customer_number, _("Sam Voorbeeld"), "sam@voorbeeld.example", None, None]
+    contact = _row(
+        export_format.CONTACT_COLUMNS,
+        {
+            "customer_number": customer_number,
+            "company_name": customer,
+            "address_line1": _("Voorbeeldstraat 1"),
+            "postal_code": "1234 AB",
+            "city": _("Voorbeeldstad"),
+            "country": "NL",
+            "email": "administratie@voorbeeld.example",
+            "payment_terms_days": 14,
+            "archived": _("nee"),
+        },
+    )
+    person = _row(
+        export_format.CONTACT_PERSON_COLUMNS,
+        {
+            "customer_number": customer_number,
+            "name": _("Sam Voorbeeld"),
+            "email": "sam@voorbeeld.example",
+        },
+    )
     paper = _("Printerpapier")
-    expense = ["1", date(2026, 1, 8), _("Voorbeeldwinkel"), paper, Amount(1210), Amount(210), None]
-    expense_line = [
-        "1",
-        1,
-        paper,
-        Amount(1210),
-        Amount(210),
-        str(VatRate.HIGH.label),
-        _("Kantoor"),
-    ]
+    expense = _row(
+        export_format.EXPENSE_COLUMNS,
+        {
+            "expense_id": "1",
+            "date": date(2026, 1, 8),
+            "supplier": _("Voorbeeldwinkel"),
+            "description": paper,
+            "amount": Amount(1210),
+            "vat": Amount(210),
+        },
+    )
+    expense_line = _row(
+        export_format.EXPENSE_LINE_COLUMNS,
+        {
+            "expense_id": "1",
+            "position": 1,
+            "description": paper,
+            "amount": Amount(1210),
+            "vat": Amount(210),
+            "vat_rate": str(VatRate.HIGH.label),
+            "category": _("Kantoor"),
+        },
+    )
     return [
         (pgettext("export file", "facturen"), invoice_header, [invoice]),
         (pgettext("export file", "offertes"), labels(export_format.QUOTE_COLUMNS), [quote]),

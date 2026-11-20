@@ -17,7 +17,7 @@ import io
 import re
 from dataclasses import dataclass, field
 from datetime import date, datetime
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal
 from enum import Enum
 from functools import cache
 
@@ -58,9 +58,12 @@ MIN_KNOWN_COLUMNS = 2
 # file with a "datum" and an "omschrijving" in it.
 MIN_KNOWN_COLUMNS_INCOMPLETE = 3
 
+# A quantity: at most seven digits before and three after the comma.
+_QUANTITY = re.compile(r"-?\d{1,7}(?:[.,]\d{1,3})?")
+
 # What csv_files._text() puts in front of text a spreadsheet would run as
 # a formula; the import takes it off again.
-_FORMULA_GUARD = re.compile(r"'(?=[=+\-@\t\r])")
+_FORMULA_GUARD = re.compile(r"^'(?=[=+\-@\t\r])")
 
 
 @cache
@@ -87,7 +90,7 @@ def _rate_patterns() -> list[tuple[str, re.Pattern]]:
             before, after = (re.escape(normalised(piece)) for piece in text.split("%(rate)s"))
             # "%%" in the template is one "%" once filled in.
             after = after.replace("%%", "%")
-            patterns.append((part, re.compile(rf"{before}\s?(\d+(?:,\d+)?){after}")))
+            patterns.append((part, re.compile(rf"{before}\s?(\d{{1,3}}(?:,\d{{1,2}})?){after}")))
     return patterns
 
 
@@ -136,6 +139,18 @@ class Row:
             self._fail(key, _("dit vak is leeg, maar moet gevuld zijn."))
         return value
 
+    def required_date(self, key: str) -> date:
+        self.required(key)
+        return self.date(key)
+
+    def required_amount(self, key: str) -> int:
+        self.required(key)
+        return self.amount(key)
+
+    def required_choice(self, key: str, choices: dict[str, object], *, examples: str):
+        self.required(key)
+        return self.choice(key, choices, examples=examples)
+
     def date(self, key: str) -> date | None:
         value = self.text(key)
         if not value:
@@ -172,10 +187,11 @@ class Row:
         value = self.text(key)
         if not value:
             return None
-        try:
-            return Decimal(value.replace(",", "."))
-        except InvalidOperation:
+        # What a line's quantity can hold (DocumentLine.quantity): more
+        # digits would be rounded when saved, after the totals were made.
+        if not _QUANTITY.fullmatch(value):
             self._fail(key, _("‘%(value)s’ is geen getal. Schrijf 2 of 2,5.") % {"value": value})
+        return Decimal(value.replace(",", "."))
 
     def whole_number(self, key: str) -> int | None:
         value = self.text(key)
@@ -220,17 +236,34 @@ class Table:
         return key in self.header_of
 
 
-def _decode(content: bytes) -> str:
+def _decode(file_name: str, content: bytes) -> str:
     """UTF-8 (with or without a BOM), as the export writes; else Windows's
-    own encoding, which Excel saves a CSV in."""
-    try:
-        return content.decode("utf-8-sig")
-    except UnicodeDecodeError:
-        return content.decode("cp1252", errors="replace")
+    own encoding, which Excel saves a CSV in. Anything else stops the
+    import: a name with a wrong letter in it would come in unnoticed."""
+    for encoding in ("utf-8-sig", "cp1252"):
+        try:
+            return content.decode(encoding)
+        except UnicodeDecodeError:
+            continue
+    raise ImportSourceError(
+        _("Huismus kan de letters in %(file)s niet lezen. Sla het bestand op als CSV (UTF-8).")
+        % {"file": file_name}
+    )
+
+
+def _numbered_lines(file_name: str, content: bytes) -> list[tuple[int, list[str]]]:
+    """The lines of a CSV file that have something in them, each with its
+    row number as a spreadsheet shows it: empty rows count too."""
+    reader = csv.reader(io.StringIO(_decode(file_name, content), newline=""), delimiter=";")
+    return [
+        (number, line)
+        for number, line in enumerate(reader, start=1)
+        if any(cell.strip() for cell in line)
+    ]
 
 
 def _clean(cell: str) -> str:
-    return _FORMULA_GUARD.sub("", cell.strip(), count=1) if cell.startswith("'") else cell.strip()
+    return _FORMULA_GUARD.sub("", cell.strip())
 
 
 def _known(kind: CsvKind, name: str) -> bool:
@@ -249,44 +282,42 @@ def recognise(header: list[str]) -> CsvKind | None:
     def known_count(kind):
         return sum(1 for name in names if _known(kind, name))
 
-    def complete(kind):
-        present = {_keys_by_name(kind).get(name) for name in names}
-        return all(column.key in present for column in COLUMNS[kind] if column.required)
-
-    best = max(CsvKind, key=lambda kind: (complete(kind), known_count(kind)))
-    enough = MIN_KNOWN_COLUMNS if complete(best) else MIN_KNOWN_COLUMNS_INCOMPLETE
+    best = max(CsvKind, key=lambda kind: (_has_required(kind, names), known_count(kind)))
+    enough = MIN_KNOWN_COLUMNS if _has_required(best, names) else MIN_KNOWN_COLUMNS_INCOMPLETE
     return best if known_count(best) >= enough else None
 
 
-def is_complete(content: bytes) -> bool:
-    """A CSV file with every required column of one of our files: surely
-    meant as one, whatever else was uploaded with it."""
-    header = _header(content)
-    kind = kind_of(content)
-    if kind is None:
-        return False
-    present = {_keys_by_name(kind).get(normalised(name)) for name in header}
+def _has_required(kind: CsvKind, names: list[str]) -> bool:
+    """`names` (normalised) hold every required column of `kind`."""
+    present = {_keys_by_name(kind).get(name) for name in names}
     return all(column.key in present for column in COLUMNS[kind] if column.required)
 
 
-def kind_of(content: bytes) -> CsvKind | None:
+def is_complete(file_name: str, content: bytes) -> bool:
+    """A CSV file with every required column of one of our files: surely
+    meant as one, whatever else was uploaded with it."""
+    header = _header(file_name, content)
+    kind = recognise(header) if header else None
+    return kind is not None and _has_required(kind, [normalised(name) for name in header])
+
+
+def kind_of(file_name: str, content: bytes) -> CsvKind | None:
     """Which of our files this CSV is, by its header row alone."""
-    header = _header(content)
+    header = _header(file_name, content)
     return recognise(header) if header else None
 
 
-def _header(content: bytes) -> list[str]:
-    reader = csv.reader(io.StringIO(_decode(content), newline=""), delimiter=";")
-    return next((line for line in reader if any(cell.strip() for cell in line)), [])
+def _header(file_name: str, content: bytes) -> list[str]:
+    lines = _numbered_lines(file_name, content)
+    return lines[0][1] if lines else []
 
 
 def read_table(file_name: str, content: bytes) -> Table | None:
     """The table in a CSV file, or None when it isn't one of ours."""
-    reader = csv.reader(io.StringIO(_decode(content), newline=""), delimiter=";")
-    lines = [line for line in reader if any(cell.strip() for cell in line)]
+    lines = _numbered_lines(file_name, content)
     if not lines:
         return None
-    header = [cell.strip() for cell in lines[0]]
+    header = [cell.strip() for cell in lines[0][1]]
     if len(header) == 1 and ("," in header[0] or "\t" in header[0]):
         # Never guessed (hard rule 6): commas can be inside a description.
         raise ImportSourceError(
@@ -329,7 +360,7 @@ def read_table(file_name: str, content: bytes) -> Table | None:
             % {"file": file_name, "column": missing[0]}
         )
 
-    for number, line in enumerate(lines[1:], start=2):
+    for number, line in lines[1:]:
         cells = {key: _clean(line[index]) for index, key in key_at.items() if index < len(line)}
         rates = {rate: _clean(line[index]) for index, rate in rate_at.items() if index < len(line)}
         table.rows.append(Row(table, number, cells, rates))

@@ -20,7 +20,7 @@ from .forms import (
     differing_current_values,
     settings_form_for,
 )
-from .pipeline import PROPOSED, run_import, source_of
+from .pipeline import PROPOSED, run_import, run_import_of, source_of
 from .recognition import describe_uploads
 from .sources import ImportSourceError, read_exports
 
@@ -181,17 +181,15 @@ def commit(request):
             _("Deze proefdraai is verlopen of al geïmporteerd. Kies de bestanden opnieuw."),
         )
         return redirect("imports:upload")
-    if source_of(read_exports(directory)) == CSV:
-        run = run_import(directory, commit=True)
-    else:
+    # Read once: what the files are decides whether settings come along.
+    exports = read_exports(directory)
+    settings_values = None
+    if source_of(exports) != CSV:
         settings_form = ImportSettingsForm(request.POST, instance=Settings.load())
         if not settings_form.is_valid():
             return _dry_run(request, token, directory, settings_form=settings_form)
-        run = run_import(
-            directory,
-            commit=True,
-            settings_values={name: settings_form.cleaned_data[name] for name in PROPOSABLE_FIELDS},
-        )
+        settings_values = {name: settings_form.cleaned_data[name] for name in PROPOSABLE_FIELDS}
+    run = run_import_of(exports, commit=True, settings_values=settings_values)
     staging.discard(token)
     return render(
         request,

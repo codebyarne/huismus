@@ -28,7 +28,7 @@
         {% endif %}
         {% if r.refused %}
         <div class="stack" style="gap:8px"><h3>{% translate "Geweigerd" %}</h3>
-            <ul class="issue-list">{% for item in r.refused %}<li><span>{{ item }}</span><span class="pill pill-unpaid no-dot">{% translate "geweigerd" %}</span></li>{% endfor %}</ul>
+            <ul class="issue-list">{% for item in r.refused %}<li><span>{{ item }}</span></li>{% endfor %}</ul>
             <p class="small muted">{% translate "Deze komen niet in Huismus. Verbeter ze in het bestand en importeer opnieuw." %}</p>
         </div>
         {% endif %}

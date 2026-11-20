@@ -7,9 +7,10 @@ The export (core.export) writes them and the import of the same format
 A label is the Dutch column name; the export translates it to the language
 of the screen, the import knows it in both.
 
-`required`: the import stops when the column is missing. `read`: False for
-a column the import knows and deliberately leaves out, because it follows
-from other columns (the payment status from what was paid).
+`required`: the import stops when the column is missing. Every other
+column may be left out of a file. The import knows them all, so none is
+reported as unknown, but it doesn't use "openstaand" and "bron": they
+follow from the rest.
 """
 
 from dataclasses import dataclass
@@ -25,7 +26,6 @@ class Column:
     key: str
     label: str
     required: bool = False
-    read: bool = True
     # Other labels the export has written for this column.
     also: tuple[str, ...] = ()
 
@@ -72,11 +72,11 @@ INVOICE_COLUMNS = (
 # export (RATE_REVENUE, RATE_TAX).
 INVOICE_COLUMNS_AFTER_RATES = (
     Column("reverse_charge_revenue", gettext_noop("omzet btw verlegd")),
-    Column("payment_state", gettext_noop("betaalstatus"), read=False),
+    Column("payment_state", gettext_noop("betaalstatus")),
     Column("paid", gettext_noop("betaald")),
-    Column("outstanding", gettext_noop("openstaand"), read=False),
+    Column("outstanding", gettext_noop("openstaand")),
     Column("paid_on", gettext_noop("laatst betaald op")),
-    Column("source", gettext_noop("bron"), read=False),
+    Column("source", gettext_noop("bron")),
 )
 RATE_REVENUE = gettext_noop("omzet %(rate)s%%")
 RATE_TAX = gettext_noop("btw %(rate)s%%")

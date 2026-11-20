@@ -383,3 +383,106 @@ def test_documents_without_a_lines_file_stop_the_import(tmp_path):
 def test_files_huismus_does_not_know_stop_the_import(tmp_path):
     with pytest.raises(ImportSourceError, match="herkent geen"):
         _run(tmp_path, {"iets.csv": "a;b;c\n1;2;3\n"})
+
+
+def test_moneybird_files_and_csv_files_together_are_refused(tmp_path):
+    from pathlib import Path
+
+    fixtures = Path(__file__).resolve().parent.parent / "fixtures" / "moneybird-example-data"
+    with zipfile.ZipFile(fixtures / "lindeboom_communicatie_2019.zip") as moneybird:
+        files = {name: moneybird.read(name) for name in moneybird.namelist()}
+    files["klanten.csv"] = CONTACTS
+
+    with pytest.raises(ImportSourceError, match="door elkaar"):
+        _run(tmp_path, files)
+    assert not Contact.objects.exists()
+
+
+def test_a_quote_with_a_status_huismus_does_not_know_stops_the_import(tmp_path):
+    files = {
+        "klanten.csv": CONTACTS,
+        "offertes.csv": (
+            "nummer;datum;klantnummer;status;bedrag excl. btw;btw;totaal incl. btw\n"
+            "2025-001;2025-03-01;7;misschien;100,00;21,00;121,00\n"
+        ),
+        "regels.csv": f"{LINE_HEADER}\nofferte;2025-001;Werk;1;100,00;21\n",
+    }
+
+    with pytest.raises(ImportSourceError, match="offertes.csv, rij 2, kolom ‘status’"):
+        _run(tmp_path, files)
+
+
+def test_an_empty_vat_cell_and_an_empty_rate_are_zero(tmp_path):
+    invoice = "factuur;2025-0001;2025-03-10;7;100,00;;100,00;;;;;;\n"
+
+    run = _run(tmp_path, _invoice_files(invoice=invoice, line="factuur;2025-0001;Werk;1;100,00;\n"))
+
+    document = Document.objects.get()
+    assert (document.tax_cents, document.lines.get().tax_rate_bp) == (0, 0)
+    assert run.report["sales_invoices"]["discrepancies"] == []
+
+
+@pytest.mark.parametrize("quantity", ["NaN", "1e999", "1,23456", "12345678"])
+def test_a_quantity_huismus_cannot_keep_stops_the_import(tmp_path, quantity):
+    line = f"factuur;2025-0001;Werk;{quantity};100,00;21\n"
+
+    with pytest.raises(ImportSourceError, match="regels.csv, rij 2, kolom ‘aantal’"):
+        _run(tmp_path, _invoice_files(line=line))
+
+
+def test_a_row_is_named_by_its_number_in_the_file_empty_rows_counted(tmp_path):
+    files = _invoice_files()
+    files["klanten.csv"] = "klantnummer;bedrijfsnaam;achternaam\n\n7;Klant BV;\n;Zonder nummer;\n"
+
+    with pytest.raises(ImportSourceError, match="klanten.csv, rij 4, kolom ‘klantnummer’"):
+        _run(tmp_path, files)
+
+
+def test_only_the_apostrophe_the_export_put_in_front_is_taken_off(tmp_path):
+    files = {
+        "klanten.csv": "klantnummer;bedrijfsnaam;achternaam\n7;'=Som BV;\n8;'t Hoekje '-korting;\n"
+    }
+
+    _run(tmp_path, files)
+
+    assert list(Contact.objects.order_by("customer_number").values_list("company_name", flat=True))
+    names = Contact.objects.order_by("customer_number").values_list("company_name", flat=True)
+    assert list(names) == ["=Som BV", "'t Hoekje '-korting"]
+
+
+def test_letters_huismus_cannot_read_stop_the_import(tmp_path):
+    # 0x81 is no letter in UTF-8 nor in Windows's own encoding.
+    files = {"klanten.csv": b"klantnummer;bedrijfsnaam;achternaam\n7;Klant \x81;\n"}
+
+    with pytest.raises(ImportSourceError, match="klanten.csv"):
+        _run(tmp_path, files)
+
+
+def test_a_real_import_keeps_the_files_as_given_once(tmp_path, settings):
+    archive = settings.DATA_DIR / "import-archief"
+
+    def kept():
+        return {path for path in archive.rglob("*") if path.is_file()}
+
+    path = tmp_path / "bewaren.zip"
+    path.write_bytes(_zip(_invoice_files()))
+    before = kept()
+
+    run_import(path, commit=False)
+    assert kept() == before
+
+    run_import(path, commit=True)
+    run_import(path, commit=True)
+    (new,) = kept() - before
+    assert new.read_bytes() == path.read_bytes()
+
+
+def test_the_command_reads_this_format_too(tmp_path):
+    from django.core.management import call_command
+
+    path = tmp_path / "import.zip"
+    path.write_bytes(_zip(_invoice_files()))
+
+    call_command("import_moneybird", str(path), "--commit")
+
+    assert Document.objects.get().number == "2025-0001"
