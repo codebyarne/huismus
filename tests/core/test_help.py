@@ -77,18 +77,31 @@ def _instructions(slug: str, language: str) -> str:
     return blocks[0]
 
 
+# Where the part of the instructions that is the same on every package page
+# starts: the line above the rules in docs/hulp/<package>.<language>.md.
+SHARED_RULES = {"nl": "Zo vul je het sjabloon:", "en": "How to fill in the template:"}
+
+
+def _shared_rules(slug: str, language: str) -> str:
+    instructions = _instructions(slug, language)
+    assert instructions.count(SHARED_RULES[language]) == 1, slug
+    return instructions[instructions.index(SHARED_RULES[language]) :]
+
+
 @pytest.mark.parametrize("language", help.LANGUAGES)
-def test_every_package_page_gives_the_assistant_the_same_rules(language):
+@pytest.mark.parametrize("slug", help.PACKAGES)
+def test_every_package_page_gives_the_assistant_the_same_rules(slug, language):
     """Each package page has its own copy of the instructions, to copy in one
     go (issue #164). Only what goes where differs per package; the rules
-    after SHARED_INSTRUCTIONS must not drift apart between the copies."""
-    marker = help.SHARED_INSTRUCTIONS[language]
-    shared = set()
-    for slug in help.PACKAGES:
-        instructions = _instructions(slug, language)
-        assert instructions.count(marker) == 1, slug
-        shared.add(instructions[instructions.index(marker) :])
-    assert len(shared) == 1
+    must not drift apart between the copies."""
+    assert _shared_rules(slug, language) == _shared_rules(help.PACKAGES[0], language)
+
+
+@pytest.mark.parametrize("language", help.LANGUAGES)
+def test_the_instructions_wrap_on_a_phone(language):
+    """huismus.css wraps a ```text block (code.language-text), so the
+    instructions can be read on a phone instead of scrolling sideways."""
+    assert 'class="language-text"' in help.render(help.PACKAGES[0], language).html
 
 
 @pytest.mark.parametrize("language", help.LANGUAGES)
@@ -104,7 +117,7 @@ def test_the_instructions_name_the_files_of_the_template(language):
         readme = csv_template.readme_name()
     for slug in help.PACKAGES:
         instructions = _instructions(slug, language)
-        named = set(re.findall(r"[a-z-]+\.csv", instructions))
+        named = set(re.findall(r"[\w-]+\.csv", instructions))
         assert named <= template_files, (slug, named - template_files)
         assert readme in instructions, slug
 

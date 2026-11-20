@@ -294,9 +294,11 @@ def _problems_on(page, path, language, dutch, data):
     # mail text too), not a UI text.
     for snippet in page.locator(".help-text code").all_inner_texts():
         text = text.replace(snippet, "")
-    # Nor is a menu name of another package, marked as its own language
-    # (lang="nl" on an English package page, issue #164).
-    for snippet in page.locator(f".help-text [lang]:not([lang='{language}'])").all_inner_texts():
+    # Nor is a menu name of another package in bold, marked as its own
+    # language (**<span lang="nl">…</span>** on an English package page,
+    # issue #164). Only that marking: a lang anywhere else is still checked.
+    marked = f".help-text strong > span[lang]:not([lang='{language}'])"
+    for snippet in page.locator(marked).all_inner_texts():
         text = text.replace(snippet, "")
     for snippet in NEVER_VISIBLE:
         if re.search(rf"(?<!\w){re.escape(snippet)}(?!\w)", text):
