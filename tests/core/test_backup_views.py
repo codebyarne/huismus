@@ -15,6 +15,8 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
 
+from huismus.business import smtp
+from huismus.business.models import Settings
 from huismus.contacts.models import Contact
 from huismus.core import auto_backups as backups
 from huismus.core.backup import create_backup
@@ -205,6 +207,62 @@ def test_after_restoring_an_inactive_user_is_not_signed_in(docker, data_dir, tmp
     response = _restore_confirmed(docker, data_dir, tmp_path, side_effect=inactive)
 
     assert reverse("login") in response.redirect_chain[-1][0]
+
+
+# After a restore on another computer the mail settings are back, the
+# password is not: one warning says so (issue #128; huismus-intern/besluiten.md,
+# 2026-11-20).
+MAIL_PASSWORD_MISSING = {
+    "nl": (
+        "Je mailwachtwoord zit niet in een back-up."
+        " Vul het opnieuw in bij Instellingen → Mailen.",
+        "Wat je nog meer opnieuw instelt, staat in Hulp → Naar een nieuwe computer.",
+    ),
+    "en": (
+        "Your mail password is not in a backup. Enter it again under Settings → Mail.",
+        "What else to set up again is in Help → Moving to a new computer.",
+    ),
+}
+
+
+def _mail_is_set_up():
+    business = Settings.load()
+    business.smtp_provider = "gmail"
+    business.smtp_host = "smtp.gmail.com"
+    business.save()
+
+
+@pytest.mark.parametrize("language", ["nl", "en"])
+def test_after_restoring_a_missing_mail_password_is_named(
+    docker, data_dir, tmp_path, settings, language
+):
+    settings.LANGUAGE_CODE = language
+    docker.cookies[settings.LANGUAGE_COOKIE_NAME] = language
+    _mail_is_set_up()
+
+    page = _restore_confirmed(docker, data_dir, tmp_path).content.decode()
+
+    sentence, more = MAIL_PASSWORD_MISSING[language]
+    assert f"<strong>{sentence}</strong>" in page
+    assert f'<span class="small">{more}</span>' in page
+    assert "flash-warning" in page
+
+
+def test_after_restoring_with_the_mail_password_nothing_is_added(docker, data_dir, tmp_path):
+    _mail_is_set_up()
+    smtp.set_password("test-app-password-not-real")
+
+    page = _restore_confirmed(docker, data_dir, tmp_path).content.decode()
+
+    assert "Teruggezet naar vandaag" in page
+    assert "mailwachtwoord" not in page
+
+
+def test_after_restoring_without_mail_nothing_is_added(docker, data_dir, tmp_path):
+    page = _restore_confirmed(docker, data_dir, tmp_path).content.decode()
+
+    assert "Teruggezet naar vandaag" in page
+    assert "mailwachtwoord" not in page
 
 
 def test_the_overview_shows_the_three_places_as_equals(desktop, drive):

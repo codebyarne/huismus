@@ -15,6 +15,9 @@ from django.shortcuts import redirect, render
 from django.utils.translation import get_language
 from django.utils.translation import gettext as _
 
+from huismus.business import smtp
+from huismus.business.models import Settings
+
 from . import auto_backups, cloud_backups, help
 from .backup import BackupError, archive_created_at, unknown_migrations
 from .templatetags.backups import moment
@@ -223,6 +226,21 @@ def _check(path: Path) -> str | None:
     return None
 
 
+def _warn_if_mail_password_missing(request) -> None:
+    """After a restore: the one thing Huismus knows this computer lacks.
+    The restored administration says mail was set up; the password stays
+    out of a backup. Folders and keys are not in the archive either, but
+    nothing tells whether there were any (docs/hulp/nieuwe-computer.*.md)."""
+    if not smtp.password_is_missing(Settings.load()):
+        return
+    sentence = _(
+        "Je mailwachtwoord zit niet in een back-up. Vul het opnieuw in bij Instellingen → Mailen."
+    )
+    more = _("Wat je nog meer opnieuw instelt, staat in Hulp → Naar een nieuwe computer.")
+    # Two lines for the toast (core/_toasts.html, "has-detail").
+    messages.warning(request, f"{sentence}\n{more}", extra_tags="has-detail")
+
+
 @login_required
 def restore(request):
     error = None
@@ -269,6 +287,7 @@ def restore(request):
                         "Teruggezet naar %(moment)s. De stand van daarvoor staat bij je back-ups."
                     )
                 messages.success(request, text % {"moment": moment(created)})
+                _warn_if_mail_password_missing(request)
                 return redirect("home")
         if error is None:
             created = archive_created_at(path)

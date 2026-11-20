@@ -22,7 +22,9 @@ Huismus het wachtwoord.
 
 Je mailwachtwoord gaat niet mee in een back-up. Anders kan iedereen met een
 kopie van je back-up in je mailbox komen. Zet je een back-up terug op een
-andere computer, dan vul je het wachtwoord daar opnieuw in.
+andere computer, dan vul je het wachtwoord daar opnieuw in. Wat je daar nog
+meer opnieuw instelt, lees je bij
+[Naar een nieuwe computer](nieuwe-computer.nl.md).
 
 ## Gmail
 

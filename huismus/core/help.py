@@ -67,7 +67,17 @@ GROUPS = (
         ),
     ),
     Group(_("Voor je boekhouder"), ("boekhouder", "exporteren")),
-    Group(_("Installeren en bijwerken"), ("desktop-app", "docker", "vps", "telefoon")),
+    Group(
+        _("Installeren en bijwerken"),
+        (
+            "desktop-app",
+            "docker",
+            "vps",
+            "telefoon",
+            # Last: a one-off job, after everything it refers to (issue #128).
+            "nieuwe-computer",
+        ),
+    ),
 )
 TOPICS = tuple(slug for group in GROUPS for slug in group.topics)
 

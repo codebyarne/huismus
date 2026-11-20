@@ -924,6 +924,17 @@ msgid ""
 "Teruggezet naar %(moment)s. De stand van daarvoor staat bij je back-ups."
 msgstr "Restored to %(moment)s. How things were before is among your backups."
 
+msgid ""
+"Je mailwachtwoord zit niet in een back-up. Vul het opnieuw in bij"
+" Instellingen → Mailen."
+msgstr ""
+"Your mail password is not in a backup. Enter it again under Settings →"
+" Mail."
+
+msgid ""
+"Wat je nog meer opnieuw instelt, staat in Hulp → Naar een nieuwe computer."
+msgstr "What else to set up again is in Help → Moving to a new computer."
+
 #, python-format
 msgid "%(service)s, versleuteld"
 msgstr "%(service)s, encrypted"

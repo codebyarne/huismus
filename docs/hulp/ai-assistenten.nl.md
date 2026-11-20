@@ -75,7 +75,8 @@ Gebruik dan Claude Code, hieronder.
 Alle assistenten die het adres gebruiken, delen één sleutel. Kies je
 **Nieuwe sleutel** of **Ontkoppelen**, dan werkt de oude sleutel voor
 niemand meer. De sleutel gaat niet mee in een back-up. Zet je een back-up
-terug op een andere computer, dan koppel je opnieuw.
+terug op een andere computer, dan koppel je opnieuw. Meer daarover lees je
+bij [Naar een nieuwe computer](nieuwe-computer.nl.md).
 
 ## Welk adres je gebruikt
 
