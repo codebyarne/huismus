@@ -59,12 +59,13 @@ MAC_PRIVACY_SETTINGS = "x-apple.systempreferences:com.apple.settings.PrivacySecu
 COUNTER_VARIABLE = "HUISMUS_SITE_COUNTER"
 # The pictures in docs/site/, each as <name>.<nl|en>.<light|dark>.webp.
 STILLS = ("overzicht",)
-# Only as a phone shows them.
-PHONE_STILLS = ("uitgaven",)
 ANIMATIONS = ("factuur-maken", "importeren")
 # Parts of a screen, shown large (Camera.detail in scripts/site_beelden.py).
-DETAILS = ("kor", "jaar")
-MEDIA = STILLS + PHONE_STILLS + ANIMATIONS + DETAILS
+DETAILS = ("jaar", "btw-aangifte", "verwerken")
+# The parts that also come as a phone shows them (….phone.webp), like a still:
+# from the administration without the KOR (core/site_data.py).
+PHONE_DETAILS = ("btw-aangifte", "verwerken")
+MEDIA = STILLS + ANIMATIONS + DETAILS
 MEDIA_DIR = Path(settings.BASE_DIR) / "docs" / "site"
 # The site is always light, whatever the visitor's system is (the owner,
 # 2026-11-19, huismus-intern/besluiten.md).
@@ -160,8 +161,8 @@ def download_url(platform: str) -> str:
 
 
 def media_files(schemes: tuple[str, ...] = ("light", "dark")) -> list[Path]:
-    """Every picture of the app; a still also as the app shows it on a phone
-    (….phone.webp), for a narrow screen. scripts/site-beelden.sh makes them
+    """Every picture of the app; a still and some parts also as the app shows
+    them on a phone (….phone.webp), for a narrow screen. scripts/site-beelden.sh makes them
     light and dark (the dark ones for the picture a shared link shows); the
     site itself is always light (SITE_SCHEMES)."""
     return [
@@ -169,9 +170,7 @@ def media_files(schemes: tuple[str, ...] = ("light", "dark")) -> list[Path]:
         for name in MEDIA
         for language in help.LANGUAGES
         for scheme in schemes
-        for kind in (
-            ("", ".phone") if name in STILLS else (".phone",) if name in PHONE_STILLS else ("",)
-        )
+        for kind in (("", ".phone") if name in STILLS + PHONE_DETAILS else ("",))
     ]
 
 
@@ -210,12 +209,14 @@ def social_image(language: str) -> Path:
 
 
 def _shot_sizes() -> dict[str, tuple[int, int]]:
-    """{name: (width, height)} in CSS pixels of the parts and phone screens
-    (they are made at twice that), so an img reserves the right room."""
+    """{name: (width, height)} in CSS pixels of the parts (they are made at
+    twice that), so an img reserves the right room; the same part as a phone
+    shows it under <name>_phone."""
     sizes = {}
-    for name, kind in [(n, "") for n in DETAILS] + [(n, ".phone") for n in PHONE_STILLS]:
+    for name, kind in [(n, "") for n in DETAILS] + [(n, ".phone") for n in PHONE_DETAILS]:
         with Image.open(MEDIA_DIR / f"{name}.nl.light{kind}.webp") as picture:
-            sizes[name] = (picture.width // 2, picture.height // 2)
+            key = name.replace("-", "_") + kind.replace(".", "_")
+            sizes[key] = (picture.width // 2, picture.height // 2)
     return sizes
 
 

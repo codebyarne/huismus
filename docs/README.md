@@ -20,7 +20,7 @@ draaien op een server staat als tweede route lager op de pagina.
 
 [`site/`](site/): de schermafbeeldingen en animaties van de app op de site,
 per taal en voor licht en donker. Ze komen van een verzonnen administratie
-(`huismus/core/site_data.py`). Ziet een scherm op de site er anders uit dan in
+(`huismus/core/site_data.py`), één keer met de KOR en één keer met btw. Ziet een scherm op de site er anders uit dan in
 de app, maak ze dan opnieuw en commit ze:
 
 ```

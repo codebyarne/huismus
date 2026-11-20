@@ -223,10 +223,15 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .bento-shot .detail img { width: 700px; max-width: none; }
 .bento-wide .bento-shot .detail img { width: 752px; }
 /* De telefoon staat rechtop en wordt onderaan afgesneden. */
-.bento-phone .bento-shot { justify-content: center; padding: 0 var(--s-6); }
-.bento-phone .bento-shot > .detail { width: min(300px, 100%); }
-.bento-phone .bento-shot .detail img { width: 100%; max-width: 300px; }
-.bento-phone .detail img { border-radius: 28px 28px 0 0; box-shadow: 0 0 0 1px var(--border), 0 20px 50px -20px rgb(12 35 37 / .3); }
+.bento-half { grid-column: span 6; }
+/* Hoger dan de andere kaarten: het bonnetje naast de velden, tot en met bedrag, btw en tarief. */
+.bento-half .bento-shot { max-height: 600px; }
+.bento-half .bento-shot .shot img { width: 960px; margin-left: -190px; }
+.bento-half .bento-shot .detail.has-phone { display: flex; justify-content: center; }
+.bento-half .bento-shot .detail.has-phone img { width: auto; height: 600px; }
+/* Een deel dat in zijn geheel moet passen (een tabel met bedragen rechts, het bonnetje naast de velden): zo breed als de kaart, niet afgesneden. */
+.bento-shot:has(.has-phone) { padding-right: clamp(24px, 3vw, 36px); }
+.bento-shot .detail.has-phone img { width: 100%; max-width: 100%; border-radius: 12px 12px 0 0; }
 .year-note { max-width: 70ch; margin-top: clamp(24px, 3vw, 40px); color: var(--text-muted); font-size: var(--fs-md); }
 .year-ai { display: flex; gap: var(--s-3); align-items: flex-start; max-width: 70ch; margin-top: var(--s-4); }
 .year-ai .i { margin-top: 4px; color: var(--primary); flex: none; }
@@ -396,7 +401,7 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
   .feature-row, .help-index .help-group { grid-template-columns: minmax(0, 1fr); }
   .feature-row h2 { position: static; }
   .check-groups { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .bento-item, .bento-wide { grid-column: span 12; }
+  .bento-item, .bento-wide, .bento-half { grid-column: span 12; }
   .trio { grid-template-columns: minmax(0, 1fr); gap: var(--s-6); }
   .people { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .person-main .photo { aspect-ratio: 16 / 9; object-position: 70% 50%; }
@@ -440,6 +445,10 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
   .people { gap: 10px; }
   .foot-top { flex-direction: column; align-items: flex-start; }
   .bento-shot { padding-left: var(--s-5); }
+  /* De telefoonversie van een deel is hoog en smal: helemaal tonen, anders valt de uitkomst eraf. */
+  .bento-shot:has(.has-phone) { padding-right: var(--s-5); max-height: none; }
+  .bento-half .bento-shot .shot img { width: 640px; margin-left: -127px; }
+  .bento-half .bento-shot .detail.has-phone img { width: 100%; height: auto; }
 }
 
 /* ---------- Films ---------- */
