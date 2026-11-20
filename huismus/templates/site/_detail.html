@@ -1,5 +1,5 @@
-{% comment %}A part of a screen of the app, shown large (scripts/site_beelden.py: Camera.detail). name, alt, width and height of the picture; phone (its width and height) when a narrow screen gets the same part as a phone shows it.{% endcomment %}
-<picture class="detail{% if phone %} has-phone{% endif %}">
+{% comment %}A part of a screen of the app, shown large (scripts/site_beelden.py: Camera.detail). name, alt, width and height of the picture; phone (its width and height) when the part has to fit its card whole (.detail-whole) and a narrow screen gets it as a phone shows it.{% endcomment %}
+<picture class="detail{% if phone %} detail-whole{% endif %}">
     {% if phone %}<source media="(max-width: 640px)" srcset="/beelden/{{ name }}.{{ language }}.light.phone.webp" width="{{ phone.0 }}" height="{{ phone.1 }}">{% endif %}
     <img src="/beelden/{{ name }}.{{ language }}.light.webp" width="{{ width }}" height="{{ height }}" alt="{{ alt }}" loading="lazy" decoding="async">
 </picture>
