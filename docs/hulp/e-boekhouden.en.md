@@ -9,13 +9,13 @@ does a trial run first and only saves something when you choose to.
 e-Boekhouden.nl has no export with everything in it. This is what it
 describes in its help:
 
-1. **Customers:** open **Relaties**, choose **Zoeken**, click **zoeken** and
+1. **Customers:** open **<span lang="nl">Relaties</span>**, choose **<span lang="nl">Zoeken</span>**, click **<span lang="nl">zoeken</span>** and
    then the Excel icon. [This is how e-Boekhouden.nl describes it in its
    help](https://cdn.e-boekhouden.nl/handleiding/Handleiding_Relaties.pdf).
-2. **Invoices:** open **Factureren**, **Facturen**, **Overzicht**. For each
+2. **Invoices:** open **<span lang="nl">Factureren</span>**, **<span lang="nl">Facturen</span>**, **<span lang="nl">Overzicht</span>**. For each
    invoice, save the PDF with the printer icon. [This is how e-Boekhouden.nl
    describes it in its help](https://cdn.e-boekhouden.nl/handleiding/Handleiding_Factureren.pdf).
-3. **Audit file:** open **Beheer**, **Exporteren**, **XML-Auditfile**. The
+3. **Audit file:** open **<span lang="nl">Beheer</span>**, **<span lang="nl">Exporteren</span>**, **<span lang="nl">XML-Auditfile</span>**. The
    assistant uses it to check whether an invoice is missing. [This is how
    e-Boekhouden.nl describes it in its help](https://www.e-boekhouden.nl/veelgestelde-vragen).
 
@@ -90,6 +90,6 @@ Cancel e-Boekhouden.nl only when everything is in Huismus, you've checked it and
 have a [backup](back-ups.en.md). Also keep what you got out of e-Boekhouden.nl with
 your own files.
 
-According to e-Boekhouden.nl, you cancel under **Beheer**. After that
+According to e-Boekhouden.nl, you cancel under **<span lang="nl">Beheer</span>**. After that
 your data is deleted, unless you take an Online Archief. [This is how e-Boekhouden.nl describes it
 in its help](https://www.e-boekhouden.nl/veelgestelde-vragen).

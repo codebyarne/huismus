@@ -8,17 +8,17 @@ trial run first and only saves something when you choose to.
 
 Jortt has no export with everything in it. You download a file per part:
 
-1. **Customers:** open **Klanten** and click **Download CSV**. [This is how
+1. **Customers:** open **<span lang="nl">Klanten</span>** and click **<span lang="nl">Download CSV</span>**. [This is how
    Jortt describes it in its help](https://www.jortt.nl/factuur-maken/factuur-maken-uitleg/klanten-aanmaken-en-beheren/).
-2. **Invoices:** open **Facturen en offertes**, **Facturen**. Choose a
+2. **Invoices:** open **<span lang="nl">Facturen en offertes</span>**, **<span lang="nl">Facturen</span>**. Choose a
    period, for example a year, and click the download icon. You get a zip
    with a PDF per invoice. Do this for every year. [This is how Jortt
    describes it in its help](https://www.jortt.nl/uitleg/faq/exportmogelijkheden-in-jortt/).
 3. **Quotes, purchase invoices and receipts:** Jortt only exports these
    through its Dropbox connection. [This is how Jortt describes it in its
    help](https://www.jortt.nl/uitleg/faq/exportmogelijkheden-in-jortt/).
-4. **Audit file:** open **Boekhoudbot** and choose **Maak voor mij een
-   auditfile**, for every year. The assistant uses it to check whether an
+4. **Audit file:** open **<span lang="nl">Boekhoudbot</span>** and choose **<span lang="nl">Maak voor mij een
+   auditfile</span>**, for every year. The assistant uses it to check whether an
    invoice is missing. [This is how Jortt describes it in its
    help](https://www.jortt.nl/boekhouder/boekhouder-uitleg/auditfile/).
 
