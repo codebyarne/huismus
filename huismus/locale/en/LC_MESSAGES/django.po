@@ -9162,7 +9162,7 @@ msgid "Overgeslagen (%(count)s)"
 msgstr "Skipped (%(count)s)"
 
 msgid "Te veel betaald"
-msgstr "Paid too much"
+msgstr "Overpaid"
 
 msgid "uit bankafschrift: %(name)s"
 msgstr "from bank statement: %(name)s"
