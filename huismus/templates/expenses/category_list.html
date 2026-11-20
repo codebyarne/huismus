@@ -59,9 +59,9 @@
                         <div class="row" style="gap:4px;flex-wrap:nowrap">
                             <a class="btn btn-ghost btn-sm" href="?bewerk={{ category.pk }}"><svg class="i i-sm" aria-hidden="true"><use href="#edit"></use></svg>{% translate "Bewerken" %}</a>
                             {% if category.expense_count %}
-                            <button type="button" class="btn btn-ghost btn-sm btn-icon" style="opacity:.55" command="show-modal" commandfor="niet-verwijderen"
+                            <button type="button" class="btn btn-ghost btn-sm btn-icon" command="show-modal" commandfor="niet-verwijderen"
                                     aria-label="{% blocktranslate with name=category.name %}{{ name }} verwijderen: niet mogelijk, er horen uitgaven bij{% endblocktranslate %}"
-                                    title="{% translate 'Er horen uitgaven bij, dus verwijderen kan niet' %}"><svg class="i i-sm" aria-hidden="true"><use href="#trash"></use></svg></button>
+                                    title="{% translate 'Er horen uitgaven bij, dus verwijderen kan niet' %}"><svg class="i i-sm" aria-hidden="true" style="opacity:.55"><use href="#trash"></use></svg></button>
                             {% else %}
                             <button type="button" class="btn btn-danger-quiet btn-sm btn-icon" command="show-modal" commandfor="verwijder-{{ category.pk }}"
                                     aria-label="{% blocktranslate with name=category.name %}{{ name }} verwijderen{% endblocktranslate %}"><svg class="i i-sm" aria-hidden="true"><use href="#trash"></use></svg></button>
