@@ -7752,6 +7752,16 @@ msgstr "An export from Huismus has the same form. That is how you take your book
 msgid "Welke kolommen er zijn en hoe je ze invult"
 msgstr "Which columns there are and how to fill them in"
 
+#, python-format
+msgid "Huismus kan de letters in %(file)s niet lezen. Sla het bestand op als CSV (UTF-8)."
+msgstr "Huismus can't read the letters in %(file)s. Save the file as CSV (UTF-8)."
+
+msgid "Origineel"
+msgstr "Original"
+
+msgid "De originele PDF blijft bewaard, maar klopt na het bewerken niet meer met de factuur."
+msgstr "The original PDF is kept, but no longer matches the invoice after editing."
+
 #~ msgid "KOR met je grens in beeld"
 #~ msgstr "KOR, with your limit in view"
 

@@ -24,7 +24,7 @@ share a file, and in the installed app Share takes Download's place.{% endcommen
 {% if has_original %}
 {% comment %}"origineel" and "opnieuw" are ORIGINAL and REGENERATED in documents/views.py.{% endcomment %}
 <nav class="tabs" aria-label="{% translate 'Welke pdf' %}" style="margin-bottom:var(--s-4)">
-    <a class="tab" href="?versie=origineel"{% if version == "origineel" %} aria-current="page"{% endif %}>{% translate "Origineel uit Moneybird" %}</a>
+    <a class="tab" href="?versie=origineel"{% if version == "origineel" %} aria-current="page"{% endif %}>{% if document.source == "moneybird" %}{% translate "Origineel uit Moneybird" %}{% else %}{% translate "Origineel" %}{% endif %}</a>
     <a class="tab" href="?versie=opnieuw"{% if version == "opnieuw" %} aria-current="page"{% endif %}>{% translate "Opnieuw gegenereerd" %}</a>
 </nav>
 {% endif %}

@@ -34,6 +34,10 @@ customers, invoices, quotes and expenses are new, and what is wrong:
 - **Amounts differ from the lines**: the total in the file differs from what
   the lines add up to. Huismus takes the total from the file and names the
   difference.
+- **Maybe double**: if there are expenses in Huismus already, the ones from
+  the file are added. When a new expense has the same date and amount as an
+  existing one, the dry run names it. Huismus does import it; if it is
+  double, delete it afterwards.
 - **Note**: a column Huismus doesn't know, or a PDF or receipt that belongs
   nowhere.
 
@@ -78,7 +82,8 @@ then open, and the dry run names it.
   themselves when you save as CSV; in an English spreadsheet, choose the
   semicolon.
 - Write an amount as 1234,56. Huismus also reads 1.234,56 and 1234.56.
-- Write a date as 2026-03-14 or 14-03-2026.
+- Write a date as 2026-03-14 or 14-03-2026. 14-3-2026 works too. Huismus
+  doesn't read slashes or a two-digit year.
 - Huismus imports euros only.
 
 When Huismus can't read an amount or a date, the import stops and says in

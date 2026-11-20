@@ -1,15 +1,16 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""manage.py import_moneybird <path> [--commit] — SPEC.md section 7's CLI
-entry point. Dry-run by default; the web upload page (M5 step 7) will be
-the other entry point onto the same imports.pipeline.run_moneybird_import.
+"""manage.py import_moneybird <path> [--commit]: SPEC.md section 7's CLI
+entry point, onto the same imports.pipeline.run_import as the web page.
+Dry-run by default. Reads files in Huismus's own format too (SPEC.md M22):
+what the files are decides which import runs.
 """
 
 from pathlib import Path
 
 from django.core.management.base import BaseCommand, CommandError
 
-from huismus.imports.pipeline import run_moneybird_import
+from huismus.imports.pipeline import run_import
 from huismus.imports.sources import ImportSourceError
 
 
@@ -30,7 +31,7 @@ class Command(BaseCommand):
             raise CommandError(f"{path} bestaat niet.")
 
         try:
-            run = run_moneybird_import(path, commit=options["commit"])
+            run = run_import(path, commit=options["commit"])
         except ImportSourceError as exc:
             raise CommandError(str(exc)) from exc
         self.stdout.write(_render_report(run))

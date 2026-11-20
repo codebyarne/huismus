@@ -47,7 +47,7 @@ from .csv_parse import (
 )
 from .csv_tables import CsvKind, Table, read_table
 from .models import ImportRun
-from .sources import Export, ImportSourceError
+from .sources import Export, ImportSourceError, files_in_upload
 
 # How many file names one note lists before it says how many more there are.
 MAX_NAMED_FILES = 10
@@ -96,51 +96,64 @@ def _readme_names() -> set[str]:
     return names
 
 
-def _tables(export: Export, parsed: ParsedCsv) -> dict[CsvKind, Table]:
-    """The tables in one export, and its other files sorted into
-    `parsed`. Two files of one kind in one export would mean two exports
-    in one: lines would end up under the wrong year's documents."""
+def _tables(export: Export, notes: list) -> dict[CsvKind, Table]:
+    """The tables in one export's CSV files; a column Huismus doesn't know
+    goes into `notes`. Two files of one kind in one export would mean two
+    exports in one: lines would end up under the wrong year's documents."""
     tables: dict[CsvKind, Table] = {}
     for name, content in sorted(export.files.items()):
         path = PurePosixPath(name)
-        suffix = path.suffix.lower()
-        table = read_table(path.name, content) if suffix == ".csv" else None
-        if table is not None:
-            if table.kind in tables:
-                raise ImportSourceError(
-                    _(
-                        "In %(export)s staan twee bestanden met dezelfde soort gegevens "
-                        "(%(first)s en %(second)s). Zip elke export apart, of importeer ze "
-                        "één voor één."
-                    )
-                    % {
-                        "export": export.name,
-                        "first": tables[table.kind].file_name,
-                        "second": table.file_name,
-                    }
+        table = read_table(path.name, content) if path.suffix.lower() == ".csv" else None
+        if table is None:
+            continue
+        if table.kind in tables:
+            raise ImportSourceError(
+                _(
+                    "In %(export)s staan twee bestanden met dezelfde soort gegevens "
+                    "(%(first)s en %(second)s). Zip elke export apart, of importeer ze "
+                    "één voor één."
                 )
-            tables[table.kind] = table
-            if table.unknown:
-                parsed.notes.append(
-                    ngettext(
-                        "In %(file)s staat een kolom die Huismus niet kent: %(columns)s. "
-                        "Huismus neemt hem niet over.",
-                        "In %(file)s staan kolommen die Huismus niet kent: %(columns)s. "
-                        "Huismus neemt ze niet over.",
-                        len(table.unknown),
-                    )
-                    % {"file": table.file_name, "columns": ", ".join(table.unknown)}
+                % {
+                    "export": export.name,
+                    "first": tables[table.kind].file_name,
+                    "second": table.file_name,
+                }
+            )
+        tables[table.kind] = table
+        if table.unknown:
+            notes.append(
+                ngettext(
+                    "In %(file)s staat een kolom die Huismus niet kent: %(columns)s. "
+                    "Huismus neemt hem niet over.",
+                    "In %(file)s staan kolommen die Huismus niet kent: %(columns)s. "
+                    "Huismus neemt ze niet over.",
+                    len(table.unknown),
                 )
-        elif suffix == ".pdf" and normalised(path.parent.name) in _pdf_kinds():
-            parsed.pdfs[(_pdf_kinds()[normalised(path.parent.name)], path.stem)] = content
-        elif normalised(path.name) not in _readme_names():
-            parsed.other_files[path.name] = content
+                % {"file": table.file_name, "columns": ", ".join(table.unknown)}
+            )
     return tables
+
+
+def _keep_other_files(export: Export, tables: dict[CsvKind, Table], parsed: ParsedCsv) -> None:
+    """What isn't a table: a PDF in a folder of pdf/ is that kind of
+    document's, the template's note is nothing, and the rest may be a
+    receipt (_receipts)."""
+    table_files = {table.file_name for table in tables.values()}
+    for name, content in export.files.items():
+        path = PurePosixPath(name)
+        folder = normalised(path.parent.name)
+        if path.name in table_files or normalised(path.name) in _readme_names():
+            continue
+        if path.suffix.lower() == ".pdf" and folder in _pdf_kinds():
+            parsed.pdfs[(_pdf_kinds()[folder], path.stem)] = content
+        else:
+            parsed.other_files[path.name] = content
 
 
 def _parse_export(export: Export, parsed: ParsedCsv) -> None:
     """One export on its own: its lines belong to its own documents."""
-    tables = _tables(export, parsed)
+    tables = _tables(export, parsed.notes)
+    _keep_other_files(export, tables, parsed)
     parsed.has |= set(tables)
     documents_without_lines = {CsvKind.INVOICES, CsvKind.QUOTES} & set(tables)
     if documents_without_lines and CsvKind.LINES not in tables:
@@ -149,7 +162,11 @@ def _parse_export(export: Export, parsed: ParsedCsv) -> None:
                 "Bij %(file)s zit geen bestand met de regels. Zonder regels kan Huismus "
                 "een factuur of offerte niet importeren. Zet het regelbestand erbij."
             )
-            % {"file": tables[sorted(documents_without_lines, key=lambda k: k.value)[0]].file_name}
+            % {
+                "file": tables[
+                    CsvKind.INVOICES if CsvKind.INVOICES in tables else CsvKind.QUOTES
+                ].file_name
+            }
         )
     if CsvKind.EXPENSE_LINES in tables and CsvKind.EXPENSES not in tables:
         raise ImportSourceError(
@@ -192,8 +209,6 @@ def _examples() -> ParsedCsv:
 
 
 def _archive(content: bytes) -> Export:
-    from .sources import files_in_upload
-
     return Export("sjabloon", files_in_upload("sjabloon.zip", content))
 
 
@@ -332,6 +347,7 @@ def run_csv_import(exports: list[Export], *, commit: bool) -> ImportRun:
                 parsed.quotes,
                 parsed.pdfs,
                 write_attachments=commit,
+                sequence="quote",
                 number_format=settings.quote_number_format,
                 numbers_label=_("offertenummers"),
             )
@@ -340,6 +356,7 @@ def run_csv_import(exports: list[Export], *, commit: bool) -> ImportRun:
                 invoices,
                 parsed.pdfs,
                 write_attachments=commit,
+                sequence="invoice",
                 number_format=settings.invoice_number_format,
                 numbers_label=_("factuurnummers"),
                 invoice_of_quote=invoice_of_quote,

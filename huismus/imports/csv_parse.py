@@ -9,6 +9,7 @@ Huismus stores it. Words such as "factuur", "ja" and "verzonden" are read
 in Dutch and in English.
 """
 
+import re
 from dataclasses import dataclass, field
 from datetime import date
 from decimal import Decimal
@@ -223,10 +224,12 @@ def parse_contact_persons(table: Table) -> list[CsvPerson]:
 
 
 def _document_key(row: Row) -> tuple[str, str]:
-    kind = row.choice("kind", _kinds(), examples=_examples(_kinds()))
-    if kind is None:
-        row.required("kind")
+    kind = row.required_choice("kind", _kinds(), examples=_examples(_kinds()))
     return kind, row.required("number")
+
+
+# A VAT rate as the export writes it: "21", "5,5".
+_TAX_RATE = re.compile(r"\d{1,3}(?:[.,]\d{1,2})?")
 
 
 def _tax_rate_bp(row: Row) -> int:
@@ -234,17 +237,21 @@ def _tax_rate_bp(row: Row) -> int:
     text = row.text("tax_rate").removesuffix("%").strip()
     if not text:
         return 0
-    try:
-        rate = Decimal(text.replace(",", ".")) * 100
-    except ArithmeticError:
-        rate = None
-    if rate is None or rate < 0 or rate != rate.to_integral_value():
+    if not _TAX_RATE.fullmatch(text):
         row.fail(
             "tax_rate",
             _("‘%(value)s’ is geen btw-tarief. Schrijf 21, 9 of 0.")
             % {"value": row.text("tax_rate")},
         )
-    return int(rate)
+    return int(Decimal(text.replace(",", ".")) * 100)
+
+
+def _in_order(entries: list[tuple]) -> list[tuple]:
+    """Lines as (position, ...) in the order of "positie" when every line
+    has one, else in the order of the file."""
+    if all(entry[0] is not None for entry in entries):
+        return sorted(entries, key=lambda entry: entry[0])
+    return entries
 
 
 def lines_by_document(table: Table | None) -> dict[tuple[str, str], list[tuple[Row, CsvLine]]]:
@@ -260,9 +267,7 @@ def lines_by_document(table: Table | None) -> dict[tuple[str, str], list[tuple[R
         rate = _tax_rate_bp(row)
         if reverse_charge and rate:
             row.fail("tax_rate", _("een regel met btw verlegd heeft 0% btw."))
-        price = row.amount("unit_price")
-        if price is None:
-            row.required("unit_price")
+        price = row.required_amount("unit_price")
         stated = row.amount("line_total")
         line = CsvLine(
             description=row.required("description"),
@@ -274,21 +279,15 @@ def lines_by_document(table: Table | None) -> dict[tuple[str, str], list[tuple[R
             stated_total_cents=None if stated is None else sign * stated,
         )
         found.setdefault((kind, number), []).append((row.whole_number("position"), row, line))
-    ordered = {}
-    for key, entries in found.items():
-        if all(position is not None for position, _row, _line in entries):
-            entries.sort(key=lambda entry: entry[0])
-        ordered[key] = [(row, line) for _position, row, line in entries]
-    return ordered
+    return {
+        key: [(row, line) for _position, row, line in _in_order(entries)]
+        for key, entries in found.items()
+    }
 
 
 def _stated_amounts(row: Row, sign: int) -> tuple[int, int, int]:
     """Subtotal, VAT and total of a document row; an empty VAT cell is 0."""
-    subtotal, total = row.amount("subtotal"), row.amount("total")
-    if subtotal is None:
-        row.required("subtotal")
-    if total is None:
-        row.required("total")
+    subtotal, total = row.required_amount("subtotal"), row.required_amount("total")
     return sign * subtotal, sign * (row.amount("tax") or 0), sign * total
 
 
@@ -343,9 +342,7 @@ def parse_invoices(table: Table, lines: dict) -> list[CsvDocument]:
         state = row.choice(
             "payment_state", _payment_states(), examples=_examples(_payment_states())
         )
-        issue_date = row.date("issue_date")
-        if issue_date is None:
-            row.required("issue_date")
+        issue_date = row.required_date("issue_date")
         documents.append(
             CsvDocument(
                 external_id=f"{kind}:{number}",
@@ -375,13 +372,11 @@ def parse_quotes(table: Table, lines: dict) -> list[CsvDocument]:
     quotes = []
     for row in table.rows:
         number = row.required("number")
-        status = row.choice("status", _quote_statuses(), examples=_examples(_quote_statuses()))
-        if status is None:
-            row.required("status")
+        status = row.required_choice(
+            "status", _quote_statuses(), examples=_examples(_quote_statuses())
+        )
         subtotal, tax, total = _stated_amounts(row, 1)
-        issue_date = row.date("issue_date")
-        if issue_date is None:
-            row.required("issue_date")
+        issue_date = row.required_date("issue_date")
         invoices = tuple(part.strip() for part in row.text("invoice").split(",") if part.strip())
         quotes.append(
             CsvDocument(
@@ -424,9 +419,7 @@ def _expense_lines(table: Table | None) -> dict[str, list[CsvExpenseLine]]:
         return found
     rates = _vat_rates()
     for row in table.rows:
-        amount = row.amount("amount")
-        if amount is None:
-            row.required("amount")
+        amount = row.required_amount("amount")
         given = row.text("vat_rate")
         line = CsvExpenseLine(
             description=row.text("description"),
@@ -441,12 +434,7 @@ def _expense_lines(table: Table | None) -> dict[str, list[CsvExpenseLine]]:
         found.setdefault(row.required("expense_id"), []).append(
             (row.whole_number("position"), row.number, line)
         )
-    ordered = {}
-    for expense_id, entries in found.items():
-        if all(position is not None for position, _row, _line in entries):
-            entries.sort(key=lambda entry: entry[0])
-        ordered[expense_id] = entries
-    return ordered
+    return {expense_id: _in_order(entries) for expense_id, entries in found.items()}
 
 
 def parse_expenses(
@@ -457,12 +445,8 @@ def parse_expenses(
     expenses = []
     for row in table.rows:
         expense_id = row.required("expense_id")
-        amount = row.amount("amount")
-        if amount is None:
-            row.required("amount")
-        day = row.date("date")
-        if day is None:
-            row.required("date")
+        amount = row.required_amount("amount")
+        day = row.required_date("date")
         names = tuple(
             name.strip() for name in row.text("receipts").split(RECEIPT_SEPARATOR.strip())
         )

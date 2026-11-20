@@ -36,6 +36,10 @@ klanten, facturen, offertes en uitgaven nieuw zijn, en wat er niet klopt:
 - **Bedragen kloppen niet met de regels**: het totaal in het bestand wijkt
   af van wat de regels samen zijn. Huismus neemt het totaal uit het bestand
   over en noemt het verschil.
+- **Misschien dubbel**: staan er al uitgaven in Huismus, dan komen die uit
+  het bestand erbij. Heeft een nieuwe uitgave dezelfde datum en hetzelfde
+  bedrag als een bestaande, dan noemt de proefdraai hem. Huismus importeert
+  hem wel; is hij dubbel, verwijder hem dan daarna.
 - **Let op**: een kolom die Huismus niet kent, of een pdf of bonnetje dat
   nergens bij hoort.
 
@@ -81,7 +85,8 @@ factuur staat dan open, en de proefdraai noemt hem.
 - Tussen de kolommen staat een puntkomma. Excel en Numbers in het
   Nederlands doen dat vanzelf als je opslaat als CSV.
 - Een bedrag schrijf je als 1234,56. Ook 1.234,56 en 1234.56 leest Huismus.
-- Een datum schrijf je als 2026-03-14 of 14-03-2026.
+- Een datum schrijf je als 2026-03-14 of 14-03-2026. Ook 14-3-2026 mag.
+  Schuine strepen en een jaar van twee cijfers leest Huismus niet.
 - Huismus importeert alleen euro's.
 
 Kan Huismus een bedrag of datum niet lezen, dan stopt de import en zegt hij
