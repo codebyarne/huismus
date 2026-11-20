@@ -263,3 +263,20 @@ def test_without_the_kor_lines_without_a_vat_rate_are_points_to_check(user_clien
 
     assert response.context["expenses"]["issue_count"] == 1
     assert "1 uitgaveregel heeft geen btw-tarief" in response.content.decode()
+
+
+def test_the_template_link_carries_the_language_of_the_page(user_client):
+    # Safari fetches a download apart from the page, in the browser's own
+    # language (found by the WebKit run on main).
+    page = user_client.get(reverse("imports:upload_other")).content.decode()
+    assert reverse("imports:template") + "?taal=nl" in page
+
+    response = user_client.get(
+        reverse("imports:template"), {"taal": "nl"}, HTTP_ACCEPT_LANGUAGE="en"
+    )
+    assert "huismus-importsjabloon.zip" in response["Content-Disposition"]
+    with zipfile.ZipFile(io.BytesIO(response.content)) as archive:
+        assert "klanten.csv" in archive.namelist()
+
+    unknown = user_client.get(reverse("imports:template"), {"taal": "xx"})
+    assert unknown.status_code == 200

@@ -6,11 +6,13 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from django.utils import translation
+from django.utils.translation import get_language, ngettext
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import ngettext
 
 from huismus.business.models import Settings
 from huismus.core import help
+from huismus.core.export_format import LANGUAGES
 
 from . import csv_template, staging
 from .csv_parse import SOURCE as CSV
@@ -88,10 +90,17 @@ def _upload_page(request, tab):
 
 @login_required
 def template(request):
-    """The template of Huismus's own format, in the language of the screen
-    (imports.csv_template). Small and made at once: a plain download."""
-    response = HttpResponse(csv_template.template_zip(), content_type="application/zip")
-    response["Content-Disposition"] = f'attachment; filename="{csv_template.filename()}"'
+    """The template of Huismus's own format (imports.csv_template). Small
+    and made at once: a plain download. In the language of the page it was
+    asked from, which the link carries (?taal=): Safari fetches a download
+    apart from the page, and then the request's own language can be
+    another one."""
+    language = request.GET.get("taal")
+    if language not in LANGUAGES:
+        language = get_language()
+    with translation.override(language):
+        response = HttpResponse(csv_template.template_zip(), content_type="application/zip")
+        response["Content-Disposition"] = f'attachment; filename="{csv_template.filename()}"'
     return response
 
 
