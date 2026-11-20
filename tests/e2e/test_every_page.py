@@ -204,6 +204,11 @@ def _data_texts():
     texts += ExpenseCategory.objects.values_list("name", flat=True)
     texts += Expense.objects.values_list("description", flat=True)
     texts += Document.objects.values_list("lines__description", flat=True)
+    # What a payer typed in a transfer, from the bank statement (#77).
+    from huismus.bank.models import BankTransaction
+
+    texts += BankTransaction.objects.values_list("description", flat=True)
+    texts += BankTransaction.objects.values_list("counterparty_name", flat=True)
     # Never a snippet the page must not show: a description "None" would
     # otherwise hide a leaked None everywhere.
     return [text for text in texts if text and text not in NEVER_VISIBLE]
