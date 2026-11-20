@@ -59,7 +59,7 @@ class ExpenseLineForm(forms.ModelForm):
         self.fields["category"].empty_label = _("Geen categorie")
         # expenses/_category_field.html draws these two itself.
         self.fields["category"].widget.attrs.update(
-            {"class": "select", "data-combobox": _("Kies of typ een categorie")}
+            {"class": "select", "data-combobox": _("Kies of typ")}
         )
         self.fields["new_category"].widget.attrs.update(
             {

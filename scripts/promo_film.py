@@ -525,7 +525,7 @@ PROCESS_BOXES = {
     "photo": ".process-img",
     "notice": "#nakijken",
     "supplier": "#id_supplier",
-    "category": "[name=lines-0-category]",
+    "category": ".category-field",
     "amount": "[name=lines-0-amount_cents]",
     "vat": "[name=lines-0-vat_info_cents]",
     "form": "#uitgave-form",
