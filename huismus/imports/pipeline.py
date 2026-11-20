@@ -7,7 +7,7 @@ dry-run report by default, commit.
 """
 
 import hashlib
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from io import BytesIO
 from pathlib import Path, PurePosixPath
 
@@ -18,10 +18,13 @@ from django.utils.translation import gettext_noop, ngettext
 
 from huismus.business.models import Settings
 
+from . import csv_pipeline
 from .archive import keep_originals, keep_rows
 from .columns import COLUMNS, check_columns
 from .commit import import_contacts, import_expenses, import_quotes, import_sales_invoices
 from .contacts import parse_contacts
+from .counting import COUNTED_SECTIONS, check_count, section
+from .csv_tables import is_complete, is_ours
 from .detect import FileKind, detect_workbook, unknown_sheets
 from .expenses import parse_expenses, receipts_by_external_id
 from .invoices import parse_sales_invoices, pdfs_by_external_id
@@ -84,6 +87,44 @@ def run_moneybird_import(source: Path, *, commit: bool, settings_values=None) ->
     """`source`: a path on disk, per manage.py import_moneybird's CLI
     contract. `settings_values`: see _run_import()."""
     return _run_import(read_exports(source), commit=commit, settings_values=settings_values)
+
+
+def run_import(source: Path, *, commit: bool, settings_values=None) -> ImportRun:
+    """An import of whatever `source` holds: a Moneybird export, or files in
+    Huismus's own format (imports.csv_pipeline), told apart by what is in
+    them. `settings_values` only counts for Moneybird."""
+    exports = read_exports(source)
+    if source_of(exports) == csv_pipeline.SOURCE:
+        return csv_pipeline.run_csv_import(exports, commit=commit)
+    return _run_import(exports, commit=commit, settings_values=settings_values)
+
+
+def source_of(exports: list[Export]) -> str:
+    """ "csv" for Huismus's own format, else Moneybird. With a Moneybird
+    sheet among the files, only a complete CSV table of ours counts: then
+    the two are mixed, which Huismus doesn't untangle."""
+    csvs = [
+        content
+        for export in exports
+        for name, content in export.files.items()
+        if name.lower().endswith(".csv")
+    ]
+    moneybird = any(
+        detect_workbook(content)
+        for export in exports
+        for name, content in export.files.items()
+        if name.lower().endswith(".xlsx")
+    )
+    if not moneybird:
+        return csv_pipeline.SOURCE if any(is_ours(content) for content in csvs) else SOURCE
+    if any(is_complete(content) for content in csvs):
+        raise ImportSourceError(
+            _(
+                "Je koos bestanden uit Moneybird en CSV-bestanden van Huismus door elkaar. "
+                "Importeer ze na elkaar."
+            )
+        )
+    return SOURCE
 
 
 def run_moneybird_import_from_uploads(uploads, *, commit: bool) -> ImportRun:
@@ -410,12 +451,12 @@ def _run_import(exports: list[Export], *, commit: bool, settings_values=None) ->
         notes += parsed.ubl.notes
 
         report = {
-            "contacts": _section(contacts_report, parsed.contacts),
-            "sales_invoices": _section(
+            "contacts": section(contacts_report, parsed.contacts),
+            "sales_invoices": section(
                 invoices_report, parsed.invoices, parsed.orphan_lines["sales_invoices"]
             ),
-            "quotes": _section(quotes_report, parsed.quotes, parsed.orphan_lines["quotes"]),
-            "expenses": _section(expenses_report, parsed.expenses, parsed.orphan_lines["expenses"]),
+            "quotes": section(quotes_report, parsed.quotes, parsed.orphan_lines["quotes"]),
+            "expenses": section(expenses_report, parsed.expenses, parsed.orphan_lines["expenses"]),
             "notes": notes,
             "settings_proposal": proposal.as_report(),
         }
@@ -424,7 +465,7 @@ def _run_import(exports: list[Export], *, commit: bool, settings_values=None) ->
             report["sales_invoices"]["ubl"] = parsed.ubl.as_report()
 
         for kind, name in COUNTED_SECTIONS:
-            _check_count(report[name], _(kind))
+            check_count(report[name], _(kind))
         # Keyed by export too: two exports can hold a file of the same name.
         file_hashes = {
             f"{export.name}/{name}": hashlib.sha256(content).hexdigest()
@@ -457,49 +498,6 @@ def _run_import(exports: list[Export], *, commit: bool, settings_values=None) ->
             transaction.set_rollback(True)
 
     return run
-
-
-# A report section and how the count's error message names it.
-COUNTED_SECTIONS = (
-    (gettext_noop("klanten"), "contacts"),
-    (gettext_noop("facturen"), "sales_invoices"),
-    (gettext_noop("offertes"), "quotes"),
-    (gettext_noop("uitgaven"), "expenses"),
-)
-
-
-def _section(report, parsed_items, orphan_lines=None) -> dict | None:
-    """A report section as stored, with how many documents the export had
-    (`in_export`, PO-besluit 2026-11-02, Q5) and the lines without one."""
-    if report is None:
-        return None
-    section = asdict(report)
-    section["in_export"] = len(parsed_items)
-    if orphan_lines is not None:
-        section["orphan_lines"] = orphan_lines
-    return section
-
-
-def _check_count(section: dict | None, kind: str) -> None:
-    """Every document of the export is new, already there, or skipped with
-    a reason. If not, Huismus itself went wrong and saves nothing."""
-    if section is None:
-        return
-    counted = (
-        section["new"]
-        + section.get("updated", 0)
-        + section["unchanged"]
-        + len(section.get("skipped_missing_contact", []))
-        + len(section.get("skipped_no_lines", []))
-    )
-    if counted != section["in_export"]:
-        raise ImportSourceError(
-            _(
-                "Er gaat iets mis in Huismus: bij %(kind)s klopt de telling niet "
-                "(%(total)s in de export, %(counted)s verwerkt). Er is niets opgeslagen."
-            )
-            % {"kind": kind, "total": section["in_export"], "counted": counted}
-        )
 
 
 def _save_settings(values: dict) -> None:

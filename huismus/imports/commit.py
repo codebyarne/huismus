@@ -141,7 +141,7 @@ def _sync_persons(contact: Contact, parsed_persons) -> None:
     )
 
 
-def _snapshot_as_stated(contact: Contact, stated: dict[str, str]) -> dict:
+def snapshot_as_stated(contact: Contact, stated: dict[str, str]) -> dict:
     """The contact snapshot of an imported document: the contact as it is
     now, with what the document itself states about the customer (name,
     address, numbers as they were then) on top. A company's name is its
@@ -315,7 +315,7 @@ def import_sales_invoices(
             document.issue_date = parsed.issue_date
             document.due_date = parsed.due_date
             document.business_snapshot = business_snapshot(settings)
-            document.contact_snapshot = _snapshot_as_stated(contact, parsed.customer)
+            document.contact_snapshot = snapshot_as_stated(contact, parsed.customer)
             document.kor_text_snapshot = settings.kor_text if settings.kor_enabled else ""
             # Faithful (SPEC.md section 7): Moneybird's own stated totals,
             # never the recomputed ones — see the discrepancy check
@@ -386,7 +386,7 @@ def import_sales_invoices(
                     source=SOURCE,
                 )
 
-        report.numbering_note = _continue_numbering(
+        report.numbering_note = continue_numbering(
             "invoice",
             settings.invoice_number_format,
             imported_numbers,
@@ -518,7 +518,7 @@ def import_quotes(parsed_quotes, *, commit: bool) -> QuoteImportReport:
                 declined_on=parsed.declined_on,
                 contact=contact,
                 business_snapshot=business_snapshot(settings),
-                contact_snapshot=_snapshot_as_stated(contact, parsed.customer),
+                contact_snapshot=snapshot_as_stated(contact, parsed.customer),
                 kor_text_snapshot=settings.kor_text if settings.kor_enabled else "",
                 language=settings.default_language,
                 currency="EUR",
@@ -544,7 +544,7 @@ def import_quotes(parsed_quotes, *, commit: bool) -> QuoteImportReport:
                     line_total_cents=line_total_cents(line.quantity, line.unit_price_cents),
                 )
 
-        report.numbering_note = _continue_numbering(
+        report.numbering_note = continue_numbering(
             "quote",
             settings.quote_number_format,
             imported_numbers,
@@ -557,7 +557,7 @@ def import_quotes(parsed_quotes, *, commit: bool) -> QuoteImportReport:
     return report
 
 
-def _continue_numbering(
+def continue_numbering(
     kind: str, number_format: str, imported_numbers, settings: Settings, *, label: str
 ) -> str:
     """SPEC.md section 7: "the sequence continues after the highest
@@ -700,14 +700,14 @@ def _expense_lines(parsed, categories: dict, report) -> list[ExpenseLineInput]:
             description=line.description,
             amount_cents=amount,
             vat_info_cents=line_vat,
-            category=_category(line.category, categories, report),
+            category=category_named(line.category, categories, report),
             vat_rate=line.vat_rate,
         )
         for line, amount, line_vat in zip(lines, gross, vat, strict=True)
     ]
 
 
-def _category(name: str, categories: dict, report):
+def category_named(name: str, categories: dict, report):
     """Moneybird's category by name: the one with that name, or a new one
     at the bottom of the list, named in the report. `categories`: the ones
     this import used. A dry run creates it too, inside the pipeline's

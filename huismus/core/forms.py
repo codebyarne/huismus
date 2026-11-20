@@ -37,6 +37,19 @@ _POINT_AMOUNT = re.compile(r"-?\d+(\.\d{1,2})?")
 _THOUSANDS_AMOUNT = re.compile(r"-?[1-9]\d{0,2}(\.\d{3})+")
 
 
+def amount_with_decimal_point(text: str) -> str | None:
+    """`text` as "1234.56", or None when it is none of the amounts above.
+    Also for the import of Huismus's own CSV format (imports.csv_tables),
+    so a file takes the same amounts as a field."""
+    if _DUTCH_AMOUNT.fullmatch(text):
+        return text.replace(".", "").replace(",", ".")
+    if _POINT_AMOUNT.fullmatch(text):
+        return text
+    if _THOUSANDS_AMOUNT.fullmatch(text):
+        return text.replace(".", "")
+    return None
+
+
 class EuroCentsField(forms.DecimalField):
     """A euro amount in a form, shown in Dutch notation ("20.000,00", like
     every amount elsewhere in the app) and returned as integer cents
@@ -75,10 +88,7 @@ class EuroCentsField(forms.DecimalField):
         text = (value or "").strip()
         if not text:
             return text
-        if _DUTCH_AMOUNT.fullmatch(text):
-            return text.replace(".", "").replace(",", ".")
-        if _POINT_AMOUNT.fullmatch(text):
-            return text
-        if _THOUSANDS_AMOUNT.fullmatch(text):
-            return text.replace(".", "")
-        raise ValidationError(self.error_messages["unclear"], code="unclear")
+        amount = amount_with_decimal_point(text)
+        if amount is None:
+            raise ValidationError(self.error_messages["unclear"], code="unclear")
+        return amount
