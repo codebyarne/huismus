@@ -31,7 +31,7 @@ CSV_TAB = "csv"
 UPLOAD_URLS = {MONEYBIRD_TAB: "imports:upload", CSV_TAB: "imports:upload_csv"}
 
 
-def _with_counts(section):
+def _with_counts(section, source=""):
     """A report section (dict of an InvoiceImportReport, QuoteImportReport
     or ExpenseImportReport) plus the counts the page shows: skipped, and
     issues to check. Quotes have no payments, expenses skip nothing,
@@ -54,14 +54,23 @@ def _with_counts(section):
         + len((section.get("moneybird_reports") or {}).get("differences", []))
         + len((section.get("ubl") or {}).get("messages", []))
     )
-    return {**section, "skipped_count": skipped, "issue_count": issues}
+    if section.get("lines_without_rate"):
+        # Only counted without the KOR (csv_commit): VAT that stays out of
+        # the VAT return report until the rate is chosen.
+        issues += section["lines_without_rate"] + len(section.get("unknown_vat_rates", []))
+    # A missing PDF or receipt is a warning for Moneybird, whose export has
+    # them all. In Huismus's own format a file without them is normal: the
+    # block keeps its check mark, and its title line says how many.
+    missing_files = section.get("missing_pdfs") or section.get("missing_receipts")
+    warn = bool(issues or (missing_files and source != CSV))
+    return {**section, "skipped_count": skipped, "issue_count": issues, "warn": warn}
 
 
 def _report_context(run):
     return {
-        "invoices": _with_counts(run.report.get("sales_invoices")),
-        "quotes": _with_counts(run.report.get("quotes")),
-        "expenses": _with_counts(run.report.get("expenses")),
+        "invoices": _with_counts(run.report.get("sales_invoices"), run.source),
+        "quotes": _with_counts(run.report.get("quotes"), run.source),
+        "expenses": _with_counts(run.report.get("expenses"), run.source),
         "contacts": run.report.get("contacts"),
         "source": run.source,
         "back_url": UPLOAD_URLS[CSV_TAB if run.source == CSV else MONEYBIRD_TAB],

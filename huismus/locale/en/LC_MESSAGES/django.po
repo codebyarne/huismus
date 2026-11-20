@@ -7601,7 +7601,7 @@ msgid "Pdf's van facturen zet je in pdf/facturen, van creditnota's in pdf/credit
 msgstr "Put PDFs of invoices in pdf/invoices, of credit notes in pdf/credit-notes and of quotes in pdf/quotes, with the number as the name. Put receipts in receipts, with their name in the column receipts."
 
 msgid "Maak er weer één zip van en kies die in Huismus bij Importeren. Huismus doet eerst een proefdraai en slaat pas iets op als jij dat kiest."
-msgstr "Make one zip of it again and choose it in Huismus under Import. Huismus does a dry run first and only saves something when you choose to."
+msgstr "Make one zip of it again and choose it in Huismus under Import. Huismus does a trial run first and only saves something when you choose to."
 
 msgid "Voorbeeld BV"
 msgstr "Example Ltd"
@@ -7746,9 +7746,6 @@ msgstr "Make one zip of it again and drag it to the box."
 msgid "Sjabloon downloaden"
 msgstr "Download template"
 
-msgid "Een export uit Huismus heeft dezelfde vorm. Zo neem je je administratie mee naar een nieuwe Huismus."
-msgstr "An export from Huismus has the same form. That is how you take your books to a new Huismus."
-
 msgid "Welke kolommen er zijn en hoe je ze invult"
 msgstr "Which columns there are and how to fill them in"
 
@@ -7761,6 +7758,50 @@ msgstr "Original"
 
 msgid "De originele PDF blijft bewaard, maar klopt na het bewerken niet meer met de factuur."
 msgstr "The original PDF is kept, but no longer matches the invoice after editing."
+
+#, python-format
+msgid "%(count)s zonder pdf."
+msgstr "%(count)s without a PDF."
+
+#, python-format
+msgid "%(count)s zonder bonnetje."
+msgstr "%(count)s without a receipt."
+
+msgid "De klant staat niet in het klantenbestand en niet in Huismus."
+msgstr "The customer isn't in the customers file and not in Huismus."
+
+msgid "Je bestanden staan bewaard in Huismus, ook in je back-ups."
+msgstr "Your files are kept in Huismus, and in your backups."
+
+#, python-format
+msgid "%(count)s geweigerde factuur verbeteren en opnieuw importeren"
+msgid_plural "%(count)s geweigerde facturen verbeteren en opnieuw importeren"
+msgstr[0] "Correct %(count)s refused invoice and import again"
+msgstr[1] "Correct %(count)s refused invoices and import again"
+
+#, python-format
+msgid "%(count)s geweigerde offerte verbeteren en opnieuw importeren"
+msgid_plural "%(count)s geweigerde offertes verbeteren en opnieuw importeren"
+msgstr[0] "Correct %(count)s refused quote and import again"
+msgstr[1] "Correct %(count)s refused quotes and import again"
+
+#, python-format
+msgid "%(count)s geweigerde uitgave verbeteren en opnieuw importeren"
+msgid_plural "%(count)s geweigerde uitgaven verbeteren en opnieuw importeren"
+msgstr[0] "Correct %(count)s refused expense and import again"
+msgstr[1] "Correct %(count)s refused expenses and import again"
+
+#, python-format
+msgid "%(count)s geweigerde klant verbeteren en opnieuw importeren"
+msgid_plural "%(count)s geweigerde klanten verbeteren en opnieuw importeren"
+msgstr[0] "Correct %(count)s refused customer and import again"
+msgstr[1] "Correct %(count)s refused customers and import again"
+
+msgid "Huismus kijkt naar de kolommen, niet naar de bestandsnaam."
+msgstr "Huismus looks at the columns, not the file name."
+
+msgid "Een export uit Huismus is op dezelfde manier ingedeeld. Zo neem je je administratie mee naar een nieuwe Huismus."
+msgstr "An export from Huismus is laid out the same way. That is how you take your books to a new Huismus."
 
 #~ msgid "KOR met je grens in beeld"
 #~ msgstr "KOR, with your limit in view"

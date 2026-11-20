@@ -11,7 +11,7 @@
         <div class="empty-art" style="position:relative;width:140px;height:96px;display:grid;place-items:end center"><span style="position:absolute;left:0;right:0;bottom:6px;height:4px;border-radius:2px;background:var(--border-strong)"></span><svg class="mark hop" width="84" height="84" style="position:relative;bottom:8px" aria-hidden="true"><use href="#mus-vogel"></use></svg></div>
         <h1>{% translate "Je administratie is verhuisd" %}</h1>
         <p class="muted" style="max-width:46ch">{% blocktranslate %}{{ customers_text }}, {{ invoices_text }}, {{ quotes_text }} en {{ expenses_text }} staan nu in Huismus.{% endblocktranslate %}</p>
-        <p class="small muted">{% translate "Je originele export staat bewaard in Huismus, ook in je back-ups." %}</p>
+        <p class="small muted">{% if source == "csv" %}{% translate "Je bestanden staan bewaard in Huismus, ook in je back-ups." %}{% else %}{% translate "Je originele export staat bewaard in Huismus, ook in je back-ups." %}{% endif %}</p>
     </div>
     <div class="mode-banner is-done" style="border-radius:0 0 var(--r-lg) var(--r-lg);padding:var(--s-4) var(--s-6)">
         <span class="mb-icon" style="width:36px;height:36px"><svg class="i" aria-hidden="true"><use href="#check"></use></svg></span>
@@ -26,6 +26,19 @@
         {% endif %}
         {% if invoices.skipped_count %}
         <li><span class="list-icon is-warn"><svg class="i" aria-hidden="true"><use href="#file"></use></svg></span><div class="grow"><a class="title" href="{% url 'documents:create' %}">{% blocktranslate count count=invoices.skipped_count %}{{ count }} overgeslagen factuur zelf toevoegen{% plural %}{{ count }} overgeslagen facturen zelf toevoegen{% endblocktranslate %}</a><div class="small muted">{{ invoices.skipped_missing_contact|join:", " }} {{ invoices.skipped_no_lines|join:", " }}</div></div></li>
+        {% endif %}
+        {% comment %}What was refused (Huismus's own format only): the report is gone after this page, so it stays named here, with the way back to the tab.{% endcomment %}
+        {% if invoices.refused %}
+        <li><span class="list-icon is-warn"><svg class="i" aria-hidden="true"><use href="#file"></use></svg></span><div class="grow"><a class="title" href="{% url back_url %}">{% blocktranslate count count=invoices.refused|length %}{{ count }} geweigerde factuur verbeteren en opnieuw importeren{% plural %}{{ count }} geweigerde facturen verbeteren en opnieuw importeren{% endblocktranslate %}</a><div class="small muted">{{ invoices.refused|join:" · " }}</div></div></li>
+        {% endif %}
+        {% if quotes.refused %}
+        <li><span class="list-icon is-warn"><svg class="i" aria-hidden="true"><use href="#file"></use></svg></span><div class="grow"><a class="title" href="{% url back_url %}">{% blocktranslate count count=quotes.refused|length %}{{ count }} geweigerde offerte verbeteren en opnieuw importeren{% plural %}{{ count }} geweigerde offertes verbeteren en opnieuw importeren{% endblocktranslate %}</a><div class="small muted">{{ quotes.refused|join:" · " }}</div></div></li>
+        {% endif %}
+        {% if expenses.refused %}
+        <li><span class="list-icon is-warn"><svg class="i" aria-hidden="true"><use href="#euro"></use></svg></span><div class="grow"><a class="title" href="{% url back_url %}">{% blocktranslate count count=expenses.refused|length %}{{ count }} geweigerde uitgave verbeteren en opnieuw importeren{% plural %}{{ count }} geweigerde uitgaven verbeteren en opnieuw importeren{% endblocktranslate %}</a><div class="small muted">{{ expenses.refused|join:" · " }}</div></div></li>
+        {% endif %}
+        {% if contacts.refused %}
+        <li><span class="list-icon is-warn"><svg class="i" aria-hidden="true"><use href="#users"></use></svg></span><div class="grow"><a class="title" href="{% url back_url %}">{% blocktranslate count count=contacts.refused|length %}{{ count }} geweigerde klant verbeteren en opnieuw importeren{% plural %}{{ count }} geweigerde klanten verbeteren en opnieuw importeren{% endblocktranslate %}</a><div class="small muted">{{ contacts.refused|join:" · " }}</div></div></li>
         {% endif %}
         <li><span class="list-icon"><svg class="i" aria-hidden="true"><use href="#settings"></use></svg></span><div class="grow"><a class="title" href="{% url 'business:overview' %}">{% translate "Instellingen nalopen" %}</a><div class="small muted">{% translate "Bedrijfsgegevens, KOR-tekst en nummerformaat" %}</div></div></li>
         <li><span class="list-icon"><svg class="i" aria-hidden="true"><use href="#home"></use></svg></span><div class="grow"><a class="title" href="{% url 'home' %}">{% translate "Naar je overzicht" %}</a><div class="small muted">{% translate "Openstaande facturen en de laatste documenten" %}</div></div></li>

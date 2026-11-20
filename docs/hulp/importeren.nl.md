@@ -1,4 +1,4 @@
-# Overstappen uit een ander pakket of Excel
+# Importeren uit een ander pakket of Excel
 
 Staat je administratie in een ander pakket dan Moneybird, of in Excel? Dan
 zet je je klanten, facturen, offertes en uitgaven in het sjabloon van
@@ -40,14 +40,18 @@ klanten, facturen, offertes en uitgaven nieuw zijn, en wat er niet klopt:
   het bestand erbij. Heeft een nieuwe uitgave dezelfde datum en hetzelfde
   bedrag als een bestaande, dan noemt de proefdraai hem. Huismus importeert
   hem wel; is hij dubbel, verwijder hem dan daarna.
+- **Zonder btw-tarief**: gebruik je de KOR niet, dan telt Huismus de btw van
+  een uitgaveregel pas mee in het rapport Btw-aangifte als de regel een
+  btw-tarief heeft. De proefdraai zegt hoeveel regels er geen hebben. Het
+  tarief kies je daarna bij de uitgave.
 - **Let op**: een kolom die Huismus niet kent, of een pdf of bonnetje dat
   nergens bij hoort.
 
-Ziet het er goed uit, klik dan op **Nu echt importeren**. Importeer je
-dezelfde zip later nog eens, dan verandert er niets.
-
 Vul eerst je bedrijfsgegevens in bij **Instellingen**. Een geïmporteerde
 factuur krijgt de bedrijfsgegevens van dat moment mee.
+
+Ziet het er goed uit, klik dan op **Nu echt importeren**. Importeer je
+dezelfde zip later nog eens, dan verandert er niets.
 
 ## De bestanden en hun kolommen
 
