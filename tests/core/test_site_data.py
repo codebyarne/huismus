@@ -5,12 +5,15 @@
 from datetime import date
 
 import pytest
-from django.core.management import call_command
+from django.core.management import CommandError, call_command
 
 from huismus.business.models import Settings
 from huismus.core.site_data import create_site_data
 from huismus.documents.models import Document
-from huismus.expenses.models import Expense
+from huismus.expenses.models import Expense, ExpenseLine
+from huismus.expenses.reading import read_by
+from huismus.reports.periods import Period
+from huismus.reports.vat_return import compute_vat_return
 
 pytestmark = pytest.mark.django_db
 
@@ -40,3 +43,52 @@ def test_a_quote_became_one_of_the_invoices():
 def test_the_command_makes_it():
     call_command("demo_data", "--yes", "--site")
     assert Document.objects.filter(kind="invoice").exists()
+
+
+def test_without_the_kor_every_line_has_a_rate():
+    create_site_data(TODAY, kor=False)
+
+    settings = Settings.load()
+    settings.full_clean()
+    assert not settings.kor_enabled
+    invoices = Document.objects.filter(kind="invoice", status="issued")
+    assert all(invoice.tax_cents > 0 for invoice in invoices)
+    assert not ExpenseLine.objects.filter(vat_rate="").exists()
+    assert not ExpenseLine.objects.filter(vat_info_cents=None).exists()
+
+
+def test_without_the_kor_the_last_quarter_has_vat_to_pay():
+    """The picture of the VAT return: 1a, 5b and "Te betalen", nothing left out."""
+    create_site_data(TODAY, kor=False)
+
+    report = compute_vat_return(Period.last_finished_quarter(TODAY))
+    boxes = {box.code: box for box in report.boxes}
+    assert boxes["1a"].tax_cents > 0
+    assert report.input_vat_cents > 0
+    assert report.balance_cents > 0
+    assert report.not_counted == 0
+
+
+def test_without_the_kor_a_read_receipt_waits_in_verwerken():
+    create_site_data(TODAY, kor=False)
+
+    expense = Expense.objects.get(needs_review=True)
+    assert read_by(expense) == "Voorbeeld-AI"
+    assert expense.attachments.get().file.read(3) == b"\xff\xd8\xff"  # a JPEG
+
+
+def test_under_the_kor_nothing_waits_and_no_line_has_vat():
+    create_site_data(TODAY)
+
+    assert not Expense.objects.filter(needs_review=True).exists()
+    assert not ExpenseLine.objects.exclude(vat_rate="").exists()
+
+
+def test_the_command_makes_it_without_the_kor():
+    call_command("demo_data", "--yes", "--site", "--zonder-kor")
+    assert not Settings.load().kor_enabled
+
+
+def test_without_the_kor_goes_with_site():
+    with pytest.raises(CommandError):
+        call_command("demo_data", "--yes", "--zonder-kor")
