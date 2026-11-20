@@ -34,7 +34,9 @@ from huismus.documents.pdf import render_pdf
 from huismus.documents.totals import compute_totals, revenue_by_rate
 from huismus.expenses.models import Expense
 
+from . import export_format
 from .csv_files import Amount, csv_bytes
+from .export_format import expense_labels, labels
 
 QUOTE_STATUSES = ["sent", "accepted", "declined", "expired"]
 
@@ -112,37 +114,13 @@ def _invoices(year):
         }
     )
 
-    header = [
-        _("soort"),
-        _("nummer"),
-        _("factuurdatum"),
-        _("vervaldatum"),
-        _("leverdatum"),
-        _("gecrediteerde factuur"),
-        _("klantnummer"),
-        _("klant"),
-        _("btw-nummer klant"),
-        _("KvK-nummer klant"),
-        _("land klant"),
-        _("kenmerk"),
-        _("valuta"),
-        _("bedrag excl. btw"),
-        _("btw"),
-        _("totaal incl. btw"),
-    ]
+    header = labels(export_format.INVOICE_COLUMNS)
     for rate in rates:
         header += [
-            _("omzet %(rate)s%%") % {"rate": _percent(rate)},
-            _("btw %(rate)s%%") % {"rate": _percent(rate)},
+            _(export_format.RATE_REVENUE) % {"rate": _percent(rate)},
+            _(export_format.RATE_TAX) % {"rate": _percent(rate)},
         ]
-    header += [
-        _("omzet btw verlegd"),
-        _("betaalstatus"),
-        _("betaald"),
-        _("openstaand"),
-        _("laatst betaald op"),
-        _("bron"),
-    ]
+    header += labels(export_format.INVOICE_COLUMNS_AFTER_RATES)
 
     # Each row fills its cells in the order of the header above.
     def table():
@@ -208,21 +186,7 @@ def _quotes(year):
         "lines", Prefetch("related_documents", queryset=invoices, to_attr="invoices")
     ).order_by("issue_date", "number", "pk")
     rows = list(documents)
-    header = [
-        _("nummer"),
-        _("datum"),
-        _("geldig tot"),
-        _("klantnummer"),
-        _("klant"),
-        _("kenmerk"),
-        _("status"),
-        _("geaccepteerd op"),
-        _("afgewezen op"),
-        _("bedrag excl. btw"),
-        _("btw"),
-        _("totaal incl. btw"),
-        _("factuur"),
-    ]
+    header = labels(export_format.QUOTE_COLUMNS)
     table = (
         [
             quote.number,
@@ -245,18 +209,7 @@ def _quotes(year):
 
 
 def _lines(documents):
-    header = [
-        _("soort"),
-        _("nummer"),
-        _("positie"),
-        _("omschrijving"),
-        _("aantal"),
-        _("eenheid"),
-        _("prijs per eenheid"),
-        _("btw-tarief (%)"),
-        _("btw verlegd"),
-        _("bedrag excl. btw"),
-    ]
+    header = labels(export_format.LINE_COLUMNS)
 
     def table():
         for document in documents:
@@ -281,27 +234,7 @@ def _lines(documents):
 
 
 def _contacts():
-    header = [
-        _("klantnummer"),
-        _("bedrijfsnaam"),
-        _("voornaam"),
-        _("achternaam"),
-        _("t.a.v."),
-        _("adresregel 1"),
-        _("adresregel 2"),
-        _("postcode"),
-        _("plaats"),
-        _("land"),
-        _("e-mail"),
-        _("e-mail voor offertes"),
-        _("telefoon"),
-        _("KvK-nummer"),
-        _("btw-nummer"),
-        _("IBAN"),
-        _("betalingstermijn (dagen)"),
-        _("notities"),
-        _("gearchiveerd"),
-    ]
+    header = labels(export_format.CONTACT_COLUMNS)
     table = (
         [
             contact.customer_number,
@@ -344,17 +277,8 @@ def _expenses(year):
     for expense in expenses:
         expense.receipts = [a for a in expense.all_attachments if a.kind == "receipt"]
     # As on the expense page: "ter info" only under the KOR (SPEC.md M21).
-    vat_label = _("btw ter info") if Settings.load().kor_enabled else _("btw")
-
-    header = [
-        _("uitgavenummer"),
-        _("datum"),
-        _("leverancier"),
-        _("omschrijving"),
-        _("bedrag (bruto)"),
-        vat_label,
-        _("bonnetjes"),
-    ]
+    kor_enabled = Settings.load().kor_enabled
+    header = expense_labels(export_format.EXPENSE_COLUMNS, kor_enabled=kor_enabled)
     table = (
         [
             expense.pk,
@@ -363,19 +287,13 @@ def _expenses(year):
             expense.description,
             Amount(expense.amount_cents),
             None if expense.vat_info_cents is None else Amount(expense.vat_info_cents),
-            " | ".join(_receipt_name(expense, receipt) for receipt in expense.receipts),
+            export_format.RECEIPT_SEPARATOR.join(
+                _receipt_name(expense, receipt) for receipt in expense.receipts
+            ),
         ]
         for expense in expenses
     )
-    line_header = [
-        _("uitgavenummer"),
-        _("positie"),
-        _("omschrijving"),
-        _("bedrag (bruto)"),
-        vat_label,
-        _("btw-tarief"),
-        _("categorie"),
-    ]
+    line_header = expense_labels(export_format.EXPENSE_LINE_COLUMNS, kor_enabled=kor_enabled)
     line_table = (
         [
             expense.pk,
