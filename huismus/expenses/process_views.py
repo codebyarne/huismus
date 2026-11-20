@@ -55,7 +55,10 @@ def _one_more_line(request, instance):
     """ "Regel toevoegen" without JS: the same page with what was typed and
     one empty line more, saving nothing (app.js adds it on the spot)."""
     data = request.POST.copy()
-    data["lines-TOTAL_FORMS"] = str(int(data.get("lines-TOTAL_FORMS") or 0) + 1)
+    count = int(data.get("lines-TOTAL_FORMS") or 0)
+    data["lines-TOTAL_FORMS"] = str(count + 1)
+    # The new line starts with the category of the line above it.
+    data[f"lines-{count}-category"] = data.get(f"lines-{count - 1}-category", "")
     return ExpenseLineFormSet(data, instance=instance, prefix="lines")
 
 

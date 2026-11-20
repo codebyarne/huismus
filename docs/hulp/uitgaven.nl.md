@@ -39,6 +39,10 @@ ophaalt. Zie [Bonnetjes onderweg](bonnetjes.nl.md).
 
 ## Categorieën
 
+Mis je een categorie terwijl je een uitgave invult? Klik op de **+** naast de
+categorie en vul de naam in. Huismus maakt hem als je de uitgave opslaat. Een
+nieuwe regel begint met de categorie van de regel erboven.
+
 Via **Categorieën** op de pagina Uitgaven maak, hernoem en sorteer je je
 categorieën. De volgorde bepaalt hoe ze in keuzelijsten en in het
 jaaroverzicht staan. Klik op een categorie om de uitgaven erin te zien, van

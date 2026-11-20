@@ -122,6 +122,11 @@ document.addEventListener("click", (event) => {
   const forms = document.querySelector(`[data-formset-forms="${prefix}"]`);
   forms.insertAdjacentHTML("beforeend", template.innerHTML.replaceAll("__prefix__", total.value));
   total.value = Number(total.value) + 1;
+  // A new line of an expense starts with the category of the line above
+  // it (owner, 2026-11-20); without JS the server does (expenses/views.py).
+  const [above, added] = [...forms.children].slice(-2);
+  const category = added?.querySelector("select[name$='-category']");
+  if (category && above) category.value = above.querySelector("select[name$='-category']")?.value ?? "";
 });
 
 // Busy buttons: the button that sends a form shows its spinner until the
@@ -713,6 +718,13 @@ function showReceiptPdfs(root) {
 wideScreen.addEventListener("change", () => showReceiptPdfs(document));
 if (window.htmx) window.htmx.onLoad(showReceiptPdfs);
 else showReceiptPdfs(document);
+
+// The "+" beside a line's category (expenses/_category_field.html): on to
+// the field for the new name, or back to the list. huismus.css shows which.
+document.addEventListener("change", (event) => {
+  const pick = event.target.closest?.(".category-toggle")?.parentElement;
+  if (pick) pick.querySelector(event.target.checked ? ".input" : ".select")?.focus();
+});
 
 // The photo first (#188, expenses/photo_views.py): on a phone, a link to the
 // new-expense form opens a choice instead (base.html, #camera): the camera,

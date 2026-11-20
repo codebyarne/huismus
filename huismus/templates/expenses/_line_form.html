@@ -5,7 +5,7 @@ empty_form (with __prefix__) for "Regel toevoegen".{% endcomment %}
     <legend class="sr-only">{% translate "Regel" %}</legend>
     {{ line_form.id }}
     {% field line_form.description span=4 optional=True %}
-    {% field line_form.category span=2 %}
+    {% include "expenses/_category_field.html" with span=2 %}
     {% field line_form.amount_cents span=2 money=True %}
     {% comment %}Required without the KOR (ExpenseLineForm).{% endcomment %}
     {% if line_form.fields.vat_info_cents.required %}{% field line_form.vat_info_cents span=2 money=True %}{% else %}{% field line_form.vat_info_cents span=2 money=True optional=True %}{% endif %}

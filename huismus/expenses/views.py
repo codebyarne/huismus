@@ -159,7 +159,11 @@ def bind_forms(request, instance, *, upload: bool):
         formset_class = (
             ExpenseLineFormSetWithEmptyLine if request.GET.get("regel") else ExpenseLineFormSet
         )
-        formset = formset_class(instance=instance, prefix="lines")
+        # The empty line starts with the category of the last line.
+        last = instance.lines.last() if instance.pk else None
+        formset = formset_class(
+            instance=instance, prefix="lines", initial=[{"category": last and last.category_id}]
+        )
         receipt_form = NewExpenseReceiptForm() if upload else None
     return form, formset, receipt_form
 

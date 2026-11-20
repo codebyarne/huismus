@@ -40,7 +40,6 @@ from pathlib import Path
 
 from django.conf import settings
 from django.db import connections, transaction
-from django.db.models import Max
 from django.template.defaultfilters import date as date_filter
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -308,10 +307,7 @@ def _with_new_categories(lines, new_names: list[str]) -> tuple[list, list[Expens
         if line.category is None and name:
             key = name.casefold()
             if key not in made:
-                last = ExpenseCategory.objects.aggregate(Max("sort_order"))["sort_order__max"]
-                made[key] = ExpenseCategory.objects.create(
-                    name=name, sort_order=0 if last is None else last + 1
-                )
+                made[key] = ExpenseCategory.at_the_bottom(name)
             line = replace(line, category=made[key])
         result.append(line)
     return result, list(made.values())
