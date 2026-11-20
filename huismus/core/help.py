@@ -45,8 +45,6 @@ class Group:
 # Moving from another package: a page per package with the steps of its own
 # export and instructions for an AI assistant (issue #164, docs/pakketten-export.md).
 PACKAGES = ("rompslomp", "tellow", "e-boekhouden", "jortt", "excel")
-# The part of those instructions that is the same on every package page.
-SHARED_INSTRUCTIONS = {"nl": "Zo vul je het sjabloon:", "en": "How to fill in the template:"}
 
 # The order of the list on /hulp/. A group without topics (on the site: with
 # only Feedback geven) isn't shown, so a group can wait here for its pages.
