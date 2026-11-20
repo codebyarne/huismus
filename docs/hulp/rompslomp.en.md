@@ -8,17 +8,17 @@ trial run first and only saves something when you choose to.
 
 Rompslomp has no export with everything in it. You download a file per part:
 
-1. **Customers:** open **Contacten**, click **Export** and choose **Download
-   als .xls**. [This is how Rompslomp describes it in its
+1. **Customers:** open **<span lang="nl">Contacten</span>**, click **<span lang="nl">Export</span>** and choose **<span lang="nl">Download
+   als .xls</span>**. [This is how Rompslomp describes it in its
    help](https://rompslomp.nl/support/contacten/contactgegevens-exporteren).
-2. **Invoices:** open **Facturen**, click **Exporteer**, choose **Alle
-   boekjaren** and **Download als .xls**. Get the PDFs of your invoices there
+2. **Invoices:** open **<span lang="nl">Facturen</span>**, click **<span lang="nl">Exporteer</span>**, choose **<span lang="nl">Alle
+   boekjaren</span>** and **<span lang="nl">Download als .xls</span>**. Get the PDFs of your invoices there
    too. [This is how Rompslomp describes it in its help](https://rompslomp.nl/support/algemeen/backup-maken).
-3. **Expenses and receipts:** open **Uitgaven**, click **Exporteer** and choose
-   **Download als .xls**. Then choose **Download alle bijlagen**: you get a
+3. **Expenses and receipts:** open **<span lang="nl">Uitgaven</span>**, click **<span lang="nl">Exporteer</span>** and choose
+   **<span lang="nl">Download als .xls</span>**. Then choose **<span lang="nl">Download alle bijlagen</span>**: you get a
    zip with your receipts. [This is how Rompslomp describes it in its
    help](https://rompslomp.nl/support/uitgaven/uitgave-exporteren).
-4. **Audit file:** open **Instellingen**, tab **Exporteren**, and export the
+4. **Audit file:** open **<span lang="nl">Instellingen</span>**, tab **<span lang="nl">Exporteren</span>**, and export the
    audit file, for every financial year. The assistant uses it to check
    whether an invoice is missing. [This is how Rompslomp describes it in its
    help](https://rompslomp.nl/support/boekhouding/auditfile).

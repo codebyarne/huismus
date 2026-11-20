@@ -8,10 +8,10 @@ trial run first and only saves something when you choose to.
 
 Tellow has one screen for exporting:
 
-1. Open **Rapportage** and choose **Exporteren**.
-2. Choose **CSV** and the whole period you used Tellow. Export **Bedrijven**,
-   **Personen**, **Verkoop - Facturen** and **Inkoop - Facturen**.
-3. Then choose **Auditfile**, for the same period. The assistant uses it to
+1. Open **<span lang="nl">Rapportage</span>** and choose **<span lang="nl">Exporteren</span>**.
+2. Choose **<span lang="nl">CSV</span>** and the whole period you used Tellow. Export **<span lang="nl">Bedrijven</span>**,
+   **<span lang="nl">Personen</span>**, **<span lang="nl">Verkoop - Facturen</span>** and **<span lang="nl">Inkoop - Facturen</span>**.
+3. Then choose **<span lang="nl">Auditfile</span>**, for the same period. The assistant uses it to
    check whether an invoice is missing.
 
 [This is how Tellow describes it in its help](https://help.tellow.nl/nl/articles/3000768-hoe-exporteer-ik-gegevens-uit-tellow).
