@@ -7612,8 +7612,8 @@ msgstr "Advice"
 msgid "uur"
 msgstr "hours"
 
-msgid "Voorbeeldstraat 1"
-msgstr "1 Example Street"
+msgid "Voorbeeldweg 1"
+msgstr "1 Example Road"
 
 msgid "Voorbeeldstad"
 msgstr "Example Town"

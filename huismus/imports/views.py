@@ -28,7 +28,7 @@ from .sources import ImportSourceError, read_exports
 # files themselves (pipeline.source_of), not from the tab.
 MONEYBIRD_TAB = "moneybird"
 CSV_TAB = "csv"
-UPLOAD_URLS = {MONEYBIRD_TAB: "imports:upload", CSV_TAB: "imports:upload_csv"}
+UPLOAD_URLS = {MONEYBIRD_TAB: "imports:upload", CSV_TAB: "imports:upload_other"}
 
 
 def _with_counts(section, source=""):
