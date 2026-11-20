@@ -298,11 +298,17 @@ a:hover { color: var(--primary-hover); }
 .btn-secondary { /* standaard */ }
 .btn-ghost { --btn-bg: transparent; --btn-bd: transparent; --btn-fg: var(--text); }
 .btn-ghost:hover { background: var(--surface-2); }
+/* Zonder rand en zonder vlak blijft van de zachte ring van .btn weinig over. Een ghost-knop
+   krijgt daarom de volle lijn van een link (:focus-visible bovenaan), ook als hij een label
+   om een verborgen vinkje is (#151). */
+.btn-ghost:focus-visible, .btn-ghost:has(input:focus-visible) { outline: 2px solid var(--primary); outline-offset: 2px; box-shadow: none; }
 .btn-danger { --btn-bg: var(--danger); --btn-fg: var(--on-danger); --btn-bd: transparent; }
 .btn-danger:hover { background: var(--danger-hover); }
 .btn-danger:focus-visible { box-shadow: 0 0 0 3px var(--danger-ring); }
 .btn-danger-quiet { --btn-bg: transparent; --btn-bd: transparent; --btn-fg: var(--danger); }
 .btn-danger-quiet:hover { background: var(--bad-bg); }
+/* Ook zonder rand of vlak: dezelfde volle lijn als .btn-ghost, in de kleur van de knop. */
+.btn-danger-quiet:focus-visible { outline: 2px solid var(--danger); outline-offset: 2px; box-shadow: none; }
 .btn-sm { height: 32px; padding: 0 14px; }
 .btn-lg { height: 48px; padding: 0 24px; font-size: var(--fs-md); }
 .btn-icon { width: var(--control-h); padding: 0; }
@@ -1267,9 +1273,9 @@ form > div > .settings-section .card-head { border-bottom: 0; padding-bottom: 0;
 .logo-slot img { transition: opacity .15s; }
 .logo-slot:has(.logo-remove input:checked) img { opacity: .3; filter: grayscale(1); }
 .logo-remove:has(input:checked) { color: var(--danger); background: var(--bad-bg); }
-.logo-remove:has(input:focus-visible) { box-shadow: 0 0 0 3px var(--ring); }
+/* Bij focus de lijn van .btn-ghost; de schaduw die hem van het logo losmaakt blijft. */
+.logo-remove:has(input:focus-visible) { box-shadow: var(--sh-1); }
 .line-delete:has(input:checked) { color: var(--danger); background: var(--bad-bg); }
-.line-delete:has(input:focus-visible) { box-shadow: 0 0 0 3px var(--ring); }
 
 /* Factuurpagina: de inline stijlen uit factuur-uitgegeven.html als klassen. */
 .list-icon { width: 36px; height: 36px; flex: none; border-radius: var(--r-md); display: grid; place-items: center; background: var(--surface-2); color: var(--text-muted); }
