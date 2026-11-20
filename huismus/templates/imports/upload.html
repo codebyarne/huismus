@@ -52,7 +52,7 @@
             <li><span>{% translate "Heb je pdf's van je facturen of bonnetjes? Zet ze in de mappen die de LEESMIJ noemt." %}</span></li>
             <li><span>{% translate "Maak er weer één zip van en sleep die naar het vak." %}</span></li>
         </ol>
-        <div><a class="btn btn-secondary" href="{% url 'imports:template' %}" hx-boost="false" download><svg class="i" aria-hidden="true"><use href="#download"></use></svg>{% translate "Sjabloon downloaden" %}</a></div>
+        <div><a class="btn btn-secondary" href="{% url 'imports:template' %}?taal={{ LANGUAGE_CODE }}" hx-boost="false" download><svg class="i" aria-hidden="true"><use href="#download"></use></svg>{% translate "Sjabloon downloaden" %}</a></div>
         <p class="small muted">{% translate "Een export uit Huismus is op dezelfde manier ingedeeld. Zo neem je je administratie mee naar een nieuwe Huismus." %}</p>
         <p class="small muted"><a href="{{ help_url }}">{% translate "Welke kolommen er zijn en hoe je ze invult" %} →</a></p>
     </aside>
