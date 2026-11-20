@@ -1599,14 +1599,20 @@ def test_an_expense_gets_a_second_line_in_another_category(app):
     app.locator("[name=lines-0-amount_cents]").fill("12,10")
     app.locator("[name=lines-0-vat_info_cents]").fill("2,10")
     app.locator("[name=lines-0-vat_rate]").select_option("21")
-    app.locator("[name=lines-0-category]").select_option(label="Software")
+    # The category is a field to type in (app.js, the combobox).
+    categories = app.get_by_role("combobox", name="Categorie")
+    categories.first.fill("soft")
+    app.get_by_role("option", name="Software").click()
 
     app.get_by_role("button", name="Regel toevoegen").click()
     app.locator("[name=lines-1-description]").fill("Trein naar klant")
     app.locator("[name=lines-1-amount_cents]").fill("8,00")
     app.locator("[name=lines-1-vat_info_cents]").fill("0")
     app.locator("[name=lines-1-vat_rate]").select_option("0")
-    app.locator("[name=lines-1-category]").select_option(label="Reiskosten")
+    # It starts with the category of the line above it.
+    expect(categories.nth(1)).to_have_value("Software")
+    categories.nth(1).fill("reis")
+    app.get_by_role("option", name="Reiskosten").click()
     app.get_by_role("button", name="Opslaan").click()
 
     expect(app.get_by_text("Uitgave opgeslagen.")).to_be_visible()

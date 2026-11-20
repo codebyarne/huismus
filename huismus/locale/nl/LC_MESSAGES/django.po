@@ -3230,7 +3230,7 @@ msgstr ""
 msgid "nieuwe categorie"
 msgstr ""
 
-msgid "Kies of typ een categorie"
+msgid "Kies of typ"
 msgstr ""
 
 msgid "Of typ een nieuwe categorie"

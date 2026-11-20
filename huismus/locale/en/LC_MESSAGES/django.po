@@ -3419,8 +3419,8 @@ msgstr "Without a receipt"
 msgid "nieuwe categorie"
 msgstr "new category"
 
-msgid "Kies of typ een categorie"
-msgstr "Choose or type a category"
+msgid "Kies of typ"
+msgstr "Choose or type"
 
 msgid "Of typ een nieuwe categorie"
 msgstr "Or type a new category"
