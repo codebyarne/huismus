@@ -880,6 +880,15 @@ msgid ""
 "Teruggezet naar %(moment)s. De stand van daarvoor staat bij je back-ups."
 msgstr ""
 
+msgid ""
+"Je mailwachtwoord zit niet in een back-up. Vul het opnieuw in bij"
+" Instellingen → Mailen."
+msgstr ""
+
+msgid ""
+"Wat je nog meer opnieuw instelt, staat in Hulp → Naar een nieuwe computer."
+msgstr ""
+
 #, python-format
 msgid "%(service)s, versleuteld"
 msgstr ""

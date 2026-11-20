@@ -5,6 +5,9 @@ a folder, Dropbox or WebDAV. A backup is one file with your invoices,
 quotes, customers, expenses, receipts and logo. Your mail password and the
 key for AI assistants are left out on purpose.
 
+What else is left out is in
+[Moving to a new computer](nieuwe-computer.en.md).
+
 Everything is under **Settings → Backups**. The three places are listed
 there, each showing whether it's on and when the last backup was. **Back up
 now** makes one right away, in every place that's on.
@@ -97,8 +100,9 @@ Afterwards you're still logged in in this browser. On other devices you may
 have to log in again. You can't restore a backup from a newer version of
 Huismus; update Huismus first.
 
-Restoring on another computer? Enter your mail password again and connect
-your AI assistants again. They don't go into a backup.
+Restoring on another computer? Then you set up a few things again, such as
+your backup folder and your mail password. Which ones is in
+[Moving to a new computer](nieuwe-computer.en.md).
 
 ## Linking a folder
 

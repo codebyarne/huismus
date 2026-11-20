@@ -22,7 +22,8 @@ Huismus erases the password.
 
 Your mail password isn't part of a backup. Otherwise anyone with a copy of
 your backup could get into your mailbox. If you restore a backup on another
-computer, enter the password there again.
+computer, enter the password there again. What else you set up again there
+is in [Moving to a new computer](nieuwe-computer.en.md).
 
 ## Gmail
 

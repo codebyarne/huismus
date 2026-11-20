@@ -46,6 +46,13 @@ def is_configured(business) -> bool:
     return bool(business.smtp_provider and business.smtp_host and password())
 
 
+def password_is_missing(business) -> bool:
+    """Mailing was set up, but this installation has no password: what a
+    backup restored on another computer leaves (core.backup keeps the
+    password out of every archive)."""
+    return bool(business.smtp_provider and business.smtp_host and not password())
+
+
 def sender(business) -> str:
     return business.smtp_from_email or business.email
 

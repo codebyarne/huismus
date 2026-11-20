@@ -4,7 +4,7 @@
     {% for message in messages %}
     <div class="toast flash-{{ message.level_tag|default:'info' }}" {% if message.level_tag == "error" %}role="alert"{% endif %}>
         <svg class="i" aria-hidden="true"><use href="#{% if message.level_tag == 'success' %}check-circle{% elif message.level_tag == 'error' %}x-circle{% elif message.level_tag == 'warning' %}alert{% else %}info{% endif %}"></use></svg>
-        {% comment %}A message tagged "has-detail" (a test mail's error) has a sentence and, on its second line, a technical text shown small.{% endcomment %}
+        {% comment %}A message tagged "has-detail" has a sentence and, on its second line, a text shown small: a test mail's technical error, or where to read more after a restore.{% endcomment %}
         {% if "has-detail" in message.extra_tags %}{% with lines=message.message.splitlines %}<div class="flash-body"><strong>{{ lines.0 }}</strong><span class="small">{{ lines.1 }}</span></div>{% endwith %}
         {% else %}<div class="flash-body"><strong>{{ message }}</strong></div>{% endif %}
         <button type="button" class="btn btn-ghost btn-sm btn-icon" data-dismiss aria-label="{% translate 'Sluiten' %}"><svg class="i i-sm" aria-hidden="true"><use href="#x"></use></svg></button>

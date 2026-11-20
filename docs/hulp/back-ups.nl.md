@@ -5,6 +5,9 @@ aanzet: een map, Dropbox of WebDAV. Een back-up is één bestand met je
 facturen, offertes, klanten, uitgaven, bonnetjes en logo. Je
 mailwachtwoord en de sleutel voor AI-assistenten gaan er bewust niet in mee.
 
+Wat er nog meer niet in zit, lees je bij
+[Naar een nieuwe computer](nieuwe-computer.nl.md).
+
 Je vindt alles onder **Instellingen → Back-ups**. Daar staan de drie plekken
 onder elkaar, met bij elke plek of hij aan staat en wanneer de laatste
 back-up was. Met **Nu back-up maken** maak je er meteen een, op elke plek
@@ -101,8 +104,9 @@ Daarna ben je in deze browser nog ingelogd. Op andere apparaten moet je
 misschien opnieuw inloggen. Een back-up van een nieuwere versie van Huismus
 kun je niet terugzetten; werk Huismus dan eerst bij.
 
-Zet je terug op een andere computer, vul dan je mailwachtwoord opnieuw in en
-koppel je AI-assistenten opnieuw. Die gaan niet mee in een back-up.
+Zet je terug op een andere computer? Dan stel je een paar dingen opnieuw
+in, zoals je back-upmap en je mailwachtwoord. Welke, lees je bij
+[Naar een nieuwe computer](nieuwe-computer.nl.md).
 
 ## Een map koppelen
 

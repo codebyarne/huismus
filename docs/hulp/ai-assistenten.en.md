@@ -74,7 +74,8 @@ Use Claude Code instead, below.
 All assistants that use the address share one key. If you choose **New
 key** or **Disconnect**, the old key stops working for everyone. The key
 isn't part of a backup. If you restore a backup on another computer, you
-connect again.
+connect again. There's more in
+[Moving to a new computer](nieuwe-computer.en.md).
 
 ## Which address to use
 
