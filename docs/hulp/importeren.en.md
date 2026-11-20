@@ -38,7 +38,8 @@ customers, invoices, quotes and expenses are new, and what is wrong:
   the file are added. When a new expense has the same date and amount as an
   existing one, the trial run names it. Huismus does import it; if it is
   double, delete it afterwards.
-- **Without a VAT rate**: if you don't use the KOR, Huismus only counts the
+- **Without a VAT rate**: if you don't use the
+  small business scheme (KOR), Huismus only counts the
   VAT of an expense line in the VAT return report when the line has a VAT
   rate. The trial run says how many lines have none. You choose the rate on
   the expense afterwards.

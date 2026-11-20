@@ -153,7 +153,7 @@ def _files() -> list[tuple[str, list[str], list[list]]]:
         {
             "customer_number": customer_number,
             "company_name": customer,
-            "address_line1": _("Voorbeeldstraat 1"),
+            "address_line1": _("Voorbeeldweg 1"),
             "postal_code": "1234 AB",
             "city": _("Voorbeeldstad"),
             "country": "NL",

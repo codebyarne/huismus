@@ -40,7 +40,8 @@ klanten, facturen, offertes en uitgaven nieuw zijn, en wat er niet klopt:
   het bestand erbij. Heeft een nieuwe uitgave dezelfde datum en hetzelfde
   bedrag als een bestaande, dan noemt de proefdraai hem. Huismus importeert
   hem wel; is hij dubbel, verwijder hem dan daarna.
-- **Zonder btw-tarief**: gebruik je de KOR niet, dan telt Huismus de btw van
+- **Zonder btw-tarief**: gebruik je de
+  kleineondernemersregeling (KOR) niet, dan telt Huismus de btw van
   een uitgaveregel pas mee in het rapport Btw-aangifte als de regel een
   btw-tarief heeft. De proefdraai zegt hoeveel regels er geen hebben. Het
   tarief kies je daarna bij de uitgave.

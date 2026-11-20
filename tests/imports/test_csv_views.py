@@ -53,11 +53,11 @@ def _upload(content=None, name="ingevuld.zip"):
 
 def test_the_page_has_a_tab_for_each_source(user_client):
     moneybird = user_client.get(reverse("imports:upload"))
-    own = user_client.get(reverse("imports:upload_csv"))
+    own = user_client.get(reverse("imports:upload_other"))
 
     for response in (moneybird, own):
         assert reverse("imports:upload") in response.content.decode()
-        assert reverse("imports:upload_csv") in response.content.decode()
+        assert reverse("imports:upload_other") in response.content.decode()
     assert "Importeren uit Moneybird" in moneybird.content.decode()
     assert "Sjabloon downloaden" not in moneybird.content.decode()
     assert "Importeren uit een ander pakket of Excel" in own.content.decode()
@@ -124,7 +124,7 @@ def test_the_template_itself_passes_the_dry_run(tmp_path):
 
 
 def test_the_dry_run_shows_the_report_without_a_settings_block(user_client):
-    response = user_client.post(reverse("imports:upload_csv"), {"files": _upload()})
+    response = user_client.post(reverse("imports:upload_other"), {"files": _upload()})
 
     page = response.content.decode()
     assert response.context["source"] == "csv"
@@ -143,13 +143,13 @@ def test_the_notice_about_business_details_goes_once_they_are_filled_in(user_cli
     settings.business_name = "Voorbeeld BV"
     settings.save()
 
-    response = user_client.post(reverse("imports:upload_csv"), {"files": _upload()})
+    response = user_client.post(reverse("imports:upload_other"), {"files": _upload()})
 
     assert "Je bedrijfsgegevens zijn nog leeg" not in response.content.decode()
 
 
 def test_commit_imports_the_staged_files_and_shows_the_done_page(user_client):
-    token = user_client.post(reverse("imports:upload_csv"), {"files": _upload()}).context["token"]
+    token = user_client.post(reverse("imports:upload_other"), {"files": _upload()}).context["token"]
 
     response = user_client.post(reverse("imports:commit"), {"token": token})
 
@@ -173,7 +173,7 @@ def test_a_missing_column_shows_the_error_on_the_same_tab(user_client):
         archive.writestr("klanten.csv", "klantnummer;bedrijfsnaam;plaats;land\n1;Klant BV;Ede;NL\n")
 
     response = user_client.post(
-        reverse("imports:upload_csv"), {"files": _upload(content.getvalue())}
+        reverse("imports:upload_other"), {"files": _upload(content.getvalue())}
     )
 
     page = response.content.decode()
@@ -198,7 +198,7 @@ def test_refused_and_skipped_documents_are_points_to_check(user_client):
         )
 
     response = user_client.post(
-        reverse("imports:upload_csv"), {"files": _upload(content.getvalue())}
+        reverse("imports:upload_other"), {"files": _upload(content.getvalue())}
     )
 
     page = response.content.decode()
@@ -228,7 +228,7 @@ def _refusing_zip() -> bytes:
 
 def test_the_done_page_still_names_what_was_refused(user_client):
     token = user_client.post(
-        reverse("imports:upload_csv"), {"files": _upload(_refusing_zip())}
+        reverse("imports:upload_other"), {"files": _upload(_refusing_zip())}
     ).context["token"]
 
     page = user_client.post(reverse("imports:commit"), {"token": token}).content.decode()
@@ -240,7 +240,7 @@ def test_the_done_page_still_names_what_was_refused(user_client):
 
 
 def test_a_missing_pdf_alone_is_no_warning_for_this_format(user_client):
-    response = user_client.post(reverse("imports:upload_csv"), {"files": _upload()})
+    response = user_client.post(reverse("imports:upload_other"), {"files": _upload()})
 
     invoices = response.context["invoices"]
     assert invoices["missing_pdfs"] == ["2026-0001"]
@@ -258,7 +258,7 @@ def test_without_the_kor_lines_without_a_vat_rate_are_points_to_check(user_clien
         archive.writestr("uitgaven.csv", "uitgavenummer;datum;bedrag (bruto)\n1;2025-02-02;12,10\n")
 
     response = user_client.post(
-        reverse("imports:upload_csv"), {"files": _upload(content.getvalue())}
+        reverse("imports:upload_other"), {"files": _upload(content.getvalue())}
     )
 
     assert response.context["expenses"]["issue_count"] == 1

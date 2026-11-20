@@ -18,7 +18,7 @@
 </div>
 <nav class="tabs" aria-label="{% translate 'Waar je vandaan komt' %}" style="margin-bottom:var(--s-5)">
     <a class="tab" href="{% url 'imports:upload' %}"{% if tab != "csv" %} aria-current="page"{% endif %}>{% translate "Uit Moneybird" %}</a>
-    <a class="tab" href="{% url 'imports:upload_csv' %}"{% if tab == "csv" %} aria-current="page"{% endif %}>{% translate "Uit een ander pakket of Excel" %}</a>
+    <a class="tab" href="{% url 'imports:upload_other' %}"{% if tab == "csv" %} aria-current="page"{% endif %}>{% translate "Uit een ander pakket of Excel" %}</a>
 </nav>
 {% include "imports/_steps.html" with step=1 %}
 <div class="split-rev">

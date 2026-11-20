@@ -7003,7 +7003,7 @@ msgstr ""
 msgid "uur"
 msgstr ""
 
-msgid "Voorbeeldstraat 1"
+msgid "Voorbeeldweg 1"
 msgstr ""
 
 msgid "Voorbeeldstad"
