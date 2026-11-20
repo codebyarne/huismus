@@ -20,7 +20,7 @@ from django.views.decorators.http import require_POST
 from huismus.documents.models import Document
 
 from . import reading
-from .lines import StatementReadError, StatementLine
+from .lines import StatementLine, StatementReadError
 from .matching import match
 from .models import BankStatement, BankTransaction
 
