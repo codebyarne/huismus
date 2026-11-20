@@ -214,8 +214,7 @@ def test_after_restoring_an_inactive_user_is_not_signed_in(docker, data_dir, tmp
 # 2026-11-20).
 MAIL_PASSWORD_MISSING = {
     "nl": (
-        "Je mailwachtwoord zit niet in een back-up."
-        " Vul het opnieuw in bij Instellingen → Mailen.",
+        "Je mailwachtwoord zit niet in een back-up. Vul het opnieuw in bij Instellingen → Mailen.",
         "Wat je nog meer opnieuw instelt, staat in Hulp → Naar een nieuwe computer.",
     ),
     "en": (
