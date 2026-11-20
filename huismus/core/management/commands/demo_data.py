@@ -27,6 +27,11 @@ class Command(BaseCommand):
             help="Een kleine, nette administratie voor de beelden op de site.",
         )
         parser.add_argument(
+            "--zonder-kor",
+            action="store_true",
+            help="Bij --site: dezelfde administratie met btw in plaats van de KOR.",
+        )
+        parser.add_argument(
             "--yes",
             action="store_true",
             help="Bevestig dat demogegevens toegevoegd mogen worden aan de huidige database.",
@@ -53,8 +58,10 @@ class Command(BaseCommand):
                 "een lege database."
             )
 
+        if options["zonder_kor"] and not options["site"]:
+            raise CommandError("--zonder-kor hoort bij --site.")
         if options["site"]:
-            create_site_data()
+            create_site_data(kor=not options["zonder_kor"])
         elif options["history"]:
             create_history()
             # Something to show in Verwerken (huismus/core/demo_receipts.py).
