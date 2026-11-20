@@ -8,6 +8,8 @@ app_name = "imports"
 
 urlpatterns = [
     path("", views.upload, name="upload"),
+    path("ander-pakket/", views.upload, {"tab": views.CSV_TAB}, name="upload_csv"),
+    path("sjabloon/", views.template, name="template"),
     path("doorvoeren/", views.commit, name="commit"),
     path("annuleren/", views.cancel, name="cancel"),
 ]

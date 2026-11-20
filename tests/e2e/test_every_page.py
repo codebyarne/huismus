@@ -105,6 +105,8 @@ def _pages():
         f"/uitgaven/categorieen/?bewerk={_first(ExpenseCategory.objects, 'category').pk}",
         f"/uitgaven/categorieen/{_first(ExpenseCategory.objects, 'category').pk}/",
         "/importeren/",
+        # Huismus's own format (SPEC.md M22); the flow: tests/e2e/test_csv_import.py.
+        "/importeren/ander-pakket/",
         "/instellingen/",
         "/instellingen/bedrijf/",
         "/instellingen/kor/",

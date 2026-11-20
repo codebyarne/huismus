@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """The template of Huismus's own import format (SPEC.md M22): a ZIP with
-the six CSV files of the export (M19), each with one made-up example, and
+the seven CSV files of the export (M19), each with one made-up example, and
 a note on how to fill them. In the language of the screen, like the
 export. The columns come from core.export_format and the cells are written
 by core.csv_files, so the template is always what the import reads.
@@ -145,6 +145,7 @@ def _files() -> list[tuple[str, list[str], list[list]]]:
         None,
         _("nee"),
     ]
+    person = [customer_number, _("Sam Voorbeeld"), "sam@voorbeeld.example", None, None]
     paper = _("Printerpapier")
     expense = ["1", date(2026, 1, 8), _("Voorbeeldwinkel"), paper, Amount(1210), Amount(210), None]
     expense_line = [
@@ -161,6 +162,11 @@ def _files() -> list[tuple[str, list[str], list[list]]]:
         (pgettext("export file", "offertes"), labels(export_format.QUOTE_COLUMNS), [quote]),
         (pgettext("export file", "regels"), labels(export_format.LINE_COLUMNS), lines),
         (pgettext("export file", "klanten"), labels(export_format.CONTACT_COLUMNS), [contact]),
+        (
+            pgettext("export file", "contactpersonen"),
+            labels(export_format.CONTACT_PERSON_COLUMNS),
+            [person],
+        ),
         (
             pgettext("export file", "uitgaven"),
             expense_labels(export_format.EXPENSE_COLUMNS, kor_enabled=False),

@@ -1,25 +1,39 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}{% translate "Importeren uit Moneybird" %} — Huismus{% endblock %}
+{% block title %}{% if tab == "csv" %}{% translate "Importeren uit een ander pakket of Excel" %}{% else %}{% translate "Importeren uit Moneybird" %}{% endif %} — Huismus{% endblock %}
 {% block content_class %}content-wide{% endblock %}
 
 {% block content %}
 <div class="page-head">
     <div class="titles">
+        {% if tab == "csv" %}
+        <h1>{% translate "Importeren uit een ander pakket of Excel" %}</h1>
+        <p class="lede">{% translate "Zet je klanten, facturen, offertes en uitgaven in het sjabloon van Huismus en neem ze mee." %} {% translate "Huismus doet eerst een proefdraai en slaat pas iets op als jij dat kiest." %}</p>
+        {% else %}
         <h1>{% translate "Importeren uit Moneybird" %}</h1>
         <p class="lede">{% translate "Neem je klanten, facturen, offertes en uitgaven één op één mee." %} {% translate "Huismus doet eerst een proefdraai en slaat pas iets op als jij dat kiest." %}</p>
+        {% endif %}
     </div>
 </div>
+<nav class="tabs" aria-label="{% translate 'Waar je vandaan komt' %}" style="margin-bottom:var(--s-5)">
+    <a class="tab" href="{% url 'imports:upload' %}"{% if tab != "csv" %} aria-current="page"{% endif %}>{% translate "Uit Moneybird" %}</a>
+    <a class="tab" href="{% url 'imports:upload_csv' %}"{% if tab == "csv" %} aria-current="page"{% endif %}>{% translate "Uit een ander pakket of Excel" %}</a>
+</nav>
 {% include "imports/_steps.html" with step=1 %}
 <div class="split-rev">
-    <form class="stack" method="post" enctype="multipart/form-data" action="{% url 'imports:upload' %}" style="gap:var(--s-5)">
+    <form class="stack" method="post" enctype="multipart/form-data" action="{% url upload_url %}" style="gap:var(--s-5)">
         {% csrf_token %}
         <label class="dropzone dropzone-lg" data-dropzone>
             <input type="file" name="files" multiple accept=".xlsx,.xls,.csv,.zip,.pdf,.xml" required data-file-summary="gekozen-bestanden">
             <span class="dz-icon"><svg class="i i-lg" aria-hidden="true"><use href="#upload"></use></svg></span>
+            {% if tab == "csv" %}
+            <strong>{% translate "Sleep je ingevulde zip hierheen" %}</strong>
+            <span class="small">{% translate "Het sjabloon, of een export uit Huismus zelf." %}</span>
+            {% else %}
             <strong>{% translate "Sleep je Moneybird-exports hierheen" %}</strong>
             <span class="small">{% translate "Alle jaren tegelijk, zoals Moneybird ze geeft." %}</span>
+            {% endif %}
             <span class="btn btn-secondary btn-sm" style="margin-top:var(--s-2)">{% translate "Bestanden kiezen" %}</span>
         </label>
         <p class="small muted" id="gekozen-bestanden" aria-live="polite"></p>
@@ -28,6 +42,20 @@
             <button class="btn btn-primary btn-lg" type="submit">{% translate "Proefdraai starten" %}<span class="spinner"></span></button>
         </section>
     </form>
+    {% if tab == "csv" %}
+    <aside class="card card-pad stack" style="gap:var(--s-4);position:sticky;top:var(--s-6)">
+        <h2>{% translate "Zo zet je je gegevens in het sjabloon" %}</h2>
+        <ol class="how-to">
+            <li><span>{% translate "Download het sjabloon: een zip met een bestand voor je klanten, facturen, offertes en uitgaven." %}</span></li>
+            <li><span>{% translate "Open de bestanden in Excel of Numbers en vervang het voorbeeld door je eigen gegevens. De kolomnamen laat je staan." %}</span></li>
+            <li><span>{% translate "Heb je pdf's van je facturen of bonnetjes? Zet ze in de mappen die de LEESMIJ noemt." %}</span></li>
+            <li><span>{% translate "Maak er weer één zip van en sleep die naar het vak." %}</span></li>
+        </ol>
+        <div><a class="btn btn-secondary" href="{% url 'imports:template' %}" hx-boost="false" download><svg class="i" aria-hidden="true"><use href="#download"></use></svg>{% translate "Sjabloon downloaden" %}</a></div>
+        <p class="small muted">{% translate "Een export uit Huismus heeft dezelfde vorm. Zo neem je je administratie mee naar een nieuwe Huismus." %}</p>
+        <p class="small muted"><a href="{{ help_url }}">{% translate "Welke kolommen er zijn en hoe je ze invult" %} →</a></p>
+    </aside>
+    {% else %}
     <aside class="card card-pad stack" style="gap:var(--s-4);position:sticky;top:var(--s-6)">
         <h2>{% translate "Zo haal je je gegevens uit Moneybird" %}</h2>
         <ol class="how-to">
@@ -40,5 +68,6 @@
         <p class="small muted">{% blocktranslate %}Geen abonnement meer? Dan kies je in Moneybird rechtsboven <strong>Exporteren › Alle gegevens</strong>. Je krijgt dan ook een zip per jaar.{% endblocktranslate %}</p>
         <p class="small muted">{% translate "Huismus bewaart de PDF's uit Moneybird bij je facturen, als origineel naast zijn eigen versie." %} {% translate "De bonnetjes komen bij je uitgaven." %}</p>
     </aside>
+    {% endif %}
 </div>
 {% endblock %}

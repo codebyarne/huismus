@@ -4,22 +4,31 @@ from datetime import date
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import ngettext
 
 from huismus.business.models import Settings
+from huismus.core import help
 
-from . import staging
+from . import csv_template, staging
+from .csv_parse import SOURCE as CSV
 from .forms import (
     PROPOSABLE_FIELDS,
     ImportSettingsForm,
     differing_current_values,
     settings_form_for,
 )
-from .pipeline import PROPOSED, run_moneybird_import
+from .pipeline import PROPOSED, run_import, source_of
 from .recognition import describe_uploads
-from .sources import ImportSourceError
+from .sources import ImportSourceError, read_exports
+
+# The two tabs of the upload page. Which import runs follows from the
+# files themselves (pipeline.source_of), not from the tab.
+MONEYBIRD_TAB = "moneybird"
+CSV_TAB = "csv"
+UPLOAD_URLS = {MONEYBIRD_TAB: "imports:upload", CSV_TAB: "imports:upload_csv"}
 
 
 def _with_counts(section):
@@ -38,6 +47,10 @@ def _with_counts(section):
         + len(section.get("payment_issues", []))
         + len(section.get("discounts", []))
         + len(section.get("orphan_lines", []))
+        + len(section.get("refused", []))
+        + len(section.get("unlinked_credit_notes", []))
+        + len(section.get("possible_duplicates", []))
+        + len(section.get("changed_in_file", []))
         + len((section.get("moneybird_reports") or {}).get("differences", []))
         + len((section.get("ubl") or {}).get("messages", []))
     )
@@ -50,13 +63,34 @@ def _report_context(run):
         "quotes": _with_counts(run.report.get("quotes")),
         "expenses": _with_counts(run.report.get("expenses")),
         "contacts": run.report.get("contacts"),
+        "source": run.source,
+        "back_url": UPLOAD_URLS[CSV_TAB if run.source == CSV else MONEYBIRD_TAB],
         "notes": run.report.get("notes", []),
     }
 
 
+def _upload_page(request, tab):
+    return render(
+        request,
+        "imports/upload.html",
+        {"tab": tab, "upload_url": UPLOAD_URLS[tab], "help_url": help.url("importeren")},
+    )
+
+
 @login_required
-def upload(request):
-    """SPEC.md section 7's web entry point, in two steps (M8).
+def template(request):
+    """The template of Huismus's own format, in the language of the screen
+    (imports.csv_template). Small and made at once: a plain download."""
+    response = HttpResponse(csv_template.template_zip(), content_type="application/zip")
+    response["Content-Disposition"] = f'attachment; filename="{csv_template.filename()}"'
+    return response
+
+
+@login_required
+def upload(request, tab=MONEYBIRD_TAB):
+    """SPEC.md section 7's web entry point, in two steps (M8). `tab`: which
+    explanation the page shows, for Moneybird or for Huismus's own format
+    (M22); the files decide which import runs.
 
     1. Upload: the files are kept in a staging (imports.staging) and a dry
        run reports what would happen. Nothing is written to the database.
@@ -64,11 +98,11 @@ def upload(request):
        the user doesn't choose them again.
     """
     if request.method != "POST":
-        return render(request, "imports/upload.html")
+        return _upload_page(request, tab)
     uploads = request.FILES.getlist("files")
     if not uploads:
         messages.error(request, _("Kies eerst een of meer bestanden."))
-        return render(request, "imports/upload.html")
+        return _upload_page(request, tab)
 
     token = staging.stage(uploads)
     directory = staging.staged_path(token)
@@ -77,7 +111,7 @@ def upload(request):
     except ImportSourceError as exc:
         staging.discard(token)
         messages.error(request, str(exc))
-        return render(request, "imports/upload.html")
+        return _upload_page(request, tab)
 
 
 def _dry_run(request, token, directory, settings_form=None):
@@ -85,7 +119,9 @@ def _dry_run(request, token, directory, settings_form=None):
     the dry run's rolled-back transaction, so the report shows what the
     import does with them (numbering continuing, for one). `settings_form`:
     the user's own, with errors, when "Nu echt importeren" refused it."""
-    run = run_moneybird_import(directory, commit=False, settings_values=PROPOSED)
+    run = run_import(directory, commit=False, settings_values=PROPOSED)
+    if run.source == CSV:
+        return _csv_dry_run(request, run, token, directory)
     proposal = run.report["settings_proposal"]
     # Not Settings.load(): that creates the row on a fresh install, and a
     # dry run writes nothing. Unsaved defaults show the same.
@@ -112,6 +148,25 @@ def _dry_run(request, token, directory, settings_form=None):
     )
 
 
+def _csv_dry_run(request, run, token, directory):
+    """The dry run of Huismus's own format: the same page without the
+    settings block, since these files hold no business details. An
+    imported document takes the business details of that moment, so the
+    page says so while the business name is still empty."""
+    settings = Settings.objects.filter(pk=1).first()
+    return render(
+        request,
+        "imports/dry_run.html",
+        {
+            "run": run,
+            "token": token,
+            "uploads": describe_uploads(directory),
+            "business_name_missing": settings is None or not settings.business_name,
+            **_report_context(run),
+        },
+    )
+
+
 @login_required
 def commit(request):
     """Imports the files of a dry run, by its staging token, then removes
@@ -126,14 +181,17 @@ def commit(request):
             _("Deze proefdraai is verlopen of al geïmporteerd. Kies de bestanden opnieuw."),
         )
         return redirect("imports:upload")
-    settings_form = ImportSettingsForm(request.POST, instance=Settings.load())
-    if not settings_form.is_valid():
-        return _dry_run(request, token, directory, settings_form=settings_form)
-    run = run_moneybird_import(
-        directory,
-        commit=True,
-        settings_values={name: settings_form.cleaned_data[name] for name in PROPOSABLE_FIELDS},
-    )
+    if source_of(read_exports(directory)) == CSV:
+        run = run_import(directory, commit=True)
+    else:
+        settings_form = ImportSettingsForm(request.POST, instance=Settings.load())
+        if not settings_form.is_valid():
+            return _dry_run(request, token, directory, settings_form=settings_form)
+        run = run_import(
+            directory,
+            commit=True,
+            settings_values={name: settings_form.cleaned_data[name] for name in PROPOSABLE_FIELDS},
+        )
     staging.discard(token)
     return render(
         request,

@@ -27,11 +27,19 @@ from huismus.core.export_format import LANGUAGES, normalised
 from . import csv_template
 from .archive import keep_originals
 from .counting import COUNTED_SECTIONS, check_count, section
-from .csv_commit import import_contacts, import_documents, import_expenses, pdf_key
+from .csv_commit import (
+    ContactReport,
+    import_contact_persons,
+    import_contacts,
+    import_documents,
+    import_expenses,
+    pdf_key,
+)
 from .csv_parse import (
     SOURCE,
     lines_by_document,
     orphan_lines,
+    parse_contact_persons,
     parse_contacts,
     parse_expenses,
     parse_invoices,
@@ -50,6 +58,7 @@ class ParsedCsv:
     """What all files of one run hold together."""
 
     contacts: list = field(default_factory=list)
+    persons: list = field(default_factory=list)
     invoices: list = field(default_factory=list)  # with the credit notes
     quotes: list = field(default_factory=list)
     expenses: list = field(default_factory=list)
@@ -150,6 +159,8 @@ def _parse_export(export: Export, parsed: ParsedCsv) -> None:
 
     if CsvKind.CONTACTS in tables:
         parsed.contacts += parse_contacts(tables[CsvKind.CONTACTS])
+    if CsvKind.CONTACT_PERSONS in tables:
+        parsed.persons += parse_contact_persons(tables[CsvKind.CONTACT_PERSONS])
     lines = lines_by_document(tables.get(CsvKind.LINES))
     documents = []
     if CsvKind.INVOICES in tables:
@@ -232,6 +243,10 @@ def parse_exports(exports: list[Export]) -> ParsedCsv:
         notes,
         _("Klant"),
     )
+    # The same person in two files counts once.
+    parsed.persons = [
+        person for person in dict.fromkeys(parsed.persons) if person not in examples.persons
+    ]
     parsed.invoices = _once(
         _without_examples(
             parsed.invoices, examples.invoices, notes, skipped % {"what": _("de factuur")}
@@ -307,6 +322,10 @@ def run_csv_import(exports: list[Export], *, commit: bool) -> ImportRun:
         contacts_report = quotes_report = invoices_report = expenses_report = None
         if CsvKind.CONTACTS in parsed.has:
             contacts_report = import_contacts(parsed.contacts)
+        if CsvKind.CONTACT_PERSONS in parsed.has:
+            # After the contacts: a person is added to its contact.
+            contacts_report = contacts_report or ContactReport()
+            import_contact_persons(parsed.persons, contacts_report)
         # Quotes first: an invoice made from one points to it.
         if CsvKind.QUOTES in parsed.has:
             quotes_report = import_documents(

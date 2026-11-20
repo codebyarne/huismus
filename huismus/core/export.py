@@ -5,7 +5,7 @@ read without Huismus. A backup is for putting Huismus back; this is for the
 accountant, and for keeping invoices readable anywhere else.
 
 In the ZIP: a CSV each for invoices and credit notes, quotes, their lines,
-customers, expenses and expense lines (core.csv_files), and the PDF of
+customers, their contact persons, expenses and expense lines (core.csv_files), and the PDF of
 every document and every receipt. Never a draft, nor a document back in
 draft through "Toch bewerken". A year counts by document date, as on the
 year overview, and an expense by its own date; customers are always all of
@@ -28,7 +28,7 @@ from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy, pgettext
 
 from huismus.business.models import Settings
-from huismus.contacts.models import Contact
+from huismus.contacts.models import Contact, ContactPerson
 from huismus.documents.models import Document
 from huismus.documents.pdf import render_pdf
 from huismus.documents.totals import compute_totals, revenue_by_rate
@@ -262,6 +262,24 @@ def _contacts():
     return header, table
 
 
+def _contact_persons():
+    """The persons at every contact, by the contact's customer number."""
+    persons = ContactPerson.objects.select_related("contact").order_by(
+        "contact__customer_number", "contact__pk", "name", "pk"
+    )
+    table = (
+        [
+            person.contact.customer_number,
+            person.name,
+            person.email,
+            person.phone,
+            person.department,
+        ]
+        for person in persons
+    )
+    return labels(export_format.CONTACT_PERSON_COLUMNS), table
+
+
 def _receipt_name(expense, attachment) -> str:
     """<expense id>-<the name it was uploaded with>."""
     return f"{expense.pk}-{PurePosixPath(attachment.file.name).name}"
@@ -343,6 +361,7 @@ def write_zip(file, year: int | None) -> None:
         (pgettext("export file", "offertes"), quote_header, quote_table),
         (pgettext("export file", "regels"), *_lines(documents)),
         (pgettext("export file", "klanten"), *_contacts()),
+        (pgettext("export file", "contactpersonen"), *_contact_persons()),
         (pgettext("export file", "uitgaven"), *expense_csv),
         (pgettext("export file", "uitgaveregels"), *expense_line_csv),
     ]

@@ -132,6 +132,14 @@ CONTACT_COLUMNS = (
     Column("archived", gettext_noop("gearchiveerd")),
 )
 
+CONTACT_PERSON_COLUMNS = (
+    Column("customer_number", gettext_noop("klantnummer"), required=True),
+    Column("name", gettext_noop("naam"), required=True),
+    Column("email", gettext_noop("e-mail")),
+    Column("phone", gettext_noop("telefoon")),
+    Column("department", gettext_noop("afdeling")),
+)
+
 # The VAT of an expense is "btw ter info" under the KOR and "btw" without
 # it (SPEC.md M21); the import reads either.
 VAT = gettext_noop("btw")
@@ -164,5 +172,6 @@ RECEIPT_SEPARATOR = " | "
 def expense_labels(columns, *, kor_enabled: bool) -> list[str]:
     """The header row of an expense file: its VAT column says "ter info"
     under the KOR, as on the expense page."""
-    vat = VAT_FOR_INFO if kor_enabled else VAT
-    return [gettext(vat if column.key == "vat" else column.label) for column in columns]
+    vat_label = VAT_FOR_INFO if kor_enabled else VAT
+    names = [vat_label if column.key == "vat" else column.label for column in columns]
+    return [gettext(name) for name in names]

@@ -32,6 +32,7 @@ from .sources import ImportSourceError
 
 class CsvKind(Enum):
     CONTACTS = "contacts"
+    CONTACT_PERSONS = "contact_persons"
     INVOICES = "invoices"
     QUOTES = "quotes"
     LINES = "lines"
@@ -41,6 +42,7 @@ class CsvKind(Enum):
 
 COLUMNS: dict[CsvKind, tuple[Column, ...]] = {
     CsvKind.CONTACTS: export_format.CONTACT_COLUMNS,
+    CsvKind.CONTACT_PERSONS: export_format.CONTACT_PERSON_COLUMNS,
     CsvKind.INVOICES: export_format.INVOICE_COLUMNS + export_format.INVOICE_COLUMNS_AFTER_RATES,
     CsvKind.QUOTES: export_format.QUOTE_COLUMNS,
     CsvKind.LINES: export_format.LINE_COLUMNS,
@@ -260,16 +262,17 @@ def is_complete(content: bytes) -> bool:
     """A CSV file with every required column of one of our files: surely
     meant as one, whatever else was uploaded with it."""
     header = _header(content)
-    kind = recognise(header) if header else None
+    kind = kind_of(content)
     if kind is None:
         return False
     present = {_keys_by_name(kind).get(normalised(name)) for name in header}
     return all(column.key in present for column in COLUMNS[kind] if column.required)
 
 
-def is_ours(content: bytes) -> bool:
+def kind_of(content: bytes) -> CsvKind | None:
+    """Which of our files this CSV is, by its header row alone."""
     header = _header(content)
-    return bool(header) and recognise(header) is not None
+    return recognise(header) if header else None
 
 
 def _header(content: bytes) -> list[str]:

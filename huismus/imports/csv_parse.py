@@ -83,12 +83,24 @@ class CsvContact:
     customer_number: str
     # Contact field -> value, only for the columns the file has.
     fields: dict
-    file: str = ""
-    row: int = 0
+    # Where it stood: for messages, not part of what the contact is.
+    file: str = field(default="", compare=False)
+    row: int = field(default=0, compare=False)
 
     @property
     def has_name(self) -> bool:
         return any(self.fields.get(name) for name in ("company_name", "first_name", "last_name"))
+
+
+@dataclass(frozen=True)
+class CsvPerson:
+    """A contact person, at the contact with this customer number."""
+
+    customer_number: str
+    name: str
+    email: str = ""
+    phone: str = ""
+    department: str = ""
 
 
 @dataclass(frozen=True)
@@ -195,6 +207,19 @@ def parse_contacts(table: Table) -> list[CsvContact]:
             fields["archived"] = bool(row.choice("archived", _yes_no(), examples=_("ja, nee")))
         contacts.append(CsvContact(number, number, fields, table.file_name, row.number))
     return contacts
+
+
+def parse_contact_persons(table: Table) -> list[CsvPerson]:
+    return [
+        CsvPerson(
+            customer_number=row.required("customer_number"),
+            name=row.required("name"),
+            email=row.text("email"),
+            phone=row.text("phone"),
+            department=row.text("department"),
+        )
+        for row in table.rows
+    ]
 
 
 def _document_key(row: Row) -> tuple[str, str]:
