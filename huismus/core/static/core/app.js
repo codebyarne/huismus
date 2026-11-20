@@ -853,6 +853,9 @@ async function sendPhoto(form, file) {
     return;
   }
   unsent = null;
+  // Sent: a browser that brings this page back with its fields filled in
+  // (Back, a reload) mustn't find the photo to send a second time.
+  for (const input of form.querySelectorAll("input[type=file][data-camera]")) input.value = "";
   // Where Huismus sends it: the photo page, or the ordinary form with the
   // reason it refused the file. Signed out meanwhile: the login page.
   window.location.assign(response.headers.get("X-Huismus-Go") || response.url);
@@ -869,3 +872,12 @@ document.addEventListener("change", (event) => {
 document.addEventListener("click", (event) => {
   if (event.target.closest?.("[data-camera-retry]") && unsent) sendPhoto(unsent.form, unsent.file);
 });
+
+// A photo taken before this script ran (a slow phone or connection, #227):
+// its change event had nobody listening, so it is sent now.
+for (const input of document.querySelectorAll("input[type=file][data-camera]")) {
+  if (input.files.length) {
+    sendPhoto(input.form, input.files[0]);
+    break;
+  }
+}
