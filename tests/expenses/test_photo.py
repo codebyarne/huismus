@@ -279,7 +279,7 @@ def test_to_app_js_it_says_where_to_go_instead_of_redirecting(logged_in, monkeyp
 # -- A new category from the expense itself (owner, 2026-11-20) -------------------------
 
 
-def _new_expense(add="on", name="Eten en drinken", **more):
+def _new_expense(name="Eten en drinken", **more):
     return {
         "date": "2026-11-19",
         "supplier": "Ramenbar Voorbeeld",
@@ -293,7 +293,6 @@ def _new_expense(add="on", name="Eten en drinken", **more):
         "lines-0-vat_info_cents": "6,63",
         "lines-0-vat_rate": "9",
         "lines-0-category": "",
-        "lines-0-add_category": add,
         "lines-0-new_category": name,
         **more,
     }
@@ -302,7 +301,7 @@ def _new_expense(add="on", name="Eten en drinken", **more):
 def test_a_new_category_is_made_with_the_expense(logged_in):
     ExpenseCategory.objects.create(name="Kantoor", sort_order=3)
     page = logged_in.get(reverse("expenses:create")).content.decode()
-    assert 'name="lines-0-add_category"' in page
+    assert 'name="lines-0-new_category"' in page
 
     logged_in.post(reverse("expenses:create"), _new_expense(name="  Eten en  drinken "))
     made = ExpenseCategory.objects.get(name="Eten en drinken")
@@ -326,19 +325,11 @@ def test_two_lines_with_the_same_new_name_get_one_category(logged_in):
         "lines-1-vat_info_cents": "2,95",
         "lines-1-vat_rate": "21",
         "lines-1-category": "",
-        "lines-1-add_category": "on",
         "lines-1-new_category": "eten en drinken",
     }
     logged_in.post(reverse("expenses:create"), _new_expense(**second))
     category = ExpenseCategory.objects.get()
     assert [line.category for line in Expense.objects.get().lines.all()] == [category] * 2
-
-
-def test_nieuwe_categorie_without_a_name_asks_for_it(logged_in):
-    page = logged_in.post(reverse("expenses:create"), _new_expense(name="")).content.decode()
-    assert "Vul de naam van de nieuwe categorie in." in page
-    assert 'name="lines-0-add_category" id="id_lines-0-add_category" checked' in page
-    assert not Expense.objects.exists()
 
 
 def test_an_expense_with_an_error_makes_no_category(logged_in):
@@ -347,10 +338,10 @@ def test_an_expense_with_an_error_makes_no_category(logged_in):
     assert not ExpenseCategory.objects.exists()
 
 
-def test_a_name_counts_only_with_the_plus_on(logged_in):
-    logged_in.post(reverse("expenses:create"), _new_expense(add=""))
-    assert not ExpenseCategory.objects.exists()
-    assert Expense.objects.get().lines.get().category is None
+def test_a_name_typed_wins_over_the_list(logged_in):
+    other = ExpenseCategory.objects.create(name="Kantoor")
+    logged_in.post(reverse("expenses:create"), {**_new_expense(), "lines-0-category": other.pk})
+    assert Expense.objects.get().lines.get().category.name == "Eten en drinken"
 
 
 def test_a_new_category_from_the_photo_page(logged_in):
@@ -363,7 +354,7 @@ def test_a_new_category_from_the_photo_page(logged_in):
 def test_a_new_line_starts_with_the_category_of_the_line_above(logged_in):
     # Without JS: "Regel toevoegen" saves and comes back with an empty line.
     category = ExpenseCategory.objects.create(name="Kantoor")
-    data = {**_new_expense(add=""), "lines-0-category": str(category.pk), "regel_toevoegen": "1"}
+    data = {**_new_expense(name=""), "lines-0-category": str(category.pk), "regel_toevoegen": "1"}
     page = logged_in.post(reverse("expenses:create"), data, follow=True).content.decode()
     assert page.count(f'<option value="{category.pk}" selected>Kantoor</option>') == 2
     # Left as it came, it is still no line.

@@ -1,17 +1,13 @@
-{% load i18n %}{% comment %}A line's category: the list, and a "+" that swaps it for a field
-for a new category's name (ExpenseLineForm; huismus.css, .category-field).
-`span`: the grid width, as for {% field %}.{% endcomment %}
+{% load i18n %}{% comment %}A line's category (ExpenseLineForm): the list, and a field for
+the name of one that isn't there yet. With JS they are one field to type
+in (app.js, the combobox with data-combobox-new); the line under it says
+when what was typed becomes a new category. `span`: the grid width, as for
+{% field %}.{% endcomment %}
 <div class="field {% if span %}span-{{ span }}{% endif %} category-field">
     <label class="label" for="{{ line_form.category.id_for_label }}">{% translate "Categorie" %}</label>
-    <div class="category-pick">
-        {{ line_form.category }}
-        {{ line_form.new_category }}
-        <label class="btn btn-icon category-toggle" title="{% translate 'Nieuwe categorie' %}">
-            {{ line_form.add_category }}
-            <svg class="i" aria-hidden="true"><use href="#plus"></use></svg>
-            <span class="sr-only">{% translate "Nieuwe categorie" %}</span>
-        </label>
-    </div>
+    {{ line_form.category }}
+    {{ line_form.new_category }}
+    <span class="help" data-combobox-new-hint hidden>{% translate "Nieuwe categorie. Huismus maakt hem als je opslaat." %}</span>
     {% for error in line_form.category.errors %}<p class="error"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>{{ error }}</p>{% endfor %}
     {% for error in line_form.new_category.errors %}<p class="error"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg>{{ error }}</p>{% endfor %}
 </div>

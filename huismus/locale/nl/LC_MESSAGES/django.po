@@ -3227,13 +3227,16 @@ msgstr ""
 msgid "Zonder bonnetje"
 msgstr ""
 
-msgid "naam van de nieuwe categorie"
+msgid "nieuwe categorie"
 msgstr ""
 
-msgid "Vul de naam van de nieuwe categorie in."
+msgid "Kies of typ een categorie"
 msgstr ""
 
-msgid "Naam van de nieuwe categorie"
+msgid "Of typ een nieuwe categorie"
+msgstr ""
+
+msgid "Nieuwe categorie. Huismus maakt hem als je opslaat."
 msgstr ""
 
 msgid "Bonnetje uploaden…"

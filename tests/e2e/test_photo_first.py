@@ -221,16 +221,23 @@ def test_on_a_wide_screen_uitgave_is_the_ordinary_form(app):
 
 
 def test_a_new_category_on_the_photo_page(phone):
-    # Owner, 2026-11-20: a category that isn't there yet, made on the spot.
+    # Owner, 2026-11-20: type in the category's own field; a name that
+    # isn't there yet is made on the spot.
+    ExpenseCategory.objects.create(name="Kantoor")
     phone.goto(phone.base + "/uitgaven/")
     _camera(phone, lambda: phone.get_by_role("link", name="Nieuwe uitgave").first.tap())
-    name = phone.get_by_label("Naam van de nieuwe categorie")
-    expect(name).to_be_hidden()
-    phone.get_by_text("Nieuwe categorie", exact=True).locator("..").tap()
-    expect(name).to_be_focused()
-    expect(phone.get_by_label("Categorie", exact=True)).to_be_hidden()
-    name.fill("Eten en drinken")
+    category = phone.get_by_role("combobox", name="Categorie")
+    hint = phone.get_by_text("Nieuwe categorie. Huismus maakt hem als je opslaat.")
+    # An existing one, by a part of its name.
+    category.fill("kan")
+    phone.get_by_role("option", name="Kantoor").tap()
+    expect(category).to_have_value("Kantoor")
+    expect(hint).to_be_hidden()
+    # One that isn't there: typing it is enough.
+    category.fill("Eten en drinken")
+    expect(phone.get_by_role("option", name="Nieuwe categorie: Eten en drinken")).to_be_visible()
     phone.get_by_label("Bedrag, zoals je het betaalde").fill("61,60")
+    expect(hint).to_be_visible()
     phone.get_by_label("Btw", exact=True).fill("6,63")
     phone.get_by_label("Btw-tarief").select_option("9")
     phone.get_by_role("button", name="Uitgave opslaan").tap()
@@ -244,6 +251,8 @@ def test_a_new_line_starts_with_the_category_above(app):
     category = ExpenseCategory.objects.create(name="Kantoor")
     app.set_viewport_size({"width": 1440, "height": 900})
     app.goto(app.base + "/uitgaven/nieuw/")
-    app.get_by_label("Categorie", exact=True).select_option("Kantoor")
+    picker = app.get_by_role("combobox", name="Categorie")
+    picker.fill("Kantoor")
     app.get_by_role("button", name="Regel toevoegen").click()
-    expect(app.get_by_label("Categorie", exact=True).nth(1)).to_have_value(str(category.pk))
+    expect(picker.nth(1)).to_have_value("Kantoor")
+    assert app.locator("select[name='lines-1-category']").input_value() == str(category.pk)

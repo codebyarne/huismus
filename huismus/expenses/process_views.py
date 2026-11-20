@@ -58,7 +58,8 @@ def _one_more_line(request, instance):
     count = int(data.get("lines-TOTAL_FORMS") or 0)
     data["lines-TOTAL_FORMS"] = str(count + 1)
     # The new line starts with the category of the line above it.
-    data[f"lines-{count}-category"] = data.get(f"lines-{count - 1}-category", "")
+    for field in ("category", "new_category"):
+        data[f"lines-{count}-{field}"] = data.get(f"lines-{count - 1}-{field}", "")
     return ExpenseLineFormSet(data, instance=instance, prefix="lines")
 
 
