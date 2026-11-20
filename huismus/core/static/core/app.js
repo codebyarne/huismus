@@ -715,11 +715,11 @@ if (window.htmx) window.htmx.onLoad(showReceiptPdfs);
 else showReceiptPdfs(document);
 
 // The photo first (#188, expenses/photo_views.py): on a phone, a link to the
-// new-expense form opens the camera instead. The photo is sent at once;
-// Huismus puts it with the receipts and opens the page with the amount.
-// Cancelling the camera opens the ordinary form, where a photo from the
-// library, a PDF or no receipt at all is possible. On a wide screen, in the
-// desktop app and without JS, the link is the ordinary form.
+// new-expense form opens a choice instead (base.html, #camera): the camera,
+// a photo or PDF the phone has, or the ordinary form. A chosen file is sent
+// at once; Huismus puts it with the receipts and opens the page with the
+// amount. Closing the camera leaves the choice open. On a wide screen, in
+// the desktop app and without JS, the link is the ordinary form.
 const phone = window.matchMedia("(max-width: 760px) and (pointer: coarse)");
 
 // Capture, and no further: htmx's boost listens on the link itself.
@@ -730,19 +730,18 @@ document.addEventListener(
     const link = event.target.closest?.("a[href]");
     if (!camera || !link || !phone.matches || event.defaultPrevented) return;
     if (link.pathname !== camera.dataset.newExpense || link.search) return;
+    // "Zonder bonnetje" in the choice itself: the ordinary form.
+    if (camera.contains(link)) return;
     event.preventDefault();
     event.stopPropagation();
     link.closest("[popover]")?.hidePopover();
-    const input = camera.querySelector("input[type=file]");
-    input.value = "";
-    // Browsers that don't say "cancel" leave the user where they tapped.
-    input.oncancel = () => window.location.assign(link.href);
-    input.click();
+    for (const input of camera.querySelectorAll("input[type=file]")) input.value = "";
+    camera.showModal();
   },
   true,
 );
 
-// A photo taken, from that hidden form or from "Opnieuw" on the photo page:
+// A photo taken or chosen, from that choice or from "Opnieuw" on the photo page:
 // sent with fetch, so a failed connection leaves the photo here to send
 // again. A photo from the camera isn't always in the library too: a
 // browser error page would lose it.
@@ -824,7 +823,8 @@ async function sendPhoto(form, file) {
 document.addEventListener("change", (event) => {
   const input = event.target;
   if (!input.matches?.("input[type=file][data-camera]") || !input.files.length) return;
-  input.oncancel = null;
+  // The choice closes: the messages lie under an open dialog.
+  input.closest("dialog")?.close();
   sendPhoto(input.form, input.files[0]);
 });
 

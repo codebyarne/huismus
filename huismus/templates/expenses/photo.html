@@ -25,14 +25,15 @@ fields are one line of the ordinary form, the amount first.{% endcomment %}
     <img class="process-img" id="foto" src="{{ receipt.file.url }}" alt="{{ receipt_label }}">
     {% endif %}
     {% comment %}"Opnieuw": a new photo in place of this one (photo_upload,
-    vervangt). Its own form: forms can't nest. data-camera: app.js sends it
+    vervangt); for a PDF the phone's own chooser, not the camera. Its own
+    form: forms can't nest. data-camera: app.js sends it
     as soon as it is taken, and says so when Huismus can't be reached. The
     old photo goes only once the new one is in.{% endcomment %}
     <form class="photo-again" method="post" action="{{ upload_url }}" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="hidden" name="vervangt" value="{{ receipt.pk }}">
         <label class="btn btn-sm">
-            <input class="sr-only" type="file" name="file" accept="image/*" capture="environment" data-camera required>
+            <input class="sr-only" type="file" name="file" {% if receipt.is_pdf %}accept="image/*,application/pdf"{% else %}accept="image/*" capture="environment"{% endif %} data-camera required>
             <svg class="i i-sm" aria-hidden="true"><use href="#refresh"></use></svg>{% translate "Opnieuw" %}
         </label>
         <noscript><button type="submit" class="btn btn-sm">{% translate "Foto versturen" %}</button></noscript>

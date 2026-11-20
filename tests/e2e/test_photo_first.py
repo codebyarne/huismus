@@ -1,8 +1,8 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """A new expense on a phone, the photo first (#188; app.js, "The photo
-first"; huismus/expenses/photo_views.py): "Uitgave" opens the camera, the
-photo goes into the tray, then the amount. Without a connection the photo
+first"; huismus/expenses/photo_views.py): "Uitgave" opens a choice, "Foto maken" the
+camera, the photo goes into the tray, then the amount. Without a connection the photo
 stays to send again. On a wide screen "Uitgave" is the ordinary form."""
 
 import io
@@ -12,7 +12,7 @@ import pytest
 from PIL import Image
 from playwright.sync_api import expect
 
-from huismus.core.demo_receipts import _photo
+from huismus.core.demo_receipts import _pdf, _photo
 from huismus.core.models import Attachment
 from huismus.expenses.models import Expense
 from tests.e2e.conftest import IGNORED
@@ -49,9 +49,12 @@ def phone(app, browser, browser_name):
 
 
 def _camera(page, tap):
-    """Taps `tap`, which must open the camera, and takes PHOTO."""
+    """Taps `tap`, which must open the choice, takes "Foto maken", which
+    must open the camera, and takes PHOTO."""
+    tap()
+    choice = page.get_by_role("dialog", name="Nieuwe uitgave")
     with page.expect_file_chooser() as chooser:
-        tap()
+        choice.get_by_text("Foto maken").tap()
     assert chooser.value.element.get_attribute("capture") == "environment"
     chooser.value.set_files(PHOTO)
 
@@ -98,8 +101,9 @@ def test_a_photo_from_the_camera_is_sent_smaller(phone):
     photo = _camera_photo()
     assert len(photo) > 2_000_000
     phone.goto(phone.base + "/uitgaven/")
+    phone.get_by_role("link", name="Nieuwe uitgave").first.tap()
     with phone.expect_file_chooser() as chooser:
-        phone.get_by_role("link", name="Nieuwe uitgave").first.tap()
+        phone.get_by_role("dialog").get_by_text("Foto maken").tap()
     chooser.value.set_files({"name": "IMG_3002.jpeg", "mimeType": "image/jpeg", "buffer": photo})
 
     expect(phone.get_by_role("img", name="Bonnetje IMG_3002.jpg")).to_be_visible()
@@ -120,7 +124,10 @@ def test_opnieuw_and_only_the_photo(phone):
     # nobody to send it (Firefox in CI, twice on 2026-11-18).
     phone.wait_for_load_state("load")
 
-    _camera(phone, lambda: phone.locator(".photo-again label").tap())
+    with phone.expect_file_chooser() as chooser:
+        phone.locator(".photo-again label").tap()
+    assert chooser.value.element.get_attribute("capture") == "environment"
+    chooser.value.set_files(PHOTO)
     expect(phone).not_to_have_url(phone.base + f"/uitgaven/nieuw/foto/{first}/")
     assert Attachment.objects.in_tray().count() == 1
     assert Attachment.objects.get().pk != first
@@ -159,15 +166,50 @@ def test_a_refused_photo_opens_the_ordinary_form_with_the_reason(phone, monkeypa
     assert not Attachment.objects.exists()
 
 
-def test_closing_the_camera_opens_the_ordinary_form(phone):
+def test_closing_the_camera_leaves_the_choice(phone):
+    # Owner, 2026-11-20: "Uitgave" went to the camera too fast. A choice
+    # first, and closing the camera comes back to it.
     phone.goto(phone.base + "/uitgaven/")
+    phone.get_by_role("link", name="Nieuwe uitgave").first.tap()
+    choice = phone.get_by_role("dialog", name="Nieuwe uitgave")
     with phone.expect_file_chooser():
-        phone.get_by_role("link", name="Nieuwe uitgave").first.tap()
+        choice.get_by_text("Foto maken").tap()
     # What the browser does when the camera is closed without a photo.
-    phone.locator("#camera input[type=file]").dispatch_event("cancel")
+    choice.locator("input[capture]").dispatch_event("cancel")
+    expect(choice).to_be_visible()
+    expect(phone).to_have_url(phone.base + "/uitgaven/")
+
+    choice.get_by_role("button", name="Sluiten").tap()
+    expect(choice).to_be_hidden()
+    assert not Attachment.objects.exists()
+
+
+def test_without_a_receipt_is_the_ordinary_form(phone):
+    phone.goto(phone.base + "/uitgaven/")
+    phone.get_by_role("link", name="Nieuwe uitgave").first.tap()
+    phone.get_by_role("dialog", name="Nieuwe uitgave").get_by_role(
+        "link", name="Zonder bonnetje"
+    ).tap()
     expect(phone).to_have_url(phone.base + "/uitgaven/nieuw/")
     expect(phone.get_by_text("Sleep een bonnetje hierheen")).to_be_visible()
-    assert not Attachment.objects.exists()
+
+
+def test_a_file_the_phone_has_goes_the_same_way(phone):
+    phone.goto(phone.base + "/uitgaven/")
+    phone.get_by_role("link", name="Nieuwe uitgave").first.tap()
+    choice = phone.get_by_role("dialog", name="Nieuwe uitgave")
+    with phone.expect_file_chooser() as chooser:
+        choice.get_by_text("Foto of bestand kiezen").tap()
+    # The phone's own chooser, not the camera, and a PDF too.
+    assert chooser.value.element.get_attribute("capture") is None
+    pdf = {"name": "factuur.pdf", "mimeType": "application/pdf", "buffer": _pdf([["TOTAAL 12,00"]])}
+    chooser.value.set_files(pdf)
+
+    expect(phone.locator("h1")).to_have_text("Nieuwe uitgave")
+    expect(phone.locator(".photo-shot")).to_contain_text("factuur.pdf")
+    assert Attachment.objects.in_tray().get().filename == "factuur.pdf"
+    # "Opnieuw" for a PDF: the chooser again, not the camera.
+    assert phone.locator(".photo-again input[type=file]").get_attribute("capture") is None
 
 
 def test_on_a_wide_screen_uitgave_is_the_ordinary_form(app):
