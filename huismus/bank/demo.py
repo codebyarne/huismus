@@ -52,7 +52,7 @@ def demo_statement(booked_on: date) -> bytes:
             booked_on,
             "Verhuur Opslag Noord",
             "Terugbetaling borg",
-            iban="NL20INGB0001234567",
+            iban="NL20TEST0001234567",
         ),
         _entry(4599, booked_on, "Telefoonwinkel", "Abonnement", credit=False),
     ]

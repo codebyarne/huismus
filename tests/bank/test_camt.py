@@ -25,7 +25,7 @@ def test_a_single_credit_with_payer_iban_and_text():
     assert first.booked_on == date(2026, 11, 14)
     assert first.amount_cents == 121000
     assert first.counterparty_name == "Bakkerij De Korst B.V."
-    assert first.counterparty_iban == "NL02RABO0123456789"
+    assert first.counterparty_iban == "NL02TEST0123456788"
     assert first.description == "Factuur 2026-015 dank je wel"
 
 
@@ -53,7 +53,7 @@ def test_version_001_08_reads_the_same():
     (line,) = _read("camt053-001-08.xml").lines
     assert line.booked_on == date(2026, 11, 13)
     assert line.counterparty_name == "J. de Vries"
-    assert line.counterparty_iban == "NL20INGB0001234567"
+    assert line.counterparty_iban == "NL20TEST0001234567"
     assert line.description == "2026-016"
     assert line.amount_cents == 60500
 

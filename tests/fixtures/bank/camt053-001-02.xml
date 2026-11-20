@@ -17,7 +17,7 @@
           <Refs><EndToEndId>NOTPROVIDED</EndToEndId></Refs>
           <RltdPties>
             <Dbtr><Nm>Bakkerij De Korst B.V.</Nm></Dbtr>
-            <DbtrAcct><Id><IBAN>NL02RABO0123456789</IBAN></Id></DbtrAcct>
+            <DbtrAcct><Id><IBAN>NL02TEST0123456788</IBAN></Id></DbtrAcct>
           </RltdPties>
           <RmtInf><Ustrd>Factuur 2026-015</Ustrd><Ustrd> dank je wel</Ustrd></RmtInf>
         </TxDtls></NtryDtls>

@@ -99,8 +99,8 @@ def test_amount_and_name_is_proposed():
 
 
 def test_the_customers_iban_from_the_contact_counts():
-    invoice = _invoice(60500, company="Studio Noord", iban="NL02 RABO 0123 4567 89")
-    _read(_camt(("605.00", "S. Noordhuis", "bedankt", "NL02RABO0123456789")))
+    invoice = _invoice(60500, company="Studio Noord", iban="NL02 TEST 0123 4567 88")
+    _read(_camt(("605.00", "S. Noordhuis", "bedankt", "NL02TEST0123456788")))
     assert BankTransaction.objects.get().proposed_document == invoice
 
 

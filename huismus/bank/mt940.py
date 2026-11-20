@@ -98,7 +98,7 @@ def read(data: bytes) -> Statement:
 
 
 def _account(text: str) -> str:
-    """'NL91INGB0001234567EUR', 'NL91RABO0123456789 EUR', '417164300' or
+    """'NL91TEST0001234567EUR', 'NL91TEST0123456789 EUR', '417164300' or
     'TRIODOSBANK/0390123456': the IBAN when there is one."""
     text = text.strip().split(" ")[0]
     if text.endswith("EUR") and _IBAN.match(text[:-3]):

@@ -42,6 +42,9 @@ flowchart TB
     subgraph imports
         ImportedRow --> |run| ImportRun
     end
+    subgraph bank
+        BankTransaction --> |statement| BankStatement
+    end
     subgraph assistants
         MCP["geen modellen<br/>(MCP op /mcp)"]
     end
@@ -53,6 +56,8 @@ flowchart TB
     Document --> |contact| Contact
     Attachment --> |"document (óf)"| Document
     Attachment --> |"expense (óf)"| Expense
+    BankTransaction --> |"payment (1-1)"| Payment
+    BankTransaction --> |proposed_document| Document
     UserPreferences --> |"1-1"| User
 ```
 
@@ -93,6 +98,11 @@ uit het diagram haalt:
   De regels van een verstuurde factuur komen uit zijn UBL-bestand als dat
   bij de factuur past, anders uit de Excel-export (`huismus/imports/ubl.py`):
   zo krijgen facturen met prijzen inclusief btw de prijzen zonder btw.
+- **`BankTransaction`** is één bijschrijving uit een ingelezen bankafschrift
+  (`BankStatement`, M23). Boekt Huismus hem op een factuur, dan is dat een
+  gewone `Payment`; de bijschrijving wijst ernaar (`payment`), zodat Huismus
+  weet welke betalingen het zelf boekte en alleen die terugdraait. Wat er op
+  een factuur openstaat, blijft `Document.outstanding_cents`.
 - `SPEC.md` noemt ook een `AuditLog`; die bestaat nog niet.
 
 ## Wat doet welke app

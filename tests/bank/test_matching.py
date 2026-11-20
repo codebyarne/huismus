@@ -31,7 +31,7 @@ NOORD = OpenInvoice(
     number="2026-016",
     outstanding_cents=60500,
     names=("Studio Noord", "Anna Jansen"),
-    ibans=("NL02RABO0123456789",),
+    ibans=("NL02TEST0123456788",),
 )
 ZUID = OpenInvoice(
     pk=3, number="2026-017", outstanding_cents=60500, names=("Studio Zuid",), ibans=()
@@ -111,7 +111,7 @@ def test_the_name_may_be_part_of_the_bank_name_and_legal_forms_dont_count():
 
 
 def test_the_customers_iban_counts_as_the_name():
-    result = match(_line(60500, name="A. JANSEN", iban="NL02RABO0123456789"), OPEN)
+    result = match(_line(60500, name="A. JANSEN", iban="NL02TEST0123456788"), OPEN)
     assert (result.kind, result.invoice) == (LIKELY, NOORD)
 
 
