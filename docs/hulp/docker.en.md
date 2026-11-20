@@ -153,3 +153,73 @@ Then start Huismus: `docker compose up -d`.
 
 If Huismus does start, you can also do it in the app: **Settings → Backups
 → Restore a backup…**.
+
+## Running a preview
+
+Want to see what's in the next version before it's out? Run the preview:
+the image `ghcr.io/codebyarne/huismus:main`. It's built again after every
+change to Huismus that passes all the tests. So it can hold something that
+doesn't work well yet.
+
+That's why you run the preview next to your regular Huismus, with its own
+data, and not instead of it. A preview can change the database. After that
+you can't go back to the regular version without restoring a backup.
+
+Make a new folder, for example `huismus-voorproef`, and put this
+`compose.yaml` in it:
+
+```yaml
+services:
+  huismus:
+    image: ghcr.io/codebyarne/huismus:main
+    restart: unless-stopped
+    environment:
+      ALLOWED_HOSTS: voorproef.local
+      DJANGO_SUPERUSER_USERNAME: <username>
+      DJANGO_SUPERUSER_PASSWORD: <password>
+    volumes:
+      - voorproef-data:/app/data
+      - /path/to/your/backup-folder:/backups:ro
+    ports:
+      - "127.0.0.1:8001:8000"
+volumes:
+  voorproef-data:
+```
+
+Start it in that folder with `docker compose up -d`. You get the newest
+preview the way you do under [Updating](#updating): `docker compose pull`
+and `docker compose up -d`.
+
+What differs from your regular Huismus:
+
+- `voorproef-data` is its own place for the data. The preview doesn't
+  touch your real administration.
+- `ALLOWED_HOSTS` is a different name from your regular Huismus. With the
+  same name, signing in to one signs you out of the other.
+- `:ro` after the backup folder: the preview can read your backups, but
+  can't add or change anything there.
+- `8001` is its own port. Have your reverse proxy send the new name there.
+
+### Your own administration in the preview
+
+The preview starts empty. Want to test with your own administration?
+Restore a backup of your regular Huismus in the preview. You find the
+file's name in your backup folder:
+
+```
+docker compose run --rm --entrypoint python huismus manage.py restore /backups/huismus-backup-<date>-<time>.tar.gz --yes
+docker compose up -d
+```
+
+After that you sign in with the name and password of your regular Huismus.
+
+Your mail password and your links to the cloud and to AI assistants don't
+travel in a backup. So the preview doesn't mail your customers. It does ask
+for a backup folder on the overview. Don't choose one: it's a copy.
+
+An invoice you make in the preview isn't in your real administration. And
+once the preview has changed the database, you can't restore a backup of
+the preview in your regular Huismus.
+
+Done testing? `docker compose down -v` in the preview's folder removes it,
+along with its data.

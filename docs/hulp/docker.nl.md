@@ -153,3 +153,74 @@ Start Huismus daarna: `docker compose up -d`.
 
 Start Huismus wel, dan kan het ook in de app: **Instellingen → Back-ups →
 Een back-up terugzetten…**.
+
+## Een voorproef draaien
+
+Wil je zien wat er in de volgende versie komt, voordat die uit is? Dan
+draai je de voorproef: de image `ghcr.io/codebyarne/huismus:main`. Die
+wordt opnieuw gemaakt na elke wijziging aan Huismus die door alle tests
+komt. Er kan dus iets in zitten wat nog niet goed werkt.
+
+Draai de voorproef daarom naast je gewone Huismus, met eigen gegevens, en
+niet in plaats daarvan. Een voorproef kan de database aanpassen. Daarna kun
+je niet terug naar de gewone versie zonder een back-up terug te zetten.
+
+Maak een nieuwe map, bijvoorbeeld `huismus-voorproef`, en zet daar dit
+`compose.yaml` in:
+
+```yaml
+services:
+  huismus:
+    image: ghcr.io/codebyarne/huismus:main
+    restart: unless-stopped
+    environment:
+      ALLOWED_HOSTS: voorproef.local
+      DJANGO_SUPERUSER_USERNAME: <gebruikersnaam>
+      DJANGO_SUPERUSER_PASSWORD: <wachtwoord>
+    volumes:
+      - voorproef-data:/app/data
+      - /pad/naar/je/backupmap:/backups:ro
+    ports:
+      - "127.0.0.1:8001:8000"
+volumes:
+  voorproef-data:
+```
+
+Start hem in die map met `docker compose up -d`. De nieuwste voorproef
+haal je op zoals bij [Bijwerken](#bijwerken): `docker compose pull` en
+`docker compose up -d`.
+
+Wat anders is dan bij je gewone Huismus:
+
+- `voorproef-data` is een eigen plek voor de gegevens. De voorproef komt
+  niet aan je echte administratie.
+- `ALLOWED_HOSTS` is een andere naam dan die van je gewone Huismus. Met
+  dezelfde naam logt de een je uit zodra je bij de ander inlogt.
+- `:ro` achter de back-upmap: de voorproef kan je back-ups lezen, maar er
+  niets in zetten of veranderen.
+- `8001` is een eigen poort. Laat je reverse proxy de nieuwe naam daarheen
+  sturen.
+
+### Je eigen administratie in de voorproef
+
+De voorproef begint leeg. Testen met je eigen administratie? Zet dan een
+back-up van je gewone Huismus terug in de voorproef. De naam van het
+bestand vind je in je back-upmap:
+
+```
+docker compose run --rm --entrypoint python huismus manage.py restore /backups/huismus-backup-<datum>-<tijd>.tar.gz --yes
+docker compose up -d
+```
+
+Daarna log je in met de naam en het wachtwoord van je gewone Huismus.
+
+Je mailwachtwoord en je koppelingen met de cloud en met AI-assistenten gaan
+niet mee in een back-up. De voorproef mailt je klanten dus niet. Hij vraagt
+op het overzicht wel om een back-upmap. Kies er geen: het is een kopie.
+
+Een factuur die je in de voorproef maakt, staat niet in je echte
+administratie. En heeft de voorproef de database aangepast, dan kun je een
+back-up van de voorproef niet terugzetten in je gewone Huismus.
+
+Klaar met testen? `docker compose down -v` in de map van de voorproef
+haalt hem weg, met zijn gegevens.

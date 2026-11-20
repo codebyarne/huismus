@@ -105,6 +105,13 @@ De Raspberry Pi van de eigenaar is een gewone Docker-installatie (besluit
 `docs/hulp/docker.nl.md`. Huismus zelf is nooit vanaf internet bereikbaar.
 Adres van de Pi: `huismus-intern/werkwijze.md`.
 
+Eerder proberen dan een release kan met de voorproef (besluit eigenaar
+2026-11-20): na elke merge naar `main` die in CI groen is, bouwt de job
+`voorproef` in `ci.yml` het image `ghcr.io/codebyarne/huismus:main`. Dat is
+geen release: `:latest` en de versietags blijven van `release.yml`. De
+voorproef draait naast de echte installatie, op eigen gegevens
+(`docs/hulp/docker.nl.md`, "Een voorproef draaien").
+
 We streven naar **een release ongeveer elke twee weken**, zonder vaste dag en
 zonder harde frequentie (besluit eigenaar 2026-11-12; verving "elke woensdag"):
 Claude maakt dan zelf een release van wat er sinds de vorige release op `main` kwam
