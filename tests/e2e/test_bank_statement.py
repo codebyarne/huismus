@@ -67,7 +67,9 @@ def test_read_confirm_pick_undo_skip_and_read_again(app, history, tmp_path):
     app.get_by_role("button", name="Alles overslaan").click()
     expect(app.locator("#zelf-kiezen")).to_have_count(0)
     app.get_by_role("link", name="Overgeslagen (2)").click()
-    app.locator("li", has_text="Terugbetaling borg").get_by_role("button", name="Terugzetten").click()
+    app.locator("li", has_text="Terugbetaling borg").get_by_role(
+        "button", name="Terugzetten"
+    ).click()
     expect(app.locator("li", has_text="Terugbetaling borg")).to_have_count(0)
 
     # On the overview, first in Te doen.

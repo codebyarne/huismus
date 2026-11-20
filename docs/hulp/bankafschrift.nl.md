@@ -55,4 +55,25 @@ Huismus bewaart elk afschrift dat je inleest. Het gaat mee in je back-ups.
 
 ## Waar je het afschrift vindt
 
-BANKEN
+Zo heet het bij de banken zelf (nagekeken op 20 november 2026). Kies
+**CAMT.053** als je bank het heeft, anders **MT940**.
+
+- **ING:** bij een zakelijke rekening, in Mijn ING Zakelijk. Een particuliere
+  rekening bij ING geeft alleen CSV en pdf. Die leest Huismus niet; registreer
+  een betaling dan op de factuur.
+- **Rabobank:** **Transacties downloaden** › je rekening › kies het
+  downloadformaat CAMT.053 en de periode › **Downloaden**. "Vanaf de laatste
+  download" kan ook.
+- **ABN AMRO:** **Zelf regelen** › **Bij- en afschrijvingen downloaden** ›
+  rekening › periode › CAMT.053. In de app: Profiel › Rekeningen en betalen ›
+  Afschriften en jaaroverzicht.
+- **bunq:** Profiel › Accounting › **Export Statement**, en kies MT940. bunq
+  heeft geen CAMT.053.
+- **Knab, Triodos:** download de transacties als CAMT.053.
+- **SNS, ASN, RegioBank:** **transacties downloaden** (RegioBank: **Bij- en
+  afschrijvingen downloaden**) › CAMT.053 › **Downloaden**. Je krijgt een zip;
+  uitpakken is niet nodig.
+- **Revolut Business:** Statements › Account statement › kies je
+  euro-rekening, de periode en XML (CAMT.053) › **Generate**.
+
+Huismus leest alleen bedragen in euro's.
