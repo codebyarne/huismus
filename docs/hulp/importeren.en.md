@@ -112,6 +112,11 @@ template. Give it the template and your export, and ask it to fill the
 files. You then let that service read your books. The trial run shows whether
 the result is right: every total is checked to the cent.
 
+For each package there's a guide with instructions you can copy as they are:
+[Rompslomp](rompslomp.en.md), [Tellow](tellow.en.md),
+[e-Boekhouden.nl](e-boekhouden.en.md), [Jortt](jortt.en.md) and
+[Excel](excel.en.md).
+
 ## Importing an export from Huismus
 
 The zip from **Settings → Export** has the same form as the template. That

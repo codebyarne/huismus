@@ -70,6 +70,45 @@ def test_no_code_block_inside_a_list(slug, language):
     assert not re.search(r"<code>[^<]*\n", outside_blocks)
 
 
+def _instructions(slug: str, language: str) -> str:
+    """The one block of instructions for an AI assistant on a package page."""
+    blocks = re.findall(r"^```text\n(.*?)^```$", help.source(slug, language), re.M | re.S)
+    assert len(blocks) == 1, slug
+    return blocks[0]
+
+
+@pytest.mark.parametrize("language", help.LANGUAGES)
+def test_every_package_page_gives_the_assistant_the_same_rules(language):
+    """Each package page has its own copy of the instructions, to copy in one
+    go (issue #164). Only what goes where differs per package; the rules
+    after SHARED_INSTRUCTIONS must not drift apart between the copies."""
+    marker = help.SHARED_INSTRUCTIONS[language]
+    shared = set()
+    for slug in help.PACKAGES:
+        instructions = _instructions(slug, language)
+        assert instructions.count(marker) == 1, slug
+        shared.add(instructions[instructions.index(marker) :])
+    assert len(shared) == 1
+
+
+@pytest.mark.parametrize("language", help.LANGUAGES)
+def test_the_instructions_name_the_files_of_the_template(language):
+    """An assistant fills the template's files by name: a name the template
+    doesn't have would be a file Huismus never reads."""
+    from django.utils import translation
+
+    from huismus.imports import csv_template
+
+    with translation.override(language):
+        template_files = {name + ".csv" for name, _header, _rows in csv_template._files()}
+        readme = csv_template.readme_name()
+    for slug in help.PACKAGES:
+        instructions = _instructions(slug, language)
+        named = set(re.findall(r"[a-z-]+\.csv", instructions))
+        assert named <= template_files, (slug, named - template_files)
+        assert readme in instructions, slug
+
+
 def test_a_link_to_another_help_file_becomes_its_page():
     html = help.render("desktop-app", "nl").html
     assert 'href="/hulp/back-ups/"' in html
