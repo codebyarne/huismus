@@ -42,16 +42,22 @@ def summary_text(summary: dict) -> str:
         ngettext("%(count)s bijschrijving gelezen.", "%(count)s bijschrijvingen gelezen.", read)
         % {"count": read}
     ]
+    # Literal ngettext calls, so makemessages finds every text.
+    texts = {
+        "booked": lambda n: ngettext("%(count)s geboekt", "%(count)s geboekt", n),
+        "proposed": lambda n: ngettext(
+            "%(count)s om te bevestigen", "%(count)s om te bevestigen", n
+        ),
+        "open": lambda n: ngettext("%(count)s om zelf te kiezen", "%(count)s om zelf te kiezen", n),
+        "already_booked": lambda n: ngettext(
+            "%(count)s stond al geboekt", "%(count)s stonden al geboekt", n
+        ),
+    }
     parts = []
-    for key, singular, plural in (
-        ("booked", "%(count)s geboekt", "%(count)s geboekt"),
-        ("proposed", "%(count)s om te bevestigen", "%(count)s om te bevestigen"),
-        ("open", "%(count)s om zelf te kiezen", "%(count)s om zelf te kiezen"),
-        ("already_booked", "%(count)s stond al geboekt", "%(count)s stonden al geboekt"),
-    ):
+    for key, text in texts.items():
         count = summary.get(key, 0)
         if count:
-            parts.append(ngettext(singular, plural, count) % {"count": count})
+            parts.append(text(count) % {"count": count})
     if parts:
         sentences.append(_capitalize(", ".join(parts)) + ".")
     seen = summary.get("seen_before", 0)

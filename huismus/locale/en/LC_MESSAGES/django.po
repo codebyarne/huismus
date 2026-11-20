@@ -8952,3 +8952,222 @@ msgstr "An export from Huismus is laid out the same way. That is how you take yo
 
 #~ msgid "Toon actieve contacten"
 #~ msgstr "Show active contacts"
+
+msgid "bestandsnaam"
+msgstr "file name"
+
+msgid "formaat"
+msgstr "format"
+
+msgid "samenvatting"
+msgstr "summary"
+
+msgid "bankafschrift"
+msgstr "bank statement"
+
+msgid "bankafschriften"
+msgstr "bank statements"
+
+msgid "geboekt door Huismus"
+msgstr "recorded by Huismus"
+
+msgid "geboekt door jou"
+msgstr "recorded by you"
+
+msgid "stond al geboekt"
+msgstr "already recorded"
+
+msgid "voorstel"
+msgstr "proposal"
+
+msgid "open"
+msgstr "open"
+
+msgid "rekening"
+msgstr "account"
+
+msgid "tegenrekening"
+msgstr "payer account"
+
+msgid "betalingskenmerk"
+msgstr "payment reference"
+
+msgid "referentie van de bank"
+msgstr "bank reference"
+
+msgid "vingerafdruk"
+msgstr "fingerprint"
+
+msgid "voorgestelde factuur"
+msgstr "proposed invoice"
+
+msgid "bijschrijving"
+msgstr "incoming payment"
+
+msgid "bijschrijvingen"
+msgstr "incoming payments"
+
+msgid ""
+"Huismus herkent dit bestand niet als bankafschrift. Download het bij je bank "
+"als CAMT.053 of MT940."
+msgstr ""
+"Huismus doesn't recognise this file as a bank statement. Download it from "
+"your bank as CAMT.053 or MT940."
+
+msgid "%(count)s bijschrijving gelezen."
+msgid_plural "%(count)s bijschrijvingen gelezen."
+msgstr[0] "Read %(count)s incoming payment."
+msgstr[1] "Read %(count)s incoming payments."
+
+msgid "%(count)s geboekt"
+msgid_plural "%(count)s geboekt"
+msgstr[0] "%(count)s recorded"
+msgstr[1] "%(count)s recorded"
+
+msgid "%(count)s om te bevestigen"
+msgid_plural "%(count)s om te bevestigen"
+msgstr[0] "%(count)s to confirm"
+msgstr[1] "%(count)s to confirm"
+
+msgid "%(count)s om zelf te kiezen"
+msgid_plural "%(count)s om zelf te kiezen"
+msgstr[0] "%(count)s to pick"
+msgstr[1] "%(count)s to pick"
+
+msgid "%(count)s stond al geboekt"
+msgid_plural "%(count)s stonden al geboekt"
+msgstr[0] "%(count)s already recorded"
+msgstr[1] "%(count)s already recorded"
+
+msgid "%(count)s was al ingelezen."
+msgid_plural "%(count)s waren al ingelezen."
+msgstr[0] "%(count)s was read before."
+msgstr[1] "%(count)s were read before."
+
+msgid "Van rekening %(iban)s."
+msgstr "From account %(iban)s."
+
+msgid "Niets nieuws: alle bijschrijvingen in dit bestand waren al ingelezen."
+msgstr "Nothing new: every incoming payment in this file was read before."
+
+msgid "Kies een factuur."
+msgstr "Pick an invoice."
+
+msgid "Betaling geboekt op factuur %(number)s."
+msgstr "Payment recorded on invoice %(number)s."
+
+msgid "Betaling teruggedraaid. Hij staat weer bij Zelf kiezen."
+msgstr "Payment undone. It's back under Pick an invoice."
+
+msgid "%(count)s betaling uit je bankafschrift wacht op je"
+msgid_plural "%(count)s betalingen uit je bankafschrift wachten op je"
+msgstr[0] "%(count)s payment from your bank statement is waiting for you"
+msgstr[1] "%(count)s payments from your bank statement are waiting for you"
+
+msgid "Bevestig of kies de factuur."
+msgstr "Confirm or pick the invoice."
+
+msgid "Kies een factuur…"
+msgstr "Pick an invoice…"
+
+msgid "open %(open)s"
+msgstr "%(open)s open"
+
+msgid "Boeken"
+msgstr "Record"
+
+msgid "Zo haal je je afschrift bij de bank"
+msgstr "How to get your statement from the bank"
+
+msgid ""
+"Download het afschrift in je internetbankieren als CAMT.053 of MT940. Kies de"
+" periode sinds je vorige keer; een periode die overlapt is geen probleem."
+msgstr ""
+
+msgid "Bankafschrift inlezen"
+msgstr "Import bank statement"
+
+msgid ""
+"Bijschrijvingen die je oversloeg. Zet je er een terug, dan staat hij weer bij"
+" Zelf kiezen."
+msgstr ""
+"Incoming payments you skipped. Restore one and it's back under Pick an "
+"invoice."
+
+msgid "Je hebt niets overgeslagen."
+msgstr "You haven't skipped anything."
+
+msgid ""
+"Lees het afschrift van je bank in. Huismus kijkt welke facturen betaald zijn "
+"en boekt wat zeker is."
+msgstr ""
+"Import the statement from your bank. Huismus looks at which invoices were "
+"paid and records what is certain."
+
+msgid "Klopt dit?"
+msgstr "Is this right?"
+
+msgid "Factuur %(number)s · %(customer)s · open %(open)s"
+msgstr "Invoice %(number)s · %(customer)s · %(open)s open"
+
+msgid "%(amount)s meer dan er open staat."
+msgstr "%(amount)s more than is open."
+
+msgid "%(amount)s minder dan er open staat. De rest blijft open."
+msgstr "%(amount)s less than is open. The rest stays open."
+
+msgid "Bevestigen"
+msgstr "Confirm"
+
+msgid "Andere factuur"
+msgstr "Other invoice"
+
+msgid "Zelf kiezen"
+msgstr "Pick an invoice"
+
+msgid ""
+"Deze betaling noemt meer dan één factuur. Registreer hem dan zelf op elke "
+"factuur en sla hem hier over."
+msgstr ""
+"This payment mentions more than one invoice. Record it on each invoice "
+"yourself and skip it here."
+
+msgid "Alles overslaan"
+msgstr "Skip all"
+
+msgid "Geboekt"
+msgstr "Recorded"
+
+msgid "Terugdraaien"
+msgstr "Undo"
+
+msgid "Stond al geboekt"
+msgstr "Already recorded"
+
+msgid "Sleep je bankafschrift hierheen"
+msgstr "Drag your bank statement here"
+
+msgid "CAMT.053 of MT940, of een zip met meer afschriften."
+msgstr "CAMT.053 or MT940, or a zip with more statements."
+
+msgid "Bestand kiezen"
+msgstr "Choose file"
+
+msgid "Inlezen"
+msgstr "Import"
+
+msgid ""
+"Hetzelfde afschrift nog een keer inlezen verandert niets. Elke betaling die "
+"Huismus boekt, kun je terugdraaien."
+msgstr ""
+"Importing the same statement again changes nothing. You can undo every "
+"payment Huismus records."
+
+msgid "Overgeslagen (%(count)s)"
+msgstr "Skipped (%(count)s)"
+
+msgid "Te veel betaald"
+msgstr "Paid too much"
+
+msgid "uit bankafschrift: %(name)s"
+msgstr "from bank statement: %(name)s"
