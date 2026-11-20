@@ -132,6 +132,26 @@ def test_make_expenses_of_three_receipts_one_after_the_other(app, tmp_path):
     assert Expense.objects.count() == 3
 
 
+def test_the_pdf_beside_the_fields_leaves_the_cursor_where_it_is(app, tmp_path):
+    # #137: the browser's PDF viewer takes the cursor when it has loaded.
+    # Whoever was typing the amount by then, typed the rest into the PDF.
+    folder = tmp_path / "bonnetjes"
+    folder.mkdir()
+    inbox.choose_folder(folder)
+    (folder / "een.pdf").write_bytes(PDF)
+    inbox.fetch()
+    receipt = Attachment.objects.in_tray().get()
+
+    app.goto(app.base + f"/uitgaven/verwerken/bonnetje/{receipt.pk}/", wait_until="commit")
+    amount = app.locator("[name='lines-0-amount_cents']")
+    amount.focus()
+    expect(app.locator("iframe.process-pdf")).to_have_attribute("src", receipt.file.url)
+    app.wait_for_load_state("load")
+    # The viewer starts after the frame's own load.
+    app.wait_for_timeout(1000)
+    expect(amount).to_be_focused()
+
+
 def test_the_receipts_button_counts_what_waits(app, tmp_path):
     folder = tmp_path / "bonnetjes"
     folder.mkdir()

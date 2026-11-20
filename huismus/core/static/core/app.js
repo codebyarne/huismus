@@ -739,10 +739,41 @@ document.addEventListener("change", (event) => {
 // frame, Android often nothing. Without JS: the file's name and "Bonnetje
 // openen", as on a phone.
 const wideScreen = window.matchMedia("(min-width: 981px)");
+
+// The browser's PDF viewer takes the cursor once it has started, a moment
+// after the frame loaded: whoever was typing the amount by then, typed the
+// rest into the PDF (#137). Until VIEWER_STARTS_MS after the frame's load,
+// focus that lands on the frame goes back to where it was.
+const VIEWER_STARTS_MS = 2000;
+function keepFocusHere(frame) {
+  // A field can have the cursor already, from before this script ran.
+  let last = document.activeElement === document.body ? null : document.activeElement;
+  const remember = (event) => {
+    if (event.target !== frame) last = event.target;
+  };
+  const giveBack = () =>
+    setTimeout(() => {
+      if (document.activeElement !== frame) return;
+      if (last?.isConnected) last.focus();
+      else frame.blur();
+    }, 0);
+  document.addEventListener("focusin", remember);
+  // Focus that moves into a frame is a blur of this window.
+  window.addEventListener("blur", giveBack);
+  const stop = () => {
+    document.removeEventListener("focusin", remember);
+    window.removeEventListener("blur", giveBack);
+  };
+  frame.addEventListener("load", () => setTimeout(stop, VIEWER_STARTS_MS), { once: true });
+}
+
 function showReceiptPdfs(root) {
   for (const frame of root.querySelectorAll("iframe[data-wide-src]")) {
     const wide = wideScreen.matches;
-    if (wide && !frame.src) frame.src = frame.dataset.wideSrc;
+    if (wide && !frame.src) {
+      keepFocusHere(frame);
+      frame.src = frame.dataset.wideSrc;
+    }
     frame.hidden = !wide;
     const file = frame.parentElement.querySelector("[data-pdf-file]");
     if (file) file.hidden = wide;
