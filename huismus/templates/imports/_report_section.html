@@ -3,10 +3,10 @@
 `r` is the report dict with counts (imports.views._with_counts), `title` its heading,
 `orphans_title` and `orphans_text` the heading and sentence for lines without a document.{% endcomment %}
 {% with issues=r.issue_count %}
-<details class="report{% if issues or r.missing_pdfs or r.missing_receipts %} is-warn{% endif %}"{% if issues %} open{% endif %}>
+<details class="report{% if r.warn %} is-warn{% endif %}"{% if issues %} open{% endif %}>
     <summary>
-        <span class="r-icon"><svg class="i" aria-hidden="true"><use href="#{% if issues or r.missing_pdfs or r.missing_receipts %}alert{% else %}check{% endif %}"></use></svg></span>
-        <span class="r-title"><strong>{{ title }}</strong><span>{% if issues %}{% blocktranslate count count=issues %}{{ count }} punt om na te lopen{% plural %}{{ count }} punten om na te lopen{% endblocktranslate %}{% else %}{% translate "Alle totalen kloppen tot op de cent" %}{% endif %}</span></span>
+        <span class="r-icon"><svg class="i" aria-hidden="true"><use href="#{% if r.warn %}alert{% else %}check{% endif %}"></use></svg></span>
+        <span class="r-title"><strong>{{ title }}</strong><span>{% if issues %}{% blocktranslate count count=issues %}{{ count }} punt om na te lopen{% plural %}{{ count }} punten om na te lopen{% endblocktranslate %}{% else %}{% translate "Alle totalen kloppen tot op de cent" %}{% if source == "csv" and r.missing_pdfs %}. {% blocktranslate with count=r.missing_pdfs|length %}{{ count }} zonder pdf.{% endblocktranslate %}{% elif source == "csv" and r.missing_receipts %}. {% blocktranslate with count=r.missing_receipts|length %}{{ count }} zonder bonnetje.{% endblocktranslate %}{% endif %}{% endif %}</span></span>
         <svg class="i chev" aria-hidden="true"><use href="#chevron-down"></use></svg>
     </summary>
     <div class="r-body">
@@ -21,7 +21,7 @@
         {% if r.skipped_missing_contact or r.skipped_no_lines %}
         <div class="stack" style="gap:8px"><h3>{% translate "Overgeslagen" %}</h3>
             <ul class="issue-list">
-                {% for number in r.skipped_missing_contact %}<li><span class="ref">{{ number }}</span><span>{% translate "De klant staat niet in het klantenbestand." %}</span><span class="pill pill-unpaid no-dot">{% translate "overgeslagen" %}</span></li>{% endfor %}
+                {% for number in r.skipped_missing_contact %}<li><span class="ref">{{ number }}</span><span>{% if source == "csv" %}{% translate "De klant staat niet in het klantenbestand en niet in Huismus." %}{% else %}{% translate "De klant staat niet in het klantenbestand." %}{% endif %}</span><span class="pill pill-unpaid no-dot">{% translate "overgeslagen" %}</span></li>{% endfor %}
                 {% for number in r.skipped_no_lines %}<li><span class="ref">{{ number }}</span><span>{% translate "Er staan geen regels voor in het regelbestand." %}</span><span class="pill pill-unpaid no-dot">{% translate "overgeslagen" %}</span></li>{% endfor %}
             </ul>
         </div>

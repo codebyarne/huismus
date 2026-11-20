@@ -205,3 +205,61 @@ def test_refused_and_skipped_documents_are_points_to_check(user_client):
     assert response.context["invoices"]["issue_count"] == 1
     assert "Geweigerd" in page
     assert "btw 21% in het bestand € 20,00, volgens de regels € 21,00" in page
+
+
+def _refusing_zip() -> bytes:
+    """One good invoice, one whose VAT per rate is wrong, no PDFs."""
+    content = io.BytesIO()
+    with zipfile.ZipFile(content, "w") as archive:
+        archive.writestr("klanten.csv", "klantnummer;bedrijfsnaam;achternaam\n7;Klant BV;\n")
+        archive.writestr(
+            "facturen.csv",
+            "soort;nummer;factuurdatum;klantnummer;bedrag excl. btw;btw;totaal incl. btw;btw 21%\n"
+            "factuur;2025-0001;2025-03-10;7;100,00;21,00;121,00;21,00\n"
+            "factuur;2025-0002;2025-03-10;7;100,00;21,00;121,00;20,00\n",
+        )
+        archive.writestr(
+            "regels.csv",
+            "soort;nummer;omschrijving;prijs per eenheid;btw-tarief (%)\n"
+            "factuur;2025-0001;Werk;100,00;21\nfactuur;2025-0002;Werk;100,00;21\n",
+        )
+    return content.getvalue()
+
+
+def test_the_done_page_still_names_what_was_refused(user_client):
+    token = user_client.post(
+        reverse("imports:upload_csv"), {"files": _upload(_refusing_zip())}
+    ).context["token"]
+
+    page = user_client.post(reverse("imports:commit"), {"token": token}).content.decode()
+
+    assert "1 geweigerde factuur verbeteren en opnieuw importeren" in page
+    assert "Factuur 2025-0002: btw 21% in het bestand € 20,00" in page
+    assert "Je bestanden staan bewaard in Huismus" in page
+    assert Document.objects.get().number == "2025-0001"
+
+
+def test_a_missing_pdf_alone_is_no_warning_for_this_format(user_client):
+    response = user_client.post(reverse("imports:upload_csv"), {"files": _upload()})
+
+    invoices = response.context["invoices"]
+    assert invoices["missing_pdfs"] == ["2026-0001"]
+    assert (invoices["issue_count"], invoices["warn"]) == (0, False)
+    assert "Alle totalen kloppen tot op de cent. 1 zonder pdf." in response.content.decode()
+
+
+def test_without_the_kor_lines_without_a_vat_rate_are_points_to_check(user_client):
+    settings = Settings.load()
+    settings.business_name = "Voorbeeld BV"
+    settings.kor_enabled = False
+    settings.save()
+    content = io.BytesIO()
+    with zipfile.ZipFile(content, "w") as archive:
+        archive.writestr("uitgaven.csv", "uitgavenummer;datum;bedrag (bruto)\n1;2025-02-02;12,10\n")
+
+    response = user_client.post(
+        reverse("imports:upload_csv"), {"files": _upload(content.getvalue())}
+    )
+
+    assert response.context["expenses"]["issue_count"] == 1
+    assert "1 uitgaveregel heeft geen btw-tarief" in response.content.decode()

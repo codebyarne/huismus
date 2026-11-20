@@ -43,7 +43,8 @@
         </section>
     </form>
     {% if tab == "csv" %}
-    <aside class="card card-pad stack" style="gap:var(--s-4);position:sticky;top:var(--s-6)">
+    {# aside-first: on a narrow screen the template comes before the drop zone. #}
+    <aside class="card card-pad stack aside-first" style="gap:var(--s-4);position:sticky;top:var(--s-6)">
         <h2>{% translate "Zo zet je je gegevens in het sjabloon" %}</h2>
         <ol class="how-to">
             <li><span>{% translate "Download het sjabloon: een zip met een bestand voor je klanten, facturen, offertes en uitgaven." %}</span></li>
@@ -52,7 +53,7 @@
             <li><span>{% translate "Maak er weer één zip van en sleep die naar het vak." %}</span></li>
         </ol>
         <div><a class="btn btn-secondary" href="{% url 'imports:template' %}" hx-boost="false" download><svg class="i" aria-hidden="true"><use href="#download"></use></svg>{% translate "Sjabloon downloaden" %}</a></div>
-        <p class="small muted">{% translate "Een export uit Huismus heeft dezelfde vorm. Zo neem je je administratie mee naar een nieuwe Huismus." %}</p>
+        <p class="small muted">{% translate "Een export uit Huismus is op dezelfde manier ingedeeld. Zo neem je je administratie mee naar een nieuwe Huismus." %}</p>
         <p class="small muted"><a href="{{ help_url }}">{% translate "Welke kolommen er zijn en hoe je ze invult" %} →</a></p>
     </aside>
     {% else %}

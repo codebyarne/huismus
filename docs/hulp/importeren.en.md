@@ -1,8 +1,8 @@
-# Switching from another package or Excel
+# Importing from another package or Excel
 
 Are your books in another package than Moneybird, or in Excel? Then you put
 your customers, invoices, quotes and expenses into Huismus's template and
-import them in one go. Huismus does a dry run first and only saves something
+import them in one go. Huismus does a trial run first and only saves something
 when you choose to.
 
 The import is meant for a Huismus that is still empty, or new. It doesn't
@@ -17,13 +17,13 @@ change what is already there.
    it with your own data and keep the first row with the column names.
 4. Remove a file you don't need. A column you don't need can go too, except
    the required ones below.
-5. Make one zip of it again and drag it to the box. Click **Start dry run**.
+5. Make one zip of it again and drag it to the box. Click **Start trial run**.
 
 Huismus skips an example you leave in.
 
-## What the dry run shows
+## What the trial run shows
 
-The dry run saves nothing. Per file you see what Huismus recognises, how many
+The trial run saves nothing. Per file you see what Huismus recognises, how many
 customers, invoices, quotes and expenses are new, and what is wrong:
 
 - **Refused**: an invoice whose revenue or VAT per rate differs from its
@@ -36,16 +36,20 @@ customers, invoices, quotes and expenses are new, and what is wrong:
   difference.
 - **Maybe double**: if there are expenses in Huismus already, the ones from
   the file are added. When a new expense has the same date and amount as an
-  existing one, the dry run names it. Huismus does import it; if it is
+  existing one, the trial run names it. Huismus does import it; if it is
   double, delete it afterwards.
+- **Without a VAT rate**: if you don't use the KOR, Huismus only counts the
+  VAT of an expense line in the VAT return report when the line has a VAT
+  rate. The trial run says how many lines have none. You choose the rate on
+  the expense afterwards.
 - **Note**: a column Huismus doesn't know, or a PDF or receipt that belongs
   nowhere.
 
-If it looks good, click **Import for real**. Import the same zip again later
-and nothing changes.
-
 Fill in your business details under **Settings** first. An imported invoice
 takes the business details of that moment.
+
+If it looks good, click **Import now**. Import the same zip again later
+and nothing changes.
 
 ## The files and their columns
 
@@ -74,7 +78,7 @@ required column is missing, the import stops and says which one.
 
 If you fill in **paid** and **last paid on** for an invoice, Huismus makes
 one payment of it. Without a date Huismus makes no payment: the invoice is
-then open, and the dry run names it.
+then open, and the trial run names it.
 
 ## Amounts, dates and characters
 
@@ -104,7 +108,7 @@ with ` | `.
 
 An AI assistant can convert the export of your old package into the
 template. Give it the template and your export, and ask it to fill the
-files. You then let that service read your books. The dry run shows whether
+files. You then let that service read your books. The trial run shows whether
 the result is right: every total is checked to the cent.
 
 ## Importing an export from Huismus

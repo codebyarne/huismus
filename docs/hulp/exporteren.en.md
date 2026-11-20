@@ -56,7 +56,7 @@ If a text starts with `=`, `+`, `-` or `@`, Huismus puts a `'` in front.
 Otherwise a spreadsheet takes it for a formula and runs it.
 
 You can import an export again, into a new Huismus: see
-[Switching from another package or Excel](importeren.en.md).
+[Importing from another package or Excel](importeren.en.md).
 
 An export isn't a backup. You restore a backup into Huismus; an export is
 for using your data somewhere else. How backups work is explained in

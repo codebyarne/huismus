@@ -21,7 +21,7 @@
 </div>
 
 <section class="card card-pad stack" style="gap:var(--s-3);margin-bottom:var(--s-5)">
-    <div class="row"><h2>{% translate "Herkende bestanden" %}</h2><span class="spacer"></span><span class="small muted">{% translate "Huismus kijkt naar tabbladen en kolommen, niet naar de bestandsnaam." %}</span></div>
+    <div class="row"><h2>{% translate "Herkende bestanden" %}</h2><span class="spacer"></span><span class="small muted">{% if source == "csv" %}{% translate "Huismus kijkt naar de kolommen, niet naar de bestandsnaam." %}{% else %}{% translate "Huismus kijkt naar tabbladen en kolommen, niet naar de bestandsnaam." %}{% endif %}</span></div>
     <ul class="file-list">
         {% for upload in uploads %}
         <li class="file-item{% if not upload.recognized %} is-unknown{% endif %}">
@@ -41,7 +41,7 @@
             <span class="r-title"><strong>{% translate "Klanten" %}</strong><span>{% blocktranslate with new=contacts.new updated=contacts.updated %}{{ new }} nieuw, {{ updated }} bijgewerkt{% endblocktranslate %}</span></span>
             <svg class="i chev" aria-hidden="true"><use href="#chevron-down"></use></svg>
         </summary>
-        <div class="r-body"><div class="stat-chips">{% if contacts.in_export is not None %}<span class="stat-chip"><b>{{ contacts.in_export }}</b>{% translate "in de export" %}</span>{% endif %}<span class="stat-chip"><b>{{ contacts.new }}</b>{% translate "nieuw" %}</span><span class="stat-chip"><b>{{ contacts.updated }}</b>{% translate "bijgewerkt" %}</span><span class="stat-chip"><b>{{ contacts.unchanged }}</b>{% translate "ongewijzigd" %}</span>{% if contacts.persons_new %}<span class="stat-chip"><b>{{ contacts.persons_new }}</b>{% blocktranslate count count=contacts.persons_new %}nieuwe contactpersoon{% plural %}nieuwe contactpersonen{% endblocktranslate %}</span>{% endif %}{% if contacts.refused %}<span class="stat-chip is-warn"><b>{{ contacts.refused|length }}</b>{% translate "geweigerd" %}</span>{% endif %}</div>
+        <div class="r-body"><div class="stat-chips">{% if contacts.in_export is not None %}<span class="stat-chip"><b>{{ contacts.in_export }}</b>{% if source == "csv" %}{% translate "in het bestand" %}{% else %}{% translate "in de export" %}{% endif %}</span>{% endif %}<span class="stat-chip"><b>{{ contacts.new }}</b>{% translate "nieuw" %}</span><span class="stat-chip"><b>{{ contacts.updated }}</b>{% translate "bijgewerkt" %}</span><span class="stat-chip"><b>{{ contacts.unchanged }}</b>{% translate "ongewijzigd" %}</span>{% if contacts.persons_new %}<span class="stat-chip"><b>{{ contacts.persons_new }}</b>{% blocktranslate count count=contacts.persons_new %}nieuwe contactpersoon{% plural %}nieuwe contactpersonen{% endblocktranslate %}</span>{% endif %}{% if contacts.refused %}<span class="stat-chip is-warn"><b>{{ contacts.refused|length }}</b>{% translate "geweigerd" %}</span>{% endif %}</div>
         {% if contacts.refused %}
         <div class="stack" style="gap:8px"><h3>{% translate "Geweigerd" %}</h3>
             <ul class="issue-list">{% for item in contacts.refused %}<li><span>{{ item }}</span></li>{% endfor %}</ul>

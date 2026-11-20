@@ -7137,9 +7137,6 @@ msgstr ""
 msgid "Sjabloon downloaden"
 msgstr ""
 
-msgid "Een export uit Huismus heeft dezelfde vorm. Zo neem je je administratie mee naar een nieuwe Huismus."
-msgstr ""
-
 msgid "Welke kolommen er zijn en hoe je ze invult"
 msgstr ""
 
@@ -7151,4 +7148,48 @@ msgid "Origineel"
 msgstr ""
 
 msgid "De originele PDF blijft bewaard, maar klopt na het bewerken niet meer met de factuur."
+msgstr ""
+
+#, python-format
+msgid "%(count)s zonder pdf."
+msgstr ""
+
+#, python-format
+msgid "%(count)s zonder bonnetje."
+msgstr ""
+
+msgid "De klant staat niet in het klantenbestand en niet in Huismus."
+msgstr ""
+
+msgid "Je bestanden staan bewaard in Huismus, ook in je back-ups."
+msgstr ""
+
+#, python-format
+msgid "%(count)s geweigerde factuur verbeteren en opnieuw importeren"
+msgid_plural "%(count)s geweigerde facturen verbeteren en opnieuw importeren"
+msgstr[0] ""
+msgstr[1] ""
+
+#, python-format
+msgid "%(count)s geweigerde offerte verbeteren en opnieuw importeren"
+msgid_plural "%(count)s geweigerde offertes verbeteren en opnieuw importeren"
+msgstr[0] ""
+msgstr[1] ""
+
+#, python-format
+msgid "%(count)s geweigerde uitgave verbeteren en opnieuw importeren"
+msgid_plural "%(count)s geweigerde uitgaven verbeteren en opnieuw importeren"
+msgstr[0] ""
+msgstr[1] ""
+
+#, python-format
+msgid "%(count)s geweigerde klant verbeteren en opnieuw importeren"
+msgid_plural "%(count)s geweigerde klanten verbeteren en opnieuw importeren"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Huismus kijkt naar de kolommen, niet naar de bestandsnaam."
+msgstr ""
+
+msgid "Een export uit Huismus is op dezelfde manier ingedeeld. Zo neem je je administratie mee naar een nieuwe Huismus."
 msgstr ""
