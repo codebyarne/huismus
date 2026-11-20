@@ -139,6 +139,32 @@ def test_opnieuw_and_only_the_photo(phone):
     assert not Expense.objects.exists()
 
 
+def test_opnieuw_before_the_script_runs_still_sends_the_photo(phone):
+    # #227: on a slow phone "Opnieuw" was tapped before app.js had loaded;
+    # the photo was taken, nobody sent it, and the page just stayed.
+    phone.goto(phone.base + "/uitgaven/")
+    _camera(phone, lambda: phone.get_by_role("link", name="Nieuwe uitgave").first.tap())
+    expect(phone.locator("h1")).to_have_text("Nieuwe uitgave")
+    first = Attachment.objects.get().pk
+
+    # The same page again, with app.js held back as on a slow connection.
+    held = []
+    phone.route("**/app*.js", lambda route: held.append(route))
+    phone.reload(wait_until="commit")
+    with phone.expect_file_chooser() as chooser:
+        phone.locator(".photo-again label").tap()
+    chooser.value.set_files(PHOTO)
+    assert Attachment.objects.get().pk == first
+
+    # The script arrives, and finds the photo waiting.
+    assert len(held) == 1
+    held[0].continue_()
+    expect(phone).not_to_have_url(phone.base + f"/uitgaven/nieuw/foto/{first}/")
+    expect(phone.locator("h1")).to_have_text("Nieuwe uitgave")
+    assert Attachment.objects.in_tray().count() == 1
+    assert Attachment.objects.get().pk != first
+
+
 def test_without_a_connection_the_photo_stays_to_send_again(phone):
     phone.goto(phone.base + "/uitgaven/")
     phone.context.set_offline(True)
