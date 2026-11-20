@@ -41,7 +41,7 @@ On the overview it's at the top of **To do**.
 Does one transfer mention more than one invoice? Then record the payment on
 each invoice yourself, with **Record payment**, and skip the line here.
 
-## Undo
+## Undoing a payment
 
 Is a payment wrong after all? Click **Undo**, on the statement page or on the
 invoice itself. The payment goes away and the line is back under **Pick an
@@ -58,20 +58,20 @@ This is what the banks call it themselves (checked on 20 November 2026; the
 menus are in Dutch). Choose **CAMT.053** if your bank has it, otherwise
 **MT940**.
 
-- **ING:** with a business account, in Mijn ING Zakelijk. A personal ING
+- **ING:** with a business account, in <span lang="nl">Mijn ING Zakelijk</span>. A personal ING
   account only gives CSV and PDF. Huismus doesn't read those; record a payment
   on the invoice instead.
-- **Rabobank:** **Transacties downloaden** › your account › choose the format
-  CAMT.053 and the period › **Downloaden**. "Vanaf de laatste download" works
-  too.
-- **ABN AMRO:** **Zelf regelen** › **Bij- en afschrijvingen downloaden** ›
-  account › period › CAMT.053. In the app: Profiel › Rekeningen en betalen ›
-  Afschriften en jaaroverzicht.
+- **Rabobank:** **<span lang="nl">Transacties downloaden</span>** › your account › choose the
+  format CAMT.053 and the period › **<span lang="nl">Downloaden</span>**. "<span lang="nl">Vanaf de laatste
+  download</span>" works too.
+- **ABN AMRO:** **<span lang="nl">Zelf regelen</span>** › **<span lang="nl">Bij- en afschrijvingen
+  downloaden</span>** › account › period › CAMT.053. In the app: <span lang="nl">Profiel › Rekeningen en
+  betalen › Afschriften en jaaroverzicht</span>.
 - **bunq:** Profile › Accounting › **Export Statement**, and choose MT940. bunq
   has no CAMT.053.
 - **Knab, Triodos:** download the transactions as CAMT.053.
-- **SNS, ASN, RegioBank:** **transacties downloaden** (RegioBank: **Bij- en
-  afschrijvingen downloaden**) › CAMT.053 › **Downloaden**. You get a zip;
+- **SNS, ASN, RegioBank:** **<span lang="nl">transacties downloaden</span>** (RegioBank: **<span lang="nl">Bij- en
+  afschrijvingen downloaden</span>**) › CAMT.053 › **<span lang="nl">Downloaden</span>**. You get a zip;
   no need to unpack it.
 - **Revolut Business:** Statements › Account statement › choose your euro
   account, the period and XML (CAMT.053) › **Generate**.

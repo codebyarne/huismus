@@ -41,7 +41,7 @@ Op het overzicht staat het bovenaan bij **Te doen**.
 Noemt een overboeking meer dan één factuur? Registreer de betaling dan zelf
 op elke factuur, met **Betaling registreren**, en sla de regel hier over.
 
-## Terugdraaien
+## Een betaling terugdraaien
 
 Klopt een betaling toch niet? Klik op **Terugdraaien**, op de pagina van het
 afschrift of op de factuur zelf. De betaling verdwijnt en de regel staat weer
