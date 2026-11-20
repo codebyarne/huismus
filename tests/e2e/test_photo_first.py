@@ -226,7 +226,11 @@ def test_a_new_category_on_the_photo_page(phone):
     ExpenseCategory.objects.create(name="Kantoor")
     phone.goto(phone.base + "/uitgaven/")
     _camera(phone, lambda: phone.get_by_role("link", name="Nieuwe uitgave").first.tap())
-    category = phone.get_by_role("combobox", name="Categorie")
+    # The field app.js makes of the list, not the list itself: this page is
+    # opened by app.js, and Firefox and WebKit found the list before the
+    # page's script had run (main, 2026-11-20).
+    category = phone.locator("input[role=combobox]")
+    expect(category).to_have_accessible_name("Categorie")
     hint = phone.get_by_text("Nieuwe categorie. Huismus maakt hem als je opslaat.")
     # An existing one, by a part of its name.
     category.fill("kan")
