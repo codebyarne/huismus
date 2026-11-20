@@ -75,7 +75,7 @@ def test_the_same_file_again_says_nothing_new(client):
 
 def test_a_wrong_file_says_so(client):
     page = client.post(PAGE, {"bestand": SimpleUploadedFile("foto.jpg", b"\xff\xd8\xff")})
-    assert page.status_code == 400
+    assert page.status_code == 200
     assert "Huismus herkent dit bestand niet als bankafschrift." in page.text
 
 

@@ -42,6 +42,9 @@ def clean_up_issued_documents_for_flush():
         cursor.executescript(_email_triggers_migration.DROP_TRIGGERS)
         cursor.executescript(_vat_rows_migration.DROP_TRIGGERS)
         cursor.execute("DELETE FROM documents_emaillog")
+        # Bank lines point to payments and documents (huismus/bank).
+        cursor.execute("DELETE FROM bank_banktransaction")
+        cursor.execute("DELETE FROM bank_bankstatement")
         cursor.execute("DELETE FROM documents_documentvatrow")
         cursor.execute("DELETE FROM documents_payment")
         cursor.execute("DELETE FROM core_attachment WHERE document_id IS NOT NULL")
