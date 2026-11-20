@@ -163,8 +163,12 @@ def test_too_much_paid_is_never_shown_as_negative_open(client):
     Payment.objects.create(document=invoice, paid_on=date(2026, 11, 1), amount_cents=1500)
     detail = client.get(reverse("documents:edit", args=[invoice.pk])).text
     assert "Te veel betaald" in detail
-    assert "-5,00" not in detail and "−5,00" not in detail
     assert Document.objects.get(pk=invoice.pk).payment_state == "paid"
+    # Nowhere a negative open amount: the invoice, the list, the overview
+    # with Te doen (product-owner agent 2026-11-20).
+    for path in (reverse("documents:edit", args=[invoice.pk]), "/facturen/", "/"):
+        text = client.get(path).text.replace("\xa0", " ")
+        assert "-5,00" not in text and "−5,00" not in text and "-€" not in text, path
 
 
 def test_summary_text_leaves_out_what_is_zero():

@@ -281,6 +281,14 @@ class Document(TimestampedModel):
         return self.total_cents - credited_cents - paid_cents
 
     @property
+    def overpaid_cents(self):
+        """How much more than the invoice was paid (a bank statement can book
+        that, #77), else 0: the screens say "Te veel betaald" with this
+        instead of a negative open amount."""
+        outstanding = self.outstanding_cents
+        return -outstanding if outstanding is not None and outstanding < 0 else 0
+
+    @property
     def shown_status(self):
         """The status as every screen, the export and the assistant show it.
         A sent quote reads as expired from the day after its expiry date,

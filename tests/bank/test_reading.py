@@ -273,20 +273,20 @@ def test_booking_on_a_draft_or_quote_is_refused():
 def test_skip_and_back():
     _read(_camt(("5.00", "Iemand", "iets")))
     line = BankTransaction.objects.get()
-    reading.skip(line)
-    assert line.state == State.SKIPPED
-    reading.unskip(line)
-    assert line.state == State.OPEN
+    assert reading.skip(line).state == State.SKIPPED
+    assert reading.unskip(line).state == State.OPEN
 
 
-def test_the_file_is_kept_once_in_the_data_folder():
+def test_the_file_is_kept_once_in_the_data_folder(django_capture_on_commit_callbacks):
     data = _camt(("10.00", "A", "een"))
-    _read(data, name="../nov.xml")
+    with django_capture_on_commit_callbacks(execute=True):
+        _read(data, name="../nov.xml")
     stored = BankStatement.objects.get()
     path = reading.archived_path(stored)
     assert path.parent == reading.archive_dir()
     assert path.read_bytes() == data
-    _read(data, name="../nov.xml")
+    with django_capture_on_commit_callbacks(execute=True):
+        _read(data, name="../nov.xml")
     assert len(list(reading.archive_dir().iterdir())) == 1
 
 
@@ -311,3 +311,37 @@ def test_an_mt940_line_books_like_a_camt_one():
     )
     _read(data, name="abn.sta")
     assert Payment.objects.get().document == invoice
+
+
+def test_a_rolled_back_read_keeps_no_file():
+    with pytest.raises(StatementReadError):
+        _read(b"<Document><BkToCstmrStmt>broken", name="kapot.xml")
+    assert not reading.archive_dir().exists() or not list(reading.archive_dir().iterdir())
+
+
+def test_a_zip_with_a_file_bigger_than_its_header_says_is_refused(monkeypatch):
+    monkeypatch.setattr(reading, "_MAX_FILE_SIZE", 100)
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w") as archive:
+        archive.writestr("a.xml", _camt(("10.00", "A", "een")))
+    with pytest.raises(StatementReadError):
+        _read(buffer.getvalue(), name="a.zip")
+
+
+def test_an_invoice_with_vat_is_booked_on_its_total_with_vat():
+    settings = Settings.load()
+    settings.kor_enabled = False
+    settings.save()
+    customer = Contact.objects.create(company_name="Klant BV")
+    document = Document.objects.create(kind="invoice", status="draft", contact=customer)
+    DocumentLine.objects.create(
+        document=document,
+        description="Werk",
+        quantity="1",
+        unit_price_cents=100000,
+        tax_rate_bp=2100,
+    )
+    invoice = issue(document)
+    assert invoice.total_cents == 121000
+    _read(_camt(("1210.00", "Klant BV", f"Factuur {invoice.number}")))
+    assert BankTransaction.objects.get().state == State.BOOKED

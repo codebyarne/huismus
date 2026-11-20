@@ -89,6 +89,9 @@ def _date(element) -> date:
 
 
 def _read_entry(entry, account: str, statement: Statement):
+    # No status at all counts as booked: a statement (camt.053, unlike the
+    # intraday camt.052) reports booked entries; Rabobank never reports
+    # reservations in it (docs/bankafschriften.md).
     if _status(entry) not in ("", "BOOK"):
         return
     if _text(entry, "CdtDbtInd") != "CRDT" or _text(entry, "RvslInd").lower() == "true":
@@ -111,14 +114,16 @@ def _read_entry(entry, account: str, statement: Statement):
         amounts = [amount_to_cents(amount.text or "")]
     else:
         amounts = [_transaction_cents(tx) for tx in details]
-    if not details or None in amounts:
+    entry_cents = amount_to_cents(amount.text or "")
+    if not details or None in amounts or sum(amounts) != entry_cents:
         # No details, or a batch that doesn't say what each transaction
-        # was: one line for the entry as a whole.
+        # was or whose parts don't add up to the entry to the cent: one
+        # line for the entry as a whole (CLAUDE.md rule 6).
         statement.lines.append(
             StatementLine(
                 account_iban=account,
                 booked_on=booked_on,
-                amount_cents=amount_to_cents(amount.text or ""),
+                amount_cents=entry_cents,
                 description=entry_info,
                 bank_reference=entry_ref,
             )

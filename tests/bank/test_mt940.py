@@ -104,3 +104,15 @@ def test_a_broken_line_is_refused(data):
 def test_not_mt940():
     assert not mt940.is_mt940(b"<?xml version='1.0'?><Document/>")
     assert not mt940.is_mt940(b"Datum;Naam;Bedrag\n")
+
+
+@pytest.mark.parametrize(
+    "value, mmdd, booked",
+    [
+        (date(2026, 12, 31), "0102", date(2027, 1, 2)),
+        (date(2027, 1, 2), "1231", date(2026, 12, 31)),
+        (date(2026, 11, 14), "1115", date(2026, 11, 15)),
+    ],
+)
+def test_the_booking_date_gets_the_right_year(value, mmdd, booked):
+    assert mt940.booking_date(value, mmdd) == booked
