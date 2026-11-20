@@ -245,6 +245,7 @@ def _expense_form(request, expense):
         # "Huismus las dit bonnetje met Mistral." (SPEC.md M20, part 3): the
         # service it was read with then, not the one in the settings now.
         context["read_by"] = reading.read_by(expense)
+        context["new_categories"] = reading.new_categories(expense)
     # "Hierna nog 2." and "Overslaan": the next in Verwerken, without saving.
     if expense and expense.needs_review:
         skip_to = batch.next_item(current, stack)

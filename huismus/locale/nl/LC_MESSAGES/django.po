@@ -3218,6 +3218,15 @@ msgstr ""
 msgid "nieuw"
 msgstr ""
 
+msgid "Foto maken"
+msgstr ""
+
+msgid "Foto of bestand kiezen"
+msgstr ""
+
+msgid "Zonder bonnetje"
+msgstr ""
+
 msgid "Bonnetje uploaden…"
 msgstr ""
 
@@ -5107,7 +5116,16 @@ msgid "Nieuwe uitgave"
 msgstr ""
 
 #, python-format
-msgid "Huismus las dit bonnetje met %(service)s. Klopt alles?"
+msgid "Huismus las dit bonnetje met %(service)s."
+msgstr ""
+
+#, python-format
+msgid "Nieuwe categorie: %(names)s."
+msgid_plural "Nieuwe categorieën: %(names)s."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Klopt alles?"
 msgstr ""
 
 msgid "Je AI-assistent vulde deze uitgave in. Klopt alles?"

@@ -105,6 +105,10 @@ doet hij met een AI-dienst die jij kiest, met je eigen sleutel. Elk bonnetje
 dat binnenkomt, wordt dan vanzelf een uitgave met **Nakijken**. Jij kijkt
 hem na en klikt op **Klopt**.
 
+Huismus kiest per regel de categorie die het best past. Past er geen, dan
+maakt Huismus een nieuwe en zegt dat bij de uitgave: "Nieuwe categorie: …".
+Een andere naam geef je hem bij **Categorieën**.
+
 Ga naar **Instellingen → Bonnetjes lezen met AI** en kies een dienst:
 
 - **Anthropic (Claude), Google Gemini, Mistral of OpenAI.** Maak op de site

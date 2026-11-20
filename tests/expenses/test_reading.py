@@ -490,3 +490,104 @@ def test_a_similar_expense_deleted_since_keeps_the_reason(service):
     similar.delete()
     receipt.refresh_from_db()
     assert reading.reason_sentence(receipt) == "Niet gelezen: lijkt op een uitgave die er al was."
+
+
+# -- Categories (owner, 2026-11-20) ---------------------------------------------------
+
+# A restaurant's receipt with both VAT rates: the food at 9%, the beer at 21%.
+RESTAURANT = {
+    "kind": "receipt",
+    "date": "2026-11-19",
+    "supplier": "Ramenbar Voorbeeld",
+    "description": "Ramen en bier",
+    "total": "61.60",
+    "lines": [
+        {"description": "Eten", "amount": "44.60", "vat": "3.68", "vat_rate": "9"},
+        {"description": "Bier", "amount": "17.00", "vat": "2.95", "vat_rate": "21"},
+    ],
+}
+
+
+def _with(answer: dict, **per_line) -> dict:
+    return {**answer, "lines": [{**line, **per_line} for line in answer["lines"]]}
+
+
+@pytest.mark.parametrize("kor_on", [True, False])
+def test_both_lines_of_a_restaurant_receipt_get_the_category(service, kor, kor_on):
+    # By hand, 2026-11-20: the expense came without a category.
+    kor(kor_on)
+    ExpenseCategory.objects.create(name="Eten en drinken")
+    _receipt()
+    service.answer(_with(RESTAURANT, category="eten en drinken"))
+    reading.read_waiting()
+    expense = Expense.objects.get()
+    assert expense.amount_cents == 6160
+    assert [line.category.name for line in expense.lines.all()] == ["Eten en drinken"] * 2
+    assert reading.new_categories(expense) == []
+
+
+def test_the_service_is_asked_to_choose_the_category_itself(service):
+    # "Never guess" kept a model from naming one: no receipt states it.
+    _receipt()
+    service.answer(ANSWER)
+    reading.read_waiting()
+    text = service.requests[-1]["messages"][0]["content"][0]["text"]
+    assert '"category" is the one thing you judge yourself' in text
+    assert "Never guess amounts, dates or VAT" in text
+    assert "Language for a new category: Dutch" in text
+
+
+def test_a_category_that_fits_none_is_made_with_the_expense(service):
+    ExpenseCategory.objects.create(name="Kantoor", sort_order=4)
+    _receipt()
+    service.answer(_with(RESTAURANT, category=None, new_category=" Eten en  drinken "))
+    reading.read_waiting()
+    expense = Expense.objects.get()
+    # One category for both lines, at the bottom of the list.
+    made = ExpenseCategory.objects.get(name="Eten en drinken")
+    assert made.sort_order == 5
+    assert made.made_for == expense
+    assert {line.category for line in expense.lines.all()} == {made}
+    assert reading.new_categories(expense) == ["Eten en drinken"]
+    # Until the user has checked the expense.
+    expense.needs_review = False
+    expense.save()
+    assert reading.new_categories(expense) == []
+
+
+def test_a_new_name_that_is_already_there_makes_none(service):
+    existing = ExpenseCategory.objects.create(name="Eten en drinken")
+    _receipt()
+    service.answer(_with(RESTAURANT, category=None, new_category="ETEN EN DRINKEN"))
+    reading.read_waiting()
+    assert ExpenseCategory.objects.get() == existing
+    assert Expense.objects.get().lines.first().category == existing
+
+
+@pytest.mark.parametrize("name", ["", "   ", "x" * 101, 12, None])
+def test_a_name_that_is_no_short_text_is_no_category(service, name):
+    _receipt()
+    service.answer(_with(RESTAURANT, category=None, new_category=name))
+    reading.read_waiting()
+    assert not ExpenseCategory.objects.exists()
+    assert Expense.objects.get().lines.first().category is None
+
+
+def test_a_receipt_left_in_the_tray_makes_no_category(service):
+    _receipt()
+    answer = _with(RESTAURANT, category=None, new_category="Eten en drinken")
+    service.answer({**answer, "total": "99.00"})
+    reading.read_waiting()
+    assert not Expense.objects.exists()
+    assert not ExpenseCategory.objects.exists()
+
+
+def test_an_expense_that_is_not_added_takes_its_category_along(service, monkeypatch):
+    def not_added(**kwargs):
+        raise reading.adding.NotAdded("nee")
+
+    monkeypatch.setattr(reading.adding, "add_expense", not_added)
+    _receipt()
+    service.answer(_with(RESTAURANT, category=None, new_category="Eten en drinken"))
+    reading.read_waiting()
+    assert not ExpenseCategory.objects.exists()

@@ -9,7 +9,14 @@ yet goes to the service, one at a time, in the background. What it sends
 is what the AI assistant gets from read_receipt (assistants.receipts): a
 photo made smaller, a PDF's text and scans.
 
-The model only reads; Huismus decides. It leaves a receipt in the tray,
+One thing the model judges, since
+no receipt states it: each line's category, the best fitting one of the
+user's own, or a name for a new one when none fits. Huismus makes that
+category with the expense (never without it) and says so on the expense
+(owner, 2026-11-20; huismus-intern/besluiten.md).
+
+For everything else the model only reads; Huismus decides. It leaves a
+receipt in the tray,
 with a reason, when the answer has no total, when the lines don't add up
 to it, when a line lacks its VAT while the KOR is off (never 0 filled in),
 or when an expense with the same date and amount is already there. Else it
@@ -28,11 +35,12 @@ import json
 import logging
 import re
 import threading
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 
 from django.conf import settings
-from django.db import connections
+from django.db import connections, transaction
+from django.db.models import Max
 from django.template.defaultfilters import date as date_filter
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -57,6 +65,10 @@ UNREADABLE, NOT_A_RECEIPT, MORE_THAN_ONE = "unreadable", "not_a_receipt", "more_
 NO_TOTAL, NOT_ADDING_UP, NO_VAT = "no_total", "not_adding_up", "no_vat"
 NO_VAT_RATE = "no_vat_rate"
 SIMILAR, TIMEOUT = "similar", "timeout"
+
+# The language a new category's name is asked in (Settings.default_language).
+LANGUAGE_NAMES = {"nl": "Dutch", "en": "English"}
+NAME_MAX = ExpenseCategory._meta.get_field("name").max_length
 
 # Left out of backups, as the settings (core.backup skips ai_service.FILE_PREFIX).
 STATUS_FILE_NAME = f"{ai_service.FILE_PREFIX}-status.json"
@@ -185,7 +197,8 @@ Answer with one JSON object and nothing else:
     {"description": "...", "amount": "gross, including VAT, e.g. 34.99",
      "vat": "the VAT on this line as the receipt shows it, e.g. 6.07, or null",
      "vat_rate": "21" | "9" | "0" | "reverse_nl" | "reverse_eu" | "reverse_non_eu" | null,
-     "category": "one of the categories below, or null"}
+     "category": "one of the categories below, or null",
+     "new_category": "a new category's name when none below fits, else null"}
   ]
 }
 
@@ -195,6 +208,9 @@ Rules:
 - "category" is the one thing you judge yourself, since no receipt states it: for
   each line the category from the list below that fits best what was bought and
   where (a restaurant, a train ticket, software). Copy its name exactly.
+- "new_category": only when no category in the list fits, with "category" null: a
+  short name for the kind of cost (e.g. "Eten en drinken"), never the shop or the
+  article, in the language named below. The same name for lines of the same kind.
 - One line per VAT rate is enough. The lines' amounts add up to the total.
 - An amount shown as included in an article ("incl.", "inclusief", "including", e.g.
   a recycling fee or a levy) is already in that article's price: never a line of
@@ -216,7 +232,11 @@ def _content(receipt: Attachment, categories: list[ExpenseCategory]) -> list[dic
     nothing in it to read: then nothing is sent."""
     found = receipts.read(receipt)
     names = ", ".join(category.name for category in categories) or "(none)"
-    text = f"{PROMPT}\nCategories: {names}\nFile name: {receipt.filename}"
+    language = LANGUAGE_NAMES.get(Settings.load().default_language, "Dutch")
+    text = (
+        f"{PROMPT}\nCategories: {names}\nLanguage for a new category: {language}"
+        f"\nFile name: {receipt.filename}"
+    )
     if found.text:
         text += f"\n\nText of the PDF:\n{found.text}"
     return [
@@ -263,9 +283,38 @@ def _euros(cents: int) -> str:
 def _category(name, categories: list[ExpenseCategory]) -> ExpenseCategory | None:
     """An existing category by its name; any other name is none."""
     for category in categories:
-        if name and category.name.casefold() == str(name).casefold():
+        if name and category.name.casefold() == str(name).strip().casefold():
             return category
     return None
+
+
+def _new_name(raw: dict) -> str:
+    """The name of the category to make for this line, or "": only a short
+    text counts (the field's length), anything else is no category."""
+    name = raw.get("new_category")
+    if not isinstance(name, str):
+        return ""
+    name = " ".join(name.split())
+    return name if len(name) <= NAME_MAX else ""
+
+
+def _with_new_categories(lines, new_names: list[str]) -> tuple[list, list[ExpenseCategory]]:
+    """The lines, each without a category given the one of its new name,
+    made at the bottom of the list as the Moneybird import does; and the
+    categories made. Inside the transaction that makes the expense."""
+    made: dict[str, ExpenseCategory] = {}
+    result = []
+    for line, name in zip(lines, new_names, strict=True):
+        if line.category is None and name:
+            key = name.casefold()
+            if key not in made:
+                last = ExpenseCategory.objects.aggregate(Max("sort_order"))["sort_order__max"]
+                made[key] = ExpenseCategory.objects.create(
+                    name=name, sort_order=0 if last is None else last + 1
+                )
+            line = replace(line, category=made[key])
+        result.append(line)
+    return result, list(made.values())
 
 
 @dataclass(frozen=True)
@@ -288,7 +337,7 @@ def _expense_from(data: dict, receipt: Attachment, categories, vat_required: boo
     raw_lines = data.get("lines")
     if not isinstance(raw_lines, list) or not raw_lines:
         return Outcome(reason=NOT_ADDING_UP)
-    lines, amounts = [], []
+    lines, amounts, new_names = [], [], []
     for raw in raw_lines:
         amount = _cents(raw.get("amount")) if isinstance(raw, dict) else None
         if amount is None:
@@ -304,12 +353,18 @@ def _expense_from(data: dict, receipt: Attachment, categories, vat_required: boo
                 return Outcome(reason=NO_VAT_RATE)
             rate = None
         amounts.append(amount)
+        # The model's own choice from the list, else its new name when that
+        # is one from the list after all, else a category to make.
+        category = _category(raw.get("category"), categories) or _category(
+            _new_name(raw), categories
+        )
+        new_names.append("" if category else _new_name(raw))
         lines.append(
             adding.Line(
                 description=str(raw.get("description") or "")[:200],
                 amount=_euros(amount),
                 vat_info=None if vat is None else _euros(vat),
-                category=_category(raw.get("category"), categories),
+                category=category,
                 vat_rate=rate,
             )
         )
@@ -325,14 +380,19 @@ def _expense_from(data: dict, receipt: Attachment, categories, vat_required: boo
     if similar is not None:
         return Outcome(reason=SIMILAR, similar=similar)
     try:
-        expense = adding.add_expense(
-            date=date.isoformat(),
-            supplier=str(data.get("supplier") or "")[:200],
-            description=str(data.get("description") or "")[:200],
-            lines=lines,
-            receipt=receipt,
-            source=SOURCE,
-        )
+        # A new category only with its expense: without the expense (an
+        # exception leaves the block) it is gone too.
+        with transaction.atomic():
+            lines, made = _with_new_categories(lines, new_names)
+            expense = adding.add_expense(
+                date=date.isoformat(),
+                supplier=str(data.get("supplier") or "")[:200],
+                description=str(data.get("description") or "")[:200],
+                lines=lines,
+                receipt=receipt,
+                source=SOURCE,
+            )
+            ExpenseCategory.objects.filter(pk__in=[c.pk for c in made]).update(made_for=expense)
     except adding.NotAdded:
         # The form refused it, or the user made an expense of the receipt
         # meanwhile: then Huismus's answer goes away.
@@ -435,6 +495,14 @@ def read_by(expense: Expense) -> str:
         return ""
     receipt = expense.attachments.filter(kind="receipt").exclude(read_by="").first()
     return receipt.read_by if receipt else ""
+
+
+def new_categories(expense: Expense) -> list[str]:
+    """The names of the categories Huismus made for this expense, for its
+    notice while it is to check."""
+    if expense.source != SOURCE or not expense.needs_review:
+        return []
+    return list(expense.new_categories.values_list("name", flat=True))
 
 
 def reason_sentence(receipt: Attachment) -> str:

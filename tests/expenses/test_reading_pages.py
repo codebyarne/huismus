@@ -127,6 +127,17 @@ def test_the_expense_says_which_service_read_it(client_in, service):
     assert "Huismus las dit bonnetje met 127.0.0.1. Klopt alles?" in page
 
 
+def test_the_expense_names_a_category_huismus_made_for_it(client_in, service):
+    _receipt()
+    lines = [{**line, "category": None, "new_category": "Gereedschap"} for line in ANSWER["lines"]]
+    service.answer({**ANSWER, "lines": lines})
+    reading.read_waiting()
+    expense = Attachment.objects.get().expense
+    sentence = "Huismus las dit bonnetje met 127.0.0.1. Nieuwe categorie: Gereedschap. Klopt alles?"
+    assert sentence in client_in.get(f"/uitgaven/{expense.pk}/").content.decode()
+    assert sentence in client_in.get("/uitgaven/verwerken/", follow=True).content.decode()
+
+
 def test_the_overview_counts_new_expenses_to_check(client_in, service):
     # Not the welcome: an administration with something in it.
     Contact.objects.create(company_name="Klant BV")

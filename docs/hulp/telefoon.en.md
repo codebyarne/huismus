@@ -31,9 +31,15 @@ can share files.
 
 ## An expense with the camera
 
-Tap **+** and then **Expense**, or **New expense** under Expenses: the camera
-opens. Take a photo of the receipt. Huismus keeps it at once. Then fill in the
-amount, then the supplier, the date and the category, and tap **Save
+Tap **+** and then **Expense**, or **New expense** under Expenses. You
+choose:
+
+- **Take a photo**: the camera opens.
+- **Choose a photo or file**: a photo from your library or a PDF.
+- **Without a receipt**: the ordinary form.
+
+Huismus first makes a photo smaller, so it is sent quickly, and keeps it at
+once. Then fill in the amount, then the supplier, the date and the category, and tap **Save
 expense**.
 
 No time? Tap **Just keep the photo**. The receipt then waits under
@@ -42,9 +48,6 @@ Photo didn't work out? Tap **Retake**.
 
 Can't reach Huismus, for example in a shop without your VPN? The photo stays
 on your screen. Tap **Try again** once you're connected.
-
-Rather use a photo from your library or a PDF? Close the camera: you get the
-ordinary form.
 
 ## What's on your phone
 

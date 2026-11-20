@@ -105,6 +105,10 @@ does that with an AI service you choose, with your own key. Every receipt
 that comes in then becomes an expense marked **To check**. You check it and
 click **Looks right**.
 
+Huismus chooses the category that fits best for each line. If none fits,
+Huismus makes a new one and says so on the expense: "New category: …". You
+can rename it under **Categories**.
+
 Go to **Settings → Reading receipts with AI** and choose a service:
 
 - **Anthropic (Claude), Google Gemini, Mistral or OpenAI.** Create an account
