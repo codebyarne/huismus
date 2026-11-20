@@ -414,12 +414,18 @@ def _focus_line(page, selector):
 
 def test_a_ghost_button_shows_the_same_focus_line_as_a_link(app):
     # #151: without an edge or a fill, the soft ring of .btn was hard to see on a
-    # ghost button. It now gets the full line of a link.
+    # ghost button. It now gets the full line of a link (:focus-visible in huismus.css):
+    # 2px, in --primary, 2px away. Written out here and not measured on a link: WebKit
+    # reports another width for a link that got the focus from a script.
     _save_appearance(app, "Nederlands")  # a toast, with its ghost ×
-    link = _focus_line(app, "main a[href]:not(.btn)")
-    assert link["shown"] and link["style"] == "solid" and link["width"] == "2px"
-    assert _focus_line(app, "button.btn-ghost[type=reset]") == link
-    assert _focus_line(app, ".toast button.btn-ghost") == link
+    primary = app.evaluate(
+        """() => { const probe = document.createElement('i');
+                   probe.style.color = 'var(--primary)'; document.body.append(probe);
+                   const colour = getComputedStyle(probe).color; probe.remove(); return colour; }"""
+    )
+    line = {"shown": True, "style": "solid", "width": "2px", "colour": primary, "offset": "2px"}
+    assert _focus_line(app, "button.btn-ghost[type=reset]") == line
+    assert _focus_line(app, ".toast button.btn-ghost") == line
 
 
 def test_the_bin_of_an_invoice_line_shows_that_focus_line_and_a_click_shows_none(app, contact):
