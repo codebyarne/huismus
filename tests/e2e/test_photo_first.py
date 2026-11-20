@@ -5,7 +5,11 @@ first"; huismus/expenses/photo_views.py): "Uitgave" opens the camera, the
 photo goes into the tray, then the amount. Without a connection the photo
 stays to send again. On a wide screen "Uitgave" is the ordinary form."""
 
+import io
+import random
+
 import pytest
+from PIL import Image
 from playwright.sync_api import expect
 
 from huismus.core.demo_receipts import _photo
@@ -76,6 +80,34 @@ def test_on_a_phone_uitgave_opens_the_camera_then_the_amount(phone):
     assert expense.amount_cents == 4895
     assert expense.attachments.get().filename == "IMG_3001.jpg"
     assert not Attachment.objects.in_tray().exists()
+
+
+def _camera_photo() -> bytes:
+    """A photo as a phone's camera makes it: many pixels and megabytes
+    (noise, so JPEG can't make it small)."""
+    noise = random.Random(1).randbytes(1000 * 750 * 3)
+    image = Image.frombytes("RGB", (1000, 750), noise).resize((4000, 3000), Image.NEAREST)
+    buffer = io.BytesIO()
+    image.save(buffer, "JPEG", quality=95)
+    return buffer.getvalue()
+
+
+def test_a_photo_from_the_camera_is_sent_smaller(phone):
+    # By hand, 2026-11-20: a phone's photo went as it was, megabytes over a
+    # weak connection, and "Bonnetje uploaden…" stayed.
+    photo = _camera_photo()
+    assert len(photo) > 2_000_000
+    phone.goto(phone.base + "/uitgaven/")
+    with phone.expect_file_chooser() as chooser:
+        phone.get_by_role("link", name="Nieuwe uitgave").first.tap()
+    chooser.value.set_files({"name": "IMG_3002.jpeg", "mimeType": "image/jpeg", "buffer": photo})
+
+    expect(phone.get_by_role("img", name="Bonnetje IMG_3002.jpg")).to_be_visible()
+    receipt = Attachment.objects.get()
+    assert receipt.filename == "IMG_3002.jpg"
+    assert receipt.file.size < len(photo) / 2
+    with receipt.file.open("rb") as file:
+        assert Image.open(file).size == (2000, 1500)
 
 
 def test_opnieuw_and_only_the_photo(phone):

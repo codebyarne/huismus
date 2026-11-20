@@ -754,11 +754,46 @@ function cameraToast(id) {
   if (template) document.getElementById("toasts")?.append(template.content.cloneNode(true));
 }
 
+// A photo made smaller before it is sent: a phone's photo is 3 to 10 MB,
+// minutes of uploading on a weak connection, and a receipt reads as well at
+// LONG_SIDE pixels. Upright, the way the camera held it. Anything the
+// browser can't draw (a PDF, a HEIC outside Safari) and a photo that
+// wouldn't get smaller go as they are.
+const LONG_SIDE = 2000;
+const JPEG_QUALITY = 0.8;
+
+async function smaller(file) {
+  if (!file.type.startsWith("image/")) return file;
+  try {
+    // Not through an <img>: the page's policy allows no blob: addresses.
+    const image = await createImageBitmap(file, { imageOrientation: "from-image" });
+    const scale = Math.min(1, LONG_SIDE / Math.max(image.width, image.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(image.width * scale);
+    canvas.height = Math.round(image.height * scale);
+    const context = canvas.getContext("2d");
+    // White under a see-through PNG, like paper.
+    context.fillStyle = "#fff";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    image.close();
+    const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", JPEG_QUALITY));
+    if (!blob || blob.size >= file.size) return file;
+    return new File([blob], file.name.replace(/\.[^.]*$/, "") + ".jpg", { type: "image/jpeg" });
+  } catch {
+    return file;
+  }
+}
+
+// No answer after this long counts as no connection: the photo stays here
+// to send again, instead of "Bonnetje uploaden…" for ever.
+const UPLOAD_TIMEOUT_MS = 60000;
+
 async function sendPhoto(form, file) {
   unsent = { form, file };
   cameraToast("camera-busy");
   const data = new FormData(form);
-  data.set("file", file);
+  data.set("file", await smaller(file));
   let response;
   try {
     // The header asks Huismus to say where to go (X-Huismus-Go) rather than
@@ -768,10 +803,11 @@ async function sendPhoto(form, file) {
       method: "POST",
       body: data,
       headers: { "X-Huismus-Camera": "1" },
+      signal: AbortSignal.timeout(UPLOAD_TIMEOUT_MS),
     });
-  } catch {
-    // No answer at all: no connection with Huismus.
-    cameraToast("camera-offline");
+  } catch (error) {
+    // No answer in time, or none at all: no connection with Huismus.
+    cameraToast(error.name === "TimeoutError" ? "camera-failed" : "camera-offline");
     return;
   }
   if (!response.ok) {
