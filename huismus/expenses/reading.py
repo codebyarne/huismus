@@ -190,7 +190,11 @@ Answer with one JSON object and nothing else:
 }
 
 Rules:
-- Never guess. Copy amounts as the receipt shows them; use null for what isn't there.
+- Never guess amounts, dates or VAT. Copy them as the receipt shows them; use null
+  for what isn't there.
+- "category" is the one thing you judge yourself, since no receipt states it: for
+  each line the category from the list below that fits best what was bought and
+  where (a restaurant, a train ticket, software). Copy its name exactly.
 - One line per VAT rate is enough. The lines' amounts add up to the total.
 - An amount shown as included in an article ("incl.", "inclusief", "including", e.g.
   a recycling fee or a levy) is already in that article's price: never a line of
