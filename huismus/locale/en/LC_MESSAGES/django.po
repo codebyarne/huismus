@@ -3407,6 +3407,15 @@ msgstr "Shortcuts:"
 msgid "nieuw"
 msgstr "new"
 
+msgid "Foto maken"
+msgstr "Take a photo"
+
+msgid "Foto of bestand kiezen"
+msgstr "Choose a photo or file"
+
+msgid "Zonder bonnetje"
+msgstr "Without a receipt"
+
 msgid "Bonnetje uploaden…"
 msgstr "Uploading receipt…"
 
@@ -5459,8 +5468,17 @@ msgid "Nieuwe uitgave"
 msgstr "New expense"
 
 #, python-format
-msgid "Huismus las dit bonnetje met %(service)s. Klopt alles?"
-msgstr "Huismus read this receipt with %(service)s. Is everything right?"
+msgid "Huismus las dit bonnetje met %(service)s."
+msgstr "Huismus read this receipt with %(service)s."
+
+#, python-format
+msgid "Nieuwe categorie: %(names)s."
+msgid_plural "Nieuwe categorieën: %(names)s."
+msgstr[0] "New category: %(names)s."
+msgstr[1] "New categories: %(names)s."
+
+msgid "Klopt alles?"
+msgstr "Is everything right?"
 
 msgid "Je AI-assistent vulde deze uitgave in. Klopt alles?"
 msgstr "Your AI assistant filled in this expense. Is everything right?"

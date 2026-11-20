@@ -130,6 +130,7 @@ def process_item(request, kind, pk):
             # Overslaan: the next one, nothing saved, `klaar` the same.
             "skip_to": skip_to.url(done) if skip_to else None,
             "read_by": reading.read_by(expense) if expense else "",
+            "new_categories": reading.new_categories(expense) if expense else [],
             # "Geen bonnetje bij deze uitgave.": the expense page's own upload.
             "receipt_form": ReceiptUploadForm() if expense and receipt is None else None,
         },

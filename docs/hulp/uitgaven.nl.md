@@ -30,7 +30,8 @@ HEIC) of een pdf. Een HEIC-foto bewaart Huismus als JPG. Bij een nieuwe uitgave 
 **Opslaan** klikt. Een uitgave kan meer bonnetjes hebben: de rest voeg je toe
 na het opslaan.
 
-Op je telefoon begint een nieuwe uitgave met de camera. Zie [Op je
+Op je telefoon kies je bij een nieuwe uitgave eerst: een foto maken, een
+foto of bestand kiezen, of zonder bonnetje. Zie [Op je
 telefoon](telefoon.nl.md).
 
 Bonnetjes van onderweg kun je ook in een map zetten die Huismus zelf

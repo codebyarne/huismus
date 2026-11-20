@@ -30,7 +30,8 @@ or a PDF. Huismus keeps a HEIC photo as a JPG. For a new expense you can do this
 **Save**. An expense can have more than one receipt: add the others after
 saving.
 
-On your phone a new expense starts with the camera. See [On your
+On your phone a new expense starts with a choice: take a photo, choose a
+photo or file, or go without a receipt. See [On your
 phone](telefoon.en.md).
 
 Receipts from the road can also go in a folder that Huismus picks up

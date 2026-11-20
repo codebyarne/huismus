@@ -29,6 +29,17 @@ class ExpenseCategory(TimestampedModel):
 
     name = models.CharField(_("naam"), max_length=100)
     sort_order = models.PositiveSmallIntegerField(_("sorteervolgorde"), default=0)
+    # The expense Huismus made this category for while reading its receipt
+    # (expenses.reading): that expense says "Nieuwe categorie: …" until the
+    # user has checked it. Empty for every category a person made.
+    made_for = models.ForeignKey(
+        "Expense",
+        null=True,
+        blank=True,
+        editable=False,
+        on_delete=models.SET_NULL,
+        related_name="new_categories",
+    )
 
     class Meta:
         verbose_name = _("uitgavecategorie")
