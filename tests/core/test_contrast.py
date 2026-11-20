@@ -48,6 +48,12 @@ PAIRS = [
 # (graphic, surface it stands on): bars and edges need 3 : 1 (WCAG 1.4.11).
 GRAPHIC_PAIRS = [
     ("primary", "surface"),  # the revenue bar
+    ("primary", "bg"),  # the focus line of a link or a ghost button, next to the sheet
+    ("primary", "surface-2"),  # and on a quiet block
+    ("primary", "primary-soft"),  # and in a blue notice (its ×)
+    ("danger", "surface"),  # the focus line of "Verwijderen…" (.btn-danger-quiet)
+    ("danger", "bg"),
+    ("danger", "surface-2"),
     ("hero-bar", "hero"),  # the KOR bar on the eye-catcher
     ("hero-text", "hero"),  # that bar close to the limit or over it
     ("hero-ahead", "hero"),  # the dashed line of a month still to come

@@ -399,6 +399,46 @@ def test_a_chosen_theme_beats_the_system_and_stays_after_a_reload(app, browser):
     assert _background(app) == dark
 
 
+def _focus_line(page, selector):
+    """The outline an element shows when the keyboard puts the focus on it."""
+    page.keyboard.press("Tab")  # the keyboard was used last, so focus() shows the line
+    page.locator(selector).first.focus()
+    return page.locator(selector).first.evaluate(
+        """el => {
+            const s = getComputedStyle(el);
+            return {shown: el.matches(':focus-visible'), style: s.outlineStyle,
+                    width: s.outlineWidth, colour: s.outlineColor, offset: s.outlineOffset};
+        }"""
+    )
+
+
+def test_a_ghost_button_shows_the_same_focus_line_as_a_link(app):
+    # #151: without an edge or a fill, the soft ring of .btn was hard to see on a
+    # ghost button. It now gets the full line of a link.
+    _save_appearance(app, "Nederlands")  # a toast, with its ghost ×
+    link = _focus_line(app, "main a[href]:not(.btn)")
+    assert link["shown"] and link["style"] == "solid" and link["width"] == "2px"
+    assert _focus_line(app, "button.btn-ghost[type=reset]") == link
+    assert _focus_line(app, ".toast button.btn-ghost") == link
+
+
+def test_a_quiet_delete_button_shows_a_full_focus_line_too(app):
+    # Same problem, same line, in the button's own red (PO, 2026-11-20).
+    app.goto(app.base + APPEARANCE)
+    app.evaluate(
+        """() => document.querySelector('main').insertAdjacentHTML('beforeend',
+            '<button type="button" class="btn btn-danger-quiet" id="weg">Verwijderen…</button>')"""
+    )
+    line = _focus_line(app, "#weg")
+    assert line["shown"] and (line["style"], line["width"], line["offset"]) == (
+        "solid",
+        "2px",
+        "2px",
+    )
+    danger = app.evaluate("getComputedStyle(document.querySelector('#weg')).color")
+    assert line["colour"] == danger
+
+
 def test_the_sidebar_and_more_menu_have_no_switches_left(app):
     # Taal en thema moved to Instellingen → Weergave (huismus-intern/besluiten.md,
     # 2026-10-31): linksonder only Hulp and Uitloggen.
