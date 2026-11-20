@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n money %}
+
+{% block title %}{% translate "Overgeslagen" %} — Huismus{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <a class="back" href="{% url 'bank:statement' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Bankafschrift inlezen" %}</a>
+        <h1>{% translate "Overgeslagen" %}</h1>
+        <p class="lede">{% translate "Bijschrijvingen die je oversloeg. Zet je er een terug, dan staat hij weer bij Zelf kiezen." %}</p>
+    </div>
+</div>
+{% if lines %}
+<section class="card">
+    <ul class="list">
+        {% for line in lines %}
+        <li id="regel-{{ line.pk }}">
+            {% include "bank/_line.html" %}
+            <form method="post" action="{% url 'bank:restore' line.pk %}">{% csrf_token %}<input type="hidden" name="terug" value="{{ here }}"><button type="submit" class="btn btn-ghost btn-sm">{% translate "Terugzetten" %}</button></form>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% else %}
+<div class="card"><div class="empty"><p>{% translate "Je hebt niets overgeslagen." %}</p></div></div>
+{% endif %}
+{% endblock %}

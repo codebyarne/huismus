@@ -277,3 +277,14 @@ def test_skip_and_back():
     assert line.state == State.SKIPPED
     reading.unskip(line)
     assert line.state == State.OPEN
+
+
+def test_the_file_is_kept_once_in_the_data_folder():
+    data = _camt(("10.00", "A", "een"))
+    _read(data, name="../nov.xml")
+    stored = BankStatement.objects.get()
+    path = reading.archived_path(stored)
+    assert path.parent == reading.archive_dir()
+    assert path.read_bytes() == data
+    _read(data, name="../nov.xml")
+    assert len(list(reading.archive_dir().iterdir())) == 1

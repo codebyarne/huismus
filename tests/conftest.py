@@ -98,6 +98,8 @@ def _no_uploaded_files():
 
     yield
     shutil.rmtree(Path(settings.DATA_DIR) / "attachments", ignore_errors=True)
+    # Bank statements read in are kept there as well (bank.reading).
+    shutil.rmtree(Path(settings.DATA_DIR) / "bankafschriften", ignore_errors=True)
 
 
 @pytest.fixture(autouse=True)

@@ -52,9 +52,41 @@ def test_the_number_is_found_with_other_separators_or_none(description):
     assert match(_line(121000, description), OPEN).kind == SURE
 
 
-@pytest.mark.parametrize("description", ["12026-015", "2026-0150", "2026-015A", "A2026-015"])
+@pytest.mark.parametrize(
+    "description",
+    ["12026-015", "2026-0150", "2026-015A", "A2026-015", "1-2026-015", "2026-015.5", "2026-015,00"],
+)
 def test_the_number_inside_a_longer_one_is_not_it(description):
     assert match(_line(121000, description), OPEN).kind != SURE
+
+
+@pytest.mark.parametrize(
+    "number, description",
+    [
+        ("2026", "factuur 2026-015"),
+        ("1210", "€ 1.210,00"),
+        ("1115", "15-11-15"),
+        ("2026", "1/2026"),
+    ],
+)
+def test_a_number_is_only_found_as_a_whole_value(number, description):
+    invoice = OpenInvoice(pk=7, number=number, outstanding_cents=500, names=(), ibans=())
+    assert match(_line(500, description), [invoice]).kind == CHOOSE
+
+
+def test_a_short_number_is_never_sure_or_likely_on_its_own_but_comes_first():
+    short = OpenInvoice(pk=8, number="15", outstanding_cents=500, names=("Studio Zuid",), ibans=())
+    other = OpenInvoice(pk=9, number="16", outstanding_cents=500, names=(), ibans=())
+    result = match(_line(500, "factuur 15"), [other, short])
+    assert result.kind == CHOOSE
+    assert result.candidates[0] == short
+    # Amount and name still work for it.
+    assert match(_line(500, "factuur 15", name="Studio Zuid"), [other, short]).invoice == short
+
+
+def test_more_than_one_number_in_the_text_is_said():
+    assert match(_line(181500, "Facturen 2026-015 en 2026-016"), OPEN).several_numbers
+    assert not match(_line(121000, "Factuur 2026-015"), OPEN).several_numbers
 
 
 def test_the_number_in_a_structured_reference_counts_too():

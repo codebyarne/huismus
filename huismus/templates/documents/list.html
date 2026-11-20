@@ -14,6 +14,7 @@
         <p class="lede">{% translate "Facturen en creditnota's. Een uitgegeven factuur staat vast. Corrigeren doe je met een creditnota." %}</p>
     </div>
     {% if has_any %}<div class="actions">
+        <a class="btn btn-secondary" href="{% url 'bank:statement' %}" id="bankafschrift-knop"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg>{% translate "Bankafschrift inlezen" %}</a>
         <a class="btn btn-primary" href="{% url 'documents:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuwe factuur" %}</a>
     </div>{% endif %}
 </div>

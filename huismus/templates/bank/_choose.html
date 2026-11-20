@@ -1,0 +1,11 @@
+{% load i18n money %}{% comment %}Pick the invoice for a line: the ones that fit first (bank.views._waiting).{% endcomment %}
+<form class="row" method="post" action="{% url 'bank:book' line.pk %}" style="gap:var(--s-2);margin-top:var(--s-2);flex-wrap:wrap">
+    {% csrf_token %}<input type="hidden" name="terug" value="{{ here }}">
+    <label class="sr-only" for="factuur-{{ line.pk }}">{% translate "Factuur" %}</label>
+    <select class="select" id="factuur-{{ line.pk }}" name="factuur" required style="flex:1;min-width:0;max-width:100%">
+        <option value="">{% translate "Kies een factuur…" %}</option>
+        {% for invoice in line.choices %}<option value="{{ invoice.pk }}">{{ invoice.number }} · {{ invoice.customer }} · {% blocktranslate with open=invoice.outstanding_cents|money %}open {{ open }}{% endblocktranslate %}</option>{% endfor %}
+    </select>
+    <button type="submit" class="btn btn-secondary btn-sm">{% translate "Boeken" %}</button>
+</form>
+{% if skip %}<form method="post" action="{% url 'bank:skip' line.pk %}" style="margin-top:var(--s-2)">{% csrf_token %}<input type="hidden" name="terug" value="{{ here }}"><button type="submit" class="btn btn-ghost btn-sm">{% translate "Overslaan" %}</button></form>{% endif %}

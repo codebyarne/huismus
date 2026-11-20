@@ -1,4 +1,4 @@
-{% load i18n money %}
+{% load i18n money documents_tags %}
 {% comment %}Invoice amount, credited, paid and what is still open (SPEC.md
 section 4: outstanding = total − issued credit notes − payments). `invoice`
 is loaded with Document.objects.with_payment_totals().{% endcomment %}
@@ -6,5 +6,7 @@ is loaded with Document.objects.with_payment_totals().{% endcomment %}
     <dt>{% translate "Factuurbedrag" %}</dt><dd>{{ invoice.total_cents|money }}</dd>
     {% if invoice.credited_cents %}<dt>{% translate "Gecrediteerd" %}</dt><dd>&minus;&nbsp;{{ invoice.credited_cents|money }}</dd>{% endif %}
     <dt>{% translate "Betaald" %}</dt><dd>{{ invoice.paid_cents|money }}</dd>
-    <dt class="is-strong">{% translate "Nog open" %}</dt><dd class="is-strong">{{ invoice.outstanding_cents|money }}</dd>
+    {% comment %}Paid more than the invoice (a bank statement can book that, #77): never "€ -10,00" open.{% endcomment %}
+    {% if invoice.outstanding_cents < 0 %}<dt class="is-strong">{% translate "Te veel betaald" %}</dt><dd class="is-strong">{{ invoice.paid_cents|add:invoice.credited_cents|subtract:invoice.total_cents|money }}</dd>
+    {% else %}<dt class="is-strong">{% translate "Nog open" %}</dt><dd class="is-strong">{{ invoice.outstanding_cents|money }}</dd>{% endif %}
 </dl>

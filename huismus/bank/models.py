@@ -22,6 +22,8 @@ class BankStatement(TimestampedModel):
     filename = models.CharField(_("bestandsnaam"), max_length=255)
     sha256 = models.CharField(_("sha256"), max_length=64)
     format = models.CharField(_("formaat"), max_length=20)
+    # What reading it found, for the summary on the page (reading.ReadResult).
+    summary = models.JSONField(_("samenvatting"), default=dict)
 
     class Meta:
         verbose_name = _("bankafschrift")
@@ -32,8 +34,16 @@ class BankStatement(TimestampedModel):
         return self.filename
 
 
+class BankTransactionQuerySet(models.QuerySet):
+    def waiting(self):
+        """What waits for the user: proposals and lines to choose for."""
+        return self.filter(state__in=[BankTransaction.State.PROPOSED, BankTransaction.State.OPEN])
+
+
 class BankTransaction(TimestampedModel):
     """One incoming payment from a statement, and what became of it."""
+
+    objects = BankTransactionQuerySet.as_manager()
 
     class State(models.TextChoices):
         # Huismus booked it itself: number and open amount fit.
@@ -89,3 +99,12 @@ class BankTransaction(TimestampedModel):
 
     def __str__(self):
         return f"{self.booked_on} {self.amount_cents} {self.counterparty_name}"
+
+    @property
+    def can_undo(self) -> bool:
+        """Booked from this line, by Huismus or by the user: a payment that
+        was there before the statement is never taken back."""
+        return self.payment_id is not None and self.state in (
+            self.State.BOOKED,
+            self.State.CONFIRMED,
+        )
