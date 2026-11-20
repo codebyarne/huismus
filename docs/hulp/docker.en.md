@@ -161,9 +161,35 @@ the image `ghcr.io/codebyarne/huismus:main`. It's built again after every
 change to Huismus that passes all the tests. So it can hold something that
 doesn't work well yet.
 
-That's why you run the preview next to your regular Huismus, with its own
-data, and not instead of it. A preview can change the database. After that
-you can't go back to the regular version without restoring a backup.
+You can run the preview in two ways: on your real administration, or
+next to it with a copy.
+
+### On your real administration
+
+This way you test what's new in your daily work. From there you simply
+move on to the next version: it holds everything the preview had, so your
+invoices, expenses and numbers stay.
+
+1. Make a backup: **Settings → Backups → Back up now**.
+2. In `compose.yaml`, set the `image` line to
+   `ghcr.io/codebyarne/huismus:main`.
+3. Run `docker compose pull` and `docker compose up -d`.
+
+You get the newest preview with the same two commands. Once the next
+version is out, set the `image` line back to
+`ghcr.io/codebyarne/huismus:0.1` and do the same.
+
+Back to the version you had, before the next one is out? That works as
+under [Going back to the previous version](#going-back-to-the-previous-version),
+with the backup from step 1. You then lose what you entered after it. An
+invoice you already sent is no longer in your administration, and Huismus
+gives out its number again. If you sent an invoice from the preview, it's
+better to wait for the next version.
+
+### Next to your regular Huismus
+
+Don't want that risk? Run the preview as a second Huismus, with its own
+data. Your regular Huismus stays as it is.
 
 Make a new folder, for example `huismus-voorproef`, and put this
 `compose.yaml` in it:
