@@ -147,9 +147,10 @@ FEATURES = (
                 _("Eén ZIP-bestand dat ook zonder Huismus opent."),
                 "exporteren",
             ),
-            _later(
+            Feature(
                 _("Importeren uit andere pakketten en uit Excel"),
                 _("Met één importbestand, ook als je niet van Moneybird komt."),
+                "importeren",
             ),
             _later(
                 _("Auditfile voor je boekhouder"),

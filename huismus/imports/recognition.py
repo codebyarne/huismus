@@ -11,6 +11,7 @@ from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
 
+from .csv_tables import CsvKind, kind_of
 from .detect import FileKind, detect_workbook
 from .sources import files_in_upload, is_archive
 
@@ -24,10 +25,18 @@ KIND_LABELS = {
     FileKind.RECURRING_INVOICES: _("Periodieke facturen"),
     FileKind.EXPENSES: _("Uitgaven"),
     FileKind.EXPENSE_LINES: _("Uitgaveregels"),
+    # Huismus's own format (imports.csv_tables).
+    CsvKind.CONTACTS: _("Klanten"),
+    CsvKind.CONTACT_PERSONS: _("Contactpersonen"),
+    CsvKind.INVOICES: _("Facturen"),
+    CsvKind.QUOTES: _("Offertes"),
+    CsvKind.LINES: _("Regels"),
+    CsvKind.EXPENSES: _("Uitgaven"),
+    CsvKind.EXPENSE_LINES: _("Uitgaveregels"),
 }
 
 
-def _kinds_in(files: dict[str, bytes]) -> list[FileKind]:
+def _kinds_in(files: dict[str, bytes]) -> list[FileKind | CsvKind]:
     kinds = []
     for name, content in files.items():
         if name.lower().endswith(".xlsx"):
@@ -37,6 +46,10 @@ def _kinds_in(files: dict[str, bytes]) -> list[FileKind]:
                 # report's notes instead, and its file stays unrecognised.
                 if detected.kind in KIND_LABELS and detected.kind not in kinds:
                     kinds.append(detected.kind)
+        elif name.lower().endswith(".csv"):
+            kind = kind_of(content)
+            if kind is not None and kind not in kinds:
+                kinds.append(kind)
     return kinds
 
 

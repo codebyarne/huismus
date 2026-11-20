@@ -24,7 +24,7 @@ from .columns import COLUMNS, check_columns
 from .commit import import_contacts, import_expenses, import_quotes, import_sales_invoices
 from .contacts import parse_contacts
 from .counting import COUNTED_SECTIONS, check_count, section
-from .csv_tables import is_complete, is_ours
+from .csv_tables import is_complete
 from .detect import FileKind, detect_workbook, unknown_sheets
 from .expenses import parse_expenses, receipts_by_external_id
 from .invoices import parse_sales_invoices, pdfs_by_external_id
@@ -116,7 +116,8 @@ def source_of(exports: list[Export]) -> str:
         if name.lower().endswith(".xlsx")
     )
     if not moneybird:
-        return csv_pipeline.SOURCE if any(is_ours(content) for content in csvs) else SOURCE
+        # Moneybird exports sheets; only CSV files can only be meant as ours.
+        return csv_pipeline.SOURCE if csvs else SOURCE
     if any(is_complete(content) for content in csvs):
         raise ImportSourceError(
             _(

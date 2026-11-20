@@ -51,7 +51,7 @@ GROUPS = (
         # Releases).
         ("beginnen", WHATS_NEW, FEEDBACK),
     ),
-    Group(_("Overstappen"), ("moneybird",)),
+    Group(_("Overstappen"), ("moneybird", "importeren")),
     Group(
         _("Het hele jaar"),
         (

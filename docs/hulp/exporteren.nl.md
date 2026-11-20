@@ -22,6 +22,7 @@ op haar eigen datum. Klanten gaan altijd allemaal mee, ook gearchiveerde.
   eruit kwam.
 - **regels.csv**: de regels van alle facturen, creditnota's en offertes.
 - **klanten.csv**: al je klanten.
+- **contactpersonen.csv**: de contactpersonen bij je klanten.
 - **uitgaven.csv** en **uitgaveregels.csv**: je uitgaven, en per regel de
   categorie.
 - **pdf/facturen**, **pdf/creditnotas** en **pdf/offertes**: elke pdf, met
@@ -53,6 +54,9 @@ puntkomma.
 
 Begint een tekst met `=`, `+`, `-` of `@`, dan zet Huismus er een `'` voor.
 Anders ziet een spreadsheet het als formule en voert die uit.
+
+Een export kun je ook weer importeren, in een nieuwe Huismus: zie
+[Overstappen uit een ander pakket of Excel](importeren.nl.md).
 
 Een export is geen back-up. Een back-up zet je terug in Huismus; een export
 is om je gegevens ergens anders te gebruiken. Hoe back-ups werken, lees je

@@ -23,6 +23,7 @@ its own date. All customers are always included, archived ones too.
   became.
 - **lines.csv**: the lines of every invoice, credit note and quote.
 - **customers.csv**: all your customers.
+- **contact-persons.csv**: the contact persons at your customers.
 - **expenses.csv** and **expense-lines.csv**: your expenses, and the
   category per line.
 - **pdf/invoices**, **pdf/credit-notes** and **pdf/quotes**: every PDF,
@@ -53,6 +54,9 @@ may ask which separator to use: choose the semicolon.
 
 If a text starts with `=`, `+`, `-` or `@`, Huismus puts a `'` in front.
 Otherwise a spreadsheet takes it for a formula and runs it.
+
+You can import an export again, into a new Huismus: see
+[Switching from another package or Excel](importeren.en.md).
 
 An export isn't a backup. You restore a backup into Huismus; an export is
 for using your data somewhere else. How backups work is explained in

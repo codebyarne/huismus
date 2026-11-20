@@ -7432,6 +7432,326 @@ msgstr ""
 "Huismus is made in the Netherlands. You can read about its maker and their "
 "other work on <a href=\"https://www.arnekrijnsen.com\">arnekrijnsen.com</a>."
 
+msgid "CSV-import"
+msgstr "CSV import"
+
+msgctxt "export file"
+msgid "contactpersonen"
+msgstr "contact-persons"
+
+#, python-format
+msgid "%(file)s, rij %(row)s: klant %(number)s heeft geen bedrijfsnaam en geen naam."
+msgstr "%(file)s, row %(row)s: customer %(number)s has no company name and no name."
+
+#, python-format
+msgid "%(label)s in het bestand € %(stated)s, volgens de regels € %(computed)s"
+msgstr "%(label)s in the file € %(stated)s, by the lines € %(computed)s"
+
+#, python-format
+msgid "regel %(position)s in het bestand € %(stated)s, uitgerekend € %(computed)s"
+msgstr "line %(position)s in the file € %(stated)s, computed € %(computed)s"
+
+#, python-format
+msgid "%(label)s: samen met de andere creditnota's is dit meer dan het bedrag van factuur %(invoice)s."
+msgstr "%(label)s: together with the other credit notes this is more than the amount of invoice %(invoice)s."
+
+#, python-format
+msgid "Factuur %(number)s: er is € %(paid)s betaald volgens het bestand, maar zonder datum. Voeg de betaling zelf toe."
+msgstr "Invoice %(number)s: € %(paid)s is paid according to the file, but without a date. Add the payment yourself."
+
+#, python-format
+msgid "Factuur %(number)s: volgens het bestand is hij betaald, maar er staat geen bedrag bij. Voeg de betaling zelf toe."
+msgstr "Invoice %(number)s: the file says it is paid, but gives no amount. Add the payment yourself."
+
+#, python-format
+msgid "het bedrag is € %(stated)s, maar de regels tellen op tot € %(lines)s."
+msgstr "the amount is € %(stated)s, but the lines add up to € %(lines)s."
+
+#, python-format
+msgid "de btw is € %(stated)s, maar de regels tellen op tot € %(lines)s."
+msgstr "the VAT is € %(stated)s, but the lines add up to € %(lines)s."
+
+msgid "ja, nee"
+msgstr "yes, no"
+
+#, python-format
+msgid "‘%(value)s’ is geen btw-tarief. Schrijf 21, 9 of 0."
+msgstr "‘%(value)s’ is not a VAT rate. Write 21, 9 or 0."
+
+msgid "een regel met btw verlegd heeft 0% btw."
+msgstr "a line with VAT reverse charged has 0% VAT."
+
+msgid "Huismus importeert alleen euro's. Schrijf hier EUR."
+msgstr "Huismus imports euros only. Write EUR here."
+
+#, python-format
+msgid "‘%(value)s’ is geen euro. Huismus importeert alleen euro's."
+msgstr "‘%(value)s’ is not the euro. Huismus imports euros only."
+
+msgid "een offerte hoort in het offertebestand."
+msgstr "a quote belongs in the quotes file."
+
+#, python-format
+msgid "In %(export)s staan twee bestanden met dezelfde soort gegevens (%(first)s en %(second)s). Zip elke export apart, of importeer ze één voor één."
+msgstr "%(export)s holds two files with the same kind of data (%(first)s and %(second)s). Zip each export separately, or import them one at a time."
+
+#, python-format
+msgid "In %(file)s staat een kolom die Huismus niet kent: %(columns)s. Huismus neemt hem niet over."
+msgid_plural "In %(file)s staan kolommen die Huismus niet kent: %(columns)s. Huismus neemt ze niet over."
+msgstr[0] "%(file)s has a column Huismus doesn't know: %(columns)s. Huismus doesn't import it."
+msgstr[1] "%(file)s has columns Huismus doesn't know: %(columns)s. Huismus doesn't import them."
+
+#, python-format
+msgid "Bij %(file)s zit geen bestand met de regels. Zonder regels kan Huismus een factuur of offerte niet importeren. Zet het regelbestand erbij."
+msgstr "There is no file with the lines next to %(file)s. Without lines Huismus can't import an invoice or quote. Add the lines file."
+
+#, python-format
+msgid "Bij %(file)s zit geen bestand met de uitgaven zelf. Zet het erbij."
+msgstr "There is no file with the expenses themselves next to %(file)s. Add it."
+
+#, python-format
+msgid "%(label)s staat twee keer in de bestanden, met verschillen. Huismus neemt de laatste."
+msgstr "%(label)s is in the files twice, with differences. Huismus takes the last one."
+
+msgid "Huismus herkent geen van deze bestanden. Download het sjabloon en kijk of de kolomnamen in de eerste rij staan."
+msgstr "Huismus recognises none of these files. Download the template and check that the column names are in the first row."
+
+#, python-format
+msgid "Het voorbeeld uit het sjabloon staat er nog in. Huismus slaat het over: %(what)s."
+msgstr "The example from the template is still in there. Huismus skips it: %(what)s."
+
+msgid "de klant"
+msgstr "the customer"
+
+msgid "de factuur"
+msgstr "the invoice"
+
+msgid "de offerte"
+msgstr "the quote"
+
+msgid "de uitgave"
+msgstr "the expense"
+
+#, python-format
+msgid "%(names)s en nog %(count)s"
+msgstr "%(names)s and %(count)s more"
+
+#, python-format
+msgid "Dit bestand hoort bij geen factuur, offerte of uitgave in de bestanden. Huismus slaat het over: %(names)s."
+msgid_plural "Deze bestanden horen bij geen factuur, offerte of uitgave in de bestanden. Huismus slaat ze over: %(names)s."
+msgstr[0] "This file belongs to no invoice, quote or expense in the files. Huismus skips it: %(names)s."
+msgstr[1] "These files belong to no invoice, quote or expense in the files. Huismus skips them: %(names)s."
+
+#, python-format
+msgid "In %(file)s, rij %(row)s, kolom ‘%(column)s’: %(reason)s"
+msgstr "In %(file)s, row %(row)s, column ‘%(column)s’: %(reason)s"
+
+msgid "dit vak is leeg, maar moet gevuld zijn."
+msgstr "this cell is empty, but must be filled in."
+
+#, python-format
+msgid "‘%(value)s’ is geen datum die Huismus leest. Schrijf 2026-03-14 of 14-03-2026."
+msgstr "‘%(value)s’ is not a date Huismus reads. Write 2026-03-14 or 14-03-2026."
+
+#, python-format
+msgid "‘%(value)s’ is geen bedrag dat Huismus leest. Schrijf 1234,56."
+msgstr "‘%(value)s’ is not an amount Huismus reads. Write 1234,56."
+
+#, python-format
+msgid "‘%(value)s’ is geen getal. Schrijf 2 of 2,5."
+msgstr "‘%(value)s’ is not a number. Write 2 or 2,5."
+
+#, python-format
+msgid "‘%(value)s’ is geen heel getal."
+msgstr "‘%(value)s’ is not a whole number."
+
+#, python-format
+msgid "‘%(value)s’ kent Huismus hier niet. Kies uit: %(examples)s."
+msgstr "Huismus doesn't know ‘%(value)s’ here. Choose from: %(examples)s."
+
+#, python-format
+msgid "%(file)s heeft geen puntkomma's tussen de kolommen. Sla het bestand op als CSV met puntkomma's (;) en probeer het opnieuw."
+msgstr "%(file)s has no semicolons between the columns. Save the file as CSV with semicolons (;) and try again."
+
+#, python-format
+msgid "In %(file)s ontbreekt de kolom ‘%(column)s’. Zet hem erbij, met precies deze naam, en probeer het opnieuw."
+msgstr "The column ‘%(column)s’ is missing from %(file)s. Add it, with exactly this name, and try again."
+
+msgctxt "import template"
+msgid "huismus-importsjabloon"
+msgstr "huismus-import-template"
+
+msgctxt "import template"
+msgid "LEESMIJ"
+msgstr "README"
+
+msgid "Sjabloon voor het importeren in Huismus"
+msgstr "Template for importing into Huismus"
+
+msgid "In elk bestand staat één voorbeeld. Vervang het door je eigen gegevens: een voorbeeld dat je laat staan, slaat Huismus over."
+msgstr "Each file holds one example. Replace it with your own data: Huismus skips an example you leave in."
+
+msgid "Laat de eerste rij met de kolomnamen staan. Een bestand of een kolom die je niet nodig hebt, mag je weghalen."
+msgstr "Keep the first row with the column names. You can remove a file or a column you don't need."
+
+msgid "Bedragen schrijf je als 1234,56 en datums als 2026-03-14 of 14-03-2026. Tussen de kolommen staat een puntkomma."
+msgstr "Write amounts as 1234,56 and dates as 2026-03-14 or 14-03-2026. A semicolon separates the columns."
+
+msgid "Pdf's van facturen zet je in pdf/facturen, van creditnota's in pdf/creditnotas en van offertes in pdf/offertes, met het nummer als naam. Bonnetjes zet je in bonnetjes, met hun naam in de kolom bonnetjes."
+msgstr "Put PDFs of invoices in pdf/invoices, of credit notes in pdf/credit-notes and of quotes in pdf/quotes, with the number as the name. Put receipts in receipts, with their name in the column receipts."
+
+msgid "Maak er weer één zip van en kies die in Huismus bij Importeren. Huismus doet eerst een proefdraai en slaat pas iets op als jij dat kiest."
+msgstr "Make one zip of it again and choose it in Huismus under Import. Huismus does a dry run first and only saves something when you choose to."
+
+msgid "Voorbeeld BV"
+msgstr "Example Ltd"
+
+msgid "Advies"
+msgstr "Advice"
+
+msgid "uur"
+msgstr "hours"
+
+msgid "Voorbeeldstraat 1"
+msgstr "1 Example Street"
+
+msgid "Voorbeeldstad"
+msgstr "Example Town"
+
+msgid "Sam Voorbeeld"
+msgstr "Sam Example"
+
+msgid "Printerpapier"
+msgstr "Printer paper"
+
+msgid "Voorbeeldwinkel"
+msgstr "Example shop"
+
+msgid "Kantoor"
+msgstr "Office"
+
+msgid "Je koos bestanden uit Moneybird en CSV-bestanden van Huismus door elkaar. Importeer ze na elkaar."
+msgstr "You chose files from Moneybird and CSV files of Huismus together. Import them one after the other."
+
+msgid "in het bestand"
+msgstr "in the file"
+
+msgid "geweigerd"
+msgstr "refused"
+
+msgid "Geweigerd"
+msgstr "Refused"
+
+msgid "Deze komen niet in Huismus. Verbeter ze in het bestand en importeer opnieuw."
+msgstr "These don't come into Huismus. Correct them in the file and import again."
+
+msgid "Bedragen kloppen niet met de regels"
+msgstr "Amounts differ from the lines"
+
+msgid "Huismus neemt de bedragen uit het bestand over. Kijk ze na."
+msgstr "Huismus takes the amounts from the file. Check them."
+
+msgid "Creditnota zonder factuur"
+msgstr "Credit note without an invoice"
+
+msgid "Huismus vond de factuur niet waar deze bij horen. Ze komen binnen zonder koppeling met een factuur."
+msgstr "Huismus didn't find the invoice these belong to. They come in without a link to an invoice."
+
+msgid "Er staan al uitgaven in Huismus"
+msgstr "There are expenses in Huismus already"
+
+#, python-format
+msgid "Er staat al %(count)s uitgave in Huismus. De uitgaven uit het bestand komen erbij."
+msgid_plural "Er staan al %(count)s uitgaven in Huismus. De uitgaven uit het bestand komen erbij."
+msgstr[0] "There is %(count)s expense in Huismus already. The expenses from the file are added to it."
+msgstr[1] "There are %(count)s expenses in Huismus already. The expenses from the file are added to them."
+
+msgid "Misschien dubbel"
+msgstr "Maybe double"
+
+msgid "Er staat al een uitgave met dezelfde datum en hetzelfde bedrag. Huismus importeert deze wel. Is hij dubbel, verwijder hem dan daarna."
+msgstr "There is an expense with the same date and the same amount already. Huismus does import this one. If it is double, delete it afterwards."
+
+msgid "Anders dan de vorige keer"
+msgstr "Different from last time"
+
+msgid "Deze importeerde je al eerder, met een andere datum of een ander bedrag. Huismus past ze niet aan. Verander ze bij de uitgave zelf."
+msgstr "You imported these before, with another date or another amount. Huismus doesn't change them. Change them on the expense itself."
+
+msgid "Zonder btw-tarief"
+msgstr "Without a VAT rate"
+
+#, python-format
+msgid "%(count)s uitgaveregel heeft geen btw-tarief. Huismus telt de btw ervan pas mee in het rapport Btw-aangifte als je het tarief kiest bij de uitgave."
+msgid_plural "%(count)s uitgaveregels hebben geen btw-tarief. Huismus telt de btw ervan pas mee in het rapport Btw-aangifte als je het tarief kiest bij de uitgave."
+msgstr[0] "%(count)s expense line has no VAT rate. Huismus only counts its VAT in the VAT return report once you choose the rate on the expense."
+msgstr[1] "%(count)s expense lines have no VAT rate. Huismus only counts their VAT in the VAT return report once you choose the rate on the expense."
+
+msgid "Deze categorieën staan nog niet in Huismus. Huismus maakt ze aan, onderaan je lijst."
+msgstr "These categories aren't in Huismus yet. Huismus creates them, at the bottom of your list."
+
+msgid "Importeren uit een ander pakket of Excel"
+msgstr "Import from another package or Excel"
+
+msgid "nieuwe contactpersoon"
+msgid_plural "nieuwe contactpersonen"
+msgstr[0] "new contact person"
+msgstr[1] "new contact persons"
+
+msgid "Contactpersonen zonder klant"
+msgstr "Contact persons without a customer"
+
+msgid "Hun klantnummer staat niet in het klantenbestand en niet in Huismus. Huismus slaat ze over."
+msgstr "Their customer number is not in the customers file and not in Huismus. Huismus skips them."
+
+msgid "Je bedrijfsgegevens zijn nog leeg"
+msgstr "Your business details are still empty"
+
+msgid "Een geïmporteerde factuur krijgt de bedrijfsgegevens van nu mee. Vul ze eerst in, dan staan ze op elke factuur zonder eigen pdf."
+msgstr "An imported invoice takes the business details of now. Fill them in first, so they are on every invoice without a PDF of its own."
+
+msgid "Zet je klanten, facturen, offertes en uitgaven in het sjabloon van Huismus en neem ze mee."
+msgstr "Put your customers, invoices, quotes and expenses into Huismus's template and bring them along."
+
+msgid "Waar je vandaan komt"
+msgstr "Where you come from"
+
+msgid "Uit Moneybird"
+msgstr "From Moneybird"
+
+msgid "Uit een ander pakket of Excel"
+msgstr "From another package or Excel"
+
+msgid "Sleep je ingevulde zip hierheen"
+msgstr "Drop your filled-in zip here"
+
+msgid "Het sjabloon, of een export uit Huismus zelf."
+msgstr "The template, or an export from Huismus itself."
+
+msgid "Zo zet je je gegevens in het sjabloon"
+msgstr "How to put your data into the template"
+
+msgid "Download het sjabloon: een zip met een bestand voor je klanten, facturen, offertes en uitgaven."
+msgstr "Download the template: a zip with a file for your customers, invoices, quotes and expenses."
+
+msgid "Open de bestanden in Excel of Numbers en vervang het voorbeeld door je eigen gegevens. De kolomnamen laat je staan."
+msgstr "Open the files in Excel or Numbers and replace the example with your own data. Keep the column names."
+
+msgid "Heb je pdf's van je facturen of bonnetjes? Zet ze in de mappen die de LEESMIJ noemt."
+msgstr "Do you have PDFs of your invoices, or receipts? Put them in the folders the README names."
+
+msgid "Maak er weer één zip van en sleep die naar het vak."
+msgstr "Make one zip of it again and drag it to the box."
+
+msgid "Sjabloon downloaden"
+msgstr "Download template"
+
+msgid "Een export uit Huismus heeft dezelfde vorm. Zo neem je je administratie mee naar een nieuwe Huismus."
+msgstr "An export from Huismus has the same form. That is how you take your books to a new Huismus."
+
+msgid "Welke kolommen er zijn en hoe je ze invult"
+msgstr "Which columns there are and how to fill them in"
+
 #~ msgid "KOR met je grens in beeld"
 #~ msgstr "KOR, with your limit in view"
 

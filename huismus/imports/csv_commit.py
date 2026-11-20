@@ -19,7 +19,7 @@ from django.db.models import Sum
 from django.utils.translation import gettext as _
 
 from huismus.business.models import Settings
-from huismus.contacts.models import Contact
+from huismus.contacts.models import Contact, ContactPerson
 from huismus.core.export import percent
 from huismus.core.models import Attachment
 from huismus.core.templatetags.money import euros
@@ -43,6 +43,9 @@ class ContactReport:
     # Rows Huismus didn't take, each with the reason.
     refused: list[str] = field(default_factory=list)
     discrepancies: list[str] = field(default_factory=list)
+    persons_new: int = 0
+    # Contact persons whose customer number is no contact's: "<name> (<number>)".
+    persons_without_contact: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -108,6 +111,28 @@ def import_contacts(contacts) -> ContactReport:
         else:
             report.unchanged += 1
     return report
+
+
+def import_contact_persons(persons, report: ContactReport) -> None:
+    """Adds the persons a contact of this import doesn't have yet. A
+    contact made here or imported another way is left as it is, persons
+    included."""
+    for parsed in persons:
+        contact = _contact(parsed.customer_number)
+        if contact is None:
+            report.persons_without_contact.append(f"{parsed.name} ({parsed.customer_number})")
+            continue
+        if contact.source != SOURCE:
+            continue
+        person = {
+            "name": parsed.name,
+            "email": parsed.email,
+            "phone": parsed.phone,
+            "department": parsed.department,
+        }
+        if not contact.persons.filter(**person).exists():
+            ContactPerson.objects.create(contact=contact, **person)
+            report.persons_new += 1
 
 
 def _contact(customer_number: str) -> Contact | None:

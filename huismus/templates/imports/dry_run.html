@@ -6,8 +6,8 @@
 {% block content %}
 <div class="page-head">
     <div class="titles">
-        <a class="back" href="{% url 'imports:upload' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Andere bestanden kiezen" %}</a>
-        <h1>{% translate "Importeren uit Moneybird" %}</h1>
+        <a class="back" href="{% url back_url %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Andere bestanden kiezen" %}</a>
+        <h1>{% if source == "csv" %}{% translate "Importeren uit een ander pakket of Excel" %}{% else %}{% translate "Importeren uit Moneybird" %}{% endif %}</h1>
     </div>
 </div>
 {% include "imports/_steps.html" with step=2 %}
@@ -35,13 +35,26 @@
 
 <div class="stack" style="gap:var(--s-3)">
     {% if contacts %}
-    <details class="report{% if contacts.discrepancies %} is-warn{% endif %}">
+    <details class="report{% if contacts.discrepancies or contacts.refused or contacts.persons_without_contact %} is-warn{% endif %}"{% if contacts.refused or contacts.persons_without_contact %} open{% endif %}>
         <summary>
             <span class="r-icon"><svg class="i" aria-hidden="true"><use href="#check"></use></svg></span>
             <span class="r-title"><strong>{% translate "Klanten" %}</strong><span>{% blocktranslate with new=contacts.new updated=contacts.updated %}{{ new }} nieuw, {{ updated }} bijgewerkt{% endblocktranslate %}</span></span>
             <svg class="i chev" aria-hidden="true"><use href="#chevron-down"></use></svg>
         </summary>
-        <div class="r-body"><div class="stat-chips">{% if contacts.in_export is not None %}<span class="stat-chip"><b>{{ contacts.in_export }}</b>{% translate "in de export" %}</span>{% endif %}<span class="stat-chip"><b>{{ contacts.new }}</b>{% translate "nieuw" %}</span><span class="stat-chip"><b>{{ contacts.updated }}</b>{% translate "bijgewerkt" %}</span><span class="stat-chip"><b>{{ contacts.unchanged }}</b>{% translate "ongewijzigd" %}</span></div></div>
+        <div class="r-body"><div class="stat-chips">{% if contacts.in_export is not None %}<span class="stat-chip"><b>{{ contacts.in_export }}</b>{% translate "in de export" %}</span>{% endif %}<span class="stat-chip"><b>{{ contacts.new }}</b>{% translate "nieuw" %}</span><span class="stat-chip"><b>{{ contacts.updated }}</b>{% translate "bijgewerkt" %}</span><span class="stat-chip"><b>{{ contacts.unchanged }}</b>{% translate "ongewijzigd" %}</span>{% if contacts.persons_new %}<span class="stat-chip"><b>{{ contacts.persons_new }}</b>{% blocktranslate count count=contacts.persons_new %}nieuwe contactpersoon{% plural %}nieuwe contactpersonen{% endblocktranslate %}</span>{% endif %}{% if contacts.refused %}<span class="stat-chip is-warn"><b>{{ contacts.refused|length }}</b>{% translate "geweigerd" %}</span>{% endif %}</div>
+        {% if contacts.refused %}
+        <div class="stack" style="gap:8px"><h3>{% translate "Geweigerd" %}</h3>
+            <ul class="issue-list">{% for item in contacts.refused %}<li><span>{{ item }}</span></li>{% endfor %}</ul>
+            <p class="small muted">{% translate "Deze komen niet in Huismus. Verbeter ze in het bestand en importeer opnieuw." %}</p>
+        </div>
+        {% endif %}
+        {% if contacts.persons_without_contact %}
+        <div class="stack" style="gap:8px"><h3>{% translate "Contactpersonen zonder klant" %}</h3>
+            <p class="small">{{ contacts.persons_without_contact|join:", " }}</p>
+            <p class="small muted">{% translate "Hun klantnummer staat niet in het klantenbestand en niet in Huismus. Huismus slaat ze over." %}</p>
+        </div>
+        {% endif %}
+        </div>
     </details>
     {% endif %}
     {% if invoices %}{% translate "Facturen" as invoices_title %}{% translate "Regels zonder factuur" as invoice_orphans_title %}{% translate "Deze regels horen bij geen enkele factuur in de export. Huismus neemt ze niet over, maar bewaart ze wel." as invoice_orphans_text %}{% include "imports/_report_section.html" with r=invoices title=invoices_title orphans_title=invoice_orphans_title orphans_text=invoice_orphans_text %}{% endif %}
@@ -58,6 +71,11 @@
 <form id="doorvoeren" method="post" action="{% url 'imports:commit' %}">
     {% csrf_token %}
     <input type="hidden" name="token" value="{{ token }}">
+    {% if source == "csv" %}
+    {% if business_name_missing %}
+    <div class="flash flash-info" style="margin-top:var(--s-6)"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><div class="flash-body"><strong>{% translate "Je bedrijfsgegevens zijn nog leeg" %}</strong><span class="small">{% translate "Een geïmporteerde factuur krijgt de bedrijfsgegevens van nu mee. Vul ze eerst in, dan staan ze op elke factuur zonder eigen pdf." %} <a href="{% url 'business:topic' 'bedrijf' %}">{% translate "Bedrijfsgegevens invullen" %} →</a></span></div></div>
+    {% endif %}
+    {% else %}
     <section class="card settings-section" id="bedrijfsgegevens" style="margin-top:var(--s-6)">
         <div class="card-head"><h2>{% translate "Je bedrijfsgegevens" %}</h2></div>
         <div class="card-pad stack" style="gap:var(--s-4)">
@@ -77,6 +95,7 @@
             </div>
         </div>
     </section>
+    {% endif %}
 </form>
 
 <section class="card card-pad row" style="margin-top:var(--s-6);align-items:center;gap:var(--s-4)">

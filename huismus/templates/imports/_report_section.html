@@ -11,10 +11,11 @@
     </summary>
     <div class="r-body">
         <div class="stat-chips">
-            {% if r.in_export is not None %}<span class="stat-chip"><b>{{ r.in_export }}</b>{% translate "in de export" %}</span>{% endif %}
+            {% if r.in_export is not None %}<span class="stat-chip"><b>{{ r.in_export }}</b>{% if source == "csv" %}{% translate "in het bestand" %}{% else %}{% translate "in de export" %}{% endif %}</span>{% endif %}
             <span class="stat-chip"><b>{{ r.new }}</b>{% translate "nieuw" %}</span>
             <span class="stat-chip"><b>{{ r.unchanged }}</b>{% translate "al aanwezig" %}</span>
             {% if r.skipped_count %}<span class="stat-chip is-warn"><b>{{ r.skipped_count }}</b>{% translate "overgeslagen" %}</span>{% endif %}
+            {% if r.refused %}<span class="stat-chip is-warn"><b>{{ r.refused|length }}</b>{% translate "geweigerd" %}</span>{% endif %}
             {% if r.discrepancies %}<span class="stat-chip is-warn"><b>{{ r.discrepancies|length }}</b>{% blocktranslate count count=r.discrepancies|length %}afwijking{% plural %}afwijkingen{% endblocktranslate %}</span>{% endif %}
         </div>
         {% if r.skipped_missing_contact or r.skipped_no_lines %}
@@ -23,6 +24,12 @@
                 {% for number in r.skipped_missing_contact %}<li><span class="ref">{{ number }}</span><span>{% translate "De klant staat niet in het klantenbestand." %}</span><span class="pill pill-unpaid no-dot">{% translate "overgeslagen" %}</span></li>{% endfor %}
                 {% for number in r.skipped_no_lines %}<li><span class="ref">{{ number }}</span><span>{% translate "Er staan geen regels voor in het regelbestand." %}</span><span class="pill pill-unpaid no-dot">{% translate "overgeslagen" %}</span></li>{% endfor %}
             </ul>
+        </div>
+        {% endif %}
+        {% if r.refused %}
+        <div class="stack" style="gap:8px"><h3>{% translate "Geweigerd" %}</h3>
+            <ul class="issue-list">{% for item in r.refused %}<li><span>{{ item }}</span><span class="pill pill-unpaid no-dot">{% translate "geweigerd" %}</span></li>{% endfor %}</ul>
+            <p class="small muted">{% translate "Deze komen niet in Huismus. Verbeter ze in het bestand en importeer opnieuw." %}</p>
         </div>
         {% endif %}
         {% if r.orphan_lines %}
@@ -40,9 +47,9 @@
         </div>
         {% endif %}
         {% if r.discrepancies %}
-        <div class="stack" style="gap:8px"><h3>{% translate "Afwijking van Moneybirds eigen totaal" %}</h3>
+        <div class="stack" style="gap:8px"><h3>{% if source == "csv" %}{% translate "Bedragen kloppen niet met de regels" %}{% else %}{% translate "Afwijking van Moneybirds eigen totaal" %}{% endif %}</h3>
             <ul class="issue-list">{% for d in r.discrepancies %}<li><span>{{ d }}</span></li>{% endfor %}</ul>
-            <p class="small muted">{% translate "Vergelijk ze met Moneybird zelf." %}</p>
+            <p class="small muted">{% if source == "csv" %}{% translate "Huismus neemt de bedragen uit het bestand over. Kijk ze na." %}{% else %}{% translate "Vergelijk ze met Moneybird zelf." %}{% endif %}</p>
         </div>
         {% endif %}
         {% if r.moneybird_reports %}
@@ -63,6 +70,32 @@
             {% if r.ubl.all_match %}<p class="small muted">{% translate "De UBL-bestanden kloppen met je facturen." %}</p>{% endif %}
         </div>
         {% endif %}
+        {% if r.unlinked_credit_notes %}
+        <div class="stack" style="gap:8px"><h3>{% translate "Creditnota zonder factuur" %}</h3>
+            <p class="small">{{ r.unlinked_credit_notes|join:", " }}</p>
+            <p class="small muted">{% translate "Huismus vond de factuur niet waar deze bij horen. Ze komen binnen zonder koppeling met een factuur." %}</p>
+        </div>
+        {% endif %}
+        {% if r.other_expenses and r.new %}
+        <div class="flash flash-info"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><div class="flash-body"><strong>{% translate "Er staan al uitgaven in Huismus" %}</strong><span class="small">{% blocktranslate count count=r.other_expenses %}Er staat al {{ count }} uitgave in Huismus. De uitgaven uit het bestand komen erbij.{% plural %}Er staan al {{ count }} uitgaven in Huismus. De uitgaven uit het bestand komen erbij.{% endblocktranslate %}</span></div></div>
+        {% endif %}
+        {% if r.possible_duplicates %}
+        <div class="stack" style="gap:8px"><h3>{% translate "Misschien dubbel" %}</h3>
+            <ul class="issue-list">{% for item in r.possible_duplicates %}<li><span>{{ item }}</span></li>{% endfor %}</ul>
+            <p class="small muted">{% translate "Er staat al een uitgave met dezelfde datum en hetzelfde bedrag. Huismus importeert deze wel. Is hij dubbel, verwijder hem dan daarna." %}</p>
+        </div>
+        {% endif %}
+        {% if r.changed_in_file %}
+        <div class="stack" style="gap:8px"><h3>{% translate "Anders dan de vorige keer" %}</h3>
+            <p class="small">{{ r.changed_in_file|join:", " }}</p>
+            <p class="small muted">{% translate "Deze importeerde je al eerder, met een andere datum of een ander bedrag. Huismus past ze niet aan. Verander ze bij de uitgave zelf." %}</p>
+        </div>
+        {% endif %}
+        {% if r.lines_without_rate %}
+        <div class="stack" style="gap:8px"><h3>{% translate "Zonder btw-tarief" %}</h3>
+            <p class="small muted">{% blocktranslate count count=r.lines_without_rate %}{{ count }} uitgaveregel heeft geen btw-tarief. Huismus telt de btw ervan pas mee in het rapport Btw-aangifte als je het tarief kiest bij de uitgave.{% plural %}{{ count }} uitgaveregels hebben geen btw-tarief. Huismus telt de btw ervan pas mee in het rapport Btw-aangifte als je het tarief kiest bij de uitgave.{% endblocktranslate %}</p>
+        </div>
+        {% endif %}
         {% if r.missing_pdfs %}
         <div class="stack" style="gap:8px"><h3>{% translate "Geen PDF gevonden" %}</h3>
             <p class="small">{{ r.missing_pdfs|join:", " }}</p>
@@ -78,7 +111,7 @@
         {% if r.new_categories %}
         <div class="stack" style="gap:8px"><h3>{% translate "Nieuwe categorieën" %}</h3>
             <p class="small">{{ r.new_categories|join:", " }}</p>
-            <p class="small muted">{% translate "Deze categorieën uit Moneybird staan nog niet in Huismus. Huismus maakt ze aan, onderaan je lijst." %}</p>
+            <p class="small muted">{% if source == "csv" %}{% translate "Deze categorieën staan nog niet in Huismus. Huismus maakt ze aan, onderaan je lijst." %}{% else %}{% translate "Deze categorieën uit Moneybird staan nog niet in Huismus. Huismus maakt ze aan, onderaan je lijst." %}{% endif %}</p>
         </div>
         {% endif %}
         {% if r.unknown_vat_rates %}
