@@ -39,6 +39,10 @@ itself. See [Receipts on the road](bonnetjes.en.md).
 
 ## Categories
 
+Missing a category while you fill in an expense? Click the **+** next to the
+category and fill in its name. Huismus makes it when you save the expense. A
+new line starts with the category of the line above it.
+
 Under **Categories** on the Expenses page you add, rename and order your
 categories. The order decides how they appear in drop-down lists and on the
 year overview. Click a category to see its expenses, of every year.

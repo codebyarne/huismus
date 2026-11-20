@@ -14,7 +14,7 @@ from playwright.sync_api import expect
 
 from huismus.core.demo_receipts import _pdf, _photo
 from huismus.core.models import Attachment
-from huismus.expenses.models import Expense
+from huismus.expenses.models import Expense, ExpenseCategory
 from tests.e2e.conftest import IGNORED
 
 pytestmark = pytest.mark.django_db(transaction=True)
@@ -218,3 +218,32 @@ def test_on_a_wide_screen_uitgave_is_the_ordinary_form(app):
     app.get_by_role("link", name="Nieuwe uitgave").first.click()
     expect(app).to_have_url(app.base + "/uitgaven/nieuw/")
     expect(app.get_by_text("Sleep een bonnetje hierheen")).to_be_visible()
+
+
+def test_a_new_category_on_the_photo_page(phone):
+    # Owner, 2026-11-20: a category that isn't there yet, made on the spot.
+    phone.goto(phone.base + "/uitgaven/")
+    _camera(phone, lambda: phone.get_by_role("link", name="Nieuwe uitgave").first.tap())
+    name = phone.get_by_label("Naam van de nieuwe categorie")
+    expect(name).to_be_hidden()
+    phone.get_by_text("Nieuwe categorie", exact=True).locator("..").tap()
+    expect(name).to_be_focused()
+    expect(phone.get_by_label("Categorie", exact=True)).to_be_hidden()
+    name.fill("Eten en drinken")
+    phone.get_by_label("Bedrag, zoals je het betaalde").fill("61,60")
+    phone.get_by_label("Btw", exact=True).fill("6,63")
+    phone.get_by_label("Btw-tarief").select_option("9")
+    phone.get_by_role("button", name="Uitgave opslaan").tap()
+
+    expect(phone.locator("#toasts")).to_contain_text("Uitgave opgeslagen.")
+    assert Expense.objects.get().lines.get().category.name == "Eten en drinken"
+
+
+def test_a_new_line_starts_with_the_category_above(app):
+    # Owner, 2026-11-20.
+    category = ExpenseCategory.objects.create(name="Kantoor")
+    app.set_viewport_size({"width": 1440, "height": 900})
+    app.goto(app.base + "/uitgaven/nieuw/")
+    app.get_by_label("Categorie", exact=True).select_option("Kantoor")
+    app.get_by_role("button", name="Regel toevoegen").click()
+    expect(app.get_by_label("Categorie", exact=True).nth(1)).to_have_value(str(category.pk))

@@ -3416,6 +3416,15 @@ msgstr "Choose a photo or file"
 msgid "Zonder bonnetje"
 msgstr "Without a receipt"
 
+msgid "naam van de nieuwe categorie"
+msgstr "name of the new category"
+
+msgid "Vul de naam van de nieuwe categorie in."
+msgstr "Fill in the name of the new category."
+
+msgid "Naam van de nieuwe categorie"
+msgstr "Name of the new category"
+
 msgid "Bonnetje uploaden…"
 msgstr "Uploading receipt…"
 

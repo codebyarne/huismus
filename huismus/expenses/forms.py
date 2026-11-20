@@ -27,17 +27,42 @@ class ExpenseForm(forms.ModelForm):
 
 
 class ExpenseLineForm(forms.ModelForm):
+    """One line. A category that isn't there yet can be made on the spot
+    (owner, 2026-11-20): the "+" beside the list (add_category, a checkbox
+    drawn as a button; huismus.css swaps the list for a field for the name,
+    without JS). The category is made when the expense is saved
+    (category_to_save), never by a form with an error."""
+
+    add_category = forms.BooleanField(label=_("Nieuwe categorie"), required=False)
+    new_category = forms.CharField(
+        label=_("naam van de nieuwe categorie"),
+        required=False,
+        max_length=ExpenseCategory._meta.get_field("name").max_length,
+    )
     amount_cents = EuroCentsField(label=_("bedrag"))
     vat_info_cents = EuroCentsField(label=_("btw ter info"), required=False)
 
     class Meta:
         model = ExpenseLine
-        fields = ["description", "category", "amount_cents", "vat_info_cents", "vat_rate"]
+        fields = [
+            "description",
+            "category",
+            "add_category",
+            "new_category",
+            "amount_cents",
+            "vat_info_cents",
+            "vat_rate",
+        ]
         widgets = {"description": forms.TextInput()}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["category"].empty_label = _("Geen categorie")
+        # expenses/_category_field.html draws these two itself.
+        self.fields["category"].widget.attrs["class"] = "select"
+        self.fields["new_category"].widget.attrs.update(
+            {"class": "input", "aria-label": _("Naam van de nieuwe categorie")}
+        )
         if Settings.load().kor_enabled:
             # Under the KOR the rate is not asked; a stored one stays
             # (rate_to_save takes it from the line).
@@ -63,7 +88,28 @@ class ExpenseLineForm(forms.ModelForm):
         vat = cleaned.get("vat_info_cents")
         if cleaned.get("vat_rate") == VatRate.ZERO and vat:
             self.add_error("vat_info_cents", _("Bij 0% of geen btw is het btw-bedrag € 0,00."))
+        # The name counts only with the "+" on: the field is out of sight
+        # otherwise, and the list is while it is on.
+        name = " ".join(cleaned.get("new_category", "").split())
+        cleaned["new_category"] = ""
+        if cleaned.get("add_category"):
+            if not name and "new_category" not in self.errors:
+                self.add_error("new_category", _("Vul de naam van de nieuwe categorie in."))
+            # A name that is there already, whatever its capitals, is that one.
+            cleaned["category"] = ExpenseCategory.objects.filter(name__iexact=name).first()
+            if cleaned["category"] is None:
+                cleaned["new_category"] = name
         return cleaned
+
+    def category_to_save(self) -> ExpenseCategory | None:
+        """The category chosen, or the new one, made here: call this only
+        inside the transaction that saves the expense. Two lines with the
+        same new name get one category."""
+        name = self.cleaned_data.get("new_category")
+        if not name:
+            return self.cleaned_data.get("category")
+        existing = ExpenseCategory.objects.filter(name__iexact=name).first()
+        return existing or ExpenseCategory.at_the_bottom(name)
 
     def rate_to_save(self) -> str:
         """The rate to save: the one chosen, or under the KOR the one the
@@ -76,23 +122,30 @@ class ExpenseLineForm(forms.ModelForm):
 class BaseExpenseLineFormSet(forms.BaseInlineFormSet):
     def clean(self):
         super().clean()
-        if not any(self.errors) and not self.line_inputs():
+        # Not line_inputs(): that makes a new category, and this is checking.
+        if not any(self.errors) and not self._filled_forms():
             raise forms.ValidationError(_("Vul minstens één regel in met een bedrag."))
 
+    def _filled_forms(self) -> list:
+        """Every filled-in line not marked to delete. The empty line to fill
+        in is left out (Django leaves its cleaned_data empty)."""
+        return [
+            form for form in self.forms if form.cleaned_data and not form.cleaned_data.get("DELETE")
+        ]
+
     def line_inputs(self) -> list[ExpenseLineInput]:
-        """The lines to save: every filled-in line not marked to delete.
-        The empty line to fill in is left out (Django leaves its
-        cleaned_data empty)."""
+        """The lines to save. Makes a line's new category
+        (ExpenseLineForm.category_to_save): call it where the expense is
+        saved, inside that transaction."""
         return [
             ExpenseLineInput(
                 description=form.cleaned_data.get("description", ""),
                 amount_cents=form.cleaned_data["amount_cents"],
                 vat_info_cents=form.cleaned_data.get("vat_info_cents"),
-                category=form.cleaned_data.get("category"),
+                category=form.category_to_save(),
                 vat_rate=form.rate_to_save(),
             )
-            for form in self.forms
-            if form.cleaned_data and not form.cleaned_data.get("DELETE")
+            for form in self._filled_forms()
         ]
 
 

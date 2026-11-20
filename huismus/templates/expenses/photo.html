@@ -58,7 +58,7 @@ fields are one line of the ordinary form, the amount first.{% endcomment %}
         {% endif %}
         {% field form.supplier %}
         {% field form.date span=3 %}
-        {% field line_form.category span=3 %}
+        {% include "expenses/_category_field.html" with span=3 %}
     </div>
     {% comment %}Verwerken for this receipt, with what was typed and one
     line more, saving nothing: its "Regel toevoegen" without JS

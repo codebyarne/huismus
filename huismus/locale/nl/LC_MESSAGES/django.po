@@ -3227,6 +3227,15 @@ msgstr ""
 msgid "Zonder bonnetje"
 msgstr ""
 
+msgid "naam van de nieuwe categorie"
+msgstr ""
+
+msgid "Vul de naam van de nieuwe categorie in."
+msgstr ""
+
+msgid "Naam van de nieuwe categorie"
+msgstr ""
+
 msgid "Bonnetje uploaden…"
 msgstr ""
 

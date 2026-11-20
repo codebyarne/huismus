@@ -49,6 +49,12 @@ class ExpenseCategory(TimestampedModel):
     def __str__(self):
         return self.name
 
+    @classmethod
+    def at_the_bottom(cls, name: str) -> "ExpenseCategory":
+        """A new category with this name, last in the list."""
+        last = cls.objects.aggregate(models.Max("sort_order"))["sort_order__max"]
+        return cls.objects.create(name=name, sort_order=0 if last is None else last + 1)
+
 
 class Expense(TimestampedModel):
     """SPEC.md section 4. Not immutable the way an issued Document is —
