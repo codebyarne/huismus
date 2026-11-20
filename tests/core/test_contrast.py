@@ -54,6 +54,8 @@ GRAPHIC_PAIRS = [
     ("danger", "surface"),  # the focus line of "Verwijderen…" (.btn-danger-quiet)
     ("danger", "bg"),
     ("danger", "surface-2"),
+    ("danger", "bad-bg"),  # that button under the mouse
+    ("primary", "bad-bg"),  # a ticked bin (a line or the logo to remove) with the focus
     ("hero-bar", "hero"),  # the KOR bar on the eye-catcher
     ("hero-text", "hero"),  # that bar close to the limit or over it
     ("hero-ahead", "hero"),  # the dashed line of a month still to come
