@@ -169,7 +169,6 @@ def statement_page(request):
             "skipped_count": BankTransaction.objects.filter(state=State.SKIPPED).count(),
             "here": request.get_full_path(),
         },
-        status=400 if error else 200,
     )
 
 
