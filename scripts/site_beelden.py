@@ -15,7 +15,8 @@ scripts/site_fotos.py, the photos with the app on the laptop's screen.
 
 Huismus runs as the desktop app does (HUISMUS_DESKTOP=true), in a temporary
 folder away from data/, on a small made-up administration
-(huismus/core/site_data.py). The animations issue invoices, so every round
+(huismus/core/site_data.py), and on the same one without the KOR for the
+VAT return and Verwerken. The animations issue invoices, so every round
 starts its own server on a fresh copy of that administration. The Moneybird
 import is filmed on an empty installation with the anonymised example export
 from tests/fixtures/.
@@ -48,6 +49,8 @@ VIEWPORT = {"width": 1280, "height": 800}
 PHONE = {"width": 390, "height": 760}
 # A part of a screen (Camera.detail): narrower, so the part is shown larger.
 DETAIL = {"width": 1040, "height": 900}
+# Narrower still, for a table that has to fit a narrow card on the site whole.
+NARROW = {"width": 560, "height": 900}
 SCALE = 2
 # Animations have many frames, so fewer pixels each.
 ANIMATION_WIDTH = 1280
@@ -93,15 +96,18 @@ def _manage(env: dict, *args: str) -> None:
     subprocess.run([sys.executable, "manage.py", *args], cwd=ROOT, env=env, check=True)
 
 
-def _prepare(work: Path) -> tuple[Path, Path, Path]:
-    """(the administration, an empty installation, the fake release list)."""
+def _prepare(work: Path) -> tuple[Path, Path, Path, Path]:
+    """(the administration, the same one without the KOR, an empty
+    installation, the fake release list)."""
     releases = work / "releases.json"
     releases.write_text("[]")
-    administration, empty, backups = work / "administratie", work / "leeg", work / "back-ups"
-    for folder in (administration, empty, backups):
+    administration, with_vat = work / "administratie", work / "zonder-kor"
+    empty, backups = work / "leeg", work / "back-ups"
+    for folder in (administration, with_vat, empty, backups):
         folder.mkdir()
-    for folder in (administration, empty):
+    for folder in (administration, with_vat, empty):
         _manage(_env(folder, releases), "migrate", "--verbosity", "0")
+    _manage(_env(with_vat, releases), "demo_data", "--yes", "--site", "--zonder-kor")
     env = _env(administration, releases)
     _manage(env, "demo_data", "--yes", "--site")
     # No "Huismus is bijgewerkt naar …" on the overview: it dates the picture.
@@ -114,7 +120,7 @@ def _prepare(work: Path) -> tuple[Path, Path, Path]:
         "from pathlib import Path; from huismus.core import auto_backups; "
         f"auto_backups.choose_folder(Path({str(backups)!r})); auto_backups.make_backup()",
     )
-    return administration, empty, releases
+    return administration, with_vat, empty, releases
 
 
 def _free_port() -> int:
@@ -183,11 +189,16 @@ class Camera:
                 self.out / f"{name}.{self.suffix}{kind}.webp", quality=82, method=6
             )
 
-    def detail(self, name: str, path: str, first: str, last: str) -> None:
+    def detail(
+        self, name: str, path: str, first: str, last: str, viewport=DETAIL, kind: str = ""
+    ) -> None:
         """A part of a screen, from the top of `first` to the bottom of `last`
-        (CSS selectors), so it can be shown large enough to read."""
-        self.page.set_viewport_size(DETAIL)
+        (CSS selectors), so it can be shown large enough to read. `kind`
+        ".phone" for the same part as a phone shows it."""
+        self.page.set_viewport_size(viewport)
         self.go(path)
+        # A phone's menu bar sticks to the window, so it would lie across the part.
+        self.page.add_style_tag(content=".tabbar { display: none }")
         top = self.page.locator(first).first.bounding_box()
         bottom = self.page.locator(last).first.bounding_box()
         margin = 14  # less than the gap between two cards: nothing of the next one shows
@@ -198,7 +209,7 @@ class Camera:
             "height": bottom["y"] + bottom["height"] - top["y"] + 2 * margin,
         }
         png = self.page.screenshot(clip=clip, full_page=True)
-        _image(png).save(self._file(name), quality=84, method=6)
+        _image(png).save(self.out / f"{name}.{self.suffix}{kind}.webp", quality=84, method=6)
 
     def animation(self, name: str, steps) -> None:
         """steps: (an action or None, how long its frame shows, in ms)."""
@@ -227,10 +238,8 @@ class Camera:
 def administration(camera: Camera) -> None:
     page = camera.page
     camera.still("overzicht", "/")
-    camera.still("uitgaven", "/uitgaven/", desktop=False)
-    # Parts that match the headings on the site: the KOR limit with the
-    # quarters, and the year with its totals and the CSV download.
-    camera.detail("kor", "/rapporten/jaaroverzicht/", "#kor-grens", "section:has(.chart)")
+    # A part that matches its heading on the site: the year with its totals
+    # and the CSV download.
     camera.detail("jaar", "/rapporten/jaaroverzicht/", ".page-head", ".grid-3")
     camera.page.set_viewport_size(VIEWPORT)
 
@@ -265,6 +274,23 @@ def administration(camera: Camera) -> None:
             (lambda: page.locator("#betaling [type=submit]").click(), 3000),
         ],
     )
+
+
+def without_kor(camera: Camera) -> None:
+    """What only someone who charges VAT sees (issue #130): the last finished
+    quarter per box down to "Te betalen", and a receipt an AI service read
+    beside the fields. Each also as a phone shows it, for a narrow screen."""
+    vat_return = ("/rapporten/btw-aangifte/", "section:has(#rubrieken)", "section:has(#uitkomst)")
+    camera.detail("btw-aangifte", *vat_return, viewport=NARROW)
+    camera.detail("btw-aangifte", *vat_return, viewport=PHONE, kind=".phone")
+    # Wide: the receipt with the fields beside it, down to the line's amount,
+    # VAT and rate: what only someone without the KOR fills in.
+    camera.detail("verwerken", "/uitgaven/verwerken/", ".process", "select[name$=vat_rate]")
+    # Phone: the receipt, and under it what Huismus says it did.
+    camera.detail(
+        "verwerken", "/uitgaven/verwerken/", ".process-receipt", "#nakijken", PHONE, ".phone"
+    )
+    camera.page.set_viewport_size(VIEWPORT)
 
 
 def empty(camera: Camera) -> None:
@@ -312,11 +338,18 @@ def share_image(browser: Browser, out: Path, language: str) -> None:
 def main(out: Path) -> None:
     out.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory() as work, sync_playwright() as playwright:
-        administration_dir, empty_dir, releases = _prepare(Path(work))
+        administration_dir, with_vat_dir, empty_dir, releases = _prepare(Path(work))
         for language, locale in LOCALES.items():
-            browser = playwright.chromium.launch(args=[f"--lang={locale}"])
+            # LANGUAGE: on Linux a date field follows it, not --lang.
+            browser = playwright.chromium.launch(
+                args=[f"--lang={locale}"], env=os.environ | {"LANGUAGE": locale.replace("-", "_")}
+            )
             for scheme in ("light", "dark"):
-                for pristine, scene in ((administration_dir, administration), (empty_dir, empty)):
+                for pristine, scene in (
+                    (administration_dir, administration),
+                    (with_vat_dir, without_kor),
+                    (empty_dir, empty),
+                ):
                     with server(pristine, releases) as url:
                         context = browser.new_context(
                             viewport=VIEWPORT,

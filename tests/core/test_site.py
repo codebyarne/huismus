@@ -137,6 +137,17 @@ def test_every_picture_of_the_app_is_there_in_both_languages_and_themes(out):
 
 
 @pytest.mark.parametrize("language", help.LANGUAGES)
+def test_the_home_page_shows_the_app_without_the_kor_too(out, language):
+    """The site says "met of zonder KOR" (issue #130): who charges VAT sees
+    the VAT return and a receipt with its VAT, and on a narrow screen each as
+    a phone shows it, so the amounts are not cut off."""
+    html = (out / site.home_url(language).strip("/") / "index.html").read_text()
+    for name in site.PHONE_DETAILS:
+        assert f'src="/beelden/{name}.{language}.light.webp"' in html
+        assert f'srcset="/beelden/{name}.{language}.light.phone.webp"' in html
+
+
+@pytest.mark.parametrize("language", help.LANGUAGES)
 def test_install_and_contribute_have_a_page_in_both_languages(out, language):
     for address in (site.install_url(language), site.contribute_url(language)):
         assert (out / address.strip("/") / "index.html").exists()

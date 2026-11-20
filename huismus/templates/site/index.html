@@ -140,7 +140,7 @@
             <h2 id="hele-jaar">{% translate "Alles voor je boekhouding, het hele jaar" %}</h2>
         </div>
         <div class="bento">
-            <article class="bento-item bento-wide">
+            <article class="bento-item bento-half">
                 <div class="bento-text">
                     <h3>{% translate "Facturen en offertes" %}</h3>
                     <p>{% translate "Kies een klant, typ wat je deed en Huismus rekent het totaal uit. Een offerte zet je met één klik om naar een factuur." %}</p>
@@ -151,15 +151,15 @@
                     {% include "site/_beeld.html" with name="factuur-maken" alt=alt %}
                 </div>
             </article>
-            <article class="bento-item bento-phone">
+            <article class="bento-item bento-half">
                 <div class="bento-text">
                     <h3>{% translate "Bonnetjes" %}</h3>
                     <p>{% translate "Zet een foto in een map die meesynchroniseert, ook vanaf je telefoon. Huismus haalt hem op." %}</p>
                     <a class="more" href="{{ help.bonnetjes }}">{% translate "Meer over bonnetjes" %} <span aria-hidden="true">→</span></a>
                 </div>
                 <div class="bento-shot">
-                    {% translate "Uitgaven op een telefoon: een lijst met per uitgave de leverancier, de datum en het bedrag." as alt %}
-                    {% include "site/_detail.html" with name="uitgaven" kind=".phone" alt=alt width=shot.uitgaven.0 height=shot.uitgaven.1 %}
+                    {% translate "Verwerken: de foto van een kassabon en de melding dat Huismus het bonnetje las, bij de velden van de uitgave." as alt %}
+                    {% include "site/_detail.html" with name="verwerken" alt=alt width=shot.verwerken.0 height=shot.verwerken.1 phone=shot.verwerken_phone %}
                 </div>
             </article>
             <article class="bento-item">
@@ -169,8 +169,8 @@
                     <a class="more" href="{{ help.kor_en_btw }}">{% translate "Meer over KOR en btw" %} <span aria-hidden="true">→</span></a>
                 </div>
                 <div class="bento-shot">
-                    {% translate "De KOR-grens: de omzet van dit jaar tegenover de grens, en daaronder de omzet en de kosten per kwartaal." as alt %}
-                    {% include "site/_detail.html" with name="kor" alt=alt width=shot.kor.0 height=shot.kor.1 %}
+                    {% translate "De bedragen voor je btw-aangifte van een kwartaal: de omzet en de btw per rubriek, de voorbelasting en het bedrag om te betalen." as alt %}
+                    {% include "site/_detail.html" with name="btw-aangifte" alt=alt width=shot.btw_aangifte.0 height=shot.btw_aangifte.1 phone=shot.btw_aangifte_phone %}
                 </div>
             </article>
             <article class="bento-item bento-wide">
