@@ -422,6 +422,27 @@ def test_a_ghost_button_shows_the_same_focus_line_as_a_link(app):
     assert _focus_line(app, ".toast button.btn-ghost") == link
 
 
+def test_the_bin_of_an_invoice_line_shows_that_focus_line_and_a_click_shows_none(app, contact):
+    # The bin is a ghost label around a hidden checkbox: the line is on the label.
+    app.goto(app.base + "/facturen/nieuw/")
+    bin_ = app.locator("label.line-delete").first
+    app.keyboard.press("Tab")
+    bin_.locator("input").focus()
+    line = bin_.evaluate(
+        """el => { const s = getComputedStyle(el);
+                   el.style.color = 'var(--primary)';
+                   return [s.outlineStyle, s.outlineWidth, s.outlineOffset,
+                           s.outlineColor === s.color]; }"""
+    )
+    assert line == ["solid", "2px", "2px", True]
+    # Only for the keyboard: after a click there is no line.
+    app.goto(app.base + APPEARANCE)
+    button = app.locator("button.btn-ghost[type=reset]")
+    button.click()
+    expect(button).to_be_focused()
+    assert button.evaluate("el => getComputedStyle(el).outlineStyle") == "none"
+
+
 def test_a_quiet_delete_button_shows_a_full_focus_line_too(app):
     # Same problem, same line, in the button's own red (PO, 2026-11-20).
     app.goto(app.base + APPEARANCE)
