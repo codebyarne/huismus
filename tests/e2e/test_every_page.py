@@ -85,9 +85,9 @@ def _pages():
         "/offertes/nieuw/",
         # Bankafschrift inlezen (#77), with a statement read in and a line
         # skipped (huismus/bank/demo.py); the flow: tests/e2e/test_bank_statement.py.
-        "/facturen/bankafschrift/",
-        f"/facturen/bankafschrift/?afschrift={statement.pk}",
-        "/facturen/bankafschrift/overgeslagen/",
+        "/bank/",
+        f"/bank/?afschrift={statement.pk}",
+        "/bank/overgeslagen/",
         "/contacten/",
         "/contacten/nieuw/",
         f"/contacten/{_first(Contact.objects, 'contact').pk}/",

@@ -28,8 +28,8 @@ urlpatterns = [
     path("mcp", assistant_views.endpoint, name="mcp"),
     path("instellingen/", include("huismus.business.urls")),
     path("contacten/", include("huismus.contacts.urls")),
-    # Bankafschrift inlezen (#77): a page of Facturen, its own app.
-    path("facturen/bankafschrift/", include("huismus.bank.urls")),
+    # Bank (#77): reading bank statements, its own menu item.
+    path("bank/", include("huismus.bank.urls")),
     path("facturen/", include("huismus.documents.urls")),
     # Own "quotes" namespace, not "documents" — see huismus/documents/urls.py's
     # comment on why a second include() of the same namespace doesn't work.

@@ -9,7 +9,7 @@ connect to your bank.
 
 1. Download a statement from your bank as **CAMT.053** or **MT940**. Below is
    where each bank keeps it.
-2. In Huismus, go to **Invoices** and click **Import bank statement**.
+2. In Huismus, go to **Bank**.
 3. Drag the file into the box, or click **Choose file**. A zip with more
    statements works too.
 4. Click **Import**.
@@ -20,7 +20,8 @@ again changes nothing.
 
 ## What Huismus does
 
-Huismus only looks at money that came in. It lays every incoming payment
+For now Huismus only looks at money that came in. It counts money going
+out, but doesn't link it to your expenses yet. It lays every incoming payment
 next to your invoices that are still open.
 
 - **Recorded.** Is the invoice number in the description and the amount
