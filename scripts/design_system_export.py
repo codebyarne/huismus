@@ -409,10 +409,25 @@ def preview(section_id, html, symbols):
     )
 
 
+def _one_line_items(markdown):
+    """Put each list item on one line: the Design System's viewer ends an item at a
+    line break and shows the rest as a loose paragraph."""
+    lines, in_code = [], False
+    for line in markdown.split("\n"):
+        if line.startswith("```"):
+            in_code = not in_code
+        continuation = line.startswith(" ") and line.strip() and lines
+        if not in_code and continuation and re.match(r"(\d+\.|-) ", lines[-1]):
+            lines[-1] += " " + line.strip()
+        else:
+            lines.append(line)
+    return "\n".join(lines)
+
+
 def readme(commit):
     rules = DOMAIN_RULES.read_text(encoding="utf-8")
     domain = re.search(r"## Domeinregels in de UI\n(.*?)(?=\n## |\Z)", rules, flags=re.S).group(1)
-    return f"""# Huismus
+    return _one_line_items(f"""# Huismus
 
 Self-hosted boekhouding voor Nederlandse zzp'ers, met of zonder KOR. Eén gebruiker, op een
 Raspberry Pi, laptop en telefoon. Richting **Helder**: petrol op
@@ -481,7 +496,7 @@ een vaste inkt (`--text` licht, {_light(ICON_INK_TOKEN)}) omdat een losse afbeel
   tokens.
 - Componenten zijn statische voorbeelden met de echte `huismus.css` (`components/bundle.css`);
   er is geen componentenbibliotheek, de app is Django-templates.
-"""
+""")
 
 
 def export(out, commit):
