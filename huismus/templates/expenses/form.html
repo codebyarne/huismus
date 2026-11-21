@@ -23,9 +23,9 @@
 {% if paid_with %}{% with line=paid_with %}
 <section class="card" id="afgeschreven" style="margin-bottom:var(--s-5)">
     <ul class="list">
-        <li>
+        <li style="flex-wrap:wrap">
             <span class="list-icon is-ok"><svg class="i i-sm" aria-hidden="true"><use href="#check"></use></svg></span>
-            <div class="grow"><strong>{% blocktranslate with date=line.booked_on|date:"SHORT_DATE_FORMAT" %}Afgeschreven op {{ date }}{% endblocktranslate %}</strong><div class="small muted" style="overflow-wrap:anywhere">{% blocktranslate with name=line.counterparty_name|default:line.description|truncatechars:60 %}uit bankafschrift: {{ name }}{% endblocktranslate %} · {% include "bank/_amount.html" %}</div></div>
+            <div class="grow" style="min-width:12rem"><strong>{% blocktranslate with date=line.booked_on|date:"SHORT_DATE_FORMAT" %}Afgeschreven op {{ date }}{% endblocktranslate %}</strong><div class="small muted" style="overflow-wrap:anywhere">{% blocktranslate with name=line.counterparty_name|default:line.description|truncatechars:60 %}uit bankafschrift: {{ name }}{% endblocktranslate %} · {% include "bank/_amount.html" %}</div></div>
             {% if line.can_undo %}<form method="post" action="{% url 'bank:undo' line.pk %}">{% csrf_token %}<input type="hidden" name="terug" value="{{ request.get_full_path }}"><button type="submit" class="btn btn-ghost btn-sm">{% translate "Terugdraaien" %}</button></form>{% endif %}
         </li>
     </ul>
