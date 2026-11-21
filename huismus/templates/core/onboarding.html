@@ -18,7 +18,8 @@
     {% endfor %}
 </ol>
 
-<form method="post" enctype="multipart/form-data">
+{% comment %}The full address as action: this round's answers (?kor=later&verlegd=nl) go along with the POST.{% endcomment %}
+<form method="post" action="{{ request.get_full_path }}" enctype="multipart/form-data">
     {% csrf_token %}
     {% form_errors form %}
     <section class="card card-pad">
@@ -37,9 +38,24 @@
             {% field form.phone span=3 optional=True %}
             {% field form.website optional=True %}
         </div>
+        {% elif step.slug == "werk" %}
+        {% comment %}Three questions, each a fieldset of radios (huismus-intern/besluiten.md, 2026-11-21).
+        Without JS the second question is always there; with JS (app.js, data-hides-group) it hides
+        while "Nee, ik gebruik de KOR" is chosen. Under the KOR its answer is ignored.{% endcomment %}
+        <div class="stack" style="gap:var(--s-6)">
+            {% include "core/_onboarding_choices.html" with field=form.vat %}
+            <p class="small" style="margin-top:calc(-1 * var(--s-4))"><a href="{{ kor_help_url }}">{% translate "Meer over de KOR" %} →</a></p>
+            <div data-group="verlegd">
+                <p class="small muted" style="margin:0 0 var(--s-2)">{% translate "Alleen als je btw rekent:" %}</p>
+                {% include "core/_onboarding_choices.html" with field=form.reverse_charge %}
+            </div>
+            {% include "core/_onboarding_choices.html" with field=form.default_language %}
+        </div>
+        {% elif step.slug == "verlegd" %}
+        {% translate "Tekst bij btw verlegd" as reverse_label %}
+        {% translate "Komt onder elke factuur, offerte en creditnota met een regel “verlegd”." as reverse_help %}
+        {% field form.reverse_charge_text label=reverse_label help=reverse_help optional=True %}
         {% elif step.slug == "kor" %}
-        <label class="switch"><input type="checkbox" name="kor_enabled" role="switch" aria-describedby="kor-uit-help"{% if form.kor_enabled.value %} checked{% endif %}>{% translate "Ik gebruik de KOR" %}</label>
-        <p class="help" id="kor-uit-help" style="margin-top:var(--s-2)">{% translate "Staat de KOR uit, dan kies je per regel 0, 9 of 21% btw." %}</p>
         {% translate "KOR-tekst" as kor_label %}
         {% translate "Verplicht zolang de KOR aan staat. Deze tekst komt onder elke nieuwe factuur." as kor_help %}
         {% field form.kor_text label=kor_label help=kor_help %}
@@ -76,9 +92,9 @@
     </section>
 
     <div class="row" style="margin-top:var(--s-5);gap:var(--s-3);flex-wrap:wrap">
-        {% if previous %}<a class="btn btn-ghost" href="{% url 'onboarding' previous.slug %}">← {% translate "Terug" %}</a>{% endif %}
+        {% if previous_url %}<a class="btn btn-ghost" href="{{ previous_url }}">← {% translate "Terug" %}</a>{% endif %}
         <span class="spacer"></span>
-        {% if is_last %}<a class="btn btn-ghost" href="{% url 'onboarding_done' %}">{% translate "Overslaan" %}</a>{% endif %}
+        {% if is_last %}<a class="btn btn-ghost" href="{{ done_url }}">{% translate "Overslaan" %}</a>{% endif %}
         <button class="btn btn-primary" type="submit">{% if is_last %}{% translate "Opslaan en afronden" %}{% else %}{% translate "Opslaan en verder" %}{% endif %} →</button>
     </div>
 </form>

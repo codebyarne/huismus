@@ -28,6 +28,7 @@ from . import (
     auto_backups,
     desktop,
     feedback_views,
+    help,
     login_throttle,
     maintenance,
     sample_data,
@@ -35,7 +36,7 @@ from . import (
 )
 from .backup_views import sign_in_again
 from .dashboard import month_bars, onboarding_steps, outstanding_invoices
-from .onboarding import STEPS
+from .onboarding import BY_SLUG, STEPS, Round, WorkForm, steps_for
 from .todo import build_todo
 
 
@@ -238,15 +239,30 @@ def onboarding_start(request):
 
 @login_required
 def onboarding(request, slug):
-    """One step of the step-by-step start: a part of the settings page.
-    Saving goes on to the next step; the last one to the done page."""
-    slugs = [step.slug for step in STEPS]
-    if slug not in slugs:
+    """One step of the step-by-step start: a part of the settings page, or
+    the questions of Je werk. Saving goes on to the next step this user
+    gets; the last one to the done page."""
+    if slug not in BY_SLUG:
         raise Http404
-    index = slugs.index(slug)
-    step = STEPS[index]
+    current = Round.from_query(request.GET)
     instance = Settings.load()
-    if request.method == "POST":
+    shown = steps_for(instance, current)
+    step = BY_SLUG[slug]
+    if step not in shown:
+        # A step this user doesn't get (the KOR step with the KOR off, say):
+        # on to the next one that is theirs.
+        return redirect(_next_step_url(instance, current, step))
+    index = shown.index(step)
+
+    if step.slug == "werk":
+        if request.method == "POST":
+            form = WorkForm(request.POST)
+            if form.is_valid():
+                current = form.save(instance)
+                return redirect(_next_step_url(Settings.load(), current, step))
+        else:
+            form = WorkForm.from_settings(instance, current)
+    elif request.method == "POST":
         form = SettingsPartForm(request.POST, request.FILES, instance=instance, fields=step.fields)
         if form.is_valid():
             try:
@@ -254,9 +270,7 @@ def onboarding(request, slug):
             except NumberingError as error:
                 form.add_error(None, str(error))
             else:
-                if index + 1 < len(STEPS):
-                    return redirect("onboarding", STEPS[index + 1].slug)
-                return redirect("onboarding_done")
+                return redirect(_next_step_url(Settings.load(), current, step))
     else:
         form = SettingsPartForm(instance=instance, fields=step.fields)
 
@@ -266,15 +280,24 @@ def onboarding(request, slug):
         {
             "form": form,
             "step": step,
-            "steps": STEPS,
+            "steps": shown,
             "step_number": index + 1,
-            "previous": STEPS[index - 1] if index else None,
-            "is_last": index + 1 == len(STEPS),
+            "previous_url": current.url(shown[index - 1].slug) if index else None,
+            "is_last": index + 1 == len(shown),
+            "done_url": current.url("klaar"),
             "settings": instance,
+            "kor_help_url": help.url("kor-en-btw"),
             # From the saved settings: a rejected form has changed instance.
             "next_numbers": next_numbers_if_issued_today(Settings.load()),
         },
     )
+
+
+def _next_step_url(settings, current, step):
+    """The step after this one, among the steps the saved settings give."""
+    shown = steps_for(settings, current)
+    later = [item for item in shown if STEPS.index(item) > STEPS.index(step)]
+    return current.url(later[0].slug if later else "klaar")
 
 
 @login_required

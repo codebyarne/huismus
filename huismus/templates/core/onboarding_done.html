@@ -14,6 +14,7 @@
             <a class="btn btn-primary btn-lg" href="{% url 'contacts:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Eerste klant toevoegen" %}</a>
             <a class="btn btn-secondary btn-lg" href="{% url 'home' %}">{% translate "Naar het overzicht" %}</a>
         </div>
+        {% if kor_later %}<p class="small" id="kor-later">{% url 'business:topic' 'kor' as kor_url %}{% blocktranslate %}Gebruik je toch de KOR? Zet hem aan bij <a href="{{ kor_url }}">Instellingen › KOR</a>.{% endblocktranslate %}</p>{% endif %}
         {% if desktop %}<p class="small" id="wachtwoord-aanbod">{% url 'business:password' as password_url %}{% blocktranslate %}Wil je dat Huismus om een wachtwoord vraagt? Stel het in bij <a href="{{ password_url }}">Wachtwoord</a>.{% endblocktranslate %}</p>{% endif %}
     </div>
 </section>

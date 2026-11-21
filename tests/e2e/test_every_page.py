@@ -129,10 +129,15 @@ def _pages():
         "/instellingen/updates/",
         "/instellingen/weergave/",
         "/welkom/bedrijf/",
+        "/welkom/werk/",
+        # The KOR step only under the KOR; without it, a step you don't
+        # get goes on to the next one (issue #259).
         "/welkom/kor/",
+        "/welkom/verlegd/?verlegd=nl",
         "/welkom/facturen/",
         "/welkom/logo/",
         "/welkom/klaar/",
+        "/welkom/klaar/?kor=later",
         # Only with the sample data; with it (and the welcome card without
         # it): tests/e2e/test_sample_data.py.
         "/nepdata/leegmaken/",

@@ -22,7 +22,7 @@ from django.views.decorators.http import require_POST
 from huismus.business.models import Settings
 
 from . import feedback, help
-from .onboarding import STEPS
+from .onboarding import Round
 
 # Where the card is, as the form's hidden "plek".
 DONE_PAGE = "welkom"
@@ -82,7 +82,12 @@ def card_context(
 
 
 def render_done_page(request, **card):
-    context = {"steps": STEPS, **card_context(request, Settings.load(), **card)}
+    settings = Settings.load()
+    context = {
+        # "Weet ik nog niet" at Je werk: say where the KOR is switched on.
+        "kor_later": Round.from_query(request.GET).kor_later and not settings.kor_enabled,
+        **card_context(request, settings, **card),
+    }
     return render(request, "core/onboarding_done.html", context)
 
 
