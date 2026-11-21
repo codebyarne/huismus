@@ -128,7 +128,6 @@
                 <a class="tab" href="{{ unknown_out_url }}"{% if unknown_side == "af" %} aria-current="page"{% endif %}>{% blocktranslate context "bank" with count=unknown_outgoing %}Af ({{ count }}){% endblocktranslate %}</a>
             </nav>
             {% endif %}
-            {% if unknown_has_outgoing %}<p class="small muted" style="margin:0">{% translate "Is een afschrijving geen uitgave, zoals geld naar je spaarrekening of iets privé? Sla hem dan over." %}</p>{% endif %}
         </div>
         <ul class="list">
             {% for item in unknown %}{% with line=item.line %}

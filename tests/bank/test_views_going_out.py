@@ -80,7 +80,7 @@ def test_a_line_that_fits_nothing_asks_nothing(client):
     assert 'id="niet-herkend"' in text
     line = BankTransaction.objects.get()
     assert f"/uitgaven/nieuw/?afschrijving={line.pk}" in text
-    assert "Is een afschrijving geen uitgave" in text
+    assert "Maak er dan een uitgave van." in text
 
 
 def test_the_af_tile_has_the_euros_that_went_out(client):
