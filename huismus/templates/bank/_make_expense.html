@@ -1,0 +1,2 @@
+{% load i18n %}{% comment %}Opens Nieuwe uitgave with what the bank knows (expenses.views, ?afschrijving=). A secondary button with a petrol icon, as in direction D (owner 2026-11-21).{% endcomment %}
+<a class="btn btn-secondary btn-sm" href="{% url 'expenses:create' %}?afschrijving={{ line.pk }}&amp;terug={{ here|urlencode }}"><svg class="i" aria-hidden="true" style="color:var(--primary)"><use href="#receipt"></use></svg>{% translate "Uitgave maken" %}</a>

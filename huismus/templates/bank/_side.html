@@ -1,0 +1,2 @@
+{% load i18n %}{% comment %}Above a line in Te doen: which side of the statement it is (direction D).{% endcomment %}
+<div style="flex-basis:100%"><span class="small row" style="gap:6px;align-items:center"><span class="legend-dot{% if line.is_outgoing %} is-cost{% endif %}" aria-hidden="true"></span>{% if line.is_outgoing %}{% translate "Af · uitgave" %}{% else %}{% translate "Bij · factuur" %}{% endif %}</span></div>

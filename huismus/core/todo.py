@@ -171,7 +171,7 @@ def _bank_item(count) -> TodoItem:
             count,
         )
         % {"count": count},
-        detail=_("Bevestig of kies de factuur."),
+        detail=_("Bevestig of kies de factuur of uitgave."),
         action=_("Bekijken"),
         action_url=reverse("bank:statement"),
         icon="wallet",

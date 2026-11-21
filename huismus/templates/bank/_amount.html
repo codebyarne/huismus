@@ -1,0 +1,1 @@
+{% load i18n money %}<strong class="num">{% if line.is_outgoing %}<span class="sr-only">{% translate "Af" %}: </span><span aria-hidden="true">−</span>&nbsp;{% else %}<span class="sr-only">{% translate "Bij" %}: </span><span aria-hidden="true">+</span>&nbsp;{% endif %}{{ line.gross_cents|money }}</strong>

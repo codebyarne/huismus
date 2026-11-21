@@ -63,7 +63,10 @@ def test_reading_shows_the_summary_and_the_blocks(client):
         ),
     )
     text = page.text.replace("\xa0", " ")
-    assert "3 bijschrijvingen gelezen. 1 geboekt, 1 om te bevestigen, 1 om zelf te kiezen." in text
+    assert (
+        "3 betalingen gelezen van rekening NL91 ABNA 0417 1643 00: 3 erbij. "
+        "Huismus boekte er 1. 1 wacht hieronder op je."
+    ) in text
     assert 'id="geboekt"' in text and 'id="te-doen"' in text and 'id="niet-herkend"' in text
     assert "data-voorstel" in text
     assert "€ 95,00 meer dan er open staat." in text
@@ -73,7 +76,7 @@ def test_the_same_file_again_says_nothing_new(client):
     data = _camt(("12.34", "Iemand", "iets"))
     _upload(client, data)
     page = _upload(client, data)
-    assert "Niets nieuws: alle bijschrijvingen in dit bestand waren al ingelezen." in page.text
+    assert "Niets nieuws: alle betalingen in dit bestand waren al ingelezen." in page.text
 
 
 def test_a_wrong_file_says_so(client):
@@ -188,19 +191,25 @@ def test_too_much_paid_is_never_shown_as_negative_open(client):
         assert "-5,00" not in text and "−5,00" not in text and "-€" not in text, path
 
 
-def test_summary_text_counts_what_went_out():
-    assert summary_text({"read": 2, "booked": 2, "outgoing": 4}) == (
-        "2 bijschrijvingen gelezen. 2 geboekt. "
-        "4 afschrijvingen: die koppel je later aan je uitgaven."
+def test_summary_text_adds_up():
+    # Product-owner agent 2026-11-21 (ronde 9 point 6): 4 + 1 + 10 = 15.
+    summary = {
+        "read": 15,
+        "incoming": 6,
+        "outgoing": 9,
+        "booked": 4,
+        "already_booked": 1,
+        "accounts": ["NL91ABNA0417164300"],
+    }
+    assert summary_text(summary, waiting=3) == (
+        "15 betalingen gelezen van rekening NL91 ABNA 0417 1643 00: 6 erbij, 9 eraf. "
+        "Huismus boekte er 4 en 1 stond al geboekt. 3 wachten hieronder op je."
     )
 
 
 def test_summary_text_leaves_out_what_is_zero():
-    assert summary_text(
-        {"read": 1, "booked": 1, "seen_before": 2, "accounts": ["NL91ABNA0417164300"]}
-    ) == (
-        "1 bijschrijving gelezen. 1 geboekt. 2 waren al ingelezen. "
-        "Van rekening NL91 ABNA 0417 1643 00."
+    assert summary_text({"read": 1, "outgoing": 1, "seen_before": 2}) == (
+        "1 betaling gelezen: 1 eraf. 2 waren al ingelezen."
     )
 
 

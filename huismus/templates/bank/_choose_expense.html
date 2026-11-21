@@ -1,0 +1,10 @@
+{% load i18n money %}{% comment %}Pick the expense for a line going out: the ones with its amount first, then by date (bank.views._waiting_outgoing). Only expenses without a bank line.{% endcomment %}
+<form class="row" method="post" action="{% url 'bank:book' line.pk %}" style="gap:var(--s-2);flex:1 1 16rem;flex-wrap:wrap">
+    {% csrf_token %}<input type="hidden" name="terug" value="{{ here }}">
+    <label class="sr-only" for="uitgave-{{ line.pk }}">{% translate "Uitgave" %}</label>
+    <select class="select" id="uitgave-{{ line.pk }}" name="uitgave" required style="flex:1;min-width:10rem;max-width:100%">
+        <option value=""{% if not item.same_amount %} selected{% endif %}>{% translate "Kies een uitgave…" %}</option>
+        {% for expense in item.choices %}<option value="{{ expense.pk }}"{% if forloop.first and item.same_amount %} selected{% endif %}>{{ expense.date|date:"SHORT_DATE_FORMAT" }} · {{ expense.supplier|default:expense.description|truncatechars:40 }} · {{ expense.gross_cents|money }}</option>{% endfor %}
+    </select>
+    <button type="submit" class="btn btn-secondary btn-sm">{% translate "Boeken" %}</button>
+</form>

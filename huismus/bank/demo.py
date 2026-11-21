@@ -1,10 +1,14 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""A fictional CAMT.053 statement for the open invoices in this database
-(#77), so the browser tests and the screenshots for the owner show every
-kind of line: one Huismus books, one paid too much, one by name, one that
-names two invoices, one Huismus can't place, one already booked, and a
-debit it leaves out. Made up, like the rest of the demo data (CLAUDE.md).
+"""A fictional CAMT.053 statement for the open invoices and the expenses
+in this database (#77, #257), so the browser tests and the screenshots for
+the owner show every kind of line. Coming in: one Huismus books, one paid
+too much, one by name, one that names two invoices, one Huismus can't
+place, one already booked. Going out: one Huismus links (Bouwmarkt Noord
+in the demo history), a card payment by date (NS) and a bill paid later by
+name (Hosting Noord), proposed; one where an expense has the amount (NS,
+in August), and four that fit nothing. Made up, like the rest of the demo
+data (CLAUDE.md).
 """
 
 from datetime import date
@@ -19,11 +23,12 @@ ACCOUNT = "NL91ABNA0417164300"
 
 def _entry(amount_cents, booked_on, name, text, credit=True, iban=""):
     euros = f"{amount_cents // 100}.{amount_cents % 100:02d}"
+    role = "Dbtr" if credit else "Cdtr"
     return f"""<Ntry><Amt Ccy="EUR">{euros}</Amt>
 <CdtDbtInd>{"CRDT" if credit else "DBIT"}</CdtDbtInd><Sts>BOOK</Sts>
 <BookgDt><Dt>{booked_on.isoformat()}</Dt></BookgDt><NtryDtls><TxDtls>
-<RltdPties><{"Dbtr" if credit else "Cdtr"}><Nm>{escape(name)}</Nm></{"Dbtr" if credit else "Cdtr"}>
-<DbtrAcct><Id><IBAN>{iban}</IBAN></Id></DbtrAcct></RltdPties>
+<RltdPties><{role}><Nm>{escape(name)}</Nm></{role}>
+<{role}Acct><Id><IBAN>{iban}</IBAN></Id></{role}Acct></RltdPties>
 <RmtInf><Ustrd>{escape(text)}</Ustrd></RmtInf></TxDtls></NtryDtls></Ntry>"""
 
 
@@ -54,6 +59,16 @@ def demo_statement(booked_on: date) -> bytes:
             "Terugbetaling borg",
             iban="NL20TEST0001234567",
         ),
+    ]
+    # Going out, for the expenses of huismus/core/demo_history.py.
+    entries += [
+        _entry(4235, booked_on, "Bouwmarkt Noord B.V.", "Bestelling 88123", credit=False),
+        _entry(1890, booked_on, "NS GROEP IZ ZAANDAM", "Pinbetaling", credit=False),
+        _entry(2420, booked_on, "Hosting Noord B.V.", "Abonnement september", credit=False),
+        _entry(6130, booked_on, "NS Reizigers", "Factuur reizen augustus", credit=False),
+        _entry(41200, booked_on, "Bol.com", "Bestelling 4021-3381", credit=False),
+        _entry(6318, booked_on, "Supermarkt De Hoek", "Pinbetaling", credit=False),
+        _entry(25000, booked_on, "J de Vries", "Naar spaarrekening", credit=False),
         _entry(4599, booked_on, "Telefoonwinkel", "Abonnement", credit=False),
     ]
     paid = (
