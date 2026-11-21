@@ -11,6 +11,7 @@ urlpatterns = [
     path("nepdata/leegmaken/", views.sample_data_clear, name="sample_data_clear"),
     path("welkom/", views.onboarding_start, name="onboarding_start"),
     path("vertel/", feedback_views.save, name="feedback"),
+    path("feedback/", feedback_views.quick, name="feedback_quick"),
     path("welkom/klaar/", views.onboarding_done, name="onboarding_done"),
     path("welkom/<slug:slug>/", views.onboarding, name="onboarding"),
 ]

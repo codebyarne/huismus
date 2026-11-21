@@ -15,7 +15,7 @@ from django import forms
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import redirect, render
-from django.urls import reverse
+from django.urls import Resolver404, resolve, reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 
@@ -136,3 +136,109 @@ def save(request):
     instance.feedback_status = feedback.SENT
     instance.save(update_fields=["feedback_organisation", "feedback_status", "updated_at"])
     return redirect(f"{back}?{SENT_PARAM}#vertel")
+
+
+# The feedback button on every page (huismus-intern/besluiten.md,
+# 2026-11-21): a panel in a popover, the same three steps as the card. With
+# HTMX the steps swap inside the panel (HX-Target below); without JS the form
+# posts as a plain page.
+PANEL_TARGET = "feedback-inhoud"
+
+
+class QuickFeedbackForm(forms.Form):
+    """What the feedback button asks. The page and the picture of the screen
+    are filled in by the page and feedback.js; both may stay empty."""
+
+    prefix = "fb"
+
+    kind = forms.ChoiceField(
+        label=_("Soort"),
+        choices=feedback.KIND_CHOICES,
+        initial="probleem",
+        widget=forms.RadioSelect,
+    )
+    message = forms.CharField(
+        label=_("Vertel het in je eigen woorden"),
+        max_length=feedback.MAX_WISH,
+        widget=forms.Textarea(attrs={"rows": 4}),
+    )
+    email = forms.EmailField(
+        label=_("E-mailadres"),
+        help_text=_("Alleen als de appbouwer je iets mag terugvragen."),
+        max_length=feedback.MAX_EMAIL,
+        required=False,
+    )
+    page = forms.CharField(required=False, widget=forms.HiddenInput)
+    image = forms.CharField(required=False, widget=forms.HiddenInput)
+
+    def clean_message(self):
+        return self.cleaned_data["message"].replace("\r\n", "\n")
+
+    def picture(self):
+        """The picture to show in the form again: only a real PNG, never a
+        posted value that clean_image would refuse (no other address in <img>)."""
+        value = self["image"].value() or ""
+        return value if feedback.image_bytes(value) else ""
+
+    def clean_page(self):
+        """A path of this app, or nothing: it goes to the site as it is."""
+        page = self.cleaned_data["page"]
+        if len(page) > feedback.MAX_PAGE or not page.startswith("/") or page.startswith("//"):
+            return ""
+        try:
+            resolve(page)
+        except Resolver404:
+            return ""
+        return page
+
+    def clean_image(self):
+        image = self.cleaned_data["image"]
+        if image and feedback.image_bytes(image) is None:
+            raise forms.ValidationError(_("Deze afbeelding kan niet mee. Maak hem opnieuw."))
+        return image
+
+
+def _panel(request, form, state, failed=False):
+    instance = Settings.load()
+    context = {"fb_form": form, "fb_state": state, "fb_failed": failed}
+    if state == "preview":
+        data = form.cleaned_data
+        context["fb_image"] = data["image"]
+        context["fb_outgoing"] = feedback.quick_outgoing(
+            instance,
+            data["kind"],
+            data["message"],
+            data["email"],
+            data["page"],
+            bool(data["image"]),
+        )
+    if request.headers.get("HX-Target") == PANEL_TARGET:
+        return render(request, "core/_feedback_panel.html", context)
+    return render(request, "core/feedback_page.html", {**context, "fb_in_page": True})
+
+
+@login_required
+@require_POST
+def quick(request):
+    """Controleer wat er meegaat, Aanpassen or Versturen, from the panel.
+    Invalid or Aanpassen: the form again. No button (Controleer): the
+    overview. Versturen with a valid form: send. clean_image already checked
+    the picture, so image_bytes gives its bytes here."""
+    form = QuickFeedbackForm(request.POST)
+    if not form.is_valid() or "aanpassen" in request.POST:
+        return _panel(request, form, "form")
+    if "versturen" not in request.POST:
+        return _panel(request, form, "preview")
+    data = form.cleaned_data
+    try:
+        feedback.send_quick(
+            Settings.load(),
+            data["kind"],
+            data["message"],
+            data["email"],
+            data["page"],
+            feedback.image_bytes(data["image"]) if data["image"] else None,
+        )
+    except feedback.SendError:
+        return _panel(request, form, "preview", failed=True)
+    return _panel(request, QuickFeedbackForm(), "sent")

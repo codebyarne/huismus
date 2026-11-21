@@ -9445,6 +9445,118 @@ msgstr "A personal ING account only gives CSV and PDF. Huismus doesn't read thos
 msgid "Betalingen die je oversloeg. Zet je er een terug, dan staat hij weer op de pagina Bank."
 msgstr "Payments you skipped. Put one back and it shows on the Bank page again."
 
+msgid "Iets werkt niet"
+msgstr "Something is broken"
+
+msgid "Idee"
+msgstr "Idea"
+
+msgid "Vraag"
+msgstr "Question"
+
+msgid "met KOR"
+msgstr "with the KOR"
+
+msgid "btw op facturen, of nog niet gekozen"
+msgstr "VAT on invoices, or not chosen yet"
+
+msgid "btw verlegd: ja"
+msgstr "reverse charge: yes"
+
+msgid "btw verlegd: nee"
+msgstr "reverse charge: no"
+
+msgid "facturen in het Engels"
+msgstr "invoices in English"
+
+msgid "facturen in het Nederlands"
+msgstr "invoices in Dutch"
+
+msgid "Pagina"
+msgstr "Page"
+
+msgid "Afbeelding"
+msgstr "Picture"
+
+msgid "ja, hierboven"
+msgstr "yes, above"
+
+msgid "Hoe je werkt"
+msgstr "How you work"
+
+msgid "Vertel het in je eigen woorden"
+msgstr "Tell it in your own words"
+
+msgid "Alleen als de appbouwer je iets mag terugvragen."
+msgstr "Only if the app's maker may ask you something back."
+
+msgid "Deze afbeelding kan niet mee. Maak hem opnieuw."
+msgstr "This picture can't be sent. Make it again."
+
+msgid "Dit gaat naar de appbouwer"
+msgstr "This goes to the app's maker"
+
+msgid "Wat wil je kwijt?"
+msgstr "What's on your mind?"
+
+msgid ""
+"Je bericht komt als idee op GitHub, zonder je e-mailadres en zonder de "
+"afbeelding."
+msgstr ""
+"Your message goes on GitHub as an idea, without your email address and "
+"without the picture."
+
+msgid "Je afbeelding van het scherm"
+msgstr "Your picture of the screen"
+
+msgid ""
+"Alleen knoppen, menu's en veldnamen zijn leesbaar. De rest maakt Huismus "
+"grijs."
+msgstr ""
+"Only buttons, menus and field names can be read. Huismus turns the rest "
+"grey."
+
+msgid ""
+"Je bericht komt als idee op GitHub. Je e-mailadres en de afbeelding niet: "
+"die ziet alleen de appbouwer."
+msgstr ""
+"Your message goes on GitHub as an idea. Your email address and the picture "
+"don't: only the app's maker sees those."
+
+msgid "Wijs aan op het scherm"
+msgstr "Point at the screen"
+
+msgid "Opnieuw aanwijzen"
+msgstr "Point again"
+
+msgid "Afbeelding weghalen"
+msgstr "Remove picture"
+
+msgid ""
+"Klik op het stuk dat je bedoelt. Huismus maakt er een afbeelding van. Alleen"
+" knoppen, menu's en veldnamen blijven leesbaar."
+msgstr ""
+"Click the part you mean. Huismus makes a picture of it. Only buttons, menus "
+"and field names stay readable."
+
+msgid "Controleer wat er meegaat"
+msgstr "Check what goes"
+
+msgid "Feedback"
+msgstr "Feedback"
+
+msgid "Klik op wat je bedoelt"
+msgstr "Click what you mean"
+
+msgid "of sleep een kader"
+msgstr "or drag a box"
+
+msgid "Hele scherm"
+msgstr "Whole screen"
+
+msgid "Stoppen"
+msgstr "Stop"
+
 msgid ""
 "Begin je nieuw? Dan vul je stap voor stap in wat Huismus nodig heeft voor je "
 "eerste factuur."

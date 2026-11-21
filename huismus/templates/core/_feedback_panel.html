@@ -1,0 +1,55 @@
+{% load i18n forms %}
+{% comment %}What is in the feedback panel: fb_state "form", "preview" or "sent" (huismus/core/feedback_views.py). In the popover the steps swap with HTMX; as a page (fb_in_page) the same forms post plainly.{% endcomment %}
+{% url 'feedback_quick' as fb_url %}
+<div class="fb-kop">
+    <h2 id="fb-titel">{% if fb_state == "preview" %}{% translate "Dit gaat naar de appbouwer" %}{% elif fb_state == "sent" %}{% translate "Verstuurd. Dank je wel!" %}{% else %}{% translate "Wat wil je kwijt?" %}{% endif %}</h2>
+    {% if not fb_in_page %}<button class="btn btn-ghost btn-sm btn-icon" type="button" popovertarget="feedback-paneel" popovertargetaction="hide" aria-label="{% translate 'Sluiten' %}"><svg class="i" aria-hidden="true"><use href="#x"></use></svg></button>{% endif %}
+</div>
+{% if fb_state == "sent" %}
+<div class="fb-verstuurd" id="fb-verstuurd" role="status">
+    <span class="fb-vink" aria-hidden="true"><svg class="i i-lg"><use href="#check"></use></svg></span>
+    <p class="help">{% translate "Je bericht komt als idee op GitHub, zonder je e-mailadres en zonder de afbeelding." %}</p>
+    {% if fb_in_page %}<a class="btn" href="{% url 'home' %}">{% translate "Naar het overzicht" %}</a>{% else %}<button class="btn" type="button" popovertarget="feedback-paneel" popovertargetaction="hide">{% translate "Sluiten" %}</button>{% endif %}
+</div>
+{% elif fb_state == "preview" %}
+{% if fb_image %}
+<figure class="fb-figuur">
+    <img src="{{ fb_image }}" alt="{% translate 'Je afbeelding van het scherm' %}">
+    <figcaption class="small muted">{% translate "Alleen knoppen, menu's en veldnamen zijn leesbaar. De rest maakt Huismus grijs." %}</figcaption>
+</figure>
+{% endif %}
+<dl class="doc-meta fb-wat" id="fb-wat-er-gaat">
+    {% for label, value in fb_outgoing %}<dt>{{ label }}</dt><dd>{{ value|default:"—" }}</dd>{% endfor %}
+</dl>
+{% if fb_failed %}<p class="error" id="fb-mislukt" role="alert">{% translate "Versturen lukte niet. Kijk of je internet hebt en probeer het nog eens." %}</p>{% endif %}
+<form method="post" action="{{ fb_url }}" hx-post="{{ fb_url }}" hx-target="#feedback-inhoud" hx-swap="innerHTML">
+    {% csrf_token %}
+    {% for field in fb_form %}<input type="hidden" name="{{ field.html_name }}" value="{{ field.value|default:'' }}">{% endfor %}
+    <div class="row fb-knoppen">
+        <button class="btn btn-primary" type="submit" name="versturen">{% translate "Versturen" %}</button>
+        <button class="btn btn-ghost" type="submit" name="aanpassen">{% translate "Aanpassen" %}</button>
+    </div>
+</form>
+<p class="small muted">{% translate "Je bericht komt als idee op GitHub. Je e-mailadres en de afbeelding niet: die ziet alleen de appbouwer." %}</p>
+{% else %}
+<form class="fb-form" method="post" action="{{ fb_url }}" hx-post="{{ fb_url }}" hx-target="#feedback-inhoud" hx-swap="innerHTML">
+    {% csrf_token %}
+    <fieldset class="seg fb-soort">
+        <legend class="sr-only">{{ fb_form.kind.label }}</legend>
+        {% for choice in fb_form.kind %}<label>{{ choice.tag }}{{ choice.choice_label }}</label>{% endfor %}
+    </fieldset>
+    {% field fb_form.message %}
+    <div class="fb-beeld" data-fb-beeld>
+        <img class="fb-voorbeeld" data-fb-voorbeeld alt="{% translate 'Je afbeelding van het scherm' %}"{% with picture=fb_form.picture %}{% if picture %} src="{{ picture }}"{% else %} hidden{% endif %}{% endwith %}>
+        <div class="fb-beeld-tekst">
+            <button class="btn" type="button" data-fb-aanwijzen data-nieuw="{% translate 'Wijs aan op het scherm' %}" data-opnieuw="{% translate 'Opnieuw aanwijzen' %}" hidden><svg class="i" aria-hidden="true"><use href="#target"></use></svg><span data-fb-aanwijzen-tekst>{% if fb_form.picture %}{% translate "Opnieuw aanwijzen" %}{% else %}{% translate "Wijs aan op het scherm" %}{% endif %}</span></button>
+            <button class="btn btn-ghost btn-sm" type="button" data-fb-weg{% if not fb_form.picture %} hidden{% endif %}>{% translate "Afbeelding weghalen" %}</button>
+            <span class="small muted" data-fb-uitleg>{% translate "Klik op het stuk dat je bedoelt. Huismus maakt er een afbeelding van. Alleen knoppen, menu's en veldnamen blijven leesbaar." %}</span>
+        </div>
+        {% for error in fb_form.image.errors %}<p class="error">{{ error }}</p>{% endfor %}
+    </div>
+    {% field fb_form.email optional=True %}
+    {{ fb_form.page }}{{ fb_form.image }}
+    <button class="btn btn-primary" type="submit">{% translate "Controleer wat er meegaat" %}</button>
+</form>
+{% endif %}

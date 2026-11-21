@@ -17,6 +17,8 @@ option text, so each choice has that text here, the same in every language
 of the app; `taal` says which language the app speaks.
 """
 
+import base64
+import binascii
 import json
 import logging
 import secrets
@@ -24,6 +26,7 @@ import sys
 import urllib.request
 
 from django.conf import settings
+from django.utils import translation
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 
@@ -76,6 +79,21 @@ SENT = "sent"
 STATUS_CHOICES = [(NOT_ASKED, "not asked"), (SKIPPED, "skipped"), (SENT, "sent")]
 
 ORGANISATION_CHOICES = [(key, label) for key, _text, label in ORGANISATIONS]
+
+# The feedback button (huismus-intern/besluiten.md, 2026-11-21): what kind
+# of message it is, as (key, option text on the form, label in the app).
+KINDS = (
+    ("probleem", "Iets werkt niet", _("Iets werkt niet")),
+    ("idee", "Idee", _("Idee")),
+    ("vraag", "Vraag", _("Vraag")),
+)
+KIND_CHOICES = [(key, label) for key, _text, label in KINDS]
+MAX_PAGE = 200
+# The picture of the screen, as the browser made it (feedback.js): a PNG,
+# at most this many bytes. The form on the site takes up to 2 MB.
+MAX_IMAGE_BYTES = 1_500_000
+IMAGE_PREFIX = "data:image/png;base64,"
+PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 
 
 class SendError(Exception):
@@ -157,24 +175,118 @@ def form_data(organisation: str, wish: str, email: str, language: str | None = N
     }
 
 
-def multipart(fields: dict) -> tuple[bytes, str]:
+def how_you_work(instance) -> str:
+    """Hoe je werkt, in the language that is active: the organisation last
+    sent from "Hoe gebruik je Huismus?" and what the step-by-step start set
+    (huismus-intern/besluiten.md, 2026-11-21). The start keeps no answers,
+    only settings, so KOR off says "with VAT, or not chosen yet"."""
+    parts = []
+    organisation = _label(ORGANISATIONS, instance.feedback_organisation)
+    if organisation:
+        parts.append(organisation)
+    parts.append(
+        _("met KOR") if instance.kor_enabled else _("btw op facturen, of nog niet gekozen")
+    )
+    if instance.reverse_charge_text.strip():
+        parts.append(_("btw verlegd: ja"))
+    else:
+        parts.append(_("btw verlegd: nee"))
+    if instance.default_language == "en":
+        parts.append(_("facturen in het Engels"))
+    else:
+        parts.append(_("facturen in het Nederlands"))
+    return " · ".join(str(part) for part in parts)
+
+
+def image_bytes(data_url: str) -> bytes | None:
+    """The PNG in a data: URL from the browser, or None when it is not one
+    (not base64, not a PNG, too big)."""
+    if not data_url.startswith(IMAGE_PREFIX):
+        return None
+    try:
+        image = base64.b64decode(data_url[len(IMAGE_PREFIX) :], validate=True)
+    except (binascii.Error, ValueError):
+        return None
+    if not image.startswith(PNG_SIGNATURE) or len(image) > MAX_IMAGE_BYTES:
+        return None
+    return image
+
+
+def quick_outgoing(instance, kind, message, email, page, has_image, language=None) -> list:
+    """Everything the feedback button sends, as (label, value) for the
+    overview. send_quick() sends these fields and the picture; like the
+    choices, the kind and Hoe je werkt go in Dutch, whatever the app's language."""
+    language = form_language(language)
+    return [
+        (_("Soort"), _label(KINDS, kind)),
+        (_("Bericht"), message),
+        (_("Pagina"), page),
+        (_("Afbeelding"), _("ja, hierboven") if has_image else _("nee")),
+        (_("E-mailadres"), email),
+        (_("Hoe je werkt"), how_you_work(instance)),
+        (_("Draait op"), _label(PLATFORMS, runs_on())),
+        (_("Versie"), current_version()),
+        (_("Taal van de app"), "English" if language == "en" else "Nederlands"),
+    ]
+
+
+def quick_form_data(instance, kind, message, email, page, language=None) -> dict:
+    """The fields of the form on the site for the feedback button: the same
+    form as form_data(), with soort, pagina and werkwijze besides. The
+    organisation goes only when it was sent before; the site does not need
+    it from the button. Hoe je werkt goes in Dutch, like the choices."""
+    with translation.override("nl"):
+        work = how_you_work(instance)
+    return {
+        "_wpcf7_unit_tag": UNIT_TAG,
+        "_wpcf7_container_post": str(PAGE_ID),
+        "organisatie": _form_text(ORGANISATIONS, instance.feedback_organisation),
+        "gebruik": _form_text(PLATFORMS, runs_on()),
+        "soort": _form_text(KINDS, kind),
+        "wens": message,
+        "pagina": page,
+        "werkwijze": work,
+        "email": email,
+        "versie": current_version(),
+        "taal": form_language(language),
+    }
+
+
+def multipart(fields: dict, files: dict | None = None) -> tuple[bytes, str]:
     """The body and Content-Type of a multipart/form-data POST: the only
     kind the endpoint of Contact Form 7 accepts. A few lines instead of a
     dependency: the names are fixed (form_data), and a value can't end a
-    part early, because the boundary is random."""
+    part early, because the boundary is random. files: name → (file name,
+    media type, bytes)."""
     boundary = f"huismus-{secrets.token_hex(16)}"
     parts = [
-        f'--{boundary}\r\nContent-Disposition: form-data; name="{name}"\r\n\r\n{value}\r\n'
+        f'--{boundary}\r\nContent-Disposition: form-data; name="{name}"\r\n\r\n{value}\r\n'.encode()
         for name, value in fields.items()
     ]
-    body = "".join(parts) + f"--{boundary}--\r\n"
-    return body.encode(), f"multipart/form-data; boundary={boundary}"
+    for name, (filename, media_type, content) in (files or {}).items():
+        head = (
+            f"--{boundary}\r\nContent-Disposition: form-data; "
+            f'name="{name}"; filename="{filename}"\r\nContent-Type: {media_type}\r\n\r\n'
+        )
+        parts.append(head.encode() + content + b"\r\n")
+    body = b"".join(parts) + f"--{boundary}--\r\n".encode()
+    return body, f"multipart/form-data; boundary={boundary}"
 
 
 def send(organisation: str, wish: str, email: str, language: str | None = None) -> None:
     """Post the answers to the form. Raises SendError unless the site says
     it mailed them."""
-    data, content_type = multipart(form_data(organisation, wish, email, language))
+    _post(*multipart(form_data(organisation, wish, email, language)))
+
+
+def send_quick(instance, kind, message, email, page, image=None, language=None) -> None:
+    """Post what the feedback button collected, with the picture of the
+    screen as a file when there is one. Raises SendError like send()."""
+    files = {"afbeelding": ("huismus.png", "image/png", image)} if image else None
+    _post(*multipart(quick_form_data(instance, kind, message, email, page, language), files))
+
+
+def _post(data: bytes, content_type: str) -> None:
     request = urllib.request.Request(
         SEND_URL,
         data=data,
