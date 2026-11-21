@@ -291,3 +291,24 @@ def test_a_new_line_starts_with_the_category_above(app):
     app.get_by_role("button", name="Regel toevoegen").click()
     expect(picker.nth(1)).to_have_value("Kantoor")
     assert app.locator("select[name='lines-1-category']").input_value() == str(category.pk)
+
+
+def test_while_the_photo_uploads_the_sparrow_hops(phone):
+    held = []
+    phone.route(
+        "**/*",
+        lambda route: held.append(route) if route.request.method == "POST" else route.continue_(),
+    )
+    phone.goto(phone.base + "/uitgaven/")
+    with phone.expect_file_chooser() as chooser:
+        phone.get_by_role("link", name="Nieuwe uitgave").first.tap()
+        phone.get_by_role("dialog").get_by_text("Foto maken").tap()
+    chooser.value.set_files(PHOTO)
+
+    toast = phone.locator("[data-camera-toast]")
+    expect(toast).to_contain_text("Bonnetje uploaden…")
+    expect(toast.locator(".bird")).to_be_visible()
+    phone.unroute("**/*")
+    for route in held:
+        route.continue_()
+    expect(phone.get_by_role("img", name="Bonnetje IMG_3001.jpg")).to_be_visible()

@@ -99,6 +99,7 @@ def test_the_tray_shows_a_receipt_huismus_will_read(client_in, service):
     _receipt()
     page = client_in.get("/uitgaven/bonnetjes/").content.decode()
     assert "Huismus leest dit bonnetje…" in page
+    assert 'class="bird"' in page, "the sparrow hops while Huismus reads"
 
 
 def test_the_tray_is_red_while_the_service_fails(client_in, service):

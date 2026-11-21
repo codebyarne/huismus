@@ -71,9 +71,8 @@ above the fields.{% endcomment %}
         {% elif waiting or reason %}
         {% comment %}What Huismus did with this receipt, in the same notice as an expense's: never missed beside empty fields.{% endcomment %}
         <div class="flash flash-info" id="nakijken">
-            <svg class="i" aria-hidden="true"><use href="#info"></use></svg>
-            {% if waiting %}<div class="flash-body row" style="gap:var(--s-1)" data-bonnetje-bezig><span class="spinner" aria-hidden="true"></span>{% translate "Huismus leest dit bonnetje…" %}</div>
-            {% else %}<div class="flash-body" data-bonnetje-reden>{% if tray_receipt.read_similar %}<a href="{% url 'expenses:edit' tray_receipt.read_similar.pk %}">{{ reason }}</a>{% else %}{{ reason }}{% endif %}</div>{% endif %}
+            {% if waiting %}{% include "core/_bird.svg" %}<div class="flash-body" data-bonnetje-bezig>{% translate "Huismus leest dit bonnetje…" %}</div>
+            {% else %}<svg class="i" aria-hidden="true"><use href="#info"></use></svg><div class="flash-body" data-bonnetje-reden>{% if tray_receipt.read_similar %}<a href="{% url 'expenses:edit' tray_receipt.read_similar.pk %}">{{ reason }}</a>{% else %}{{ reason }}{% endif %}</div>{% endif %}
         </div>
         {% endif %}
         <form class="card card-pad stack" id="uitgave-form" method="post" style="gap:var(--s-5)">
