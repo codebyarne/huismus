@@ -11,8 +11,8 @@ Huismus needs for your first invoice:
 
 1. **Business:** your business name, address, KvK number and IBAN. This goes
    on every invoice and quote.
-2. **Your work:** three questions. Do you charge VAT, do you use the KOR, or
-   don't you know yet? Do you have customers where the VAT is reverse-charged?
+2. **Your work:** three questions. Do you charge VAT, do you use the
+   small business scheme (KOR), or don't you know yet? Do you have customers where the VAT is reverse-charged?
    And in which language do you usually write your invoices? Your answers
    decide which steps follow. More about the KOR in
    [Small business scheme (KOR) and VAT](kor-en-btw.en.md).

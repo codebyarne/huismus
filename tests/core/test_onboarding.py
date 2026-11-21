@@ -428,15 +428,6 @@ def test_an_unknown_place_in_the_address_is_ignored(logged_in):
     assert logged_in.get(_url("verlegd") + "?verlegd=mars").url == _url("facturen")
 
 
-def test_your_work_offers_the_languages_of_the_setting():
-    from huismus.core.onboarding import WorkForm
-
-    model_choices = Settings._meta.get_field("default_language").choices
-    assert [value for value, _label in WorkForm.base_fields["default_language"].choices] == [
-        value for value, _label in model_choices
-    ]
-
-
 def test_a_step_opened_without_the_answers_of_this_round_forgets_them(logged_in):
     # On purpose: the answers live only in the address (Round).
     response = logged_in.post(_url("werk"), {**WORK, "reverse_charge": "nl"})

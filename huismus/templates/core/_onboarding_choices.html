@@ -1,13 +1,15 @@
 {% load i18n %}
 {% comment %}One question of Je werk (/welkom/werk/): a fieldset with the question as its legend and a
-radio per answer, under each other (the radio list of Map voor back-ups, .folder-choices). The
+radio per answer, under each other (the radio list of Map voor back-ups, .folder-choices). The text
+spans both rows beside the radio, so on a phone it stays centred. tabindex: the error summary's link
+puts the focus on the question. The
 answer "Ja" to the VAT question says what it means for the lines.{% endcomment %}
-<fieldset id="{{ field.auto_id }}" style="border:0;padding:0;margin:0"{% if field.errors %} aria-describedby="{{ field.auto_id }}-fout"{% endif %}>
+<fieldset id="{{ field.auto_id }}" tabindex="-1" style="border:0;padding:0;margin:0"{% if field.errors %} aria-describedby="{{ field.auto_id }}-fout"{% endif %}>
     <legend class="label" style="padding:0;margin-bottom:var(--s-2)">{{ field.label }}</legend>
     <div class="stack folder-choices" style="gap:var(--s-2)">
         {% for choice in field %}
         {% with id=choice.id_for_label %}
-        <label class="file-item"><span class="f-icon"><input type="radio" id="{{ id }}" name="{{ field.html_name }}" value="{{ choice.data.value }}" aria-labelledby="{{ id }}-naam"{% if field.name == "vat" and choice.data.value == "ja" %} aria-describedby="{{ id }}-uitleg"{% endif %}{% if choice.data.selected %} checked{% endif %}{% if field.name == "vat" and choice.data.value == "kor" %} data-hides-group="verlegd"{% endif %}></span><span><span class="f-name" id="{{ id }}-naam">{{ choice.choice_label }}</span>{% if field.name == "vat" and choice.data.value == "ja" %}<span class="f-meta" id="{{ id }}-uitleg">{% translate "Je kiest dan per regel het btw-tarief." %}</span>{% endif %}</span></label>
+        <label class="file-item"><span class="f-icon"><input type="radio" id="{{ id }}" name="{{ field.html_name }}" value="{{ choice.data.value }}" aria-labelledby="{{ id }}-naam"{% if field.name == "vat" and choice.data.value == "ja" %} aria-describedby="{{ id }}-uitleg"{% endif %}{% if choice.data.selected %} checked{% endif %}{% if field.name == "vat" and choice.data.value == "kor" %} data-hides-group="verlegd"{% endif %}></span><span class="f-text" style="grid-row:1 / span 2;align-self:center"><span class="f-name" id="{{ id }}-naam">{{ choice.choice_label }}</span>{% if field.name == "vat" and choice.data.value == "ja" %}<span class="f-meta" id="{{ id }}-uitleg">{% translate "Je kiest dan per regel het btw-tarief." %}</span>{% endif %}</span></label>
         {% endwith %}
         {% endfor %}
     </div>

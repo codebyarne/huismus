@@ -1570,7 +1570,7 @@ def test_starting_step_by_step_without_moneybird(app, live_server):
     app.get_by_label("Ja", exact=True).check()
     expect(question).to_be_visible()
     app.get_by_label("Nee, ik gebruik de KOR").check()
-    app.get_by_label("Engels").check()
+    app.get_by_label("English").check()
     app.get_by_role("button", name="Opslaan en verder").click()
 
     expect(app.locator("h1")).to_have_text("Kleineondernemersregeling (KOR)")

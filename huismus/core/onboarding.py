@@ -189,8 +189,8 @@ class WorkForm(forms.Form):
     )
     default_language = forms.ChoiceField(
         label=_("In welke taal maak je je facturen meestal?"),
-        # In the app's language, unlike the settings page's fixed names.
-        choices=[("nl", _("Nederlands")), ("en", _("Engels"))],
+        # Each language by its own name, as on Facturen en nummering.
+        choices=Settings._meta.get_field("default_language").choices,
         widget=forms.RadioSelect,
     )
 

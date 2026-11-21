@@ -7247,11 +7247,7 @@ msgstr ""
 msgid "In welke taal maak je je facturen meestal?"
 msgstr ""
 
-msgid "Nederlands"
-msgstr ""
 
-msgid "Engels"
-msgstr ""
 
 msgid "Kies een antwoord."
 msgstr ""
@@ -7267,6 +7263,6 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Gebruik je toch de KOR? Zet hem aan bij <a "
-"href=\"%(kor_url)s\">Instellingen › KOR</a>."
+"Gebruik je toch de KOR? Zet hem aan bij <a href=\"%(kor_url)s\" "
+"style=\"white-space:nowrap\">Instellingen › KOR</a>."
 msgstr ""

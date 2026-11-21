@@ -8995,11 +8995,7 @@ msgstr "Yes, outside the EU"
 msgid "In welke taal maak je je facturen meestal?"
 msgstr "In which language do you usually write your invoices?"
 
-msgid "Nederlands"
-msgstr "Dutch"
 
-msgid "Engels"
-msgstr "English"
 
 msgid "Kies een antwoord."
 msgstr "Choose an answer."
@@ -9015,6 +9011,8 @@ msgstr "Only if you charge VAT:"
 
 #, python-format
 msgid ""
-"Gebruik je toch de KOR? Zet hem aan bij <a "
-"href=\"%(kor_url)s\">Instellingen › KOR</a>."
-msgstr "Using the KOR after all? Switch it on in <a href=\"%(kor_url)s\">Settings › KOR</a>."
+"Gebruik je toch de KOR? Zet hem aan bij <a href=\"%(kor_url)s\" "
+"style=\"white-space:nowrap\">Instellingen › KOR</a>."
+msgstr ""
+"Using the KOR after all? Switch it on in <a href=\"%(kor_url)s\" "
+"style=\"white-space:nowrap\">Settings › KOR</a>."

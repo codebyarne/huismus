@@ -11,10 +11,10 @@ in wat Huismus nodig heeft voor je eerste factuur:
 
 1. **Bedrijf:** je bedrijfsnaam, adres, KvK-nummer en IBAN. Dit komt op elke
    factuur en offerte.
-2. **Je werk:** drie vragen. Reken je btw, gebruik je de KOR of weet je het
-   nog niet? Heb je klanten waarbij de btw verlegd wordt? En in welke taal
-   maak je je facturen meestal? Je antwoorden bepalen welke stappen nog
-   komen. Meer over de KOR in
+2. **Je werk:** drie vragen. Reken je btw, gebruik je de
+   kleineondernemersregeling (KOR) of weet je het nog niet? Heb je klanten
+   waarbij de btw verlegd wordt? En in welke taal maak je je facturen
+   meestal? Je antwoorden bepalen welke stappen nog komen. Meer over de KOR in
    [Kleineondernemersregeling (KOR) en btw](kor-en-btw.nl.md).
 3. **Kleineondernemersregeling (KOR):** alleen als je de KOR gebruikt. De
    tekst die onder je facturen komt, en je KOR-grens.
