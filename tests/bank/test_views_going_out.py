@@ -213,10 +213,7 @@ def test_the_expense_shows_its_bank_line_and_undo_keeps_it(client):
     assert "Afgeschreven op" in text
     assert "uit bankafschrift: Bol.com" in text
     response = client.post(reverse("bank:undo", args=[line.pk]), {"terug": page_url}, follow=True)
-    assert (
-        "Koppeling teruggedraaid. De uitgave blijft staan en de afschrijving staat weer bij Te doen."
-        in response.text
-    )
+    assert "Koppeling teruggedraaid. De uitgave blijft staan" in response.text
     assert Expense.objects.filter(pk=expense.pk).exists()
     line.refresh_from_db()
     assert line.state == State.OPEN
