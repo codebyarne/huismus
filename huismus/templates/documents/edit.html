@@ -36,11 +36,14 @@
     carries hx-post, so the form's own submit still saves normally.
     No "changed" modifier in hx-trigger: it compares the value of the
     element carrying the trigger — this div, which has none — and would
-    let only the change events after leaving a field through.{% endcomment %}
+    let only the change events after leaving a field through.
+    hx-disinherit: a link inside ("Tekst aanpassen" under the KOR text) would
+    otherwise send the invoice along and show nothing (hx-swap none).{% endcomment %}
     <div class="doc-stage"
          hx-post="{{ preview_url }}"
          hx-trigger="input delay:400ms, change"
-         hx-include="#factuur" hx-swap="none transition:false" hx-indicator="#totalen" hx-sync="this:queue last">
+         hx-include="#factuur" hx-swap="none transition:false" hx-indicator="#totalen" hx-sync="this:queue last"
+         hx-disinherit="*">
         <article class="paper" aria-label="{% if is_quote %}{% translate 'Offerte' %}{% elif document.kind == 'credit_note' %}{% translate 'Creditnota (concept)' %}{% else %}{% translate 'Factuur (concept)' %}{% endif %}">
             <div class="row small muted" style="justify-content:space-between;margin-bottom:var(--s-8)">
                 {% if settings.logo %}<img src="{{ settings.logo.url }}" alt="" style="max-width:240px;max-height:80px">{% else %}<span></span>{% endif %}

@@ -822,6 +822,20 @@ def test_new_contact_from_the_editor_returns_with_the_contact_chosen(app, contac
     expect(app.locator("#id_contact option:checked")).to_have_text("Studio Noordwind")
 
 
+def test_a_link_in_the_editor_does_not_carry_the_form_along(app):
+    # A boosted link inside a form made htmx send every field of the
+    # invoice, CSRF token included, in the address of the next page:
+    # "Tekst aanpassen" under the KOR text opened /instellingen/kor/?csrf…
+    settings = Settings.load()
+    settings.kor_enabled = True
+    settings.save()
+    app.goto(f"{app.base}/facturen/nieuw/")
+    app.get_by_role("link", name="Tekst aanpassen").click()
+    app.wait_for_url(re.compile("/instellingen/kor/"))
+    assert app.url == f"{app.base}/instellingen/kor/"
+    expect(app.locator("h1")).to_contain_text("KOR")
+
+
 def test_only_the_sidebar_morphs_between_pages(app):
     # A view-transition-name on content that differs in size from page to
     # page makes the browser stretch the old page into the new one: it looked
