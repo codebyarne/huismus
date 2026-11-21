@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""Facturen → Bankafschrift inlezen (#77): the page, its blocks and every
+"""Bank → Bankafschrift inlezen (#77): the page, its blocks and every
 action as a plain POST."""
 
 from datetime import date
@@ -19,7 +19,7 @@ from .test_reading import _camt, _invoice
 pytestmark = pytest.mark.django_db
 
 State = BankTransaction.State
-PAGE = "/facturen/bankafschrift/"
+PAGE = "/bank/"
 
 
 @pytest.fixture
@@ -40,13 +40,15 @@ def _upload(client, data, name="nov.xml"):
     return client.post(PAGE, {"bestand": SimpleUploadedFile(name, data)}, follow=True)
 
 
-def test_the_page_and_the_button_on_facturen(client):
+def test_bank_is_its_own_menu_item_not_a_button_on_facturen(client):
+    # Owner 2026-11-21: one statement holds both sides, so one place.
     _invoice(1000)
     assert reverse("bank:statement") == PAGE
     page = client.get(PAGE)
     assert page.status_code == 200
-    assert "Bankafschrift inlezen" in page.text
-    assert PAGE in client.get("/facturen/").text
+    assert "<h1>Bank</h1>" in page.text
+    assert f'href="{PAGE}" aria-current="page"' in page.text
+    assert "bankafschrift-knop" not in client.get("/facturen/").text
 
 
 def test_reading_shows_the_summary_and_the_blocks(client):
@@ -169,6 +171,13 @@ def test_too_much_paid_is_never_shown_as_negative_open(client):
     for path in (reverse("documents:edit", args=[invoice.pk]), "/facturen/", "/"):
         text = client.get(path).text.replace("\xa0", " ")
         assert "-5,00" not in text and "−5,00" not in text and "-€" not in text, path
+
+
+def test_summary_text_counts_what_went_out():
+    assert summary_text({"read": 2, "booked": 2, "outgoing": 4}) == (
+        "2 bijschrijvingen gelezen. 2 geboekt. "
+        "4 afschrijvingen: die koppel je later aan je uitgaven."
+    )
 
 
 def test_summary_text_leaves_out_what_is_zero():

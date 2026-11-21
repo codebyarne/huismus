@@ -7451,3 +7451,9 @@ msgstr "Deze bijschrijving is al geboekt."
 
 msgid "Deze betaling was al teruggedraaid."
 msgstr "Deze betaling was al teruggedraaid."
+
+#, python-format
+msgid "%(count)s afschrijving: die koppel je later aan je uitgaven."
+msgid_plural "%(count)s afschrijvingen: die koppel je later aan je uitgaven."
+msgstr[0] "%(count)s afschrijving: die koppel je later aan je uitgaven."
+msgstr[1] "%(count)s afschrijvingen: die koppel je later aan je uitgaven."

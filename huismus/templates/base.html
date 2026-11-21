@@ -43,6 +43,7 @@
                 <a href="{% url 'expenses:category_list' %}"{% if nav_subsection == "categories" %} aria-current="page"{% endif %}>{% translate "Categorieën" %}</a>
             </div>
             {% endif %}
+            <a href="{% url 'bank:statement' %}"{% if nav_section == "bank" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#euro"></use></svg>{% translate "Bank" %}</a>
             <a href="{% url 'contacts:list' %}"{% if nav_section == "contacts" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#users"></use></svg>{% translate "Klanten" %}</a>
             <a href="{% url 'reports:index' %}"{% if nav_section == "reports" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#chart"></use></svg>{% translate "Rapporten" %}</a>
             <a href="{% url 'imports:upload' %}"{% if nav_section == "imports" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#upload"></use></svg>{% translate "Importeren" %}</a>
@@ -68,7 +69,7 @@
         <a href="{% url 'documents:list' %}"{% if nav_section == "documents" %} aria-current="page"{% endif %}><svg class="i i-lg" aria-hidden="true"><use href="#file"></use></svg>{% translate "Facturen" %}</a>
         <button class="fab {% block tab_plus_class %}fab-quiet{% endblock %}" type="button" popovertarget="plus-menu" aria-label="{% translate 'Nieuw' %}"><svg class="i i-lg" aria-hidden="true"><use href="#plus"></use></svg></button>
         <a href="{% url 'expenses:list' %}"{% if nav_section == "expenses" %} aria-current="page"{% endif %}><svg class="i i-lg" aria-hidden="true"><use href="#wallet"></use></svg>{% translate "Uitgaven" %}</a>
-        <button type="button" popovertarget="meer-menu"{% if nav_section == "quotes" or nav_section == "contacts" or nav_section == "reports" or nav_section == "imports" or nav_section == "business" or nav_section == "help" %} aria-current="page"{% endif %}><svg class="i i-lg" aria-hidden="true"><use href="#menu"></use></svg>{% translate "Meer" %}</button>
+        <button type="button" popovertarget="meer-menu"{% if nav_section == "quotes" or nav_section == "bank" or nav_section == "contacts" or nav_section == "reports" or nav_section == "imports" or nav_section == "business" or nav_section == "help" %} aria-current="page"{% endif %}><svg class="i i-lg" aria-hidden="true"><use href="#menu"></use></svg>{% translate "Meer" %}</button>
     </nav>
     {# The sidebar's "Nieuw" menu, for the tab bar's +. #}
     <div id="plus-menu" class="menu" popover="auto">
@@ -80,6 +81,7 @@
     <div id="meer-menu" class="menu" popover="auto">
         <a href="{% url 'quotes:list' %}"><svg class="i" aria-hidden="true"><use href="#tag"></use></svg>{% translate "Offertes" %}</a>
         <a href="{% url 'expenses:category_list' %}"><svg class="i" aria-hidden="true"><use href="#archive"></use></svg>{% translate "Categorieën" %}</a>
+        <a href="{% url 'bank:statement' %}"><svg class="i" aria-hidden="true"><use href="#euro"></use></svg>{% translate "Bank" %}</a>
         <a href="{% url 'contacts:list' %}"><svg class="i" aria-hidden="true"><use href="#users"></use></svg>{% translate "Klanten" %}</a>
         <a href="{% url 'reports:index' %}"><svg class="i" aria-hidden="true"><use href="#chart"></use></svg>{% translate "Rapporten" %}</a>
         <a href="{% url 'imports:upload' %}"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg>{% translate "Importeren" %}</a>

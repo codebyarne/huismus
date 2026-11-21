@@ -209,6 +209,7 @@ def test_mt940_and_camt_from_the_fixtures_read():
     assert result.not_incoming == 2
     assert result.other_currency == 1
     assert result.accounts == {"NL91ABNA0417164300"}
+    assert result.summary()["outgoing"] == 2
 
 
 def test_a_file_that_is_no_statement_is_refused_and_keeps_nothing():

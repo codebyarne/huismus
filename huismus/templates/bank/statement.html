@@ -1,15 +1,14 @@
 {% extends "base.html" %}
 {% load i18n money %}
 
-{% block title %}{% translate "Bankafschrift inlezen" %} — Huismus{% endblock %}
+{% block title %}{% translate "Bank" %} — Huismus{% endblock %}
 {% block content_class %}content-wide{% endblock %}
 
 {% block content %}
-{% comment %}Facturen → Bankafschrift inlezen (#77, huismus.bank.views.statement_page). Texts by the product-owner agent, 2026-11-20.{% endcomment %}
+{% comment %}Bank → Bankafschrift inlezen (#77, huismus.bank.views.statement_page). Texts by the product-owner agent, 2026-11-20.{% endcomment %}
 <div class="page-head">
     <div class="titles">
-        <a class="back" href="{% url 'documents:list' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Facturen" %}</a>
-        <h1>{% translate "Bankafschrift inlezen" %}</h1>
+        <h1>{% translate "Bank" %}</h1>
         <p class="lede">{% translate "Lees het afschrift van je bank in. Huismus kijkt welke facturen betaald zijn en boekt wat zeker is." %}</p>
     </div>
 </div>

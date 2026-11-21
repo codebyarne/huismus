@@ -9201,3 +9201,9 @@ msgstr "This incoming payment is already recorded."
 
 msgid "Deze betaling was al teruggedraaid."
 msgstr "This payment was already undone."
+
+#, python-format
+msgid "%(count)s afschrijving: die koppel je later aan je uitgaven."
+msgid_plural "%(count)s afschrijvingen: die koppel je later aan je uitgaven."
+msgstr[0] "%(count)s payment going out: you'll link it to your expenses later."
+msgstr[1] "%(count)s payments going out: you'll link them to your expenses later."

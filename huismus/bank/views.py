@@ -1,7 +1,8 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""Facturen → Bankafschrift inlezen (#77; texts and choices by the
-product-owner agent 2026-11-20, huismus-intern/besluiten.md).
+"""Bank → Bankafschrift inlezen (#77). Its own menu item since the owner's
+decision of 2026-11-21 (first a button on Facturen); texts and choices by
+the product-owner agent 2026-11-20, huismus-intern/besluiten.md.
 
 One page: the drop zone, the summary of the statement just read, what
 Huismus booked from it, and every line that still waits (from any
@@ -64,6 +65,16 @@ def summary_text(summary: dict) -> str:
             parts.append(text(count) % {"count": count})
     if parts:
         sentences.append(_capitalize(", ".join(parts)) + ".")
+    outgoing = summary.get("outgoing", 0)
+    if outgoing:
+        sentences.append(
+            ngettext(
+                "%(count)s afschrijving: die koppel je later aan je uitgaven.",
+                "%(count)s afschrijvingen: die koppel je later aan je uitgaven.",
+                outgoing,
+            )
+            % {"count": outgoing}
+        )
     seen = summary.get("seen_before", 0)
     if seen:
         sentences.append(
@@ -183,7 +194,7 @@ def statement_page(request):
         request,
         "bank/statement.html",
         {
-            "nav_section": "documents",
+            "nav_section": "bank",
             "error": error,
             "statement": statement,
             "summary": summary_text(statement.summary) if statement and requested else "",
@@ -203,7 +214,7 @@ def skipped_page(request):
         request,
         "bank/skipped.html",
         {
-            "nav_section": "documents",
+            "nav_section": "bank",
             "lines": BankTransaction.objects.filter(state=State.SKIPPED).order_by("-booked_on"),
             "here": request.get_full_path(),
         },

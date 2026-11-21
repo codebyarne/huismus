@@ -79,6 +79,8 @@ class ReadResult:
             "open": len(self.open),
             "already_booked": len(self.already_booked),
             "seen_before": self.seen_before,
+            # Money going out (and reversals): counted, not stored yet.
+            "outgoing": self.not_incoming,
             "accounts": sorted(self.accounts),
         }
 

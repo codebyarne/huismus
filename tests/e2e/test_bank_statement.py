@@ -29,9 +29,9 @@ def test_read_confirm_pick_undo_skip_and_read_again(app, history, tmp_path):
     statement.write_bytes(demo_statement(LAST_DAY))
     payments = Payment.objects.count()
 
-    app.goto(app.base + "/facturen/")
-    app.get_by_role("link", name="Bankafschrift inlezen").click()
-    expect(app.locator("h1")).to_have_text("Bankafschrift inlezen")
+    app.goto(app.base + "/")
+    app.get_by_role("navigation").get_by_role("link", name="Bank", exact=True).first.click()
+    expect(app.locator("h1")).to_have_text("Bank")
     _read(app, statement)
 
     expect(app.locator("#samenvatting")).to_contain_text("6 bijschrijvingen gelezen.")
@@ -63,7 +63,7 @@ def test_read_confirm_pick_undo_skip_and_read_again(app, history, tmp_path):
     assert line.state == State.OPEN
 
     # Skip all that is left to pick, and put one back.
-    app.goto(app.base + "/facturen/bankafschrift/")
+    app.goto(app.base + "/bank/")
     app.get_by_role("button", name="Alles overslaan").click()
     expect(app.locator("#zelf-kiezen")).to_have_count(0)
     app.get_by_role("link", name="Overgeslagen (2)").click()
@@ -78,7 +78,7 @@ def test_read_confirm_pick_undo_skip_and_read_again(app, history, tmp_path):
 
     # The same file again changes nothing.
     before = Payment.objects.count()
-    app.goto(app.base + "/facturen/bankafschrift/")
+    app.goto(app.base + "/bank/")
     _read(app, statement)
     expect(app.get_by_text("Niets nieuws: alle bijschrijvingen")).to_be_visible()
     assert Payment.objects.count() == before
@@ -87,6 +87,6 @@ def test_read_confirm_pick_undo_skip_and_read_again(app, history, tmp_path):
 def test_a_file_that_is_no_statement(app, tmp_path):
     photo = tmp_path / "foto.jpg"
     photo.write_bytes(b"\xff\xd8\xff\xe0 geen afschrift")
-    app.goto(app.base + "/facturen/bankafschrift/")
+    app.goto(app.base + "/bank/")
     _read(app, photo)
     expect(app.locator("#fout")).to_contain_text("Huismus herkent dit bestand niet")

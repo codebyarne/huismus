@@ -9,7 +9,7 @@ met je bank.
 
 1. Download bij je bank een afschrift als **CAMT.053** of **MT940**. Hieronder
    staat per bank waar dat zit.
-2. Ga in Huismus naar **Facturen** en klik op **Bankafschrift inlezen**.
+2. Ga in Huismus naar **Bank**.
 3. Sleep het bestand naar het vak, of klik op **Bestand kiezen**. Een zip
    met meer afschriften kan ook.
 4. Klik op **Inlezen**.
@@ -20,7 +20,8 @@ nog een keer inlezen verandert niets.
 
 ## Wat Huismus doet
 
-Huismus kijkt alleen naar geld dat binnenkwam. Elke bijschrijving legt het
+Huismus kijkt nu alleen naar geld dat binnenkwam. Afschrijvingen telt het,
+maar koppelt het nog niet aan je uitgaven. Elke bijschrijving legt Huismus
 naast je facturen die nog openstaan.
 
 - **Geboekt.** Staat het factuurnummer in de omschrijving en is het bedrag
