@@ -122,7 +122,9 @@ def invoice_setup() -> tuple[str, str]:
 
 def outgoing(organisation: str, wish: str, email: str, language: str | None = None) -> list:
     """Everything that goes, as (label, value) for the overview. send()
-    sends exactly these fields and nothing more."""
+    sends exactly these fields and nothing more. What Huismus fills in
+    itself is read again at Versturen, like the version: a setting changed
+    in between goes as it is then."""
     language = form_language(language)
     reverse_charge, invoice_language = invoice_setup()
     return [
