@@ -226,7 +226,7 @@ def quick_outgoing(instance, kind, message, email, page, has_image, language=Non
         (_("Hoe je werkt"), how_you_work(instance)),
         (_("Draait op"), _label(PLATFORMS, runs_on())),
         (_("Versie"), current_version()),
-        (_("Taal"), "English" if language == "en" else "Nederlands"),
+        (_("Taal van de app"), "English" if language == "en" else "Nederlands"),
     ]
 
 
