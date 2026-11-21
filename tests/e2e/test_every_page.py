@@ -306,6 +306,28 @@ MENUS_OFF_SCREEN = """() => [...document.querySelectorAll('[popover]')]
     .map(menu => menu.id)"""
 
 
+# A boosted link takes over the htmx attributes of every element around it.
+# In the editor "Tekst aanpassen" under the KOR text sat in the block of the
+# live totals: it sent the whole invoice along (hx-include) and the answer
+# was never shown (hx-swap="none"), so the click did nothing (2026-11-21).
+# Such a block says hx-disinherit="*"; a link that means it has its own hx-get.
+# Inheriting where to put the answer is fine: the sort links in a list's
+# toolbar refresh only the results, as meant.
+INHERITING_LINKS = """() => {
+    const breaks = el => ['hx-include', 'hx-vals', 'hx-params'].some(name => el.hasAttribute(name))
+        || /(^|\\s)none(\\s|$)/.test(el.getAttribute('hx-swap') || '');
+    return [...document.querySelectorAll('a[href]')].filter(link => {
+        if (link.closest('[hx-boost]')?.getAttribute('hx-boost') !== 'true') return false;
+        if (link.hasAttribute('hx-get') || link.target === '_blank') return false;
+        for (let el = link.parentElement; el; el = el.parentElement) {
+            if (el.hasAttribute('hx-disinherit')) return false;
+            if (breaks(el)) return true;
+        }
+        return false;
+    }).map(link => link.textContent.trim().slice(0, 40));
+}"""
+
+
 def _problems_on(page, path, language, dutch, data):
     problems = []
     response = page.goto(page.base + path)
@@ -393,7 +415,21 @@ def _problems_on(page, path, language, dutch, data):
     off_screen = page.evaluate(MENUS_OFF_SCREEN)
     if off_screen:
         problems.append(f"menu opent buiten beeld: {sorted(off_screen)}")
+    inheriting = page.evaluate(INHERITING_LINKS)
+    if inheriting:
+        problems.append(f"link erft htmx van een blok eromheen: {sorted(set(inheriting))}")
     return problems
+
+
+def test_the_link_check_reports_a_link_in_a_live_block_and_only_that(page):
+    page.set_content(
+        '<body hx-boost="true">'
+        '<div hx-post="/x" hx-swap="none"><a href="/a">erft</a>'
+        '<a href="/b" hx-boost="false">uit</a><a href="/c" hx-get="/c">eigen</a></div>'
+        '<div hx-post="/x" hx-swap="none" hx-disinherit="*"><a href="/d">los</a></div>'
+        '<a href="/e">gewoon</a></body>'
+    )
+    assert page.evaluate(INHERITING_LINKS) == ["erft"]
 
 
 def test_the_placeholder_check_reports_a_cut_off_text_and_only_that(page):
