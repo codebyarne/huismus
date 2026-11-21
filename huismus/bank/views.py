@@ -120,8 +120,9 @@ class Waiting:
     # open on it.
     proposal: OpenInvoice | OpenExpense | None = None
     difference_cents: int = 0
-    # Money out: an expense without a bank line has exactly this amount,
-    # in the window (expense_matching): "Er is al een uitgave met dit bedrag."
+    # Money out only: an expense without a bank line has exactly this
+    # amount, in the window of expense_matching, and is chosen first in the
+    # list: "Er is al een uitgave met dit bedrag."
     same_amount: bool = False
 
     @property
@@ -129,20 +130,21 @@ class Waiting:
         return -self.difference_cents
 
 
-# How many expenses the list to choose from holds: the closest in date.
-# Years of expenses in one list helps nobody.
-EXPENSE_CHOICES = 50
+# How many expenses with another amount the list adds: the closest in
+# date. Years of expenses in one list helps nobody.
+OTHER_EXPENSE_CHOICES = 50
 
 
 def _expense_choices(line, first, open_expenses) -> list[OpenExpense]:
+    """`first`, then every expense with the line's amount, also from
+    outside the window (one that is old must be choosable, product-owner
+    agent 2026-11-21 point 1), then 50 others closest in date."""
+    gross = -line.amount_cents
     choices = list(first)
     by_date = sorted(open_expenses, key=lambda e: abs((line.booked_on - e.date).days))
-    for expense in by_date:
-        if len(choices) >= EXPENSE_CHOICES:
-            break
-        if expense not in choices:
-            choices.append(expense)
-    return choices
+    choices += [e for e in by_date if e.gross_cents == gross and e not in choices]
+    others = [e for e in by_date if e not in choices]
+    return choices + others[:OTHER_EXPENSE_CHOICES]
 
 
 def _waiting_incoming(line, open_invoices, by_pk) -> tuple[str, Waiting]:
@@ -167,12 +169,16 @@ def _waiting_incoming(line, open_invoices, by_pk) -> tuple[str, Waiting]:
 
 
 def _waiting_outgoing(line, open_expenses, by_pk, others) -> tuple[str, Waiting]:
+    """The list to choose from: the stored proposal (or the expense undone
+    from), then what matching found, then the rest (_expense_choices)."""
     as_line = reading.as_statement_line(line)
     found = expense_matching.match(as_line, open_expenses, others)
     stored = by_pk.get(line.proposed_expense_id)
-    same = [e for e in [found.expense, *found.candidates] if e is not None]
-    first = ([stored] if stored else []) + [e for e in same if e != stored]
-    item = Waiting(line, _expense_choices(line, first, open_expenses), same_amount=bool(same))
+    # Whatever matching found has the line's amount: sure, likely or choose.
+    with_amount = [e for e in [found.expense, *found.candidates] if e is not None]
+    first = ([stored] if stored else []) + [e for e in with_amount if e != stored]
+    choices = _expense_choices(line, first, open_expenses)
+    item = Waiting(line, choices, same_amount=bool(with_amount))
     if line.state == State.PROPOSED and stored is not None:
         item.proposal = stored
         return "proposed", item
@@ -270,13 +276,12 @@ def _unknown_url(request, side, show=None) -> str:
 def _unknown_view(request, unknown):
     incoming = [item for item in unknown if not item.line.is_outgoing]
     outgoing = [item for item in unknown if item.line.is_outgoing]
-    side = request.GET.get("kant", "")
     # The tabs only when both sides have lines; else the one side is all.
     tabs = bool(incoming and outgoing)
-    shown = {"bij": incoming, "af": outgoing}.get(side, unknown) if tabs else unknown
-    if not tabs:
-        side = ""
+    side = request.GET.get("kant", "") if tabs else ""
+    shown = {"bij": incoming, "af": outgoing}.get(side, unknown)
     count = request.GET.get("toon", "")
+    # Never fewer than the first 20, whatever ?toon= says.
     limit = max(int(count), SHOW_STEP) if count.isdigit() else SHOW_STEP
     return {
         "unknown": shown[:limit],

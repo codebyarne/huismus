@@ -119,6 +119,9 @@ def _read_entry(entry, account: str, statement: Statement):
         amounts = [_transaction_cents(tx) for tx in details]
     entry_cents = amount_to_cents(amount.text or "")
     # The amounts in a statement are without sign; CdtDbtInd says which way.
+    # A minus would contradict it: refused, not guessed (CLAUDE.md rule 6).
+    if entry_cents < 0 or any(cents is not None and cents < 0 for cents in amounts):
+        raise StatementReadError(f"signed amount {amount.text!r}")
     if not details or None in amounts or sum(amounts) != entry_cents:
         # No details, or a batch that doesn't say what each transaction
         # was or whose parts don't add up to the entry to the cent: one

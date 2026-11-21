@@ -115,8 +115,8 @@ menus are in Dutch). Choose **CAMT.053** if your bank has it, otherwise
 **MT940**.
 
 - **ING:** with a business account, in <span lang="nl">Mijn ING Zakelijk</span>. A personal ING
-  account only gives CSV and PDF. Huismus doesn't read those; record a payment
-  on the invoice instead.
+  account only gives CSV and PDF. Huismus doesn't read those; record payments
+  from customers on the invoice yourself instead.
 - **Rabobank:** **<span lang="nl">Transacties downloaden</span>** › your account › choose the
   format CAMT.053 and the period › **<span lang="nl">Downloaden</span>**. "<span lang="nl">Vanaf de laatste
   download</span>" works too.

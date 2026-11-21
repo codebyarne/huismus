@@ -7675,3 +7675,9 @@ msgstr ""
 
 msgid "Afgeschreven op %(date)s"
 msgstr ""
+
+msgid "Een particuliere rekening bij ING geeft alleen CSV en pdf. Die leest Huismus niet; registreer betalingen van klanten dan zelf op de factuur."
+msgstr ""
+
+msgid "Betalingen die je oversloeg. Zet je er een terug, dan staat hij weer op de pagina Bank."
+msgstr ""
