@@ -1644,11 +1644,16 @@ def test_your_work_with_vat_and_reverse_charge_and_not_knowing_yet(app):
     assert (settings.kor_enabled, settings.reverse_charge_text) == (False, "Btw verlegd.")
 
 
-def test_your_work_without_javascript_asks_every_question(browser, live_server, app):
+def test_your_work_without_javascript_asks_every_question(
+    browser, browser_context_args, live_server, app
+):
     # Without JS the question about btw verlegd is always there, and choosing
-    # the KOR ignores it (a plain POST).
+    # the KOR ignores it (a plain POST). The same context args as every test:
+    # without locale Firefox and WebKit ask for English (Chromium for Dutch).
     context = browser.new_context(
-        java_script_enabled=False, storage_state=app.context.storage_state()
+        **browser_context_args,
+        java_script_enabled=False,
+        storage_state=app.context.storage_state(),
     )
     page = context.new_page()
     page.goto(app.base + "/welkom/werk/")
