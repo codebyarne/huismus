@@ -1299,6 +1299,21 @@ msgstr "Runs on"
 msgid "Versie"
 msgstr "Version"
 
+msgid "Taal van de app"
+msgstr "Language of the app"
+
+msgid "Btw verlegd"
+msgstr "Reverse charge"
+
+msgid "Ja"
+msgstr "Yes"
+
+msgid "Nee"
+msgstr "No"
+
+msgid "Taal van je facturen"
+msgstr "Language of your invoices"
+
 msgid "Wat voor organisatie heb je?"
 msgstr "What kind of organisation do you have?"
 

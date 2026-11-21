@@ -1244,6 +1244,21 @@ msgstr ""
 msgid "Versie"
 msgstr ""
 
+msgid "Taal van de app"
+msgstr ""
+
+msgid "Btw verlegd"
+msgstr ""
+
+msgid "Ja"
+msgstr ""
+
+msgid "Nee"
+msgstr ""
+
+msgid "Taal van je facturen"
+msgstr ""
+
 msgid "Wat voor organisatie heb je?"
 msgstr ""
 
