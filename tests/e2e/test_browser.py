@@ -42,6 +42,21 @@ def test_sidebar_navigation_reaches_every_section_and_marks_it(app):
         expect(app.locator(".sidebar .nav > a[aria-current=page]")).to_have_text(label)
 
 
+def test_a_slow_page_shows_the_sparrow_until_it_is_there(app):
+    sparrow = app.locator("#pagina-laden")
+    expect(sparrow).to_be_hidden()
+    held = []
+    app.route("**/contacten/", lambda route: held.append(route))
+    app.locator(".sidebar .nav > a", has_text="Klanten").click()
+
+    expect(sparrow).to_be_visible()
+    expect(sparrow).to_have_attribute("aria-label", "Pagina laden…")
+    held.pop().continue_()
+    expect(app).to_have_url(app.base + "/contacten/")
+    expect(app.locator("#pagina-laden")).to_be_hidden()
+    app.unroute("**/contacten/")
+
+
 def test_clicking_the_current_section_again_stays_there(app):
     link = app.locator(".sidebar .nav a", has_text="Overzicht").first
     app.goto(app.base + "/facturen/")

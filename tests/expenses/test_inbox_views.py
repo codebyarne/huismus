@@ -130,6 +130,7 @@ def test_while_fetching_the_status_asks_again(client, user, folder, monkeypatch)
     content = client.get(reverse("business:receipts_folder")).content.decode()
 
     assert "Bezig met ophalen…" in content
+    assert 'class="bird"' in content
     assert 'hx-trigger="every 3s"' in content
     # The pill is refreshed along: green again after a look that works.
     assert 'hx-select-oob="#bonnetjesmap-pill"' in content

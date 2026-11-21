@@ -3454,6 +3454,9 @@ msgstr "Or type a new category"
 msgid "Nieuwe categorie. Huismus maakt hem als je opslaat."
 msgstr "New category. Huismus makes it when you save."
 
+msgid "Pagina laden…"
+msgstr "Loading page…"
+
 msgid "Bonnetje uploaden…"
 msgstr "Uploading receipt…"
 

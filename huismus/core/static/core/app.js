@@ -190,6 +190,26 @@ document.addEventListener("htmx:afterRequest", (event) => ended(event.detail.xhr
 document.addEventListener("htmx:beforeRequest", (event) => {
   if (leaving) event.preventDefault();
 });
+// A page that is slow to come (a boosted link or GET form): after half a
+// second the sparrow hops at the top (#pagina-laden, base.html). Looked up
+// each time: a boosted page swaps <body>, and the element with it. Buttons
+// that post have their own spinner, and parts that fetch themselves aren't
+// boosted, so neither shows it.
+let pageWaitTimer;
+const pageWait = (show) => {
+  clearTimeout(pageWaitTimer);
+  const sparrow = document.getElementById("pagina-laden");
+  if (sparrow) sparrow.hidden = !show;
+};
+document.addEventListener("htmx:beforeRequest", (event) => {
+  if (!event.detail.boosted || event.defaultPrevented) return;
+  clearTimeout(pageWaitTimer);
+  pageWaitTimer = setTimeout(() => pageWait(true), 500);
+});
+document.addEventListener("htmx:afterRequest", (event) => {
+  if (event.detail.boosted) pageWait(false);
+});
+window.addEventListener("pageshow", () => pageWait(false));
 // Back to this page from the browser's cache: it may send again.
 window.addEventListener("pageshow", () => {
   leaving = false;
