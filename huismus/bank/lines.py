@@ -4,9 +4,10 @@
 
 Both readers (`camt.py` for CAMT.053, `mt940.py` for MT940) turn a file
 into these lines, so matching and storing never know which format it was.
-Only incoming money is kept (`amount_cents` > 0): #77 is about invoices
-that were paid. Other lines (money going out,
-reversals) are only counted.
+Money that came in has `amount_cents` > 0 and is matched to invoices
+(#77); money going out has `amount_cents` < 0 and is matched to expenses
+(#257). Reversals (a returned direct debit) are left out: they are no
+payment of a customer or for an expense (product-owner agent 2026-11-21).
 """
 
 import re
@@ -41,7 +42,6 @@ class Statement:
     format: str  # "camt053" or "mt940"
     lines: list[StatementLine] = field(default_factory=list)
     accounts: set[str] = field(default_factory=set)
-    not_incoming: int = 0
     # Credits in another currency than euros: Huismus skips them.
     other_currency: int = 0
 

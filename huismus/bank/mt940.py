@@ -127,10 +127,10 @@ def _finish(pending, info_lines, statement: Statement):
     found = _LINE_61.match(lines[0].strip())
     if not found:
         raise StatementReadError(f":61: {lines[0]!r}")
-    if found["mark"] != "C":
-        # D: money going out. RC/RD: a reversal, no customer paying.
-        statement.not_incoming += 1
+    if found["mark"] not in ("C", "D"):
+        # RC/RD: a reversal, no customer paying and no expense (lines.py).
         return
+    sign = 1 if found["mark"] == "C" else -1
     value_date = _date(found["value"])
     booked_on = booking_date(value_date, found["booking"]) if found["booking"] else value_date
     payer = _info(_joined(info_lines or []))
@@ -147,7 +147,7 @@ def _finish(pending, info_lines, statement: Statement):
         StatementLine(
             account_iban=account,
             booked_on=booked_on,
-            amount_cents=_cents(found["amount"]),
+            amount_cents=sign * _cents(found["amount"]),
             counterparty_name=clean_text(payer.get("name", "")),
             counterparty_iban=clean_iban(iban),
             description=clean_text(payer.get("text", "")),

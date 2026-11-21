@@ -24,7 +24,7 @@ def _read(name):
 def test_ing_structured():
     statement = _read("mt940-ing.sta")
     assert statement.accounts == {"NL91TEST0001234567"}
-    first, second = statement.lines
+    first, second, third = statement.lines
     assert first.booked_on == date(2026, 11, 14)
     assert first.amount_cents == 121000
     assert first.counterparty_iban == "NL02TEST0123456788"
@@ -34,7 +34,10 @@ def test_ing_structured():
     assert first.bank_reference == "00000000001005"
     assert second.counterparty_name == "J. de Vries"
     assert second.reference == "9001123412341234"
-    assert statement.not_incoming == 1
+    # D: money going out, with whom it went to.
+    assert third.amount_cents == -4599
+    assert third.counterparty_name == "Telefoonwinkel"
+    assert third.counterparty_iban == "NL44TEST0123456789"
 
 
 def test_rabobank_structured():
@@ -49,8 +52,8 @@ def test_rabobank_structured():
     assert second.counterparty_name == "Studio Zuid"
     assert second.reference == "1234567890123456"
     assert second.description == ""
-    # RD: a reversal, no customer paying.
-    assert statement.not_incoming == 1
+    # RD: a reversal, no customer paying and no expense: left out (the
+    # unpacking above has two lines, not three).
 
 
 def test_abn_amro_structured_and_the_older_free_text():
@@ -76,7 +79,7 @@ def test_triodos_subfields():
 
 def test_cp1252_is_read_too():
     data = (FIXTURES / "mt940-ing.sta").read_bytes().replace(b"Vries", "Vri\xebs".encode("cp1252"))
-    (_, second) = mt940.read(data).lines
+    (_, second, _debit) = mt940.read(data).lines
     assert second.counterparty_name == "J. de Vriës"
 
 

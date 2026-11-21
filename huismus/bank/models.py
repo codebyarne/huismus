@@ -1,12 +1,14 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""Bank statements read in, and their incoming payments (#77, SPEC.md
-section 4). Only money that came in is stored: #77 is about invoices that
-were paid; the bank balance and other lines are #159.
+"""Bank statements read in, and their lines (SPEC.md section 4): money
+that came in, matched to invoices (#77), and money that went out, matched
+to expenses (#257). The bank balance is #159.
 
-A payment booked from a bank line is an ordinary `Payment` on the invoice;
-the line points to it, so Huismus knows which payments it booked and can
-undo exactly those.
+A payment booked from a line coming in is an ordinary `Payment` on the
+invoice; the line points to it, so Huismus knows which payments it booked
+and can undo exactly those. A line going out points to its expense; the
+expense itself never changes for it (CLAUDE.md rule 7), and undoing only
+takes the link away.
 """
 
 from django.db import models
@@ -14,6 +16,7 @@ from django.utils.translation import gettext_lazy as _
 
 from huismus.core.models import TimestampedModel
 from huismus.documents.models import Document, Payment
+from huismus.expenses.models import Expense
 
 
 class BankStatement(TimestampedModel):
@@ -41,14 +44,17 @@ class BankTransactionQuerySet(models.QuerySet):
 
 
 class BankTransaction(TimestampedModel):
-    """One incoming payment from a statement, and what became of it."""
+    """One line of a statement, and what became of it. `amount_cents` > 0:
+    money in, for an invoice; < 0: money out, for an expense."""
 
     objects = BankTransactionQuerySet.as_manager()
 
     class State(models.TextChoices):
-        # Huismus booked it itself: number and open amount fit.
+        # Huismus booked it itself: number and open amount fit, or (money
+        # out) amount, name and date of one expense (expense_matching.py).
         BOOKED = "booked", _("geboekt door Huismus")
-        # The user confirmed Huismus's proposal, or chose the invoice.
+        # The user confirmed Huismus's proposal, or chose the invoice or
+        # expense, or made the expense from the line (Uitgave maken).
         CONFIRMED = "confirmed", _("geboekt door jou")
         # Already booked before the statement came in (by hand, or an
         # import): linked to that payment, nothing new booked.
@@ -86,6 +92,25 @@ class BankTransaction(TimestampedModel):
         related_name="+",
         verbose_name=_("voorgestelde factuur"),
     )
+    # Money out: the same, for an expense. `proposed_expense` while it
+    # waits, `expense` once it is linked.
+    proposed_expense = models.ForeignKey(
+        Expense,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="+",
+        verbose_name=_("voorgestelde uitgave"),
+    )
+    # Deleting the expense makes the line wait again (signals.py).
+    expense = models.OneToOneField(
+        Expense,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="bank_transaction",
+        verbose_name=_("uitgave"),
+    )
     payment = models.OneToOneField(
         Payment,
         on_delete=models.SET_NULL,
@@ -96,18 +121,25 @@ class BankTransaction(TimestampedModel):
     )
 
     class Meta:
-        verbose_name = _("bijschrijving")
-        verbose_name_plural = _("bijschrijvingen")
+        verbose_name = _("bankregel")
+        verbose_name_plural = _("bankregels")
         ordering = ["booked_on", "pk"]
 
     def __str__(self):
         return f"{self.booked_on} {self.amount_cents} {self.counterparty_name}"
 
     @property
+    def is_outgoing(self) -> bool:
+        return self.amount_cents < 0
+
+    @property
+    def gross_cents(self) -> int:
+        """The amount without its sign: what an expense for it is."""
+        return abs(self.amount_cents)
+
+    @property
     def can_undo(self) -> bool:
         """Booked from this line, by Huismus or by the user: a payment that
         was there before the statement is never taken back."""
-        return self.payment_id is not None and self.state in (
-            self.State.BOOKED,
-            self.State.CONFIRMED,
-        )
+        linked = self.payment_id is not None or self.expense_id is not None
+        return linked and self.state in (self.State.BOOKED, self.State.CONFIRMED)
