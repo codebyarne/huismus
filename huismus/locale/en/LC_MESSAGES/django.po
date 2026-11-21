@@ -9270,3 +9270,158 @@ msgid "%(count)s afschrijving"
 msgid_plural "%(count)s afschrijvingen"
 msgstr[0] "%(count)s payment going out"
 msgstr[1] "%(count)s payments going out"
+
+msgid "voorgestelde uitgave"
+msgstr "proposed expense"
+
+msgid "bankregel"
+msgstr "bank line"
+
+msgid "bankregels"
+msgstr "bank lines"
+
+msgid "%(count)s betaling gelezen van rekening %(iban)s"
+msgid_plural "%(count)s betalingen gelezen van rekening %(iban)s"
+msgstr[0] "Read %(count)s payment from account %(iban)s"
+msgstr[1] "Read %(count)s payments from account %(iban)s"
+
+msgid "%(count)s betaling gelezen"
+msgid_plural "%(count)s betalingen gelezen"
+msgstr[0] "Read %(count)s payment"
+msgstr[1] "Read %(count)s payments"
+
+msgid "%(count)s erbij"
+msgstr "%(count)s in"
+
+msgid "%(count)s eraf"
+msgstr "%(count)s out"
+
+msgid "Huismus boekte er %(booked)s en %(count)s stond al geboekt."
+msgid_plural "Huismus boekte er %(booked)s en %(count)s stonden al geboekt."
+msgstr[0] "Huismus recorded %(booked)s, and %(count)s was already recorded."
+msgstr[1] "Huismus recorded %(booked)s, and %(count)s were already recorded."
+
+msgid "Huismus boekte er %(booked)s."
+msgstr "Huismus recorded %(booked)s."
+
+msgid "%(count)s stond al geboekt."
+msgid_plural "%(count)s stonden al geboekt."
+msgstr[0] "%(count)s was already recorded."
+msgstr[1] "%(count)s were already recorded."
+
+msgid "%(count)s wacht hieronder op je."
+msgid_plural "%(count)s wachten hieronder op je."
+msgstr[0] "%(count)s is waiting for you below."
+msgstr[1] "%(count)s are waiting for you below."
+
+msgid "Niets nieuws: alle betalingen in dit bestand waren al ingelezen."
+msgstr "Nothing new: every payment in this file was read before."
+
+msgid "Kies een uitgave."
+msgstr "Pick an expense."
+
+msgid "Deze afschrijving of uitgave is al geboekt."
+msgstr "This payment or expense is already recorded."
+
+msgid "Afschrijving geboekt bij de uitgave."
+msgstr "Payment recorded on the expense."
+
+msgid "Koppeling teruggedraaid. De uitgave blijft staan en de afschrijving staat weer bij Te doen."
+msgstr "Link undone. The expense stays, and the payment is back under To do."
+
+msgid "Bevestig of kies de factuur of uitgave."
+msgstr "Confirm or pick the invoice or expense."
+
+msgid "Deze afschrijving is al geboekt."
+msgstr "This payment is already recorded."
+
+msgid "Uitgave bewaard. De afschrijving staat nu bij Geboekt."
+msgstr "Expense saved. The payment is now under Recorded."
+
+msgid "Kies een uitgave…"
+msgstr "Pick an expense…"
+
+msgid "Af · uitgave"
+msgstr "Out · expense"
+
+msgid "Bij · factuur"
+msgstr "In · invoice"
+
+msgid "Lees het afschrift van je bank in. Huismus koppelt wat erbij komt aan je facturen en wat eraf gaat aan je uitgaven. Wat zeker is, boekt Huismus zelf."
+msgstr "Read in your bank statement. Huismus links money coming in to your invoices and money going out to your expenses. What's certain, it records by itself."
+
+msgid "%(fitting)s van de %(total)s horen bij je administratie"
+msgstr "%(fitting)s of %(total)s belong to your administration"
+
+msgid "%(count)s hoort bij je administratie"
+msgid_plural "%(count)s horen bij je administratie"
+msgstr[0] "%(count)s belongs to your administration"
+msgstr[1] "%(count)s belong to your administration"
+
+msgid "passen bij je facturen of uitgaven. Klopt het?"
+msgstr "fit your invoices or expenses. Is that right?"
+
+msgid "Uitgave van %(date)s · %(supplier)s · %(amount)s"
+msgstr "Expense of %(date)s · %(supplier)s · %(amount)s"
+
+msgid "Bij deze uitgave mist het bonnetje."
+msgstr "This expense has no receipt yet."
+
+msgid "Andere uitgave"
+msgstr "Other expense"
+
+msgid "Er is al een uitgave met dit bedrag. Is het die? Kies hem dan en boek."
+msgstr "There's already an expense with this amount. If it's that one, pick it and record it."
+
+msgid "Alles wat bij je facturen of uitgaven past, is geboekt."
+msgstr "Everything that fits your invoices or expenses is recorded."
+
+msgid "Uitgave · %(name)s"
+msgstr "Expense · %(name)s"
+
+msgid "privé, of nog geen uitgave"
+msgstr "private, or no expense yet"
+
+msgid "Privé, of geld naar je spaarrekening? Dan laat je het hier staan. Zakelijk betaald, maar nog geen uitgave in Huismus? Maak er dan een uitgave van. Is het een betaling van een klant? Kies dan de factuur."
+msgstr "Private, or money to your savings account? Then leave it here. Paid for your business, but no expense in Huismus yet? Then make it an expense. Is it a customer's payment? Then pick the invoice."
+
+msgid "Bij of af"
+msgstr "In or out"
+
+msgctxt "bank"
+msgid "Alles (%(count)s)"
+msgstr "All (%(count)s)"
+
+msgctxt "bank"
+msgid "Bij (%(count)s)"
+msgstr "In (%(count)s)"
+
+msgctxt "bank"
+msgid "Af (%(count)s)"
+msgstr "Out (%(count)s)"
+
+msgid "Is een afschrijving geen uitgave, zoals geld naar je spaarrekening of iets privé? Sla hem dan over."
+msgstr "If money going out isn't an expense, like a transfer to savings or something private, skip it."
+
+msgid "Toon meer (%(count)s nog)"
+msgid_plural "Toon meer (%(count)s nog)"
+msgstr[0] "Show more (%(count)s left)"
+msgstr[1] "Show more (%(count)s left)"
+
+msgid "Hetzelfde afschrift nog een keer inlezen verandert niets. Alles wat Huismus boekt, kun je terugdraaien."
+msgstr "Importing the same statement again changes nothing. Everything Huismus records, you can undo."
+
+msgid "Contant betaald? Dat staat niet op je afschrift. Zet de factuur zelf op betaald. Een uitgave met bonnetje telt gewoon mee, ook zonder bankregel."
+msgstr "Paid in cash? That's not on your statement. Mark the invoice as paid yourself. An expense with a receipt counts as usual, without a bank line too."
+
+msgid "Uit je bankafschrift: − %(amount)s aan %(name)s op %(date)s, “%(text)s”."
+msgstr "From your bank statement: − %(amount)s to %(name)s on %(date)s, “%(text)s”."
+
+msgid "Uit je bankafschrift: − %(amount)s aan %(name)s op %(date)s."
+msgstr "From your bank statement: − %(amount)s to %(name)s on %(date)s."
+
+msgid "Vul aan wat ontbreekt en bewaar: dan staat de afschrijving bij deze uitgave."
+msgstr "Fill in what's missing and save: then the payment is linked to this expense."
+
+msgid "Afgeschreven op %(date)s"
+msgstr "Paid on %(date)s"
