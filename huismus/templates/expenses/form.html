@@ -20,7 +20,7 @@
 <p class="hint-banner" id="uit-bankafschrift" style="margin-bottom:var(--s-5)"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{% if line.description %}{% blocktranslate with amount=line.gross_cents|money name=line.counterparty_name|default:"?" date=line.booked_on|date:"SHORT_DATE_FORMAT" text=line.description %}Uit je bankafschrift: − {{ amount }} aan {{ name }} op {{ date }}, “{{ text }}”.{% endblocktranslate %}{% else %}{% blocktranslate with amount=line.gross_cents|money name=line.counterparty_name|default:"?" date=line.booked_on|date:"SHORT_DATE_FORMAT" %}Uit je bankafschrift: − {{ amount }} aan {{ name }} op {{ date }}.{% endblocktranslate %}{% endif %} {% translate "Vul aan wat ontbreekt en bewaar: dan staat de afschrijving bij deze uitgave." %}</span></p>
 {% endwith %}{% endif %}
 
-{% if paid_by %}{% with line=paid_by %}
+{% if paid_with %}{% with line=paid_with %}
 <section class="card" id="afgeschreven" style="margin-bottom:var(--s-5)">
     <ul class="list">
         <li>

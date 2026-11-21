@@ -165,7 +165,9 @@ def bind_forms(request, instance, *, upload: bool, bank_line=None):
             instance=instance,
             initial={
                 "date": bank_line.booked_on,
-                "supplier": bank_line.counterparty_name[:200],
+                "supplier": bank_line.counterparty_name[
+                    : Expense._meta.get_field("supplier").max_length
+                ],
                 "description": bank_line.description,
             },
         )
@@ -229,12 +231,11 @@ def _bank_line(request):
     pk = request.GET.get("afschrijving", "")
     if not pk:
         return None
-    line = BankTransaction.objects.waiting().filter(
-        pk=pk if pk.isdigit() else None, amount_cents__lt=0
-    )
-    if not line.exists():
+    waiting = BankTransaction.objects.waiting().filter(amount_cents__lt=0)
+    line = waiting.filter(pk=pk).first() if pk.isdigit() else None
+    if line is None:
         raise BankLineGone()
-    return line.get()
+    return line
 
 
 def _bank_url(request) -> str:
@@ -306,7 +307,7 @@ def _expense_form(request, expense):
         "bank_line": bank_line,
         "bank_back_url": _bank_url(request) if bank_line else "",
         # The bank line this expense was paid with, for "Afgeschreven op".
-        "paid_by": BankTransaction.objects.filter(expense=expense).first() if expense else None,
+        "paid_with": getattr(expense, "bank_transaction", None),
         "new_receipt_form": new_receipt_form,
         # A browser doesn't keep a chosen file when the page comes back
         # with an error, so a valid receipt has to be chosen again.

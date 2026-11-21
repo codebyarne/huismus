@@ -23,6 +23,7 @@ Huismus never makes an expense itself. Pure: works on `OpenExpense`s, so
 the rules are tested without a database.
 """
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import date
 
@@ -46,7 +47,7 @@ class OpenExpense:
     # How the page shows it; not used to match.
     description: str = ""
     categories: str = ""
-    has_receipt: bool = True
+    has_receipt: bool = False
 
 
 @dataclass(frozen=True)
@@ -66,11 +67,11 @@ def _in_window(line: StatementLine, expense: OpenExpense) -> bool:
     return -SURE_DAYS <= _days_before(line, expense) <= PAID_LATER_DAYS
 
 
-def _by_name(line: StatementLine, expense: OpenExpense) -> bool:
+def _name_fits_in_window(line: StatementLine, expense: OpenExpense) -> bool:
     return _in_window(line, expense) and name_fits(expense.supplier, line.counterparty_name)
 
 
-def _by_date(line: StatementLine, expense: OpenExpense) -> bool:
+def _within_a_week(line: StatementLine, expense: OpenExpense) -> bool:
     return abs(_days_before(line, expense)) <= SURE_DAYS
 
 
@@ -81,13 +82,15 @@ def _same_amount(line: StatementLine, expense: OpenExpense) -> bool:
 def fits(line: StatementLine, expense: OpenExpense) -> bool:
     """The line could be this expense's payment: the amount, and the name
     or the date."""
-    return _same_amount(line, expense) and (_by_name(line, expense) or _by_date(line, expense))
+    if not _same_amount(line, expense):
+        return False
+    return _name_fits_in_window(line, expense) or _within_a_week(line, expense)
 
 
 def match(
     line: StatementLine,
     open_expenses: list[OpenExpense],
-    other_lines: list[StatementLine] = (),
+    other_lines: Sequence[StatementLine] = (),
 ) -> Match:
     """`other_lines`: the other lines going out that wait, the ones from the
     same file included: an expense two of them fit is never linked."""
@@ -98,18 +101,23 @@ def match(
         (e for e in open_expenses if _same_amount(line, e) and _in_window(line, e)),
         key=lambda e: abs(_days_before(line, e)),
     )
-    by_name = [e for e in in_window if _by_name(line, e)]
+    by_name = [e for e in in_window if _name_fits_in_window(line, e)]
 
-    if len(in_window) == 1 and by_name and _by_date(line, by_name[0]):
+    # Sure: the one expense with the amount, by name and within a week.
+    if len(in_window) == 1 and by_name and _within_a_week(line, by_name[0]):
         expense = by_name[0]
         if not any(fits(other, expense) for other in other_lines):
             return Match(SURE, expense)
         return Match(LIKELY, expense)
+    # Likely, a bill paid later: of the expenses with the amount, exactly
+    # one has the name (however many have the amount).
     if len(by_name) == 1:
         return Match(LIKELY, by_name[0])
-    by_date = [e for e in in_window if _by_date(line, e)]
+    # Likely, a card payment: none has the name, exactly one the week.
+    by_date = [e for e in in_window if _within_a_week(line, e)]
     if not by_name and len(by_date) == 1:
         return Match(LIKELY, by_date[0])
+    # Choose: the amount fits, the rest doesn't, or fits more than one.
     if in_window:
         return Match(CHOOSE, candidates=tuple(in_window))
     return Match(NONE)

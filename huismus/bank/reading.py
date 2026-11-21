@@ -372,6 +372,13 @@ def _waiting_going_out() -> list[BankTransaction]:
 
 
 def _match_going_out(lines: list[BankTransaction], result: ReadResult):
+    """Links or proposes each new line going out. Runs after every line of
+    the file is saved as waiting (_new_line), so `waiting` holds them all:
+    a line is never sure about an expense another one fits too. A linked
+    line and its expense drop out of both lists; a proposed one stays, as
+    the user may pick another expense for it, so two lines can propose the
+    same expense. Links directly, not through link_expense: `expenses`
+    holds only expenses without a bank line, and the line is new."""
     expenses = open_expenses()
     waiting = _waiting_going_out()
     for transaction_ in lines:
@@ -443,16 +450,16 @@ def undo(line: BankTransaction):
     first choice (product-owner agent 2026-11-20 and 2026-11-21). A payment
     that was there before the statement is never removed."""
     line = BankTransaction.objects.select_for_update().get(pk=line.pk)
-    if line.state not in (State.BOOKED, State.CONFIRMED):
+    if not line.can_undo:
         raise ValueError("nothing to undo")
     if line.expense_id is not None:
+        # Money out: only the link goes, the expense stays.
         line.proposed_expense = line.expense
         line.expense = None
         line.state = State.OPEN
         line.save()
         return line
-    if line.payment_id is None:
-        raise ValueError("nothing to undo")
+    # Money in: the payment booked from this line goes.
     payment = line.payment
     line.payment = None
     line.proposed_document = payment.document

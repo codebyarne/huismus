@@ -109,3 +109,13 @@ def test_a_debit_takes_the_creditors_iban():
     assert line.counterparty_name == "Hosting Noord B.V."
     assert line.counterparty_iban == "NL20TEST0001234567"
     assert line.description == "Abonnement september"
+
+
+@pytest.mark.parametrize("old, new", [(b"45.99", b"-45.99"), (b"100.00", b"-100.00")])
+def test_a_signed_amount_is_refused(old, new):
+    # CAMT amounts have no sign; CdtDbtInd gives the direction. A minus
+    # contradicts it: refused rather than guessed (CLAUDE.md rule 6).
+    data = (FIXTURES / "camt053-001-02.xml").read_bytes().replace(old, new, 1)
+    assert new in data
+    with pytest.raises(StatementReadError):
+        camt.read(data)

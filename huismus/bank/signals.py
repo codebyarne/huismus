@@ -3,7 +3,8 @@
 """A deleted expense makes its bank line wait again (product-owner agent
 2026-11-21, "afschrijvingen in richting D" point 6): the statement stays
 the source, and the line goes back to Te doen or Niet herkend. The
-expense's page asks nothing extra for it."""
+expense's page asks nothing extra for it. Connected in apps.py (ready).
+`proposed_expense` needs nothing here: its foreign key is SET_NULL."""
 
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver

@@ -9440,3 +9440,9 @@ msgstr "Fill in what's missing and save: then the payment is linked to this expe
 
 msgid "Afgeschreven op %(date)s"
 msgstr "Paid on %(date)s"
+
+msgid "Een particuliere rekening bij ING geeft alleen CSV en pdf. Die leest Huismus niet; registreer betalingen van klanten dan zelf op de factuur."
+msgstr "A personal ING account only gives CSV and PDF. Huismus doesn't read those; record payments from customers on the invoice yourself instead."
+
+msgid "Betalingen die je oversloeg. Zet je er een terug, dan staat hij weer op de pagina Bank."
+msgstr "Payments you skipped. Put one back and it shows on the Bank page again."

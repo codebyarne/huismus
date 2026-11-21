@@ -119,7 +119,7 @@ Zo heet het bij de banken zelf (nagekeken op 20 november 2026). Kies
 
 - **ING:** bij een zakelijke rekening, in Mijn ING Zakelijk. Een particuliere
   rekening bij ING geeft alleen CSV en pdf. Die leest Huismus niet; registreer
-  een betaling dan op de factuur.
+  betalingen van klanten dan zelf op de factuur.
 - **Rabobank:** **Transacties downloaden** › je rekening › kies het
   downloadformaat CAMT.053 en de periode › **Downloaden**. "Vanaf de laatste
   download" kan ook.
