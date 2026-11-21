@@ -7535,3 +7535,158 @@ msgid "%(count)s afschrijving"
 msgid_plural "%(count)s afschrijvingen"
 msgstr[0] "%(count)s afschrijving"
 msgstr[1] "%(count)s afschrijvingen"
+
+msgid "voorgestelde uitgave"
+msgstr ""
+
+msgid "bankregel"
+msgstr ""
+
+msgid "bankregels"
+msgstr ""
+
+msgid "%(count)s betaling gelezen van rekening %(iban)s"
+msgid_plural "%(count)s betalingen gelezen van rekening %(iban)s"
+msgstr[0] "%(count)s betaling gelezen van rekening %(iban)s"
+msgstr[1] "%(count)s betalingen gelezen van rekening %(iban)s"
+
+msgid "%(count)s betaling gelezen"
+msgid_plural "%(count)s betalingen gelezen"
+msgstr[0] "%(count)s betaling gelezen"
+msgstr[1] "%(count)s betalingen gelezen"
+
+msgid "%(count)s erbij"
+msgstr ""
+
+msgid "%(count)s eraf"
+msgstr ""
+
+msgid "Huismus boekte er %(booked)s en %(count)s stond al geboekt."
+msgid_plural "Huismus boekte er %(booked)s en %(count)s stonden al geboekt."
+msgstr[0] "Huismus boekte er %(booked)s en %(count)s stond al geboekt."
+msgstr[1] "Huismus boekte er %(booked)s en %(count)s stonden al geboekt."
+
+msgid "Huismus boekte er %(booked)s."
+msgstr ""
+
+msgid "%(count)s stond al geboekt."
+msgid_plural "%(count)s stonden al geboekt."
+msgstr[0] "%(count)s stond al geboekt."
+msgstr[1] "%(count)s stonden al geboekt."
+
+msgid "%(count)s wacht hieronder op je."
+msgid_plural "%(count)s wachten hieronder op je."
+msgstr[0] "%(count)s wacht hieronder op je."
+msgstr[1] "%(count)s wachten hieronder op je."
+
+msgid "Niets nieuws: alle betalingen in dit bestand waren al ingelezen."
+msgstr ""
+
+msgid "Kies een uitgave."
+msgstr ""
+
+msgid "Deze afschrijving of uitgave is al geboekt."
+msgstr ""
+
+msgid "Afschrijving geboekt bij de uitgave."
+msgstr ""
+
+msgid "Koppeling teruggedraaid. De uitgave blijft staan en de afschrijving staat weer bij Te doen."
+msgstr ""
+
+msgid "Bevestig of kies de factuur of uitgave."
+msgstr ""
+
+msgid "Deze afschrijving is al geboekt."
+msgstr ""
+
+msgid "Uitgave bewaard. De afschrijving staat nu bij Geboekt."
+msgstr ""
+
+msgid "Kies een uitgave…"
+msgstr ""
+
+msgid "Af · uitgave"
+msgstr ""
+
+msgid "Bij · factuur"
+msgstr ""
+
+msgid "Lees het afschrift van je bank in. Huismus koppelt wat erbij komt aan je facturen en wat eraf gaat aan je uitgaven. Wat zeker is, boekt Huismus zelf."
+msgstr ""
+
+msgid "%(fitting)s van de %(total)s horen bij je administratie"
+msgstr ""
+
+msgid "%(count)s hoort bij je administratie"
+msgid_plural "%(count)s horen bij je administratie"
+msgstr[0] "%(count)s hoort bij je administratie"
+msgstr[1] "%(count)s horen bij je administratie"
+
+msgid "passen bij je facturen of uitgaven. Klopt het?"
+msgstr ""
+
+msgid "Uitgave van %(date)s · %(supplier)s · %(amount)s"
+msgstr ""
+
+msgid "Bij deze uitgave mist het bonnetje."
+msgstr ""
+
+msgid "Andere uitgave"
+msgstr ""
+
+msgid "Er is al een uitgave met dit bedrag. Is het die? Kies hem dan en boek."
+msgstr ""
+
+msgid "Alles wat bij je facturen of uitgaven past, is geboekt."
+msgstr ""
+
+msgid "Uitgave · %(name)s"
+msgstr ""
+
+msgid "privé, of nog geen uitgave"
+msgstr ""
+
+msgid "Privé, of geld naar je spaarrekening? Dan laat je het hier staan. Zakelijk betaald, maar nog geen uitgave in Huismus? Maak er dan een uitgave van. Is het een betaling van een klant? Kies dan de factuur."
+msgstr ""
+
+msgid "Bij of af"
+msgstr ""
+
+msgctxt "bank"
+msgid "Alles (%(count)s)"
+msgstr ""
+
+msgctxt "bank"
+msgid "Bij (%(count)s)"
+msgstr ""
+
+msgctxt "bank"
+msgid "Af (%(count)s)"
+msgstr ""
+
+msgid "Is een afschrijving geen uitgave, zoals geld naar je spaarrekening of iets privé? Sla hem dan over."
+msgstr ""
+
+msgid "Toon meer (%(count)s nog)"
+msgid_plural "Toon meer (%(count)s nog)"
+msgstr[0] "Toon meer (%(count)s nog)"
+msgstr[1] "Toon meer (%(count)s nog)"
+
+msgid "Hetzelfde afschrift nog een keer inlezen verandert niets. Alles wat Huismus boekt, kun je terugdraaien."
+msgstr ""
+
+msgid "Contant betaald? Dat staat niet op je afschrift. Zet de factuur zelf op betaald. Een uitgave met bonnetje telt gewoon mee, ook zonder bankregel."
+msgstr ""
+
+msgid "Uit je bankafschrift: − %(amount)s aan %(name)s op %(date)s, “%(text)s”."
+msgstr ""
+
+msgid "Uit je bankafschrift: − %(amount)s aan %(name)s op %(date)s."
+msgstr ""
+
+msgid "Vul aan wat ontbreekt en bewaar: dan staat de afschrijving bij deze uitgave."
+msgstr ""
+
+msgid "Afgeschreven op %(date)s"
+msgstr ""
