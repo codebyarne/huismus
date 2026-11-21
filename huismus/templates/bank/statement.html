@@ -11,8 +11,10 @@
         <h1>{% translate "Bank" %}</h1>
         <p class="lede">{% translate "Lees het afschrift van je bank in. Huismus koppelt wat erbij komt aan je facturen en wat eraf gaat aan je uitgaven. Wat zeker is, boekt Huismus zelf." %}</p>
     </div>
-    <div class="actions"><a class="btn btn-primary" href="#inlezen"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg>{% translate "Afschrift inlezen" %}</a></div>
+    {% if statement %}<div class="actions"><a class="btn btn-primary" href="#inlezen"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg>{% translate "Afschrift inlezen" %}</a></div>{% endif %}
 </div>
+
+{% if not statement %}{% include "bank/_read_in.html" with top=True %}{% else %}
 
 {% if report %}
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--s-3)" id="rapport">
@@ -154,23 +156,8 @@
 {% endif %}
 </div>
 
-<div class="split-rev" id="inlezen" style="margin-top:var(--s-8)">
-    <form class="stack" method="post" enctype="multipart/form-data" action="{% url 'bank:statement' %}" style="gap:var(--s-4)">
-        {% csrf_token %}
-        {% if error %}<p class="hint-banner is-bad" id="fout" role="alert"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{{ error }}</span></p>{% endif %}
-        <label class="dropzone" data-dropzone>
-            <input type="file" name="bestand" accept=".xml,.sta,.940,.mt940,.swi,.txt,.zip" required data-file-summary="gekozen-afschrift">
-            <span class="dz-icon"><svg class="i i-lg" aria-hidden="true"><use href="#upload"></use></svg></span>
-            <strong>{% translate "Sleep je bankafschrift hierheen" %}</strong>
-            <span class="small">{% translate "CAMT.053 of MT940, of een zip met meer afschriften." %}</span>
-            <span class="btn btn-secondary btn-sm" style="margin-top:var(--s-2)">{% translate "Bestand kiezen" %}</span>
-        </label>
-        <p class="small muted" id="gekozen-afschrift" aria-live="polite"></p>
-        <div><button class="btn btn-primary btn-lg" type="submit">{% translate "Inlezen" %}<span class="spinner"></span></button></div>
-        <p class="small muted">{% translate "Hetzelfde afschrift nog een keer inlezen verandert niets. Alles wat Huismus boekt, kun je terugdraaien." %}</p>
-    </form>
-    {% include "bank/_where.html" %}
-</div>
+{% include "bank/_read_in.html" %}
+{% endif %}
 
 <p class="small muted row" style="gap:var(--s-2);align-items:flex-start;margin-top:var(--s-5)"><svg class="i i-sm" aria-hidden="true" style="flex:none;margin-top:2px"><use href="#wallet"></use></svg><span>{% translate "Contant betaald? Dat staat niet op je afschrift. Zet de factuur zelf op betaald. Een uitgave met bonnetje telt gewoon mee, ook zonder bankregel." %}</span></p>
 

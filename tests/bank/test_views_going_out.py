@@ -220,3 +220,16 @@ def test_the_expense_shows_its_bank_line_and_undo_keeps_it(client):
     assert "Afgeschreven op" not in _text(client.get(page_url))
     # The expense is the first choice again, under Te doen.
     assert views.to_do_count() == 1
+
+
+def test_before_anything_is_read_the_drop_zone_comes_first(client):
+    # The owner, 2026-11-21: while nothing was read, the one thing to do is
+    # at the top; after the first statement it goes under the sections.
+    empty = client.get(PAGE).text
+    assert 'id="inlezen"' in empty
+    assert 'id="te-doen"' not in empty
+    assert 'href="#inlezen"' not in empty
+    _upload(client, _camt(("412.00", "Bol.com", "2026-09-25")))
+    page = client.get(PAGE).text
+    assert page.index('id="te-doen"') < page.index('id="inlezen"')
+    assert 'href="#inlezen"' in page

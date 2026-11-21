@@ -1,0 +1,18 @@
+{% load i18n %}{% comment %}The drop zone and where each bank keeps its statement. At the top of Bank while nothing was read yet, so the one thing to do comes first; after that under the three sections, as on the canvas of direction D (owner 2026-11-21).{% endcomment %}
+<div class="split-rev" id="inlezen" style="margin-top:{% if top %}var(--s-6){% else %}var(--s-8){% endif %}">
+    <form class="stack" method="post" enctype="multipart/form-data" action="{% url 'bank:statement' %}" style="gap:var(--s-4)">
+        {% csrf_token %}
+        {% if error %}<p class="hint-banner is-bad" id="fout" role="alert"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{{ error }}</span></p>{% endif %}
+        <label class="dropzone" data-dropzone>
+            <input type="file" name="bestand" accept=".xml,.sta,.940,.mt940,.swi,.txt,.zip" required data-file-summary="gekozen-afschrift">
+            <span class="dz-icon"><svg class="i i-lg" aria-hidden="true"><use href="#upload"></use></svg></span>
+            <strong>{% translate "Sleep je bankafschrift hierheen" %}</strong>
+            <span class="small">{% translate "CAMT.053 of MT940, of een zip met meer afschriften." %}</span>
+            <span class="btn btn-secondary btn-sm" style="margin-top:var(--s-2)">{% translate "Bestand kiezen" %}</span>
+        </label>
+        <p class="small muted" id="gekozen-afschrift" aria-live="polite"></p>
+        <div><button class="btn btn-primary btn-lg" type="submit">{% translate "Inlezen" %}<span class="spinner"></span></button></div>
+        <p class="small muted">{% translate "Hetzelfde afschrift nog een keer inlezen verandert niets. Alles wat Huismus boekt, kun je terugdraaien." %}</p>
+    </form>
+    {% include "bank/_where.html" %}
+</div>
