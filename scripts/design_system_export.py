@@ -86,7 +86,10 @@ COMPONENTS = {
         "- Concepten tonen `Concept` in plaats van een nummer.\n"
         "- Bedragen rechts, met tabulaire cijfers.\n"
         "- De blikvanger (`.kpi-hero`) is er één per scherm: een diep petrol vlak "
-        "met het grootste bedrag.",
+        "met het grootste bedrag, in `.hero-row` naast `.hero-side`.\n"
+        "- Kosten in een grafiek of legenda: `.legend-dot.is-cost` (licht petrol, geen geel).\n"
+        "- Een blok met een kop: `.section-head` met een `.count-badge`; een lijst "
+        "om af te werken: `.todo`; een tabel op een wit vel: `.table-sheet`.",
     ),
     "leeg": (
         "EmptyState",
@@ -114,6 +117,13 @@ COMPONENTS = {
         "en het slotje, zonder invoervelden. De KOR-tekst onder de factuur is de "
         "tekst die de gebruiker in Instellingen zet.",
     ),
+    "instellingen": (
+        "SettingsList",
+        "Inhoud",
+        "Instellingen als lijst van groepen (`.settings-groups`, `.settings-list`): "
+        "per regel een icoon, titel, een zin uitleg en de stand (`.state-on`, "
+        "`.state-off`, `.state-attention`), met een pijltje naar de pagina.",
+    ),
 }
 
 # The cover above the brand book (the Design System type wants one): the palette as
@@ -125,16 +135,16 @@ COVER = """<!-- @dsCard height=288 -->
   .cover { position: relative; width: 960px; height: 288px; overflow: hidden;
     background: var(--bg); }
   .cover svg { position: absolute; inset: 0; }
-  .sky { fill: var(--primary); } .apricot { fill: var(--accent); }
+  .sky { fill: var(--primary); } .wing { fill: var(--mark-wing); }
   .ink { fill: var(--text); } .soft { fill: var(--primary-soft); }
-  .seed { fill: var(--accent-soft); }
+  .seed { fill: var(--surface-3); }
   .name { position: absolute; left: 40px; bottom: 64px; margin: 0; max-width: 440px;
     font: 700 104px/.92 var(--font-sans); letter-spacing: -.035em; color: var(--text); }
   .tag { position: absolute; left: 42px; bottom: 36px; margin: 0; max-width: 440px;
     font: 14px/1.4 var(--font-sans); color: var(--text-muted); }
 </style>
 <div class="cover">
-  <!-- blocks: --primary 216x288 slab bleeding off the top, --accent 144x120, --text 96x96,
+  <!-- blocks: --primary 216x288 slab bleeding off the top, --mark-wing 120x72, --text 96x96,
        --primary-soft 168x144; arrangement: one tall slab with satellites, right of x=480;
        pattern: pills and discs (soft, friendly, large radii: --r-xl, --r-pill) like the
        labels and the sparrow's round body, on a 24px pitch (--s-6);
@@ -142,15 +152,15 @@ COVER = """<!-- @dsCard height=288 -->
   <svg width="960" height="288" viewBox="0 0 960 288" aria-hidden="true">
     <rect class="soft" x="504" y="120" width="168" height="144" rx="20"/>
     <rect class="sky" x="696" y="-20" width="216" height="308" rx="20"/>
-    <rect class="apricot" x="552" y="24" width="120" height="72" rx="36"/>
+    <rect class="wing" x="552" y="24" width="120" height="72" rx="36"/>
     <rect class="ink" x="840" y="168" width="96" height="96" rx="48"/>
     <circle class="seed" cx="744" cy="48" r="12"/><circle class="seed" cx="792" cy="48" r="12"/>
     <circle class="seed" cx="744" cy="96" r="12"/><circle class="seed" cx="792" cy="96" r="12"/>
-    <rect class="apricot" x="720" y="216" width="96" height="24" rx="12"/>
+    <rect class="wing" x="720" y="216" width="96" height="24" rx="12"/>
     <rect class="sky" x="528" y="216" width="72" height="24" rx="12"/>
   </svg>
   <p class="name">Huismus</p>
-  <p class="tag">Facturen voor zzp'ers onder de KOR. Petrol
+  <p class="tag">Boekhouding voor zzp'ers, met of zonder KOR. Petrol
     op koel, bijna wit.</p>
 </div>
 """
@@ -212,8 +222,8 @@ COLOR_USAGE = {
     "primary-soft": "Zacht petrol vlak (gekozen item, informatie), met --primary-ink.",
     "primary-ink": "Tekst en links op --primary-soft en op de pagina.",
     "ring": "Focusring.",
-    "accent": "Snavelgeel: snavel, KOR-balk, herinnering, kosten in grafieken. Nooit een knop.",
-    "accent-soft": "Zacht geel vlak: KOR-hint, Geïmporteerd.",
+    "accent": "Snavelgeel: alleen de snavel van de mus (logo, lege toestand). Nooit in de UI.",
+    "accent-soft": "Neutraal vlak, geen geel: KOR-hint, Geïmporteerd, voorstel.",
     "accent-ink": "Tekst op --accent-soft.",
     "ok": "Gelukt (icoon of melding). Betaald is een vinkje in gedempte tekst.",
     "ok-bg": "Vlak bij een geslaagde melding.",
@@ -373,15 +383,26 @@ def _sections():
     return sections
 
 
+# The Design System's theme menu sets data-theme on <html>, but its frame sets
+# color-scheme from Claude's own light or dark, and huismus.css takes its colours
+# from color-scheme (light-dark()). This makes the menu win, as data-theme does in the app.
+THEME_STYLE = (
+    "<style>:root[data-theme=dark]{color-scheme:dark!important}"
+    ":root[data-theme=light]{color-scheme:light!important}</style>"
+)
+
+
 def preview(section_id, html, symbols):
     used = sorted(set(re.findall(r"icons\.svg#([\w-]+)", html)))
-    html = html.replace("../../templates/icons.svg#", "#")
+    # componenten.html points into the sprite file; the card has the sprite inline.
+    html = re.sub(r'href="[^"#]*icons\.svg#', 'href="#', html)
     html = re.sub(r'<h2 class="section-title">.*?</h2>', "", html, count=1)
     sprite = "".join(symbols[name] for name in used)
     _, group, _ = COMPONENTS[section_id]
     source = f"docs/design/componenten.html#{section_id}"
     return (
         f'<!-- @dsCard group="{group}" height=320 subtitle="{source}" -->\n'
+        f"{THEME_STYLE}\n"
         f'<div class="content" style="padding:16px;max-width:none">\n'
         f'<svg xmlns="http://www.w3.org/2000/svg" style="display:none">{sprite}</svg>\n'
         f'<div class="stack">{html}</div>\n</div>\n'
@@ -393,7 +414,7 @@ def readme(commit):
     domain = re.search(r"## Domeinregels in de UI\n(.*?)(?=\n## |\Z)", rules, flags=re.S).group(1)
     return f"""# Huismus
 
-Self-hosted facturatie voor Nederlandse zzp'ers onder de KOR. Eén gebruiker, op een
+Self-hosted boekhouding voor Nederlandse zzp'ers, met of zonder KOR. Eén gebruiker, op een
 Raspberry Pi, laptop en telefoon. Richting **Helder**: petrol op
 koel, bijna wit; de inhoud op één wit vel, één diep petrol blikvanger per scherm.
 
@@ -414,6 +435,20 @@ koel, bijna wit; de inhoud op één wit vel, één diep petrol blikvanger per sc
 4. **Uitgegeven is definitief.** Geen invoervelden, een slotje. Concepten hebben geen nummer.
 5. **Licht en donker, telefoon en laptop.** Alles werkt op 360 px, in beide thema's, en
    haalt WCAG AA. Elk formulier werkt zonder JavaScript; totalen komen van de server.
+
+## Licht en donker
+
+Laad `components/bundle.css` (de echte `huismus.css`). De kleuren komen uit
+`light-dark()`, dus uit `color-scheme`: zonder meer volgt een ontwerp het systeem. Kies
+je het thema zelf, zet dan `data-theme="dark"` of `"light"` op `<html>`, zoals de app.
+Zet een omgeving zelf `color-scheme` (Claude Design doet dat), neem dan deze regel op,
+zoals de voorbeelden hier:
+
+```html
+{THEME_STYLE}
+```
+
+Kopieer geen kleurwaarden uit `tokens.json` in een ontwerp: die zijn er om te lezen.
 
 ## Teksten
 
@@ -464,6 +499,13 @@ def export(out, commit):
     )
     (project / "README.md").write_text(readme(commit), encoding="utf-8")
     shutil.copy(CSS, project / "components" / "bundle.css")
+    # The Design System runs no preview without a bundle. The previews are static
+    # HTML with the app's classes, so the bundle only names the namespace.
+    (project / "components" / "bundle.js").write_text(
+        "/* Huismus heeft geen JS-componenten: de app is Django-templates met huismus.css. */\n"
+        "window.Huismus = {};\n",
+        encoding="utf-8",
+    )
     # The letters the CSS loads: url("fonts/...") beside it.
     shutil.copytree(CSS.parent / "fonts", project / "components" / "fonts")
     sections = _sections()
