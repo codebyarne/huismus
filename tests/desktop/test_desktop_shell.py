@@ -132,3 +132,18 @@ def test_the_release_test_hands_its_own_long_token_and_it_leaves_the_environment
 def test_a_short_token_from_the_environment_does_not_count(monkeypatch):
     monkeypatch.setenv(app.RELEASE_TEST_TOKEN, "kort")
     assert app._window_token() != "kort"
+
+
+@pytest.mark.parametrize("screen", [screens.starting, screens.updating])
+def test_while_waiting_the_sparrow_hops(screen):
+    page = screen("nl")
+
+    assert 'class="bird"' in page and "@keyframes bird-hop" in page
+    assert 'role="status"' in page
+    assert "prefers-reduced-motion" in page
+
+
+def test_a_screen_that_asks_something_has_a_sparrow_that_stands_still():
+    page = screens.failed("nl", "x")
+
+    assert 'class="bird"' not in page and 'class="mark"' in page
