@@ -10,8 +10,11 @@ from django.db.models.functions import Lower
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext_lazy as _
 
+from huismus.bank import reading as bank_reading
+from huismus.bank.models import BankTransaction
 from huismus.core.models import Attachment
 from huismus.core.sorting import chosen_sort, sort_headers
 
@@ -146,14 +149,30 @@ class TrayReceiptGone(Exception):
     an expense or removed meanwhile, in another tab."""
 
 
-def bind_forms(request, instance, *, upload: bool):
+def bind_forms(request, instance, *, upload: bool, bank_line=None):
     """The expense form, its lines and (for a new expense without a receipt
     from the tray) the upload field, bound to the POST or fresh. Shared by
-    the expense page and Verwerken (process_views)."""
+    the expense page and Verwerken (process_views). `bank_line`: Uitgave
+    maken from a line going out (#257): date, supplier, description and
+    gross amount from the bank; category and VAT left empty, the bank
+    doesn't know them (product-owner agent 2026-11-21, ronde 9 point 7)."""
     if request.method == "POST":
         form = ExpenseForm(request.POST, instance=instance)
         formset = ExpenseLineFormSet(request.POST, instance=instance, prefix="lines")
         receipt_form = NewExpenseReceiptForm(request.POST, request.FILES) if upload else None
+    elif bank_line is not None:
+        form = ExpenseForm(
+            instance=instance,
+            initial={
+                "date": bank_line.booked_on,
+                "supplier": bank_line.counterparty_name[:200],
+                "description": bank_line.description,
+            },
+        )
+        formset = ExpenseLineFormSet(
+            instance=instance, prefix="lines", initial=[{"amount_cents": bank_line.gross_cents}]
+        )
+        receipt_form = NewExpenseReceiptForm() if upload else None
     else:
         form = ExpenseForm(instance=instance)
         formset_class = (
@@ -199,12 +218,48 @@ def save_expense(form, formset, *, receipt_form=None, tray_receipt=None) -> Expe
     return saved
 
 
+class BankLineGone(Exception):
+    """The bank line no longer waits: linked or skipped meanwhile (another tab)."""
+
+
+def _bank_line(request):
+    """Uitgave maken from Bank (#257): ?afschrijving=<pk>, a line going out
+    that still waits. None without the parameter; BankLineGone when it no
+    longer waits."""
+    pk = request.GET.get("afschrijving", "")
+    if not pk:
+        return None
+    line = BankTransaction.objects.waiting().filter(
+        pk=pk if pk.isdigit() else None, amount_cents__lt=0
+    )
+    if not line.exists():
+        raise BankLineGone()
+    return line.get()
+
+
+def _bank_url(request) -> str:
+    """Where Uitgave maken came from on Bank (the same tab), or Bank."""
+    target = request.GET.get("terug", "")
+    if url_has_allowed_host_and_scheme(target, allowed_hosts={request.get_host()}):
+        return target
+    return reverse("bank:statement")
+
+
+def _back_to_bank(request):
+    return redirect(_bank_url(request))
+
+
 def _expense_form(request, expense):
     """The new and edit page: the expense and its lines."""
     # "Uitgave maken" from the tray used to open this page with
     # ?bonnetje=<pk>; it is Verwerken now (huismus/expenses/process_views.py).
     if expense is None and request.GET.get("bonnetje", "").isdigit():
         return redirect(batch.Item(batch.RECEIPT, int(request.GET["bonnetje"])).url())
+    try:
+        bank_line = _bank_line(request) if expense is None else None
+    except BankLineGone:
+        messages.error(request, _("Deze afschrijving is al geboekt."))
+        return _back_to_bank(request)
     # A new expense's amount 0 lasts only until save_lines(), in the same
     # transaction, sets the sum of its lines.
     instance = expense or Expense(amount_cents=0)
@@ -213,7 +268,21 @@ def _expense_form(request, expense):
     current = batch.Item(batch.EXPENSE, expense.pk) if expense else None
     # A new expense takes its receipt along in the same form. An existing
     # one has the Bonnetjes section with its own upload (receipt_upload).
-    form, formset, new_receipt_form = bind_forms(request, instance, upload=expense is None)
+    form, formset, new_receipt_form = bind_forms(
+        request, instance, upload=expense is None, bank_line=bank_line
+    )
+    if request.method == "POST" and all_valid(form, formset, new_receipt_form) and bank_line:
+        # Saved and linked in one transaction: never an expense the line
+        # then misses, nor a second expense for one line.
+        try:
+            with transaction.atomic():
+                saved = save_expense(form, formset, receipt_form=new_receipt_form)
+                bank_reading.link_expense(bank_line, saved)
+        except ValueError:
+            messages.error(request, _("Deze afschrijving is al geboekt."))
+            return _back_to_bank(request)
+        messages.success(request, _("Uitgave bewaard. De afschrijving staat nu bij Geboekt."))
+        return _back_to_bank(request)
     if request.method == "POST" and all_valid(form, formset, new_receipt_form):
         saved = save_expense(form, formset, receipt_form=new_receipt_form)
         if "klopt" in request.POST and current is not None:
@@ -234,6 +303,10 @@ def _expense_form(request, expense):
         "form": form,
         "formset": formset,
         "expense": expense,
+        "bank_line": bank_line,
+        "bank_back_url": _bank_url(request) if bank_line else "",
+        # The bank line this expense was paid with, for "Afgeschreven op".
+        "paid_by": BankTransaction.objects.filter(expense=expense).first() if expense else None,
         "new_receipt_form": new_receipt_form,
         # A browser doesn't keep a chosen file when the page comes back
         # with an error, so a valid receipt has to be chosen again.

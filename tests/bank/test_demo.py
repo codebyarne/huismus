@@ -19,11 +19,18 @@ State = BankTransaction.State
 def test_every_kind_of_line():
     create_history()
     result = reading.read_statement("demo.xml", demo.demo_statement(LAST_DAY))
-    states = Counter(BankTransaction.objects.values_list("state", flat=True))
-    assert states == {
+    coming_in = BankTransaction.objects.filter(amount_cents__gt=0)
+    assert Counter(coming_in.values_list("state", flat=True)) == {
         State.BOOKED: 1,
         State.PROPOSED: 2,  # too much, and by name
         State.OPEN: 2,  # two invoices named, and one Huismus can't place
         State.ALREADY_BOOKED: 1,
     }
-    assert result.not_incoming == 1
+    going_out = BankTransaction.objects.filter(amount_cents__lt=0)
+    assert Counter(going_out.values_list("state", flat=True)) == {
+        State.BOOKED: 1,  # Bouwmarkt Noord
+        State.PROPOSED: 2,  # NS by date, Hosting Noord paid later
+        # NS in August (an expense with the amount) and four that fit nothing.
+        State.OPEN: 5,
+    }
+    assert result.summary()["outgoing"] == 8
