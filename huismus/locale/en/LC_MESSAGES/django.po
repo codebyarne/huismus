@@ -9556,3 +9556,70 @@ msgstr "Whole screen"
 
 msgid "Stoppen"
 msgstr "Stop"
+
+msgid ""
+"Begin je nieuw? Dan vul je stap voor stap in wat Huismus nodig heeft voor je "
+"eerste factuur."
+msgstr ""
+"Starting fresh? Fill in what Huismus needs for your first invoice, step by "
+"step."
+
+msgid "Je werk"
+msgstr "Your work"
+
+msgid ""
+"Een paar vragen, zodat je alleen ziet wat bij jou hoort. Je past het later "
+"aan in Instellingen."
+msgstr "A few questions, so you only see what fits you. You can change it later in Settings."
+
+msgid "Jouw KOR-tekst komt onder elke factuur."
+msgstr "Your KOR text goes under every invoice."
+
+msgid ""
+"Deze tekst komt onder elke factuur met een regel “verlegd”. Je kunt hem ook "
+"leeg laten."
+msgstr "This text goes under every invoice with a “reverse charge” line. You can also leave it empty."
+
+msgid "Reken je btw op je facturen?"
+msgstr "Do you charge VAT on your invoices?"
+
+msgid "Nee, ik gebruik de KOR"
+msgstr "No, I use the KOR"
+
+msgid "Weet ik nog niet"
+msgstr "I don't know yet"
+
+msgid "Heb je klanten waarbij de btw verlegd wordt?"
+msgstr "Do you have customers where the VAT is reverse-charged?"
+
+msgid "Ja, in Nederland"
+msgstr "Yes, in the Netherlands"
+
+msgid "Ja, in een ander EU-land"
+msgstr "Yes, in another EU country"
+
+msgid "Ja, buiten de EU"
+msgstr "Yes, outside the EU"
+
+msgid "In welke taal maak je je facturen meestal?"
+msgstr "In which language do you usually write your invoices?"
+
+msgid "Kies een antwoord."
+msgstr "Choose an answer."
+
+msgid "Je kiest dan per regel het btw-tarief."
+msgstr "You then choose the VAT rate per line."
+
+msgid "Meer over de KOR"
+msgstr "More about the KOR"
+
+msgid "Alleen als je btw rekent:"
+msgstr "Only if you charge VAT:"
+
+#, python-format
+msgid ""
+"Gebruik je toch de KOR? Zet hem aan bij <a href=\"%(kor_url)s\" "
+"style=\"white-space:nowrap\">Instellingen › KOR</a>."
+msgstr ""
+"Using the KOR after all? Switch it on in <a href=\"%(kor_url)s\" "
+"style=\"white-space:nowrap\">Settings › KOR</a>."

@@ -277,16 +277,25 @@ document.addEventListener("change", (event) => {
 // data-group="<name>" show only while something is chosen (e.g. the mail
 // fields while "Mailen via" is not "Niet ingesteld"). Without JS they are
 // always shown.
+// Likewise a radio with data-hides-group="<name>": those elements hide while
+// it is chosen (the question about btw verlegd under the KOR, /welkom/werk/).
 function showGroups(root) {
   for (const select of root.querySelectorAll("select[data-shows-group]")) {
     for (const element of document.querySelectorAll(`[data-group="${select.dataset.showsGroup}"]`)) {
       element.hidden = !select.value;
     }
   }
+  for (const radio of root.querySelectorAll("input[type=radio][data-hides-group]")) {
+    for (const element of document.querySelectorAll(`[data-group="${radio.dataset.hidesGroup}"]`)) {
+      element.hidden = radio.checked;
+    }
+  }
 }
 showGroups(document);
+// Every radio, not only the one with data-hides-group: choosing another
+// answer ("Ja") has to show the group again.
 document.addEventListener("change", (event) => {
-  if (event.target.matches("select[data-shows-group]")) showGroups(event.target.form);
+  if (event.target.matches("select[data-shows-group], input[type=radio]")) showGroups(event.target.form);
 });
 
 // Table rows with a .row-link: a click anywhere in the row follows that

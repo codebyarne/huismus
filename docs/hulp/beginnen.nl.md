@@ -6,23 +6,33 @@ rondkijken met nepdata.
 
 ## Stap voor stap beginnen
 
-Klik op het overzicht op **Stap voor stap beginnen**. In vier stappen vul je
+Klik op het overzicht op **Stap voor stap beginnen**. Stap voor stap vul je
 in wat Huismus nodig heeft voor je eerste factuur:
 
 1. **Bedrijf:** je bedrijfsnaam, adres, KvK-nummer en IBAN. Dit komt op elke
    factuur en offerte.
-2. **Kleineondernemersregeling (KOR):** of je hem gebruikt, en zo ja de
-   tekst die onder je facturen komt. Meer daarover in
+2. **Je werk:** drie vragen. Reken je btw, gebruik je de
+   kleineondernemersregeling (KOR) of weet je het nog niet? Heb je klanten
+   waarbij de btw verlegd wordt? En in welke taal maak je je facturen
+   meestal? Je antwoorden bepalen welke stappen nog komen. Meer over de KOR in
    [Kleineondernemersregeling (KOR) en btw](kor-en-btw.nl.md).
-3. **Facturen:** je standaard betalingstermijn en hoe Huismus je facturen
+3. **Kleineondernemersregeling (KOR):** alleen als je de KOR gebruikt. De
+   tekst die onder je facturen komt, en je KOR-grens.
+4. **Btw verlegd:** alleen als je klanten hebt waarbij de btw verlegd wordt.
+   De tekst onder een factuur met een regel "verlegd". Huismus vult hem niet
+   voor je in; je kunt hem ook leeg laten.
+5. **Facturen:** je standaard betalingstermijn en hoe Huismus je facturen
    en offertes nummert. Meestal is de standaard goed. Kom je uit een ander
    pakket, vul dan het volgnummer in dat na je laatste factuur komt. Dan
    lopen je nummers door.
-4. **Logo:** je logo komt bovenaan je facturen en offertes. Dit kan ook
+6. **Logo:** je logo komt bovenaan je facturen en offertes. Dit kan ook
    later.
 
 Je kunt een stap overslaan en later terugkomen. Alles staat daarna ook onder
-**Instellingen**.
+**Instellingen**: de KOR en de tekst bij btw verlegd onder
+**Kleineondernemersregeling (KOR)**, de taal van je facturen onder
+**Facturen en nummering**. Ga je nog een keer door de stappen, dan zie je bij
+Je werk wat er nu is ingesteld.
 
 ## Overstappen uit Moneybird
 

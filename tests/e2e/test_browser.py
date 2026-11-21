@@ -1561,8 +1561,20 @@ def test_starting_step_by_step_without_moneybird(app, live_server):
     app.fill("#id_email", "hallo@example.invalid")
     app.get_by_role("button", name="Opslaan en verder").click()
 
+    expect(app.locator("h1")).to_have_text("Je werk")
+    question = app.get_by_role("group", name="Heb je klanten waarbij de btw verlegd wordt?")
+    expect(question).to_be_visible()
+    # Under the KOR the question about btw verlegd goes away (app.js).
+    app.get_by_label("Nee, ik gebruik de KOR").check()
+    expect(question).to_be_hidden()
+    app.get_by_label("Ja", exact=True).check()
+    expect(question).to_be_visible()
+    app.get_by_label("Nee, ik gebruik de KOR").check()
+    app.get_by_label("English").check()
+    app.get_by_role("button", name="Opslaan en verder").click()
+
     expect(app.locator("h1")).to_have_text("Kleineondernemersregeling (KOR)")
-    app.get_by_role("switch").check()
+    expect(app.locator(".steps")).to_contain_text("Je werk")
     app.fill("#id_kor_text", "Vrijgesteld van btw (KOR).")
     app.get_by_role("button", name="Opslaan en verder").click()
 
@@ -1583,6 +1595,56 @@ def test_starting_step_by_step_without_moneybird(app, live_server):
     expect(app).to_have_url(re.compile(r"/contacten/nieuw/$"))
     settings = Settings.load()
     assert (settings.business_name, settings.kor_enabled) == ("Atelier Zonnig", True)
+    assert settings.default_language == "en"
+
+
+def test_your_work_with_vat_and_reverse_charge_and_not_knowing_yet(app):
+    # Issue #259: a "ja" for btw verlegd brings its step, empty; "Weet ik
+    # nog niet" leaves the KOR off and the done page says where it goes.
+    app.goto(app.base + "/welkom/werk/")
+    app.get_by_label("Ja, in een ander EU-land").check()
+    app.get_by_role("button", name="Opslaan en verder").click()
+
+    expect(app.locator("h1")).to_have_text("Btw verlegd")
+    expect(app.locator(".steps")).not_to_contain_text("KOR")
+    expect(app.locator("#id_reverse_charge_text")).to_have_value("")
+    app.fill("#id_reverse_charge_text", "Btw verlegd.")
+    app.get_by_role("button", name="Opslaan en verder").click()
+    expect(app.locator("h1")).to_have_text("Facturen")
+    app.get_by_role("link", name="Terug").click()
+    app.get_by_role("link", name="Terug").click()
+    expect(app.get_by_label("Ja, in een ander EU-land")).to_be_checked()
+
+    app.get_by_label("Weet ik nog niet").check()
+    app.get_by_label("Nee", exact=True).check()
+    app.get_by_role("button", name="Opslaan en verder").click()
+    expect(app.locator("h1")).to_have_text("Facturen")
+    app.get_by_role("button", name="Opslaan en verder").click()
+    app.get_by_role("link", name="Overslaan").click()
+
+    expect(app.locator("#kor-later")).to_contain_text("Gebruik je toch de KOR?")
+    app.locator("#kor-later").get_by_role("link").click()
+    expect(app.locator("h1")).to_have_text("Kleineondernemersregeling (KOR)")
+    settings = Settings.load()
+    assert (settings.kor_enabled, settings.reverse_charge_text) == (False, "Btw verlegd.")
+
+
+def test_your_work_without_javascript_asks_every_question(browser, live_server, app):
+    # Without JS the question about btw verlegd is always there, and choosing
+    # the KOR ignores it (a plain POST).
+    context = browser.new_context(
+        java_script_enabled=False, storage_state=app.context.storage_state()
+    )
+    page = context.new_page()
+    page.goto(app.base + "/welkom/werk/")
+    page.get_by_label("Nee, ik gebruik de KOR").check()
+    expect(
+        page.get_by_role("group", name="Heb je klanten waarbij de btw verlegd wordt?")
+    ).to_be_visible()
+    page.get_by_label("Ja, buiten de EU").check()
+    page.get_by_role("button", name="Opslaan en verder").click()
+    expect(page.locator("h1")).to_have_text("Kleineondernemersregeling (KOR)")
+    context.close()
 
 
 def test_connecting_an_ai_assistant_and_copying_the_key(app, browser_name):

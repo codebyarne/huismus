@@ -9,7 +9,7 @@ Design: contact.html.{% endcomment %}
         {% if errored_fields %}
         <span class="small">
             {% blocktranslate count counter=errored_fields|length %}Eén veld heeft aandacht nodig:{% plural %}{{ counter }} velden hebben aandacht nodig:{% endblocktranslate %}
-            {% for f in errored_fields %}<a href="#{{ f.id_for_label }}">{{ f.label|capfirst }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}.
+            {% for f in errored_fields %}<a href="#{{ f.id_for_label|default:f.auto_id }}">{{ f.label|capfirst }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}.
         </span>
         {% endif %}
         {% for error in non_field_errors %}<span class="small">{{ error }}</span>{% endfor %}

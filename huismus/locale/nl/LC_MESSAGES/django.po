@@ -7801,3 +7801,66 @@ msgstr ""
 
 msgid "Soort"
 msgstr ""
+
+msgid ""
+"Begin je nieuw? Dan vul je stap voor stap in wat Huismus nodig heeft voor je "
+"eerste factuur."
+msgstr ""
+
+msgid "Je werk"
+msgstr ""
+
+msgid ""
+"Een paar vragen, zodat je alleen ziet wat bij jou hoort. Je past het later "
+"aan in Instellingen."
+msgstr ""
+
+msgid "Jouw KOR-tekst komt onder elke factuur."
+msgstr ""
+
+msgid ""
+"Deze tekst komt onder elke factuur met een regel “verlegd”. Je kunt hem ook "
+"leeg laten."
+msgstr ""
+
+msgid "Reken je btw op je facturen?"
+msgstr ""
+
+msgid "Nee, ik gebruik de KOR"
+msgstr ""
+
+msgid "Weet ik nog niet"
+msgstr ""
+
+msgid "Heb je klanten waarbij de btw verlegd wordt?"
+msgstr ""
+
+msgid "Ja, in Nederland"
+msgstr ""
+
+msgid "Ja, in een ander EU-land"
+msgstr ""
+
+msgid "Ja, buiten de EU"
+msgstr ""
+
+msgid "In welke taal maak je je facturen meestal?"
+msgstr ""
+
+msgid "Kies een antwoord."
+msgstr ""
+
+msgid "Je kiest dan per regel het btw-tarief."
+msgstr ""
+
+msgid "Meer over de KOR"
+msgstr ""
+
+msgid "Alleen als je btw rekent:"
+msgstr ""
+
+#, python-format
+msgid ""
+"Gebruik je toch de KOR? Zet hem aan bij <a href=\"%(kor_url)s\" "
+"style=\"white-space:nowrap\">Instellingen › KOR</a>."
+msgstr ""

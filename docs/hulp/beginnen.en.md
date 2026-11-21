@@ -6,23 +6,33 @@ sample data first.
 
 ## Start step by step
 
-On the overview, click **Start step by step**. In four steps you fill in what
+On the overview, click **Start step by step**. Step by step you fill in what
 Huismus needs for your first invoice:
 
 1. **Business:** your business name, address, KvK number and IBAN. This goes
    on every invoice and quote.
-2. **Small business scheme (KOR):** whether you use it, and if so the text
-   that goes under your invoices. More in
+2. **Your work:** three questions. Do you charge VAT, do you use the
+   small business scheme (KOR), or don't you know yet? Do you have customers where the VAT is reverse-charged?
+   And in which language do you usually write your invoices? Your answers
+   decide which steps follow. More about the KOR in
    [Small business scheme (KOR) and VAT](kor-en-btw.en.md).
-3. **Invoices:** your default payment term and how Huismus numbers your
+3. **Small business scheme (KOR):** only if you use the KOR. The text that
+   goes under your invoices, and your KOR limit.
+4. **Reverse charge:** only if you have customers where the VAT is
+   reverse-charged. The text under an invoice with a "reverse charge" line.
+   Huismus doesn't fill it in for you; you can leave it empty.
+5. **Invoices:** your default payment term and how Huismus numbers your
    invoices and quotes. The default is usually fine. Coming from another
    package? Enter the sequence number that follows your last invoice, so
    your numbers carry on.
-4. **Logo:** your logo goes at the top of your invoices and quotes. This can
+6. **Logo:** your logo goes at the top of your invoices and quotes. This can
    wait.
 
 You can skip a step and come back later. Everything is also under
-**Settings** afterwards.
+**Settings** afterwards: the KOR and the reverse-charge text under
+**Small business scheme (KOR)**, your invoice language under
+**Invoices and numbering**. Go through the steps again and Your work shows
+what is set now.
 
 ## Moving from Moneybird
 
