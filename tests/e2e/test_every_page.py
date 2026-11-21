@@ -46,6 +46,19 @@ def _first(queryset, what):
     return found
 
 
+def _bank_statement():
+    """The demo statement, read in once (reading it again changes nothing),
+    with one line skipped, so every block of the bank pages shows."""
+    from huismus.bank import demo, reading
+    from huismus.bank.models import BankStatement, BankTransaction
+    from huismus.core.demo_history import LAST_DAY
+
+    if not BankStatement.objects.exists():
+        reading.read_statement("demo.xml", demo.demo_statement(LAST_DAY))
+        reading.skip(BankTransaction.objects.waiting().order_by("-pk").first())
+    return BankStatement.objects.get()
+
+
 def _pages():
     """Every HTML page, with real objects from the history fixture."""
     documents = Document.objects.all()
@@ -55,6 +68,7 @@ def _pages():
         (d for d in documents.filter(kind="invoice", status="issued") if d.is_overdue), None
     )
     assert overdue is not None, "huismus/core/demo_history.py has no overdue invoice"
+    statement = _bank_statement()
     pages = [
         "/",
         "/facturen/",
@@ -69,6 +83,11 @@ def _pages():
         f"/offertes/{sent_quote.pk}/pdf/bekijken/",
         "/offertes/",
         "/offertes/nieuw/",
+        # Bankafschrift inlezen (#77), with a statement read in and a line
+        # skipped (huismus/bank/demo.py); the flow: tests/e2e/test_bank_statement.py.
+        "/bank/",
+        f"/bank/?afschrift={statement.pk}",
+        "/bank/overgeslagen/",
         "/contacten/",
         "/contacten/nieuw/",
         f"/contacten/{_first(Contact.objects, 'contact').pk}/",
@@ -190,6 +209,11 @@ def _data_texts():
     texts += ExpenseCategory.objects.values_list("name", flat=True)
     texts += Expense.objects.values_list("description", flat=True)
     texts += Document.objects.values_list("lines__description", flat=True)
+    # What a payer typed in a transfer, from the bank statement (#77).
+    from huismus.bank.models import BankTransaction
+
+    texts += BankTransaction.objects.values_list("description", flat=True)
+    texts += BankTransaction.objects.values_list("counterparty_name", flat=True)
     # Never a snippet the page must not show: a description "None" would
     # otherwise hide a leaked None everywhere.
     return [text for text in texts if text and text not in NEVER_VISIBLE]

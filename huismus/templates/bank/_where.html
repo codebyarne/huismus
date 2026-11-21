@@ -1,0 +1,15 @@
+{% load i18n %}{% comment %}Where each bank puts its statement download, as in docs/hulp/bankafschrift (sources: docs/bankafschriften.md, read 2026-11-20). Menu names are the banks' own, in Dutch.{% endcomment %}
+<aside class="card card-pad stack" style="gap:var(--s-3);position:sticky;top:var(--s-6)" id="waar-afschrift">
+    <h2>{% translate "Zo haal je je afschrift bij de bank" %}</h2>
+    <p class="small muted">{% translate "Kies CAMT.053 als je bank het heeft, anders MT940. Kies de periode sinds de vorige keer; overlappen is geen probleem." %}</p>
+    <ul class="small stack" style="gap:var(--s-2);padding-left:var(--s-4);margin:0">
+        <li><strong>ING</strong> · {% translate "Mijn ING Zakelijk, bij het downloaden het bestandstype kiezen." %} {% translate "Een particuliere rekening bij ING geeft alleen CSV en pdf. Die leest Huismus niet; registreer een betaling dan op de factuur." %}</li>
+        <li><strong>Rabobank</strong> · <span lang="nl">Transacties downloaden</span> › CAMT.053</li>
+        <li><strong>ABN AMRO</strong> · <span lang="nl">Zelf regelen › Bij- en afschrijvingen downloaden</span> › CAMT.053</li>
+        <li><strong>bunq</strong> · <span lang="nl">Profiel › Accounting › Export Statement</span> › MT940</li>
+        <li><strong>Knab, Triodos</strong> · {% translate "de transacties downloaden als CAMT.053" %}</li>
+        <li><strong>SNS, ASN, RegioBank</strong> · <span lang="nl">transacties downloaden</span> › CAMT.053. {% translate "Een zip is goed." %}</li>
+        <li><strong>Revolut Business</strong> · Statements › Account statement › XML (CAMT.053)</li>
+    </ul>
+    <p class="small"><a href="{% url 'help:page' 'bankafschrift' %}">{% translate "Meer uitleg per bank" %} →</a></p>
+</aside>

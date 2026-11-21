@@ -14,6 +14,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 from django.views.static import serve as static_serve
 
+from huismus.bank.views import to_do_count as bank_to_do_count
 from huismus.business.forms import SettingsPartForm
 from huismus.business.kor_limit import kor_limit_status
 from huismus.business.models import Settings
@@ -127,6 +128,7 @@ def home(request):
                 tray_count=tray_count,
                 to_check_count=to_check_count,
                 today=today,
+                bank_count=bank_to_do_count(),
             ),
             "latest_invoices": Document.objects.filter(kind="invoice", status="issued")
             .with_payment_totals()

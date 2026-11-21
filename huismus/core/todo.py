@@ -26,7 +26,8 @@ MAX_PER_KIND = 3
 # the "Te laat" pill in the lists (huismus-intern/besluiten.md, 2026-11-15).
 DAYS_BECOME_A_DATE = 100
 
-OVERDUE, QUOTE, DRAFT, RECEIPTS, TO_CHECK, MORE = (
+BANK, OVERDUE, QUOTE, DRAFT, RECEIPTS, TO_CHECK, MORE = (
+    "bank",
     "te-laat",
     "offerte",
     "concept",
@@ -161,13 +162,35 @@ def _draft_item(draft) -> TodoItem:
     )
 
 
-def build_todo(*, overdue, waiting_quotes, drafts, tray_count, to_check_count, today) -> Todo:
+def _bank_item(count) -> TodoItem:
+    return TodoItem(
+        kind=BANK,
+        title=ngettext(
+            "%(count)s betaling uit je bankafschrift wacht op je",
+            "%(count)s betalingen uit je bankafschrift wachten op je",
+            count,
+        )
+        % {"count": count},
+        detail=_("Bevestig of kies de factuur."),
+        action=_("Bekijken"),
+        action_url=reverse("bank:statement"),
+        icon="wallet",
+    )
+
+
+def build_todo(
+    *, overdue, waiting_quotes, drafts, tray_count, to_check_count, today, bank_count=0
+) -> Todo:
     """`overdue`: overdue invoices, the one that fell due last first: the
     order of core.dashboard.outstanding_invoices, so years-old open
     invoices don't hide last week's (huismus-intern/besluiten.md, 2026-11-18).
-    `waiting_quotes`: (quote, expiry hint) pairs. `drafts`: draft invoices."""
+    `waiting_quotes`: (quote, expiry hint) pairs. `drafts`: draft invoices.
+    `bank_count`: bank lines to confirm or choose for (#77), first of all:
+    who handles them sends no reminder for an invoice that was paid
+    (product-owner agent 2026-11-20)."""
     overdue, waiting_quotes, drafts = list(overdue), list(waiting_quotes), list(drafts)
-    items = [_overdue_item(invoice) for invoice in overdue[:MAX_PER_KIND]]
+    items = [_bank_item(bank_count)] if bank_count else []
+    items += [_overdue_item(invoice) for invoice in overdue[:MAX_PER_KIND]]
     rest = len(overdue) - MAX_PER_KIND
     if rest > 0:
         items.append(
@@ -245,5 +268,10 @@ def build_todo(*, overdue, waiting_quotes, drafts, tray_count, to_check_count, t
 
     return Todo(
         items=items,
-        count=len(overdue) + len(waiting_quotes) + len(drafts) + tray_count + to_check_count,
+        count=len(overdue)
+        + len(waiting_quotes)
+        + len(drafts)
+        + tray_count
+        + to_check_count
+        + bank_count,
     )

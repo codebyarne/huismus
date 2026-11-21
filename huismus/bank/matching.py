@@ -1,0 +1,152 @@
+# SPDX-FileCopyrightText: 2026 Huismus contributors
+# SPDX-License-Identifier: AGPL-3.0-or-later
+"""Which open invoice an incoming payment is for (#77; the owner's decision
+2026-11-13, huismus-intern/besluiten.md, "Bankafschrift: zoveel mogelijk
+automatisch afvinken").
+
+- **Sure**: the invoice number is in the payer's text (or the structured
+  reference) and the amount is exactly what is open. Huismus books it.
+- **Likely**: exactly one invoice fits: by number with another amount
+  (partly paid, or too much), or without a number by amount and by name or
+  IBAN. Huismus proposes it; the user confirms.
+- **Choose**: nothing fits, or more than one does. The user picks, from the
+  candidates first.
+
+Pure: works on `OpenInvoice`s, so the rules are tested without a database.
+What is open comes from the caller (`reading.open_invoices`), from the one
+place payments and credit notes are summed.
+"""
+
+import re
+from dataclasses import dataclass
+
+from .lines import StatementLine
+
+SURE, LIKELY, CHOOSE = "sure", "likely", "choose"
+
+# Words in a name that say nothing about who it is.
+_LEGAL_FORMS = {"bv", "nv", "vof", "cv", "ez", "eo", "en", "of", "de", "het", "van", "der"}
+# A number with fewer letters and digits than this ("15") is never enough
+# on its own: it is in too many texts (product-owner agent 2026-11-20).
+_MIN_NUMBER_LENGTH = 4
+# Shorter names (after dropping the words above) are never compared: "AB"
+# would be found in half the bank names.
+_MIN_NAME_LENGTH = 4
+
+
+@dataclass(frozen=True)
+class OpenInvoice:
+    pk: int
+    number: str
+    outstanding_cents: int
+    # The customer's names as Huismus knows them: from the invoice's
+    # snapshot and from the contact as it is now.
+    names: tuple[str, ...]
+    ibans: tuple[str, ...]
+    # How the page names the customer; not used to match.
+    customer: str = ""
+
+
+@dataclass(frozen=True)
+class Match:
+    kind: str
+    invoice: OpenInvoice | None = None
+    # For CHOOSE: the invoices that fit in part, best first.
+    candidates: tuple[OpenInvoice, ...] = ()
+    # The text names more than one open invoice: one transfer for several
+    # (not booked by Huismus; the page says to record it per invoice).
+    several_numbers: bool = False
+
+
+def number_pattern(number: str) -> re.Pattern:
+    """An invoice number as it may be typed in a transfer: any case, and
+    between its letter and digit groups a dash, dot, slash, space or
+    nothing ("2026-015", "2026015", "2026 015"). Only as a whole value:
+    never part of a longer word or number, also not one joined by a dash,
+    dot, comma or slash ("2026" is not in "2026-015", "1210" not in
+    "1.210,00")."""
+    groups = re.findall(r"[A-Za-z0-9]+", number)
+    body = r"[-./ _]?".join(re.escape(g) for g in groups)
+    return re.compile(
+        rf"(?<![A-Za-z0-9])(?<![0-9][-./,]){body}(?![A-Za-z0-9])(?![-./,][0-9])",
+        re.IGNORECASE,
+    )
+
+
+def _long_enough(number: str) -> bool:
+    return len(re.sub(r"[^A-Za-z0-9]", "", number)) >= _MIN_NUMBER_LENGTH
+
+
+def _words(name: str) -> list[str]:
+    """Lower-case words without legal forms, small words and single
+    letters (initials, and "B.V." read as "b" and "v")."""
+    words = re.findall(r"[a-z0-9]+", name.lower())
+    return [w for w in words if len(w) > 1 and w not in _LEGAL_FORMS]
+
+
+def name_fits(customer_name: str, bank_name: str) -> bool:
+    """Every word of the customer's name is in the bank's name, in order
+    ("Bakkerij De Korst B.V." in "BAKKERIJ DE KORST"; "Anna Jansen" in
+    "Anna Jansen eo", not in "Hr A Jansen")."""
+    customer = " ".join(_words(customer_name))
+    if len(customer) < _MIN_NAME_LENGTH:
+        return False
+    bank = " ".join(_words(bank_name))
+    return re.search(rf"(?<![a-z0-9]){re.escape(customer)}(?![a-z0-9])", bank) is not None
+
+
+def _knows_payer(invoice: OpenInvoice, line: StatementLine) -> bool:
+    if line.counterparty_iban and line.counterparty_iban in invoice.ibans:
+        return True
+    return any(name_fits(name, line.counterparty_name) for name in invoice.names if name)
+
+
+def fits_without_amount(line: StatementLine, invoice: OpenInvoice) -> bool:
+    """The line points to this invoice by its number or by its customer,
+    whatever the amount: to recognise a payment already in Huismus
+    (reading._payment_already_there)."""
+    text = f"{line.description} {line.reference}"
+    if invoice.number and _long_enough(invoice.number):
+        if number_pattern(invoice.number).search(text):
+            return True
+    return _knows_payer(invoice, line)
+
+
+def _unique(invoices) -> tuple[OpenInvoice, ...]:
+    result = []
+    for invoice in invoices:
+        if invoice not in result:
+            result.append(invoice)
+    return tuple(result)
+
+
+def match(line: StatementLine, open_invoices: list[OpenInvoice]) -> Match:
+    text = f"{line.description} {line.reference}"
+    # Every invoice whose number is in the text, and of those the numbers
+    # long enough to be proof (a "15" is in too many texts).
+    named = [i for i in open_invoices if i.number and number_pattern(i.number).search(text)]
+    proof = [i for i in named if _long_enough(i.number)]
+
+    # Step 1, by number: exactly one number in the text and it is proof.
+    # Sure when the amount is what is open, else likely.
+    if len(named) == 1 and len(proof) == 1:
+        invoice = proof[0]
+        kind = SURE if invoice.outstanding_cents == line.amount_cents else LIKELY
+        return Match(kind, invoice)
+    # More than one invoice named: one transfer for several, the user's.
+    if len(proof) > 1:
+        return Match(CHOOSE, candidates=tuple(named), several_numbers=True)
+
+    # Step 2, by amount and payer: exactly one invoice with this open
+    # amount whose customer's name or IBAN is the payer's.
+    by_amount = [i for i in open_invoices if i.outstanding_cents == line.amount_cents]
+    by_payer = [i for i in open_invoices if _knows_payer(i, line)]
+    both = [i for i in by_amount if i in by_payer]
+    if len(both) == 1:
+        return Match(LIKELY, both[0])
+
+    # Step 3, the user chooses. First the invoices named by a short number
+    # (no proof, but the best lead), then those that fit on amount and
+    # payer, then on amount or payer alone.
+    leads = both if both else by_amount + by_payer
+    return Match(CHOOSE, candidates=_unique(named + leads))

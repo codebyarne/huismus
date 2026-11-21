@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% load i18n money %}
+
+{% block title %}{% translate "Bank" %} — Huismus{% endblock %}
+{% block content_class %}content-wide{% endblock %}
+
+{% block content %}
+{% comment %}Bank (#77, huismus.bank.views.statement_page), direction D approved by the owner 2026-11-21: tiles with what the statement held, then three sections that fold. Niet herkend starts folded: it asks nothing of you.{% endcomment %}
+<div class="page-head">
+    <div class="titles">
+        <h1>{% translate "Bank" %}</h1>
+        <p class="lede">{% translate "Lees het afschrift van je bank in. Huismus kijkt welke facturen betaald zijn en boekt wat zeker is." %}</p>
+    </div>
+    <div class="actions"><a class="btn btn-primary" href="#inlezen"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg>{% translate "Afschrift inlezen" %}</a></div>
+</div>
+
+{% if report %}
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--s-3)" id="rapport">
+    <div class="card kpi">
+        <span class="kpi-label">{% if report.first_day %}{% blocktranslate with first=report.first_day|date:"SHORT_DATE_FORMAT" last=report.last_day|date:"SHORT_DATE_FORMAT" %}Ingelezen · {{ first }} t/m {{ last }}{% endblocktranslate %}{% else %}{% translate "Ingelezen" %}{% endif %}</span>
+        <span class="kpi-value">{% blocktranslate count count=report.total %}{{ count }} betaling{% plural %}{{ count }} betalingen{% endblocktranslate %}</span>
+        <span class="progress is-kor" role="img" aria-label="{% blocktranslate with fitting=report.fitting total=report.total %}{{ fitting }} van de {{ total }} horen bij je facturen{% endblocktranslate %}"><span style="width:{{ report.fitting_percent }}%"></span></span>
+        <span class="kpi-sub">{% blocktranslate count count=report.fitting %}{{ count }} hoort bij je facturen{% plural %}{{ count }} horen bij je facturen{% endblocktranslate %}</span>
+    </div>
+    <div class="card kpi">
+        <span class="kpi-label"><span class="legend-dot" aria-hidden="true"></span> {% translate "Bij" %}</span>
+        <span class="kpi-value">{{ report.incoming_cents|money }}</span>
+        <span class="kpi-sub">{% blocktranslate count count=report.incoming %}{{ count }} betaling{% plural %}{{ count }} betalingen{% endblocktranslate %}</span>
+    </div>
+    <div class="card kpi">
+        <span class="kpi-label"><span class="legend-dot is-cost" aria-hidden="true"></span> {% translate "Af" %}</span>
+        <span class="kpi-value">{% blocktranslate count count=report.outgoing %}{{ count }} afschrijving{% plural %}{{ count }} afschrijvingen{% endblocktranslate %}</span>
+        <span class="kpi-sub">{% translate "Die koppel je later aan je uitgaven." %}</span>
+    </div>
+</div>
+{% endif %}
+{% if summary %}<p class="small muted" id="samenvatting" style="margin-top:var(--s-3)">{{ summary }}</p>{% endif %}
+
+<div style="margin-top:var(--s-8)">
+<details class="fold" id="te-doen" open>
+    <summary class="section-head"><h2>{% translate "Te doen" %} <span class="count-badge">{{ to_do|length }}</span></h2><span class="fold-sub">{% translate "passen bij je facturen. Klopt het?" %}</span><svg class="i chev" aria-hidden="true"><use href="#chevron-down"></use></svg></summary>
+    {% if to_do %}
+    <section class="card">
+        <ul class="list">
+            {% for item in to_do %}{% with line=item.line %}
+            <li style="flex-wrap:wrap" id="regel-{{ line.pk }}"{% if item.proposal %} data-voorstel{% endif %}>
+                {% include "bank/_line.html" %}
+                {% if item.proposal %}
+                <div class="small" style="flex-basis:100%">
+                    {% blocktranslate with number=item.proposal.number customer=item.proposal.customer open=item.proposal.outstanding_cents|money %}Factuur {{ number }} · {{ customer }} · open {{ open }}{% endblocktranslate %}
+                    {% if item.difference_cents > 0 %}<br><span class="muted">{% blocktranslate with amount=item.difference_cents|money %}{{ amount }} meer dan er open staat.{% endblocktranslate %}</span>
+                    {% elif item.short_cents > 0 %}<br><span class="muted">{% blocktranslate with amount=item.short_cents|money %}{{ amount }} minder dan er open staat. De rest blijft open.{% endblocktranslate %}</span>{% endif %}
+                </div>
+                <div class="row" style="flex-basis:100%;gap:var(--s-2)">
+                    <form method="post" action="{% url 'bank:confirm' line.pk %}">{% csrf_token %}<input type="hidden" name="terug" value="{{ here }}"><button type="submit" class="btn btn-primary btn-sm">{% translate "Bevestigen" %}</button></form>
+                    <form method="post" action="{% url 'bank:skip' line.pk %}">{% csrf_token %}<input type="hidden" name="terug" value="{{ here }}"><button type="submit" class="btn btn-ghost btn-sm">{% translate "Overslaan" %}</button></form>
+                </div>
+                <details style="flex-basis:100%">
+                    <summary class="small" style="cursor:pointer">{% translate "Andere factuur" %}</summary>
+                    {% include "bank/_choose.html" %}
+                </details>
+                {% else %}
+                {% if item.several_numbers %}<p class="small muted" style="flex-basis:100%" data-meer-facturen>{% translate "Deze betaling noemt meer dan één factuur. Registreer hem dan zelf op elke factuur en sla hem hier over." %}</p>{% endif %}
+                <div style="flex-basis:100%">{% include "bank/_choose.html" with skip=True %}</div>
+                {% endif %}
+            </li>
+            {% endwith %}{% endfor %}
+        </ul>
+    </section>
+    {% else %}
+    <div class="card card-pad small muted">{% translate "Alles wat bij je facturen past, is geboekt." %}</div>
+    {% endif %}
+</details>
+
+{% if booked %}
+<details class="fold" id="geboekt" open>
+    <summary class="section-head"><h2>{% translate "Geboekt" %} <span class="count-badge">{{ booked|length }}</span></h2><span class="fold-sub">{% translate "kun je terugdraaien" %}</span><svg class="i chev" aria-hidden="true"><use href="#chevron-down"></use></svg></summary>
+    <section class="card">
+        <ul class="list">
+            {% for line in booked %}
+            <li style="flex-wrap:wrap" id="regel-{{ line.pk }}">
+                <span class="list-icon is-ok"><svg class="i i-sm" aria-hidden="true"><use href="#check"></use></svg></span>
+                <div class="grow">
+                    <strong class="num"><span class="sr-only">{% translate "Bij" %}: </span>{{ line.amount_cents|money }}</strong> · <a href="{% url 'documents:edit' line.payment.document.pk %}">{% blocktranslate with number=line.payment.document.number %}Factuur {{ number }}{% endblocktranslate %}</a>
+                    <div class="small muted" style="overflow-wrap:anywhere">{{ line.booked_on|date:"SHORT_DATE_FORMAT" }}{% if line.counterparty_name %} · {{ line.counterparty_name }}{% endif %}{% if line.state == "already_booked" %} · {% translate "stond al geboekt" %}{% endif %}</div>
+                </div>
+                {% if line.can_undo %}<form method="post" action="{% url 'bank:undo' line.pk %}">{% csrf_token %}<input type="hidden" name="terug" value="{{ here }}"><button type="submit" class="btn btn-ghost btn-sm">{% translate "Terugdraaien" %}</button></form>{% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+</details>
+{% endif %}
+
+{% if unknown %}
+<details class="fold" id="niet-herkend">
+    <summary class="section-head"><h2>{% translate "Niet herkend" %} <span class="count-badge">{{ unknown|length }}</span></h2><span class="fold-sub">{% translate "privé, of geen factuur" %}</span><svg class="i chev" aria-hidden="true"><use href="#chevron-down"></use></svg></summary>
+    <section class="card">
+        <p class="small" style="margin:0;padding:var(--s-4) var(--s-5) 0">{% translate "Huismus vond hier geen factuur bij. Privé, of geld van je spaarrekening? Dan laat je het hier staan. Is het toch een betaling van een klant? Kies dan de factuur." %}</p>
+        <ul class="list">
+            {% for item in unknown %}{% with line=item.line %}
+            <li style="flex-wrap:wrap" id="regel-{{ line.pk }}">
+                {% include "bank/_line.html" %}
+                <details style="flex-basis:100%">
+                    <summary class="btn btn-secondary btn-sm" style="list-style:none"><svg class="i" aria-hidden="true" style="color:var(--primary)"><use href="#file"></use></svg>{% translate "Als factuurbetaling markeren" %}</summary>
+                    {% include "bank/_choose.html" %}
+                </details>
+            </li>
+            {% endwith %}{% endfor %}
+        </ul>
+    </section>
+</details>
+{% endif %}
+</div>
+
+<div class="split-rev" id="inlezen" style="margin-top:var(--s-8)">
+    <form class="stack" method="post" enctype="multipart/form-data" action="{% url 'bank:statement' %}" style="gap:var(--s-4)">
+        {% csrf_token %}
+        {% if error %}<p class="hint-banner is-bad" id="fout" role="alert"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{{ error }}</span></p>{% endif %}
+        <label class="dropzone" data-dropzone>
+            <input type="file" name="bestand" accept=".xml,.sta,.940,.mt940,.swi,.txt,.zip" required data-file-summary="gekozen-afschrift">
+            <span class="dz-icon"><svg class="i i-lg" aria-hidden="true"><use href="#upload"></use></svg></span>
+            <strong>{% translate "Sleep je bankafschrift hierheen" %}</strong>
+            <span class="small">{% translate "CAMT.053 of MT940, of een zip met meer afschriften." %}</span>
+            <span class="btn btn-secondary btn-sm" style="margin-top:var(--s-2)">{% translate "Bestand kiezen" %}</span>
+        </label>
+        <p class="small muted" id="gekozen-afschrift" aria-live="polite"></p>
+        <div><button class="btn btn-primary btn-lg" type="submit">{% translate "Inlezen" %}<span class="spinner"></span></button></div>
+        <p class="small muted">{% translate "Hetzelfde afschrift nog een keer inlezen verandert niets. Elke betaling die Huismus boekt, kun je terugdraaien." %}</p>
+    </form>
+    {% include "bank/_where.html" %}
+</div>
+
+<p class="small muted row" style="gap:var(--s-2);align-items:flex-start;margin-top:var(--s-5)"><svg class="i i-sm" aria-hidden="true" style="flex:none;margin-top:2px"><use href="#wallet"></use></svg><span>{% translate "Contant betaald? Dat staat niet op je afschrift. Zet de factuur dan zelf op betaald." %}</span></p>
+
+{% if skipped_count %}
+<p class="small"><a href="{% url 'bank:skipped' %}" id="overgeslagen-link">{% blocktranslate with count=skipped_count %}Overgeslagen ({{ count }}){% endblocktranslate %}</a></p>
+{% endif %}
+{% endblock %}

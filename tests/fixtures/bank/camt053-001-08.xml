@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Fictional statement for Huismus's tests (#77): no real account or person. -->
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.08">
+  <BkToCstmrStmt>
+    <GrpHdr><MsgId>TEST-0002</MsgId><CreDtTm>2026-11-15T06:00:00+01:00</CreDtTm></GrpHdr>
+    <Stmt>
+      <Id>TEST-0002-1</Id>
+      <Acct><Id><IBAN>NL91ABNA0417164300</IBAN></Id></Acct>
+      <Ntry>
+        <Amt Ccy="EUR">605.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Sts><Cd>BOOK</Cd></Sts>
+        <BookgDt><DtTm>2026-11-13T10:12:00+01:00</DtTm></BookgDt>
+        <NtryDtls><TxDtls>
+          <Refs><AcctSvcrRef>REF-3</AcctSvcrRef></Refs>
+          <RltdPties>
+            <Dbtr><Pty><Nm>J. de Vries</Nm></Pty></Dbtr>
+            <DbtrAcct><Id><IBAN>NL20TEST0001234567</IBAN></Id></DbtrAcct>
+          </RltdPties>
+          <RmtInf><Ustrd>2026-016</Ustrd></RmtInf>
+        </TxDtls></NtryDtls>
+      </Ntry>
+    </Stmt>
+  </BkToCstmrStmt>
+</Document>

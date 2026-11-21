@@ -46,6 +46,9 @@ The invoice shows its payment status: unpaid, partly paid, paid or overdue.
 When a payment comes in, click **Record payment**. The amount is already
 filled in with what's still open. A partial payment works too.
 
+Many payments at once? Import your bank statement and Huismus records them
+itself. See [Import bank statement](bankafschrift.en.md).
+
 The overview shows how much is open in total and which invoices are late.
 
 ## Sending a reminder

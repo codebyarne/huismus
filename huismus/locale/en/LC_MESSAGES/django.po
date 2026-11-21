@@ -4391,11 +4391,11 @@ msgid "Welkom bij Huismus"
 msgstr "Welcome to Huismus"
 
 msgid ""
-"Begin je nieuw? Dan vul je stap voor stap in wat Huismus nodig heeft voor je "
-"eerste factuur."
+"Begin je nieuw? Dan vul je in vier stappen in wat Huismus nodig heeft voor "
+"je eerste factuur."
 msgstr ""
-"Starting fresh? Fill in what Huismus needs for your first invoice, step by "
-"step."
+"Starting fresh? Fill in what Huismus needs for your first invoice, in four "
+"steps."
 
 msgid ""
 "Kom je van Moneybird? Neem dan in één keer al je klanten, facturen en "
@@ -8946,6 +8946,331 @@ msgstr "An export from Huismus is laid out the same way. That is how you take yo
 #~ msgid "Toon actieve contacten"
 #~ msgstr "Show active contacts"
 
+msgid "bestandsnaam"
+msgstr "file name"
+
+msgid "formaat"
+msgstr "format"
+
+msgid "samenvatting"
+msgstr "summary"
+
+msgid "bankafschrift"
+msgstr "bank statement"
+
+msgid "bankafschriften"
+msgstr "bank statements"
+
+msgid "geboekt door Huismus"
+msgstr "recorded by Huismus"
+
+msgid "geboekt door jou"
+msgstr "recorded by you"
+
+msgid "stond al geboekt"
+msgstr "already recorded"
+
+msgid "voorstel"
+msgstr "proposal"
+
+msgid "open"
+msgstr "open"
+
+msgid "rekening"
+msgstr "account"
+
+msgid "tegenrekening"
+msgstr "payer account"
+
+msgid "betalingskenmerk"
+msgstr "payment reference"
+
+msgid "referentie van de bank"
+msgstr "bank reference"
+
+msgid "vingerafdruk"
+msgstr "fingerprint"
+
+msgid "voorgestelde factuur"
+msgstr "proposed invoice"
+
+msgid "bijschrijving"
+msgstr "incoming payment"
+
+msgid "bijschrijvingen"
+msgstr "incoming payments"
+
+msgid ""
+"Huismus herkent dit bestand niet als bankafschrift. Download het bij je bank "
+"als CAMT.053 of MT940."
+msgstr ""
+"Huismus doesn't recognise this file as a bank statement. Download it from "
+"your bank as CAMT.053 or MT940."
+
+msgid "%(count)s bijschrijving gelezen."
+msgid_plural "%(count)s bijschrijvingen gelezen."
+msgstr[0] "Read %(count)s incoming payment."
+msgstr[1] "Read %(count)s incoming payments."
+
+msgid "%(count)s geboekt"
+msgid_plural "%(count)s geboekt"
+msgstr[0] "%(count)s recorded"
+msgstr[1] "%(count)s recorded"
+
+msgid "%(count)s om te bevestigen"
+msgid_plural "%(count)s om te bevestigen"
+msgstr[0] "%(count)s to confirm"
+msgstr[1] "%(count)s to confirm"
+
+msgid "%(count)s om zelf te kiezen"
+msgid_plural "%(count)s om zelf te kiezen"
+msgstr[0] "%(count)s to pick"
+msgstr[1] "%(count)s to pick"
+
+msgid "%(count)s stond al geboekt"
+msgid_plural "%(count)s stonden al geboekt"
+msgstr[0] "%(count)s already recorded"
+msgstr[1] "%(count)s already recorded"
+
+msgid "%(count)s was al ingelezen."
+msgid_plural "%(count)s waren al ingelezen."
+msgstr[0] "%(count)s was read before."
+msgstr[1] "%(count)s were read before."
+
+msgid "Van rekening %(iban)s."
+msgstr "From account %(iban)s."
+
+msgid "Niets nieuws: alle bijschrijvingen in dit bestand waren al ingelezen."
+msgstr "Nothing new: every incoming payment in this file was read before."
+
+msgid "Kies een factuur."
+msgstr "Pick an invoice."
+
+msgid "Betaling geboekt op factuur %(number)s."
+msgstr "Payment recorded on invoice %(number)s."
+
+msgid "Betaling teruggedraaid. Hij staat weer bij Zelf kiezen."
+msgstr "Payment undone. It's back under Pick an invoice."
+
+msgid "%(count)s betaling uit je bankafschrift wacht op je"
+msgid_plural "%(count)s betalingen uit je bankafschrift wachten op je"
+msgstr[0] "%(count)s payment from your bank statement is waiting for you"
+msgstr[1] "%(count)s payments from your bank statement are waiting for you"
+
+msgid "Bevestig of kies de factuur."
+msgstr "Confirm or pick the invoice."
+
+msgid "Kies een factuur…"
+msgstr "Pick an invoice…"
+
+msgid "open %(open)s"
+msgstr "%(open)s open"
+
+msgid "Boeken"
+msgstr "Record"
+
+msgid "Zo haal je je afschrift bij de bank"
+msgstr "How to get your statement from the bank"
+
+msgid "Bankafschrift inlezen"
+msgstr "Import bank statement"
+
+msgid ""
+"Bijschrijvingen die je oversloeg. Zet je er een terug, dan staat hij weer bij"
+" Zelf kiezen."
+msgstr ""
+"Incoming payments you skipped. Restore one and it's back under Pick an "
+"invoice."
+
+msgid "Je hebt niets overgeslagen."
+msgstr "You haven't skipped anything."
+
+msgid ""
+"Lees het afschrift van je bank in. Huismus kijkt welke facturen betaald zijn "
+"en boekt wat zeker is."
+msgstr ""
+"Import the statement from your bank. Huismus looks at which invoices were "
+"paid and records what is certain."
+
+msgid "Klopt dit?"
+msgstr "Is this right?"
+
+msgid "Factuur %(number)s · %(customer)s · open %(open)s"
+msgstr "Invoice %(number)s · %(customer)s · %(open)s open"
+
+msgid "%(amount)s meer dan er open staat."
+msgstr "%(amount)s more than is open."
+
+msgid "%(amount)s minder dan er open staat. De rest blijft open."
+msgstr "%(amount)s less than is open. The rest stays open."
+
+msgid "Bevestigen"
+msgstr "Confirm"
+
+msgid "Andere factuur"
+msgstr "Other invoice"
+
+msgid "Zelf kiezen"
+msgstr "Pick an invoice"
+
+msgid ""
+"Deze betaling noemt meer dan één factuur. Registreer hem dan zelf op elke "
+"factuur en sla hem hier over."
+msgstr ""
+"This payment mentions more than one invoice. Record it on each invoice "
+"yourself and skip it here."
+
+msgid "Alles overslaan"
+msgstr "Skip all"
+
+msgid "Geboekt"
+msgstr "Recorded"
+
+msgid "Terugdraaien"
+msgstr "Undo"
+
+msgid "Stond al geboekt"
+msgstr "Already recorded"
+
+msgid "Sleep je bankafschrift hierheen"
+msgstr "Drag your bank statement here"
+
+msgid "CAMT.053 of MT940, of een zip met meer afschriften."
+msgstr "CAMT.053 or MT940, or a zip with more statements."
+
+msgid "Bestand kiezen"
+msgstr "Choose file"
+
+msgid "Inlezen"
+msgstr "Import"
+
+msgid ""
+"Hetzelfde afschrift nog een keer inlezen verandert niets. Elke betaling die "
+"Huismus boekt, kun je terugdraaien."
+msgstr ""
+"Importing the same statement again changes nothing. You can undo every "
+"payment Huismus records."
+
+msgid "Overgeslagen (%(count)s)"
+msgstr "Skipped (%(count)s)"
+
+msgid "Te veel betaald"
+msgstr "Overpaid"
+
+msgid "uit bankafschrift: %(name)s"
+msgstr "from bank statement: %(name)s"
+
+msgid ""
+"Kies CAMT.053 als je bank het heeft, anders MT940. Kies de periode sinds de "
+"vorige keer; overlappen is geen probleem."
+msgstr ""
+"Choose CAMT.053 if your bank has it, otherwise MT940. Choose the period since"
+" last time; an overlap is fine."
+
+msgid "Mijn ING Zakelijk, bij het downloaden het bestandstype kiezen."
+msgstr "Mijn ING Zakelijk, choosing the file type when you download."
+
+msgid ""
+"Een particuliere rekening bij ING geeft alleen CSV en pdf. Die leest Huismus "
+"niet; registreer een betaling dan op de factuur."
+msgstr ""
+"A personal ING account only gives CSV and PDF. Huismus doesn't read those; "
+"record a payment on the invoice instead."
+
+msgid "de transacties downloaden als CAMT.053"
+msgstr "download the transactions as CAMT.053"
+
+msgid "Een zip is goed."
+msgstr "A zip is fine."
+
+msgid "Meer uitleg per bank"
+msgstr "More about each bank"
+
+msgid "Dit bestand is groter dan 50 MB. Kies bij je bank een kortere periode."
+msgstr "This file is larger than 50 MB. Choose a shorter period at your bank."
+
+msgid "Deze bijschrijving is al geboekt."
+msgstr "This incoming payment is already recorded."
+
+msgid "Deze betaling was al teruggedraaid."
+msgstr "This payment was already undone."
+
+#, python-format
+msgid "%(count)s afschrijving: die koppel je later aan je uitgaven."
+msgid_plural "%(count)s afschrijvingen: die koppel je later aan je uitgaven."
+msgstr[0] "%(count)s payment going out: you'll link it to your expenses later."
+msgstr[1] "%(count)s payments going out: you'll link them to your expenses later."
+
+msgid "Afschrift inlezen"
+msgstr "Read a statement"
+
+msgid "Die koppel je later aan je uitgaven."
+msgstr "You'll link them to your expenses later."
+
+msgid "passen bij je facturen. Klopt het?"
+msgstr "fit your invoices. Is that right?"
+
+msgid "Alles wat bij je facturen past, is geboekt."
+msgstr "Everything that fits your invoices is booked."
+
+msgid "kun je terugdraaien"
+msgstr "you can undo these"
+
+msgid "privé, of geen factuur"
+msgstr "private, or no invoice"
+
+msgid "Huismus vond hier geen factuur bij. Privé, of geld van je spaarrekening? Dan laat je het hier staan. Is het toch een betaling van een klant? Kies dan de factuur."
+msgstr "Huismus found no invoice for these. Private, or money from your savings account? Then leave it here. Is it a customer's payment after all? Then choose the invoice."
+
+msgid "Als factuurbetaling markeren"
+msgstr "Mark as invoice payment"
+
+msgid "Contant betaald? Dat staat niet op je afschrift. Zet de factuur dan zelf op betaald."
+msgstr "Paid in cash? That's not on your statement. Mark the invoice as paid yourself."
+
+msgid "Bijschrijvingen die je oversloeg. Zet je er een terug, dan staat hij weer op de pagina Bank."
+msgstr "Incoming payments you skipped. Put one back and it shows on the Bank page again."
+
+msgid "Betaling teruggedraaid. Hij staat weer bij Te doen."
+msgstr "Payment undone. It's back under To do."
+
+msgid "Ingelezen · %(first)s t/m %(last)s"
+msgstr "Read · %(first)s to %(last)s"
+
+msgid "Ingelezen"
+msgstr "Read"
+
+msgid "%(fitting)s van de %(total)s horen bij je facturen"
+msgstr "%(fitting)s of the %(total)s belong to your invoices"
+
+msgid "Bij"
+msgstr "In"
+
+msgid "Af"
+msgstr "Out"
+
+msgid "%(count)s betaling"
+msgid_plural "%(count)s betalingen"
+msgstr[0] "%(count)s payment"
+msgstr[1] "%(count)s payments"
+
+msgid "%(count)s hoort bij je facturen"
+msgid_plural "%(count)s horen bij je facturen"
+msgstr[0] "%(count)s belongs to your invoices"
+msgstr[1] "%(count)s belong to your invoices"
+
+msgid "%(count)s afschrijving"
+msgid_plural "%(count)s afschrijvingen"
+msgstr[0] "%(count)s payment going out"
+msgstr[1] "%(count)s payments going out"
+
+msgid ""
+"Begin je nieuw? Dan vul je stap voor stap in wat Huismus nodig heeft voor je "
+"eerste factuur."
+msgstr ""
+"Starting fresh? Fill in what Huismus needs for your first invoice, step by "
+"step."
+
 msgid "Je werk"
 msgstr "Your work"
 
@@ -8994,8 +9319,6 @@ msgstr "Yes, outside the EU"
 
 msgid "In welke taal maak je je facturen meestal?"
 msgstr "In which language do you usually write your invoices?"
-
-
 
 msgid "Kies een antwoord."
 msgstr "Choose an answer."
