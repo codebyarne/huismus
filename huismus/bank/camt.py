@@ -94,11 +94,14 @@ def _read_entry(entry, account: str, statement: Statement):
     # reservations in it (docs/bankafschriften.md).
     if _status(entry) not in ("", "BOOK"):
         return
-    if _text(entry, "CdtDbtInd") != "CRDT" or _text(entry, "RvslInd").lower() == "true":
-        # Money going out, or a reversal (CRDT with RvslInd: a debit that
-        # came back, ISO 20022's usage rule): neither is a customer paying.
-        statement.not_incoming += 1
+    if _text(entry, "RvslInd").lower() == "true":
+        # A reversal (a debit that came back, ISO 20022's usage rule): no
+        # customer paying and no expense. Left out (lines.py).
         return
+    direction = _text(entry, "CdtDbtInd")
+    if direction not in ("CRDT", "DBIT"):
+        raise StatementReadError(f"CdtDbtInd {direction!r}")
+    sign = 1 if direction == "CRDT" else -1
     amount = _child(entry, "Amt")
     if amount is None:
         raise StatementReadError("amount missing")
@@ -115,6 +118,7 @@ def _read_entry(entry, account: str, statement: Statement):
     else:
         amounts = [_transaction_cents(tx) for tx in details]
     entry_cents = amount_to_cents(amount.text or "")
+    # The amounts in a statement are without sign; CdtDbtInd says which way.
     if not details or None in amounts or sum(amounts) != entry_cents:
         # No details, or a batch that doesn't say what each transaction
         # was or whose parts don't add up to the entry to the cent: one
@@ -123,7 +127,7 @@ def _read_entry(entry, account: str, statement: Statement):
             StatementLine(
                 account_iban=account,
                 booked_on=booked_on,
-                amount_cents=entry_cents,
+                amount_cents=sign * entry_cents,
                 description=entry_info,
                 bank_reference=entry_ref,
             )
@@ -131,7 +135,7 @@ def _read_entry(entry, account: str, statement: Statement):
         return
     for tx, cents in zip(details, amounts, strict=True):
         statement.lines.append(
-            _transaction_line(tx, account, booked_on, cents, entry_ref, entry_info)
+            _transaction_line(tx, account, booked_on, sign * cents, entry_ref, entry_info)
         )
 
 
@@ -149,8 +153,10 @@ def _party_name(parties, role) -> str:
 
 def _transaction_line(tx, account, booked_on, cents, entry_ref, entry_info) -> StatementLine:
     parties = _child(tx, "RltdPties")
-    name = _party_name(parties, "UltmtDbtr") or _party_name(parties, "Dbtr")
-    iban = clean_iban(_text(parties, "DbtrAcct", "Id", "IBAN"))
+    # The other party: who paid us (Dbtr), or whom we paid (Cdtr).
+    role = "Cdtr" if cents < 0 else "Dbtr"
+    name = _party_name(parties, f"Ultmt{role}") or _party_name(parties, role)
+    iban = clean_iban(_text(parties, f"{role}Acct", "Id", "IBAN"))
     remittance = _child(tx, "RmtInf")
     unstructured = " ".join((u.text or "") for u in _children(remittance, "Ustrd"))
     reference = ""

@@ -6,3 +6,6 @@ from django.apps import AppConfig
 class BankConfig(AppConfig):
     name = "huismus.bank"
     label = "bank"
+
+    def ready(self):
+        from . import signals  # noqa: F401 (connects the receivers)
