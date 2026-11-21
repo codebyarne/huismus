@@ -9,7 +9,9 @@ Wil je het vertellen, dan kan dat hieronder.
 1. Kies wat voor organisatie je hebt. Wat je mist en je e-mailadres mogen
    leeg blijven.
 2. Druk op **Controleer gegevens**. Je ziet alles wat meegaat, ook wat Huismus
-   zelf invult: waar het draait, de versie en de taal.
+   zelf invult: waar het draait, de versie, de taal van de app, of je een tekst
+   bij btw verlegd hebt ingesteld (ja of nee, niet de tekst zelf) en de taal
+   van je facturen.
 3. Druk op **Versturen**. Pas dan stuurt Huismus het naar een formulier op
    arnekrijnsen.com. Je e-mailadres en wat je mist bewaart Huismus niet.
    Wat je mist komt daarna als idee op GitHub, waar anderen het kunnen lezen.

@@ -7,8 +7,9 @@ choose to (huismus-intern/besluiten.md, 2026-11-01 and 2026-11-02).
 Huismus sends it itself, to the Contact Form 7 form on arnekrijnsen.com,
 but only when the user presses Versturen after seeing everything that goes
 along: the third kind of outgoing request of SPEC.md principle 6. Where
-Huismus runs, its version and its language Huismus fills in itself; they
-are in that overview too.
+Huismus runs, its version and its language Huismus fills in itself, and
+from the settings whether there is a text for reverse-charge invoices and
+the language invoices are in (#268); they are in that overview too.
 
 The choices are those of the issue form (.github/ISSUE_TEMPLATE/idee.yml).
 The form on the site takes a choice only when the value is exactly its
@@ -36,7 +37,9 @@ logger = logging.getLogger("huismus.feedback")
 # The site lets this form skip reCAPTCHA for a User-Agent "Huismus/<version>"
 # (plugin Huismus-formulier, huismus-intern/wordpress/), but only when the
 # request looks exactly like this one (the same version in "versie", a known
-# "taal" and "gebruik") and only a few times an hour: the User-Agent is public,
+# "taal" and "gebruik", and "btw_verlegd" and "factuurtaal" either missing,
+# as from Huismus before #268, or a value of invoice_setup()) and only a
+# few times an hour: the User-Agent is public,
 # so anyone could copy it. Change those fields here, change the plugin too.
 FORM_ID = 2943
 PAGE_ID = 2939
@@ -104,23 +107,42 @@ def form_language(language: str | None = None) -> str:
     return language if language in ("nl", "en") else "nl"
 
 
+def invoice_setup() -> tuple[str, str]:
+    """From the settings, as sent to the form: "ja" when there is a text
+    for reverse-charge invoices, else "nee" (never the text itself), and the
+    invoice language, nl or en. Where the reverse charge applies (NL, EU or
+    outside the EU) is in no setting, so it doesn't go."""
+    # Here, not at the top: business.models imports this module's choices.
+    from huismus.business.models import Settings
+
+    instance = Settings.load()
+    reverse_charge = "ja" if instance.reverse_charge_text.strip() else "nee"
+    return reverse_charge, "en" if instance.default_language == "en" else "nl"
+
+
 def outgoing(organisation: str, wish: str, email: str, language: str | None = None) -> list:
     """Everything that goes, as (label, value) for the overview. send()
-    sends exactly these fields and nothing more."""
+    sends exactly these fields and nothing more. What Huismus fills in
+    itself is read again at Versturen, like the version: a setting changed
+    in between goes as it is then."""
     language = form_language(language)
+    reverse_charge, invoice_language = invoice_setup()
     return [
         (_("Organisatie"), _label(ORGANISATIONS, organisation)),
         (_("Wat je mist"), wish),
         (_("E-mailadres"), email),
         (_("Draait op"), _label(PLATFORMS, runs_on())),
         (_("Versie"), current_version()),
-        (_("Taal"), "English" if language == "en" else "Nederlands"),
+        (_("Taal van de app"), "English" if language == "en" else "Nederlands"),
+        (_("Btw verlegd"), _("Ja") if reverse_charge == "ja" else _("Nee")),
+        (_("Taal van je facturen"), "English" if invoice_language == "en" else "Nederlands"),
     ]
 
 
 def form_data(organisation: str, wish: str, email: str, language: str | None = None) -> dict:
     """The fields of the form on the site, plus the hidden ones its REST
     endpoint needs. An unknown organisation stays empty: the site refuses it."""
+    reverse_charge, invoice_language = invoice_setup()
     return {
         "_wpcf7_unit_tag": UNIT_TAG,
         "_wpcf7_container_post": str(PAGE_ID),
@@ -130,6 +152,8 @@ def form_data(organisation: str, wish: str, email: str, language: str | None = N
         "email": email,
         "versie": current_version(),
         "taal": form_language(language),
+        "btw_verlegd": reverse_charge,
+        "factuurtaal": invoice_language,
     }
 
 

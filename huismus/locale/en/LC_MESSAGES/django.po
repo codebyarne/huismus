@@ -1299,6 +1299,21 @@ msgstr "Runs on"
 msgid "Versie"
 msgstr "Version"
 
+msgid "Taal van de app"
+msgstr "Language of the app"
+
+msgid "Btw verlegd"
+msgstr "Reverse charge"
+
+msgid "Ja"
+msgstr "Yes"
+
+msgid "Nee"
+msgstr "No"
+
+msgid "Taal van je facturen"
+msgstr "Language of your invoices"
+
 msgid "Wat voor organisatie heb je?"
 msgstr "What kind of organisation do you have?"
 
@@ -9282,9 +9297,6 @@ msgstr "A few questions, so you only see what fits you. You can change it later 
 msgid "Jouw KOR-tekst komt onder elke factuur."
 msgstr "Your KOR text goes under every invoice."
 
-msgid "Btw verlegd"
-msgstr "Reverse charge"
-
 msgid ""
 "Deze tekst komt onder elke factuur met een regel “verlegd”. Je kunt hem ook "
 "leeg laten."
@@ -9292,9 +9304,6 @@ msgstr "This text goes under every invoice with a “reverse charge” line. You
 
 msgid "Reken je btw op je facturen?"
 msgstr "Do you charge VAT on your invoices?"
-
-msgid "Ja"
-msgstr "Yes"
 
 msgid "Nee, ik gebruik de KOR"
 msgstr "No, I use the KOR"
@@ -9304,9 +9313,6 @@ msgstr "I don't know yet"
 
 msgid "Heb je klanten waarbij de btw verlegd wordt?"
 msgstr "Do you have customers where the VAT is reverse-charged?"
-
-msgid "Nee"
-msgstr "No"
 
 msgid "Ja, in Nederland"
 msgstr "Yes, in the Netherlands"

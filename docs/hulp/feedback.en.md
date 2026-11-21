@@ -9,7 +9,9 @@ you're missing. If you'd like to say, you can do it below.
 1. Choose what kind of organisation you have. What you're missing and your
    email address can stay empty.
 2. Press **Check details**. You see everything that goes along, including
-   what Huismus fills in itself: where it runs, the version and the language.
+   what Huismus fills in itself: where it runs, the version, the language of
+   the app, whether you've set a text for reverse charge (yes or no, not the
+   text itself) and the language of your invoices.
 3. Press **Send**. Only then does Huismus send it to a form on
    arnekrijnsen.com. Huismus doesn't keep your email address or what you're
    missing. What you're missing then goes on GitHub as an idea, where others

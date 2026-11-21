@@ -48,7 +48,7 @@ def test_huismus_knows_where_it_runs(settings, monkeypatch, desktop, platform, e
     assert feedback.runs_on() == expected
 
 
-def test_the_form_gets_the_answers_and_what_huismus_fills_in(settings, monkeypatch):
+def test_the_form_gets_the_answers_and_what_huismus_fills_in(settings, monkeypatch, db):
     settings.DESKTOP = True
     monkeypatch.setattr(feedback.sys, "platform", "win32")
     data = feedback.form_data("stichting", "Uren bijhouden", "a@example.com", "en")
@@ -61,22 +61,59 @@ def test_the_form_gets_the_answers_and_what_huismus_fills_in(settings, monkeypat
         "email": "a@example.com",
         "versie": current_version(),
         "taal": "en",
+        "btw_verlegd": "nee",
+        "factuurtaal": "nl",
     }
 
 
-def test_the_overview_shows_every_field_that_goes():
+@pytest.mark.parametrize(
+    ("text", "language", "reverse_charge", "invoice_language"),
+    [
+        ("", "nl", "nee", "nl"),
+        ("  \n", "nl", "nee", "nl"),  # only spaces: nothing under a verlegd line
+        ("Btw verlegd naar de afnemer.", "en", "ja", "en"),
+    ],
+)
+def test_reverse_charge_and_invoice_language_come_from_the_settings(
+    db, text, language, reverse_charge, invoice_language
+):
+    """Only whether there is a text, never the text itself (#268)."""
+    instance = Settings.load()
+    instance.reverse_charge_text = text
+    instance.default_language = language
+    instance.save()
+    data = feedback.form_data("btw", "", "", "nl")
+    assert (data["btw_verlegd"], data["factuurtaal"]) == (reverse_charge, invoice_language)
+    if text.strip():
+        assert not any(text.strip() in value for value in data.values())
+
+
+def test_the_overview_shows_every_field_that_goes(db):
     """Nothing goes that the user didn't see: one line per form field."""
     with translation.override("nl"):
-        shown = dict((str(label), value) for label, value in feedback.outgoing("bv", "", "", "nl"))
+        shown = {str(label): str(value) for label, value in feedback.outgoing("bv", "", "", "nl")}
     sent = feedback.form_data("bv", "", "", "nl")
     assert len(shown) == len([key for key in sent if not key.startswith("_wpcf7")])
     assert shown["Organisatie"] == "Bv of holding"
     assert shown["Draait op"] == "Docker, op een server of NAS"
     assert shown["Versie"] == sent["versie"]
-    assert shown["Taal"] == "Nederlands"
+    assert shown["Taal van de app"] == "Nederlands"
+    assert shown["Btw verlegd"] == "Nee"
+    assert shown["Taal van je facturen"] == "Nederlands"
 
 
-def test_the_choices_are_the_same_text_in_every_language():
+def test_the_overview_says_reverse_charge_and_invoice_language_in_english(db):
+    instance = Settings.load()
+    instance.reverse_charge_text = "VAT reverse charged."
+    instance.default_language = "en"
+    instance.save()
+    with translation.override("en"):
+        shown = {str(label): str(value) for label, value in feedback.outgoing("bv", "", "", "en")}
+    assert shown["Reverse charge"] == "Yes"
+    assert shown["Language of your invoices"] == "English"
+
+
+def test_the_choices_are_the_same_text_in_every_language(db):
     """The form only takes a choice whose value is exactly its option."""
     assert (
         feedback.form_data("kor", "", "", "nl")["organisatie"]
@@ -84,7 +121,7 @@ def test_the_choices_are_the_same_text_in_every_language():
     )
 
 
-def test_another_language_is_sent_as_dutch():
+def test_another_language_is_sent_as_dutch(db):
     assert feedback.form_data("kor", "", "", "de")["taal"] == "nl"
 
 
@@ -134,7 +171,7 @@ def _site_says(monkeypatch, answer):
     return sent
 
 
-def test_send_posts_the_form_fields_to_contact_form_7(monkeypatch):
+def test_send_posts_the_form_fields_to_contact_form_7(monkeypatch, db):
     sent = _site_says(monkeypatch, {"status": "mail_sent", "message": "Bedankt"})
     feedback.send("kor", "Offertes online", "", "nl")
     (request,) = sent
@@ -152,7 +189,7 @@ def test_send_posts_the_form_fields_to_contact_form_7(monkeypatch):
     assert fields == feedback.form_data("kor", "Offertes online", "", "nl")
 
 
-def test_send_keeps_line_breaks_and_quotes_in_what_you_miss(monkeypatch):
+def test_send_keeps_line_breaks_and_quotes_in_what_you_miss(monkeypatch, db):
     sent = _site_says(monkeypatch, {"status": "mail_sent"})
     wish = 'Regel 1\r\nRegel "2"\n--huismus-nep--'
     feedback.send("kor", wish, "", "nl")
@@ -167,7 +204,7 @@ def test_send_keeps_line_breaks_and_quotes_in_what_you_miss(monkeypatch):
     assert parts["wens"].removesuffix("\r\n") == wish
 
 
-def test_an_answer_that_is_not_an_object_is_a_failure(monkeypatch):
+def test_an_answer_that_is_not_an_object_is_a_failure(monkeypatch, db):
     _site_says(monkeypatch, ["mail_sent"])
     with pytest.raises(feedback.SendError):
         feedback.send("kor", "", "", "nl")
@@ -182,13 +219,13 @@ def test_an_answer_that_is_not_an_object_is_a_failure(monkeypatch):
         TimeoutError("traag"),
     ],
 )
-def test_send_fails_unless_the_site_mailed_it(monkeypatch, answer):
+def test_send_fails_unless_the_site_mailed_it(monkeypatch, answer, db):
     _site_says(monkeypatch, answer)
     with pytest.raises(feedback.SendError):
         feedback.send("kor", "", "", "nl")
 
 
-def test_send_fails_on_an_answer_that_is_not_json(monkeypatch):
+def test_send_fails_on_an_answer_that_is_not_json(monkeypatch, db):
     monkeypatch.setattr(
         feedback.urllib.request, "urlopen", lambda request, timeout: _Answer(b"<html>")
     )
@@ -245,6 +282,8 @@ def test_see_what_goes_shows_everything_and_sends_nothing(logged_in, sends):
     assert "Docker, op een server of NAS" in page
     assert current_version() in page
     assert 'name="versturen"' in page
+    assert "Btw verlegd" in page
+    assert "Taal van je facturen" in page
     assert sends == []
     assert Settings.load().feedback_status == ""
 
