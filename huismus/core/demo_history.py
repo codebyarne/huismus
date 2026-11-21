@@ -98,6 +98,18 @@ def create_history(seed: int = 1, last_day: date = LAST_DAY) -> None:
             description="Voorbeelduitgave",
             needs_review=True,
         )
+    # Two bills the bank statement of huismus/bank/demo.py pays later
+    # (#257): one Huismus proposes by its name, one only by its amount.
+    for supplier, cents, category, days, text in (
+        ("Hosting Noord", 2420, categories[0], 25, "Abonnement september"),
+        ("NS", 6130, categories[1], 23, "Reizen op rekening augustus"),
+    ):
+        create_expense(
+            [ExpenseLineInput("", cents, None, category)],
+            date=last_day - timedelta(days=days),
+            supplier=supplier,
+            description=text,
+        )
 
 
 def _settings() -> None:

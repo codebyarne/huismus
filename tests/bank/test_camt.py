@@ -30,7 +30,7 @@ def test_a_single_credit_with_payer_iban_and_text():
 
 
 def test_a_batch_gives_a_line_per_transaction_with_its_own_amount():
-    lines = _read("camt053-001-02.xml").lines
+    lines = [line for line in _read("camt053-001-02.xml").lines if line.amount_cents > 0]
     assert [(line.counterparty_name, line.amount_cents) for line in lines[1:]] == [
         ("Studio Noord", 10000),
         ("Studio Zuid", 20000),
@@ -41,10 +41,11 @@ def test_a_batch_gives_a_line_per_transaction_with_its_own_amount():
     assert lines[2].description == "Overboeking"
 
 
-def test_debits_pending_foreign_and_reversals_are_left_out():
+def test_pending_foreign_and_reversals_are_left_out():
     statement = _read("camt053-001-02.xml")
-    assert len(statement.lines) == 3
-    assert statement.not_incoming == 2  # the debit and the reversal
+    # Three credits and the debit; not the reversal, the pending entry or
+    # the one in dollars.
+    assert len(statement.lines) == 4
     assert statement.other_currency == 1
     assert statement.accounts == {"NL91ABNA0417164300"}
 
@@ -80,5 +81,41 @@ def test_an_amount_with_more_than_two_decimals_is_refused():
 def test_a_batch_whose_parts_dont_add_up_is_one_line():
     data = (FIXTURES / "camt053-001-02.xml").read_bytes().replace(b"200.00", b"199.99")
     lines = camt.read(data).lines
-    assert [line.amount_cents for line in lines] == [121000, 30000]
-    assert lines[1].description == "Verzamelbetaling"
+    assert [line.amount_cents for line in lines] == [121000, -4599, 30000]
+    assert lines[2].description == "Verzamelbetaling"
+
+
+def test_a_debit_is_a_negative_line_with_whom_was_paid():
+    debit = [line for line in _read("camt053-001-02.xml").lines if line.amount_cents < 0]
+    assert len(debit) == 1
+    assert debit[0].amount_cents == -4599
+    assert debit[0].counterparty_name == "Telefoonwinkel"
+    assert debit[0].booked_on == date(2026, 11, 14)
+
+
+def test_a_debit_takes_the_creditors_iban():
+    data = b"""<?xml version="1.0"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.02"><BkToCstmrStmt><Stmt>
+<Acct><Id><IBAN>NL91ABNA0417164300</IBAN></Id></Acct>
+<Ntry><Amt Ccy="EUR">24.20</Amt><CdtDbtInd>DBIT</CdtDbtInd><Sts>BOOK</Sts>
+<BookgDt><Dt>2026-09-26</Dt></BookgDt><NtryDtls><TxDtls><RltdPties>
+<Dbtr><Nm>Voorbeeld BV</Nm></Dbtr><DbtrAcct><Id><IBAN>NL91ABNA0417164300</IBAN></Id></DbtrAcct>
+<Cdtr><Nm>Hosting Noord B.V.</Nm></Cdtr>
+<CdtrAcct><Id><IBAN>NL20TEST0001234567</IBAN></Id></CdtrAcct>
+</RltdPties><RmtInf><Ustrd>Abonnement september</Ustrd></RmtInf></TxDtls></NtryDtls></Ntry>
+</Stmt></BkToCstmrStmt></Document>"""
+    (line,) = camt.read(data).lines
+    assert line.amount_cents == -2420
+    assert line.counterparty_name == "Hosting Noord B.V."
+    assert line.counterparty_iban == "NL20TEST0001234567"
+    assert line.description == "Abonnement september"
+
+
+@pytest.mark.parametrize("old, new", [(b"45.99", b"-45.99"), (b"100.00", b"-100.00")])
+def test_a_signed_amount_is_refused(old, new):
+    # CAMT amounts have no sign; CdtDbtInd gives the direction. A minus
+    # contradicts it: refused rather than guessed (CLAUDE.md rule 6).
+    data = (FIXTURES / "camt053-001-02.xml").read_bytes().replace(old, new, 1)
+    assert new in data
+    with pytest.raises(StatementReadError):
+        camt.read(data)

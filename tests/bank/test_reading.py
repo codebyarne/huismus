@@ -205,11 +205,11 @@ def test_the_bank_files_in_a_zip_are_read_all():
 
 def test_mt940_and_camt_from_the_fixtures_read():
     result = _read((FIXTURES / "camt053-001-02.xml").read_bytes())
-    assert result.new == 3
-    assert result.not_incoming == 2
+    assert result.new == 4
     assert result.other_currency == 1
     assert result.accounts == {"NL91ABNA0417164300"}
-    assert result.summary()["outgoing"] == 2
+    assert result.summary()["incoming"] == 3
+    assert result.summary()["outgoing"] == 1
 
 
 def test_a_file_that_is_no_statement_is_refused_and_keeps_nothing():
@@ -297,7 +297,7 @@ def test_the_file_is_kept_once_in_the_data_folder(django_capture_on_commit_callb
 def test_mt940_of_every_bank_reads(name):
     result = _read((FIXTURES / name).read_bytes(), name=name)
     assert result.new >= 1
-    assert all(t.amount_cents > 0 for t in BankTransaction.objects.all())
+    assert result.summary()["incoming"] >= 1
 
 
 def test_an_mt940_line_books_like_a_camt_one():

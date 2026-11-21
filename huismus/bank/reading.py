@@ -4,10 +4,13 @@
 lines afterwards (#77).
 
 `read_statement` reads one file (CAMT.053, MT940, or a ZIP of them) in one
-transaction: every incoming payment Huismus hasn't seen yet becomes a
-`BankTransaction`; a sure one is booked as a `Payment` at once, a likely
-one is proposed, the rest waits for the user (`matching.py`). A line seen
-before (same or overlapping statement) is left as it is.
+transaction: every line Huismus hasn't seen yet becomes a
+`BankTransaction`. Money coming in: a sure one is booked as a `Payment` at
+once, a likely one is proposed, the rest waits for the user
+(`matching.py`). Money going out the same, with expenses
+(`expense_matching.py`): a sure one is linked to its expense. A line seen
+before (same or overlapping statement) is left as it is, so reading a
+statement from before #257 again adds only the lines going out.
 
 A payment booked from a line is an ordinary payment: the outstanding
 amount stays the one sum of payments and credit notes
@@ -29,8 +32,9 @@ from django.db import transaction
 
 from huismus.documents.listing import contact_name
 from huismus.documents.models import Document, Payment
+from huismus.expenses.models import Expense
 
-from . import camt, mt940
+from . import camt, expense_matching, mt940
 from .lines import Statement, StatementLine, StatementReadError, clean_iban
 from .matching import LIKELY, SURE, OpenInvoice, fits_without_amount, match
 from .models import BankStatement, BankTransaction
@@ -62,7 +66,6 @@ class ReadResult:
     open: list[BankTransaction] = field(default_factory=list)
     already_booked: list[BankTransaction] = field(default_factory=list)
     seen_before: int = 0
-    not_incoming: int = 0
     other_currency: int = 0
     accounts: set[str] = field(default_factory=set)
     statement: BankStatement | None = None
@@ -72,15 +75,17 @@ class ReadResult:
         return len(self.booked) + len(self.proposed) + len(self.open) + len(self.already_booked)
 
     def summary(self) -> dict:
+        lines = self.booked + self.proposed + self.open + self.already_booked
+        outgoing = sum(1 for line in lines if line.is_outgoing)
         return {
             "read": self.new,
+            "incoming": self.new - outgoing,
+            "outgoing": outgoing,
             "booked": len(self.booked),
             "proposed": len(self.proposed),
             "open": len(self.open),
             "already_booked": len(self.already_booked),
             "seen_before": self.seen_before,
-            # Money going out (and reversals): counted, not stored yet.
-            "outgoing": self.not_incoming,
             "accounts": sorted(self.accounts),
         }
 
@@ -228,8 +233,8 @@ def read_statement(filename: str, data: bytes) -> ReadResult:
         sha256=hashlib.sha256(data).hexdigest(),
         format=statements[0].format,
     )
+    going_out = []
     for statement in statements:
-        result.not_incoming += statement.not_incoming
         result.other_currency += statement.other_currency
         result.accounts |= statement.accounts
         # How often an equal line came before in this file.
@@ -243,7 +248,13 @@ def read_statement(filename: str, data: bytes) -> ReadResult:
                 continue
             if stored.pk is None:
                 stored.save()
-            _store(stored, line, line_print, result)
+            if line.amount_cents < 0:
+                going_out.append(_new_line(stored, line, line_print))
+            else:
+                _store(stored, line, line_print, result)
+    # Money going out is matched once all of it is in: an expense that two
+    # lines of this file fit is never linked by Huismus (expense_matching).
+    _match_going_out(going_out, result)
     if stored.pk is not None:
         result.statement = stored
         stored.summary = result.summary()
@@ -272,8 +283,16 @@ def _keep_file(stored: BankStatement, data: bytes):
     os.replace(partial, target)
 
 
-def _store(stored, line: StatementLine, line_print: str, result: ReadResult):
-    transaction_ = BankTransaction(
+def _new_line(stored, line: StatementLine, line_print: str) -> BankTransaction:
+    """A line going out, saved as waiting; _match_going_out decides."""
+    transaction_ = _unsaved(stored, line, line_print)
+    transaction_.state = State.OPEN
+    transaction_.save()
+    return transaction_
+
+
+def _unsaved(stored, line: StatementLine, line_print: str) -> BankTransaction:
+    return BankTransaction(
         statement=stored,
         account_iban=line.account_iban,
         booked_on=line.booked_on,
@@ -285,6 +304,10 @@ def _store(stored, line: StatementLine, line_print: str, result: ReadResult):
         bank_reference=line.bank_reference[:140],
         fingerprint=line_print,
     )
+
+
+def _store(stored, line: StatementLine, line_print: str, result: ReadResult):
+    transaction_ = _unsaved(stored, line, line_print)
     existing = _payment_already_there(line)
     if existing is not None:
         transaction_.state = State.ALREADY_BOOKED
@@ -310,6 +333,72 @@ def _store(stored, line: StatementLine, line_print: str, result: ReadResult):
     transaction_.save()
 
 
+def as_statement_line(transaction_: BankTransaction) -> StatementLine:
+    """A stored line as matching reads it."""
+    return StatementLine(
+        account_iban=transaction_.account_iban,
+        booked_on=transaction_.booked_on,
+        amount_cents=transaction_.amount_cents,
+        counterparty_name=transaction_.counterparty_name,
+        counterparty_iban=transaction_.counterparty_iban,
+        description=transaction_.description,
+        reference=transaction_.reference,
+    )
+
+
+def open_expenses() -> list[expense_matching.OpenExpense]:
+    """Every expense without a bank line, newest first."""
+    rows = (
+        Expense.objects.filter(bank_transaction__isnull=True)
+        .prefetch_related("lines__category", "attachments")
+        .order_by("-date", "-pk")
+    )
+    return [
+        expense_matching.OpenExpense(
+            pk=expense.pk,
+            date=expense.date,
+            supplier=expense.supplier,
+            gross_cents=expense.amount_cents,
+            description=expense.description,
+            categories=expense.category_names,
+            has_receipt=any(a.kind == "receipt" for a in expense.attachments.all()),
+        )
+        for expense in rows
+    ]
+
+
+def _waiting_going_out() -> list[BankTransaction]:
+    return [line for line in BankTransaction.objects.waiting() if line.is_outgoing]
+
+
+def _match_going_out(lines: list[BankTransaction], result: ReadResult):
+    """Links or proposes each new line going out. Runs after every line of
+    the file is saved as waiting (_new_line), so `waiting` holds them all:
+    a line is never sure about an expense another one fits too. A linked
+    line and its expense drop out of both lists; a proposed one stays, as
+    the user may pick another expense for it, so two lines can propose the
+    same expense. Links directly, not through link_expense: `expenses`
+    holds only expenses without a bank line, and the line is new."""
+    expenses = open_expenses()
+    waiting = _waiting_going_out()
+    for transaction_ in lines:
+        others = [as_statement_line(o) for o in waiting if o.pk != transaction_.pk]
+        found = expense_matching.match(as_statement_line(transaction_), expenses, others)
+        if found.kind == expense_matching.SURE:
+            transaction_.state = State.BOOKED
+            transaction_.expense_id = found.expense.pk
+            expenses.remove(found.expense)
+            waiting.remove(transaction_)
+            result.booked.append(transaction_)
+        elif found.kind == expense_matching.LIKELY:
+            transaction_.state = State.PROPOSED
+            transaction_.proposed_expense_id = found.expense.pk
+            result.proposed.append(transaction_)
+        else:
+            result.open.append(transaction_)
+        transaction_.save()
+
+
 def _book_payment(invoice, paid_on, amount_cents) -> Payment:
     payment = Payment(document=invoice, paid_on=paid_on, amount_cents=amount_cents, method=METHOD)
     payment.full_clean()
@@ -323,6 +412,8 @@ def book(line: BankTransaction, invoice: Document):
     line = BankTransaction.objects.select_for_update().get(pk=line.pk)
     if line.payment_id is not None or line.state not in (State.PROPOSED, State.OPEN):
         raise ValueError("already booked")
+    if line.is_outgoing:
+        raise ValueError("money going out is not an invoice payment")
     if invoice.kind != "invoice" or invoice.status != "issued":
         raise ValueError("not an issued invoice")
     line.payment = _book_payment(invoice, line.booked_on, line.amount_cents)
@@ -333,14 +424,42 @@ def book(line: BankTransaction, invoice: Document):
 
 
 @transaction.atomic
-def undo(line: BankTransaction):
-    """Takes back a payment booked from this line; the line waits again
-    under Zelf kiezen, booked by Huismus or by the user alike, with the
-    invoice it was on as the first choice (product-owner agent 2026-11-20).
-    A payment that was there before the statement is never removed."""
+def link_expense(line: BankTransaction, expense: Expense):
+    """The user confirms the proposal, chose this expense, or made it from
+    the line (Uitgave maken: called in the transaction that saves it). The
+    expense itself doesn't change (CLAUDE.md rule 7)."""
     line = BankTransaction.objects.select_for_update().get(pk=line.pk)
-    if line.state not in (State.BOOKED, State.CONFIRMED) or line.payment_id is None:
+    if line.expense_id is not None or line.state not in (State.PROPOSED, State.OPEN):
+        raise ValueError("already booked")
+    if not line.is_outgoing:
+        raise ValueError("money coming in is not an expense")
+    if BankTransaction.objects.filter(expense=expense).exists():
+        raise ValueError("expense already has a bank line")
+    line.expense = expense
+    line.proposed_expense = None
+    line.state = State.CONFIRMED
+    line.save()
+    return line
+
+
+@transaction.atomic
+def undo(line: BankTransaction):
+    """Takes back a payment booked from this line, or the link to an
+    expense (the expense stays); the line waits again, booked by Huismus
+    or by the user alike, with the invoice or expense it was on as the
+    first choice (product-owner agent 2026-11-20 and 2026-11-21). A payment
+    that was there before the statement is never removed."""
+    line = BankTransaction.objects.select_for_update().get(pk=line.pk)
+    if not line.can_undo:
         raise ValueError("nothing to undo")
+    if line.expense_id is not None:
+        # Money out: only the link goes, the expense stays.
+        line.proposed_expense = line.expense
+        line.expense = None
+        line.state = State.OPEN
+        line.save()
+        return line
+    # Money in: the payment booked from this line goes.
     payment = line.payment
     line.payment = None
     line.proposed_document = payment.document

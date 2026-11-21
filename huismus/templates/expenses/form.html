@@ -7,13 +7,30 @@
 {% block content %}
 <div class="page-head">
     <div class="titles">
-        <a class="back" href="{% url 'expenses:list' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Uitgaven" %}</a>
+        {% if bank_line %}<a class="back" href="{{ bank_back_url }}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Bank" %}</a>
+        {% else %}<a class="back" href="{% url 'expenses:list' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Uitgaven" %}</a>{% endif %}
         <h1>{% if expense %}{{ expense.description|default:expense.supplier|default:_("Uitgave")|truncatechars:60 }}{% else %}{% translate "Nieuwe uitgave" %}{% endif %}</h1>
         {% if expense %}<span class="small muted">{% if expense.supplier %}{{ expense.supplier }} · {% endif %}{{ expense.date|date:"SHORT_DATE_FORMAT" }}</span>{% endif %}
     </div>
 </div>
 
 {% form_errors form formset new_receipt_form %}
+
+{% if bank_line %}{% with line=bank_line %}
+<p class="hint-banner" id="uit-bankafschrift" style="margin-bottom:var(--s-5)"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{% if line.description %}{% blocktranslate with amount=line.gross_cents|money name=line.counterparty_name|default:"?" date=line.booked_on|date:"SHORT_DATE_FORMAT" text=line.description %}Uit je bankafschrift: − {{ amount }} aan {{ name }} op {{ date }}, “{{ text }}”.{% endblocktranslate %}{% else %}{% blocktranslate with amount=line.gross_cents|money name=line.counterparty_name|default:"?" date=line.booked_on|date:"SHORT_DATE_FORMAT" %}Uit je bankafschrift: − {{ amount }} aan {{ name }} op {{ date }}.{% endblocktranslate %}{% endif %} {% translate "Vul aan wat ontbreekt en bewaar: dan staat de afschrijving bij deze uitgave." %}</span></p>
+{% endwith %}{% endif %}
+
+{% if paid_with %}{% with line=paid_with %}
+<section class="card" id="afgeschreven" style="margin-bottom:var(--s-5)">
+    <ul class="list">
+        <li style="flex-wrap:wrap">
+            <span class="list-icon is-ok"><svg class="i i-sm" aria-hidden="true"><use href="#check"></use></svg></span>
+            <div class="grow" style="min-width:12rem"><strong>{% blocktranslate with date=line.booked_on|date:"SHORT_DATE_FORMAT" %}Afgeschreven op {{ date }}{% endblocktranslate %}</strong><div class="small muted" style="overflow-wrap:anywhere">{% blocktranslate with name=line.counterparty_name|default:line.description|truncatechars:60 %}uit bankafschrift: {{ name }}{% endblocktranslate %} · {% include "bank/_amount.html" %}</div></div>
+            {% if line.can_undo %}<form method="post" action="{% url 'bank:undo' line.pk %}">{% csrf_token %}<input type="hidden" name="terug" value="{{ request.get_full_path }}"><button type="submit" class="btn btn-ghost btn-sm">{% translate "Terugdraaien" %}</button></form>{% endif %}
+        </li>
+    </ul>
+</section>
+{% endwith %}{% endif %}
 
 {% if expense.needs_review %}
 {% comment %}An AI assistant filled it in (add_expense), or Huismus read

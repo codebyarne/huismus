@@ -1,6 +1,6 @@
-{% load i18n money %}{% comment %}One incoming payment: amount, who, when and their text.{% endcomment %}
-<span class="list-icon"><svg class="i i-sm" aria-hidden="true"><use href="#file"></use></svg></span>
+{% load i18n money %}{% comment %}One line of the statement: amount, who, when and their text. Money out has a minus (hidden from screen readers, which say "Af" instead).{% endcomment %}
+<span class="list-icon"><svg class="i i-sm" aria-hidden="true"><use href="#{% if line.is_outgoing %}receipt{% else %}file{% endif %}"></use></svg></span>
 <div class="grow">
-    <strong class="num"><span class="sr-only">{% translate "Bij" %}: </span>{{ line.amount_cents|money }}</strong>{% if line.counterparty_name %} · {{ line.counterparty_name }}{% endif %}
+    {% include "bank/_amount.html" %}{% if line.counterparty_name %} · {{ line.counterparty_name }}{% endif %}
     <div class="small muted" style="overflow-wrap:anywhere">{{ line.booked_on|date:"SHORT_DATE_FORMAT" }}{% if line.description %} · {{ line.description }}{% endif %}</div>
 </div>
