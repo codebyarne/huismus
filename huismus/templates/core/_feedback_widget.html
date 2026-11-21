@@ -1,0 +1,7 @@
+{% load i18n %}
+{% comment %}The feedback button on every page (huismus/core/feedback_views.py, quick). A popover: it opens without JS too. feedback.js adds "Wijs aan op het scherm".{% endcomment %}
+<button class="fb-knop" id="feedback-knop" type="button" popovertarget="feedback-paneel"><svg class="i" aria-hidden="true"><use href="#chat"></use></svg><span>{% translate "Feedback" %}</span></button>
+<div class="fb-paneel" id="feedback-paneel" popover="auto" role="dialog" aria-labelledby="fb-titel">
+    <div id="feedback-inhoud">{% include "core/_feedback_panel.html" with fb_form=quick_feedback_form fb_state="form" %}</div>
+</div>
+<template id="fb-aanwijzen-balk"><div class="fb-balk" role="status"><svg class="i" aria-hidden="true"><use href="#target"></use></svg><strong>{% translate "Klik op wat je bedoelt" %}</strong><span class="muted">{% translate "of sleep een kader" %}</span><button class="btn btn-sm" type="button" data-fb-hele-scherm>{% translate "Hele scherm" %}</button><button class="btn btn-ghost btn-sm" type="button" data-fb-stoppen>{% translate "Stoppen" %} <span class="kbd">Esc</span></button></div></template>

@@ -1442,3 +1442,68 @@ th.r .th-sort { flex-direction: row-reverse; }
   .content > .list-card { border-color: transparent; border-radius: 0; margin-inline: calc(-1 * var(--s-4)); }
   .content > .list-card > .tabs { padding-top: 0; }
 }
+
+/* ---------- 20. Feedback-knop (de eigenaar, 2026-11-21) ----------
+   Rechtsonder op elke pagina, rustig: wit met een randje, want petrol is voor
+   "Nieuwe factuur". Het paneel is een popover, geen dialoog over de hele pagina,
+   zodat je ziet waar je het over hebt. Op een telefoon een rond knopje boven de
+   tabbalk en een blad van onderen. */
+.fb-knop {
+  position: fixed; right: var(--s-6); bottom: var(--s-6); z-index: 30;
+  display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px 0 14px;
+  border: 1px solid var(--border-strong); border-radius: var(--r-pill); background: var(--surface); color: var(--text);
+  font: inherit; font-size: var(--fs-sm); font-weight: var(--fw-semibold); box-shadow: var(--sh-pop); cursor: pointer;
+}
+.fb-knop:hover { background: var(--surface-2); }
+.fb-knop:focus-visible { outline: none; box-shadow: var(--sh-pop), 0 0 0 3px var(--ring); }
+.fb-knop:has(+ .fb-paneel:popover-open) { background: var(--primary-soft); border-color: var(--primary); color: var(--primary-ink); }
+/* Met een actiebalk onderaan (de factuur maken) schuift de knop erboven. */
+.app:has(.actionbar) ~ .fb-knop { bottom: 88px; }
+.fb-paneel:popover-open {
+  position: fixed; inset: auto var(--s-6) calc(var(--s-6) + 56px) auto; margin: 0;
+  display: block; width: min(400px, calc(100vw - 2 * var(--s-6))); max-height: calc(100vh - 120px); overflow: auto;
+  box-sizing: border-box; padding: var(--s-5); border: 1px solid var(--border); border-radius: var(--r-lg);
+  background: var(--surface); color: var(--text); box-shadow: var(--sh-pop);
+}
+.app:has(.actionbar) ~ .fb-paneel:popover-open { bottom: calc(88px + 56px); }
+.fb-kop { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); margin-bottom: var(--s-4); }
+.fb-kop h2 { margin: 0; font-family: var(--font-display); font-size: var(--fs-xl); }
+.fb-form { display: flex; flex-direction: column; gap: var(--s-4); }
+.fb-soort { margin: 0; align-self: flex-start; }
+.fb-beeld { display: flex; gap: var(--s-3); align-items: flex-start; padding: var(--s-3); border: 1px dashed var(--border-strong); border-radius: var(--r-md); background: var(--surface-2); }
+.fb-beeld-tekst { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-2); min-width: 0; }
+.fb-voorbeeld { width: 96px; max-height: 120px; object-fit: cover; object-position: top; flex-shrink: 0; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--surface); }
+.fb-figuur { margin: 0 0 var(--s-4); display: flex; flex-direction: column; gap: var(--s-2); }
+.fb-figuur img { width: 100%; height: auto; max-height: 220px; object-fit: contain; border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface-2); }
+.fb-wat { margin: 0 0 var(--s-4); }
+.fb-wat dd { text-align: left; white-space: pre-line; overflow-wrap: anywhere; }
+.fb-knoppen { gap: var(--s-2); margin-bottom: var(--s-3); }
+.fb-knoppen .btn-primary { flex: 1; }
+.fb-verstuurd { display: flex; flex-direction: column; align-items: center; gap: var(--s-3); text-align: center; }
+.fb-vink { display: grid; place-items: center; width: 56px; height: 56px; border-radius: var(--r-pill); background: var(--primary-soft); color: var(--primary-ink); }
+.fb-pagina .fb-kop { margin-bottom: var(--s-5); }
+@media (max-width: 760px) {
+  .fb-knop { right: 14px; bottom: calc(84px + env(safe-area-inset-bottom)); width: 44px; padding: 0; justify-content: center; }
+  .fb-knop span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .app:has(.actionbar) ~ .fb-knop { bottom: calc(150px + env(safe-area-inset-bottom)); }
+  /* De balk van de editor heeft twee rijen: het totaal boven de knoppen. */
+  .app:has(.actionbar-editor) ~ .fb-knop { bottom: calc(190px + env(safe-area-inset-bottom)); }
+  .fb-paneel:popover-open, .app:has(.actionbar) ~ .fb-paneel:popover-open {
+    inset: auto 0 0 0; width: 100%; max-height: 88vh; border-radius: var(--r-xl) var(--r-xl) 0 0;
+    padding: var(--s-4) var(--s-4) calc(var(--s-6) + env(safe-area-inset-bottom));
+  }
+  .fb-paneel::backdrop { background: var(--overlay); }
+  .fb-soort { align-self: stretch; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .fb-soort label { height: 36px; }
+}
+
+/* Aanwijzen (feedback.js): een lichte waas, een kader om wat je bedoelt en een balk bovenaan. */
+.fb-aanwijzen { position: fixed; inset: 0; z-index: 200; cursor: crosshair; touch-action: none; background: rgb(6 20 21 / .14); }
+.fb-kader { position: fixed; z-index: 201; pointer-events: none; border: 2px solid var(--primary); border-radius: 8px; box-shadow: 0 0 0 4px var(--ring); }
+.fb-balk {
+  position: fixed; z-index: 202; top: var(--s-4); left: 50%; translate: -50% 0; max-width: calc(100vw - 2 * var(--s-4));
+  display: flex; align-items: center; flex-wrap: wrap; justify-content: center; gap: var(--s-2) var(--s-3);
+  padding: 8px 8px 8px 16px; border: 1px solid var(--border); border-radius: var(--r-lg); background: var(--surface); color: var(--text); box-shadow: var(--sh-pop);
+  font-size: var(--fs-sm);
+}
+.fb-balk strong { font-weight: var(--fw-semibold); }
