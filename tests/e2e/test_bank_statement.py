@@ -61,7 +61,9 @@ def test_read_confirm_pick_undo_skip_and_read_again(app, history, tmp_path):
     unknown.get_by_text("Als factuurbetaling markeren").click()
     unknown.locator("select").select_option(index=1)
     unknown.get_by_role("button", name="Boeken").click()
-    expect(app.locator(".toast, .flash").first).to_contain_text("Betaling geboekt op factuur")
+    # Wait for the line under Geboekt, not for a message: the one from
+    # Bevestigen above says the same and can still be on screen (WebKit).
+    expect(app.locator("#geboekt li", has_text="Verhuur Opslag Noord")).to_have_count(1)
     line = BankTransaction.objects.get(description="Terugbetaling borg")
     assert line.state == State.CONFIRMED
 
