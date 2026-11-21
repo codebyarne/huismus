@@ -7694,3 +7694,110 @@ msgstr ""
 
 msgid "Betalingen die je oversloeg. Zet je er een terug, dan staat hij weer op de pagina Bank."
 msgstr ""
+
+msgid "Iets werkt niet"
+msgstr ""
+
+msgid "Idee"
+msgstr ""
+
+msgid "Vraag"
+msgstr ""
+
+msgid "met KOR"
+msgstr ""
+
+msgid "btw op facturen, of nog niet gekozen"
+msgstr ""
+
+msgid "btw verlegd: ja"
+msgstr ""
+
+msgid "btw verlegd: nee"
+msgstr ""
+
+msgid "facturen in het Engels"
+msgstr ""
+
+msgid "facturen in het Nederlands"
+msgstr ""
+
+msgid "Pagina"
+msgstr ""
+
+msgid "Afbeelding"
+msgstr ""
+
+msgid "ja, hierboven"
+msgstr ""
+
+msgid "Hoe je werkt"
+msgstr ""
+
+msgid "Vertel het in je eigen woorden"
+msgstr ""
+
+msgid "Alleen als de appbouwer je iets mag terugvragen."
+msgstr ""
+
+msgid "Deze afbeelding kan niet mee. Maak hem opnieuw."
+msgstr ""
+
+msgid "Dit gaat naar de appbouwer"
+msgstr ""
+
+msgid "Wat wil je kwijt?"
+msgstr ""
+
+msgid ""
+"Je bericht komt als idee op GitHub, zonder je e-mailadres en zonder de "
+"afbeelding."
+msgstr ""
+
+msgid "Je afbeelding van het scherm"
+msgstr ""
+
+msgid ""
+"Alleen knoppen, menu's en veldnamen zijn leesbaar. De rest maakt Huismus "
+"grijs."
+msgstr ""
+
+msgid ""
+"Je bericht komt als idee op GitHub. Je e-mailadres en de afbeelding niet: "
+"die ziet alleen de appbouwer."
+msgstr ""
+
+msgid "Wijs aan op het scherm"
+msgstr ""
+
+msgid "Opnieuw aanwijzen"
+msgstr ""
+
+msgid "Afbeelding weghalen"
+msgstr ""
+
+msgid ""
+"Klik op het stuk dat je bedoelt. Huismus maakt er een afbeelding van. Alleen"
+" knoppen, menu's en veldnamen blijven leesbaar."
+msgstr ""
+
+msgid "Controleer wat er meegaat"
+msgstr ""
+
+msgid "Feedback"
+msgstr ""
+
+msgid "Klik op wat je bedoelt"
+msgstr ""
+
+msgid "of sleep een kader"
+msgstr ""
+
+msgid "Hele scherm"
+msgstr ""
+
+msgid "Stoppen"
+msgstr ""
+
+msgid "Soort"
+msgstr ""

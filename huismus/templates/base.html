@@ -24,6 +24,7 @@
          principle 6) and must work on a LAN with no internet access. -->
     <script src="{% static 'core/vendor/htmx.min.js' %}" defer></script>
     <script src="{% static 'core/app.js' %}" type="module"></script>
+    <script src="{% static 'core/feedback.js' %}" type="module"></script>
 </head>
 {% block body %}
 <body hx-boost="true" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
@@ -142,6 +143,7 @@ the desktop app, even in a narrow window on a touch screen.{% endcomment %}
 <template id="camera-offline"><div class="toast flash-error" role="alert" data-camera-toast><svg class="i" aria-hidden="true"><use href="#x-circle"></use></svg><div class="flash-body"><strong>{% translate "Huismus is niet bereikbaar. Probeer het opnieuw als je verbinding hebt." %}</strong><span><button type="button" class="btn btn-sm" data-camera-retry style="margin-top:var(--s-2)">{% translate "Opnieuw proberen" %}</button></span></div></div></template>
 <template id="camera-failed"><div class="toast flash-error" role="alert" data-camera-toast><svg class="i" aria-hidden="true"><use href="#x-circle"></use></svg><div class="flash-body"><strong>{% translate "Het uploaden is mislukt. Probeer het nog een keer." %}</strong><span><button type="button" class="btn btn-sm" data-camera-retry style="margin-top:var(--s-2)">{% translate "Opnieuw proberen" %}</button></span></div></div></template>
 {% endif %}
+{% if user.is_authenticated and not fb_in_page %}{% include "core/_feedback_widget.html" %}{% endif %}
 {% include "core/_toasts.html" %}
 </body>
 {% endblock %}
