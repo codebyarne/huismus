@@ -8,7 +8,7 @@
         <span class="f-meta" style="display:block">
         {% if mine == service %}
             {% if not cloud_ready %}<span id="cloud-niet-actief">{% translate "Nog niet actief: bewaar eerst je herstelcode." %} <a href="{% url 'business:backups_code' %}">{% translate "Herstelcode bewaren" %} →</a></span>
-            {% elif uploading %}<span id="cloud-bezig"><span class="spinner" aria-hidden="true"></span>{% translate "Bezig met een back-up…" %}</span>
+            {% elif uploading %}<span id="cloud-bezig" class="row" style="gap:var(--s-1)">{% include "core/_bird.svg" %}{% translate "Bezig met een back-up…" %}</span>
             {% elif cloud_failure is not None %}{% blocktranslate with service=name %}De laatste back-up kon niet naar {{ service }}.{% endblocktranslate %} {{ cloud_failure }}
             {% elif cloud.last_success %}{% blocktranslate with moment=cloud.last_success_at|moment size=cloud.last_size|filesizeformat %}Laatste back-up {{ moment }} · {{ size }}, versleuteld{% endblocktranslate %}
             {% else %}{% translate "Nog geen back-up." %}{% endif %}

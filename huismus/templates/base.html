@@ -139,6 +139,7 @@ the desktop app, even in a narrow window on a touch screen.{% endcomment %}
         <button type="button" class="btn" command="close" commandfor="camera">{% translate "Sluiten" %}</button>
     </div>
 </dialog>
+<div class="page-wait" id="pagina-laden" role="status" aria-label="{% translate 'Pagina laden…' %}" hidden>{% include "core/_bird.svg" %}</div>
 <template id="camera-busy"><div class="toast flash-info" role="status" data-camera-toast>{% include "core/_bird.svg" %}<div class="flash-body"><strong>{% translate "Bonnetje uploaden…" %}</strong></div></div></template>
 <template id="camera-offline"><div class="toast flash-error" role="alert" data-camera-toast><svg class="i" aria-hidden="true"><use href="#x-circle"></use></svg><div class="flash-body"><strong>{% translate "Huismus is niet bereikbaar. Probeer het opnieuw als je verbinding hebt." %}</strong><span><button type="button" class="btn btn-sm" data-camera-retry style="margin-top:var(--s-2)">{% translate "Opnieuw proberen" %}</button></span></div></div></template>
 <template id="camera-failed"><div class="toast flash-error" role="alert" data-camera-toast><svg class="i" aria-hidden="true"><use href="#x-circle"></use></svg><div class="flash-body"><strong>{% translate "Het uploaden is mislukt. Probeer het nog een keer." %}</strong><span><button type="button" class="btn btn-sm" data-camera-retry style="margin-top:var(--s-2)">{% translate "Opnieuw proberen" %}</button></span></div></div></template>

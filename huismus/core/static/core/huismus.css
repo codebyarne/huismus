@@ -1516,6 +1516,14 @@ th.r .th-sort { flex-direction: row-reverse; }
 .small > .bird { width: 20px; height: 19px; }
 .toast > .bird { width: 34px; height: 32px; margin: -4px 0; }
 .flash { --bird-eye: var(--f-bg); }
+.f-meta .bird { width: 18px; height: 17px; }
+/* Een pagina die traag komt (app.js): na een halve seconde huppelt het mussje bovenaan. */
+.page-wait { position: fixed; z-index: 150; top: calc(var(--s-3) + env(safe-area-inset-top)); left: 50%; translate: -50% 0;
+  padding: 6px 10px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); box-shadow: var(--sh-pop);
+  animation: page-wait-in .2s var(--ease); }
+@keyframes page-wait-in { from { opacity: 0; } }
+.page-wait[hidden] { display: none; }
+.page-wait .bird { display: block; width: 32px; height: 30px; }
 .bird * { transform-box: fill-box; }
 .bird .bird-wing { fill: var(--primary-hover); }
 .bird .bird-beak { fill: var(--accent); }

@@ -175,7 +175,7 @@ def test_the_page_comes_back_before_the_first_upload_is_done(signed_in, dav, mon
     page = response.content.decode()
     assert "De eerste back-up gaat nu naar WebDAV." in page
     assert dav.names() == [] and cloud_backups.uploading()
-    assert 'id="cloud-bezig"' in page
+    assert 'id="cloud-bezig"' in page and 'class="bird"' in page
 
     waiting.pop()()  # the thread runs
     assert len(dav.names()) == 1 and not cloud_backups.uploading()

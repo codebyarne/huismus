@@ -3263,6 +3263,9 @@ msgstr ""
 msgid "Nieuwe categorie. Huismus maakt hem als je opslaat."
 msgstr ""
 
+msgid "Pagina laden…"
+msgstr ""
+
 msgid "Bonnetje uploaden…"
 msgstr ""
 
