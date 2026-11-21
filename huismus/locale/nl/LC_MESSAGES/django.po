@@ -7457,3 +7457,66 @@ msgid "%(count)s afschrijving: die koppel je later aan je uitgaven."
 msgid_plural "%(count)s afschrijvingen: die koppel je later aan je uitgaven."
 msgstr[0] "%(count)s afschrijving: die koppel je later aan je uitgaven."
 msgstr[1] "%(count)s afschrijvingen: die koppel je later aan je uitgaven."
+
+msgid "Afschrift inlezen"
+msgstr "Afschrift inlezen"
+
+msgid "Die koppel je later aan je uitgaven."
+msgstr "Die koppel je later aan je uitgaven."
+
+msgid "passen bij je facturen. Klopt het?"
+msgstr "passen bij je facturen. Klopt het?"
+
+msgid "Alles wat bij je facturen past, is geboekt."
+msgstr "Alles wat bij je facturen past, is geboekt."
+
+msgid "kun je terugdraaien"
+msgstr "kun je terugdraaien"
+
+msgid "privé, of geen factuur"
+msgstr "privé, of geen factuur"
+
+msgid "Huismus vond hier geen factuur bij. Privé, of geld van je spaarrekening? Dan laat je het hier staan. Is het toch een betaling van een klant? Kies dan de factuur."
+msgstr "Huismus vond hier geen factuur bij. Privé, of geld van je spaarrekening? Dan laat je het hier staan. Is het toch een betaling van een klant? Kies dan de factuur."
+
+msgid "Als factuurbetaling markeren"
+msgstr "Als factuurbetaling markeren"
+
+msgid "Contant betaald? Dat staat niet op je afschrift. Zet de factuur dan zelf op betaald."
+msgstr "Contant betaald? Dat staat niet op je afschrift. Zet de factuur dan zelf op betaald."
+
+msgid "Bijschrijvingen die je oversloeg. Zet je er een terug, dan staat hij weer op de pagina Bank."
+msgstr "Bijschrijvingen die je oversloeg. Zet je er een terug, dan staat hij weer op de pagina Bank."
+
+msgid "Betaling teruggedraaid. Hij staat weer bij Te doen."
+msgstr "Betaling teruggedraaid. Hij staat weer bij Te doen."
+
+msgid "Ingelezen · %(first)s t/m %(last)s"
+msgstr "Ingelezen · %(first)s t/m %(last)s"
+
+msgid "Ingelezen"
+msgstr "Ingelezen"
+
+msgid "%(fitting)s van de %(total)s horen bij je facturen"
+msgstr "%(fitting)s van de %(total)s horen bij je facturen"
+
+msgid "Bij"
+msgstr "Bij"
+
+msgid "Af"
+msgstr "Af"
+
+msgid "%(count)s betaling"
+msgid_plural "%(count)s betalingen"
+msgstr[0] "%(count)s betaling"
+msgstr[1] "%(count)s betalingen"
+
+msgid "%(count)s hoort bij je facturen"
+msgid_plural "%(count)s horen bij je facturen"
+msgstr[0] "%(count)s hoort bij je facturen"
+msgstr[1] "%(count)s horen bij je facturen"
+
+msgid "%(count)s afschrijving"
+msgid_plural "%(count)s afschrijvingen"
+msgstr[0] "%(count)s afschrijving"
+msgstr[1] "%(count)s afschrijvingen"

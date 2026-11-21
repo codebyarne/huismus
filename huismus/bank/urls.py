@@ -9,7 +9,6 @@ app_name = "bank"
 urlpatterns = [
     path("", views.statement_page, name="statement"),
     path("overgeslagen/", views.skipped_page, name="skipped"),
-    path("alles-overslaan/", views.skip_all, name="skip_all"),
     path("<int:pk>/bevestigen/", views.confirm, name="confirm"),
     path("<int:pk>/boeken/", views.book, name="book"),
     path("<int:pk>/terugdraaien/", views.undo, name="undo"),

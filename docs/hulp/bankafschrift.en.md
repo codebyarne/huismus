@@ -24,19 +24,28 @@ For now Huismus only looks at money that came in. It counts money going
 out, but doesn't link it to your expenses yet. It lays every incoming payment
 next to your invoices that are still open.
 
-- **Recorded.** Is the invoice number in the description and the amount
-  exactly what is open? Then Huismus records the payment itself.
-- **Is this right?** Does exactly one invoice fit, but not for certain? For
-  example the number is right but the amount isn't, or the amount and the
-  name are right but there is no number. Then Huismus proposes that invoice.
-  Click **Confirm**, or choose an **Other invoice**.
-- **Pick an invoice.** Does no invoice fit, or more than one? Then pick the
-  invoice yourself and click **Record**, or click **Skip**. **Skip all** skips
-  them in one go.
-- **Already recorded.** Had you recorded the payment yourself already? Then
-  Huismus doesn't record it again.
+At the top you see what was in the statement: how many payments, how many of
+them belong to your invoices, and what came in. Below that are three
+sections, each of which you can fold open and shut.
 
-What still waits for you stays on the page, also when you come back later.
+- **To do.** Does an invoice fit, but not for certain? For example the number
+  is right but the amount isn't, or the amount and the name are right but
+  there is no number. Then Huismus proposes that invoice. Click **Confirm**,
+  or choose an **Other invoice**. Do several invoices fit? Then pick one
+  yourself and click **Record**. Or click **Skip**.
+- **Recorded.** Is the invoice number in the description and the amount
+  exactly what is open? Then Huismus records the payment itself. Had you
+  recorded the payment yourself already, it says "was already booked" and
+  Huismus doesn't record it again.
+- **Not recognised.** Does no invoice fit at all? Then it's often private, or
+  money from your savings account. This section stays shut: you don't need to
+  do anything with it. Is it a customer's payment after all? Open it, click
+  **Mark as invoice payment** and choose the invoice.
+
+Do you use your account privately too? Then most of it is under **Not
+recognised**. That's fine.
+
+What is under **To do** stays on the page, also when you come back later.
 On the overview it's at the top of **To do**.
 
 Does one transfer mention more than one invoice? Then record the payment on
@@ -45,11 +54,13 @@ each invoice yourself, with **Record payment**, and skip the line here.
 ## Undoing a payment
 
 Is a payment wrong after all? Click **Undo**, on the statement page or on the
-invoice itself. The payment goes away and the line is back under **Pick an
-invoice**. Huismus never undoes a payment you recorded yourself.
+invoice itself. The payment goes away and the line is back under **To do**. Huismus never undoes a payment you recorded yourself.
 
-A line you skipped is under **Skipped**. **Restore** puts it back under
-**Pick an invoice**.
+A line you skipped is under **Skipped**. **Restore** puts it back on the
+page.
+
+Paid in cash? That's not on your statement. Mark the invoice as paid
+yourself.
 
 Huismus keeps every statement you import. It goes into your backups.
 

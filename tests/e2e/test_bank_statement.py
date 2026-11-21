@@ -2,7 +2,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """Bankafschrift inlezen (#77) as a user does it, on the demo history: from
 Facturen to the page, read the demo statement, confirm a proposal, record
-a line on an invoice picked by hand, undo it, skip and restore, and read
+a line Huismus didn't recognise on an invoice picked by hand, undo it,
+skip and restore, and read
 the same file again."""
 
 import pytest
@@ -35,19 +36,25 @@ def test_read_confirm_pick_undo_skip_and_read_again(app, history, tmp_path):
     _read(app, statement)
 
     expect(app.locator("#samenvatting")).to_contain_text("6 bijschrijvingen gelezen.")
-    expect(app.locator("#geboekt li")).to_have_count(1)
-    expect(app.locator("#klopt-dit li")).to_have_count(2)
-    expect(app.locator("#zelf-kiezen li")).to_have_count(2)
+    expect(app.locator("#rapport")).to_contain_text("Bij")
+    # Geboekt: the one Huismus booked, and the one that was already there.
+    expect(app.locator("#geboekt li")).to_have_count(2)
+    expect(app.locator("#te-doen li[data-voorstel]")).to_have_count(2)
     expect(app.locator("[data-meer-facturen]")).to_have_count(1)
+    # Niet herkend starts folded: it asks nothing.
+    expect(app.locator("#niet-herkend")).not_to_have_attribute("open", "")
     assert Payment.objects.count() == payments + 1
 
     # Confirm the first proposal: it moves to Geboekt.
-    app.locator("#klopt-dit li").first.get_by_role("button", name="Bevestigen").click()
-    expect(app.locator("#geboekt li")).to_have_count(2)
-    expect(app.locator("#klopt-dit li")).to_have_count(1)
+    app.locator("#te-doen li[data-voorstel]").first.get_by_role("button", name="Bevestigen").click()
+    expect(app.locator("#geboekt li")).to_have_count(3)
+    expect(app.locator("#te-doen li[data-voorstel]")).to_have_count(1)
 
-    # Pick an invoice for the line Huismus couldn't place.
-    unknown = app.locator("#zelf-kiezen li", has_text="Terugbetaling borg")
+    # The line Huismus couldn't place is under Niet herkend: open it and
+    # mark it as an invoice payment.
+    app.locator("#niet-herkend > summary").click()
+    unknown = app.locator("#niet-herkend li", has_text="Terugbetaling borg")
+    unknown.get_by_text("Als factuurbetaling markeren").click()
     unknown.locator("select").select_option(index=1)
     unknown.get_by_role("button", name="Boeken").click()
     expect(app.locator(".toast, .flash").first).to_contain_text("Betaling geboekt op factuur")
@@ -62,11 +69,13 @@ def test_read_confirm_pick_undo_skip_and_read_again(app, history, tmp_path):
     line.refresh_from_db()
     assert line.state == State.OPEN
 
-    # Skip all that is left to pick, and put one back.
+    # Undone, it waits under Te doen, with the invoice it came from. Skip
+    # it, and put it back.
     app.goto(app.base + "/bank/")
-    app.get_by_role("button", name="Alles overslaan").click()
-    expect(app.locator("#zelf-kiezen")).to_have_count(0)
-    app.get_by_role("link", name="Overgeslagen (2)").click()
+    back = app.locator("#te-doen li", has_text="Terugbetaling borg")
+    back.get_by_role("button", name="Overslaan").click()
+    expect(app.locator("#te-doen li", has_text="Terugbetaling borg")).to_have_count(0)
+    app.get_by_role("link", name="Overgeslagen (1)").click()
     app.locator("li", has_text="Terugbetaling borg").get_by_role(
         "button", name="Terugzetten"
     ).click()

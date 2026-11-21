@@ -64,7 +64,8 @@ def test_reading_shows_the_summary_and_the_blocks(client):
     )
     text = page.text.replace("\xa0", " ")
     assert "3 bijschrijvingen gelezen. 1 geboekt, 1 om te bevestigen, 1 om zelf te kiezen." in text
-    assert 'id="geboekt"' in text and 'id="klopt-dit"' in text and 'id="zelf-kiezen"' in text
+    assert 'id="geboekt"' in text and 'id="te-doen"' in text and 'id="niet-herkend"' in text
+    assert "data-voorstel" in text
     assert "€ 95,00 meer dan er open staat." in text
 
 
@@ -103,7 +104,7 @@ def test_book_on_a_chosen_invoice_and_undo_from_the_invoice(client):
     back = reverse("documents:edit", args=[invoice.pk])
     page = client.post(reverse("bank:undo", args=[line.pk]), {"terug": back}, follow=True)
     assert page.redirect_chain[-1][0] == back
-    assert "Betaling teruggedraaid. Hij staat weer bij Zelf kiezen." in page.text
+    assert "Betaling teruggedraaid. Hij staat weer bij Te doen." in page.text
     assert not Payment.objects.exists()
 
 
@@ -122,17 +123,29 @@ def test_a_payment_by_hand_has_no_undo_on_the_invoice(client):
     assert "Terugdraaien" not in detail
 
 
-def test_skip_skip_all_and_restore(client):
-    _upload(client, _camt(("1.00", "A", "een"), ("2.00", "B", "twee"), ("3.00", "C", "drie")))
-    first, *_ = BankTransaction.objects.all()
+def test_skip_and_restore(client):
+    _upload(client, _camt(("1.00", "A", "een"), ("2.00", "B", "twee")))
+    first, second = BankTransaction.objects.all()
     client.post(reverse("bank:skip", args=[first.pk]))
-    client.post(reverse("bank:skip_all"))
+    client.post(reverse("bank:skip", args=[second.pk]))
     assert not BankTransaction.objects.waiting().exists()
     skipped = client.get(reverse("bank:skipped"))
-    assert skipped.text.count("Terugzetten") == 3
-    assert "Overgeslagen (3)" in client.get(PAGE).text
+    assert skipped.text.count("Terugzetten") == 2
+    assert "Overgeslagen (2)" in client.get(PAGE).text
     client.post(reverse("bank:restore", args=[first.pk]))
     assert BankTransaction.objects.waiting().count() == 1
+
+
+def test_a_line_that_fits_no_invoice_waits_folded_and_asks_nothing(client):
+    """Direction D (owner 2026-11-21): a line that fits no invoice is often
+    private money. It goes to Niet herkend, folded, and the overview doesn't
+    count it as something to do."""
+    _invoice(121000, company="Bakkerij De Korst")
+    _upload(client, _camt(("63.18", "Supermarkt De Hoek", "pinbetaling")))
+    text = client.get(PAGE).text
+    assert '<details class="fold" id="niet-herkend">' in text
+    assert "Als factuurbetaling markeren" in text
+    assert "betaling uit je bankafschrift" not in client.get("/").text
 
 
 def test_a_hint_when_the_text_names_more_than_one_invoice(client):
@@ -151,7 +164,9 @@ def test_back_never_leaves_huismus(client):
 
 
 def test_te_doen_counts_what_waits_first(client):
-    _invoice(1000)
+    # Each line fits an invoice by its amount: something to do.
+    _invoice(100)
+    _invoice(200)
     _upload(client, _camt(("1.00", "A", "een"), ("2.00", "B", "twee")))
     home = client.get("/").text
     assert "2 betalingen uit je bankafschrift wachten op je" in home

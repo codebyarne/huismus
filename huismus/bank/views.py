@@ -4,9 +4,11 @@
 decision of 2026-11-21 (first a button on Facturen); texts and choices by
 the product-owner agent 2026-11-20, huismus-intern/besluiten.md.
 
-One page: the drop zone, the summary of the statement just read, what
-Huismus booked from it, and every line that still waits (from any
-statement). Every action is a plain POST that comes back to the page.
+One page (direction D, owner 2026-11-21): what the latest statement held,
+then three sections that fold: Te doen (lines that fit an invoice),
+Geboekt, and Niet herkend (lines that fit nothing, folded: often private
+money, nothing to do). Every action is a plain POST that comes back to the
+page.
 """
 
 from dataclasses import dataclass
@@ -124,12 +126,13 @@ class Waiting:
         return -self.difference_cents
 
 
-def _waiting(open_invoices) -> tuple[list[Waiting], list[Waiting]]:
-    """The lines that wait: (Klopt dit?, Zelf kiezen). The proposal is the
-    stored one; matching runs again only to order the choices, since what is
-    open changed since the statement was read."""
+def _waiting(open_invoices) -> tuple[list[Waiting], list[Waiting], list[Waiting]]:
+    """The lines that wait: (proposals, lines to choose for, not recognised),
+    the first two under Te doen. The proposal is the stored one; matching runs
+    again to order the choices and to see whether any invoice fits at all,
+    since what is open changed since the statement was read."""
     by_pk = {invoice.pk: invoice for invoice in open_invoices}
-    proposed, to_choose = [], []
+    proposed, to_choose, unknown = [], [], []
     for line in BankTransaction.objects.waiting():
         found = match(_as_line(line), open_invoices)
         stored = by_pk.get(line.proposed_document_id)
@@ -144,10 +147,60 @@ def _waiting(open_invoices) -> tuple[list[Waiting], list[Waiting]]:
             item.proposal = stored
             item.difference_cents = line.amount_cents - stored.outstanding_cents
             proposed.append(item)
-        else:
+        elif first or found.candidates or found.several_numbers:
             # A proposal whose invoice was paid meanwhile is a line to choose for.
             to_choose.append(item)
-    return proposed, to_choose
+        else:
+            # Nothing fits: often private money. It waits without asking.
+            unknown.append(item)
+    return proposed, to_choose, unknown
+
+
+def to_do_count() -> int:
+    """The lines under Te doen, for the overview (core.todo): a line that
+    fits nothing doesn't ask for anything."""
+    proposed, to_choose, _unknown = _waiting(reading.open_invoices())
+    return len(proposed) + len(to_choose)
+
+
+@dataclass
+class Report:
+    """The tiles at the top: what the statement held."""
+
+    total: int  # every line in the file
+    fitting: int  # lines that fit an invoice: booked, already there, or waiting
+    incoming_cents: int
+    incoming: int
+    outgoing: int
+    first_day: object
+    last_day: object
+
+    @property
+    def fitting_percent(self) -> int:
+        return round(100 * self.fitting / self.total) if self.total else 0
+
+
+def _report(statement, waiting_pks) -> Report | None:
+    if statement is None:
+        return None
+    lines = list(statement.transactions.all())
+    summary = statement.summary
+    outgoing = summary.get("outgoing", 0)
+    fitting = sum(
+        1
+        for t in lines
+        if t.state in (State.BOOKED, State.CONFIRMED, State.ALREADY_BOOKED) or t.pk in waiting_pks
+    )
+    days = [t.booked_on for t in lines]
+    return Report(
+        total=len(lines) + outgoing,
+        fitting=fitting,
+        incoming_cents=sum(t.amount_cents for t in lines),
+        incoming=len(lines),
+        outgoing=outgoing,
+        first_day=min(days) if days else None,
+        last_day=max(days) if days else None,
+    )
 
 
 @login_required
@@ -184,12 +237,14 @@ def statement_page(request):
         statement = BankStatement.objects.first()
 
     open_invoices = reading.open_invoices()
-    proposed, to_choose = _waiting(open_invoices)
-    booked, already = [], []
+    proposed, to_choose, unknown = _waiting(open_invoices)
+    booked = []
     if statement is not None:
         lines = statement.transactions.select_related("payment__document", "proposed_document")
-        booked = [t for t in lines if t.state in (State.BOOKED, State.CONFIRMED)]
-        already = [t for t in lines if t.state == State.ALREADY_BOOKED]
+        booked = [
+            t for t in lines if t.state in (State.BOOKED, State.CONFIRMED, State.ALREADY_BOOKED)
+        ]
+    to_do = proposed + to_choose
     return render(
         request,
         "bank/statement.html",
@@ -198,10 +253,10 @@ def statement_page(request):
             "error": error,
             "statement": statement,
             "summary": summary_text(statement.summary) if statement and requested else "",
+            "report": _report(statement, {item.line.pk for item in to_do}),
             "booked": booked,
-            "already": already,
-            "proposed": proposed,
-            "to_choose": to_choose,
+            "to_do": to_do,
+            "unknown": unknown,
             "skipped_count": BankTransaction.objects.filter(state=State.SKIPPED).count(),
             "here": request.get_full_path(),
         },
@@ -276,7 +331,7 @@ def undo(request, pk):
     except ValueError:
         messages.error(request, _("Deze betaling was al teruggedraaid."))
         return _back(request)
-    messages.success(request, _("Betaling teruggedraaid. Hij staat weer bij Zelf kiezen."))
+    messages.success(request, _("Betaling teruggedraaid. Hij staat weer bij Te doen."))
     return _back(request)
 
 
@@ -288,15 +343,6 @@ def skip(request, pk):
     except ValueError:
         pass  # already skipped or booked: nothing left to skip
 
-    return _back(request)
-
-
-@login_required
-@require_POST
-def skip_all(request):
-    _proposed, to_choose = _waiting(reading.open_invoices())
-    for item in to_choose:
-        reading.skip(item.line)
     return _back(request)
 
 
