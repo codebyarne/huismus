@@ -295,7 +295,6 @@ def _unknown_view(request, unknown):
         "unknown_all_url": _unknown_url(request, ""),
         "unknown_in_url": _unknown_url(request, "bij"),
         "unknown_out_url": _unknown_url(request, "af"),
-        "unknown_has_outgoing": any(item.line.is_outgoing for item in shown[:limit]),
         # Opened by a tab or Toon meer, or coming back from an action there.
         "unknown_open": "kant" in request.GET or "toon" in request.GET,
     }

@@ -9400,8 +9400,6 @@ msgctxt "bank"
 msgid "Af (%(count)s)"
 msgstr "Out (%(count)s)"
 
-msgid "Is een afschrijving geen uitgave, zoals geld naar je spaarrekening of iets privé? Sla hem dan over."
-msgstr "If money going out isn't an expense, like a transfer to savings or something private, skip it."
 
 msgid "Toon meer (%(count)s nog)"
 msgid_plural "Toon meer (%(count)s nog)"

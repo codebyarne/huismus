@@ -7650,8 +7650,6 @@ msgctxt "bank"
 msgid "Af (%(count)s)"
 msgstr ""
 
-msgid "Is een afschrijving geen uitgave, zoals geld naar je spaarrekening of iets privé? Sla hem dan over."
-msgstr ""
 
 msgid "Toon meer (%(count)s nog)"
 msgid_plural "Toon meer (%(count)s nog)"
