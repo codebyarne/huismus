@@ -76,7 +76,7 @@ expense by itself.
 
 Click **Create expense**. You get a new expense with the date, the name, the
 description and the amount from your bank. Add the category, and without the
-KOR the VAT and the rate: your bank doesn't know those. Add the receipt, now
+small business scheme (KOR) the VAT and the rate: your bank doesn't know those. Add the receipt, now
 or later. Click **Save**: you're back on **Bank** and the payment is under
 **Recorded**.
 

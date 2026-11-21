@@ -77,7 +77,8 @@ een uitgave.
 
 Klik op **Uitgave maken**. Je krijgt een nieuwe uitgave met de datum, de
 naam, de omschrijving en het bedrag van je bank. Vul de categorie aan, en
-zonder de KOR de btw en het tarief: die kent de bank niet. Voeg het bonnetje
+zonder de kleineondernemersregeling (KOR) de btw en het tarief: die kent de
+bank niet. Voeg het bonnetje
 toe, nu of later. Klik op **Opslaan**: je bent terug op **Bank** en de
 afschrijving staat bij **Geboekt**.
 
