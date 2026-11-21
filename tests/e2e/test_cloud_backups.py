@@ -33,7 +33,7 @@ def test_set_up_webdav_save_the_code_and_restore_from_it(app, dav):
     row.get_by_role("link", name="Instellen").click()
 
     expect(app.locator("h1")).to_have_text("WebDAV instellen")
-    app.get_by_label("Adres").fill(ADDRESS)
+    app.get_by_label("Adres", exact=True).fill(ADDRESS)
     app.get_by_label("Gebruikersnaam").fill(USERNAME)
     app.get_by_label("App-wachtwoord").fill("verkeerd")
     app.get_by_role("button", name="Opslaan").click()

@@ -28,12 +28,12 @@ def test_choose_a_service_save_and_turn_off(app, ai_fake):
     # A known service puts its address and model in the fields.
     mistral = ai_service.PROVIDERS["mistral"]
     app.get_by_label("Dienst").select_option(label="Mistral")
-    expect(app.get_by_label("Adres")).to_have_value(mistral.url)
+    expect(app.get_by_label("Adres", exact=True)).to_have_value(mistral.url)
     expect(app.get_by_label("Model")).to_have_value(mistral.model)
 
     # Another one: the address the service gives.
     app.get_by_label("Dienst").select_option(label="Andere dienst")
-    app.get_by_label("Adres").fill(ai_fake.url)
+    app.get_by_label("Adres", exact=True).fill(ai_fake.url)
     app.get_by_label("Model").fill("nep-model")
     app.get_by_label("API-sleutel").fill("fout")
     app.get_by_role("button", name="Opslaan").click()
