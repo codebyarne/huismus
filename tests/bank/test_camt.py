@@ -100,7 +100,8 @@ def test_a_debit_takes_the_creditors_iban():
 <Ntry><Amt Ccy="EUR">24.20</Amt><CdtDbtInd>DBIT</CdtDbtInd><Sts>BOOK</Sts>
 <BookgDt><Dt>2026-09-26</Dt></BookgDt><NtryDtls><TxDtls><RltdPties>
 <Dbtr><Nm>Voorbeeld BV</Nm></Dbtr><DbtrAcct><Id><IBAN>NL91ABNA0417164300</IBAN></Id></DbtrAcct>
-<Cdtr><Nm>Hosting Noord B.V.</Nm></Cdtr><CdtrAcct><Id><IBAN>NL20TEST0001234567</IBAN></Id></CdtrAcct>
+<Cdtr><Nm>Hosting Noord B.V.</Nm></Cdtr>
+<CdtrAcct><Id><IBAN>NL20TEST0001234567</IBAN></Id></CdtrAcct>
 </RltdPties><RmtInf><Ustrd>Abonnement september</Ustrd></RmtInf></TxDtls></NtryDtls></Ntry>
 </Stmt></BkToCstmrStmt></Document>"""
     (line,) = camt.read(data).lines
