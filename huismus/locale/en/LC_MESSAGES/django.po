@@ -9207,3 +9207,66 @@ msgid "%(count)s afschrijving: die koppel je later aan je uitgaven."
 msgid_plural "%(count)s afschrijvingen: die koppel je later aan je uitgaven."
 msgstr[0] "%(count)s payment going out: you'll link it to your expenses later."
 msgstr[1] "%(count)s payments going out: you'll link them to your expenses later."
+
+msgid "Afschrift inlezen"
+msgstr "Read a statement"
+
+msgid "Die koppel je later aan je uitgaven."
+msgstr "You'll link them to your expenses later."
+
+msgid "passen bij je facturen. Klopt het?"
+msgstr "fit your invoices. Is that right?"
+
+msgid "Alles wat bij je facturen past, is geboekt."
+msgstr "Everything that fits your invoices is booked."
+
+msgid "kun je terugdraaien"
+msgstr "you can undo these"
+
+msgid "privé, of geen factuur"
+msgstr "private, or no invoice"
+
+msgid "Huismus vond hier geen factuur bij. Privé, of geld van je spaarrekening? Dan laat je het hier staan. Is het toch een betaling van een klant? Kies dan de factuur."
+msgstr "Huismus found no invoice for these. Private, or money from your savings account? Then leave it here. Is it a customer's payment after all? Then choose the invoice."
+
+msgid "Als factuurbetaling markeren"
+msgstr "Mark as invoice payment"
+
+msgid "Contant betaald? Dat staat niet op je afschrift. Zet de factuur dan zelf op betaald."
+msgstr "Paid in cash? That's not on your statement. Mark the invoice as paid yourself."
+
+msgid "Bijschrijvingen die je oversloeg. Zet je er een terug, dan staat hij weer op de pagina Bank."
+msgstr "Incoming payments you skipped. Put one back and it shows on the Bank page again."
+
+msgid "Betaling teruggedraaid. Hij staat weer bij Te doen."
+msgstr "Payment undone. It's back under To do."
+
+msgid "Ingelezen · %(first)s t/m %(last)s"
+msgstr "Read · %(first)s to %(last)s"
+
+msgid "Ingelezen"
+msgstr "Read"
+
+msgid "%(fitting)s van de %(total)s horen bij je facturen"
+msgstr "%(fitting)s of the %(total)s belong to your invoices"
+
+msgid "Bij"
+msgstr "In"
+
+msgid "Af"
+msgstr "Out"
+
+msgid "%(count)s betaling"
+msgid_plural "%(count)s betalingen"
+msgstr[0] "%(count)s payment"
+msgstr[1] "%(count)s payments"
+
+msgid "%(count)s hoort bij je facturen"
+msgid_plural "%(count)s horen bij je facturen"
+msgstr[0] "%(count)s belongs to your invoices"
+msgstr[1] "%(count)s belong to your invoices"
+
+msgid "%(count)s afschrijving"
+msgid_plural "%(count)s afschrijvingen"
+msgstr[0] "%(count)s payment going out"
+msgstr[1] "%(count)s payments going out"
