@@ -139,7 +139,9 @@ Omdat werk een paar weken op `main` kan liggen voordat iemand het krijgt, moet `
 altijd uit te brengen zijn: merge alleen wat af is. Een groot stuk knip je in
 delen die elk los werken; een scherm dat nog niet af is, krijgt pas een link in
 het menu als het af is. Geen feature flags: één gebruiker per installatie, en
-elke schakelaar verdubbelt wat er getest moet worden.
+elke schakelaar verdubbelt wat er getest moet worden. Wat wel mag (besluit eigenaar
+2026-11-21): dat de gebruiker zelf een heel onderdeel uit het menu haalt
+(`SPEC.md` principe 7). Dat is een instelling van de gebruiker, geen schakelaar per functie.
 
 Werk als agent altijd op een eigen branch en lever via een pull request. Push nooit
 rechtstreeks naar `main` (`.claude/settings.json` weigert het ook).
