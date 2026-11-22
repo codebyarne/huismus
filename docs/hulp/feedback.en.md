@@ -34,7 +34,8 @@ the moment you notice it.
    along: the page, the version, where Huismus runs, and how you work (your
    organisation, KOR or VAT, reverse charge and the language of your
    invoices).
-5. Press **Send**. Your message goes on GitHub, where anyone can read it.
-   Only the app's maker sees the picture and your email address.
+5. Press **Send**. Your message goes on GitHub, so others can read along and
+   think with you. The picture and your email address stay with the app's
+   maker.
 
 Don't include customer details, IBANs or amounts.

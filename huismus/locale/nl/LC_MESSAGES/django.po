@@ -7756,8 +7756,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Je bericht komt op GitHub, waar iedereen het kan lezen. Je e-mailadres en de"
-" afbeelding ziet alleen de appbouwer."
+"Je bericht komt op GitHub, zodat anderen kunnen meelezen en meedenken. Je "
+"e-mailadres en de afbeelding blijven bij de appbouwer."
 msgstr ""
 
 msgid "Wijs aan op het scherm"
