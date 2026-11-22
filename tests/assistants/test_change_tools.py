@@ -505,3 +505,42 @@ def test_skipping_and_restoring_a_line(tool, business):
     assert line.state == BankTransaction.State.OPEN
     _found, text, error = tool("restore_bank_line", id=line.pk)
     assert error and "niet overgeslagen" in text
+
+
+# --- Onderdelen (#260): what "Nieuw" doesn't offer, an assistant doesn't make ---
+
+
+def _switch_off(**parts):
+    from huismus.business.models import Settings
+
+    Settings.load()
+    Settings.objects.filter(pk=1).update(**{f"show_{name}": False for name in parts})
+
+
+def test_with_quotes_off_an_assistant_makes_no_quote(tool, business, customer):
+    _switch_off(quotes=True)
+    lines = [{"description": "Ontwerp", "unit_price": "100"}]
+    _found, text, error = tool("create_draft", kind="quote", contact_id=customer.pk, lines=lines)
+    assert error
+    assert "Instellingen › Onderdelen" in text
+    assert not Document.objects.filter(kind="quote").exists()
+    # An invoice still can.
+    _found, _text, error = tool("create_draft", kind="invoice", contact_id=customer.pk, lines=lines)
+    assert not error
+
+
+def test_with_expenses_off_an_assistant_adds_no_expense_or_category(tool, business):
+    _switch_off(expenses=True)
+    _found, text, error = tool("add_expense", lines=[{"amount": "10"}])
+    assert error and "Instellingen › Onderdelen" in text
+    _found, _text, error = tool("add_category", name="Reizen")
+    assert error
+    assert not Expense.objects.exists()
+    assert not ExpenseCategory.objects.filter(name="Reizen").exists()
+
+
+def test_a_part_with_data_lets_an_assistant_add_to_it(tool, business, customer):
+    _switch_off(expenses=True)
+    Expense.objects.create(date=TODAY, amount_cents=1000)
+    _found, _text, error = tool("add_expense", lines=[{"amount": "10"}])
+    assert not error

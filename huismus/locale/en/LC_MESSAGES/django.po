@@ -10645,3 +10645,9 @@ msgstr "You have expenses or receipts, so Expenses stays in the menu."
 
 msgid "Je hebt een bankafschrift ingelezen, dus Bank blijft in het menu."
 msgstr "You've imported a bank statement, so Bank stays in the menu."
+
+msgid "Offertes staat uit bij Instellingen › Onderdelen. Zet het daar aan om een offerte te maken."
+msgstr "Quotes is off at Settings › Sections. Switch it on there to make a quote."
+
+msgid "Uitgaven staat uit bij Instellingen › Onderdelen. Zet het daar aan om een uitgave of categorie toe te voegen."
+msgstr "Expenses is off at Settings › Sections. Switch it on there to add an expense or category."

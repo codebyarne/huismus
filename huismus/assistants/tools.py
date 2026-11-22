@@ -67,6 +67,7 @@ from huismus.contacts.models import Contact
 from huismus.core import form_messages
 from huismus.core.dashboard import outstanding_invoices
 from huismus.core.models import Attachment
+from huismus.core.profile import EXPENSES, QUOTES, profile
 from huismus.core.templatetags.money import euros, money
 from huismus.core.todo import current_todo
 from huismus.documents.drafts import (
@@ -830,8 +831,24 @@ def _save(document, data: dict):
     return _detail(Document.objects.with_payment_totals().get(pk=saved.pk))
 
 
+def _part_shown(part, refusal):
+    """What "Nieuw" doesn't offer, an assistant doesn't make either: a part
+    out of the menu (#260, Instellingen › Onderdelen; huismus-intern/besluiten.md,
+    2026-11-22, #273 Q7). A part with something in it is shown."""
+    if part not in profile().parts_shown:
+        raise ToolError(refusal)
+
+
 def create_draft(arguments):
     settings = Settings.load()
+    if arguments.get("kind") == "quote":
+        _part_shown(
+            QUOTES,
+            _(
+                "Offertes staat uit bij Instellingen › Onderdelen. "
+                "Zet het daar aan om een offerte te maken."
+            ),
+        )
     contact = _contact(arguments.get("contact_id"))
     if not arguments.get("lines"):
         raise ToolError(_("Een concept heeft minstens één regel nodig."))
@@ -946,6 +963,13 @@ def _category_ids() -> set[int]:
 def add_expense(arguments):
     """Validates and saves like "Opslaan" on the expense page, through
     expenses.adding, as Huismus does with a receipt it read itself."""
+    _part_shown(
+        EXPENSES,
+        _(
+            "Uitgaven staat uit bij Instellingen › Onderdelen. "
+            "Zet het daar aan om een uitgave of categorie toe te voegen."
+        ),
+    )
     lines = _expense_lines(arguments, required=True)
     receipt = None
     if arguments.get("receipt_id") is not None:
@@ -1045,6 +1069,13 @@ def _save_category(form) -> dict:
 
 
 def add_category(arguments):
+    _part_shown(
+        EXPENSES,
+        _(
+            "Uitgaven staat uit bij Instellingen › Onderdelen. "
+            "Zet het daar aan om een uitgave of categorie toe te voegen."
+        ),
+    )
     return _save_category(ExpenseCategoryForm({"name": arguments.get("name") or ""}))
 
 

@@ -8727,4 +8727,9 @@ msgid "Download je facturen, offertes, klanten en uitgaven als CSV, met de pdf's
 msgstr ""
 
 msgid "Bedrag zonder uitgaveregel"
+
+msgid "Offertes staat uit bij Instellingen › Onderdelen. Zet het daar aan om een offerte te maken."
+msgstr ""
+
+msgid "Uitgaven staat uit bij Instellingen › Onderdelen. Zet het daar aan om een uitgave of categorie toe te voegen."
 msgstr ""
