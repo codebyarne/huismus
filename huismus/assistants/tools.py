@@ -510,9 +510,9 @@ def _bank_line(line) -> dict:
     }
 
 
-def _bank_choice(choice) -> dict:
+def _bank_choice(choice, *, outgoing: bool) -> dict:
     """An open invoice (money in) or an expense without a bank line (out)."""
-    if hasattr(choice, "number"):
+    if not outgoing:
         return {
             "invoice_id": choice.pk,
             "number": choice.number,
@@ -531,12 +531,15 @@ def _bank_choice(choice) -> dict:
 def _waiting_line(item) -> dict:
     found = _bank_line(item.line)
     if item.proposal is not None:
-        found["proposal"] = _bank_choice(item.proposal)
+        found["proposal"] = _bank_choice(item.proposal, outgoing=item.line.is_outgoing)
         if not item.line.is_outgoing and item.difference_cents:
             # More (positive) or less (negative) than what is open on it.
             found["difference"] = _amount(item.difference_cents)
     else:
-        found["choices"] = [_bank_choice(choice) for choice in item.choices[:BANK_CHOICES]]
+        found["choices"] = [
+            _bank_choice(choice, outgoing=item.line.is_outgoing)
+            for choice in item.choices[:BANK_CHOICES]
+        ]
     return found
 
 
@@ -628,8 +631,9 @@ def get_settings(arguments):
     settings = Settings.load()
     try:
         numbers = next_numbers_if_issued_today(settings)
-    except NumberingError:
-        numbers = {"invoice": None, "quote": None}
+    except NumberingError as error:
+        # The number format can't make a number: say why, don't hide it.
+        raise ToolError(str(error)) from error
     return {
         "business_name": settings.business_name,
         "kor": settings.kor_enabled,
@@ -639,7 +643,8 @@ def get_settings(arguments):
         "payment_terms_days": settings.default_payment_terms_days,
         "numbering_restarts_yearly": settings.number_reset_yearly,
         # Nothing is reserved: issuing today would give these. Credit
-        # notes share the invoices' sequence.
+        # notes share the invoices' sequence (NumberSequence, and
+        # documents.drafts.peek_number_for).
         "next_number_if_issued_now": {
             "invoice": numbers["invoice"],
             "credit_note": numbers["invoice"],
@@ -1204,7 +1209,8 @@ TOOLS = (
         "fit an invoice (money in) or an expense (money out), with Huismus's proposal, or "
         "choices when the user must pick. booked: the latest statement's booked lines. "
         "not_recognised: lines that fit nothing, often private money; nothing to do. "
-        "Huismus reads statements only when the user reads one in, on that page.",
+        "Huismus reads statements only when the user reads one in, on that page. "
+        "limit applies to not_recognised only.",
         {**_LIMIT},
         (),
         list_bank,
