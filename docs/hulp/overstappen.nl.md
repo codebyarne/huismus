@@ -9,11 +9,13 @@ bonnetjes. Zeg je oude pakket pas op als alles in Huismus staat en klopt.
 1. **Haal alles uit je oude pakket.** Elk jaar dat je wilt meenemen, met de
    pdf's en bonnetjes. Waar je dat vindt, staat op de pagina van je pakket
    hieronder.
-2. **Doe een proefdraai.** Huismus laat zien wat hij zou overnemen en rekent
-   elke factuur na, tot op de cent. Er is dan nog niets opgeslagen.
+2. **Doe een proefdraai.** Huismus laat zien wat hij zou overnemen, rekent
+   elke factuur na, tot op de cent, en zegt wat niet klopt. Er is dan nog
+   niets opgeslagen.
 3. **Importeer.** Klopt de proefdraai? Dan zet Huismus alles erin. Je
    factuurnummers blijven zoals ze waren, en je volgende factuur telt
-   verder.
+   verder. Wil je een ander volgend nummer? Dat stel je in bij
+   **Instellingen → Facturen en nummering**.
 4. **Kijk het na.** Kijk je bedrijfsgegevens na bij **Instellingen**, vooral
    je IBAN. Leg een paar facturen naast de pdf uit je oude pakket. Vergelijk
    per jaar je omzet bij **Rapporten › Jaaroverzicht** met die in je oude
@@ -56,9 +58,9 @@ bonnetjes. Zeg je oude pakket pas op als alles in Huismus staat en klopt.
 
 ## Wat je daarna hebt
 
-Je oude jaren staan op je eigen computer en in je back-ups, zonder
-abonnement. Met [Exporteren](exporteren.nl.md) haal je ze er altijd weer uit,
-als bestanden die ook zonder Huismus opengaan.
+Je oude jaren staan in Huismus en in je back-ups, zonder abonnement. Met
+[Exporteren](exporteren.nl.md) haal je ze er altijd weer uit, als bestanden
+die ook zonder Huismus opengaan.
 
 Hoe lang je je administratie bewaart, lees je bij de
 [Belastingdienst](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/administratie_bijhouden/administratie_bewaren/).
