@@ -1451,8 +1451,9 @@ th.r .th-sort { flex-direction: row-reverse; }
    "Nieuwe factuur". Het paneel is een popover, geen dialoog over de hele pagina,
    zodat je ziet waar je het over hebt. Op een telefoon een rond knopje boven de
    tabbalk en een blad van onderen. */
+:root { --fb-rust: var(--s-6); }
 .fb-knop {
-  position: fixed; right: var(--s-6); bottom: var(--s-6); z-index: 30;
+  position: fixed; right: var(--s-6); bottom: var(--fb-rust); z-index: 30;
   display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px 0 14px;
   border: 1px solid var(--border-strong); border-radius: var(--r-pill); background: var(--surface); color: var(--text);
   font: inherit; font-size: var(--fs-sm); font-weight: var(--fw-semibold); box-shadow: var(--sh-pop); cursor: pointer;
@@ -1460,15 +1461,17 @@ th.r .th-sort { flex-direction: row-reverse; }
 .fb-knop:hover { background: var(--surface-2); }
 .fb-knop:focus-visible { outline: none; box-shadow: var(--sh-pop), 0 0 0 3px var(--ring); }
 .fb-knop:has(+ .fb-paneel:popover-open) { background: var(--primary-soft); border-color: var(--primary); color: var(--primary-ink); }
-/* Met een actiebalk onderaan (de factuur maken) schuift de knop erboven. */
-.app:has(.actionbar) ~ .fb-knop { bottom: 88px; }
+/* Met een actiebalk onderaan (de factuur maken) schuift de knop erboven. Waar de
+   balk staat, meet feedback.js (--fb-onder): op een korte pagina staat de
+   voettekst eronder en de balk dus hoger (#280). Zonder JS: boven één rij. */
+.app:has(.actionbar) ~ .fb-knop { bottom: var(--fb-onder, 88px); }
 .fb-paneel:popover-open {
   position: fixed; inset: auto var(--s-6) calc(var(--s-6) + 56px) auto; margin: 0;
   display: block; width: min(400px, calc(100vw - 2 * var(--s-6))); max-height: calc(100vh - 120px); overflow: auto;
   box-sizing: border-box; padding: var(--s-5); border: 1px solid var(--border); border-radius: var(--r-lg);
   background: var(--surface); color: var(--text); box-shadow: var(--sh-pop);
 }
-.app:has(.actionbar) ~ .fb-paneel:popover-open { bottom: calc(88px + 56px); }
+.app:has(.actionbar) ~ .fb-paneel:popover-open { bottom: calc(var(--fb-onder, 88px) + 56px); }
 .fb-kop { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); margin-bottom: var(--s-4); }
 .fb-kop h2 { margin: 0; font-family: var(--font-display); font-size: var(--fs-xl); }
 .fb-form { display: flex; flex-direction: column; gap: var(--s-4); }
@@ -1486,11 +1489,12 @@ th.r .th-sort { flex-direction: row-reverse; }
 .fb-vink { display: grid; place-items: center; width: 56px; height: 56px; border-radius: var(--r-pill); background: var(--primary-soft); color: var(--primary-ink); }
 .fb-pagina .fb-kop { margin-bottom: var(--s-5); }
 @media (max-width: 760px) {
-  .fb-knop { right: 14px; bottom: calc(84px + env(safe-area-inset-bottom)); width: 44px; padding: 0; justify-content: center; }
+  :root { --fb-rust: calc(84px + env(safe-area-inset-bottom)); }
+  .fb-knop { right: 14px; width: 44px; padding: 0; justify-content: center; }
   .fb-knop span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  .app:has(.actionbar) ~ .fb-knop { bottom: calc(150px + env(safe-area-inset-bottom)); }
+  .app:has(.actionbar) ~ .fb-knop { bottom: var(--fb-onder, calc(150px + env(safe-area-inset-bottom))); }
   /* De balk van de editor heeft twee rijen: het totaal boven de knoppen. */
-  .app:has(.actionbar-editor) ~ .fb-knop { bottom: calc(190px + env(safe-area-inset-bottom)); }
+  .app:has(.actionbar-editor) ~ .fb-knop { bottom: var(--fb-onder, calc(190px + env(safe-area-inset-bottom))); }
   .fb-paneel:popover-open, .app:has(.actionbar) ~ .fb-paneel:popover-open {
     inset: auto 0 0 0; width: 100%; max-height: 88vh; border-radius: var(--r-xl) var(--r-xl) 0 0;
     padding: var(--s-4) var(--s-4) calc(var(--s-6) + env(safe-area-inset-bottom));
