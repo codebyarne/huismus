@@ -78,11 +78,7 @@ Excel](importeren.en.md#what-the-trial-run-shows).
 If everything is right, click **Import now**. Then compare your revenue per
 year under **Reports › Year overview** with the one in Tellow.
 
-## Cancelling afterwards
-
-Cancel Tellow only when everything is in Huismus, you've checked it and you
-have a [backup](back-ups.en.md). Also keep what you got out of Tellow with
-your own files.
+## When you cancel
 
 According to Tellow, you cancel by email, and afterwards you can't log in
 any more. [This is how Tellow describes it in its help](https://help.tellow.nl/nl/articles/6389787-hoe-kan-ik-mijn-abonnement-annuleren).

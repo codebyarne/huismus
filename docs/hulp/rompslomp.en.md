@@ -83,11 +83,7 @@ Excel](importeren.en.md#what-the-trial-run-shows).
 If everything is right, click **Import now**. Then compare your revenue per
 year under **Reports › Year overview** with the one in Rompslomp.
 
-## Cancelling afterwards
-
-Cancel Rompslomp only when everything is in Huismus, you've checked it and you
-have a [backup](back-ups.en.md). Also keep what you got out of Rompslomp with
-your own files.
+## When you cancel
 
 According to Rompslomp, cancelling deletes your account, and everything is
 gone within 30 days. [This is how Rompslomp describes it in its

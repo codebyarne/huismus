@@ -83,11 +83,7 @@ Excel](importeren.en.md#what-the-trial-run-shows).
 If everything is right, click **Import now**. Then compare your revenue per
 year under **Reports › Year overview** with the one in Jortt.
 
-## Cancelling afterwards
-
-Cancel Jortt only when everything is in Huismus, you've checked it and you
-have a [backup](back-ups.en.md). Also keep what you got out of Jortt with
-your own files.
+## When you cancel
 
 According to Jortt, you keep your data if you go back to jortt Starter.
 The bookkeeping, the audit file and the Dropbox connection then stop

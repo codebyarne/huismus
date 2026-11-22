@@ -84,11 +84,7 @@ Excel](importeren.nl.md#wat-de-proefdraai-laat-zien).
 Klopt alles, klik dan op **Nu echt importeren**. Vergelijk daarna per jaar je
 omzet bij **Rapporten › Jaaroverzicht** met die in Rompslomp.
 
-## Daarna opzeggen
-
-Zeg Rompslomp pas op als alles in Huismus staat, je het hebt nagekeken en er een
-[back-up](back-ups.nl.md) is. Bewaar ook wat je uit Rompslomp hebt gehaald bij
-je eigen bestanden.
+## Als je opzegt
 
 Volgens Rompslomp verwijder je bij opzeggen je account, en is alles
 binnen 30 dagen weg. [Zo beschrijft Rompslomp het in zijn
