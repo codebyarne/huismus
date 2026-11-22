@@ -42,6 +42,10 @@ class Group:
     topics: tuple[str, ...]
 
 
+# The page for everyone who comes from another package: Overstappen in the
+# site's menu goes there (issue #122).
+SWITCHING = "overstappen"
+
 # Moving from another package: a page per package with the steps of its own
 # export and instructions for an AI assistant (issue #164, docs/pakketten-export.md).
 PACKAGES = ("rompslomp", "tellow", "e-boekhouden", "jortt", "excel")
@@ -57,9 +61,10 @@ GROUPS = (
     ),
     Group(
         _("Overstappen"),
-        # One page per package, each with its own copy of the AI instructions
-        # (issue #164; tests/core/test_help.py keeps the shared part equal).
-        ("moneybird", "importeren", *PACKAGES),
+        # First the page that says the order and what to look out for (issue
+        # #122), then one page per package, each with its own copy of the AI
+        # instructions (issue #164; tests/core/test_help.py keeps the shared part equal).
+        (SWITCHING, "moneybird", "importeren", *PACKAGES),
     ),
     Group(
         _("Het hele jaar"),

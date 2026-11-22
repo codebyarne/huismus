@@ -44,6 +44,9 @@ keer al je klanten, facturen, offertes en uitgaven mee. Huismus doet eerst
 een proefdraai en slaat pas iets op als jij dat kiest. Hoe het werkt staat in
 [Overstappen uit Moneybird](moneybird.nl.md).
 
+Kom je van een ander pakket of van Excel? Dat kan ook: zie
+[Overstappen](overstappen.nl.md).
+
 ## Eerst rondkijken
 
 Wil je eerst zien hoe Huismus werkt? Kies **Probeer met nepdata**. Huismus
