@@ -8,7 +8,7 @@ Huismus sends it itself, to the Contact Form 7 form on arnekrijnsen.com,
 but only when the user presses Versturen after seeing everything that goes
 along: the third kind of outgoing request of SPEC.md principle 6. Where
 Huismus runs, its version and its language Huismus fills in itself, and
-from the settings whether there is a text for reverse-charge invoices and
+from the profile (profile.py) whether there is a text for reverse-charge invoices and
 the language invoices are in (#268); they are in that overview too.
 
 The choices are those of the issue form (.github/ISSUE_TEMPLATE/idee.yml).
@@ -30,6 +30,7 @@ from django.utils import translation
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 
+from .profile import KOR, NO_VAT, VAT, profile
 from .updates import current_version
 
 logger = logging.getLogger("huismus.feedback")
@@ -80,6 +81,14 @@ STATUS_CHOICES = [(NOT_ASKED, "not asked"), (SKIPPED, "skipped"), (SENT, "sent")
 
 ORGANISATION_CHOICES = [(key, label) for key, _text, label in ORGANISATIONS]
 
+# The VAT axis of the profile in Hoe je werkt. The start keeps no answers,
+# only settings, so btw also means "not chosen yet".
+VAT_WORDS = {
+    KOR: _("met KOR"),
+    NO_VAT: _("geen btw om een andere reden"),
+    VAT: _("btw op facturen, of nog niet gekozen"),
+}
+
 # The feedback button (huismus-intern/besluiten.md, 2026-11-21): what kind
 # of message it is, as (key, option text on the form, label in the app).
 KINDS = (
@@ -126,16 +135,12 @@ def form_language(language: str | None = None) -> str:
 
 
 def invoice_setup() -> tuple[str, str]:
-    """From the settings, as sent to the form: "ja" when there is a text
+    """From the profile, as sent to the form: "ja" when there is a text
     for reverse-charge invoices, else "nee" (never the text itself), and the
     invoice language, nl or en. Where the reverse charge applies (NL, EU or
-    outside the EU) is in no setting, so it doesn't go."""
-    # Here, not at the top: business.models imports this module's choices.
-    from huismus.business.models import Settings
-
-    instance = Settings.load()
-    reverse_charge = "ja" if instance.reverse_charge_text.strip() else "nee"
-    return reverse_charge, "en" if instance.default_language == "en" else "nl"
+    outside the EU) doesn't go yet (#285)."""
+    you = profile()
+    return ("ja" if you.reverse_charge_text else "nee"), you.invoice_language
 
 
 def outgoing(organisation: str, wish: str, email: str, language: str | None = None) -> list:
@@ -178,23 +183,16 @@ def form_data(organisation: str, wish: str, email: str, language: str | None = N
 def how_you_work(instance) -> str:
     """Hoe je werkt, in the language that is active: the organisation last
     sent from "Hoe gebruik je Huismus?" and what the step-by-step start set
-    (huismus-intern/besluiten.md, 2026-11-21). The start keeps no answers,
-    only settings, so KOR off says "with VAT, or not chosen yet"."""
+    (huismus-intern/besluiten.md, 2026-11-21), as profile() reads it from
+    `instance`."""
+    you = profile(instance)
     parts = []
     organisation = _label(ORGANISATIONS, instance.feedback_organisation)
     if organisation:
         parts.append(organisation)
-    if instance.kor_enabled:
-        parts.append(_("met KOR"))
-    elif instance.vat_exempt:
-        parts.append(_("geen btw om een andere reden"))
-    else:
-        parts.append(_("btw op facturen, of nog niet gekozen"))
-    if instance.reverse_charge_text.strip():
-        parts.append(_("btw verlegd: ja"))
-    else:
-        parts.append(_("btw verlegd: nee"))
-    if instance.default_language == "en":
+    parts.append(VAT_WORDS[you.vat])
+    parts.append(_("btw verlegd: ja") if you.reverse_charge_text else _("btw verlegd: nee"))
+    if you.invoice_language == "en":
         parts.append(_("facturen in het Engels"))
     else:
         parts.append(_("facturen in het Nederlands"))
