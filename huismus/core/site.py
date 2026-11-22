@@ -113,7 +113,7 @@ TESTS_AT_LEAST = 2500
 TESTED_SOURCES = {
     "tests": "tests",
     "gate": "scripts/verify.sh",
-    "triggers": "huismus/documents/migrations/0003_immutability_triggers.py",
+    "immutability": "tests/documents/test_immutability.py",
     "rules": "CLAUDE.md",
     "bugs": "BUGS-BY-HAND.md",
 }
