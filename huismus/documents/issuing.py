@@ -68,14 +68,20 @@ def issue(document: Document) -> Document:
     # never come through here: they keep their VAT as Moneybird had it. A
     # reopened document was issued before, maybe before the KOR: not a new
     # invoice.
-    if settings.kor_enabled and not was_issued:
-        if not settings.kor_text.strip():
-            raise IssueError(str(_("Vul eerst de KOR-tekst in, bij Instellingen → KOR.")))
+    # Without VAT for another reason (issue #53) the same guard holds, with
+    # the user's own text in place of the KOR text.
+    if settings.no_vat and not was_issued:
+        if not settings.no_vat_text.strip():
+            raise IssueError(missing_no_vat_text_message(settings))
         rates = allowed_rates(document, settings)
         if any(line.tax_rate_bp not in rates for line in lines):
-            raise IssueError(str(_("Met KOR moeten nieuwe regels 0% btw hebben.")))
+            if settings.kor_enabled:
+                raise IssueError(str(_("Met KOR moeten nieuwe regels 0% btw hebben.")))
+            raise IssueError(str(_("Zonder btw moeten nieuwe regels 0% btw hebben.")))
         if lines_have_reverse_charge(lines) and not reverse_charge_allowed(document, settings):
-            raise IssueError(str(_("Met de KOR kan een nieuwe regel niet verlegd zijn.")))
+            if settings.kor_enabled:
+                raise IssueError(str(_("Met de KOR kan een nieuwe regel niet verlegd zijn.")))
+            raise IssueError(str(_("Zonder btw kan een nieuwe regel niet verlegd zijn.")))
     missing = missing_reverse_charge_text(document, lines, settings)
     if missing:
         raise IssueError(missing)
@@ -212,19 +218,26 @@ def validate_credit_note_amount(document, new_total_cents):
 
 
 def kor_text_for(document, settings) -> str:
-    """The KOR text a document gets when it is issued or sent. A credit
+    """The text under a document without VAT (the KOR text, or the text for
+    no VAT for another reason, issue #53) that it gets when issued or sent. A credit
     note follows the invoice it credits (decided 2026-11-02): an
     invoice with VAT, or with a "verlegd" line, had no KOR, so neither does
     its credit note. Looked at the invoice's VAT, not its KOR text: an
     imported invoice got the KOR text of the settings at import."""
-    if not settings.kor_enabled:
+    if not settings.no_vat:
         return ""
     invoice = document.related_document if document.kind == "credit_note" else None
     if invoice is not None and (
         invoice.tax_cents != 0 or invoice.lines.filter(reverse_charge=True).exists()
     ):
         return ""
-    return settings.kor_text
+    return settings.no_vat_text
+
+
+def missing_no_vat_text_message(settings) -> str:
+    if settings.kor_enabled:
+        return str(_("Vul eerst de KOR-tekst in, bij Instellingen → KOR."))
+    return str(_("Vul eerst de tekst bij geen btw in, bij Instellingen → KOR."))
 
 
 def missing_reverse_charge_text(document, lines, settings) -> str | None:

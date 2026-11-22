@@ -5,7 +5,8 @@ invariant 6, M18). The editor's form, issue() and the AI connection all
 ask here, so they can never disagree.
 
 - KOR off: 0, 9 and 21%; a new line starts at 21%.
-- KOR on: 0% only for new invoices and quotes; a new line starts at 0%.
+- KOR on, or no VAT for another reason (issue #53, `Settings.no_vat`):
+  0% only for new invoices and quotes; a new line starts at 0%.
 - A credit note may also have the rates of the invoice it credits, even
   under the KOR: it corrects that invoice, it isn't a new one.
 - A reopened document ("Toch bewerken") was issued before, maybe before
@@ -41,13 +42,13 @@ def rate_label(rate_bp: int | None) -> str:
 
 def default_rate(settings) -> int:
     """The rate a new line starts with."""
-    return 0 if settings.kor_enabled else 2100
+    return 0 if settings.no_vat else 2100
 
 
 def allowed_rates(document, settings) -> list[int]:
     """The rates a line of `document` may have, lowest first. Starts from
     what the KOR allows, then adds what a correction must keep."""
-    rates = {0} if settings.kor_enabled else set(STANDARD_RATES)
+    rates = {0} if settings.no_vat else set(STANDARD_RATES)
     if document.reopened_at is not None:
         # Its own rates too: an imported or old invoice may have one that
         # isn't offered any more (6% before 2019), and the editor must not
@@ -61,7 +62,7 @@ def allowed_rates(document, settings) -> list[int]:
 
 def reverse_charge_allowed(document, settings) -> bool:
     """Whether a line of `document` may be "verlegd"."""
-    if not settings.kor_enabled:
+    if not settings.no_vat:
         return True
     if document.reopened_at is not None and document_has_reverse_charge(document):
         return True
@@ -87,8 +88,8 @@ def editor_value(line) -> str:
 
 def vat_for_copy(line, settings) -> dict:
     """A line's VAT fields when it is copied into a new invoice or quote (a
-    copy, or a quote turned into an invoice): under the KOR that is 0%."""
-    if settings.kor_enabled:
+    copy, or a quote turned into an invoice): without VAT that is 0%."""
+    if settings.no_vat:
         return {"tax_rate_bp": 0, "reverse_charge": False}
     return {"tax_rate_bp": line.tax_rate_bp, "reverse_charge": line.reverse_charge}
 

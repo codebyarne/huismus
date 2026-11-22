@@ -294,8 +294,8 @@ def _expenses(year):
     expenses = list(expenses)
     for expense in expenses:
         expense.receipts = [a for a in expense.all_attachments if a.kind == "receipt"]
-    # As on the expense page: "ter info" only under the KOR (SPEC.md M21).
-    kor_enabled = Settings.load().kor_enabled
+    # As on the expense page: "ter info" only without VAT (SPEC.md M21).
+    kor_enabled = Settings.load().no_vat
     header = expense_labels(export_format.EXPENSE_COLUMNS, kor_enabled=kor_enabled)
     table = (
         [

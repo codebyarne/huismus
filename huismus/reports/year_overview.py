@@ -118,7 +118,7 @@ def compute_year_overview(year: int) -> YearOverview:
     expense_totals = _totals_by_period(
         Expense.objects.filter(date__year=year), "date", "amount_cents", ExtractQuarter
     )
-    shows_input_vat = not Settings.load().kor_enabled
+    shows_input_vat = not Settings.load().no_vat
     input_vat_lines = ExpenseLine.objects.filter(
         expense__date__year=year, vat_rate__in=INPUT_VAT_RATES
     )
