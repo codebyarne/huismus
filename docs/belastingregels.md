@@ -7,7 +7,11 @@ de bronpagina erbij. **Dit is geen boekhoudkundig of fiscaal advies.** Regels
 kunnen wijzigen na het nakijken. Controleer bij twijfel de bronpagina's zelf
 of vraag een boekhouder.
 
-Nagekeken op 6 november 2026; sectie 6 op 22 november 2026. Alleen officiële bronnen: belastingdienst.nl (ook
+Nagekeken op 6 november 2026; sectie 6 op 22 november 2026. Op 22 november
+2026 ook opnieuw nagekeken, voor de pagina's van Uitleg op de site
+(`docs/uitleg/`, issue #308): de bronpagina's van sectie 1 (voorwaarden,
+meedoen, aanmelden, afmelden), sectie 4 (de eerste twee bronpagina's) en
+sectie 5 (de drie webpagina's); wat daarbij anders bleek, staat erbij. Alleen officiële bronnen: belastingdienst.nl (ook
 de pdf's op `download.belastingdienst.nl`) en
 Ondernemersplein (sinds kort `ondernemersplein.overheid.nl`; het oude adres
 `ondernemersplein.kvk.nl` stuurt daarheen door). Citaten staan tussen
@@ -52,6 +56,9 @@ Bron: [Voorwaarden voor deelname aan de kleineondernemersregeling (KOR)](https:/
 - "U trekt de btw over uw zakelijke kosten en investeringen niet af." Ook
   niet voor btw uit een ander EU-land. "Bewaar uw inkoopfacturen wel."
 - "In sommige gevallen moet u de btw herzien die u eerder hebt afgetrokken."
+- Boven de grens zegt deze pagina (22 november 2026): "Maar let op: zodra uw
+  omzet boven de € 20.000 komt in 1 kalenderjaar, moet u zich meteen afmelden
+  voor de KOR. Uw afmelding gaat dan direct in."
 
 Bron: [Wat betekent meedoen met de kleineondernemersregeling (KOR)?](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/hoe_werkt_de_btw/kleineondernemersregeling/wat-betekent-meedoen-met-de-kleineondernemersregeling/wat-betekent-meedoen-met-de-kleineondernemersregeling)
 (Belastingdienst)
@@ -197,9 +204,12 @@ Bron: [Btw-aangifte: waar moet u aan denken?](https://www.belastingdienst.nl/wps
 
 ### Welke bedragen erin komen
 
-- "In de aangifte vermeldt u de btw die u hebt berekend aan uw klanten, en de
-  btw die uw leveranciers aan u hebben berekend." Het verschil betaal je of
-  krijg je terug.
+- "U geeft in uw aangifte de btw aan die u hebt berekend aan uw klanten, en de
+  btw die u kunt aftrekken." (Btw-aangifte: waar moet u aan denken?, sectie 4
+  hierboven; nagekeken 22 november 2026. De zin die hier eerder stond, "In de
+  aangifte vermeldt u de btw die u hebt berekend aan uw klanten, en de btw die
+  uw leveranciers aan u hebben berekend.", staat niet meer op de nagekeken
+  pagina's.) Het verschil betaal je of krijg je terug.
 - Rubrieken die het stap-voor-stap-voorbeeld noemt:
   - 1a "Levering/diensten belast met hoog tarief": links de omzet exclusief
     btw, rechts de btw.
@@ -319,6 +329,9 @@ Bron: [EU-landen](https://european-union.europa.eu/principles-countries-history/
   bewaartermijn van 9 jaar, volgend op het jaar waarin het vastgoed in gebruik
   is genomen". Voor Huismus speelt dit niet; noem het niet zonder beide
   bronnen.
+- De drie punten over scannen hieronder staan op 22 november 2026 niet op de
+  webpagina "Hoe bewaart u uw administratie?". Of ze in de brochure staan, is
+  die dag niet nagekeken. Tot dan: niet gebruiken in nieuwe tekst.
 - Scannen (conversie): "Een balans en staat van baten en lasten op papier mag
   u niet converteren. Verder mag u alle gegevens converteren als u aan de
   volgende voorwaarden voldoet": je zet alle gegevens over, inhoudelijk juist,

@@ -5,7 +5,9 @@ die publiceert, als referentie voor wie aan de PDF-template of
 factuurformulieren in deze codebase werkt. **Dit is geen boekhoudkundig of
 fiscaal advies.** Controleer bij twijfel de bronpagina's zelf of raadpleeg
 een boekhouder — regels kunnen wijzigen na het schrijven van dit document
-(25 september 2026).
+(25 september 2026). De lijst met verplichte gegevens, de verzendtermijn en
+de grens van de vereenvoudigde factuur zijn opnieuw nagekeken op 22 november
+2026.
 
 Zie CLAUDE.md: juridische claims horen hier en in instelbare tekstvelden
 thuis, nooit hardcoded in code of UI-tekst.
@@ -17,7 +19,7 @@ Bron: [Aan welke eisen moeten facturen voldoen voor uw btw-administratie?](https
 
 - Uw volledige naam en die van uw afnemer.
 - Uw volledige adres en dat van uw afnemer.
-- Uw btw-identificatienummer.
+- Uw btw-identificatienummer. "Dit is het nummer met 'NL' ervoor."
 - Als u bij de KVK bent ingeschreven: uw KVK-nummer.
 - De datum waarop de factuur is uitgereikt.
 - Een factuurnummer. Letterlijk: "Gebruik opeenvolgende nummers voor uw
@@ -26,7 +28,8 @@ Bron: [Aan welke eisen moeten facturen voldoen voor uw btw-administratie?](https
   (vestiging, afdeling, apparaat) zegt de pagina niet.
 - Bij goederen: wat voor goederen u hebt geleverd en hoeveel.
 - Bij diensten: wat voor diensten u hebt geleverd en de omvang ervan.
-- De datum waarop de goederen of diensten zijn geleverd.
+- De datum waarop de goederen of diensten zijn geleverd, "of de datum van een
+  vooruitbetaling" (nagekeken 22 november 2026).
 - Het bedrag dat u in rekening brengt, exclusief btw.
 - Het btw-tarief dat van toepassing is.
 - Het btw-bedrag.
