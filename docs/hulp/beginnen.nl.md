@@ -71,3 +71,6 @@ krijgt een vinkje. Met **Doen** ga je meteen naar de goede plek.
 - **Mailen:** wil je facturen vanuit Huismus mailen, stel dan je mail in.
   Zie [Mailen](mailen.nl.md).
 - **Je eerste factuur:** zie [Facturen](facturen.nl.md).
+- **Wat je niet gebruikt:** stuur je geen offertes of houd je geen uitgaven
+  bij, haal ze dan uit het menu bij **Instellingen › Onderdelen**. Je
+  gegevens blijven. Een onderdeel waar iets in staat, blijft in het menu.

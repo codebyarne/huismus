@@ -8628,6 +8628,26 @@ msgid "Kies bestaande uitgave"
 msgstr ""
 
 msgid "Nieuwe uitgave maken"
+
+msgid "Onderdelen"
+msgstr ""
+
+msgid "Wat je niet gebruikt, haal je uit het menu. Een onderdeel waar iets in staat, blijft erin."
+msgstr ""
+
+msgid "Alleen facturen"
+msgstr ""
+
+msgid "Met je bonnetjes en categorieën."
+msgstr ""
+
+msgid "Je hebt offertes, dus Offertes blijft in het menu."
+msgstr ""
+
+msgid "Je hebt uitgaven of bonnetjes, dus Uitgaven blijft in het menu."
+msgstr ""
+
+msgid "Je hebt een bankafschrift ingelezen, dus Bank blijft in het menu."
 msgstr ""
 
 msgid "Hoog tarief"

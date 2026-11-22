@@ -9,6 +9,7 @@ from django.db import transaction
 from django.utils.text import format_lazy
 from django.utils.translation import gettext_lazy as _
 
+from huismus.core import profile as profile_axes
 from huismus.core.forms import EuroCentsField
 from huismus.core.profile import LEGAL_ENTITY_CHOICES
 from huismus.documents import mail_texts
@@ -84,6 +85,22 @@ MAIL_TEXT_PARTS = {
 }
 
 
+# Instellingen › Onderdelen (#260): the checkbox per part, and why it stays
+# on while the part has something in it (huismus-intern/besluiten.md,
+# 2026-11-22, "Onderdelen verbergen").
+PART_FIELDS = {
+    "show_quotes": (profile_axes.QUOTES, _("Je hebt offertes, dus Offertes blijft in het menu.")),
+    "show_expenses": (
+        profile_axes.EXPENSES,
+        _("Je hebt uitgaven of bonnetjes, dus Uitgaven blijft in het menu."),
+    ),
+    "show_bank": (
+        profile_axes.BANK,
+        _("Je hebt een bankafschrift ingelezen, dus Bank blijft in het menu."),
+    ),
+}
+
+
 class SettingsForm(forms.ModelForm):
     class Meta:
         model = Settings
@@ -125,6 +142,7 @@ class SettingsForm(forms.ModelForm):
             "smtp_username",
             "smtp_from_email",
             *(name for _kind, _part, _language, name in MAIL_TEXT_FIELDS),
+            *PART_FIELDS,
         ]
         widgets = {
             "kor_text": forms.Textarea(attrs={"rows": 3}),
@@ -346,6 +364,24 @@ class SettingsPartForm(SettingsForm):
                 self.fields["legal_entity"].help_text = _(
                     "Voorstel op basis van wat je eerder invulde. Klopt het, sla dan op."
                 )
+        # A part with something in it stays in the menu: its checkbox is on
+        # and can't be changed, with the reason under it. What was saved
+        # stays saved (clean() below), so the part goes once it is empty
+        # and you had switched it off.
+        self.parts_kept = {}
+        in_use = None
+        for name, (part, reason) in PART_FIELDS.items():
+            if name not in self.fields:
+                continue
+            if in_use is None:
+                in_use = profile_axes.profile(self.instance).parts_in_use
+            if part in in_use:
+                self.parts_kept[name] = getattr(self.instance, name)
+                self.fields[name].disabled = True
+                self.fields[name].help_text = reason
+                self.initial[name] = True
+        if "show_expenses" in self.fields and "show_expenses" not in self.parts_kept:
+            self.fields["show_expenses"].help_text = _("Met je bonnetjes en categorieën.")
         # The next number by hand (issue #141), where the fields name it
         # (Facturen en nummering, the start's Facturen step), and only for a
         # kind Huismus never gave a number yet (invariant 3).
@@ -383,6 +419,8 @@ class SettingsPartForm(SettingsForm):
 
     def clean(self):
         cleaned = super().clean()
+        # A kept part saves what was saved, never the "on" it shows.
+        cleaned.update(self.parts_kept)
         if not self.errors:
             for name, kind, template, year, value in self._next_numbers():
                 # Unchanged is not a change: no checks, so it never stops

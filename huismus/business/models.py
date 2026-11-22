@@ -180,6 +180,14 @@ class Settings(TimestampedModel):
     )
     feedback_status = models.CharField(max_length=10, choices=feedback.STATUS_CHOICES, blank=True)
 
+    # Instellingen › Onderdelen (#260, SPEC.md principle 7): whether a whole
+    # part is in the menu and under "Nieuw". A choice of the user, not a
+    # feature flag. A part with data in it shows whatever this says
+    # (core.profile.Profile.parts_shown); the data itself is never hidden.
+    show_quotes = models.BooleanField(_("Offertes"), default=True)
+    show_expenses = models.BooleanField(_("Uitgaven"), default=True)
+    show_bank = models.BooleanField(_("Bank"), default=True)
+
     class Meta:
         verbose_name = _("instellingen")
         verbose_name_plural = _("instellingen")

@@ -106,6 +106,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "huismus.core.context_processors.navigation",
+                "huismus.core.context_processors.parts",
                 "huismus.core.context_processors.desktop",
                 "huismus.core.context_processors.sample_data",
                 "huismus.core.context_processors.theme",

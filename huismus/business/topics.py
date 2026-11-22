@@ -14,6 +14,7 @@ from django.utils.translation import gettext_lazy as _
 
 from huismus.assistants import key as assistant_key
 from huismus.core import auto_backups, cloud_backups, desktop, updates
+from huismus.core import profile as profile_axes
 from huismus.core.appearance import language_name
 from huismus.core.models import THEME_CHOICES
 from huismus.core.templatetags.backups import moment
@@ -108,7 +109,28 @@ TOPICS = (
     ),
 )
 
+# Instellingen › Onderdelen (#260): a topic like the others, but in the
+# group Huismus (GROUPS below).
+TOPICS += (
+    Topic(
+        "onderdelen",
+        _("Onderdelen"),
+        _(
+            "Wat je niet gebruikt, haal je uit het menu. "
+            "Een onderdeel waar iets in staat, blijft erin."
+        ),
+        ("show_quotes", "show_expenses", "show_bank"),
+    ),
+)
+
 BY_SLUG = {topic.slug: topic for topic in TOPICS}
+
+# The parts in the order of the menu, for the card's line.
+PART_NAMES = (
+    (profile_axes.QUOTES, _("Offertes")),
+    (profile_axes.EXPENSES, _("Uitgaven")),
+    (profile_axes.BANK, _("Bank")),
+)
 
 
 def business_is_complete(settings: Settings) -> bool:
@@ -175,6 +197,12 @@ def cards(settings: Settings, theme: str = "") -> list[dict]:
     else:
         summary["mailen"] = (_("Nog niet ingesteld"), (off_text, off))
 
+    # What is in the menu now, not what was chosen: why a part stays, the
+    # page itself says.
+    shown = profile_axes.profile(settings).parts_shown
+    names = [str(name) for part, name in PART_NAMES if part in shown]
+    summary["onderdelen"] = (", ".join(names) or _("Alleen facturen"), None)
+
     result = [
         {
             "title": topic.title,
@@ -187,8 +215,12 @@ def cards(settings: Settings, theme: str = "") -> list[dict]:
         for topic in TOPICS
     ]
     result.append(_backups_card(ok, off))
-    result.append(_receipts_folder_card(ok, off))
-    result.append(_receipt_reading_card(ok, off))
+    # With Uitgaven out of the menu the receipts' settings go too, unless
+    # one is set up (huismus-intern/besluiten.md, 2026-11-22).
+    if profile_axes.EXPENSES in shown or inbox.is_on():
+        result.append(_receipts_folder_card(ok, off))
+    if profile_axes.EXPENSES in shown or ai_service.is_on():
+        result.append(_receipt_reading_card(ok, off))
     result.append(_export_card())
     result.append(_assistants_card(ok, off))
     result.append(_updates_card(ok, off))
@@ -363,7 +395,7 @@ GROUPS = (
     (_("Bedrijf en facturen"), ("bedrijf", "kor", "facturen", "huisstijl", "mailen")),
     (_("Bonnetjes"), ("bonnetjesmap", "bonnetjes-lezen")),
     (_("Back-ups en export"), ("back-ups", "exporteren")),
-    (_("Huismus"), ("ai-assistenten", "updates", "wachtwoord", "weergave")),
+    (_("Huismus"), ("onderdelen", "ai-assistenten", "updates", "wachtwoord", "weergave")),
 )
 
 # An icon per card, from huismus/templates/icons.svg.
@@ -377,6 +409,7 @@ ICONS = {
     "bonnetjes-lezen": "sparkles",
     "back-ups": "archive",
     "exporteren": "download",
+    "onderdelen": "menu",
     "ai-assistenten": "chat",
     "updates": "refresh",
     "wachtwoord": "lock",

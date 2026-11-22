@@ -37,14 +37,15 @@
         <nav class="nav" aria-label="{% translate 'Hoofdmenu' %}">
             <a href="{% url 'home' %}"{% if nav_section == "home" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#home"></use></svg>{% translate "Overzicht" %}</a>
             <a href="{% url 'documents:list' %}"{% if nav_section == "documents" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#file"></use></svg>{% translate "Facturen" %}</a>
-            <a href="{% url 'quotes:list' %}"{% if nav_section == "quotes" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#tag"></use></svg>{% translate "Offertes" %}</a>
-            <a href="{% url 'expenses:list' %}"{% if nav_section == "expenses" and not nav_subsection %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#wallet"></use></svg>{% translate "Uitgaven" %}</a>
+            {% comment %}Offertes, Uitgaven and Bank only when shown (#260, Instellingen › Onderdelen; core.context_processors.parts).{% endcomment %}
+            {% if show_quotes %}<a href="{% url 'quotes:list' %}"{% if nav_section == "quotes" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#tag"></use></svg>{% translate "Offertes" %}</a>{% endif %}
+            {% if show_expenses %}<a href="{% url 'expenses:list' %}"{% if nav_section == "expenses" and not nav_subsection %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#wallet"></use></svg>{% translate "Uitgaven" %}</a>
             {% if nav_section == "expenses" %}
             <div class="sub">
                 <a href="{% url 'expenses:category_list' %}"{% if nav_subsection == "categories" %} aria-current="page"{% endif %}>{% translate "Categorieën" %}</a>
             </div>
-            {% endif %}
-            <a href="{% url 'bank:statement' %}"{% if nav_section == "bank" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#euro"></use></svg>{% translate "Bank" %}</a>
+            {% endif %}{% endif %}
+            {% if show_bank %}<a href="{% url 'bank:statement' %}"{% if nav_section == "bank" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#euro"></use></svg>{% translate "Bank" %}</a>{% endif %}
             <a href="{% url 'contacts:list' %}"{% if nav_section == "contacts" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#users"></use></svg>{% translate "Klanten" %}</a>
             <a href="{% url 'reports:index' %}"{% if nav_section == "reports" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#chart"></use></svg>{% translate "Rapporten" %}</a>
             <a href="{% url 'imports:upload' %}"{% if nav_section == "imports" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#upload"></use></svg>{% translate "Importeren" %}</a>
@@ -69,21 +70,29 @@
         <a href="{% url 'home' %}"{% if nav_section == "home" %} aria-current="page"{% endif %}><svg class="i i-lg" aria-hidden="true"><use href="#home"></use></svg>{% translate "Overzicht" %}</a>
         <a href="{% url 'documents:list' %}"{% if nav_section == "documents" %} aria-current="page"{% endif %}><svg class="i i-lg" aria-hidden="true"><use href="#file"></use></svg>{% translate "Facturen" %}</a>
         <button class="fab {% block tab_plus_class %}fab-quiet{% endblock %}" type="button" popovertarget="plus-menu" aria-label="{% translate 'Nieuw' %}"><svg class="i i-lg" aria-hidden="true"><use href="#plus"></use></svg></button>
+        {% comment %}The fourth place: Uitgaven, else Offertes, else Klanten (tab_part, core.context_processors.parts). Always five places.{% endcomment %}
+        {% if tab_part == "uitgaven" %}
         <a href="{% url 'expenses:list' %}"{% if nav_section == "expenses" %} aria-current="page"{% endif %}><svg class="i i-lg" aria-hidden="true"><use href="#wallet"></use></svg>{% translate "Uitgaven" %}</a>
-        <button type="button" popovertarget="meer-menu"{% if nav_section == "quotes" or nav_section == "bank" or nav_section == "contacts" or nav_section == "reports" or nav_section == "imports" or nav_section == "business" or nav_section == "help" %} aria-current="page"{% endif %}><svg class="i i-lg" aria-hidden="true"><use href="#menu"></use></svg>{% translate "Meer" %}</button>
+        {% elif tab_part == "offertes" %}
+        <a href="{% url 'quotes:list' %}"{% if nav_section == "quotes" %} aria-current="page"{% endif %}><svg class="i i-lg" aria-hidden="true"><use href="#tag"></use></svg>{% translate "Offertes" %}</a>
+        {% else %}
+        <a href="{% url 'contacts:list' %}"{% if nav_section == "contacts" %} aria-current="page"{% endif %}><svg class="i i-lg" aria-hidden="true"><use href="#users"></use></svg>{% translate "Klanten" %}</a>
+        {% endif %}
+        <button type="button" popovertarget="meer-menu"{% if nav_section in meer_sections %} aria-current="page"{% endif %}><svg class="i i-lg" aria-hidden="true"><use href="#menu"></use></svg>{% translate "Meer" %}</button>
     </nav>
     {# The sidebar's "Nieuw" menu, for the tab bar's +. #}
     <div id="plus-menu" class="menu" popover="auto">
         <a href="{% url 'documents:create' %}"><svg class="i" aria-hidden="true"><use href="#file"></use></svg>{% translate "Factuur" %}</a>
-        <a href="{% url 'quotes:create' %}"><svg class="i" aria-hidden="true"><use href="#clipboard"></use></svg>{% translate "Offerte" %}</a>
+        {% if show_quotes %}<a href="{% url 'quotes:create' %}"><svg class="i" aria-hidden="true"><use href="#clipboard"></use></svg>{% translate "Offerte" %}</a>{% endif %}
         <a href="{% url 'contacts:create' %}"><svg class="i" aria-hidden="true"><use href="#users"></use></svg>{% translate "Klant" %}</a>
-        <a href="{% url 'expenses:create' %}"><svg class="i" aria-hidden="true"><use href="#receipt"></use></svg>{% translate "Uitgave" %}</a>
+        {% if show_expenses %}<a href="{% url 'expenses:create' %}"><svg class="i" aria-hidden="true"><use href="#receipt"></use></svg>{% translate "Uitgave" %}</a>{% endif %}
     </div>
+    {# Everything the tab bar has no place for. #}
     <div id="meer-menu" class="menu" popover="auto">
-        <a href="{% url 'quotes:list' %}"><svg class="i" aria-hidden="true"><use href="#tag"></use></svg>{% translate "Offertes" %}</a>
-        <a href="{% url 'expenses:category_list' %}"><svg class="i" aria-hidden="true"><use href="#archive"></use></svg>{% translate "Categorieën" %}</a>
-        <a href="{% url 'bank:statement' %}"><svg class="i" aria-hidden="true"><use href="#euro"></use></svg>{% translate "Bank" %}</a>
-        <a href="{% url 'contacts:list' %}"><svg class="i" aria-hidden="true"><use href="#users"></use></svg>{% translate "Klanten" %}</a>
+        {% if "quotes" in meer_sections %}<a href="{% url 'quotes:list' %}"><svg class="i" aria-hidden="true"><use href="#tag"></use></svg>{% translate "Offertes" %}</a>{% endif %}
+        {% if show_expenses %}<a href="{% url 'expenses:category_list' %}"><svg class="i" aria-hidden="true"><use href="#archive"></use></svg>{% translate "Categorieën" %}</a>{% endif %}
+        {% if show_bank %}<a href="{% url 'bank:statement' %}"><svg class="i" aria-hidden="true"><use href="#euro"></use></svg>{% translate "Bank" %}</a>{% endif %}
+        {% if "contacts" in meer_sections %}<a href="{% url 'contacts:list' %}"><svg class="i" aria-hidden="true"><use href="#users"></use></svg>{% translate "Klanten" %}</a>{% endif %}
         <a href="{% url 'reports:index' %}"><svg class="i" aria-hidden="true"><use href="#chart"></use></svg>{% translate "Rapporten" %}</a>
         <a href="{% url 'imports:upload' %}"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg>{% translate "Importeren" %}</a>
         <a href="{% url 'business:overview' %}"><svg class="i" aria-hidden="true"><use href="#settings"></use></svg>{% translate "Instellingen" %}</a>
@@ -115,7 +124,9 @@
     </div>
 </div>
 {% if user.is_authenticated and not desktop %}
-{% comment %}On a phone every "Uitgave" opens this choice first (owner,
+{% if show_expenses %}
+{% comment %}Not while Uitgaven is out of the menu (#260): nothing leads to it then.
+On a phone every "Uitgave" opens this choice first (owner,
 2026-11-20; before that the camera at once, #188): a photo with the camera,
 a photo or PDF the phone already has, or the ordinary form. A chosen file
 goes to photo_upload (app.js, "The photo first"; expenses/photo_views.py).
@@ -139,10 +150,11 @@ the desktop app, even in a narrow window on a touch screen.{% endcomment %}
         <button type="button" class="btn" command="close" commandfor="camera">{% translate "Sluiten" %}</button>
     </div>
 </dialog>
+{% endif %}
 <div class="page-wait" id="pagina-laden" role="status" aria-label="{% translate 'Pagina laden…' %}" hidden>{% include "core/_bird.svg" %}</div>
-<template id="camera-busy"><div class="toast flash-info" role="status" data-camera-toast>{% include "core/_bird.svg" %}<div class="flash-body"><strong>{% translate "Bonnetje uploaden…" %}</strong></div></div></template>
+{% if show_expenses %}<template id="camera-busy"><div class="toast flash-info" role="status" data-camera-toast>{% include "core/_bird.svg" %}<div class="flash-body"><strong>{% translate "Bonnetje uploaden…" %}</strong></div></div></template>
 <template id="camera-offline"><div class="toast flash-error" role="alert" data-camera-toast><svg class="i" aria-hidden="true"><use href="#x-circle"></use></svg><div class="flash-body"><strong>{% translate "Huismus is niet bereikbaar. Probeer het opnieuw als je verbinding hebt." %}</strong><span><button type="button" class="btn btn-sm" data-camera-retry style="margin-top:var(--s-2)">{% translate "Opnieuw proberen" %}</button></span></div></div></template>
-<template id="camera-failed"><div class="toast flash-error" role="alert" data-camera-toast><svg class="i" aria-hidden="true"><use href="#x-circle"></use></svg><div class="flash-body"><strong>{% translate "Het uploaden is mislukt. Probeer het nog een keer." %}</strong><span><button type="button" class="btn btn-sm" data-camera-retry style="margin-top:var(--s-2)">{% translate "Opnieuw proberen" %}</button></span></div></div></template>
+<template id="camera-failed"><div class="toast flash-error" role="alert" data-camera-toast><svg class="i" aria-hidden="true"><use href="#x-circle"></use></svg><div class="flash-body"><strong>{% translate "Het uploaden is mislukt. Probeer het nog een keer." %}</strong><span><button type="button" class="btn btn-sm" data-camera-retry style="margin-top:var(--s-2)">{% translate "Opnieuw proberen" %}</button></span></div></div></template>{% endif %}
 {% endif %}
 {% if user.is_authenticated and not fb_in_page %}{% include "core/_feedback_widget.html" %}{% endif %}
 {% include "core/_toasts.html" %}
