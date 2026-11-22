@@ -6,7 +6,7 @@ welke vorm je het bewaart.
 ## Zeven jaar
 
 Je bent verplicht je administratie 7 jaar te bewaren. De basisgegevens bewaar
-je altijd 7 jaar: je verkoop- en inkoopadministratie, je debiteuren en
+je altijd 7 jaar, zoals je verkoop- en inkoopadministratie, je debiteuren en
 crediteuren, en het grootboek. Voor gegevens over onroerende zaken geldt een
 andere termijn. Die staat op de bronpagina hieronder.
 

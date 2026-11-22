@@ -23,7 +23,7 @@ maand na dat kwartaal of die maand. Per kwartaal is dat:
 | januari tot en met maart | 30 april |
 | april tot en met juni | 31 juli |
 | juli tot en met september | 31 oktober |
-| oktober tot en met december | 31 januari |
+| oktober tot en met december | 31 januari van het jaar erna |
 
 Doe je aangifte per jaar, dan is dat vóór 1 april van het jaar erna.
 
@@ -41,13 +41,14 @@ je mag aftrekken. Het voorbeeld van de Belastingdienst noemt deze rubrieken:
 - **5a, verschuldigde btw:** het totaal van de rubrieken 1 tot en met 4.
 - **5b, voorbelasting:** de btw op je inkopen die je mag aftrekken.
 
-Het verschil tussen 5a en 5b betaal je of krijg je terug.
+Het verschil betaal je of krijg je terug.
 
 ## Zo doe je dit in Huismus
 
 Onder **Rapporten → Btw-aangifte** zie je per kwartaal, maand of jaar de omzet
 en de btw uit je facturen en uitgaven, per rubriek, en wat je betaalt of
-terugkrijgt. Je neemt de bedragen zelf over in je aangifte. Huismus verstuurt
+terugkrijgt. Wat Huismus niet kan meetellen, staat eronder bij **Niet
+meegeteld**. Je neemt de bedragen zelf over in je aangifte. Huismus verstuurt
 niets naar de Belastingdienst.
 
 [Het rapport Btw-aangifte](../hulp/kor-en-btw.nl.md#btw-aangifte)

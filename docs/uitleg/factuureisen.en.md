@@ -48,10 +48,12 @@ that an exemption applies. Read more about the scheme in
 
 ## How to do this in Huismus
 
-Huismus puts these details on every invoice. You fill in your name, address,
-KVK number and VAT number once under **Settings → Business**. An invoice gets
-its number when you issue it: the next one in the series, without gaps.
-Huismus uses the same full layout for every amount, also up to € 100.
+Huismus has a place on the invoice for each of these details. You fill in
+your name, address, KVK number and VAT number once under **Settings →
+Business**. The delivery date you fill in per invoice. An
+invoice gets its number when you issue it: the next one in the series,
+without gaps. Huismus uses the same full layout for every amount, also up to
+€ 100.
 
 [Making and issuing invoices](../hulp/facturen.en.md)
 
