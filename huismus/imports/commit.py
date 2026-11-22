@@ -316,7 +316,11 @@ def import_sales_invoices(
             document.due_date = parsed.due_date
             document.business_snapshot = business_snapshot(settings)
             document.contact_snapshot = snapshot_as_stated(contact, parsed.customer)
-            document.kor_text_snapshot = settings.no_vat_text
+            # No text beside VAT: that invoice was not made under the KOR or
+            # without VAT, whatever the settings say now (as the CSV import).
+            document.kor_text_snapshot = (
+                settings.no_vat_text if parsed.stated_tax_cents == 0 else ""
+            )
             # Faithful (SPEC.md section 7): Moneybird's own stated totals,
             # never the recomputed ones — see the discrepancy check
             # above, and huismus-intern/STATUS.md's M5 notes on why the two can
@@ -519,7 +523,7 @@ def import_quotes(parsed_quotes, *, commit: bool) -> QuoteImportReport:
                 contact=contact,
                 business_snapshot=business_snapshot(settings),
                 contact_snapshot=snapshot_as_stated(contact, parsed.customer),
-                kor_text_snapshot=settings.no_vat_text,
+                kor_text_snapshot=(settings.no_vat_text if parsed.stated_tax_cents == 0 else ""),
                 language=settings.default_language,
                 currency="EUR",
                 # Faithful (SPEC.md section 7): Moneybird's own stated
