@@ -353,6 +353,10 @@ Nagelezen op 2026-11-22 in hun eigen documentatie.
   volgers op GitHub, en drie keer zoveel (225, 90, 90) als de maker zelf
   indient. Een repository jonger dan 30 dagen komt normaal niet in aanmerking.
 - Nieuwe versies haalt Homebrew daarna zelf op (autobump, elke drie uur).
+- Een cask daar heeft een `zap` nodig
+  ([Cask Cookbook](https://docs.brew.sh/Cask-Cookbook)), die geen bestanden
+  weghaalt die de gebruiker zelf maakte. Voor Huismus dus hooguit voorkeuren
+  en caches, nooit de administratie.
 - Wie met AI indient, zegt dat erbij; elke commit heeft een mens als auteur,
   en de indiener beantwoordt vragen van de beheerders zelf.
 
