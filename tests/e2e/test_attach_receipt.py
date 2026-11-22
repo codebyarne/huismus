@@ -84,3 +84,8 @@ def test_from_verwerken_on_to_the_next_one(app):
     expect(app.get_by_role("img", name="Bonnetje oud.jpg")).to_be_visible()
     receipt.refresh_from_db()
     assert receipt.expense == expense
+
+    # Undone: this receipt again, the count as before Kiezen.
+    app.get_by_role("button", name="Ongedaan maken").click()
+    expect(app.locator("#verwerken-teller")).to_have_text("1 van 2")
+    expect(app.get_by_role("img", name="Bonnetje nieuw.jpg")).to_be_visible()

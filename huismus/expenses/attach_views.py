@@ -158,19 +158,18 @@ def choose(request, pk):
     )
 
 
-def _one_less_done(url: str) -> str:
-    """In Verwerken, Kiezen counted this one as done (`klaar`); undone, it
-    isn't any more, so "3 van 24" is as before Kiezen. Never below 0."""
+def _back_after_undo(url: str, receipt: Attachment) -> str:
+    """Where "Ongedaan maken" goes: the tray as it was, or in Verwerken
+    this receipt again with `klaar` one less (Kiezen counted it as done),
+    so "3 van 24" is as before Kiezen. Never below 0."""
     parts = urlsplit(url)
-    params = dict(parse_qsl(parts.query))
-    params.pop(ATTACHED, None)
-    if "klaar" in params:
-        try:
-            done = max(int(params["klaar"]) - 1, 0)
-        except ValueError:
-            done = 0
-        params["klaar"] = str(done) if done else ""
-    return _with(parts.path, **params)
+    if resolve(parts.path).view_name == "expenses:tray":
+        return parts.path
+    try:
+        done = max(int(dict(parse_qsl(parts.query)).get("klaar") or 0) - 1, 0)
+    except ValueError:
+        done = 0
+    return batch.Item(batch.RECEIPT, receipt.pk).url(done)
 
 
 def _is_tray_or_process(url: str) -> bool:
@@ -202,7 +201,7 @@ def undo(request, pk):
     expense = get_object_or_404(Expense, pk=request.POST.get("uitgave") or 0)
     if adding.detach_receipt(expense, receipt):
         messages.success(request, _("Het bonnetje staat weer bij de bonnetjes zonder uitgave."))
-        target = _one_less_done(target)
+        target = _back_after_undo(target, receipt)
     else:
         messages.error(request, _("Dit bonnetje hangt niet meer aan die uitgave."))
     return redirect(target)

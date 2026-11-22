@@ -302,7 +302,7 @@ def test_undo_goes_back_only_to_the_tray_or_verwerken(client, user):
     assert response.url == reverse("expenses:tray")
 
 
-def test_undo_in_verwerken_counts_it_as_not_done(client, user):
+def test_undo_in_verwerken_goes_back_to_that_receipt_not_done(client, user):
     expense, receipt = _expense(), _receipt()
     client.post(_page(receipt)[0], {"uitgave": expense.pk})
     place = (
@@ -314,4 +314,4 @@ def test_undo_in_verwerken_counts_it_as_not_done(client, user):
         {"uitgave": expense.pk, "plek": place},
     )
 
-    assert response.url == f"{reverse('expenses:process_item', args=['bonnetje', 7])}?klaar=2"
+    assert response.url == batch.Item(batch.RECEIPT, receipt.pk).url(2)
