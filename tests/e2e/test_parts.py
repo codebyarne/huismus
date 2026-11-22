@@ -20,7 +20,11 @@ def _switch_off_quotes_and_expenses(app):
     app.get_by_role("button", name="Opslaan").click()
     expect(app.get_by_text("Instellingen opgeslagen.")).to_be_visible()
     settings = Settings.load()
-    assert (settings.show_quotes, settings.show_expenses, settings.show_bank) == (False, False, True)
+    assert (settings.show_quotes, settings.show_expenses, settings.show_bank) == (
+        False,
+        False,
+        True,
+    )
 
 
 def test_parts_switched_off_leave_the_sidebar(app):

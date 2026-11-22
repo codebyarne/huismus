@@ -37,11 +37,14 @@ def navigation(request):
 
 
 def parts(request):
-    """show_quotes, show_expenses, show_bank: whether a part is in the menu,
-    the tab bar, "Meer" and "Nieuw" (#260, core.profile.parts_shown).
-    tab_part: the part on the tab bar's fourth place, Uitgaven, else
-    Offertes, else Klanten (huismus-intern/besluiten.md, 2026-11-22).
-    meer_sections: the sections behind "Meer", the rest."""
+    """show_quotes, show_expenses, show_bank: whether a part is in the
+    sidebar and under "Nieuw" (#260, core.profile.parts_shown).
+    tab: what the tab bar's fourth place holds, "expenses", else "quotes",
+    else "contacts" (huismus-intern/besluiten.md, 2026-11-22); the values
+    are URL namespaces, like nav_section. meer: the sections behind "Meer",
+    everything the tab bar has no place for; it lists their links and is
+    marked on their pages. Uitgaven's Categorieën is in it as "categories",
+    no section: its page marks the Uitgaven tab, like every expenses page."""
     if not getattr(request, "user", None) or not request.user.is_authenticated:
         return {}
     from huismus.business.models import Settings
@@ -51,25 +54,26 @@ def parts(request):
     stored = Settings.objects.filter(pk=1).first() or Settings()
     shown = profile(stored).parts_shown
     if EXPENSES in shown:
-        tab_part = EXPENSES
+        tab = "expenses"
     elif QUOTES in shown:
-        tab_part = QUOTES
+        tab = "quotes"
     else:
-        tab_part = "klanten"
-    # The sections "Meer" holds, so it is marked on their pages and only there.
-    meer_sections = {"reports", "imports", "business", "help"}
+        tab = "contacts"
+    meer = {"reports", "imports", "business", "help"}
+    if QUOTES in shown:
+        meer.add("quotes")
+    if EXPENSES in shown:
+        meer.add("categories")
     if BANK in shown:
-        meer_sections.add("bank")
-    if QUOTES in shown and tab_part != QUOTES:
-        meer_sections.add("quotes")
-    if tab_part != "klanten":
-        meer_sections.add("contacts")
+        meer.add("bank")
+    meer.add("contacts")
+    meer.discard(tab)
     return {
         "show_quotes": QUOTES in shown,
         "show_expenses": EXPENSES in shown,
         "show_bank": BANK in shown,
-        "tab_part": tab_part,
-        "meer_sections": meer_sections,
+        "tab": tab,
+        "meer": meer,
     }
 
 
