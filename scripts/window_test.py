@@ -199,8 +199,12 @@ def first_invoice(page, base, shots):
     page.locator('input[name="iban"]').fill("NL91ABNA0417164300")
     page.locator('input[name="email"]').fill("studio@voorbeeld.example")
     shots.take("welkom-bedrijf")
-    _next_step(page, "/welkom/kor/")
-    shots.take("welkom-kor")
+    _next_step(page, "/welkom/werk/")
+    # Je werk: VAT, no reverse charge, so the invoice below has 21% and
+    # no KOR or Btw verlegd step comes.
+    page.locator('label:has(input[name="vat"][value="ja"])').click()
+    page.locator('label:has(input[name="reverse_charge"][value="nee"])').click()
+    shots.take("welkom-werk")
     _next_step(page, "/welkom/facturen/")
     shots.take("welkom-facturen")
     _next_step(page, "/welkom/logo/")
@@ -212,7 +216,7 @@ def first_invoice(page, base, shots):
     page.locator('a.btn-primary[href="/contacten/nieuw/"]').click()
     page.locator('input[name="company_name"]').fill("Bakkerij De Korrel")
     shots.take("klant")
-    page.locator("form button.btn-primary[type=submit]").last.click()
+    page.locator("main form button.btn-primary[type=submit]").last.click()
     page.wait_for_url(re.compile(r"/contacten/\d+/"))
 
     page.goto(base + "/facturen/nieuw/")
@@ -246,8 +250,9 @@ def first_invoice(page, base, shots):
 
 
 def _next_step(page, path):
-    page.locator("form button.btn-primary[type=submit]").click()
-    page.wait_for_url(re.compile(re.escape(path) + "$"))
+    # In main: the Feedback panel outside it has a form with a primary button too.
+    page.locator("main form button.btn-primary[type=submit]").click()
+    page.wait_for_url(re.compile(re.escape(path) + r"(\?.*)?$"))
 
 
 def _invoice_number(page) -> str:
