@@ -2,8 +2,8 @@
 
 Are your books in another package or in Excel? Then you bring them along to
 Huismus: your customers, invoices, quotes and expenses, with the PDFs and
-receipts. Only cancel your old package once everything is in Huismus and
-adds up.
+receipts. Huismus does a trial run first and only saves something when you
+choose to.
 
 ## How to move
 
@@ -21,9 +21,6 @@ adds up.
    above all. Put a few invoices next to the PDF from your old package.
    Compare your revenue per year under **Reports › Year overview** with the
    one in your old package.
-5. **Cancel.** Is everything in, does it add up and do you have a
-   [backup](back-ups.en.md)? Then you cancel your old package. Also keep what
-   you got out of it with your own files.
 
 ## Per package
 

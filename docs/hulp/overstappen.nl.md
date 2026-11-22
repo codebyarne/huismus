@@ -2,7 +2,8 @@
 
 Staat je administratie in een ander pakket of in Excel? Dan neem je haar mee
 naar Huismus: je klanten, facturen, offertes en uitgaven, met de pdf's en
-bonnetjes. Zeg je oude pakket pas op als alles in Huismus staat en klopt.
+bonnetjes. Huismus doet eerst een proefdraai en slaat pas iets op als jij dat
+kiest.
 
 ## Zo stap je over
 
@@ -20,9 +21,6 @@ bonnetjes. Zeg je oude pakket pas op als alles in Huismus staat en klopt.
    je IBAN. Leg een paar facturen naast de pdf uit je oude pakket. Vergelijk
    per jaar je omzet bij **Rapporten › Jaaroverzicht** met die in je oude
    pakket.
-5. **Zeg op.** Staat alles erin, klopt het en is er een
-   [back-up](back-ups.nl.md)? Dan zeg je je oude pakket op. Bewaar ook wat je
-   eruit hebt gehaald bij je eigen bestanden.
 
 ## Per pakket
 

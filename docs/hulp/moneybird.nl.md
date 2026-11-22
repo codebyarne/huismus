@@ -52,10 +52,3 @@ Moneybird.
 
 Importeer je dezelfde export nog eens, dan verandert er niets: wat al bestaat,
 slaat Huismus over. Een nieuwer jaar erbij importeren kan dus altijd.
-
-## Daarna opzeggen
-
-Zeg Moneybird pas op als alles in Huismus staat, je het hebt nagekeken en er
-een [back-up](back-ups.nl.md) is. Bewaar ook de zips uit Moneybird bij je
-eigen bestanden. Waar je verder op let, staat in
-[Overstappen](overstappen.nl.md#waar-je-op-let).
