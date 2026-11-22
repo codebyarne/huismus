@@ -57,6 +57,15 @@ ARCHIVE_DIR_NAME = "bankafschriften"
 # A ZIP may hold a statement per month; anything else in it is skipped.
 _MAX_FILES_IN_ZIP = 200
 _MAX_FILE_SIZE = 50 * 1024 * 1024
+# What one ZIP may unpack to in all (#299), counted as it is read: a few KB
+# can unpack to gigabytes, and all of it is held in memory on a Raspberry
+# Pi. Bank statements are text, years of them stay far below 200 MB; the
+# import from another package allows 1 GB because it holds invoice PDFs.
+MAX_UNZIPPED_BYTES = 200 * 1024 * 1024
+
+
+class UnzippedTooBigError(StatementReadError):
+    """A ZIP that unpacks to more than MAX_UNZIPPED_BYTES."""
 
 
 @dataclass
@@ -119,13 +128,20 @@ def _parse_zip(data: bytes) -> list[Statement]:
     members = [m for m in archive.infolist() if not m.is_dir()]
     if len(members) > _MAX_FILES_IN_ZIP:
         raise StatementReadError("too many files in zip")
+    left = MAX_UNZIPPED_BYTES
     for member in members:
-        # Read at most one byte past the limit: the size in the zip's own
-        # header can lie, what comes out of it can't.
-        with archive.open(member) as file:
-            content = file.read(_MAX_FILE_SIZE + 1)
+        # Read at most one byte past what is allowed: the size in the zip's
+        # own header can lie, what comes out of it can't.
+        try:
+            with archive.open(member) as file:
+                content = file.read(min(_MAX_FILE_SIZE, left) + 1)
+        except (zipfile.BadZipFile, EOFError) as exc:
+            raise StatementReadError("zip") from exc
         if len(content) > _MAX_FILE_SIZE:
             raise StatementReadError("file in zip too big")
+        if len(content) > left:
+            raise UnzippedTooBigError("zip unpacks too big")
+        left -= len(content)
         # Anything else in the zip (a read-me) is not a statement: skipped.
         statement = _parse_one(content)
         if statement is not None:

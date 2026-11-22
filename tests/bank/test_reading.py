@@ -329,6 +329,50 @@ def test_a_zip_with_a_file_bigger_than_its_header_says_is_refused(monkeypatch):
         _read(buffer.getvalue(), name="a.zip")
 
 
+def _bomb(files: int, size: int) -> bytes:
+    """A zip that is small, but unpacks to `files` times `size` bytes."""
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as archive:
+        for number in range(files):
+            archive.writestr(f"{number}.xml", b"\0" * size)
+    return buffer.getvalue()
+
+
+def test_a_zip_that_unpacks_too_big_in_all_is_refused(monkeypatch):
+    # Each file stays under the limit per file; together they don't (#299).
+    monkeypatch.setattr(reading, "_MAX_FILE_SIZE", 1000)
+    monkeypatch.setattr(reading, "MAX_UNZIPPED_BYTES", 2500)
+    data = _bomb(files=3, size=1000)
+    assert len(data) < 2500
+    with pytest.raises(reading.UnzippedTooBigError):
+        _read(data, name="bom.zip")
+    assert not BankStatement.objects.exists()
+
+
+def test_the_total_counts_what_is_read_not_what_the_header_says(monkeypatch):
+    # A header that says 0 bytes doesn't get the file past the total.
+    monkeypatch.setattr(reading, "MAX_UNZIPPED_BYTES", 2500)
+    data = bytearray(_bomb(files=1, size=3000))
+    for header in (b"PK\x03\x04", b"PK\x01\x02"):
+        start = data.find(header)
+        # The uncompressed size: offset 22 in a local header, 24 in the central one.
+        offset = start + (22 if header == b"PK\x03\x04" else 24)
+        data[offset : offset + 4] = (0).to_bytes(4, "little")
+    with pytest.raises(StatementReadError):
+        _read(bytes(data), name="bom.zip")
+    assert not BankStatement.objects.exists()
+
+
+def test_a_zip_of_statements_up_to_the_total_still_reads(monkeypatch):
+    first, second = _camt(("10.00", "A", "een")), _camt(("20.00", "B", "twee"))
+    monkeypatch.setattr(reading, "MAX_UNZIPPED_BYTES", len(first) + len(second))
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w") as archive:
+        archive.writestr("a.xml", first)
+        archive.writestr("b.xml", second)
+    assert _read(buffer.getvalue(), name="a.zip").new == 2
+
+
 def test_an_invoice_with_vat_is_booked_on_its_total_with_vat():
     settings = Settings.load()
     settings.kor_enabled = False
