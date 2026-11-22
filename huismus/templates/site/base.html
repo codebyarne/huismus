@@ -45,6 +45,7 @@
         <a href="{{ home_url }}"{% if nav == "home" %} aria-current="page"{% endif %}>{% translate "Home" %}</a>
         <a href="{{ switching_url }}"{% if nav == "switching" %} aria-current="page"{% endif %}>{% translate "Overstappen" %}</a>
         <a href="{{ features_url }}"{% if nav == "features" %} aria-current="page"{% endif %}>{% translate "Functies" %}</a>
+        <a href="{{ guides_index_url }}"{% if nav == "guides" %} aria-current="page"{% endif %}>{% translate "Uitleg" %}</a>
         <a href="{{ help_index_url }}"{% if nav == "help" %} aria-current="page"{% endif %}>{% translate "Hulp" %}</a>
         <a href="{{ install_url }}"{% if nav == "install" %} aria-current="page"{% endif %}>{% translate "Installeren" %}</a>
         <a href="{{ contribute_url }}"{% if nav == "contribute" %} aria-current="page"{% endif %}>{% translate "Meebouwen" %}</a>
@@ -72,6 +73,7 @@
             <a href="{{ features_url }}">{% translate "Functies" %}</a>
             <a href="{{ why_url }}"{% if nav == "why" %} aria-current="page"{% endif %}>{% translate "Waarom Huismus" %}</a>
             <a href="{{ install_url }}">{% translate "Installeren" %}</a>
+            <a href="{{ guides_index_url }}">{% translate "Uitleg" %}</a>
             <a href="{{ help_index_url }}">{% translate "Hulp" %}</a>
             <a href="{{ contribute_url }}">{% translate "Meebouwen" %}</a>
             <a href="{{ repository }}">{% translate "Broncode" %}</a>

@@ -21,6 +21,8 @@ Addresses: Dutch at the root, English under /en/.
     /functies/          /en/features/
     /hulp/              /en/help/
     /hulp/<onderwerp>/  /en/help/<topic>/
+    /uitleg/            /en/guides/
+    /uitleg/<pagina>/   /en/guides/<page>/
     /waarom/            /en/why/
     /meebouwen/         /en/contribute/
     /download/<mac|windows>/  /en/download/<mac|windows>/
@@ -38,7 +40,7 @@ from django.template.loader import render_to_string
 from django.utils import translation
 from PIL import Image
 
-from . import help, site_features, updates
+from . import guides, help, site_features, updates
 
 DOMAIN = "mijnhuismus.nl"
 REPOSITORY = "https://github.com/codebyarne/huismus"
@@ -112,6 +114,13 @@ def home_url(language: str) -> str:
 def help_url(language: str, slug: str = "", anchor: str = "") -> str:
     base = "/hulp/" if language == "nl" else "/en/help/"
     return base + (f"{slug}/" if slug else "") + anchor
+
+
+def guides_url(language: str, slug: str = "") -> str:
+    """Uitleg: how something works for a freelancer, apart from Huismus
+    (core.guides, issue #308)."""
+    base = "/uitleg/" if language == "nl" else "/en/guides/"
+    return base + (f"{slug}/" if slug else "")
 
 
 def whats_new_url(language: str) -> str:
@@ -341,6 +350,33 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
                 "film": FILM_WITH_HELP.get(slug) if language == FILM_LANGUAGE else None,
             },
         )
+    pages[guides_url(language)] = (
+        "site/guide_index.html",
+        {
+            "nav": "guides",
+            "switch_url": guides_url(other),
+            "guides": [
+                (guides_url(language, s), guides.title(s, language), guides.summary(s, language))
+                for s in guides.GUIDES
+            ],
+        },
+    )
+    for slug in guides.GUIDES:
+        page = guides.render(
+            slug,
+            language,
+            help_link=lambda s, a: help_url(language, s, a),
+            link=lambda s: guides_url(language, s),
+        )
+        pages[guides_url(language, slug)] = (
+            "site/guide_page.html",
+            {
+                "nav": "guides",
+                "switch_url": guides_url(other, slug),
+                "page": page,
+                "summary": _short(page.summary),
+            },
+        )
     return pages
 
 
@@ -354,6 +390,7 @@ def _links(language: str) -> dict[str, str]:
         "switching_url": switching_url(language),
         "features_url": features_url(language),
         "help_index_url": help_url(language),
+        "guides_index_url": guides_url(language),
         "install_url": install_url(language),
         "contribute_url": contribute_url(language),
         "why_url": why_url(language),
@@ -471,8 +508,8 @@ def _for_search_engines(out: Path, addresses: list[str]) -> None:
 def _for_ai_assistants() -> str:
     """llms.txt: what Huismus is and where each page is, as Markdown, for an AI
     assistant that reads the site to answer someone's question (issue #295).
-    The titles and summaries are those of the help pages, so it never says
-    something the site doesn't."""
+    The titles and summaries are those of the help pages and of Uitleg
+    (core.guides), so it never says something the site doesn't."""
     lines = [
         "# Huismus",
         "",
@@ -495,4 +532,8 @@ def _for_ai_assistants() -> str:
                     address = f"https://{DOMAIN}{help_url(language, slug)}"
                     summary = _short(help.summary(slug, language))
                     lines.append(f"- [{help.title(slug, language)}]({address}): {summary}")
+            for slug in guides.GUIDES:
+                address = f"https://{DOMAIN}{guides_url(language, slug)}"
+                summary = _short(guides.summary(slug, language))
+                lines.append(f"- [{guides.title(slug, language)}]({address}): {summary}")
     return "\n".join(lines) + "\n"
