@@ -102,7 +102,7 @@ def test_the_button_opens_the_panel_point_check_and_send(app, contact, quick_sen
     panel = app.locator("#feedback-paneel")
     expect(panel.get_by_role("heading")).to_have_text("Wat wil je kwijt?")
     panel.get_by_text("Idee", exact=True).click()
-    panel.get_by_label("Vertel het in je eigen woorden").fill("Klanten op plaats sorteren")
+    panel.get_by_label("Bericht").fill("Klanten op plaats sorteren")
 
     # Point at something on the page: the panel steps aside, a click picks it.
     panel.get_by_role("button", name="Wijs aan op het scherm").click()

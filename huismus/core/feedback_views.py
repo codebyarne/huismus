@@ -158,13 +158,13 @@ class QuickFeedbackForm(forms.Form):
         widget=forms.RadioSelect,
     )
     message = forms.CharField(
-        label=_("Vertel het in je eigen woorden"),
+        label=_("Bericht"),
         max_length=feedback.MAX_WISH,
         widget=forms.Textarea(attrs={"rows": 4}),
     )
     email = forms.EmailField(
         label=_("E-mailadres"),
-        help_text=_("Vul dit alleen in als de appbouwer je over je bericht mag mailen."),
+        help_text=_("Laat je e-mailadres achter als de appbouwer je over je bericht mag mailen."),
         max_length=feedback.MAX_EMAIL,
         required=False,
     )
