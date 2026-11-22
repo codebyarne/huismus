@@ -1,0 +1,36 @@
+{% extends "site/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ page.title }} — Huismus{% endblock %}
+{% block og_title %}{{ page.title }} — Huismus{% endblock %}
+{% block description %}{{ summary }}{% endblock %}
+{% block main_class %}wrap site-narrow guide-page{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <a class="small" href="{{ guides_index_url }}">← {% translate "Uitleg" %}</a>
+        <h1>{{ page.title }}</h1>
+        <p class="lede">{{ page.summary }}</p>
+    </div>
+</div>
+
+{% comment %}Markdown from docs/uitleg/, in the repository: trusted, rendered by core.guides in three parts.{% endcomment %}
+<article class="help-text guide-text">
+    {{ page.html|safe }}
+</article>
+
+<section class="card card-pad help-text guide-in-huismus" aria-labelledby="in-huismus">
+    <h2 id="in-huismus">{% translate "Zo doe je dit in Huismus" %}</h2>
+    {{ page.in_huismus_html|safe }}
+</section>
+
+<section class="help-text guide-sources" aria-labelledby="bronnen">
+    <h2 id="bronnen">{% translate "Bronnen" %}</h2>
+    {{ page.sources_html|safe }}
+</section>
+
+<section class="band band-final" id="downloaden">
+    {% include "site/_final.html" %}
+</section>
+{% endblock %}

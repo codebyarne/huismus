@@ -7965,6 +7965,22 @@ msgid ""
 "lees je op <a href=\"https://www.arnekrijnsen.com\">arnekrijnsen.com</a>."
 msgstr ""
 
+msgid "Uitleg"
+msgstr ""
+
+msgid "Zo doe je dit in Huismus"
+msgstr ""
+
+msgid "Bronnen"
+msgstr ""
+
+msgid "Uitleg voor zzp’ers over facturen, btw en de kleineondernemersregeling, met de bron erbij."
+msgstr ""
+
+#, python-format
+msgid "Hoe werkt het met facturen, btw en de kleineondernemersregeling (KOR)? Elke pagina zegt in gewone taal wat de regel is, met de bron erbij. Uitleg over Huismus zelf staat bij <a href=\"%(help_index_url)s\">Hulp</a>."
+msgstr ""
+
 #~ msgid "bijschrijving"
 #~ msgstr "bijschrijving"
 

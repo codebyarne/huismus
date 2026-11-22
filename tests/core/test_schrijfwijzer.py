@@ -130,6 +130,18 @@ def test_help_pages_follow_the_writing_guide(language):
     assert _offences(language, lines) == []
 
 
+@pytest.mark.parametrize("language", ["nl", "en"])
+def test_uitleg_follows_the_writing_guide(language):
+    """The pages of Uitleg on the site (docs/uitleg/): what the Belastingdienst
+    says in the u-form, they say in the je-form."""
+    pages = sorted((ROOT / "docs" / "uitleg").glob(f"*.{language}.md"))
+    assert pages
+    lines = [line for page in pages for line in _prose(page.read_text()).splitlines()]
+    # A source page keeps its own title, u-form and all.
+    lines = [line for line in lines if not line.startswith("- [")]
+    assert _offences(language, lines) == []
+
+
 def _docs() -> list[Path]:
     docs = sorted(p for p in (ROOT / "docs").glob("*.md") if p.name not in DOCS_NOT_CHECKED)
     return [ROOT / "README.md", *docs]

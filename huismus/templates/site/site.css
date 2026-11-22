@@ -387,6 +387,24 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .help-index .settings-topics a.card:hover h3 { color: var(--primary-ink); }
 .help-index .topic-intro { display: block !important; font-size: var(--fs-md) !important; }
 
+/* Uitleg: de tekst los op de pagina, "Zo doe je dit in Huismus" als vel, de bronnen klein eronder. */
+.guide-list { padding: 0; border-top: 1px solid var(--border); }
+.help-index .guide-list h2 { font-family: var(--font-sans); font-size: 1.0625rem; font-weight: var(--fw-semibold); }
+.help-index .guide-list a.card:hover h2 { color: var(--primary-ink); }
+/* Alleen een lang woord in de titel (kleineondernemersregeling) breekt af op een telefoon. */
+.guide-page .page-head h1 { hyphens: auto; hyphenate-limit-chars: 16 6 6; overflow-wrap: anywhere; }
+.guide-page .guide-text { font-size: 1.0625rem; }
+.guide-page .guide-text h2 { font-family: var(--font-display); }
+.guide-page .guide-text table { border-collapse: collapse; width: 100%; font-size: 1rem; }
+.guide-page .guide-text th, .guide-page .guide-text td { padding: var(--s-2) var(--s-3) var(--s-2) 0; border-bottom: 1px solid var(--border); text-align: left; }
+.guide-page .guide-text th { font-weight: var(--fw-semibold); }
+.guide-page .guide-in-huismus { margin-top: var(--s-4); }
+.guide-page .guide-in-huismus p:last-child a { font-weight: var(--fw-semibold); }
+.guide-page .guide-in-huismus p:last-child a::after { content: " →"; }
+.guide-page .guide-sources { padding-top: var(--s-6); border-top: 1px solid var(--border); font-size: var(--fs-sm); color: var(--text-muted); }
+.guide-page .guide-sources h2 { margin-top: 0; font-family: var(--font-sans); font-size: var(--fs-md); color: var(--text); }
+.guide-page .guide-sources a { overflow-wrap: anywhere; }
+
 /* Een laptop met een laag scherm: de kop iets compacter, zodat de app in beeld komt. */
 @media (min-width: 641px) and (max-height: 860px) {
   .hero { gap: var(--s-3); padding-top: var(--s-6); }

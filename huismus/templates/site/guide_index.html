@@ -1,0 +1,33 @@
+{% extends "site/base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Uitleg" %} — Huismus{% endblock %}
+{% block og_title %}{% translate "Uitleg" %} — Huismus{% endblock %}
+{% block description %}{% translate "Uitleg voor zzp’ers over facturen, btw en de kleineondernemersregeling, met de bron erbij." %}{% endblock %}
+
+{% block main_class %}wrap help-index{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <h1>{% translate "Uitleg" %}</h1>
+        <p class="lede">{% blocktranslate %}Hoe werkt het met facturen, btw en de kleineondernemersregeling (KOR)? Elke pagina zegt in gewone taal wat de regel is, met de bron erbij. Uitleg over Huismus zelf staat bij <a href="{{ help_index_url }}">Hulp</a>.{% endblocktranslate %}</p>
+    </div>
+</div>
+
+{% comment %}The list of the help index (site/help_index.html), without groups while there are few pages.{% endcomment %}
+<ul class="settings-topics guide-list">
+    {% for url, title, summary in guides %}
+    <li>
+        <a class="card card-pad" href="{{ url }}" aria-label="{{ title }}">
+            <h2>{{ title }}</h2>
+            <span class="small muted topic-intro">{{ summary }}</span>
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+
+<section class="band band-final" id="downloaden">
+    {% include "site/_final.html" %}
+</section>
+{% endblock %}

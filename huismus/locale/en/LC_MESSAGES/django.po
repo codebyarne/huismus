@@ -8694,6 +8694,23 @@ msgstr ""
 "other work on <a href=\"https://www.arnekrijnsen.com\">arnekrijnsen.com</a>."
 
 #, python-format
+
+msgid "Uitleg"
+msgstr "Guides"
+
+msgid "Zo doe je dit in Huismus"
+msgstr "How to do this in Huismus"
+
+msgid "Bronnen"
+msgstr "Sources"
+
+msgid "Uitleg voor zzp’ers over facturen, btw en de kleineondernemersregeling, met de bron erbij."
+msgstr "Guides for freelancers in the Netherlands on invoices, VAT and the small business scheme, each with its source."
+
+#, python-format
+msgid "Hoe werkt het met facturen, btw en de kleineondernemersregeling (KOR)? Elke pagina zegt in gewone taal wat de regel is, met de bron erbij. Uitleg over Huismus zelf staat bij <a href=\"%(help_index_url)s\">Hulp</a>."
+msgstr "How do invoices, VAT and the small business scheme (KOR) work in the Netherlands? Each page says in plain words what the rule is, with its source. How Huismus itself works is under <a href=\"%(help_index_url)s\">Help</a>."
+
 #~ msgid "Grens %(limit)s · waarschuwen vanaf %(percent)s%%"
 #~ msgstr "Limit %(limit)s · warn from %(percent)s%%"
 

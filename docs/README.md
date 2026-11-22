@@ -18,6 +18,18 @@ installeren en een pagina voor wie wil meebouwen. De site is vooral voor
 mensen die geen techneut zijn: de app voor Mac en Windows komt eerst, zelf
 draaien op een server staat als tweede route lager op de pagina.
 
+[`uitleg/`](uitleg/): de pagina's van **Uitleg** op de site, over hoe iets
+werkt voor een zzp'er, los van Huismus (wat er op een factuur staat, de
+omzetgrens van de KOR). Eén bestand per pagina per taal, in drie delen: de
+uitleg, `## Zo doe je dit in Huismus` met een link naar een hulppagina
+(`../hulp/facturen.nl.md`), en `## Bronnen` met de dag waarop ze zijn
+nagekeken. Elke bewering komt uit `belastingregels.md` of
+`invoice-requirements.md`, en elke link naar buiten is een bronpagina die daar
+staat: zonder bron geen pagina. Een nieuwe pagina: beide bestanden, de naam in
+`GUIDES` in `huismus/core/guides.py`, en de bronpagina's die dag opnieuw
+openen. `tests/core/test_guides.py` controleert de delen en de links. De app
+toont deze pagina's niet.
+
 [`site/`](site/): de schermafbeeldingen en animaties van de app op de site,
 per taal en voor licht en donker. Ze komen van een verzonnen administratie
 (`huismus/core/site_data.py`), één keer met de KOR en één keer met btw. Ziet een scherm op de site er anders uit dan in
