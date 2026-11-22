@@ -392,6 +392,9 @@ def _problems_on(page, path, language, dutch, data):
     off_screen = page.evaluate(MENUS_OFF_SCREEN)
     if off_screen:
         problems.append(f"menu opent buiten beeld: {sorted(off_screen)}")
+    under_feedback = page.evaluate(UNDER_THE_FEEDBACK_BUTTON)
+    if under_feedback:
+        problems.append(f"onder de knop Feedback: {sorted(set(under_feedback))}")
     return problems
 
 
@@ -438,6 +441,41 @@ def test_the_tab_check_reports_a_row_that_cuts_tabs_off_and_not_one_that_breaks(
     # The same tabs breaking onto a next line, as .tabs does now.
     page.set_content(f'{style}<nav class="tabs" style="{row}; flex-wrap: wrap">{tabs}</nav>')
     assert page.evaluate(CUT_OFF_TABS) == []
+
+
+# The Feedback button floats over the page. On a page shorter than the
+# window the action bar is not at the bottom of the window (the footer is
+# below it), and the button lay on "Opslaan": you couldn't click it (#280).
+# Nothing you can press in the action bar is under the button, at the top of
+# the page and at its end.
+UNDER_THE_FEEDBACK_BUTTON = """async () => {
+    const button = document.getElementById('feedback-knop');
+    if (!button || !button.checkVisibility()) return [];
+    const covered = () => {
+        const over = button.getBoundingClientRect();
+        return [...document.querySelectorAll('.actionbar :is(a, button, input, select)')]
+            .filter(el => {
+                if (!el.checkVisibility()) return false;
+                const box = el.getBoundingClientRect();
+                return box.width > 0 && box.left < over.right && box.right > over.left
+                    && box.top < over.bottom && box.bottom > over.top;
+            })
+            .map(el => (el.innerText || el.getAttribute('aria-label') || el.name || '').trim());
+    };
+    if (!document.querySelector('.actionbar')) return [];
+    // feedback.js moves the button after a scroll, and it gets there a few
+    // frames later (the tests reduce motion: a transition of 1 ms).
+    const frame = () => new Promise(done => requestAnimationFrame(done));
+    const settled = async () => { await frame(); await frame(); await frame(); };
+    await settled();
+    const found = covered();
+    window.scrollTo(0, document.documentElement.scrollHeight);
+    await settled();
+    found.push(...covered());
+    window.scrollTo(0, 0);
+    await settled();
+    return found;
+}"""
 
 
 @pytest.mark.parametrize("width", WIDTHS)
