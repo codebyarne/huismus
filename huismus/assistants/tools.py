@@ -913,8 +913,7 @@ def _expense_lines(arguments, *, required: bool) -> list[adding.Line] | None:
 def _expense_answer(expense: Expense, categories_before: set[int]) -> dict:
     lines = list(expense.lines.select_related("category"))
     new = sorted(
-        {line.category.name for line in lines if line.category}
-        - {line.category.name for line in lines if line.category_id in categories_before}
+        {line.category.name for line in lines if line.category_id not in (None, *categories_before)}
     )
     return {
         "id": expense.pk,
@@ -1003,14 +1002,18 @@ def attach_receipt(arguments):
     except adding.NotAdded as error:
         raise ToolError(str(error)) from error
     expense.refresh_from_db()
-    return {**_expense_answer(expense, _category_ids()), "receipt": receipt.filename}
+    # Attaching makes no category: every one of its lines was there before.
+    answer = _expense_answer(expense, _category_ids())
+    del answer["new_categories"]
+    return {**answer, "receipt": receipt.filename}
 
 
 def delete_expense_tool(arguments):
     expense = _expense(arguments)
-    found = {"id": expense.pk, "deleted": True}
+    # Read before deleting: afterwards the expense has no id.
+    answer = {"id": expense.pk, "deleted": True}
     adding.delete_expense(expense)
-    return found
+    return answer
 
 
 # --- Categories (Uitgaven → Categorieën) ---
@@ -1056,12 +1059,12 @@ def rename_category(arguments):
 
 def delete_category_tool(arguments):
     category = _category(arguments)
-    found = {"id": category.pk, "name": category.name, "deleted": True}
+    answer = {"id": category.pk, "name": category.name, "deleted": True}
     try:
         adding.delete_category(category)
     except adding.CategoryInUse as refusal:
         raise ToolError(str(refusal)) from refusal
-    return found
+    return answer
 
 
 # --- Deleting: what goes ---
@@ -1198,7 +1201,9 @@ def _proposal(line):
 
 def preview_bank_booking(arguments):
     """What confirm_bank_match, book_bank_line or undo_bank_booking will do
-    with this line."""
+    with this line, decided in this order: a booked line can only be
+    undone; a waiting line is booked on the invoice or expense given, or
+    else on Huismus's proposal; anything else (skipped) is refused."""
     line = _bank_transaction(arguments)
     found = {"line": _bank_line(line)}
     if line.can_undo:
@@ -1264,7 +1269,11 @@ _ALREADY = {
 
 
 def _book_to(line, target) -> dict:
-    """As the page's _book and _link."""
+    """As the page's _book and _link, with the page's words for a refusal.
+    bank.reading refuses with ValueError: a line that is booked already, or
+    an expense with a bank line already. Its other refusals (a line in the
+    wrong direction, an invoice not issued) can't happen here: _chosen and
+    _proposal pick by direction, and _chosen only takes an issued invoice."""
     try:
         if line.is_outgoing:
             bank_reading.link_expense(line, target)
@@ -1595,9 +1604,9 @@ def _deletable_draft(arguments) -> Document:
 
 def delete_draft_tool(arguments):
     document = _deletable_draft(arguments)
-    found = {"id": document.pk, "kind": document.kind, "deleted": True}
+    answer = {"id": document.pk, "kind": document.kind, "deleted": True}
     delete_draft(document)
-    return found
+    return answer
 
 
 def _reopenable(arguments) -> Document:
@@ -2242,6 +2251,8 @@ TOOLS = (
         gettext_lazy("Betaling registreren"),
         "confirm",
         "Record a payment by hand on an issued invoice, as Betaling registreren in Huismus. "
+        "Left out: paid_on is today, method is Overboeking (bank transfer); ask the user "
+        "when you don't know them. "
         "A payment from the bank is booked with book_bank_line instead. Call "
         "preview_payment first.",
         _PAYMENT,

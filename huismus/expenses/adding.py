@@ -18,7 +18,6 @@ from django.utils.translation import gettext_lazy
 
 from huismus.core import form_messages
 from huismus.core.models import Attachment
-from huismus.core.templatetags.money import euros
 
 from .forms import ExpenseForm, ExpenseLineFormSet
 from .lines import save_lines
@@ -132,43 +131,29 @@ def change_expense(
     out (None) stays as it is; lines, when given, replace all lines. Unlike
     Opslaan by the user it is "Nakijken" afterwards, also when it had been
     checked: the user says whether the change is right."""
-    existing = list(expense.lines.all())
     data = {
         "date": expense.date.isoformat() if date is None else date,
         "supplier": expense.supplier if supplier is None else supplier,
         "description": expense.description if description is None else description,
     }
-    if lines is None:
-        kept = [
-            Line(
-                description=line.description,
-                amount=euros(line.amount_cents),
-                vat_info=None if line.vat_info_cents is None else euros(line.vat_info_cents),
-                category=line.category,
-                vat_rate=line.vat_rate or None,
-            )
-            for line in existing
-        ]
-        data.update(_management(len(existing), len(existing)))
-        for index, (line, saved_line) in enumerate(zip(kept, existing, strict=True)):
-            data.update(_line_data(index, line))
-            data[f"lines-{index}-id"] = str(saved_line.pk)
-    else:
-        # Every saved line marked for deletion and the new ones after
-        # them, as the page posts after the user replaced them all.
-        data.update(_management(len(existing) + len(lines), len(existing)))
-        for index, saved_line in enumerate(existing):
-            data.update(
-                _line_data(
-                    index,
-                    Line(saved_line.description, euros(saved_line.amount_cents), None, None),
-                )
-            )
-            data[f"lines-{index}-id"] = str(saved_line.pk)
-            data[f"lines-{index}-DELETE"] = "on"
-        for index, line in enumerate(lines, start=len(existing)):
-            data.update(_line_data(index, line))
     expense.needs_review = True
+    if lines is None:
+        # Only the expense's own fields: its lines and amounts are not
+        # posted again, so a stored amount never goes back through a form.
+        form = ExpenseForm(data, instance=expense)
+        if not form.is_valid():
+            raise NotAdded(form_messages.as_text(form))
+        return form.save()
+    # Every saved line marked for deletion and the new ones after them, as
+    # the page posts after the user replaced them all. A form marked DELETE
+    # is not validated (Django formsets): its id is all it needs.
+    existing = list(expense.lines.all())
+    data.update(_management(len(existing) + len(lines), len(existing)))
+    for index, saved_line in enumerate(existing):
+        data[f"lines-{index}-id"] = str(saved_line.pk)
+        data[f"lines-{index}-DELETE"] = "on"
+    for index, line in enumerate(lines, start=len(existing)):
+        data.update(_line_data(index, line))
     form, formset = _bound_forms(expense, data)
     with transaction.atomic():
         saved = form.save()
