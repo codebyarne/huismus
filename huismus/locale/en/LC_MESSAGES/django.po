@@ -295,6 +295,14 @@ msgid "Dit bestand is groter dan 50 MB. Kies bij je bank een kortere periode."
 msgstr "This file is larger than 50 MB. Choose a shorter period at your bank."
 
 #, python-format
+msgid ""
+"Deze zip is uitgepakt groter dan %(max_mb)s MB, te groot om in te lezen. "
+"Kies bij je bank een kortere periode."
+msgstr ""
+"This zip is larger than %(max_mb)s MB unpacked, too big to import. Choose a "
+"shorter period at your bank."
+
+#, python-format
 msgid "%(count)s betaling gelezen van rekening %(iban)s"
 msgid_plural "%(count)s betalingen gelezen van rekening %(iban)s"
 msgstr[0] "Read %(count)s payment from account %(iban)s"
