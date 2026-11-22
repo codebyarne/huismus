@@ -7731,7 +7731,7 @@ msgstr ""
 msgid "Vertel het in je eigen woorden"
 msgstr ""
 
-msgid "Alleen als de appbouwer je iets mag terugvragen."
+msgid "Vul dit alleen in als de appbouwer je over je bericht mag mailen."
 msgstr ""
 
 msgid "Deze afbeelding kan niet mee. Maak hem opnieuw."
@@ -7744,8 +7744,7 @@ msgid "Wat wil je kwijt?"
 msgstr ""
 
 msgid ""
-"Je bericht komt als idee op GitHub, zonder je e-mailadres en zonder de "
-"afbeelding."
+"Je bericht komt op GitHub, zonder je e-mailadres en zonder de afbeelding."
 msgstr ""
 
 msgid "Je afbeelding van het scherm"
@@ -7757,8 +7756,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Je bericht komt als idee op GitHub. Je e-mailadres en de afbeelding niet: "
-"die ziet alleen de appbouwer."
+"Je bericht komt op GitHub, waar iedereen het kan lezen. Je e-mailadres en de"
+" afbeelding ziet alleen de appbouwer."
 msgstr ""
 
 msgid "Wijs aan op het scherm"
@@ -7771,8 +7770,8 @@ msgid "Afbeelding weghalen"
 msgstr ""
 
 msgid ""
-"Klik op het stuk dat je bedoelt. Huismus maakt er een afbeelding van. Alleen"
-" knoppen, menu's en veldnamen blijven leesbaar."
+"Wijs het stuk aan dat je bedoelt. Huismus maakt er een afbeelding van. "
+"Daarin zijn alleen knoppen, menu's en veldnamen leesbaar."
 msgstr ""
 
 msgid "Controleer wat er meegaat"
@@ -7954,4 +7953,7 @@ msgid "Tekst invullen"
 msgstr ""
 
 msgid "Btw-instellingen"
+msgstr ""
+
+msgid "geen"
 msgstr ""
