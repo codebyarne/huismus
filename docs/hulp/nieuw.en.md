@@ -5,6 +5,44 @@ version, what you can do with it now. The newest is at the top.
 
 After a new version, a notice on the overview points you here.
 
+## 0.1.6, 22 November 2026
+
+- **Import your bank statement.** Under **Bank** you import a statement as
+  CAMT.053 or MT940. Huismus puts each payment in next to your open invoices,
+  and each payment out next to your expenses. What is certain, Huismus books
+  itself. When Huismus isn't sure, it's under **To do**. Is an expense not in
+  Huismus yet? Click **Create expense** on the line. Huismus doesn't connect
+  to your bank. How it works:
+  [Import bank statement](bankafschrift.en.md).
+- **No VAT for another reason.** Is your work exempt from VAT? Under
+  **Settings → VAT**, choose **No, for another reason** and fill in the text
+  that goes under your invoices. See
+  [Small business scheme (KOR) and VAT](kor-en-btw.en.md#no-vat-for-another-reason).
+- **Getting started asks about your work first.** Under **Start step by
+  step** you answer three questions: do you charge VAT, do you have customers
+  where VAT is reverse charged, and in which language you make your invoices.
+  After that, only the steps that fit you come.
+- **Give feedback from every page.** At the bottom right is the **Feedback**
+  button. With **Point at the screen** you show where it is. Names and
+  amounts become grey bars, and before you send you see everything that goes
+  along.
+- **Switching from another package or Excel.** Under **Import → From another
+  package or Excel** you download a template, fill it in and import
+  everything at once, with a trial run first. How to get your data out of
+  Rompslomp, Tellow, e-Boekhouden.nl, Jortt or Excel is in
+  [Moving to Huismus](overstappen.en.md). An export from Huismus imports this
+  way too.
+- **A new category on your expense.** Type its name in the **Category**
+  field. Huismus makes it when you save. If you have your receipts read,
+  Huismus chooses the category too.
+- **On your phone** you choose first for a new expense: **Take a photo**,
+  **Choose a photo or file** or **Without a receipt**. Huismus makes a photo
+  smaller first, so it's sent quickly.
+- **Moving to a new computer.** A new help page says what you take along and
+  what you set up again: [Moving to a new computer](nieuwe-computer.en.md).
+- **The sparrow hops** while Huismus is busy: when receipts come in, a backup
+  runs, or the app starts or updates.
+
 ## 0.1.5, 18 November 2026
 
 - **A new, clear look.** Huismus is lighter and calmer: the menu stands on its
@@ -46,7 +84,7 @@ After a new version, a notice on the overview points you here.
 - **The VAT return.** Under **Reports → VAT return** you see, per quarter,
   month or year, what goes in each box, and what you pay or get back. **Download
   CSV** gives you the same as a file. You copy the amounts over yourself;
-  Huismus sends nothing. How it works: [KOR and VAT](kor-en-btw.en.md#vat-return).
+  Huismus sends nothing. How it works: [Small business scheme (KOR) and VAT](kor-en-btw.en.md#vat-return).
 - **VAT per expense line.** With the KOR off, you choose the VAT rate for each
   expense line. The year overview then shows your costs without VAT and the
   input VAT apart. When importing from Moneybird, Huismus takes the rate along

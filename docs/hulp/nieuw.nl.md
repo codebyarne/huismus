@@ -5,6 +5,44 @@ wat je er nu mee kunt. De nieuwste staat bovenaan.
 
 Na een nieuwe versie wijst een melding op het overzicht je hierheen.
 
+## 0.1.6, 22 november 2026
+
+- **Je bankafschrift inlezen.** Onder **Bank** lees je een afschrift in als
+  CAMT.053 of MT940. Huismus legt elke bijschrijving naast je facturen die nog
+  openstaan, en elke afschrijving naast je uitgaven. Wat zeker is, boekt
+  Huismus zelf. Twijfelt Huismus, dan staat het bij **Te doen**. Staat een
+  uitgave nog niet in Huismus? Klik bij de regel op **Uitgave maken**. Huismus
+  maakt geen verbinding met je bank. Zo werkt het:
+  [Bankafschrift inlezen](bankafschrift.nl.md).
+- **Geen btw om een andere reden.** Is je werk vrijgesteld van btw? Kies bij
+  **Instellingen → Btw** voor **Nee, om een andere reden** en vul de tekst in
+  die onder je facturen komt. Zie
+  [Kleineondernemersregeling (KOR) en btw](kor-en-btw.nl.md#geen-btw-om-een-andere-reden).
+- **Beginnen vraagt eerst naar je werk.** Bij **Stap voor stap beginnen**
+  beantwoord je drie vragen: reken je btw, heb je klanten waarbij de btw
+  verlegd wordt, en in welke taal maak je je facturen. Daarna komen alleen de
+  stappen die bij jou passen.
+- **Feedback geven vanaf elke pagina.** Rechtsonder staat de knop
+  **Feedback**. Met **Wijs aan op het scherm** laat je zien waar het om gaat.
+  Namen en bedragen worden grijze balken, en voor je verstuurt zie je alles
+  wat meegaat.
+- **Overstappen uit een ander pakket of Excel.** Bij **Importeren → Uit een
+  ander pakket of Excel** download je een sjabloon, vul je het in en
+  importeer je alles in één keer, eerst met een proefdraai. Hoe je je
+  gegevens uit Rompslomp, Tellow, e-Boekhouden.nl, Jortt of Excel haalt, lees
+  je bij [Overstappen](overstappen.nl.md). Een export uit Huismus lees je zo
+  ook weer in.
+- **Een nieuwe categorie bij je uitgave.** Typ de naam in het veld
+  **Categorie**. Huismus maakt hem als je opslaat. Laat je bonnetjes lezen,
+  dan kiest Huismus de categorie ook.
+- **Op je telefoon** kies je bij een nieuwe uitgave eerst: **Foto maken**,
+  **Foto of bestand kiezen** of **Zonder bonnetje**. Een foto maakt Huismus
+  eerst kleiner, zodat hij snel verstuurd is.
+- **Naar een nieuwe computer.** Een nieuwe hulppagina zegt wat je meeneemt en
+  wat je opnieuw instelt: [Naar een nieuwe computer](nieuwe-computer.nl.md).
+- **De mus huppelt** terwijl Huismus bezig is: als bonnetjes binnenkomen, een
+  back-up loopt of de app start of bijwerkt.
+
 ## 0.1.5, 18 november 2026
 
 - **Een nieuw, helder uiterlijk.** Huismus is lichter en rustiger: het menu staat
@@ -49,7 +87,7 @@ Na een nieuwe versie wijst een melding op het overzicht je hierheen.
   maand of jaar wat je in elke rubriek invult, en wat je betaalt of
   terugkrijgt. Met **CSV downloaden** krijg je hetzelfde als bestand. Je neemt
   de bedragen zelf over; Huismus verstuurt niets. Zo werkt het:
-  [KOR en btw](kor-en-btw.nl.md#btw-aangifte).
+  [Kleineondernemersregeling (KOR) en btw](kor-en-btw.nl.md#btw-aangifte).
 - **Btw per uitgaveregel.** Staat de KOR uit, dan kies je bij elke
   uitgaveregel het btw-tarief. Het jaaroverzicht toont je kosten dan zonder
   btw en de voorbelasting apart. Bij een import uit Moneybird neemt Huismus
