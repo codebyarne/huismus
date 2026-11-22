@@ -10,6 +10,7 @@ from django.utils.text import format_lazy
 from django.utils.translation import gettext_lazy as _
 
 from huismus.core.forms import EuroCentsField
+from huismus.core.profile import LEGAL_ENTITY_CHOICES
 from huismus.documents import mail_texts
 from huismus.documents.numbering import (
     NumberingError,
@@ -24,7 +25,7 @@ from huismus.documents.numbering import (
 from . import smtp
 from .legal_entity import suggestion
 from .logo import validate_and_sanitize_logo
-from .models import LEGAL_ENTITY_CHOICES, Settings
+from .models import Settings
 
 CHARGES_VAT, USES_KOR, NO_VAT_OTHER = "ja", "kor", "anders"
 VAT_CHOICES = [
