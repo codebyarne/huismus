@@ -64,6 +64,18 @@ def test_the_page_has_a_tab_for_each_source(user_client):
     assert reverse("imports:template") in own.content.decode()
 
 
+def test_the_other_tab_links_to_the_guides_per_package(user_client):
+    # Issue #253: the guides for Rompslomp, Tellow and the rest live under
+    # Hulp > Overstappen; the tab that needs them points there.
+    switching = reverse("help:page", args=["overstappen"])
+    own = user_client.get(reverse("imports:upload_other")).content.decode()
+    moneybird = user_client.get(reverse("imports:upload")).content.decode()
+
+    assert f'href="{switching}"' in own
+    assert "Rompslomp" in own
+    assert f'href="{switching}"' not in moneybird
+
+
 def test_the_template_needs_a_login(client):
     assert client.get(reverse("imports:template")).status_code == 302
 
