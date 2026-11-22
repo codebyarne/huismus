@@ -127,10 +127,21 @@ def source(slug: str, language: str | None = None) -> str:
     return (HELP_DIR / f"{slug}.{_language(language)}.md").read_text(encoding="utf-8")
 
 
+def split_title(text: str) -> tuple[str, str]:
+    """(title, the rest) of a Markdown file that starts with "# Title"; also
+    for the pages of Uitleg on the site (core.guides)."""
+    heading, _newline, body = text.partition("\n")
+    return heading.removeprefix("# ").strip(), body
+
+
+def first_paragraph(body: str) -> str:
+    """The first paragraph under the title, on one line."""
+    return " ".join(body.strip().split("\n\n")[0].split())
+
+
 def _split(slug: str, language: str | None) -> tuple[str, str]:
     """(title, the rest) of a help file."""
-    heading, _newline, body = source(slug, language).partition("\n")
-    return heading.removeprefix("# ").strip(), body
+    return split_title(source(slug, language))
 
 
 def title(slug: str, language: str | None = None) -> str:
@@ -139,8 +150,7 @@ def title(slug: str, language: str | None = None) -> str:
 
 def summary(slug: str, language: str | None = None) -> str:
     """The first paragraph under the title, for the list on /hulp/."""
-    first_paragraph = _split(slug, language)[1].strip().split("\n\n")[0]
-    return " ".join(first_paragraph.split())
+    return first_paragraph(_split(slug, language)[1])
 
 
 def url(slug: str, anchor: str = "") -> str:
@@ -148,26 +158,30 @@ def url(slug: str, anchor: str = "") -> str:
     return reverse("help:page", args=[slug]) + anchor
 
 
-class _HelpLinks(markdown.treeprocessors.Treeprocessor):
-    def __init__(self, md, link: Callable[[str, str], str]):
+class _Links(markdown.treeprocessors.Treeprocessor):
+    def __init__(self, md, rewrite: Callable[[str], str | None]):
         super().__init__(md)
-        self.link = link
+        self.rewrite = rewrite
 
     def run(self, root: Element) -> None:
         for a in root.iter("a"):
-            match = _HELP_LINK.match(a.get("href", ""))
-            if match:
-                a.set("href", self.link(match["slug"], match["anchor"] or ""))
+            address = self.rewrite(a.get("href", ""))
+            if address is not None:
+                a.set("href", address)
 
 
-class _HelpLinksExtension(markdown.extensions.Extension):
-    def __init__(self, link: Callable[[str, str], str]):
+class LinksExtension(markdown.extensions.Extension):
+    """Gives every link's href to `rewrite`; what it returns becomes the
+    href, None leaves the link as it is. So a link to another Markdown file
+    (which works on GitHub) becomes that page's address here."""
+
+    def __init__(self, rewrite: Callable[[str], str | None]):
         super().__init__()
-        self.link = link
+        self.rewrite = rewrite
 
     def extendMarkdown(self, md):  # noqa: N802 (the name Markdown calls)
         # After "inline" (priority 20), which makes the <a> elements.
-        md.treeprocessors.register(_HelpLinks(md, self.link), "help_links", 5)
+        md.treeprocessors.register(_Links(md, self.rewrite), "links", 5)
 
 
 def render(
@@ -176,9 +190,14 @@ def render(
     """The help page as HTML. `link` turns a link to another help file into
     an address: the app's by default, the Huismus site's (core.site) there."""
     heading, body = _split(slug, language)
+
+    def rewrite(href: str) -> str | None:
+        match = _HELP_LINK.match(href)
+        return link(match["slug"], match["anchor"] or "") if match else None
+
     # "toc" gives every heading an id ("een-map-koppelen"), so a link from
     # a screen lands on the right heading; the table of contents is unused.
     html = markdown.markdown(
-        body, extensions=["fenced_code", "tables", "toc", _HelpLinksExtension(link)]
+        body, extensions=["fenced_code", "tables", "toc", LinksExtension(rewrite)]
     )
     return HelpPage(slug, heading, html)
