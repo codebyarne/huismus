@@ -8607,7 +8607,7 @@ msgstr ""
 msgid "Lijkt op dit bonnetje"
 msgstr ""
 
-msgid "Zoek op leverancier, omschrijving of bedrag"
+msgid "Leverancier, omschrijving of bedrag"
 msgstr ""
 
 msgid "Uitgaven zonder bonnetje"

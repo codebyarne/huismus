@@ -111,6 +111,7 @@ def test_what_it_looks_like_comes_first_and_only_once(client, user):
     receipt = _receipt(read_similar=similar)
     text = _get(client, receipt).text
     assert 'id="lijkt-op"' in text
+    assert "Lijkt op dit bonnetje" in text
     assert text.count(f'id="kies-{similar.pk}"') == 1
     assert text.index('id="lijkt-op"') < text.index(f'id="kies-{similar.pk}"')
 
@@ -192,7 +193,8 @@ def test_undo_puts_it_back_and_returns_to_the_same_page(client, user):
         follow=True,
     )
 
-    assert response.redirect_chain[-1][0] == place
+    # The same page, without the notice that has nothing to say any more.
+    assert response.redirect_chain[-1][0] == reverse("expenses:tray")
     assert Attachment.objects.in_tray().filter(pk=receipt.pk).exists()
     assert "Het bonnetje staat weer bij de bonnetjes zonder uitgave." in response.text
     assert 'id="bonnetje-gekoppeld"' not in response.text
@@ -298,3 +300,18 @@ def test_undo_goes_back_only_to_the_tray_or_verwerken(client, user):
         {"uitgave": expense.pk, "plek": reverse("expenses:tray_delete", args=[receipt.pk])},
     )
     assert response.url == reverse("expenses:tray")
+
+
+def test_undo_in_verwerken_counts_it_as_not_done(client, user):
+    expense, receipt = _expense(), _receipt()
+    client.post(_page(receipt)[0], {"uitgave": expense.pk})
+    place = (
+        f"{reverse('expenses:process_item', args=['bonnetje', 7])}?klaar=3&gekoppeld={receipt.pk}"
+    )
+
+    response = client.post(
+        reverse("expenses:tray_attach_undo", args=[receipt.pk]),
+        {"uitgave": expense.pk, "plek": place},
+    )
+
+    assert response.url == f"{reverse('expenses:process_item', args=['bonnetje', 7])}?klaar=2"
