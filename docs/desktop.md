@@ -337,8 +337,11 @@ Nagelezen op 2026-11-22 in hun eigen documentatie.
   kan dat vanuit een workflow doen, met een klassiek GitHub-token (recht
   `public_repo`) als geheim; een fijnmazig token werkt daar niet.
 - De eerste inzending vraagt dat de indiener Microsofts CLA tekent.
-- De versie uit de Microsoft Store (hierboven) heeft geen manifest nodig:
-  zodra hij in de Store staat, werkt `winget install 9NKWHBHSFMHN -s msstore`.
+- Een app uit de Microsoft Store heeft geen manifest nodig: winget
+  installeert hem met zijn Store-ID uit de bron `msstore`
+  ([winget install](https://learn.microsoft.com/windows/package-manager/winget/install)),
+  voor Huismus `winget install 9NKWHBHSFMHN -s msstore` zodra de Store-pagina
+  er is.
 
 **Homebrew**, de officiële catalogus `homebrew/cask`
 ([Acceptable Casks](https://docs.brew.sh/Acceptable-Casks),
@@ -355,7 +358,8 @@ Nagelezen op 2026-11-22 in hun eigen documentatie.
 
 **Homebrew, een eigen tap** ([Taps](https://docs.brew.sh/Taps),
 [Tap Trust](https://docs.brew.sh/Tap-Trust)): een repository
-`codebyarne/homebrew-huismus` met `Casks/huismus.rb`. Dan werkt
+`codebyarne/homebrew-huismus` met `Casks/huismus.rb`. Die repository is er
+nog niet. Is hij er, dan werkt
 `brew install --cask codebyarne/huismus/huismus`. Een tap heeft geen eisen
 aan ondertekening of bekendheid. Homebrew zet wel het quarantainekenmerk op
 de download, dus een niet-genotariseerde app vraagt ook zo de eerste keer om
@@ -367,7 +371,7 @@ de download, dus een niet-genotariseerde app vraagt ook zo de eerste keer om
 |---|---|---|
 | winget, communitycatalogus | de manifesten staan bij elke release klaar | de eerste inzending, door de eigenaar van het project |
 | winget, uit de Store | nee | de Store-pagina |
-| Homebrew, eigen tap | de cask staat bij elke release klaar | de repository voor de tap |
+| Homebrew, eigen tap | de cask staat bij elke release klaar | de repository voor de tap, die nog gemaakt moet worden |
 | Homebrew, `homebrew/cask` | nee | de notarisatie (zie "Ondertekenen op de Mac") en de eis aan bekendheid |
 
 De hulp en de site noemen `winget` en `brew` pas als het commando voor
