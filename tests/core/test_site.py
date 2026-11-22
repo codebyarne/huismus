@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """The Huismus site: huismus/core/site.py, built by manage.py build_site."""
 
+import json
 import re
 from html.parser import HTMLParser
 
@@ -521,3 +522,27 @@ def test_overstappen_links_to_every_package_and_aan_de_slag_links_to_it(out, lan
         assert site.help_url(language, slug) in links, slug
     # Aan de slag: the menu and the text.
     assert _read(out, site.help_url(language, "beginnen")).links.count(switching) == 2
+
+
+def test_an_ai_assistant_finds_what_huismus_is_and_every_help_page(out):
+    """llms.txt (issue #295): one file with what Huismus is and a line per page,
+    and every address in it is a page of the site."""
+    text = (out / "llms.txt").read_text(encoding="utf-8")
+    assert text.startswith("# Huismus\n\n> ")
+    addresses = re.findall(rf"https://{re.escape(site.DOMAIN)}(/[^\s)]*)", text)
+    for language in help.LANGUAGES:
+        for slug in site.TOPICS:
+            assert site.help_url(language, slug) in addresses, slug
+    for address in addresses:
+        assert (out / address.strip("/") / "index.html").exists(), address
+
+
+@pytest.mark.parametrize("language", help.LANGUAGES)
+def test_the_home_page_tells_a_search_engine_what_the_app_is(out, language):
+    html = (out / site.home_url(language).strip("/") / "index.html").read_text(encoding="utf-8")
+    data = json.loads(
+        re.search(r'<script type="application/ld\+json">(.*?)</script>', html).group(1)
+    )
+    assert data["@type"] == "SoftwareApplication" and data["isAccessibleForFree"] is True
+    assert data["description"] and data["sameAs"] == site.REPOSITORY
+    assert data["downloadUrl"].endswith("#downloaden")

@@ -3,7 +3,7 @@
 
 {% block title %}{% translate "Huismus: je boekhouding op je eigen computer" %}{% endblock %}
 {% block main_class %}home{% endblock %}
-{% block head %}<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Huismus","url":"https://{{ domain }}{{ home_url }}","applicationCategory":"BusinessApplication","operatingSystem":"macOS, Windows, Linux","softwareVersion":"{{ version }}","inLanguage":["nl","en"],"license":"https://www.gnu.org/licenses/agpl-3.0.html","image":"https://{{ domain }}/delen.{{ language }}.png","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}</script>{% endblock %}
+{% block head %}<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Huismus","url":"https://{{ domain }}{{ home_url }}","applicationCategory":"BusinessApplication","operatingSystem":"macOS, Windows, Linux","softwareVersion":"{{ version }}","inLanguage":["nl","en"],"license":"https://www.gnu.org/licenses/agpl-3.0.html","image":"https://{{ domain }}/delen.{{ language }}.png","description":"{% translate 'Boekhouden voor zzp’ers: facturen, bonnetjes en de bedragen voor je btw-aangifte. Gratis, en alles blijft op je eigen computer.' as about %}{{ about|escapejs }}","isAccessibleForFree":true,"downloadUrl":"https://{{ domain }}{{ home_url }}#downloaden","sameAs":"{{ repository }}","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}</script>{% endblock %}
 
 {% block content %}
 {% comment %}The home page (docs/design/ronde-8/, redesign of 2026-11-18): one headline, the app large on a petrol stage, who it is for, switching, privacy, the year in four parts, and one next step: download.{% endcomment %}
