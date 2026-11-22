@@ -4,11 +4,13 @@ Huismus werkt met en zonder de kleineondernemersregeling (KOR). Gebruik je de
 KOR, dan staat er geen btw op je facturen. Reken je wel btw, dan kies je per
 regel het tarief. Of de KOR bij je past, zegt Huismus niet: dat bepaal je zelf.
 
-Je stelt het in bij **Instellingen → KOR**.
+Je stelt het in bij **Instellingen → Btw**. Daar beantwoord je **Reken je
+btw op je facturen?** met **Ja**, **Nee, ik gebruik de KOR** of **Nee, om een
+andere reden**.
 
 ## Met de KOR
 
-Zet **Ik gebruik de KOR** aan en vul je **KOR-tekst** in. Die tekst komt
+Kies **Nee, ik gebruik de KOR** en vul je **KOR-tekst** in. Die tekst komt
 onder elke nieuwe factuur. Huismus stelt geen tekst voor: je schrijft hem
 zelf. Zolang de KOR aan staat, geeft Huismus geen factuur uit zonder die
 tekst.
@@ -22,9 +24,26 @@ overzicht laat zien hoeveel daarvan je dit jaar al hebt gebruikt. Vanaf het
 percentage dat je kiest, krijg je daar een melding. Kom je met een nieuwe
 factuur over dat percentage, dan zegt Huismus dat al bij het uitgeven.
 
+## Geen btw om een andere reden
+
+Reken je geen btw, maar niet vanwege de KOR? Bijvoorbeeld voor werk dat
+vrijgesteld is van btw, zoals sommige zorg of onderwijs. Of dat voor jou
+geldt, zegt Huismus niet: dat bepaal je zelf.
+
+Kies bij **Instellingen → Btw** voor **Nee, om een andere reden** en vul de
+**Tekst bij geen btw** in. Die komt onder elke nieuwe factuur. Huismus stelt
+geen tekst voor: je schrijft hem zelf. Zonder die tekst geeft Huismus geen
+factuur uit.
+
+Elke regel heeft dan 0% btw. Net als met de KOR heeft het rapport
+Btw-aangifte geen bedragen, telt de btw op je uitgaven nergens mee en zie je
+je kosten met btw. Een KOR-grens is er niet.
+
+Heb je werk met en zonder btw door elkaar? Dat kan Huismus nog niet.
+
 ## Met btw
 
-Zet de KOR uit. Je kiest dan per regel 0, 9 of 21% btw. Een nieuwe regel
+Kies **Ja**. Je kiest dan per regel 0, 9 of 21% btw. Een nieuwe regel
 begint op 21%. Vul onder **Instellingen → Bedrijf** je btw-nummer in, dan
 staat dat op je facturen.
 
@@ -35,7 +54,7 @@ op het scherm en in de pdf.
 
 Voor een regel waarvan de btw verlegd is, kies je **verlegd** in plaats van
 een tarief. De regel telt dan mee als 0%, en op de factuur staat "verlegd".
-Vul bij **Instellingen → KOR** ook de **Tekst bij btw verlegd** in. Die komt
+Vul bij **Instellingen → Btw** ook de **Tekst bij btw verlegd** in. Die komt
 onderaan de factuur. Zonder die tekst geeft Huismus zo'n factuur niet uit.
 
 Staat het btw-nummer van je klant bij de klant, dan komt het onder het adres

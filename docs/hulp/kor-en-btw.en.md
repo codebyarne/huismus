@@ -5,11 +5,13 @@ KOR, your invoices carry no VAT. If you do charge VAT, you choose the rate per
 line. Whether the KOR suits you is not something Huismus tells you: that's
 your call.
 
-You set it up under **Settings → KOR**.
+You set it up under **Settings → VAT**. There you answer **Do you charge
+VAT on your invoices?** with **Yes**, **No, I use the KOR** or **No, for
+another reason**.
 
 ## With the KOR
 
-Turn on **I use the KOR** and fill in your **KOR text**. That text goes under
+Choose **No, I use the KOR** and fill in your **KOR text**. That text goes under
 every new invoice. Huismus doesn't suggest a text: you write it yourself.
 While the KOR is on, Huismus won't issue an invoice without it.
 
@@ -22,9 +24,27 @@ The overview shows how much of it you've used this year. From the percentage
 you choose, you get a warning there. If a new invoice takes you past that
 percentage, Huismus already tells you when you issue it.
 
+## No VAT for another reason
+
+Do you charge no VAT, but not because of the KOR? For example for work that
+is exempt from VAT, such as some care or teaching work. Whether that applies
+to you is not something Huismus tells you: that's your call.
+
+Under **Settings → VAT**, choose **No, for another reason** and fill in the
+**No-VAT text**. It goes under every new invoice. Huismus doesn't suggest a
+text: you write it yourself. Without that text, Huismus won't issue an
+invoice.
+
+Every line then has 0% VAT. As with the KOR, the VAT return report has no
+amounts, the VAT on your expenses counts nowhere and you see your costs with
+VAT. There is no KOR limit.
+
+Do you have work with and without VAT side by side? Huismus can't do that
+yet.
+
 ## With VAT
 
-Turn the KOR off. You then choose 0, 9 or 21% VAT per line. A new line starts
+Choose **Yes**. You then choose 0, 9 or 21% VAT per line. A new line starts
 at 21%. Fill in your VAT number under **Settings → Business**, and it goes on
 your invoices.
 
@@ -35,7 +55,7 @@ on screen and in the PDF.
 
 For a line where the VAT is reverse charged, choose **reverse charge** instead
 of a rate. The line counts as 0%, and the invoice says "reverse charge". Also
-fill in the **Reverse charge text** under **Settings → KOR**. It goes at the
+fill in the **Reverse charge text** under **Settings → VAT**. It goes at the
 bottom of the invoice. Without that text, Huismus won't issue such an
 invoice.
 

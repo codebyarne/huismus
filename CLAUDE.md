@@ -50,8 +50,9 @@ above is therefore optional.
 4. **One totals function** for everything (UI, PDF, import validation). Do not recompute totals elsewhere.
 5. **Snapshots.** Issued documents store business, contact and KOR text snapshots. Never render an issued document from live settings or contact data. Eén uitzondering (SPEC.md invariant 4): een document zonder logo in de snapshot krijgt het huidige logo.
 6. **Import must be idempotent, dry-run by default, and verify every total to the cent.** Never guess column meanings: detect by headers, warn on unknown ones, fail clearly on missing required ones.
-7. **Expenses are stored gross.** Under the KOR their VAT counts nowhere. With the KOR
-   off, each line's VAT is input VAT: it goes into the VAT return report, and costs on the
+7. **Expenses are stored gross.** Under the KOR, or with no VAT for another reason
+   (owner, 2026-11-22, SPEC.md M24), their VAT counts nowhere. Otherwise each line's VAT
+   is input VAT: it goes into the VAT return report, and costs on the
    year overview are without VAT (owner, 2026-11-06). Stored amounts never change for it.
 
 ## Conventions
