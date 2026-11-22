@@ -113,6 +113,38 @@ de gebruiker doet, met de bronpagina erbij (`CLAUDE.md`, besluit eigenaar
 2026-11-22). "Bewaar je bonnetjes 7 jaar" mag dus als `docs/belastingregels.md`
 het zo zegt; uit je geheugen niet.
 
+## Plaats in het profiel
+
+Elk plan voor een nieuwe functie heeft de stap "Plaats in het profiel" (skill
+`/mijlpaal`, stap 2): acht vragen over waar de functie staat en wanneer hij in
+beeld is. Ontbreekt de stap of een antwoord, dan keur je het plan niet goed.
+Toets de antwoorden aan de drie lagen, in deze volgorde:
+
+1. **Situatie:** past het niet bij de btw-keuze (KOR, btw, geen btw), dan
+   nergens in beeld. Geen vinkje.
+2. **Gegevens:** staat er iets in, dan blijft het altijd in beeld. Een import
+   met gegevens wint van elke keuze.
+3. **Keuze:** een vinkje, alleen voor een heel onderdeel met een eigen plek in
+   het menu (#260). Verbergen raakt alleen het menu en "Nieuw".
+
+En aan deze regels:
+
+- Liever een deel van een bestaand scherm dat vanzelf verschijnt (zoals
+  artikelen in de factuur zodra je er een hebt) dan een eigen onderdeel. Alleen
+  wat een eigen lijst met eigen gegevens heeft, wordt een onderdeel.
+- Offertes, Uitgaven en Bank staan standaard aan. Een nieuw onderdeel staat uit
+  tot de gebruiker het kiest of er iets in staat, en wordt een keuze bij de
+  wizardvraag "Wat houd je naast je facturen bij?": er komt geen nieuwe vraag.
+- Een nieuwe as of waarde in `profile()` leid je af uit instellingen en
+  gegevens. Een as die niets laat zien of verbergt, komt er niet. Moet hij toch
+  opgeslagen worden, dan staat hij ook in Instellingen.
+- In de feedback gaat hoogstens de waarde van een as mee, nooit een bedrag of
+  een naam.
+
+Leg de plek vast als rij in de tabel van
+`huismus-intern/product/profiel-en-functies.md` (sectie 3), in dezelfde commit
+in `huismus-intern` als je besluit.
+
 ## Onderzoek op het web
 
 Voor marktvragen (doelgroepen, persona's, wat andere pakketten doen en kosten,
