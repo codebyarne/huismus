@@ -13,13 +13,13 @@ where the user came from, the tray or the next one in Verwerken
 maken". Every form is a plain POST, the search a plain GET."""
 
 from decimal import Decimal, InvalidOperation
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlsplit
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Exists, OuterRef, Q
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
+from django.urls import Resolver404, resolve, reverse
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
@@ -114,6 +114,8 @@ def choose(request, pk):
     if request.method == "POST":
         expense = get_object_or_404(Expense, pk=request.POST.get("uitgave") or 0)
         current = batch.Item(batch.RECEIPT, receipt.pk)
+        # The stack before attaching: afterwards this receipt is out of it,
+        # and next_item() needs where it was to find the one after it.
         stack = batch.items()
         try:
             adding.attach_receipt(expense, receipt, to_check=False)
@@ -156,12 +158,28 @@ def choose(request, pk):
     )
 
 
+def _is_tray_or_process(url: str) -> bool:
+    """Only back to the tray or Verwerken, nowhere else."""
+    try:
+        match = resolve(urlsplit(url).path)
+    except Resolver404:
+        return False
+    return url.startswith("/") and match.view_name in (
+        "expenses:tray",
+        "expenses:process",
+        "expenses:process_item",
+    )
+
+
 @login_required
 def undo(request, pk):
     """ "Ongedaan maken" in the notice after "Kiezen": back into the tray,
-    and back to the page the notice was on (`plek`: the tray or Verwerken)."""
+    and back to the page the notice was on (`plek`: the tray or Verwerken).
+    The receipt and the expense come from the notice's form; detach_receipt
+    checks that it still hangs there and came from the tray, so at most a
+    receipt goes back where it was, never anything deleted."""
     target = request.POST.get("plek", "")
-    if not target.startswith((reverse("expenses:tray"), reverse("expenses:process"))):
+    if not _is_tray_or_process(target):
         target = reverse("expenses:tray")
     if request.method != "POST":
         return redirect(target)
