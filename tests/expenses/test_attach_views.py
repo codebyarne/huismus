@@ -288,3 +288,13 @@ def test_choosing_the_last_one_from_verwerken(client, user):
     )
     assert 'id="niets-te-verwerken"' in response.text
     assert 'id="bonnetje-gekoppeld"' in response.text
+
+
+def test_undo_goes_back_only_to_the_tray_or_verwerken(client, user):
+    expense, receipt = _expense(), _receipt()
+    client.post(_page(receipt)[0], {"uitgave": expense.pk})
+    response = client.post(
+        reverse("expenses:tray_attach_undo", args=[receipt.pk]),
+        {"uitgave": expense.pk, "plek": reverse("expenses:tray_delete", args=[receipt.pk])},
+    )
+    assert response.url == reverse("expenses:tray")

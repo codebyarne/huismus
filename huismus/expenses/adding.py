@@ -17,7 +17,7 @@ from django.db.models import ProtectedError
 from django.utils.translation import gettext_lazy
 
 from huismus.core import form_messages
-from huismus.core.models import Attachment
+from huismus.core.models import TRAY_FOLDER, Attachment
 
 from .forms import ExpenseForm, ExpenseLineFormSet
 from .lines import save_lines
@@ -171,9 +171,6 @@ def attach_receipt(expense: Expense, receipt: Attachment, *, to_check: bool = Tr
             Expense.objects.filter(pk=expense.pk).update(needs_review=True)
 
 
-TRAY_FOLDER = "attachments/bakje/"
-
-
 def came_from_tray(receipt: Attachment) -> bool:
     """A receipt that was in the tray keeps its place there (core.models
     attachment_upload_to); one uploaded on the expense page doesn't."""
@@ -186,12 +183,9 @@ def detach_receipt(expense: Expense, receipt: Attachment) -> bool:
     the tray. False, and nothing changed, otherwise."""
     if not came_from_tray(receipt):
         return False
-    with transaction.atomic():
-        return bool(
-            Attachment.objects.filter(pk=receipt.pk, expense=expense, kind="receipt").update(
-                expense=None
-            )
-        )
+    # One update: it only moves the receipt if it still hangs there.
+    taken = Attachment.objects.filter(pk=receipt.pk, expense=expense, kind="receipt")
+    return bool(taken.update(expense=None))
 
 
 def delete_expense(expense: Expense) -> None:

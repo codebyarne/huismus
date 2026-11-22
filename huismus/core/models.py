@@ -17,6 +17,11 @@ class TimestampedModel(models.Model):
         abstract = True
 
 
+# Where a receipt from the tray lives, also once it is on an expense: so
+# "Ongedaan maken" (expenses.adding.detach_receipt) knows it came from there.
+TRAY_FOLDER = "attachments/bakje/"
+
+
 def attachment_upload_to(instance, filename):
     if instance.document_id:
         return f"attachments/documents/{instance.document_id}/{filename}"
@@ -26,7 +31,7 @@ def attachment_upload_to(instance, filename):
         # A receipt in the tray, from the receipts folder (huismus/expenses/inbox.py).
         # In a folder of its own, so it keeps the name it had in the
         # receipts folder; it keeps this place once an expense is made of it.
-        return f"attachments/bakje/{instance.sha256[:12]}/{filename}"
+        return f"{TRAY_FOLDER}{instance.sha256[:12]}/{filename}"
     return f"attachments/{filename}"
 
 
