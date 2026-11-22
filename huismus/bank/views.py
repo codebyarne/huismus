@@ -312,6 +312,11 @@ def statement_page(request):
         else:
             try:
                 result = reading.read_statement(upload.name, upload.read())
+            except reading.UnzippedTooBigError:
+                error = _(
+                    "Deze zip is uitgepakt groter dan %(max_mb)s MB, te groot om in te "
+                    "lezen. Kies bij je bank een kortere periode."
+                ) % {"max_mb": reading.MAX_UNZIPPED_BYTES // 1024**2}
             except StatementReadError:
                 error = NOT_A_STATEMENT
             else:

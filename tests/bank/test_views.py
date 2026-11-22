@@ -217,3 +217,17 @@ def test_the_pages_need_a_login():
     from django.test import Client
 
     assert Client().get(PAGE).status_code == 302
+
+
+def test_a_zip_that_unpacks_too_big_says_so(client, monkeypatch):
+    from huismus.bank import reading
+
+    from .test_reading import _bomb
+
+    monkeypatch.setattr(reading, "MAX_UNZIPPED_BYTES", 2 * 1024 * 1024)
+    page = _upload(client, _bomb(files=3, size=1024 * 1024), name="afschriften.zip")
+    assert (
+        "Deze zip is uitgepakt groter dan 2 MB, te groot om in te lezen. "
+        "Kies bij je bank een kortere periode."
+    ) in page.text
+    assert not BankTransaction.objects.exists()
