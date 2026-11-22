@@ -85,3 +85,28 @@ def test_media_serves_the_logo(client):
     response = client.get("/data/logo/test-media-probe.png")
 
     assert response.status_code == 200
+
+
+@pytest.mark.parametrize("name", ["c.svg", "c.html", "c.png"])
+def test_a_served_file_can_run_no_script_and_is_never_guessed(client, name):
+    """A file from data/ is shown as what its name says and in a sandbox: an
+    .svg or .html that got there can't act as the logged-in user."""
+    default_storage.save(f"attachments/test-media-probe/{name}", ContentFile(b"<svg/>"))
+    get_user_model().objects.create_user(username="freelancer", password="s3cret-pass")
+    client.login(username="freelancer", password="s3cret-pass")
+
+    response = client.get(f"/data/attachments/test-media-probe/{name}")
+
+    assert response["X-Content-Type-Options"] == "nosniff"
+    assert response["Content-Security-Policy"] == "sandbox"
+
+
+def test_a_pdf_is_served_without_the_sandbox_so_the_browser_shows_it(client):
+    default_storage.save("attachments/test-media-probe/c.pdf", ContentFile(b"%PDF-1.4"))
+    get_user_model().objects.create_user(username="freelancer", password="s3cret-pass")
+    client.login(username="freelancer", password="s3cret-pass")
+
+    response = client.get("/data/attachments/test-media-probe/c.pdf")
+
+    assert response["X-Content-Type-Options"] == "nosniff"
+    assert "Content-Security-Policy" not in response

@@ -309,6 +309,28 @@ def test_expenses_already_in_huismus_are_named_not_skipped(tmp_path):
     assert Expense.objects.get(source="csv").amount_cents == 500
 
 
+def test_only_a_pdf_or_a_photo_becomes_a_receipt(tmp_path):
+    """What an expense names in "bonnetjes" is only kept when it is a file a
+    receipt can be, as the upload and the Moneybird import do. Anything else
+    (an .svg or .html can carry a script) is named and left out."""
+    files = {
+        "uitgaven.csv": (
+            "uitgavenummer;datum;leverancier;bedrag (bruto);bonnetjes\n"
+            "2;2025-02-03;Kiosk;5,00;bon.jpg | plaatje.svg | pagina.html\n"
+        ),
+        "bonnetjes/bon.jpg": b"jpg",
+        "bonnetjes/plaatje.svg": b"<svg xmlns='http://www.w3.org/2000/svg'><script/></svg>",
+        "bonnetjes/pagina.html": b"<script></script>",
+    }
+
+    run = _run(tmp_path, files)
+
+    names = [a.file.name.rsplit("/", 1)[-1] for a in Expense.objects.get().attachments.all()]
+    assert len(names) == 1 and names[0].endswith(".jpg")
+    (note,) = run.report["notes"]
+    assert "plaatje.svg" in note and "pagina.html" in note and "bon.jpg" not in note
+
+
 def test_files_that_belong_nowhere_are_named(tmp_path):
     files = _invoice_files(
         **{
