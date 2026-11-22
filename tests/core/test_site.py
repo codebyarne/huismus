@@ -90,7 +90,7 @@ def test_every_link_inside_the_site_lands_on_a_page_and_heading(out):
                 assert ".md" not in link or in_repository, (address, link)
                 continue
             path, _hash, anchor = link.partition("#")
-            # "/?#overstappen": on the home page a real navigation, so the menu closes.
+            # "/?naar=downloaden#downloaden": a real navigation, so the menu closes.
             path = path.split("?")[0]
             if path.startswith("/beelden/"):
                 # "Download de film", for a browser that can't play it: the file itself.
@@ -349,13 +349,14 @@ def test_every_picture_that_comes_with_the_site_is_on_a_page(out):
         assert f"/beelden/{path.relative_to(out / 'beelden')}" in pages, path.name
 
 
-def test_on_the_home_page_each_jump_in_the_menu_has_its_own_address(out):
+def test_on_the_home_page_the_jump_in_the_menu_has_its_own_address(out):
     """A popover stays open on a jump within the same page, and the site has no
-    JS: on the home page each menu link to a block is a navigation of its own,
-    so choosing one closes the menu, also after the other."""
+    JS: on the home page the menu's link to a block (Download) is a navigation
+    of its own, so choosing it closes the menu. Overstappen is a page since #122."""
     page = _read(out, "/")
-    jumps = [link for link in page.links if link.startswith("/?")]
-    assert len(jumps) == len(set(jumps)) == 2, jumps
+    assert [link for link in page.links if link.startswith("/?")] == [
+        "/?naar=downloaden#downloaden"
+    ]
 
 
 def test_a_help_page_is_described_in_whole_words():
@@ -488,3 +489,36 @@ def test_the_kor_is_written_out_before_it_is_called_kor(out, language):
                 address,
                 body[first - 80 : first + 10],
             )
+
+
+@pytest.mark.parametrize("language", help.LANGUAGES)
+def test_overstappen_in_the_menu_is_a_page_and_what_to_do_next_links_to_it(out, language):
+    """Issue #122: someone coming from another package finds the page with the
+    steps from the menu on every page, from the block on the home page, and
+    from what to do after installing."""
+    switching = site.switching_url(language)
+    assert switching == site.help_url(language, help.SWITCHING)
+    for address in (
+        site.home_url(language),
+        site.help_url(language),
+        site.install_url(language),
+        *(site.download_page_url(language, name) for name in site.PLATFORMS),
+    ):
+        assert _read(out, address).links.count(switching) >= 1, address
+    # The menu, and "Zo stap je over" in the block Overstappen.
+    assert _read(out, site.home_url(language)).links.count(switching) == 2
+    # Under "Daarna": the menu's link and one in the text.
+    assert _read(out, site.install_url(language)).links.count(switching) == 2
+    html = (out / switching.strip("/") / "index.html").read_text(encoding="utf-8")
+    assert f'<a href="{switching}" aria-current="page">' in html
+
+
+@pytest.mark.parametrize("language", help.LANGUAGES)
+def test_overstappen_links_to_every_package_and_they_link_back(out, language):
+    switching = site.switching_url(language)
+    links = _read(out, switching).links
+    for slug in ("moneybird", "importeren", *help.PACKAGES):
+        assert site.help_url(language, slug) in links, slug
+    for slug in ("beginnen", "moneybird"):
+        on_page = [link.split("#")[0] for link in _read(out, site.help_url(language, slug)).links]
+        assert on_page.count(switching) >= 2, slug  # the menu and the text

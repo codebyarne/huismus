@@ -50,3 +50,10 @@ Then everything is in Huismus, with the numbers as they were in Moneybird.
 
 If you import the same export again, nothing changes: Huismus skips what
 already exists. So you can always import a newer year later.
+
+## Cancelling afterwards
+
+Cancel Moneybird only when everything is in Huismus, you've checked it and
+you have a [backup](back-ups.en.md). Also keep the zips from Moneybird with
+your own files. What else to look out for is in
+[Moving to Huismus](overstappen.en.md#what-to-look-out-for).

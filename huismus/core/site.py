@@ -136,9 +136,10 @@ def features_url(language: str) -> str:
 
 
 def switching_url(language: str) -> str:
-    """Overstappen in the menu: the block on the home page, until the page
-    Overstappen exists (huismus-intern/besluiten.md, 2026-11-13)."""
-    return home_url(language) + "#overstappen"
+    """Overstappen in the menu: the help page with the steps, per package
+    (issue #122; owner 2026-11-13: live once the template import and the
+    guides per package are)."""
+    return help_url(language, help.SWITCHING)
 
 
 def why_url(language: str) -> str:
@@ -332,7 +333,8 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
         pages[help_url(language, slug)] = (
             "site/help_page.html",
             {
-                "nav": "help",
+                # Overstappen has its own place in the menu (issue #122).
+                "nav": "switching" if slug == help.SWITCHING else "help",
                 "switch_url": help_url(other, slug),
                 "page": page,
                 "summary": _short(help.summary(slug, language)),

@@ -44,6 +44,9 @@ customers, invoices, quotes and expenses along in one go. Huismus does a trial
 run first and only saves anything when you choose to. How it works is in
 [Moving from Moneybird](moneybird.en.md).
 
+Coming from another package or from Excel? That works too: see
+[Moving to Huismus](overstappen.en.md).
+
 ## Look around first
 
 Want to see how Huismus works first? Choose **Try with sample data**. Huismus
