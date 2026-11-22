@@ -84,7 +84,12 @@ def _upload_page(request, tab):
     return render(
         request,
         "imports/upload.html",
-        {"tab": tab, "upload_url": UPLOAD_URLS[tab], "help_url": help.url("importeren")},
+        {
+            "tab": tab,
+            "upload_url": UPLOAD_URLS[tab],
+            "help_url": help.url("importeren"),
+            "switching_url": help.url(help.SWITCHING),
+        },
     )
 
 

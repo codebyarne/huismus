@@ -7309,6 +7309,13 @@ msgstr ""
 msgid "Welke kolommen er zijn en hoe je ze invult"
 msgstr "Which columns there are and how to fill them in"
 
+msgid ""
+"Per pakket lees je hoe je je gegevens eruit haalt: Rompslomp, Tellow, e-"
+"Boekhouden.nl, Jortt en Excel."
+msgstr ""
+"For each package you can read how to get your data out: Rompslomp, Tellow, "
+"e-Boekhouden.nl, Jortt and Excel."
+
 msgid "Zo haal je je gegevens uit Moneybird"
 msgstr "How to get your data out of Moneybird"
 
