@@ -221,7 +221,7 @@ def quick_outgoing(instance, kind, message, email, page, has_image, language=Non
         (_("Soort"), _label(KINDS, kind)),
         (_("Bericht"), message),
         (_("Pagina"), page),
-        (_("Afbeelding"), _("ja, hierboven") if has_image else _("nee")),
+        (_("Afbeelding"), _("ja, hierboven") if has_image else _("geen")),
         (_("E-mailadres"), email),
         (_("Hoe je werkt"), how_you_work(instance)),
         (_("Draait op"), _label(PLATFORMS, runs_on())),
