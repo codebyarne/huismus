@@ -71,6 +71,11 @@ Bron: [Wat betekent meedoen met de kleineondernemersregeling?](https://www.belas
   KOR aan staat, en staat geen btw > 0% toe op nieuwe (niet-geïmporteerde)
   regels; een creditnota mag de tarieven houden van de factuur die hij
   crediteert — zie SPEC.md invariant 6 en `documents.vat`.
+- Geen btw om een andere reden (SPEC.md M24, `Settings.vat_exempt`): net als
+  bij de KOR alleen 0% per regel, en onder de factuur de tekst die de
+  gebruiker zelf invult (`Settings.exempt_text`, leeg; Huismus stelt geen
+  wettekst voor). De bron zegt alleen dat de factuur moet vermelden "dat een
+  vrijstelling van toepassing is" (`docs/belastingregels.md` sectie 6).
 - Staat de KOR uit (SPEC.md M18), dan kiest de gebruiker per regel 0, 9 of
   21% btw. Het eigen btw-nummer staat op de pdf als het in Instellingen →
   Bedrijf is ingevuld; Huismus dwingt dat (nog) niet af.

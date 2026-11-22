@@ -12,25 +12,28 @@ in wat Huismus nodig heeft voor je eerste factuur:
 1. **Bedrijf:** je bedrijfsnaam, adres, KvK-nummer en IBAN. Dit komt op elke
    factuur en offerte.
 2. **Je werk:** drie vragen. Reken je btw, gebruik je de
-   kleineondernemersregeling (KOR) of weet je het nog niet? Heb je klanten
+   kleineondernemersregeling (KOR), reken je om een andere reden geen btw, of
+   weet je het nog niet? Heb je klanten
    waarbij de btw verlegd wordt? En in welke taal maak je je facturen
    meestal? Je antwoorden bepalen welke stappen nog komen. Meer over de KOR in
    [Kleineondernemersregeling (KOR) en btw](kor-en-btw.nl.md).
 3. **Kleineondernemersregeling (KOR):** alleen als je de KOR gebruikt. De
    tekst die onder je facturen komt, en je KOR-grens.
-4. **Btw verlegd:** alleen als je klanten hebt waarbij de btw verlegd wordt.
+4. **Geen btw:** alleen als je om een andere reden geen btw rekent. De tekst
+   die onder je facturen komt. Huismus vult hem niet voor je in.
+5. **Btw verlegd:** alleen als je klanten hebt waarbij de btw verlegd wordt.
    De tekst onder een factuur met een regel "verlegd". Huismus vult hem niet
    voor je in; je kunt hem ook leeg laten.
-5. **Facturen:** je standaard betalingstermijn en hoe Huismus je facturen
+6. **Facturen:** je standaard betalingstermijn en hoe Huismus je facturen
    en offertes nummert. Meestal is de standaard goed. Kom je uit een ander
    pakket, vul dan het volgnummer in dat na je laatste factuur komt. Dan
    lopen je nummers door.
-6. **Logo:** je logo komt bovenaan je facturen en offertes. Dit kan ook
+7. **Logo:** je logo komt bovenaan je facturen en offertes. Dit kan ook
    later.
 
 Je kunt een stap overslaan en later terugkomen. Alles staat daarna ook onder
-**Instellingen**: de KOR en de tekst bij btw verlegd onder
-**Kleineondernemersregeling (KOR)**, de taal van je facturen onder
+**Instellingen**: de KOR, de tekst bij geen btw en de tekst bij btw verlegd
+onder **Btw**, de taal van je facturen onder
 **Facturen en nummering**. Ga je nog een keer door de stappen, dan zie je bij
 Je werk wat er nu is ingesteld.
 

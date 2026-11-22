@@ -12,25 +12,28 @@ Huismus needs for your first invoice:
 1. **Business:** your business name, address, KvK number and IBAN. This goes
    on every invoice and quote.
 2. **Your work:** three questions. Do you charge VAT, do you use the
-   small business scheme (KOR), or don't you know yet? Do you have customers where the VAT is reverse-charged?
+   small business scheme (KOR), do you charge no VAT for another reason, or
+   don't you know yet? Do you have customers where the VAT is reverse-charged?
    And in which language do you usually write your invoices? Your answers
    decide which steps follow. More about the KOR in
    [Small business scheme (KOR) and VAT](kor-en-btw.en.md).
 3. **Small business scheme (KOR):** only if you use the KOR. The text that
    goes under your invoices, and your KOR limit.
-4. **Reverse charge:** only if you have customers where the VAT is
+4. **No VAT:** only if you charge no VAT for another reason. The text that
+   goes under your invoices. Huismus doesn't fill it in for you.
+5. **Reverse charge:** only if you have customers where the VAT is
    reverse-charged. The text under an invoice with a "reverse charge" line.
    Huismus doesn't fill it in for you; you can leave it empty.
-5. **Invoices:** your default payment term and how Huismus numbers your
+6. **Invoices:** your default payment term and how Huismus numbers your
    invoices and quotes. The default is usually fine. Coming from another
    package? Enter the sequence number that follows your last invoice, so
    your numbers carry on.
-6. **Logo:** your logo goes at the top of your invoices and quotes. This can
+7. **Logo:** your logo goes at the top of your invoices and quotes. This can
    wait.
 
 You can skip a step and come back later. Everything is also under
-**Settings** afterwards: the KOR and the reverse-charge text under
-**Small business scheme (KOR)**, your invoice language under
+**Settings** afterwards: the KOR, the no-VAT text and the reverse-charge
+text under **VAT**, your invoice language under
 **Invoices and numbering**. Go through the steps again and Your work shows
 what is set now.
 
