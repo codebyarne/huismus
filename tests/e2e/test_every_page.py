@@ -152,6 +152,7 @@ def _pages():
         # The KOR step only under the KOR; without it, a step you don't
         # get goes on to the next one (issue #259).
         "/welkom/kor/",
+        "/welkom/geen-btw/",
         "/welkom/verlegd/?verlegd=nl",
         "/welkom/facturen/",
         "/welkom/logo/",

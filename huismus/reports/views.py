@@ -8,12 +8,13 @@ from django.utils.formats import date_format
 from django.utils.translation import gettext_lazy as _
 
 from huismus.business.kor_limit import kor_limit_status
+from huismus.business.models import Settings
 from huismus.core.csv_files import Amount, csv_response
 from huismus.documents.models import Document
 from huismus.expenses.models import Expense
 
 from .periods import MONTH, QUARTER, YEAR, Period
-from .vat_return import KOR_NOTE, NOT_COUNTED_TITLES, compute_vat_return
+from .vat_return import EXEMPT_NOTE, KOR_NOTE, NOT_COUNTED_TITLES, compute_vat_return
 from .vat_return_csv import header as vat_return_header
 from .vat_return_csv import rows as vat_return_rows
 from .year_overview import CHART_STEPS, chart_step, compute_year_overview
@@ -162,7 +163,7 @@ def vat_return(request):
             "report": report,
             "period": period,
             "period_name": _period_name(period),
-            "kor_note": KOR_NOTE,
+            "kor_note": EXEMPT_NOTE if Settings.load().vat_exempt else KOR_NOTE,
             "titles": NOT_COUNTED_TITLES,
             "kinds": [
                 (period.as_kind(QUARTER), _("Kwartaal")),

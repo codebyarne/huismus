@@ -276,7 +276,54 @@ def test_a_rejected_number_format_never_previews_a_number_with_none(client):
     assert f"{timezone.localdate().year}-0001" in page
 
 
-def test_the_kor_page_says_what_off_means(client):
+def test_the_vat_page_asks_one_question_with_three_answers(client):
     _login(client)
     page = client.get(reverse("business:topic", args=["kor"])).content.decode()
-    assert "Staat de KOR uit, dan kies je per regel 0, 9 of 21% btw." in page
+    assert "Reken je btw op je facturen?" in page
+    for answer in ("Ja", "Nee, ik gebruik de KOR", "Nee, om een andere reden"):
+        assert f">{answer}<" in page
+    for card in ('data-group="btw-kor"', 'data-group="btw-anders"', 'data-group="btw-ja"'):
+        assert card in page
+
+
+def test_choosing_no_vat_for_another_reason_saves_it_and_says_what_it_means(client):
+    _login(client)
+    settings = Settings.load()
+    settings.kor_enabled = True
+    settings.kor_text = "KOR-tekst."
+    settings.save()
+    response = client.post(
+        reverse("business:topic", args=["kor"]),
+        {
+            "vat_choice": "anders",
+            "kor_text": "KOR-tekst.",
+            "exempt_text": "",
+            "kor_limit_cents": "20.000,00",
+            "kor_warning_percent": "80",
+            "reverse_charge_text": "",
+        },
+        follow=True,
+    )
+    settings = Settings.load()
+    assert (settings.kor_enabled, settings.vat_exempt) == (False, True)
+    # An empty text may be saved: issuing is what needs it.
+    assert settings.exempt_text == ""
+    assert settings.kor_text == "KOR-tekst."
+    assert "Facturen die je al uitgaf, blijven zoals ze zijn." in response.content.decode()
+
+
+def test_saving_without_changing_the_choice_just_says_saved(client):
+    _login(client)
+    response = client.post(
+        reverse("business:topic", args=["kor"]),
+        {
+            "vat_choice": "ja",
+            "kor_text": "",
+            "exempt_text": "",
+            "kor_limit_cents": "20.000,00",
+            "kor_warning_percent": "80",
+            "reverse_charge_text": "",
+        },
+        follow=True,
+    )
+    assert "Instellingen opgeslagen." in response.content.decode()

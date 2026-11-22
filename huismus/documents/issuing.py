@@ -77,11 +77,11 @@ def issue(document: Document) -> Document:
         if any(line.tax_rate_bp not in rates for line in lines):
             if settings.kor_enabled:
                 raise IssueError(str(_("Met KOR moeten nieuwe regels 0% btw hebben.")))
-            raise IssueError(str(_("Zonder btw moeten nieuwe regels 0% btw hebben.")))
+            raise IssueError(str(_("Je rekent geen btw: zet nieuwe regels op 0%.")))
         if lines_have_reverse_charge(lines) and not reverse_charge_allowed(document, settings):
             if settings.kor_enabled:
                 raise IssueError(str(_("Met de KOR kan een nieuwe regel niet verlegd zijn.")))
-            raise IssueError(str(_("Zonder btw kan een nieuwe regel niet verlegd zijn.")))
+            raise IssueError(str(_("Je rekent geen btw: een nieuwe regel kan niet verlegd zijn.")))
     missing = missing_reverse_charge_text(document, lines, settings)
     if missing:
         raise IssueError(missing)
@@ -236,8 +236,8 @@ def kor_text_for(document, settings) -> str:
 
 def missing_no_vat_text_message(settings) -> str:
     if settings.kor_enabled:
-        return str(_("Vul eerst de KOR-tekst in, bij Instellingen → KOR."))
-    return str(_("Vul eerst de tekst bij geen btw in, bij Instellingen → KOR."))
+        return str(_("Vul eerst de KOR-tekst in, bij Instellingen → Btw."))
+    return str(_("Vul eerst de tekst bij geen btw in, bij Instellingen → Btw."))
 
 
 def missing_reverse_charge_text(document, lines, settings) -> str | None:
@@ -246,7 +246,7 @@ def missing_reverse_charge_text(document, lines, settings) -> str | None:
     reopened document that has the text in its snapshot keeps that one."""
     text = document.reverse_charge_text_snapshot or settings.reverse_charge_text
     if lines_have_reverse_charge(lines) and not text.strip():
-        return str(_("Vul eerst de tekst bij btw verlegd in, bij Instellingen → KOR."))
+        return str(_("Vul eerst de tekst bij btw verlegd in, bij Instellingen → Btw."))
     return None
 
 

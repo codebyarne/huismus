@@ -297,21 +297,33 @@ document.addEventListener("change", (event) => {
 // data-group="<name>" show only while something is chosen (e.g. the mail
 // fields while "Mailen via" is not "Niet ingesteld"). Without JS they are
 // always shown.
-// Likewise a radio with data-hides-group="<name>": those elements hide while
-// it is chosen (the question about btw verlegd under the KOR, /welkom/werk/).
+// Likewise radios: a group named in data-shows-group shows while one of its
+// radios is chosen (the cards of Instellingen → Btw), a group named in
+// data-hides-group hides while one of its radios is chosen (the question
+// about btw verlegd without VAT, /welkom/werk/).
 function showGroups(root) {
   for (const select of root.querySelectorAll("select[data-shows-group]")) {
     for (const element of document.querySelectorAll(`[data-group="${select.dataset.showsGroup}"]`)) {
       element.hidden = !select.value;
     }
   }
+  const visible = new Map();
+  for (const radio of root.querySelectorAll("input[type=radio][data-shows-group]")) {
+    const group = radio.dataset.showsGroup;
+    visible.set(group, Boolean(visible.get(group)) || radio.checked);
+  }
   for (const radio of root.querySelectorAll("input[type=radio][data-hides-group]")) {
-    for (const element of document.querySelectorAll(`[data-group="${radio.dataset.hidesGroup}"]`)) {
-      element.hidden = radio.checked;
-    }
+    const group = radio.dataset.hidesGroup;
+    visible.set(group, visible.get(group) !== false && !radio.checked);
+  }
+  for (const [group, shown] of visible) {
+    for (const element of document.querySelectorAll(`[data-group="${group}"]`)) element.hidden = !shown;
   }
 }
 showGroups(document);
+// A page reached through hx-boost doesn't run this module again: hide the
+// groups of the new page too (found with Instellingen → Btw, BUGS-BY-HAND.md).
+document.addEventListener("htmx:load", () => showGroups(document));
 // Every radio, not only the one with data-hides-group: choosing another
 // answer ("Ja") has to show the group again.
 document.addEventListener("change", (event) => {

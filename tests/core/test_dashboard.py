@@ -184,7 +184,20 @@ def test_the_kor_or_vat_step_is_done_with_the_kor_and_its_text(settings_filled):
     settings_filled.save()
     step = next(s for s in onboarding_steps() if s["key"] == "kor")
     assert step["done"] is True
-    assert str(step["title"]) == "KOR of btw instellen"
+    assert str(step["title"]) == "Btw instellen"
+
+
+def test_the_vat_step_is_done_without_vat_for_another_reason_once_its_text_is_there(
+    settings_filled,
+):
+    settings_filled.vat_exempt = True
+    settings_filled.exempt_text = ""
+    settings_filled.vat_number = "NL000099998B57"
+    settings_filled.save()
+    assert next(s for s in onboarding_steps() if s["key"] == "kor")["done"] is False
+    settings_filled.exempt_text = "Geen btw."
+    settings_filled.save()
+    assert next(s for s in onboarding_steps() if s["key"] == "kor")["done"] is True
 
 
 def test_the_kor_or_vat_step_is_done_without_the_kor_and_with_a_vat_number(settings_filled):

@@ -99,9 +99,10 @@ def onboarding_steps():
     """The checklist on the first-time Overzicht, each step done or not,
     from what already exists."""
     settings = Settings.load()
-    # Under the KOR its text goes on every invoice; without it, the VAT number.
-    if settings.kor_enabled:
-        kor_or_vat_done = bool(settings.kor_text.strip())
+    # Without VAT the text goes on every invoice (the KOR text, or the text
+    # for no VAT for another reason, issue #53); with VAT, the VAT number.
+    if settings.no_vat:
+        kor_or_vat_done = bool(settings.no_vat_text.strip())
     else:
         kor_or_vat_done = bool(settings.vat_number.strip())
     return [
@@ -121,10 +122,10 @@ def onboarding_steps():
         },
         {
             "key": "kor",
-            "title": _("KOR of btw instellen"),
+            "title": _("Btw instellen"),
             "help": _(
-                "Gebruik je de KOR, dan komt die tekst op elke factuur. "
-                "Reken je btw, dan komt je btw-nummer erop."
+                "Kies of je btw rekent. Zonder btw komt jouw tekst onder elke factuur, "
+                "met btw je btw-nummer."
             ),
             "done": kor_or_vat_done,
             "url": reverse("business:topic", args=["kor"]),

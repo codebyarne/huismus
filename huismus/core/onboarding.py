@@ -63,7 +63,7 @@ STEPS = (
             "Een paar vragen, zodat je alleen ziet wat bij jou hoort. "
             "Je past het later aan in Instellingen."
         ),
-        ("kor_enabled", "default_language"),
+        ("kor_enabled", "vat_exempt", "default_language"),
     ),
     Step(
         "kor",
@@ -71,6 +71,18 @@ STEPS = (
         _("Jouw KOR-tekst komt onder elke factuur."),
         ("kor_text", "kor_limit_cents", "kor_warning_percent"),
         short=_("KOR"),
+    ),
+    # In the place of the KOR step, only for "Nee, om een andere reden"
+    # (issue #53). The text may stay empty: Huismus suggests none, and the
+    # checklist and the editor say it is still missing.
+    Step(
+        "geen-btw",
+        _("Geen btw"),
+        _(
+            "Deze tekst komt onder elke factuur. Schrijf zelf waarom er geen btw op staat: "
+            "Huismus vult niets voor je in."
+        ),
+        ("exempt_text",),
     ),
     Step(
         "verlegd",
@@ -106,7 +118,7 @@ STEPS = (
 
 BY_SLUG = {step.slug: step for step in STEPS}
 
-VAT_YES, VAT_KOR, VAT_LATER = "ja", "kor", "later"
+VAT_YES, VAT_KOR, VAT_OTHER, VAT_LATER = "ja", "kor", "anders", "later"
 REVERSE_NO = "nee"
 REVERSE_PLACES = ("nl", "eu", "buiten-eu")
 
@@ -142,9 +154,10 @@ class Round:
 
 
 def steps_for(settings: Settings, current: Round) -> list[Step]:
-    """The steps this user gets: KOR only under the KOR; Btw verlegd only
-    without it and after a "ja" (a text already there stays, but doesn't
-    bring the step: huismus-intern/besluiten.md, 2026-11-21).
+    """The steps this user gets: KOR only under the KOR; Geen btw only
+    without VAT for another reason; Btw verlegd only with VAT and after a
+    "ja" (a text already there stays, but doesn't bring the step:
+    huismus-intern/besluiten.md, 2026-11-21).
 
     The round's answers live only in the address, on purpose (nothing about
     them is stored): open a step without them, from the address bar or an
@@ -154,8 +167,10 @@ def steps_for(settings: Settings, current: Round) -> list[Step]:
     def shown(step: Step) -> bool:
         if step.slug == "kor":
             return settings.kor_enabled
+        if step.slug == "geen-btw":
+            return settings.vat_exempt
         if step.slug == "verlegd":
-            return not settings.kor_enabled and bool(current.reverse_charge)
+            return not settings.no_vat and bool(current.reverse_charge)
         return True
 
     return [step for step in STEPS if shown(step)]
@@ -163,14 +178,15 @@ def steps_for(settings: Settings, current: Round) -> list[Step]:
 
 class WorkForm(forms.Form):
     """Je werk: three choices, no free fields. Only kor_enabled (with the
-    settings page's suggestion for the KOR text) and default_language are
-    saved; the answer about btw verlegd only decides the next step."""
+    settings page's suggestion for the KOR text), vat_exempt and
+    default_language are saved; the answer about btw verlegd only decides the next step."""
 
     vat = forms.ChoiceField(
         label=_("Reken je btw op je facturen?"),
         choices=[
             (VAT_YES, _("Ja")),
             (VAT_KOR, _("Nee, ik gebruik de KOR")),
+            (VAT_OTHER, _("Nee, om een andere reden")),
             (VAT_LATER, _("Weet ik nog niet")),
         ],
         widget=forms.RadioSelect,
@@ -184,7 +200,7 @@ class WorkForm(forms.Form):
             (REVERSE_PLACES[2], _("Ja, buiten de EU")),
         ],
         widget=forms.RadioSelect,
-        # Required unless the KOR is chosen (clean).
+        # Required unless an answer without VAT is chosen (clean).
         required=False,
     )
     default_language = forms.ChoiceField(
@@ -199,6 +215,8 @@ class WorkForm(forms.Form):
         """The current state as the answer: nothing else is stored."""
         if settings.kor_enabled:
             vat = VAT_KOR
+        elif settings.vat_exempt:
+            vat = VAT_OTHER
         else:
             vat = VAT_LATER if current.kor_later else VAT_YES
         if current.reverse_charge:
@@ -219,7 +237,8 @@ class WorkForm(forms.Form):
 
     def clean(self):
         cleaned = super().clean()
-        if cleaned.get("vat") not in (None, VAT_KOR) and not cleaned.get("reverse_charge"):
+        without_vat = (None, VAT_KOR, VAT_OTHER)
+        if cleaned.get("vat") not in without_vat and not cleaned.get("reverse_charge"):
             self.add_error("reverse_charge", _("Kies een antwoord."))
         return cleaned
 
@@ -227,15 +246,16 @@ class WorkForm(forms.Form):
         """Save the settings; return what the rest of this round needs."""
         vat = self.cleaned_data["vat"]
         settings.kor_enabled = vat == VAT_KOR
+        settings.vat_exempt = vat == VAT_OTHER
         if settings.kor_enabled and not settings.kor_text.strip():
             # The model wants a text while the KOR is on: the same
             # suggestion as the settings page, to change in the KOR step.
             settings.kor_text = str(DEFAULT_KOR_TEXT)
         settings.default_language = self.cleaned_data["default_language"]
         settings.save()
-        # Under the KOR, and with "Nee", there is no step Btw verlegd.
+        # Without VAT, and with "Nee", there is no step Btw verlegd.
         place = ""
         reverse_charge = self.cleaned_data.get("reverse_charge")
-        if vat != VAT_KOR and reverse_charge in REVERSE_PLACES:
+        if vat not in (VAT_KOR, VAT_OTHER) and reverse_charge in REVERSE_PLACES:
             place = reverse_charge
         return Round(kor_later=vat == VAT_LATER, reverse_charge=place)

@@ -1,15 +1,18 @@
 {% load i18n %}
-{% comment %}One question of Je werk (/welkom/werk/): a fieldset with the question as its legend and a
-radio per answer, under each other (the radio list of Map voor back-ups, .folder-choices). The text
-spans both rows beside the radio, so on a phone it stays centred. tabindex: the error summary's link
-puts the focus on the question. The
-answer "Ja" to the VAT question says what it means for the lines.{% endcomment %}
+{% comment %}One question as a fieldset with the question as its legend and a radio per answer, under each
+other (the radio list of Map voor back-ups, .folder-choices): the questions of Je werk (/welkom/werk/) and
+the VAT choice of Instellingen → Btw. The text spans both rows beside the radio, so on a phone it stays
+centred. tabindex: the error summary's link puts the focus on the question. In the VAT question "Ja" says
+what it means for the lines and "Nee, om een andere reden" gives an example (issue #53). In Je werk both
+answers without VAT hide the question about btw verlegd; on the settings page (groups="btw") each answer
+shows the card that goes with it (app.js). The values "ja", "kor" and "anders" are
+those of the VAT question only.{% endcomment %}
 <fieldset id="{{ field.auto_id }}" tabindex="-1" style="border:0;padding:0;margin:0"{% if field.errors %} aria-describedby="{{ field.auto_id }}-fout"{% endif %}>
     <legend class="label" style="padding:0;margin-bottom:var(--s-2)">{{ field.label }}</legend>
     <div class="stack folder-choices" style="gap:var(--s-2)">
         {% for choice in field %}
-        {% with id=choice.id_for_label %}
-        <label class="file-item"><span class="f-icon"><input type="radio" id="{{ id }}" name="{{ field.html_name }}" value="{{ choice.data.value }}" aria-labelledby="{{ id }}-naam"{% if field.name == "vat" and choice.data.value == "ja" %} aria-describedby="{{ id }}-uitleg"{% endif %}{% if choice.data.selected %} checked{% endif %}{% if field.name == "vat" and choice.data.value == "kor" %} data-hides-group="verlegd"{% endif %}></span><span class="f-text" style="grid-column:2;grid-row:1 / span 2;align-self:center"><span class="f-name" id="{{ id }}-naam">{{ choice.choice_label }}</span>{% if field.name == "vat" and choice.data.value == "ja" %}<span class="f-meta" id="{{ id }}-uitleg">{% translate "Je kiest dan per regel het btw-tarief." %}</span>{% endif %}</span></label>
+        {% with id=choice.id_for_label value=choice.data.value %}
+        <label class="file-item"><span class="f-icon"><input type="radio" id="{{ id }}" name="{{ field.html_name }}" value="{{ value }}" aria-labelledby="{{ id }}-naam"{% if value == "ja" or value == "anders" %} aria-describedby="{{ id }}-uitleg"{% endif %}{% if choice.data.selected %} checked{% endif %}{% if groups == "btw" %} data-shows-group="btw-{{ value }}"{% elif value == "kor" or value == "anders" %} data-hides-group="verlegd"{% endif %}></span><span class="f-text" style="grid-column:2;grid-row:1 / span 2;align-self:center"><span class="f-name" id="{{ id }}-naam">{{ choice.choice_label }}</span>{% if value == "ja" or value == "anders" %}<span class="f-meta" id="{{ id }}-uitleg">{% if value == "ja" %}{% translate "Je kiest dan per regel het btw-tarief." %}{% else %}{% translate "Bijvoorbeeld voor werk dat vrijgesteld is van btw, zoals sommige zorg of onderwijs." %}{% endif %}</span>{% endif %}</span></label>
         {% endwith %}
         {% endfor %}
     </div>
