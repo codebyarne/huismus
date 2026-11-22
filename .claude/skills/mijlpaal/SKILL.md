@@ -63,6 +63,33 @@ deze verschillen:
   de achtergrond, bestanden en rechten), dan beschrijf je per platform wat er
   gebeurt. Een platform overslaan kan alleen met een besluit van
   `product-owner`, met de reden in het plan.
+- **Plaats in het profiel.** Elke nieuwe functie krijgt in het plan een plek in
+  het profiel (`profile()`, `huismus/core/profile.py`), zodat het menu
+  overzichtelijk blijft terwijl er functies bijkomen. Of iets in beeld is, hangt
+  af van drie lagen, in deze volgorde: **situatie** (past het niet bij de
+  btw-keuze, dan nergens in beeld), **gegevens** (staat er iets in, dan blijft
+  het altijd in beeld, ook na een import) en **keuze** (een vinkje, alleen voor
+  een heel onderdeel met een eigen plek in het menu, #260). Liever een deel van
+  een bestaand scherm dat vanzelf verschijnt (zoals artikelen in de factuur
+  zodra je er een hebt) dan een eigen onderdeel. Offertes, Uitgaven en Bank
+  staan standaard aan; een nieuw onderdeel staat uit tot je het kiest of er
+  iets in staat. Beantwoord in het plan:
+  1. Onderdeel of deel van een bestaand scherm? Zonder eigen lijst met eigen
+     gegevens: welk scherm?
+  2. Bij welke btw-situatie hoort het: KOR, btw, geen btw? Loop alle drie na;
+     wat verdwijnt waar het niet past?
+  3. Welke gegevens zetten het vanzelf in beeld, ook na een import?
+  4. Standaard aan of uit? Een nieuw onderdeel wordt een keuze bij de
+     wizardvraag "Wat houd je naast je facturen bij?", geen nieuwe vraag.
+  5. Nieuwe as of waarde nodig, en valt die af te leiden uit instellingen en
+     gegevens? Zo niet: naar `product-owner`.
+  6. Wat ziet de gebruiker als het uit staat? (Niets in het menu en bij
+     "Nieuw"; de gegevens blijven in rapporten, export en back-up.)
+  7. Welke waarde gaat mee in de feedback? Nooit een bedrag of een naam.
+  8. Werkt het hetzelfde in Docker, op de Mac en op Windows?
+
+  De antwoorden gaan mee naar `product-owner`, die ook de rij in de tabel van
+  `huismus-intern/product/profiel-en-functies.md` (sectie 3) bijwerkt.
 - Elke open vraag naar `product-owner`. `ESCALEREN` → vraag de eigenaar (zie 9) en
   bouw intussen alleen wat er niet van afhangt.
 - Werk `SPEC.md` bij (mijlpaalnummer pas nu kiezen, na `git fetch`). Dit gaat
