@@ -46,6 +46,7 @@ from .csv_parse import (
     parse_quotes,
 )
 from .csv_tables import CsvKind, Table, read_table
+from .expenses import RECEIPT_SUFFIXES
 from .models import ImportRun
 from .sources import Export, ImportSourceError, files_in_upload
 
@@ -287,9 +288,17 @@ def parse_exports(exports: list[Export]) -> ParsedCsv:
 
 
 def _receipts(parsed: ParsedCsv) -> dict[str, bytes]:
-    """The files that an expense names in "bonnetjes"."""
+    """The files that an expense names in "bonnetjes", when they are a file a
+    receipt can be (RECEIPT_SUFFIXES, as the Moneybird import and the upload
+    keep to). Huismus serves a receipt to the browser by its name, so an
+    .svg or .html from someone else's zip never becomes one; it is named
+    with the files that belong nowhere."""
     wanted = {name for expense in parsed.expenses for name in expense.receipt_names}
-    return {name: content for name, content in parsed.other_files.items() if name in wanted}
+    return {
+        name: content
+        for name, content in parsed.other_files.items()
+        if name in wanted and PurePosixPath(name).suffix.lower() in RECEIPT_SUFFIXES
+    }
 
 
 def _note_files_without_a_place(parsed: ParsedCsv, receipts: dict) -> None:

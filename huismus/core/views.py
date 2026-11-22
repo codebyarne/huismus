@@ -335,6 +335,13 @@ def media(request, path):
         # (process.html); every other response keeps DENY
         # (XFrameOptionsMiddleware leaves a header that is already set).
         response["X-Frame-Options"] = "SAMEORIGIN"
+    else:
+        # Anything else is shown in a sandbox: a file that isn't the picture
+        # its place says (an .svg or .html) can run no script as the logged-in
+        # user. A picture in an <img> looks the same; the browser's PDF viewer
+        # needs to run, so a PDF goes without.
+        response["Content-Security-Policy"] = "sandbox"
+    response["X-Content-Type-Options"] = "nosniff"
     return response
 
 
