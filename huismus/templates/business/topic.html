@@ -180,6 +180,15 @@
                 </div>
             </div>
         </section>
+        {% elif topic.slug == "onderdelen" %}
+        {% comment %}A checkbox per whole part (#260). One with something in it is on and can't be changed; its help says why (business.forms.PART_FIELDS).{% endcomment %}
+        <section class="card settings-section">
+            <div class="card-pad">
+                {% field form.show_quotes %}
+                {% field form.show_expenses %}
+                {% field form.show_bank %}
+            </div>
+        </section>
         {% endif %}
     </div>
 </form>

@@ -9,6 +9,7 @@ import pytest
 from huismus.bank.models import BankStatement
 from huismus.business.models import Settings
 from huismus.contacts.models import Contact
+from huismus.core.models import Attachment
 from huismus.core.profile import profile
 from huismus.documents.models import Document, DocumentLine
 from huismus.expenses.models import Expense
@@ -128,6 +129,52 @@ def test_an_expense_puts_expenses_in_use(db):
 def test_a_bank_statement_puts_bank_in_use(db):
     BankStatement.objects.create(filename="afschrift.csv", sha256="0" * 64, format="csv")
     assert profile().parts_in_use == frozenset({"bank"})
+
+
+def test_a_receipt_waiting_in_the_tray_puts_expenses_in_use(db):
+    Attachment.objects.create(kind="receipt", file="bonnetje.jpg")
+    assert profile().parts_in_use == frozenset({"uitgaven"})
+
+
+# ---------- Werk: in beeld (#260) ----------
+
+
+def test_by_default_every_part_is_chosen_and_shown(db):
+    you = profile()
+    assert you.parts_chosen == frozenset({"offertes", "uitgaven", "bank"})
+    assert you.parts_shown == frozenset({"offertes", "uitgaven", "bank"})
+
+
+def test_a_part_switched_off_and_empty_is_not_shown(db):
+    Settings.objects.filter(pk=Settings.load().pk).update(show_quotes=False, show_bank=False)
+    you = profile()
+    assert you.parts_chosen == frozenset({"uitgaven"})
+    assert you.parts_shown == frozenset({"uitgaven"})
+
+
+def test_a_part_with_data_is_shown_whatever_you_chose(db):
+    Settings.objects.filter(pk=Settings.load().pk).update(
+        show_quotes=False, show_expenses=False, show_bank=False
+    )
+    Expense.objects.create(date="2026-01-01", amount_cents=1000)
+    you = profile()
+    assert you.parts_chosen == frozenset()
+    assert you.parts_shown == frozenset({"uitgaven"})
+
+
+def test_an_import_with_quotes_shows_quotes(db):
+    Settings.objects.filter(pk=Settings.load().pk).update(show_quotes=False)
+    contact = Contact.objects.create(company_name="Klant")
+    Document.objects.create(
+        kind="quote", contact=contact, issue_date="2026-01-01", source="moneybird"
+    )
+    assert "offertes" in profile().parts_shown
+
+
+def test_the_choice_needs_no_database():
+    """What you chose comes from the settings alone, like the VAT."""
+    you = profile(Settings(show_quotes=False, show_expenses=True, show_bank=False))
+    assert you.parts_chosen == frozenset({"uitgaven"})
 
 
 # ---------- Herkomst ----------

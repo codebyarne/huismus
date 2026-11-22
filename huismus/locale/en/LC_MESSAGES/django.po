@@ -10624,3 +10624,24 @@ msgstr "Download your invoices, quotes, customers and expenses as CSV, with the 
 
 msgid "Bedrag zonder uitgaveregel"
 msgstr "Amount without an expense line"
+
+msgid "Onderdelen"
+msgstr "Sections"
+
+msgid "Wat je niet gebruikt, haal je uit het menu. Een onderdeel waar iets in staat, blijft erin."
+msgstr "Take what you don't use out of the menu. A section with something in it stays."
+
+msgid "Alleen facturen"
+msgstr "Invoices only"
+
+msgid "Met je bonnetjes en categorieën."
+msgstr "Including your receipts and categories."
+
+msgid "Je hebt offertes, dus Offertes blijft in het menu."
+msgstr "You have quotes, so Quotes stays in the menu."
+
+msgid "Je hebt uitgaven of bonnetjes, dus Uitgaven blijft in het menu."
+msgstr "You have expenses or receipts, so Expenses stays in the menu."
+
+msgid "Je hebt een bankafschrift ingelezen, dus Bank blijft in het menu."
+msgstr "You've imported a bank statement, so Bank stays in the menu."

@@ -123,22 +123,51 @@ class Profile:
                 found.add(OUTSIDE_EU)
         return frozenset(found or {NL})
 
+    @property
+    def parts_chosen(self) -> frozenset[str]:
+        """The parts you want in the menu: Instellingen › Onderdelen (#260).
+        Only the settings, no data."""
+        choices = {
+            QUOTES: self.settings.show_quotes,
+            EXPENSES: self.settings.show_expenses,
+            BANK: self.settings.show_bank,
+        }
+        return frozenset(part for part, chosen in choices.items() if chosen)
+
     @cached_property
     def parts_in_use(self) -> frozenset[str]:
-        """The parts with data in them. Until the choice per part (#260)
-        exists, every part stays in the menu whatever this says."""
+        """The parts with data in them: a quote (a draft too), an expense or
+        a receipt waiting in the tray, a bank statement. Categories don't
+        count: they are there from the start."""
+        return self._with_data({QUOTES, EXPENSES, BANK})
+
+    def _with_data(self, parts) -> frozenset[str]:
+        """Those of `parts` with data in them; asks only about those."""
         from huismus.bank.models import BankStatement
+        from huismus.core.models import Attachment
         from huismus.documents.models import Document
         from huismus.expenses.models import Expense
 
         found = set()
-        if Document.objects.filter(kind="quote").exists():
+        if QUOTES in parts and Document.objects.filter(kind="quote").exists():
             found.add(QUOTES)
-        if Expense.objects.exists():
+        if EXPENSES in parts and (
+            Expense.objects.exists() or Attachment.objects.in_tray().exists()
+        ):
             found.add(EXPENSES)
-        if BankStatement.objects.exists():
+        if BANK in parts and BankStatement.objects.exists():
             found.add(BANK)
         return frozenset(found)
+
+    @cached_property
+    def parts_shown(self) -> frozenset[str]:
+        """The parts in the menu, the tab bar, "Meer" and "Nieuw": the ones
+        you chose and the ones with data in them. Data always wins, so an
+        import with quotes shows Quotes (huismus-intern/besluiten.md,
+        2026-11-21). Every page asks this, so only a part switched off is
+        looked up in the data."""
+        chosen = self.parts_chosen
+        return chosen | self._with_data({QUOTES, EXPENSES, BANK} - chosen)
 
     @cached_property
     def origin(self) -> str:

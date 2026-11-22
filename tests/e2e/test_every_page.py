@@ -140,6 +140,7 @@ def _pages():
         "/instellingen/facturen/",
         "/instellingen/huisstijl/",
         "/instellingen/mailen/",
+        "/instellingen/onderdelen/",
         # On Docker too (SPEC.md M15); with a linked folder and a backup:
         # test_the_backup_and_update_pages_on_docker_have_no_known_kind_of_ui_bug.
         "/instellingen/back-ups/",

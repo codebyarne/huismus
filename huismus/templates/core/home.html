@@ -46,9 +46,9 @@
         <h1>{% translate "Overzicht" %}</h1>
         <span class="muted wide-only">{{ today|date:"l j F" }}</span>
     </div>
-    <div class="actions wide-only">
+    {% if show_expenses %}<div class="actions wide-only">
         <a class="btn btn-secondary" href="{% url 'expenses:create' %}"><svg class="i" aria-hidden="true"><use href="#receipt"></use></svg>{% translate "Uitgave" %}</a>
-    </div>
+    </div>{% endif %}
 </div>
 
 {% comment %}The notices come before the figures: on a phone the three figures stack and would push them out of sight (BUGS-BY-HAND.md).{% endcomment %}
@@ -161,14 +161,14 @@
         <a href="{% url 'imports:upload' %}">{% translate "Importeren uit Moneybird" %}</a>
     </div>
 </section>
-{% comment %}Expenses stay: only the invoice figures make way for the card above.{% endcomment %}
-<div class="grid-3" style="margin-bottom:var(--s-6)">
+{% comment %}Expenses stay: only the invoice figures make way for the card above. Unless Uitgaven is out of the menu (#260): then there are none.{% endcomment %}
+{% if show_expenses %}<div class="grid-3" style="margin-bottom:var(--s-6)">
     <a class="card kpi" href="{% url 'expenses:list' %}" style="text-decoration:none;color:inherit">
         <span class="kpi-label"><span>{{ overview.costs_label }} {{ year }}</span></span>
         <span class="kpi-value">{{ overview.expenses_cents|money }}</span>
         <span class="kpi-sub">{% translate "Naar je uitgaven" %} →</span>
     </a>
-</div>
+</div>{% endif %}
 {% comment %}Without invoices there can still be a quote, a draft or a receipt waiting.{% endcomment %}
 {% if todo.items %}{% include "core/_todo.html" %}{% endif %}
 {% endif %}
