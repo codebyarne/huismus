@@ -2,14 +2,17 @@
 
 Huismus works with and without the small business scheme (KOR). If you use the
 KOR, your invoices carry no VAT. If you do charge VAT, you choose the rate per
-line. Whether the KOR suits you is not something Huismus tells you: that's
-your call.
+line.
 
 You set it up under **Settings → VAT**. There you answer **Do you charge
 VAT on your invoices?** with **Yes**, **No, I use the KOR** or **No, for
 another reason**.
 
 ## With the KOR
+
+You can use the KOR if you're based in the Netherlands, your revenue in a
+calendar year stays at or below € 20,000 and your work is subject to VAT. For
+the exact conditions, see the [Belastingdienst](https://www.belastingdienst.nl/wps/wcm/connect/nl/btw/content/kor-voorwaarden) (in Dutch).
 
 Choose **No, I use the KOR** and fill in your **KOR text**. That text goes under
 every new invoice. Huismus doesn't suggest a text: you write it yourself.
@@ -26,21 +29,41 @@ percentage, Huismus already tells you when you issue it.
 
 ## No VAT for another reason
 
-Do you charge no VAT, but not because of the KOR? For example for work that
-is exempt from VAT, such as some care or teaching work. Whether that applies
-to you is not something Huismus tells you: that's your call.
+Do you charge no VAT, but not because of the KOR? That's mostly when your
+work is exempt from VAT. The Belastingdienst lists, among others, healthcare,
+education, childcare, sports clubs, social and cultural institutions,
+financial services and insurance, and composers, writers, cartoonists and
+journalists. Each exemption has its own conditions: look up your work in the
+[Belastingdienst's list](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/tarieven_en_vrijstellingen/vrijstellingen/) (in Dutch). Do you have several clients? Then
+check per assignment whether the exemption applies.
+
+If your work is exempt:
+
+- you charge your customers no VAT;
+- you file no VAT return on that revenue, with a few exceptions;
+- you don't deduct the VAT on your costs.
+
+Source: [Exempt goods or services](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/tarieven_en_vrijstellingen/vrijstellingen/wat_moet_u_doen_als_u_vrijgestelde_goederen_of_diensten_levert)
+(Belastingdienst, in Dutch).
+
+Someone who isn't an entrepreneur for VAT charges no VAT either. You're an
+entrepreneur if you work independently and earn income from it. The
+Belastingdienst tells you whether you're an entrepreneur for VAT after you
+register with the KVK. See
+[Ondernemer voor de btw](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/hoe_werkt_de_btw/voor_wie_geldt_de_btw/ondernemer) (in Dutch).
 
 Under **Settings → VAT**, choose **No, for another reason** and fill in the
-**No-VAT text**. It goes under every new invoice. Huismus doesn't suggest a
-text: you write it yourself. Without that text, Huismus won't issue an
-invoice.
+**No-VAT text**. It goes under every new invoice. For exempt work, say that an
+exemption applies, for example "Vrijgesteld van btw." (exempt from VAT). The
+Belastingdienst prescribes no fixed wording. Without that text, Huismus won't
+issue an invoice.
 
 Every line then has 0% VAT. As with the KOR, the VAT return report has no
 amounts, the VAT on your expenses counts nowhere and you see your costs with
 VAT. There is no KOR limit.
 
-Do you have work with and without VAT side by side? Huismus can't do that
-yet.
+Do you have work with and without VAT side by side? Then you keep VAT
+records and file VAT returns. Huismus can't do that yet.
 
 ## With VAT
 

@@ -15,8 +15,10 @@ aanhalingstekens en zijn letterlijk overgenomen, ook de u-vorm. Een bedrag of
 termijn staat hier alleen als hij letterlijk op de bronpagina staat; anders
 staat er **Bron ontbreekt**.
 
-Zie `CLAUDE.md`: wat hier staat, komt nooit als juridische of fiscale
-bewering in UI-tekst of codecommentaar. Factuureisen staan in
+Wat hier staat, mag Huismus in schermen en hulp uitleggen, in gewone taal en
+met de bronpagina erbij (`CLAUDE.md`; besluit eigenaar 2026-11-22: richting
+geven hoort bij boekhouden makkelijk maken). Wat hier niet staat, of "Bron
+ontbreekt" heeft, beweert Huismus niet. Factuureisen staan in
 `docs/invoice-requirements.md`.
 
 ## 1. KOR (kleineondernemersregeling)

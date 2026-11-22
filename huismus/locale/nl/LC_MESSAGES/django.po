@@ -7898,8 +7898,8 @@ msgid "Geen btw"
 msgstr ""
 
 msgid ""
-"Deze tekst komt onder elke factuur. Schrijf zelf waarom er geen btw op "
-"staat: Huismus vult niets voor je in."
+"Deze tekst komt onder elke factuur. Bij vrijgesteld werk zet je erin dat een "
+"vrijstelling van toepassing is, bijvoorbeeld “Vrijgesteld van btw.”"
 msgstr ""
 
 msgid "Je rekent geen btw: zet nieuwe regels op 0%."
@@ -7930,8 +7930,8 @@ msgid "Tekst bij geen btw"
 msgstr ""
 
 msgid ""
-"Komt onder elke nieuwe factuur. Huismus stelt geen tekst voor: je schrijft "
-"hem zelf."
+"Komt onder elke nieuwe factuur. Bij vrijgesteld werk zet je erin dat een "
+"vrijstelling van toepassing is, bijvoorbeeld “Vrijgesteld van btw.”"
 msgstr ""
 
 msgid ""

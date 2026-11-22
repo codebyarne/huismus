@@ -59,7 +59,8 @@ class Settings(TimestampedModel):
     # No VAT for another reason than the KOR (issue #53): an exemption, or not
     # an entrepreneur for VAT. For the VAT it behaves like the KOR (no_vat
     # below); the text under the invoice is the user's own, empty by
-    # default: Huismus suggests no legal text.
+    # default. The field's help gives an example from the source
+    # (docs/belastingregels.md section 6), nothing is filled in.
     vat_exempt = models.BooleanField(_("geen btw om een andere reden"), default=False)
     exempt_text = models.TextField(_("tekst bij geen btw"), blank=True)
     # Under every document with a "verlegd" line (SPEC.md M18). The user's

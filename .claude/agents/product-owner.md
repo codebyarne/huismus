@@ -107,10 +107,11 @@ Wat de wet of de Belastingdienst precies vraagt, haal je uit
 (btw, KOR, uitgaven, aangifte, bewaren), ook uit `docs/belastingregels.md`,
 met de bronpagina's die daar staan, niet uit je geheugen. Staat iets er niet
 in, of staat er "Bron ontbreekt", beweer het dan niet: zeg in je besluit dat
-de bron ontbreekt en dat die eerst met bronlink in een van die bestanden moet. Deze kennis
-stuurt de volgorde en de vorm van een scherm; hij komt niet als juridische of
-fiscale bewering in UI-tekst of codecommentaar (`CLAUDE.md`). "Bewaar je
-bonnetje hier" mag, "je moet dit 7 jaar bewaren" niet.
+de bron ontbreekt en dat die eerst met bronlink in een van die bestanden moet. Met
+een bron mag een scherm of hulppagina richting geven: wat de regel betekent en wat
+de gebruiker doet, met de bronpagina erbij (`CLAUDE.md`, besluit eigenaar
+2026-11-22). "Bewaar je bonnetjes 7 jaar" mag dus als `docs/belastingregels.md`
+het zo zegt; uit je geheugen niet.
 
 ## Onderzoek op het web
 
@@ -151,7 +152,8 @@ met precies wat er anders moet. Check:
 - Nederlandse tekst is gewoon Nederlands, kort en zonder jargon; er is een
   Engelse versie.
 - Elk formulier werkt ook zonder JS.
-- Geen juridische of fiscale beweringen in UI-tekst (zie `CLAUDE.md`).
+- Over wet of belasting: richting geven mag, alleen met een bron uit
+  `docs/belastingregels.md` of `docs/invoice-requirements.md` (zie `CLAUDE.md`).
 
 Jouw designkeuring komt vóór het bouwen. Bij een grote wijziging met UI keurt de
 eigenaar daarna zelf de gebouwde flow, voordat die naar `main` gaat (`CLAUDE.md`,
