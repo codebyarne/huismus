@@ -4,7 +4,6 @@ from urllib.parse import urlencode
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db import transaction
 from django.db.models import Case, Q, When
 from django.http import FileResponse, Http404, HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, redirect, render
@@ -21,11 +20,13 @@ from huismus.core.templatetags.money import euros
 
 from .detail import contact_changed_since_issue, timeline_events
 from .drafts import (
+    copy_document,
     create_credit_note,
+    deletable_drafts,
+    delete_draft,
     document_form,
     line_formset,
     peek_number_for,
-    recompute_stored_totals,
     save_draft,
 )
 from .editing import preview_totals
@@ -53,7 +54,8 @@ from .mailing import (
     default_recipients,
     send_document,
 )
-from .models import Document, DocumentLine
+from .models import Document
+from .payments import record_payment
 from .pdf import render_pdf
 from .preview import render_preview_pdf
 from .quoting import (
@@ -66,7 +68,6 @@ from .quoting import (
 )
 from .reopening import ReopenError, reopen, undo_reopen
 from .totals import tax_rows
-from .vat import vat_for_copy
 
 # How many rows the invoice list shows at first, and how many more each
 # "Meer laden" adds.
@@ -150,18 +151,13 @@ def document_list(request):
 
 @login_required
 def document_delete(request, pk, kind="invoice"):
-    """Deletes a draft: an invoice or credit note that was never issued, or
-    a quote that was never sent. Both are numberless, so no gap appears in
-    a number sequence (invariant 3). Anything else is a 404: an issued
-    document is never deleted (invariant 2; Document.delete() and the
-    triggers refuse as well) — corrections are a credit note. So is a
-    draft that already has a number (reopened, or imported as scheduled)."""
+    """Deletes a draft (documents.drafts.deletable_drafts); anything else
+    is a 404."""
     kinds = ["quote"] if kind == "quote" else ["invoice", "credit_note"]
-    document = get_object_or_404(Document, pk=pk, kind__in=kinds, status="draft", number="")
+    document = get_object_or_404(deletable_drafts(), pk=pk, kind__in=kinds)
     if request.method != "POST":
         return HttpResponseNotAllowed(["POST"])
-    credited_invoice = document.related_document if document.kind == "credit_note" else None
-    document.delete()
+    credited_invoice = delete_draft(document)
     messages.success(request, _("Concept verwijderd."))
     if credited_invoice is not None:
         return redirect("documents:edit", pk=credited_invoice.pk)
@@ -560,41 +556,12 @@ def document_credit_note_create(request, pk):
 
 @login_required
 def document_copy(request, pk, kind="invoice"):
-    """A new draft of the same kind with the customer, lines and texts of an
-    invoice or quote, in any status. It gets no number, dates or snapshots
-    until it is issued or sent itself (the due date then follows from the
-    payment term, like any new invoice), and is no correction of the
-    original (that is a credit note), so it carries no related_document.
-    The notes are about the original, not about the copy."""
+    """A new draft with the customer, lines and texts of an invoice or
+    quote (documents.drafts.copy_document)."""
     document = get_object_or_404(Document, pk=pk, kind=kind)
     if request.method != "POST":
         return redirect(_edit_url(document))
-    lines = list(document.lines.all())
-    settings = Settings.load()
-    # One transaction: a copy that fails halfway leaves no half draft.
-    with transaction.atomic():
-        copy = Document.objects.create(
-            kind=kind,
-            status="draft",
-            contact=document.contact,
-            language=document.language,
-            currency=document.currency,
-            intro_text=document.intro_text,
-            footer_text=document.footer_text,
-            attention=document.attention,
-            reference=document.reference,
-        )
-        for line in lines:
-            DocumentLine.objects.create(
-                document=copy,
-                position=line.position,
-                description=line.description,
-                quantity=line.quantity,
-                unit=line.unit,
-                unit_price_cents=line.unit_price_cents,
-                **vat_for_copy(line, settings),
-            )
-        recompute_stored_totals(copy)
+    copy = copy_document(document)
     messages.success(request, _("Kopie gemaakt. Dit is een nieuw concept."))
     return redirect(_edit_url(copy))
 
@@ -605,10 +572,7 @@ def payment_create(request, pk):
     if request.method == "POST":
         form = PaymentForm(request.POST)
         if form.is_valid():
-            payment = form.save(commit=False)
-            payment.document = document
-            payment.full_clean()
-            payment.save()
+            record_payment(document, form)
             messages.success(request, _("Betaling geregistreerd."))
         else:
             # The detail template always builds a fresh, unbound

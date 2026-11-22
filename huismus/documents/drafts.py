@@ -5,6 +5,8 @@ connection (assistants.tools) both go through here, so a draft is validated by
 the same forms and its totals are stored by the same code (CLAUDE.md rule 4: one totals function).
 """
 
+from django.db import transaction
+
 from huismus.business.models import Settings
 from huismus.contacts.numbering import next_customer_number
 
@@ -12,7 +14,7 @@ from .forms import DocumentForm, DocumentLineFormSet, QuoteForm
 from .models import Document, DocumentLine
 from .numbering import peek_next_number
 from .totals import compute_totals
-from .vat import default_rate, line_choices
+from .vat import default_rate, line_choices, vat_for_copy
 
 
 def line_formset(document, data=None):
@@ -141,3 +143,57 @@ def create_credit_note(invoice):
             )
         recompute_stored_totals(credit_note)
     return credit_note
+
+
+def copy_document(document):
+    """A new draft of the same kind with the customer, lines and texts of an
+    invoice or quote, in any status. It gets no number, dates or snapshots
+    until it is issued or sent itself (the due date then follows from the
+    payment term, like any new invoice), and is no correction of the
+    original (that is a credit note), so it carries no related_document.
+    The notes are about the original, not about the copy."""
+    lines = list(document.lines.all())
+    settings = Settings.load()
+    # One transaction: a copy that fails halfway leaves no half draft.
+    with transaction.atomic():
+        copy = Document.objects.create(
+            kind=document.kind,
+            status="draft",
+            contact=document.contact,
+            language=document.language,
+            currency=document.currency,
+            intro_text=document.intro_text,
+            footer_text=document.footer_text,
+            attention=document.attention,
+            reference=document.reference,
+        )
+        for line in lines:
+            DocumentLine.objects.create(
+                document=copy,
+                position=line.position,
+                description=line.description,
+                quantity=line.quantity,
+                unit=line.unit,
+                unit_price_cents=line.unit_price_cents,
+                **vat_for_copy(line, settings),
+            )
+        recompute_stored_totals(copy)
+    return copy
+
+
+def deletable_drafts():
+    """The documents "Verwijderen" may delete: an invoice or credit note
+    that was never issued, or a quote that was never sent. Both are
+    numberless, so no gap appears in a number sequence (invariant 3). An
+    issued document is never deleted (invariant 2; Document.delete() and
+    the triggers refuse as well): corrections are a credit note. Neither is
+    a draft that already has a number (reopened, or imported as scheduled)."""
+    return Document.objects.filter(status="draft", number="")
+
+
+def delete_draft(document):
+    """Deletes a draft from deletable_drafts(); returns the invoice a
+    credit note was for, or None."""
+    credited_invoice = document.related_document if document.kind == "credit_note" else None
+    document.delete()
+    return credited_invoice
