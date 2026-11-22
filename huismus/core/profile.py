@@ -13,7 +13,6 @@ The values are those of the model (kor, btw, nl, eu, offertes, ...): they
 go to the feedback form as they are (#285).
 """
 
-from dataclasses import dataclass
 from functools import cached_property
 
 # Btw
@@ -31,15 +30,20 @@ QUOTES = "offertes"
 EXPENSES = "uitgaven"
 BANK = "bank"
 
-# Herkomst (rompslomp comes with #119)
+# Herkomst (rompslomp comes with #119): ImportRun.source → origin. A new
+# import source gets its own line here.
 NEW = "nieuw"
 MONEYBIRD = "moneybird"
 OTHER = "ander"
+ORIGIN_BY_SOURCE = {"moneybird": MONEYBIRD, "csv": OTHER}
 
 
-@dataclass(frozen=True)
 class Profile:
-    settings: object  # huismus.business.models.Settings
+    """Read it, don't keep it: the axes that look at data are worked out
+    once per Profile, on first use."""
+
+    def __init__(self, settings):
+        self.settings = settings  # huismus.business.models.Settings
 
     @property
     def vat(self) -> str:
@@ -71,21 +75,27 @@ class Profile:
         from huismus.documents.models import DocumentLine
         from huismus.reports.vat_return import EU_COUNTRIES
 
-        countries = set(Contact.objects.values_list("country", flat=True).distinct())
-        for snapshot in (
+        # The country on the invoice too: a customer who moved since was
+        # invoiced, reverse charged, where the invoice says.
+        countries = list(Contact.objects.values_list("country", flat=True).distinct())
+        snapshots = (
             DocumentLine.objects.filter(reverse_charge=True, document__status="issued")
             .values_list("document__contact_snapshot", flat=True)
             .distinct()
-        ):
-            countries.add((snapshot or {}).get("country") or "")
+        )
+        for snapshot in snapshots:
+            countries.append((snapshot or {}).get("country") or "")
 
-        def where(country: str) -> str:
+        found = set()
+        for country in countries:
             country = country.strip().upper()
             if country in ("", "NL"):
-                return NL
-            return EU if country in EU_COUNTRIES else OUTSIDE_EU
-
-        return frozenset(map(where, countries)) or frozenset({NL})
+                found.add(NL)
+            elif country in EU_COUNTRIES:
+                found.add(EU)
+            else:
+                found.add(OUTSIDE_EU)
+        return frozenset(found or {NL})
 
     @cached_property
     def parts_in_use(self) -> frozenset[str]:
@@ -95,24 +105,28 @@ class Profile:
         from huismus.documents.models import Document
         from huismus.expenses.models import Expense
 
-        found = {
-            QUOTES: Document.objects.filter(kind="quote").exists(),
-            EXPENSES: Expense.objects.exists(),
-            BANK: BankStatement.objects.exists(),
-        }
-        return frozenset(part for part, has_data in found.items() if has_data)
+        found = set()
+        if Document.objects.filter(kind="quote").exists():
+            found.add(QUOTES)
+        if Expense.objects.exists():
+            found.add(EXPENSES)
+        if BankStatement.objects.exists():
+            found.add(BANK)
+        return frozenset(found)
 
     @cached_property
     def origin(self) -> str:
         """Where the data came from: moneybird once a Moneybird import went
-        through, ander after any other import (CSV), else nieuw. A dry run
+        through, else ander after a CSV import, else nieuw. A dry run
         doesn't count."""
         from huismus.imports.models import ImportRun
 
-        sources = set(ImportRun.objects.filter(committed=True).values_list("source", flat=True))
-        if MONEYBIRD in sources:
-            return MONEYBIRD
-        return OTHER if sources else NEW
+        sources = ImportRun.objects.filter(committed=True).values_list("source", flat=True)
+        origins = {ORIGIN_BY_SOURCE.get(source) for source in sources}
+        for origin in (MONEYBIRD, OTHER):
+            if origin in origins:
+                return origin
+        return NEW
 
 
 def profile(settings=None) -> Profile:

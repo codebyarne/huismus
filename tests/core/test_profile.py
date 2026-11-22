@@ -88,6 +88,13 @@ def test_a_reverse_charged_line_counts_the_country_on_the_invoice(db):
     assert profile().customers == frozenset({"nl", "eu"})
 
 
+@pytest.mark.parametrize("snapshot_country", ["", "NL"])
+def test_reverse_charged_in_the_netherlands_or_without_a_country_is_nl(db, snapshot_country):
+    contact = Contact.objects.create(company_name="Duits", country="DE")
+    _invoice_with_reverse_charge(contact, snapshot_country)
+    assert profile().customers == frozenset({"nl", "eu"})
+
+
 def test_a_draft_with_a_reverse_charged_line_adds_no_country(db):
     contact = Contact.objects.create(company_name="Duits", country="DE")
     _invoice_with_reverse_charge(contact, "", status="draft")
