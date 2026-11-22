@@ -27,7 +27,6 @@ to another page here as `kor.nl.md`, so both also work on GitHub.
 import re
 from collections.abc import Callable
 from dataclasses import dataclass
-from xml.etree.ElementTree import Element
 
 import markdown
 from django.conf import settings
@@ -60,60 +59,29 @@ def source(slug: str, language: str) -> str:
     return (GUIDES_DIR / f"{slug}.{language}.md").read_text(encoding="utf-8")
 
 
-def _split(slug: str, language: str) -> tuple[str, str]:
-    """(title, the rest) of a file."""
-    heading, _newline, body = source(slug, language).partition("\n")
-    return heading.removeprefix("# ").strip(), body
-
-
 def title(slug: str, language: str) -> str:
-    return _split(slug, language)[0]
+    return help.split_title(source(slug, language))[0]
 
 
 def summary(slug: str, language: str) -> str:
     """The first paragraph under the title: the list on /uitleg/, the line
     under the title and what a search result shows."""
-    return " ".join(_split(slug, language)[1].strip().split("\n\n")[0].split())
+    return help.first_paragraph(help.split_title(source(slug, language))[1])
 
 
 def parts(slug: str, language: str) -> tuple[str, str, str]:
     """The Markdown of (the explanation, in Huismus, the sources), each
     without its heading and the explanation without the summary. A file
     that misses a part raises ValueError."""
-    body = _split(slug, language)[1].strip()
+    body = help.split_title(source(slug, language))[1].strip()
     _summary, _blank, rest = body.partition("\n\n")
-    explanation, found, rest = rest.partition(f"\n## {IN_HUISMUS[language]}\n")
-    in_huismus, found_sources, sources = rest.partition(f"\n## {SOURCES[language]}\n")
-    if not (found and found_sources):
-        raise ValueError(f"{slug}.{language}.md mist een deel.")
-    return explanation.strip(), in_huismus.strip(), sources.strip()
-
-
-class _Links(markdown.treeprocessors.Treeprocessor):
-    def __init__(self, md, help_link: Callable[[str, str], str], link: Callable[[str], str]):
-        super().__init__(md)
-        self.help_link, self.link = help_link, link
-
-    def run(self, root: Element) -> None:
-        for a in root.iter("a"):
-            match = _LINK.match(a.get("href", ""))
-            if not match:
-                continue
-            anchor = match["anchor"] or ""
-            if match["help"]:
-                a.set("href", self.help_link(match["slug"], anchor))
-            else:
-                a.set("href", self.link(match["slug"]) + anchor)
-
-
-class _LinksExtension(markdown.extensions.Extension):
-    def __init__(self, help_link: Callable[[str, str], str], link: Callable[[str], str]):
-        super().__init__()
-        self.help_link, self.link = help_link, link
-
-    def extendMarkdown(self, md):  # noqa: N802 (the name Markdown calls)
-        # After "inline" (priority 20), which makes the <a> elements.
-        md.treeprocessors.register(_Links(md, self.help_link, self.link), "guide_links", 5)
+    pieces = []
+    for heading in (IN_HUISMUS[language], SOURCES[language]):
+        piece, found, rest = rest.partition(f"\n## {heading}\n")
+        if not found:
+            raise ValueError(f'{slug}.{language}.md mist de kop "## {heading}".')
+        pieces.append(piece.strip())
+    return pieces[0], pieces[1], rest.strip()
 
 
 def render(
@@ -123,16 +91,23 @@ def render(
     link: Callable[[str], str],
 ) -> GuidePage:
     """The page as HTML. `help_link(slug, anchor)` gives the address of a
-    help page and `link(slug)` that of another page here."""
-    extensions = ["tables", "toc", _LinksExtension(help_link, link)]
+    help page and `link(slug)` that of another page here: the addresses are
+    the site's (core.site), which builds on this module and not the other
+    way round."""
+
+    def rewrite(href: str) -> str | None:
+        match = _LINK.match(href)
+        if not match:
+            return None
+        anchor = match["anchor"] or ""
+        if match["help"]:
+            return help_link(match["slug"], anchor)
+        return link(match["slug"]) + anchor
+
+    extensions = ["tables", "toc", help.LinksExtension(rewrite)]
     explanation, in_huismus, sources = (
         markdown.markdown(part, extensions=extensions) for part in parts(slug, language)
     )
     return GuidePage(
         slug, title(slug, language), summary(slug, language), explanation, in_huismus, sources
     )
-
-
-def help_topics() -> tuple[str, ...]:
-    """The help pages a page here may link to: the ones the site has."""
-    return tuple(slug for slug in help.TOPICS if slug != help.FEEDBACK)

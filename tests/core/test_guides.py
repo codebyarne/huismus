@@ -86,7 +86,7 @@ def test_a_page_names_its_sources_and_the_day_they_were_checked(slug, language):
 @pytest.mark.parametrize("slug,language", PAGES)
 def test_a_page_ends_with_how_to_do_it_in_huismus_and_a_help_page(slug, language):
     in_huismus = _render(slug, language).in_huismus_html
-    help_pages = {site.help_url(language, topic): topic for topic in guides.help_topics()}
+    help_pages = {site.help_url(language, topic): topic for topic in site.TOPICS}
     targets = [href.partition("#") for href in _links(in_huismus)]
     assert targets and all(target in help_pages for target, _hash, _anchor in targets)
     for target, _hash, anchor in targets:
@@ -99,7 +99,7 @@ def test_a_file_without_its_sources_is_refused(monkeypatch, tmp_path):
         "# Titel\n\nSamenvatting.\n\nUitleg.\n\n## Zo doe je dit in Huismus\n\nZo.\n"
     )
     monkeypatch.setattr(guides, "GUIDES_DIR", tmp_path)
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="## Bronnen"):
         guides.parts("kor", "nl")
 
 
