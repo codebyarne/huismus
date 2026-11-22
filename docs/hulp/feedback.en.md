@@ -25,7 +25,7 @@ the moment you notice it.
 
 1. Choose **Something is broken**, **Idea** or **Question**, and write what
    you want to say. Your email address can stay empty.
-2. Want to show where it is? Press **Point at the screen** and click the part
+2. Want to show where it is? Press **Point at the screen** and click or tap the part
    you mean, or drag a box around it. **Whole screen** takes everything.
    **Esc** stops.
 3. Huismus makes a picture of it itself. In it, only buttons, menus and field
@@ -34,7 +34,7 @@ the moment you notice it.
    along: the page, the version, where Huismus runs, and how you work (your
    organisation, KOR or VAT, reverse charge and the language of your
    invoices).
-5. Press **Send**. Your message goes on GitHub as an idea. The picture and
-   your email address don't: only the app's maker sees those.
+5. Press **Send**. Your message goes on GitHub, where anyone can read it.
+   Only the app's maker sees the picture and your email address.
 
 Don't include customer details, IBANs or amounts.
