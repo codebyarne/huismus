@@ -15,6 +15,22 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "Je mailwachtwoord ontbreekt. Vul het in bij Instellingen → Mailen."
+msgstr ""
+
+msgid ""
+"Je mailwachtwoord ontbreekt in Huismus. Vul het in bij Instellingen → "
+"Mailen. Een back-up neemt het niet mee."
+msgstr ""
+
+msgid "Je mailwachtwoord ontbreekt."
+msgstr ""
+
+msgid ""
+"Een back-up neemt het niet mee. Vul het in bij <a href=\"%(settings_url)s"
+"\">Instellingen → Mailen</a>."
+msgstr ""
+
 msgid "Binnenkort verwacht"
 msgstr ""
 

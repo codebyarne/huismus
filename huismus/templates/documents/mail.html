@@ -13,7 +13,14 @@
 </div>
 
 <div class="stack" style="gap:var(--s-5);max-width:720px">
-    {% if not mail_configured %}
+    {% if mail_password_missing %}
+    <div class="flash flash-info">
+        <svg class="i" aria-hidden="true"><use href="#info"></use></svg>
+        <div class="flash-body"><strong>{% translate "Je mailwachtwoord ontbreekt." %}</strong>
+            <span>{% url 'business:topic' 'mailen' as settings_url %}{% blocktranslate %}Een back-up neemt het niet mee. Vul het in bij <a href="{{ settings_url }}">Instellingen → Mailen</a>.{% endblocktranslate %}</span>
+        </div>
+    </div>
+    {% elif not mail_configured %}
     <div class="flash flash-info">
         <svg class="i" aria-hidden="true"><use href="#info"></use></svg>
         <div class="flash-body"><strong>{% translate "Mailen is nog niet ingesteld." %}</strong>
