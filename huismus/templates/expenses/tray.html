@@ -50,7 +50,7 @@
             {% if item.waiting %}<span class="small muted row" style="gap:var(--s-1)" data-bonnetje-bezig>{% include "core/_bird.svg" %}{% translate "Huismus leest dit bonnetje…" %}</span>
             {% elif item.reason %}<span class="small muted" data-bonnetje-reden>{% if receipt.read_similar %}<a href="{% url 'expenses:edit' receipt.read_similar.pk %}">{{ item.reason }}</a>{% else %}{{ item.reason }}{% endif %}</span>{% endif %}
             <a class="btn btn-primary btn-sm" href="{% url 'expenses:process_item' 'bonnetje' receipt.pk %}">{% translate "Uitgave maken" %}</a>
-            <a class="btn btn-secondary btn-sm" style="white-space:normal" href="{% url 'expenses:tray_attach' receipt.pk %}">{% translate "Bij bestaande uitgave" %}</a>
+            <a class="btn btn-secondary btn-sm" style="white-space:normal;height:auto;min-height:32px;padding-block:6px;line-height:1.25;text-align:center" href="{% url 'expenses:tray_attach' receipt.pk %}">{% translate "Bij bestaande uitgave" %}</a>
         </div>
         <dialog class="dialog" id="verwijder-bon-{{ receipt.pk }}" aria-labelledby="verwijder-bon-{{ receipt.pk }}-titel">
             <form method="post" action="{% url 'expenses:tray_delete' receipt.pk %}">
