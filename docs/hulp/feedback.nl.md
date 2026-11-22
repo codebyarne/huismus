@@ -34,7 +34,8 @@ het je opvalt.
 4. Druk op **Controleer wat er meegaat**. Je ziet de afbeelding en alles wat
    meegaat: de pagina, de versie, waar Huismus draait, en hoe je werkt (je
    organisatie, KOR of btw, btw verlegd en de taal van je facturen).
-5. Druk op **Versturen**. Je bericht komt op GitHub, waar iedereen het kan
-   lezen. De afbeelding en je e-mailadres ziet alleen de appbouwer.
+5. Druk op **Versturen**. Je bericht komt op GitHub, zodat anderen kunnen
+   meelezen en meedenken. De afbeelding en je e-mailadres blijven bij de
+   appbouwer.
 
 Stuur geen klantgegevens, IBAN's of bedragen mee.

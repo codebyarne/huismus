@@ -30,7 +30,7 @@
         <button class="btn btn-ghost" type="submit" name="aanpassen">{% translate "Aanpassen" %}</button>
     </div>
 </form>
-<p class="small muted">{% translate "Je bericht komt op GitHub, waar iedereen het kan lezen. Je e-mailadres en de afbeelding ziet alleen de appbouwer." %}</p>
+<p class="small muted">{% translate "Je bericht komt op GitHub, zodat anderen kunnen meelezen en meedenken. Je e-mailadres en de afbeelding blijven bij de appbouwer." %}</p>
 {% else %}
 <form class="fb-form" method="post" action="{{ fb_url }}" hx-post="{{ fb_url }}" hx-target="#feedback-inhoud" hx-swap="innerHTML">
     {% csrf_token %}
