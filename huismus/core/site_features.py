@@ -122,8 +122,12 @@ FEATURES = (
                 _("Jaaroverzicht"),
                 _("Je omzet, je kosten en wat je overhoudt, ook per kwartaal."),
             ),
+            Feature(
+                _("Je bankafschrift inlezen"),
+                _("Zodat je ziet welke factuur betaald is."),
+                "bankafschrift",
+            ),
             _later(_("Winst-en-verliesrekening"), _("Per jaar.")),
-            _later(_("Je bankafschrift inlezen"), _("Zodat je ziet welke factuur betaald is.")),
         ),
     ),
     (
