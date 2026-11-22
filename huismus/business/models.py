@@ -56,6 +56,12 @@ class Settings(TimestampedModel):
         blank=True,
         help_text=_("Wordt getoond op elke factuur zolang “KOR van toepassing” aan staat."),
     )
+    # No VAT for another reason than the KOR (issue #53): an exemption, or not
+    # an entrepreneur for VAT. For the VAT it behaves like the KOR (no_vat
+    # below); the text under the invoice is the user's own, empty by
+    # default: Huismus suggests no legal text.
+    vat_exempt = models.BooleanField(_("geen btw om een andere reden"), default=False)
+    exempt_text = models.TextField(_("tekst bij geen btw"), blank=True)
     # Under every document with a "verlegd" line (SPEC.md M18). The user's
     # own words: Huismus suggests no legal text.
     reverse_charge_text = models.TextField(_("tekst bij btw verlegd"), blank=True)
@@ -180,8 +186,24 @@ class Settings(TimestampedModel):
                     )
                 }
             )
+        if self.kor_enabled and self.vat_exempt:
+            raise ValidationError(_("Kies de KOR of geen btw om een andere reden, niet allebei."))
         if self.country == "NL" and self.postal_code:
             validate_dutch_postal_code(self.postal_code)
+
+    @property
+    def no_vat(self) -> bool:
+        """No VAT on new documents: under the KOR, or for another reason
+        (issue #53). What the KOR alone does (its revenue limit, its text)
+        still asks kor_enabled."""
+        return self.kor_enabled or self.vat_exempt
+
+    @property
+    def no_vat_text(self) -> str:
+        """The text under a document without VAT, for the choice made."""
+        if self.kor_enabled:
+            return self.kor_text
+        return self.exempt_text if self.vat_exempt else ""
 
     def save(self, *args, **kwargs):
         self.pk = 1

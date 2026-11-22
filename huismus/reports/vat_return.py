@@ -236,9 +236,10 @@ def compute_vat_return(period: Period) -> VatReturn:
 
     input_vat = reverse_charged = 0
     lines_missing = []
-    kor_on = Settings.load().kor_enabled
-    # Under the KOR the VAT on expenses counts nowhere (CLAUDE.md, hard
-    # rule 7): no lines are read. The page then shows no figures at all.
+    kor_on = Settings.load().no_vat
+    # Under the KOR, or without VAT for another reason, the VAT on expenses
+    # counts nowhere (CLAUDE.md, hard rule 7): no lines are read. The page
+    # then shows no figures at all.
     lines = (
         ExpenseLine.objects.none()
         if kor_on

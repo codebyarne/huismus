@@ -316,7 +316,7 @@ def import_sales_invoices(
             document.due_date = parsed.due_date
             document.business_snapshot = business_snapshot(settings)
             document.contact_snapshot = snapshot_as_stated(contact, parsed.customer)
-            document.kor_text_snapshot = settings.kor_text if settings.kor_enabled else ""
+            document.kor_text_snapshot = settings.no_vat_text
             # Faithful (SPEC.md section 7): Moneybird's own stated totals,
             # never the recomputed ones — see the discrepancy check
             # above, and huismus-intern/STATUS.md's M5 notes on why the two can
@@ -519,7 +519,7 @@ def import_quotes(parsed_quotes, *, commit: bool) -> QuoteImportReport:
                 contact=contact,
                 business_snapshot=business_snapshot(settings),
                 contact_snapshot=snapshot_as_stated(contact, parsed.customer),
-                kor_text_snapshot=settings.kor_text if settings.kor_enabled else "",
+                kor_text_snapshot=settings.no_vat_text,
                 language=settings.default_language,
                 currency="EUR",
                 # Faithful (SPEC.md section 7): Moneybird's own stated

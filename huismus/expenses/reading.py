@@ -400,7 +400,7 @@ def read_one(receipt: Attachment, config: Config) -> Outcome | None:
     """Reads one receipt and records the outcome on it. None when the
     service did no work (recorded in the status): the receipt waits."""
     categories = list(ExpenseCategory.objects.all())
-    vat_required = not Settings.load().kor_enabled
+    vat_required = not Settings.load().no_vat
     try:
         content = _content(receipt, categories)
     except receipts.Unreadable:

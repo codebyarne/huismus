@@ -442,7 +442,7 @@ def _tray_receipt(pk) -> Attachment:
 def list_receipts(arguments):
     return {
         # The same rule as the expense form (decision of the owner, 2026-11-05).
-        "vat_required": not Settings.load().kor_enabled,
+        "vat_required": not Settings.load().no_vat,
         "receipts": [
             {
                 "id": receipt.pk,

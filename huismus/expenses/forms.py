@@ -69,8 +69,9 @@ class ExpenseLineForm(forms.ModelForm):
                 "aria-label": _("Nieuwe categorie"),
             }
         )
-        if Settings.load().kor_enabled:
-            # Under the KOR the rate is not asked; a stored one stays
+        if Settings.load().no_vat:
+            # Under the KOR, or without VAT for another reason (issue #53),
+            # the rate is not asked; a stored one stays
             # (rate_to_save takes it from the line).
             del self.fields["vat_rate"]
             return

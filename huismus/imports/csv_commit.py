@@ -416,7 +416,7 @@ def import_expenses(
 ) -> ExpenseReport:
     """`receipts`: file name (as in the column "bonnetjes") -> content."""
     report = ExpenseReport()
-    kor_enabled = Settings.load().kor_enabled
+    kor_enabled = Settings.load().no_vat
     categories: dict = {}
     others = list(Expense.objects.exclude(source=SOURCE).values_list("date", "amount_cents"))
     report.other_expenses = len(others)
