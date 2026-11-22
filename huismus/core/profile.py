@@ -15,6 +15,8 @@ go to the feedback form as they are (#285).
 
 from functools import cached_property
 
+from django.utils.translation import gettext_lazy as _
+
 # Btw
 KOR = "kor"
 VAT = "btw"
@@ -38,7 +40,14 @@ PRIVATE_COMPANY = "bv"
 FOUNDATION = "stichting"
 ASSOCIATION = "vereniging"
 OTHER_FORM = "anders"
-LEGAL_FORMS = (SOLE_PROPRIETOR, PARTNERSHIP, PRIVATE_COMPANY, FOUNDATION, ASSOCIATION, OTHER_FORM)
+LEGAL_ENTITY_CHOICES = [
+    (SOLE_PROPRIETOR, _("Eenmanszaak")),
+    (PARTNERSHIP, _("Vof")),
+    (PRIVATE_COMPANY, _("Bv")),
+    (FOUNDATION, _("Stichting")),
+    (ASSOCIATION, _("Vereniging")),
+    (OTHER_FORM, _("Anders")),
+]
 
 # Herkomst (rompslomp comes with #119): ImportRun.source → origin. A new
 # import source gets its own line here.
@@ -66,7 +75,7 @@ class Profile:
         return VAT
 
     @property
-    def legal_form(self) -> str:
+    def legal_entity(self) -> str:
         """eenmanszaak, vof, bv, stichting, vereniging, anders, or "" when
         not chosen. Only the saved choice: never the suggestion
         (business.legal_entity), which counts only once someone saves it."""

@@ -32,7 +32,7 @@ from django.utils import translation
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 
-from .profile import KOR, NO_VAT, VAT, profile
+from .profile import KOR, LEGAL_ENTITY_CHOICES, NO_VAT, VAT, profile
 from .updates import current_version
 
 logger = logging.getLogger("huismus.feedback")
@@ -149,11 +149,9 @@ def invoice_setup() -> tuple[str, str]:
     return ("ja" if you.reverse_charge_text else "nee"), you.invoice_language
 
 
-def legal_form_label(you) -> str:
+def legal_entity_label(you) -> str:
     """The legal form of the profile in words, or "" when not chosen."""
-    from huismus.business.models import LEGAL_ENTITY_CHOICES
-
-    return next((str(label) for key, label in LEGAL_ENTITY_CHOICES if key == you.legal_form), "")
+    return next((str(label) for key, label in LEGAL_ENTITY_CHOICES if key == you.legal_entity), "")
 
 
 def outgoing(wish: str, email: str, language: str | None = None) -> list:
@@ -165,7 +163,7 @@ def outgoing(wish: str, email: str, language: str | None = None) -> list:
     reverse_charge, invoice_language = invoice_setup()
     you = profile()
     return [
-        (_("Rechtsvorm"), legal_form_label(you) or _("niet ingevuld")),
+        (_("Rechtsvorm"), legal_entity_label(you) or _("niet ingevuld")),
         (_("Btw"), VAT_WORDS[you.vat]),
         (_("Wat je mist"), wish),
         (_("E-mailadres"), email),
@@ -179,7 +177,7 @@ def outgoing(wish: str, email: str, language: str | None = None) -> list:
 
 def profile_fields(you) -> dict:
     """The legal form ("" when not chosen) and the VAT, as they are."""
-    return {"rechtsvorm": you.legal_form, "btw": you.vat}
+    return {"rechtsvorm": you.legal_entity, "btw": you.vat}
 
 
 def form_data(wish: str, email: str, language: str | None = None) -> dict:
@@ -206,9 +204,9 @@ def how_you_work(instance) -> str:
     2026-11-21 and 2026-11-22), as profile() reads it from `instance`."""
     you = profile(instance)
     parts = []
-    legal_form = legal_form_label(you)
-    if legal_form:
-        parts.append(legal_form)
+    legal_entity = legal_entity_label(you)
+    if legal_entity:
+        parts.append(legal_entity)
     parts.append(VAT_WORDS[you.vat])
     parts.append(_("btw verlegd: ja") if you.reverse_charge_text else _("btw verlegd: nee"))
     if you.invoice_language == "en":
@@ -245,7 +243,7 @@ def quick_outgoing(instance, kind, message, email, page, has_image, language=Non
         (_("Afbeelding"), _("ja, hierboven") if has_image else _("geen")),
         (_("E-mailadres"), email),
         (_("Hoe je werkt"), how_you_work(instance)),
-        (_("Rechtsvorm"), legal_form_label(you) or _("niet ingevuld")),
+        (_("Rechtsvorm"), legal_entity_label(you) or _("niet ingevuld")),
         (_("Btw"), VAT_WORDS[you.vat]),
         (_("Draait op"), _label(PLATFORMS, runs_on())),
         (_("Versie"), current_version()),

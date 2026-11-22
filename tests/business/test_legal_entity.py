@@ -84,8 +84,8 @@ def test_a_choice_made_gives_no_suggestion():
 
 
 def test_the_profile_counts_only_the_stored_choice():
-    assert profile(Settings(legal_form="B.V.", feedback_organisation="bv")).legal_form == ""
-    assert profile(Settings(legal_entity="vof")).legal_form == "vof"
+    assert profile(Settings(legal_form="B.V.", feedback_organisation="bv")).legal_entity == ""
+    assert profile(Settings(legal_entity="vof")).legal_entity == "vof"
 
 
 def test_the_six_choices():
@@ -143,6 +143,14 @@ def test_the_wizard_asks_only_the_choice_and_it_may_stay_empty(logged_in):
     assert Settings.load().legal_entity == ""
     logged_in.post(url, {**BUSINESS, "legal_entity": "vof"})
     assert Settings.load().legal_entity == "vof"
+
+
+def test_the_wizard_suggests_from_old_text_too(logged_in):
+    _set(legal_form="Stichting")
+    page = logged_in.get(reverse("onboarding", args=["bedrijf"])).content.decode()
+    assert SUGGESTED in page
+    assert '<option value="stichting" selected>' in page
+    assert Settings.load().legal_entity == ""
 
 
 def test_the_wizard_keeps_the_old_text(logged_in):

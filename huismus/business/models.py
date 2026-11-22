@@ -5,18 +5,10 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from huismus.core import feedback, profile
+from huismus.core import feedback
 from huismus.core.models import TimestampedModel
+from huismus.core.profile import LEGAL_ENTITY_CHOICES
 from huismus.core.validators import validate_dutch_postal_code, validate_iban, validate_kvk_number
-
-LEGAL_ENTITY_CHOICES = [
-    (profile.SOLE_PROPRIETOR, _("Eenmanszaak")),
-    (profile.PARTNERSHIP, _("Vof")),
-    (profile.PRIVATE_COMPANY, _("Bv")),
-    (profile.FOUNDATION, _("Stichting")),
-    (profile.ASSOCIATION, _("Vereniging")),
-    (profile.OTHER_FORM, _("Anders")),
-]
 
 
 def logo_upload_to(instance, filename):
@@ -179,8 +171,10 @@ class Settings(TimestampedModel):
     )
     mail_reminder_body_en = models.TextField(_("tekst herinnering (engels)"), blank=True)
 
-    # Hoe gebruik je Huismus? (huismus.core.feedback): the organisation last
-    # sent, to fill in next time, and whether the done page still asks.
+    # Hoe gebruik je Huismus? (huismus.core.feedback): the organisation the
+    # card sent until #302. Nothing writes it any more; it is only read for
+    # the legal form suggestion (business.legal_entity). And whether the
+    # done page still asks.
     feedback_organisation = models.CharField(
         _("organisatie"), max_length=20, choices=feedback.ORGANISATION_CHOICES, blank=True
     )
