@@ -31,7 +31,7 @@ def _fields(manifest: str) -> dict[str, str]:
     for line in manifest.splitlines():
         key, colon, value = line.strip().removeprefix("- ").partition(": ")
         if colon and not line.startswith("#"):
-            fields[key] = value.strip("'")
+            fields[key] = value.strip("'\"")
     return fields
 
 
@@ -44,7 +44,7 @@ def test_every_value_is_plain_yaml_text():
             if not line or line.startswith("#") or line.endswith(":"):
                 continue
             value = line.strip().removeprefix("- ").partition(": ")[2] or line.strip()[2:]
-            if value.startswith("'") and value.endswith("'"):
+            if value[0] == value[-1] and value[0] in "'\"" and value.count(value[0]) == 2:
                 continue
             assert ": " not in value and " #" not in value, (name, line)
             assert value[0].isalnum(), (name, line)

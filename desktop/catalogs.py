@@ -67,7 +67,8 @@ def _winget_locale(locale: str, description: str, tags: list[str]) -> str:
         f"PackageUrl: {HOMEPAGE}\n"
         "License: AGPL-3.0-or-later\n"
         f"LicenseUrl: {REPOSITORY}/blob/main/LICENSE\n"
-        f"ShortDescription: {description}\n"
+        # In quotes: the sentence has a colon of its own.
+        f'ShortDescription: "{description}"\n'
         "Tags:\n" + "".join(f"- {tag}\n" for tag in tags)
     )
 
@@ -89,13 +90,15 @@ def winget_manifests(version: str, installer_sha256: str) -> dict[str, str]:
     )
     english = _winget_locale(
         "en-US",
-        "Bookkeeping for Dutch freelancers, with quotes, invoices, expenses and VAT reports.",
-        ["bookkeeping", "invoicing", "freelancer", "netherlands", "vat"],
+        "Bookkeeping for freelancers in the Netherlands: quotes, invoices, receipts and "
+        "the amounts for your VAT return. It all stays on your computer.",
+        ["bookkeeping", "accounting", "invoicing", "freelancer", "zzp", "netherlands", "vat"],
     )
     dutch = _winget_locale(
         "nl-NL",
-        "Boekhouden voor zzp'ers, met offertes, facturen, uitgaven en btw-overzichten.",
-        ["boekhouden", "facturen", "zzp", "btw"],
+        "Boekhouden voor zzp'ers: offertes, facturen, bonnetjes en de bedragen voor je "
+        "btw-aangifte. Alles blijft op je eigen computer.",
+        ["boekhouden", "boekhouding", "facturen", "offertes", "zzp", "btw"],
     )
     return {
         f"{WINGET_ID}.yaml": _winget_file("version", version, "DefaultLocale: en-US\n"),
@@ -118,7 +121,7 @@ def homebrew_cask(version: str, dmg_sha256: str) -> str:
   url "{url}",
       verified: "github.com/codebyarne/huismus/"
   name "Huismus"
-  desc "Bookkeeping for Dutch freelancers"
+  desc "Bookkeeping for freelancers in the Netherlands"
   homepage "{HOMEPAGE}"
 
   auto_updates true
