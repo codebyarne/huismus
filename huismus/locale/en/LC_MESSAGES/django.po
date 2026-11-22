@@ -9592,11 +9592,8 @@ msgstr "yes, above"
 msgid "Hoe je werkt"
 msgstr "How you work"
 
-msgid "Vertel het in je eigen woorden"
-msgstr "Tell it in your own words"
-
-msgid "Vul dit alleen in als de appbouwer je over je bericht mag mailen."
-msgstr "Only fill this in if the app's maker may email you about your message."
+msgid "Laat je e-mailadres achter als de appbouwer je over je bericht mag mailen."
+msgstr "Leave your email address if the app's maker may email you about your message."
 
 msgid "Deze afbeelding kan niet mee. Maak hem opnieuw."
 msgstr "This picture can't be sent. Make it again."
