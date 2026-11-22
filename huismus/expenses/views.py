@@ -5,7 +5,7 @@ from urllib.parse import urlencode
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.db.models import Count, Exists, F, OuterRef, ProtectedError, Q, Subquery, Sum
+from django.db.models import Count, Exists, F, OuterRef, Q, Subquery, Sum
 from django.db.models.functions import Lower
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -18,7 +18,7 @@ from huismus.bank.models import BankTransaction
 from huismus.core.models import Attachment
 from huismus.core.sorting import chosen_sort, sort_headers
 
-from . import batch, inbox, reading
+from . import adding, batch, inbox, reading
 from .forms import (
     ExpenseCategoryForm,
     ExpenseForm,
@@ -387,12 +387,7 @@ def expense_edit(request, pk):
 def expense_delete(request, pk):
     expense = get_object_or_404(Expense, pk=pk)
     if request.method == "POST":
-        # Attachment.expense is on_delete=CASCADE, so the row disappears
-        # on its own — but nothing removes the file it points at unless
-        # we do it here first, same as receipt_delete() already has to.
-        for attachment in expense.attachments.all():
-            attachment.file.delete(save=False)
-        expense.delete()
+        adding.delete_expense(expense)
         messages.success(request, _("Uitgave verwijderd."))
     return redirect("expenses:list")
 
@@ -494,14 +489,8 @@ def category_delete(request, pk):
     category = get_object_or_404(ExpenseCategory, pk=pk)
     if request.method == "POST":
         try:
-            category.delete()
+            adding.delete_category(category)
             messages.success(request, _("Categorie verwijderd."))
-        except ProtectedError:
-            messages.error(
-                request,
-                _(
-                    "Er horen nog uitgaven bij deze categorie. Geef ze eerst een "
-                    "andere categorie, dan kun je hem verwijderen."
-                ),
-            )
+        except adding.CategoryInUse as refusal:
+            messages.error(request, str(refusal))
     return redirect("expenses:category_list")
