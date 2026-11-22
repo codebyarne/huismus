@@ -161,7 +161,7 @@
         <a href="{% url 'imports:upload' %}">{% translate "Importeren uit Moneybird" %}</a>
     </div>
 </section>
-{% comment %}Expenses stay: only the invoice figures make way for the card above. Unless Uitgaven is out of the menu (#260): then there are none.{% endcomment %}
+{% comment %}Only the invoice figures make way for the card above; the expenses figure stays while Uitgaven is in the menu (#260).{% endcomment %}
 {% if show_expenses %}<div class="grid-3" style="margin-bottom:var(--s-6)">
     <a class="card kpi" href="{% url 'expenses:list' %}" style="text-decoration:none;color:inherit">
         <span class="kpi-label"><span>{{ overview.costs_label }} {{ year }}</span></span>

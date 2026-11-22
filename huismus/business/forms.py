@@ -364,10 +364,10 @@ class SettingsPartForm(SettingsForm):
                 self.fields["legal_entity"].help_text = _(
                     "Voorstel op basis van wat je eerder invulde. Klopt het, sla dan op."
                 )
-        # A part with something in it stays in the menu: its checkbox is on
-        # and can't be changed, with the reason under it. What was saved
-        # stays saved (clean() below), so the part goes once it is empty
-        # and you had switched it off.
+        # A part with something in it stays in the menu: its checkbox shows
+        # on and can't be changed, with the reason under it. parts_kept holds
+        # what was saved, which may be off: clean() saves that again instead
+        # of the "on" on the screen, so the part goes once it is empty.
         self.parts_kept = {}
         in_use = None
         for name, (part, reason) in PART_FIELDS.items():

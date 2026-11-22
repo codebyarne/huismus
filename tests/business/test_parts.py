@@ -185,7 +185,11 @@ def test_the_page_saves_the_choice(client_in):
     response = client_in.post(ONDERDELEN, {"show_expenses": "on"})
     assert response.status_code == 302
     settings = Settings.load()
-    assert (settings.show_quotes, settings.show_expenses, settings.show_bank) == (False, True, False)
+    assert (settings.show_quotes, settings.show_expenses, settings.show_bank) == (
+        False,
+        True,
+        False,
+    )
 
 
 def test_saving_another_topic_leaves_the_parts_alone(client_in):

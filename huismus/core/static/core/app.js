@@ -849,6 +849,8 @@ const phone = window.matchMedia("(max-width: 760px) and (pointer: coarse)");
 document.addEventListener(
   "click",
   (event) => {
+    // Not on the page while Uitgaven is out of the menu (#260, base.html),
+    // and with it the camera-* toasts the upload below uses.
     const camera = document.getElementById("camera");
     const link = event.target.closest?.("a[href]");
     if (!camera || !link || !phone.matches || event.defaultPrevented) return;
