@@ -595,6 +595,8 @@ def get_document_pdf(arguments):
     if document.status == "draft":
         content = render_pdf(document, preview=True)
         data["preview"] = True
+        # None until it is issued; a draft reopened with "Toch bewerken" keeps its own.
+        data["number"] = document.number or None
         data["note"] = _(
             "Dit is een concept: de PDF heeft VOORBEELD op elke pagina. "
             "Stuur hem niet als factuur naar je klant."

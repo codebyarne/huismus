@@ -240,7 +240,7 @@ def test_a_draft_gives_a_preview(full, business, customer, monkeypatch):
     data = result["structuredContent"]
     assert data["preview"] is True
     assert "VOORBEELD" in data["note"]
-    assert "number" not in data
+    assert data["number"] is None
 
 
 def test_a_credit_note_names_the_invoice(full, business, customer, monkeypatch):
