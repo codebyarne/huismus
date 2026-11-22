@@ -164,7 +164,7 @@ class QuickFeedbackForm(forms.Form):
     )
     email = forms.EmailField(
         label=_("E-mailadres"),
-        help_text=_("Alleen als de appbouwer je iets mag terugvragen."),
+        help_text=_("Vul dit alleen in als de appbouwer je over je bericht mag mailen."),
         max_length=feedback.MAX_EMAIL,
         required=False,
     )
