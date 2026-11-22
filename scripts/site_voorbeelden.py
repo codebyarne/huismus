@@ -163,11 +163,12 @@ def make(out: Path, language: str) -> None:
     from django.utils import translation
 
     from huismus.core import site_examples as names
+    from huismus.documents.pdf import render_pdf
 
     out.mkdir(parents=True, exist_ok=True)
     with translation.override(language):
         for example, document in _documents(language).items():
-            pdf = _document_pdf(document)
+            pdf = render_pdf(document)
             _write(out, example, language, "pdf", pdf)
             _write(out, example, language, "docx", _document_docx(document))
             _write(out, example, language, "xlsx", _document_xlsx(document, language))
@@ -246,12 +247,6 @@ def _draft(kind: str, customer, language: str, rate_bp: int, day: date):
             tax_rate_bp=rate_bp,
         )
     return document
-
-
-def _document_pdf(document) -> bytes:
-    from huismus.documents.pdf import render_pdf
-
-    return render_pdf(document)
 
 
 @dataclass(frozen=True)
@@ -409,7 +404,8 @@ def _document_xlsx(document, language: str) -> bytes:
 
     words, labels = WORDS[language], _document_labels(document)
     business, lines = document.business_snapshot, list(document.lines.all())
-    sheet = _Sheet(labels.title, widths=(10, 10, 44, 14, 12, 14))
+    kind = app_says("Offerte") if document.kind == "quote" else app_says("Factuur")
+    sheet = _Sheet(kind, labels.title, widths=(10, 10, 44, 14, 12, 14))
 
     sheet.put("A1", business["business_name"], bold=True)
     row = 1
@@ -450,7 +446,7 @@ def _document_xlsx(document, language: str) -> bytes:
         sheet.put(f"C{row}", line.description)
         sheet.put(f"D{row}", _euros(line.unit_price_cents), num_format=EUROS)
         sheet.put(f"E{row}", Decimal(line.tax_rate_bp) / 10000, num_format="0%")
-        sheet.put(
+        sheet.put_formula(
             f"F{row}",
             f"=ROUND(A{row}*D{row},2)",
             shows=_euros(line.line_total_cents),
@@ -460,7 +456,7 @@ def _document_xlsx(document, language: str) -> bytes:
     row += 2
     amounts = [row]
     sheet.put(f"E{row}", app_says("Subtotaal"))
-    sheet.put(
+    sheet.put_formula(
         f"F{row}",
         f"=SUM(F{first}:F{last})",
         shows=_euros(document.subtotal_cents),
@@ -472,7 +468,7 @@ def _document_xlsx(document, language: str) -> bytes:
         amounts.append(row)
         rate = Decimal(rate_bp) / 10000
         sheet.put(f"E{row}", _tax_label(rate_bp))
-        sheet.put(
+        sheet.put_formula(
             f"F{row}",
             f"=ROUND(SUMIF(E{first}:E{last},{rate},F{first}:F{last})*{rate},2)",
             shows=_euros(cents),
@@ -480,7 +476,7 @@ def _document_xlsx(document, language: str) -> bytes:
         )
     row += 1
     sheet.put(f"E{row}", app_says("Totaal"), bold=True, top=1)
-    sheet.put(
+    sheet.put_formula(
         f"F{row}",
         "=" + "+".join(f"F{r}" for r in amounts),
         shows=_euros(document.total_cents),
@@ -515,13 +511,9 @@ class _Timesheet:
 
 
 def _timesheet(language: str) -> _Timesheet:
-    from huismus.business.models import Settings
-    from huismus.documents.snapshots import business_snapshot
-
-    business = business_snapshot(Settings.load())
     return _Timesheet(
         words=WORDS[language],
-        contractor=[business["business_name"], *_sender_lines(business)],
+        contractor=[BUSINESS["business_name"], *_sender_lines(BUSINESS)],
         client=[
             CUSTOMER["company_name"],
             CUSTOMER["address_line1"],
@@ -532,7 +524,8 @@ def _timesheet(language: str) -> _Timesheet:
 
 
 def _hours(hours: Decimal) -> str:
-    """3.5 -> "3,5" in Dutch, "3.5" in English."""
+    """3.5 -> "3,5" in Dutch, "3.5" in English: in the language make() has
+    switched on, like every number and word here."""
     from huismus.documents.templatetags.documents_tags import plain_quantity
 
     return plain_quantity(hours)
@@ -634,7 +627,7 @@ def _timesheet_docx(sheet: _Timesheet) -> bytes:
 
 def _timesheet_xlsx(sheet: _Timesheet) -> bytes:
     words = sheet.words
-    page = _Sheet(words["timesheet"], widths=(14, 50, 12))
+    page = _Sheet(words["timesheet"], words["timesheet"], widths=(14, 50, 12))
     page.put("A1", words["timesheet"], font_size=18)
     row = 3
     for heading, party in (
@@ -663,7 +656,7 @@ def _timesheet_xlsx(sheet: _Timesheet) -> bytes:
     last = row
     row += 2
     page.put(f"B{row}", words["total"], bold=True)
-    page.put(
+    page.put_formula(
         f"C{row}",
         f"=SUM(C{first}:C{last})",
         shows=sheet.total,
@@ -743,35 +736,39 @@ def _line_under(row) -> None:
 class _Sheet:
     """One worksheet of a new workbook, every cell in FONT."""
 
-    def __init__(self, title: str, widths: tuple[int, ...]):
+    def __init__(self, name: str, title: str, widths: tuple[int, ...]):
+        """`name` is on the tab, `title` in the file's properties."""
         import xlsxwriter
 
         self._buffer = io.BytesIO()
         self._book = xlsxwriter.Workbook(self._buffer, {"in_memory": True})
         self._book.set_properties({"title": title, "author": AUTHOR, "created": MADE_ON})
-        self._sheet = self._book.add_worksheet(title.split()[0])
+        self._sheet = self._book.add_worksheet(name)
         for column, width in enumerate(widths):
             self._sheet.set_column(column, column, width)
         # Printed, it is one A4 page wide.
         self._sheet.set_paper(9)
         self._sheet.fit_to_pages(1, 0)
 
-    def put(self, cell: str, value, shows=None, **look) -> None:
-        """Write `value` in `cell` ("B4"). A formula ("=…") also gets what it
-        `shows` before a program has calculated it. `look`: xlsxwriter's
-        format properties (bold, num_format, …)."""
-        look = self._book.add_format({"font_name": FONT, "font_size": 10} | look)
-        if isinstance(value, str) and value.startswith("="):
-            self._sheet.write_formula(cell, value, look, shows)
-        elif isinstance(value, date):
-            self._sheet.write_datetime(cell, value, look)
+    def put(self, cell: str, value, **look) -> None:
+        """Write `value` in `cell` ("B4"). `look`: xlsxwriter's format
+        properties (bold, num_format, …)."""
+        if isinstance(value, date):
+            self._sheet.write_datetime(cell, value, self._look(look))
         else:
-            self._sheet.write(cell, value, look)
+            self._sheet.write(cell, value, self._look(look))
+
+    def put_formula(self, cell: str, formula: str, shows, **look) -> None:
+        """A formula ("=SUM(…)"), with what it `shows` before a program has
+        calculated it."""
+        self._sheet.write_formula(cell, formula, self._look(look), shows)
+
+    def _look(self, look: dict):
+        return self._book.add_format({"font_name": FONT, "font_size": 10} | look)
 
     def put_wide(self, cells: str, text: str, height: int) -> None:
         """A text over several columns ("A20:F20") that wraps."""
-        look = {"font_name": FONT, "font_size": 10, "text_wrap": True, "valign": "top"}
-        self._sheet.merge_range(cells, text, self._book.add_format(look))
+        self._sheet.merge_range(cells, text, self._look({"text_wrap": True, "valign": "top"}))
         self._sheet.set_row(int(cells.split(":")[0][1:]) - 1, height)
 
     def saved(self) -> bytes:
@@ -803,9 +800,10 @@ def _preview(pdf: bytes) -> bytes:
 def main(out: Path, language: str) -> None:
     """One language, in a temporary administration away from data/."""
     with tempfile.TemporaryDirectory() as work:
+        # Before django.setup(): the settings read where the database is.
         os.environ["HUISMUS_DATA_DIR"] = work
-        os.environ.setdefault("SECRET_KEY", "site-voorbeelden-only")
-        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "huismus.config.settings")
+        os.environ["SECRET_KEY"] = "site-voorbeelden-only"
+        os.environ["DJANGO_SETTINGS_MODULE"] = "huismus.config.settings"
         sys.path.insert(0, str(ROOT))
         import django
         from django.core.management import call_command
