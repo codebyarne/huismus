@@ -108,8 +108,10 @@
                     {% if settings.kor_enabled %}
                     <div class="kor-note"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{{ settings.kor_text|linebreaksbr }} <a href="{% url 'business:topic' 'kor' %}" style="color:inherit">{% translate "Tekst aanpassen" %}</a></span></div>
                     {% elif settings.vat_exempt %}
-                    {% comment %}No VAT for another reason (issue #53): the user's own text, or that it is missing.{% endcomment %}
-                    <div class="kor-note" id="tekst-geen-btw"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{% if settings.exempt_text.strip %}{{ settings.exempt_text|linebreaksbr }} <a href="{% url 'business:topic' 'kor' %}" style="color:inherit">{% translate "Tekst aanpassen" %}</a>{% else %}{% translate "Je hebt nog geen tekst bij geen btw. Zonder tekst kun je deze factuur niet uitgeven." %} <a href="{% url 'business:topic' 'kor' %}" style="color:inherit">{% translate "Tekst invullen" %}</a>{% endif %}</span></div>
+                    {% comment %}No VAT for another reason (issue #53): the user's own text, or that it is missing.
+                    hx-boost="false": inside the live totals' block an htmx link would send the
+                    invoice along and show nothing (the same as "Tekst aanpassen" above, PR #269).{% endcomment %}
+                    <div class="kor-note" id="tekst-geen-btw"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{% if settings.exempt_text.strip %}{{ settings.exempt_text|linebreaksbr }} <a href="{% url 'business:topic' 'kor' %}" hx-boost="false" style="color:inherit">{% translate "Tekst aanpassen" %}</a>{% else %}{% translate "Je hebt nog geen tekst bij geen btw. Zonder tekst kun je deze factuur niet uitgeven." %} <a href="{% url 'business:topic' 'kor' %}" hx-boost="false" style="color:inherit">{% translate "Tekst invullen" %}</a>{% endif %}</span></div>
                     {% endif %}
                     <label class="sr-only" for="{{ form.footer_text.id_for_label }}">{% translate "Voettekst" %}</label>
                     <textarea id="{{ form.footer_text.id_for_label }}" name="{{ form.footer_text.html_name }}" class="textarea input-quiet small" rows="2" style="min-height:0;margin:0 -12px;width:calc(100% + 24px)" placeholder="{% translate 'Voettekst (optioneel)' %}">{{ form.footer_text.value|default:'' }}</textarea>

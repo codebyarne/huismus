@@ -23,7 +23,7 @@ from huismus.contacts.models import Contact, ContactPerson
 from huismus.core.export import percent
 from huismus.core.models import Attachment
 from huismus.core.templatetags.money import euros
-from huismus.documents.issuing import kor_text_for, reverse_charge_text_for
+from huismus.documents.issuing import no_vat_text_for, reverse_charge_text_for
 from huismus.documents.models import Document, DocumentLine, Payment
 from huismus.documents.snapshots import business_snapshot
 from huismus.documents.totals import compute_totals, line_total_cents, vat_rows
@@ -363,7 +363,7 @@ def _create(parsed: CsvDocument, contact, settings, related) -> Document:
     # No KOR text beside VAT or a "verlegd" line: that document was not
     # made under the KOR, whatever the settings say now.
     under_kor = parsed.stated_tax_cents == 0 and not any(line.reverse_charge for line in lines)
-    document.kor_text_snapshot = kor_text_for(document, settings) if under_kor else ""
+    document.kor_text_snapshot = no_vat_text_for(document, settings) if under_kor else ""
     document.reverse_charge_text_snapshot = reverse_charge_text_for(document, lines, settings)
     document.subtotal_cents = parsed.stated_subtotal_cents
     document.tax_cents = parsed.stated_tax_cents
@@ -416,7 +416,7 @@ def import_expenses(
 ) -> ExpenseReport:
     """`receipts`: file name (as in the column "bonnetjes") -> content."""
     report = ExpenseReport()
-    kor_enabled = Settings.load().no_vat
+    no_vat = Settings.load().no_vat
     categories: dict = {}
     others = list(Expense.objects.exclude(source=SOURCE).values_list("date", "amount_cents"))
     report.other_expenses = len(others)
@@ -451,7 +451,7 @@ def import_expenses(
                     vat_rate=line.vat_rate,
                 )
             )
-        if not kor_enabled:
+        if not no_vat:
             report.lines_without_rate += sum(1 for line in lines if not line.vat_rate)
         expense = create_expense(
             lines,

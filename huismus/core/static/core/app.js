@@ -300,7 +300,8 @@ document.addEventListener("change", (event) => {
 // Likewise radios: a group named in data-shows-group shows while one of its
 // radios is chosen (the cards of Instellingen → Btw), a group named in
 // data-hides-group hides while one of its radios is chosen (the question
-// about btw verlegd without VAT, /welkom/werk/).
+// about btw verlegd without VAT, /welkom/werk/). A group is named by one
+// kind of attribute, never both.
 function showGroups(root) {
   for (const select of root.querySelectorAll("select[data-shows-group]")) {
     for (const element of document.querySelectorAll(`[data-group="${select.dataset.showsGroup}"]`)) {
@@ -322,7 +323,8 @@ function showGroups(root) {
 }
 showGroups(document);
 // A page reached through hx-boost doesn't run this module again: hide the
-// groups of the new page too (found with Instellingen → Btw, BUGS-BY-HAND.md).
+// groups of the new page too (BUGS-BY-HAND.md, 2026-11-22;
+// tests/e2e/test_vat_exempt.py comes to Instellingen → Btw through a link).
 document.addEventListener("htmx:load", () => showGroups(document));
 // Every radio, not only the one with data-hides-group: choosing another
 // answer ("Ja") has to show the group again.

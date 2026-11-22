@@ -57,7 +57,7 @@
         {% field form.reverse_charge_text label=reverse_label help=reverse_help optional=True %}
         {% elif step.slug == "geen-btw" %}
         {% translate "Tekst bij geen btw" as exempt_label %}
-        {% field form.exempt_text label=exempt_label optional=True %}
+        {% field form.exempt_text label=exempt_label %}
         {% elif step.slug == "kor" %}
         {% translate "KOR-tekst" as kor_label %}
         {% translate "Verplicht zolang de KOR aan staat. Deze tekst komt onder elke nieuwe factuur." as kor_help %}

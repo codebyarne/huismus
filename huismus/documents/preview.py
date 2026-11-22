@@ -20,7 +20,7 @@ from django.utils.translation import gettext_lazy as _
 from huismus.business.models import Settings
 
 from .editing import counted_forms
-from .issuing import default_due_date, kor_text_for, reverse_charge_text_for
+from .issuing import default_due_date, no_vat_text_for, reverse_charge_text_for
 from .pdf import render_pdf
 from .snapshots import business_snapshot, contact_snapshot
 from .totals import compute_totals
@@ -62,7 +62,7 @@ def render_preview_pdf(form, formset) -> bytes:
         document.due_date = default_due_date(document, settings, document.issue_date)
     document.business_snapshot = business_snapshot(settings)
     document.contact_snapshot = contact_snapshot(document.contact) if document.contact else None
-    document.kor_text_snapshot = kor_text_for(document, settings)
+    document.kor_text_snapshot = no_vat_text_for(document, settings)
     document.reverse_charge_text_snapshot = reverse_charge_text_for(document, typed, settings)
     document.subtotal_cents = totals.subtotal_cents
     document.tax_cents = totals.tax_cents

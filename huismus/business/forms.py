@@ -241,7 +241,10 @@ class SettingsForm(forms.ModelForm):
         if "vat_choice" not in self.fields:
             return
         # On the instance, not in cleaned: the two switches are not fields of
-        # the page. The model's own clean() then checks the result.
+        # the page (Instellingen → Btw names vat_choice, not them, and
+        # SettingsPartForm drops every field a page doesn't name), so the
+        # ModelForm would not set them. The model's own clean() then checks
+        # the result. Without an answer (an old form) the choice stays.
         choice = cleaned.get("vat_choice") or vat_choice_of(self.instance)
         self.instance.kor_enabled = choice == USES_KOR
         self.instance.vat_exempt = choice == NO_VAT_OTHER

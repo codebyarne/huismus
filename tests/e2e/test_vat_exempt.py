@@ -52,11 +52,13 @@ def test_choose_no_vat_for_another_reason_fill_in_the_text_and_issue(app, contac
     expect(app.locator("body")).to_contain_text("Vul eerst de tekst bij geen btw in")
     assert Document.objects.get().status == "draft"
 
+    # "Tekst invullen" leads to the card, nothing sent along.
     draft_url = app.url
-    expect(
-        app.locator("#tekst-geen-btw").get_by_role("link", name="Tekst invullen")
-    ).to_have_attribute("href", "/instellingen/kor/")
-    app.goto(app.base + "/instellingen/kor/")
+    app.locator("#tekst-geen-btw").get_by_role("link", name="Tekst invullen").click()
+    expect(app.locator("h1")).to_have_text("Btw")
+    expect(app).to_have_url(f"{app.base}/instellingen/kor/")
+    # Issuing needs it: the label doesn't say "(optioneel)".
+    expect(app.locator('[data-group="btw-anders"]')).not_to_contain_text("optioneel")
     app.get_by_label("Tekst bij geen btw").fill("Geen btw: vrijgesteld (voorbeeldtekst).")
     app.get_by_role("button", name="Opslaan", exact=True).press("Enter")
     expect(app.get_by_text("Instellingen opgeslagen.")).to_be_visible()
