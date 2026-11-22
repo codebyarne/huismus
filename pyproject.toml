@@ -33,6 +33,9 @@ dev = [
     "hypothesis>=6.115",
     "pytest-playwright>=0.9.0",  # browser tests (tests/e2e): HTMX, JS and language switching
     "pytest-xdist>=3.6",  # the gate runs the tests on every core: ~10 min to under 2 in a cloud session
+    "python-docx>=1.1",  # writes the Word examples for the site (scripts/site_voorbeelden.py); tests compare them
+    "pypdfium2>=4.30",  # the first page of an example PDF as a picture, for the site (scripts/site_voorbeelden.py)
+    "xlsxwriter>=3.2",  # writes the Excel examples: a formula together with its amount, which openpyxl cannot
 ]
 
 [tool.ruff]
