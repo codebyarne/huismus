@@ -80,11 +80,7 @@ Excel](importeren.nl.md#wat-de-proefdraai-laat-zien).
 Klopt alles, klik dan op **Nu echt importeren**. Vergelijk daarna per jaar je
 omzet bij **Rapporten › Jaaroverzicht** met die in Tellow.
 
-## Daarna opzeggen
-
-Zeg Tellow pas op als alles in Huismus staat, je het hebt nagekeken en er een
-[back-up](back-ups.nl.md) is. Bewaar ook wat je uit Tellow hebt gehaald bij
-je eigen bestanden.
+## Als je opzegt
 
 Volgens Tellow zeg je op per mail, en kun je daarna niet meer inloggen.
 [Zo beschrijft Tellow het in zijn hulp](https://help.tellow.nl/nl/articles/6389787-hoe-kan-ik-mijn-abonnement-annuleren).

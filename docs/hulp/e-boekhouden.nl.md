@@ -84,11 +84,7 @@ Excel](importeren.nl.md#wat-de-proefdraai-laat-zien).
 Klopt alles, klik dan op **Nu echt importeren**. Vergelijk daarna per jaar je
 omzet bij **Rapporten › Jaaroverzicht** met die in e-Boekhouden.nl.
 
-## Daarna opzeggen
-
-Zeg e-Boekhouden.nl pas op als alles in Huismus staat, je het hebt nagekeken en er een
-[back-up](back-ups.nl.md) is. Bewaar ook wat je uit e-Boekhouden.nl hebt gehaald bij
-je eigen bestanden.
+## Als je opzegt
 
 Volgens e-Boekhouden.nl zeg je op onder **Beheer**. Daarna worden je
 gegevens verwijderd, tenzij je een Online Archief neemt. [Zo beschrijft e-Boekhouden.nl het in

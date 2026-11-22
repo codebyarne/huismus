@@ -84,11 +84,7 @@ Excel](importeren.nl.md#wat-de-proefdraai-laat-zien).
 Klopt alles, klik dan op **Nu echt importeren**. Vergelijk daarna per jaar je
 omzet bij **Rapporten › Jaaroverzicht** met die in Jortt.
 
-## Daarna opzeggen
-
-Zeg Jortt pas op als alles in Huismus staat, je het hebt nagekeken en er een
-[back-up](back-ups.nl.md) is. Bewaar ook wat je uit Jortt hebt gehaald bij
-je eigen bestanden.
+## Als je opzegt
 
 Volgens Jortt houd je je gegevens als je teruggaat naar jortt Starter. De boekhouding, de auditfile en de koppeling met Dropbox werken
 dan niet meer, dus die exporteer je eerst. [Zo beschrijft Jortt het in zijn

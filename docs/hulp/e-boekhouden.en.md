@@ -84,11 +84,7 @@ Excel](importeren.en.md#what-the-trial-run-shows).
 If everything is right, click **Import now**. Then compare your revenue per
 year under **Reports › Year overview** with the one in e-Boekhouden.nl.
 
-## Cancelling afterwards
-
-Cancel e-Boekhouden.nl only when everything is in Huismus, you've checked it and you
-have a [backup](back-ups.en.md). Also keep what you got out of e-Boekhouden.nl with
-your own files.
+## When you cancel
 
 According to e-Boekhouden.nl, you cancel under **<span lang="nl">Beheer</span>**. After that
 your data is deleted, unless you take an Online Archief. [This is how e-Boekhouden.nl describes it
