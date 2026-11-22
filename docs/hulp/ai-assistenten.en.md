@@ -8,10 +8,14 @@ you only connect it.
 ## What an assistant can do
 
 - **Read:** the overview (revenue this year, your limit for the small business scheme (KOR), what's open
-  and what's overdue), find and open invoices, credit notes and quotes,
-  find customers, expenses per year, and the VAT return of a quarter, month
-  or year, with what isn't counted. It can't read settings, PDFs,
-  mail texts or the mail log.
+  and what's overdue), and what waits for you, as under To do. Find and
+  open invoices, credit notes and quotes, also as a PDF. Find customers,
+  expenses per year, your categories, what's under Bank, the year overview
+  and the VAT return of a quarter, month or year, with what isn't counted.
+  Of your settings it only sees what it needs: whether the KOR is on, your
+  default language, your payment terms and the next number. It doesn't see
+  your address, KvK number, IBAN, passwords or keys, nor mail texts or the
+  mail log.
 - **Make drafts:** make and change a draft invoice or quote, and a draft
   credit note for an issued invoice. If the customer isn't in Huismus yet,
   you add them yourself first.
@@ -29,8 +33,9 @@ you only connect it.
   Then the assistant's app asks for your permission, with a button only you
   can press. If you choose "always allow" there, the app stops asking.
   Huismus can't see that.
-- **Never:** change customers or payments, change an expense, mark a quote
-  accepted or declined, delete anything, or "Edit anyway".
+- **Not yet:** change customers, payments, expenses or categories, answer
+  a quote, send a reminder, delete anything, or "Edit anyway". That comes in
+  a later version.
 
 What the assistant reads goes to the company behind that assistant (OpenAI,
 Google or Anthropic). Huismus itself doesn't become reachable from the

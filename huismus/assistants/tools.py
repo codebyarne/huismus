@@ -1,12 +1,17 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""What an AI assistant can do in Huismus (SPEC.md M16; huismus-intern/besluiten.md,
-2026-10-28 "Wat een AI-assistent mag" and 2026-10-30 "bouwkeuzes").
+"""What an AI assistant can do in Huismus (SPEC.md M16). Since
+huismus-intern/besluiten.md, 2026-11-21 "een assistent mag wat jij mag"
+(#273): what the user may do in the app, an assistant may do here, and what
+can't be undone or goes outside asks the user first.
 
-Three kinds of tool:
+Four kinds of tool:
 
 - "read": changes nothing. Marked read-only, so the assistant's app may
-  run it without asking.
+  run it without asking: the overview with Te doen, documents and their
+  PDF, contacts, expenses, categories, the receipts without an expense,
+  the bank page, the year overview, the VAT return, and the settings an
+  assistant needs (never passwords, keys or backups).
 - "draft": makes or changes a draft, through the editor's own forms and
   documents.drafts.
 - "add": adds an expense, through the expense page's own forms and
@@ -18,27 +23,32 @@ Three kinds of tool:
   app's, the assistant cannot press it. Each has a preview tool before it
   that says what will happen.
 
-Never here: contacts, changing an expense, attachments other than the
-receipts without an expense, payments, a quote's answer, deleting,
-"Toch bewerken". Every action goes through the same function as in the
-app (issue(), send_quote(), send_document()), so numbering, totals and
-immutability are checked where they always are.
+Not yet here, coming in the next steps of #273: changing contacts,
+expenses and categories, payments, a quote's answer, reminders, the bank's
+actions, deleting a draft, "Toch bewerken". Every action goes through the
+same function as in the app (issue(), send_quote(), send_document(),
+core.todo, bank.views), so numbering, totals and immutability are checked
+where they always are.
 
 Titles are gettext, shown in the default language from the settings
 (assistants.views); descriptions are English, for the assistant.
 """
 
+import base64
 import json
 from collections.abc import Callable
 from dataclasses import dataclass
 from decimal import Decimal
 from typing import Literal
 
+from django.db.models import Count
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
+from huismus.bank import views as bank
+from huismus.bank.models import BankStatement
 from huismus.business import smtp
 from huismus.business.kor_limit import kor_limit_crossed_by, kor_limit_status
 from huismus.business.models import Settings
@@ -47,6 +57,7 @@ from huismus.core import form_messages
 from huismus.core.dashboard import outstanding_invoices
 from huismus.core.models import Attachment
 from huismus.core.templatetags.money import euros, money
+from huismus.core.todo import current_todo
 from huismus.documents.drafts import (
     create_credit_note,
     document_form,
@@ -58,11 +69,14 @@ from huismus.documents.issuing import IssueError, issue
 from huismus.documents.listing import contact_name
 from huismus.documents.mailing import (
     MAILABLE_STATUSES,
+    attachment,
     default_message,
     default_recipients,
     send_document,
 )
 from huismus.documents.models import Document
+from huismus.documents.numbering import NumberingError, next_numbers_if_issued_today
+from huismus.documents.pdf import render_pdf
 from huismus.documents.quoting import QuoteError, send_quote
 from huismus.documents.totals import compute_totals
 from huismus.documents.vat import default_rate, editor_value, rate_label
@@ -80,11 +94,12 @@ class ToolError(Exception):
 
 
 @dataclass(frozen=True)
-class WithImages:
-    """A handler's answer with images after its data: a receipt."""
+class WithContent:
+    """A handler's answer with more after its data: the images of a
+    receipt, or a document's PDF."""
 
     data: dict
-    images: list[dict]
+    content: list[dict]
 
 
 @dataclass(frozen=True)
@@ -126,19 +141,24 @@ class Tool:
             data = self.handler(arguments)
         except ToolError as refusal:
             return {"content": [{"type": "text", "text": str(refusal)}], "isError": True}
-        images = []
-        if isinstance(data, WithImages):
-            data, images = data.data, data.images
+        more = []
+        if isinstance(data, WithContent):
+            data, more = data.data, data.content
         text = json.dumps(data, ensure_ascii=False, indent=1)
-        return {"content": [{"type": "text", "text": text}, *images], "structuredContent": data}
+        return {"content": [{"type": "text", "text": text}, *more], "structuredContent": data}
 
 
 # --- What the assistant gets back ---
 
 
+def _plain_text(text) -> str:
+    """Without the non-breaking spaces the pages use."""
+    return str(text).replace("\u00a0", " ")
+
+
 def _amount(cents) -> str:
-    """ "€ 1.815,00", without the non-breaking spaces the pages use."""
-    return money(cents).replace("\u00a0", " ")
+    """ "€ 1.815,00"."""
+    return _plain_text(money(cents))
 
 
 def _date(value) -> str | None:
@@ -241,6 +261,16 @@ def get_overview(arguments):
         "open_invoices": outstanding["count"],
         "outstanding": _amount(outstanding["total_cents"]),
         "overdue_invoices": outstanding["overdue_count"],
+        # Te doen on the Overzicht, the same rows (core.todo).
+        "to_do": [
+            {
+                "kind": item.kind,
+                "title": _plain_text(item.title),
+                "detail": _plain_text(item.detail),
+                "path": item.url or item.action_url,
+            }
+            for item in current_todo(timezone.localdate(), outstanding).items
+        ],
     }
     kor = kor_limit_status(year)
     if kor is not None:
@@ -426,6 +456,199 @@ def get_vat_return(arguments):
     return data
 
 
+def get_year_overview(arguments):
+    """Rapporten → Jaaroverzicht: compute_year_overview() as it is, nothing
+    counted anew."""
+    year = arguments.get("year") or timezone.localdate().year
+    overview = compute_year_overview(year)
+
+    def costs(cents_without, input_vat_cents) -> dict:
+        found = {"costs": _amount(cents_without)}
+        if overview.shows_input_vat:
+            found["input_vat"] = _amount(input_vat_cents)
+        return found
+
+    return {
+        "year": year,
+        # "Kosten" (gross) or "Kosten zonder btw", as the page says.
+        "costs_label": str(overview.costs_label),
+        "costs_without_vat": overview.shows_input_vat,
+        "revenue": _amount(overview.revenue_cents),
+        **costs(overview.expenses_cents, overview.input_vat_cents),
+        "profit": _amount(overview.profit_cents),
+        "quarters": [
+            {
+                "quarter": f"Q{quarter.quarter}",
+                "revenue": _amount(quarter.revenue_cents),
+                **costs(quarter.expenses_cents, quarter.input_vat_cents),
+                "profit": _amount(quarter.profit_cents),
+            }
+            for quarter in overview.quarters
+        ],
+        "costs_by_category": [
+            {"category": category.name, "amount": _amount(category.amount_cents)}
+            for category in overview.by_category
+        ],
+    }
+
+
+# How many invoices or expenses to choose from a line under Te doen
+# gives: the ones that fit first (bank.views).
+BANK_CHOICES = 5
+
+
+def _bank_line(line) -> dict:
+    return {
+        "id": line.pk,
+        "date": _date(line.booked_on),
+        # Positive: money in, for an invoice; negative: out, for an expense.
+        "amount": _amount(line.amount_cents),
+        "direction": "out" if line.is_outgoing else "in",
+        "name": line.counterparty_name,
+        "description": line.description,
+        "reference": line.reference,
+    }
+
+
+def _bank_choice(choice) -> dict:
+    """An open invoice (money in) or an expense without a bank line (out)."""
+    if hasattr(choice, "number"):
+        return {
+            "invoice_id": choice.pk,
+            "number": choice.number,
+            "customer": choice.customer,
+            "outstanding": _amount(choice.outstanding_cents),
+        }
+    return {
+        "expense_id": choice.pk,
+        "date": _date(choice.date),
+        "supplier": choice.supplier,
+        "description": choice.description,
+        "amount": _amount(choice.gross_cents),
+    }
+
+
+def _waiting_line(item) -> dict:
+    found = _bank_line(item.line)
+    if item.proposal is not None:
+        found["proposal"] = _bank_choice(item.proposal)
+        if not item.line.is_outgoing and item.difference_cents:
+            # More (positive) or less (negative) than what is open on it.
+            found["difference"] = _amount(item.difference_cents)
+    else:
+        found["choices"] = [_bank_choice(choice) for choice in item.choices[:BANK_CHOICES]]
+    return found
+
+
+def _booked_line(line) -> dict:
+    found = {**_bank_line(line), "state": str(line.get_state_display())}
+    if line.payment_id:
+        document = line.payment.document
+        found["invoice"] = {"id": document.pk, "number": document.number}
+    elif line.expense_id:
+        found["expense_id"] = line.expense_id
+    return found
+
+
+def list_bank(arguments):
+    """Bank: the page's three sections, from the page's own functions."""
+    to_do, unknown = bank.to_do_and_unknown()
+    statement = BankStatement.objects.first()
+    limit = min(arguments.get("limit") or 20, 100)
+    return {
+        "to_do": [_waiting_line(item) for item in to_do],
+        # As the page: the booked lines of the latest statement.
+        "latest_statement": None
+        if statement is None
+        else {"name": statement.filename, "read": _date(timezone.localdate(statement.created_at))},
+        "booked": [_booked_line(line) for line in bank.booked_lines(statement)],
+        "not_recognised": [_bank_line(item.line) for item in unknown[:limit]],
+        "not_recognised_total": len(unknown),
+        "path": reverse("bank:statement"),
+    }
+
+
+def list_categories(arguments):
+    """Uitgaven → Categorieën, with the same count per category."""
+    categories = ExpenseCategory.objects.annotate(
+        expense_count=Count("lines__expense", distinct=True)
+    )
+    return {
+        "categories": [
+            {"id": category.pk, "name": category.name, "expenses": category.expense_count}
+            for category in categories
+        ],
+        "path": reverse("expenses:category_list"),
+    }
+
+
+def get_document_pdf(arguments):
+    """The PDF the app gives: for an issued invoice, credit note or a sent
+    quote the one of the PDF button, which is the imported original while
+    it is still the document (mailing.attachment, Document.primary_original_pdf);
+    for a draft the editor's preview, marked VOORBEELD."""
+    document = _document(arguments)
+    data = {"id": document.pk, "kind": document.kind, "status": document.shown_status}
+    if document.status == "draft":
+        content = render_pdf(document, preview=True)
+        data["preview"] = True
+        data["note"] = _(
+            "Dit is een concept: de PDF heeft VOORBEELD op elke pagina. "
+            "Stuur hem niet als factuur naar je klant."
+        )
+        name = f"concept-{document.pk}.pdf"
+    else:
+        name, content = attachment(document)
+        data["number"] = document.number
+        data["preview"] = False
+        data["made_by"] = "original" if document.primary_original_pdf() else "huismus"
+    related = document.related_document
+    if document.kind == "credit_note" and related is not None:
+        data["corrects_invoice"] = related.number
+    data["name"] = name
+    return WithContent(
+        data,
+        [
+            {
+                "type": "resource",
+                "resource": {
+                    "uri": f"huismus://documents/{document.pk}/{name}",
+                    "mimeType": "application/pdf",
+                    "blob": base64.b64encode(content).decode("ascii"),
+                },
+            }
+        ],
+    )
+
+
+def get_settings(arguments):
+    """What an assistant needs to work well, and nothing more: no address,
+    registration numbers, bank account, mail server, passwords, keys or
+    backups (huismus-intern/besluiten.md, 2026-11-22)."""
+    settings = Settings.load()
+    try:
+        numbers = next_numbers_if_issued_today(settings)
+    except NumberingError:
+        numbers = {"invoice": None, "quote": None}
+    return {
+        "business_name": settings.business_name,
+        "kor": settings.kor_enabled,
+        "no_vat_for_another_reason": settings.vat_exempt,
+        "default_language": settings.default_language,
+        "currency": settings.currency,
+        "payment_terms_days": settings.default_payment_terms_days,
+        "numbering_restarts_yearly": settings.number_reset_yearly,
+        # Nothing is reserved: issuing today would give these. Credit
+        # notes share the invoices' sequence.
+        "next_number_if_issued_now": {
+            "invoice": numbers["invoice"],
+            "credit_note": numbers["invoice"],
+            "quote": numbers["quote"],
+        },
+        "mail_set_up": smtp.is_configured(settings) and not smtp.password_is_missing(settings),
+    }
+
+
 # --- Receipts without an expense (SPEC.md M20, part 2) ---
 
 RECEIPT_GONE = adding.RECEIPT_GONE
@@ -467,7 +690,7 @@ def read_receipt(arguments):
     data = {"id": receipt.pk, "name": receipt.filename, "text": reading.text}
     if reading.pages is not None:
         data["pages"] = reading.pages
-    return WithImages(data, reading.images)
+    return WithContent(data, reading.images)
 
 
 # --- Drafts ---
@@ -883,8 +1106,11 @@ TOOLS = (
         "get_overview",
         gettext_lazy("Overzicht bekijken"),
         "read",
-        "Revenue for a year, open and overdue invoices, and how revenue compares with the "
-        "KOR limit the user set (when the KOR is on).",
+        "Revenue for a year, open and overdue invoices, how revenue compares with the "
+        "KOR limit the user set (when the KOR is on), and to_do: what waits for the user "
+        "now, as the list Te doen on Huismus's Overzicht shows it (bank lines, overdue "
+        "invoices, quotes waiting for an answer, drafts, receipts and expenses to check). "
+        "path is the place in Huismus, after Huismus's address.",
         _YEAR,
         (),
         get_overview,
@@ -957,6 +1183,66 @@ TOOLS = (
         },
         (),
         get_vat_return,
+    ),
+    Tool(
+        "get_year_overview",
+        gettext_lazy("Jaaroverzicht bekijken"),
+        "read",
+        "The year overview, as on Huismus's page Rapporten > Jaaroverzicht: revenue (without "
+        "VAT), costs, profit, per quarter and costs per category. costs_label says what the "
+        "costs are: gross, or without VAT when costs_without_vat is true, with input_vat "
+        "apart. Pass the amounts on as they are.",
+        _YEAR,
+        (),
+        get_year_overview,
+    ),
+    Tool(
+        "list_bank",
+        gettext_lazy("Bank bekijken"),
+        "read",
+        "The bank page: the lines of the bank statements the user read in. to_do: lines that "
+        "fit an invoice (money in) or an expense (money out), with Huismus's proposal, or "
+        "choices when the user must pick. booked: the latest statement's booked lines. "
+        "not_recognised: lines that fit nothing, often private money; nothing to do. "
+        "Huismus reads statements only when the user reads one in, on that page.",
+        {**_LIMIT},
+        (),
+        list_bank,
+    ),
+    Tool(
+        "list_categories",
+        gettext_lazy("Categorieën bekijken"),
+        "read",
+        "The expense categories, with how many expenses each has. add_expense takes a "
+        "category by its name.",
+        {},
+        (),
+        list_categories,
+    ),
+    Tool(
+        "get_document_pdf",
+        gettext_lazy("PDF van een document"),
+        "read",
+        "The PDF of an invoice, credit note or quote, as an attachment you can show the "
+        "user. For an issued or sent document it is the PDF the customer gets: made_by "
+        "says whether it is the original from the import or made by Huismus. A draft "
+        "gives a preview marked VOORBEELD (preview is true): never present it as the "
+        "invoice.",
+        _ID,
+        ("id",),
+        get_document_pdf,
+    ),
+    Tool(
+        "get_settings",
+        gettext_lazy("Instellingen bekijken"),
+        "read",
+        "The settings an assistant needs: whether the KOR is on, or no VAT for another "
+        "reason, the default language, currency, payment terms, the next numbers if "
+        "issued now (nothing is reserved) and whether mailing is set up. Addresses, "
+        "registration numbers, the bank account, passwords and keys are not given.",
+        {},
+        (),
+        get_settings,
     ),
     Tool(
         "list_receipts",

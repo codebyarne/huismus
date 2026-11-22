@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-22 19:04+0100\n"
+"POT-Creation-Date: 2026-11-22 19:38+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -35,6 +35,11 @@ msgid "Dit document bestaat niet in Huismus, of past niet bij deze actie."
 msgstr ""
 
 msgid "Uitgave"
+msgstr ""
+
+msgid ""
+"Dit is een concept: de PDF heeft VOORBEELD op elke pagina. Stuur hem niet "
+"als factuur naar je klant."
 msgstr ""
 
 msgid "Huismus kan dit bonnetje niet lezen. Maak de uitgave in Huismus."
@@ -133,6 +138,21 @@ msgid "Uitgaven bekijken"
 msgstr ""
 
 msgid "Btw-aangifte bekijken"
+msgstr ""
+
+msgid "Jaaroverzicht bekijken"
+msgstr ""
+
+msgid "Bank bekijken"
+msgstr ""
+
+msgid "Categorieën bekijken"
+msgstr ""
+
+msgid "PDF van een document"
+msgstr ""
+
+msgid "Instellingen bekijken"
 msgstr ""
 
 msgid "Bonnetjes zonder uitgave bekijken"
