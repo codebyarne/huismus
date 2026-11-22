@@ -21,6 +21,8 @@ De Belastingdienst vraagt deze gegevens op elke factuur:
 - het btw-tarief;
 - het btw-bedrag.
 
+Een voorbeeld met al deze gegevens staat bij [Voorbeelden](../site/voorbeelden/).
+
 ## Het factuurnummer
 
 Je facturen hebben opeenvolgende nummers, in één of meer reeksen. Elk nummer

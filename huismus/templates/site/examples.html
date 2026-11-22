@@ -1,0 +1,55 @@
+{% extends "site/base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Voorbeelden om te downloaden" %} — Huismus{% endblock %}
+{% block og_title %}{% translate "Voorbeelden om te downloaden" %} — Huismus{% endblock %}
+{% block description %}{% translate "Voorbeeld van een factuur met en zonder btw, een offerte en een urenstaat. Gratis te downloaden als Word, Excel en pdf." %}{% endblock %}
+
+{% block main_class %}wrap examples-page{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <h1>{% translate "Voorbeelden om te downloaden" %}</h1>
+        <p class="lede">{% translate "Een factuur, een offerte en een urenstaat om zelf in te vullen, elk als Word, Excel en pdf. De gegevens zijn verzonnen: vervang ze door die van jezelf. Het Excel-bestand rekent de bedragen voor je uit. In Word reken je ze zelf uit." %}</p>
+    </div>
+</div>
+
+{% comment %}The files and their pictures come from docs/site/voorbeelden/ (core.site_examples), made by scripts/site-voorbeelden.sh. What the first card says about the Belastingdienst's list is checked against the PDF by tests/core/test_site_examples.py.{% endcomment %}
+<ul class="examples">
+    {% for example in examples %}
+    <li class="card example">
+        <img class="example-picture" src="{{ example.preview_url }}" width="{{ preview_width }}" height="{{ preview_height }}" loading="lazy" alt="{% blocktranslate with title=example.title %}Voorbeeld: {{ title }}{% endblocktranslate %}">
+        <div class="example-text">
+            <h2>{{ example.title }}</h2>
+            {% if example.slug == "factuur-met-btw" %}
+            <p>{% blocktranslate %}Een factuur met 21% btw. Alle gegevens die de Belastingdienst op een factuur vraagt, staan erop. Welke dat zijn, lees je bij <a href="{{ invoice_guide_url }}">Wat moet er op een factuur staan?</a>{% endblocktranslate %}</p>
+            {% elif example.slug == "factuur-zonder-btw" %}
+            <p>{% blocktranslate %}Voor wie de kleineondernemersregeling (KOR) gebruikt: er staat geen btw op. Onderaan staat een voorbeeldtekst. Zet er je eigen tekst voor in de plaats. Meer lees je bij <a href="{{ kor_guide_url }}">De kleineondernemersregeling (KOR)</a>.{% endblocktranslate %}</p>
+            {% elif example.slug == "offerte" %}
+            <p>{% translate "Een offerte met 21% btw en de datum tot wanneer hij geldig is." %}</p>
+            {% else %}
+            <p>{% translate "Per dag de datum, wat je deed en hoeveel uur. Met het totaal en ruimte voor een handtekening van jou en je opdrachtgever." %}</p>
+            {% endif %}
+            <p class="example-downloads">
+                {% for label, url in example.downloads %}
+                <a class="btn" href="{{ url }}" download aria-label="{% blocktranslate with title=example.title format=label %}{{ title }} downloaden als {{ format }}{% endblocktranslate %}"><svg class="i" width="18" height="18" aria-hidden="true"><use href="#download"></use></svg>{{ label }}</a>
+                {% endfor %}
+            </p>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+
+<p class="examples-other">{% if language == "nl" %}{% blocktranslate %}De Engelse versies staan op de <a href="{{ switch_url }}" hreflang="en">Engelse pagina</a>.{% endblocktranslate %}{% else %}{% blocktranslate %}De Nederlandse versies staan op de <a href="{{ switch_url }}" hreflang="nl">Nederlandse pagina</a>.{% endblocktranslate %}{% endif %}</p>
+
+<section class="card card-pad help-text examples-in-huismus" aria-labelledby="in-huismus">
+    <h2 id="in-huismus">{% translate "Zo doe je dit in Huismus" %}</h2>
+    <p>{% translate "In Huismus vul je je gegevens één keer in. Daarna kies je een klant en typ je de regels. Huismus rekent het totaal uit en geeft de factuur het volgende nummer. De factuur blijft zoals je hem verstuurde." %}</p>
+    <p class="examples-links">{% for url, title in help_pages %}<a href="{{ url }}">{{ title }}</a> {% endfor %}</p>
+</section>
+
+<section class="band band-final" id="downloaden">
+    {% include "site/_final.html" %}
+</section>
+{% endblock %}

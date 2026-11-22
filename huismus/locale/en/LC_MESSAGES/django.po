@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-22 13:49+0100\n"
+"POT-Creation-Date: 2026-11-22 19:04+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -13,26 +13,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-msgid "Je mailwachtwoord ontbreekt. Vul het in bij Instellingen → Mailen."
-msgstr "Your mail password is missing. Enter it under Settings → Mail."
-
-msgid ""
-"Je mailwachtwoord ontbreekt in Huismus. Vul het in bij Instellingen → "
-"Mailen. Een back-up neemt het niet mee."
-msgstr ""
-"Your mail password is missing in Huismus. Enter it under Settings → Mail. A "
-"backup doesn't include it."
-
-msgid "Je mailwachtwoord ontbreekt."
-msgstr "Your mail password is missing."
-
-msgid ""
-"Een back-up neemt het niet mee. Vul het in bij <a href=\"%(settings_url)s"
-"\">Instellingen → Mailen</a>."
-msgstr ""
-"A backup doesn't include it. Enter it under <a href=\"%(settings_url)s\">"
-"Settings → Mail</a>."
 
 msgid "Binnenkort verwacht"
 msgstr "Coming soon"
@@ -134,6 +114,13 @@ msgid ""
 "Alleen een uitgegeven factuur of creditnota, of een verzonden offerte, kun "
 "je mailen."
 msgstr "Only an issued invoice or credit note, or a sent quote, can be mailed."
+
+msgid ""
+"Je mailwachtwoord ontbreekt in Huismus. Vul het in bij Instellingen → "
+"Mailen. Een back-up neemt het niet mee."
+msgstr ""
+"Your mail password is missing in Huismus. Enter it under Settings → Mail. A "
+"backup doesn't include it."
 
 msgid ""
 "Mailen is nog niet ingesteld. Dat doe je in Huismus, onder Instellingen → "
@@ -315,14 +302,6 @@ msgid "Dit bestand is groter dan 50 MB. Kies bij je bank een kortere periode."
 msgstr "This file is larger than 50 MB. Choose a shorter period at your bank."
 
 #, python-format
-msgid ""
-"Deze zip is uitgepakt groter dan %(max_mb)s MB, te groot om in te lezen. "
-"Kies bij je bank een kortere periode."
-msgstr ""
-"This zip is larger than %(max_mb)s MB unpacked, too big to import. Choose a "
-"shorter period at your bank."
-
-#, python-format
 msgid "%(count)s betaling gelezen van rekening %(iban)s"
 msgid_plural "%(count)s betalingen gelezen van rekening %(iban)s"
 msgstr[0] "Read %(count)s payment from account %(iban)s"
@@ -369,6 +348,14 @@ msgid "%(count)s was al ingelezen."
 msgid_plural "%(count)s waren al ingelezen."
 msgstr[0] "%(count)s was read before."
 msgstr[1] "%(count)s were read before."
+
+#, python-format
+msgid ""
+"Deze zip is uitgepakt groter dan %(max_mb)s MB, te groot om in te lezen. "
+"Kies bij je bank een kortere periode."
+msgstr ""
+"This zip is larger than %(max_mb)s MB unpacked, too big to import. Choose a "
+"shorter period at your bank."
 
 msgid "Niets nieuws: alle betalingen in dit bestand waren al ingelezen."
 msgstr "Nothing new: every payment in this file was read before."
@@ -548,24 +535,6 @@ msgstr ""
 "This file ends in .%(extension)s, but it isn't a %(extension)s file. Choose "
 "another file."
 
-msgid "Eenmanszaak"
-msgstr "Sole proprietorship"
-
-msgid "Vof"
-msgstr "General partnership (vof)"
-
-msgid "Bv"
-msgstr "Private limited company (bv)"
-
-msgid "Stichting"
-msgstr "Foundation"
-
-msgid "Vereniging"
-msgstr "Association"
-
-msgid "Anders"
-msgstr "Other"
-
 msgid "bedrijfsnaam"
 msgstr "business name"
 
@@ -658,6 +627,9 @@ msgstr "mail through"
 
 msgid "Niet ingesteld"
 msgstr "Not set up"
+
+msgid "Anders"
+msgstr "Other"
 
 msgid "SMTP-server"
 msgstr "SMTP server"
@@ -1528,6 +1500,12 @@ msgstr "Sole trader or partnership charging VAT"
 msgid "Bv of holding"
 msgstr "Private limited company or holding"
 
+msgid "Stichting"
+msgstr "Foundation"
+
+msgid "Vereniging"
+msgstr "Association"
+
 msgid "Desktop-app op een Mac"
 msgstr "Desktop app on a Mac"
 
@@ -1856,8 +1834,37 @@ msgstr "Password set."
 msgid "Wachtwoord uitgezet."
 msgstr "Password turned off."
 
+msgid "Eenmanszaak"
+msgstr "Sole proprietorship"
+
+msgid "Vof"
+msgstr "General partnership (vof)"
+
+msgid "Bv"
+msgstr "Private limited company (bv)"
+
 msgid "Zelf-gehoste boekhouding voor Nederlandse zzp'ers onder de KOR"
 msgstr "Self-hosted bookkeeping for Dutch freelancers under the KOR"
+
+msgid "Factuur met btw"
+msgstr "Invoice with VAT"
+
+msgid "Factuur zonder btw"
+msgstr "Invoice without VAT"
+
+msgid "Urenstaat"
+msgstr "Timesheet"
+
+msgid "Pdf"
+msgstr "PDF"
+
+msgid "Voorbeelden om te downloaden"
+msgstr "Examples to download"
+
+msgid ""
+"Voorbeeld van een factuur met en zonder btw, een offerte en een urenstaat. "
+"Gratis te downloaden als Word, Excel en pdf."
+msgstr "Example of an invoice with and without VAT, a quote and a timesheet. Free to download as Word, Excel and PDF."
 
 msgid "Factureren"
 msgstr "Invoicing"
@@ -1975,6 +1982,9 @@ msgstr ""
 "Your KOR text on every invoice, and on the overview how far you are from "
 "your limit."
 
+msgid "Voor werk dat vrijgesteld is van btw. Jouw tekst op elke factuur."
+msgstr "For work that is exempt from VAT. Your text on every invoice."
+
 msgid "Btw per regel, ook verlegd"
 msgstr "VAT per line, reverse-charged too"
 
@@ -2003,8 +2013,12 @@ msgstr "Your revenue, your costs and what is left, per quarter too."
 msgid "Je bankafschrift inlezen"
 msgstr "Import your bank statement"
 
-msgid "Zodat je ziet welke factuur betaald is."
-msgstr "So you see which invoice has been paid."
+msgid ""
+"Je ziet welke factuur betaald is en welke uitgave bij een afschrijving "
+"hoort. Zonder verbinding met je bank."
+msgstr ""
+"You see which invoice is paid and which expense belongs to a payment out. "
+"Without a connection to your bank."
 
 msgid "Winst-en-verliesrekening"
 msgstr "Profit and loss statement"
@@ -2040,8 +2054,12 @@ msgstr "One ZIP file that opens without Huismus too."
 msgid "Importeren uit andere pakketten en uit Excel"
 msgstr "Import from other packages and from Excel"
 
-msgid "Met één importbestand, ook als je niet van Moneybird komt."
-msgstr "With one import file, even if you’re not coming from Moneybird."
+msgid ""
+"Met het sjabloon, en een handleiding voor Rompslomp, Tellow, e-Boekhouden."
+"nl, Jortt en Excel."
+msgstr ""
+"With the template, and a guide for Rompslomp, Tellow, e-Boekhouden.nl, Jortt "
+"and Excel."
 
 msgid "Auditfile voor je boekhouder"
 msgstr "Audit file for your accountant"
@@ -2811,6 +2829,9 @@ msgstr "The payment wasn't saved. Check the amount and the date."
 msgid "Factuur %(number)s is niet te laat. Er is geen herinnering gestuurd."
 msgstr "Invoice %(number)s isn't overdue. No reminder was sent."
 
+msgid "Je mailwachtwoord ontbreekt. Vul het in bij Instellingen → Mailen."
+msgstr "Your mail password is missing. Enter it under Settings → Mail."
+
 #, python-format
 msgid "Herinnering gestuurd naar %(to)s."
 msgstr "Reminder sent to %(to)s."
@@ -2909,6 +2930,7 @@ msgstr "Fill in the VAT amount. No VAT paid? Then fill in 0."
 msgid "Kies het btw-tarief."
 msgstr "Choose the VAT rate."
 
+#, python-format
 msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
 msgstr "With 0% or no VAT, the VAT amount is € 0.00."
 
@@ -2983,6 +3005,7 @@ msgstr "Saved. Huismus picks up new receipts from %(place)s by itself."
 msgid "Bonnetje verwijderd."
 msgstr "Receipt deleted."
 
+#, python-format
 msgid "0% of geen btw"
 msgstr "0% or no VAT"
 
@@ -3923,6 +3946,7 @@ msgstr "Supplies/services subject to the high VAT rate"
 msgid "Leveringen/diensten belast met laag tarief"
 msgstr "Supplies/services subject to the low VAT rate"
 
+#, python-format
 msgid "Leveringen/diensten belast met 0% of niet bij u belast"
 msgstr "Supplies/services taxed at 0% or not taxed to you"
 
@@ -5268,7 +5292,8 @@ msgstr ""
 
 msgid ""
 "Huismus houdt niet bij wie het gebruikt. Vertel het de appbouwer als je wilt."
-msgstr "Huismus doesn't keep track of who uses it. Tell the app maker if you like."
+msgstr ""
+"Huismus doesn't keep track of who uses it. Tell the app maker if you like."
 
 msgid "Controleer gegevens"
 msgstr "Check details"
@@ -6308,6 +6333,17 @@ msgstr "Clear filters"
 msgid "Te laat betekent: vervaldatum voorbij en nog niet volledig betaald."
 msgstr "Late means: past the due date and not fully paid yet."
 
+msgid "Je mailwachtwoord ontbreekt."
+msgstr "Your mail password is missing."
+
+#, python-format
+msgid ""
+"Een back-up neemt het niet mee. Vul het in bij <a "
+"href=\"%(settings_url)s\">Instellingen → Mailen</a>."
+msgstr ""
+"A backup doesn't include it. Enter it under <a "
+"href=\"%(settings_url)s\">Settings → Mail</a>."
+
 #, python-format
 msgid ""
 "Stel bij <a href=\"%(settings_url)s\">Instellingen</a> in hoe Huismus mailt."
@@ -7301,6 +7337,13 @@ msgid "Zo zet je je gegevens in het sjabloon"
 msgstr "How to put your data into the template"
 
 msgid ""
+"Per pakket lees je hoe je je gegevens eruit haalt: Rompslomp, Tellow, e-"
+"Boekhouden.nl, Jortt en Excel."
+msgstr ""
+"For each package you can read how to get your data out: Rompslomp, Tellow, e-"
+"Boekhouden.nl, Jortt and Excel."
+
+msgid ""
 "Download het sjabloon: een zip met een bestand voor je klanten, facturen, "
 "offertes en uitgaven."
 msgstr ""
@@ -7336,13 +7379,6 @@ msgstr ""
 
 msgid "Welke kolommen er zijn en hoe je ze invult"
 msgstr "Which columns there are and how to fill them in"
-
-msgid ""
-"Per pakket lees je hoe je je gegevens eruit haalt: Rompslomp, Tellow, e-"
-"Boekhouden.nl, Jortt en Excel."
-msgstr ""
-"For each package you can read how to get your data out: Rompslomp, Tellow, "
-"e-Boekhouden.nl, Jortt and Excel."
 
 msgid "Zo haal je je gegevens uit Moneybird"
 msgstr "How to get your data out of Moneybird"
@@ -7774,6 +7810,9 @@ msgstr "Home"
 msgid "Functies"
 msgstr "Features"
 
+msgid "Uitleg"
+msgstr "Guides"
+
 msgid "Installeren"
 msgstr "Install"
 
@@ -7794,6 +7833,9 @@ msgstr "Footer"
 
 msgid "Waarom Huismus"
 msgstr "Why Huismus"
+
+msgid "Voorbeelden"
+msgstr "Examples"
 
 msgid "Broncode"
 msgstr "Source code"
@@ -8102,6 +8144,66 @@ msgid "Aan de slag"
 msgstr "Getting started"
 
 msgid ""
+"Een factuur, een offerte en een urenstaat om zelf in te vullen, elk als "
+"Word, Excel en pdf. De gegevens zijn verzonnen: vervang ze door die van "
+"jezelf. Het Excel-bestand rekent de bedragen voor je uit. In Word reken je "
+"ze zelf uit."
+msgstr "An invoice, a quote and a timesheet to fill in yourself, each as Word, Excel and PDF. The details are made up: replace them with your own. The Excel file works out the amounts for you. In Word you work them out yourself."
+
+#, python-format
+msgid "Voorbeeld: %(title)s"
+msgstr "Example: %(title)s"
+
+#, python-format
+msgid ""
+"Een factuur met 21%% btw. Alle gegevens die de Belastingdienst op een "
+"factuur vraagt, staan erop. Welke dat zijn, lees je bij <a "
+"href=\"%(invoice_guide_url)s\">Wat moet er op een factuur staan?</a>"
+msgstr "An invoice with 21%% VAT. It has every detail the Dutch Tax Administration (Belastingdienst) asks for on an invoice. The list is in <a href=\"%(invoice_guide_url)s\">What goes on an invoice?</a>"
+
+#, python-format
+msgid ""
+"Voor wie de kleineondernemersregeling (KOR) gebruikt: er staat geen btw op. "
+"Onderaan staat een voorbeeldtekst. Zet er je eigen tekst voor in de plaats. "
+"Meer lees je bij <a href=\"%(kor_guide_url)s\">De kleineondernemersregeling "
+"(KOR)</a>."
+msgstr "For those who use the small business scheme (KOR): there's no VAT on it. At the bottom is a sample text. Replace it with your own. Read more in <a href=\"%(kor_guide_url)s\">The small business scheme (KOR)</a>."
+
+#, python-format
+msgid "Een offerte met 21%% btw en de datum tot wanneer hij geldig is."
+msgstr "A quote with 21%% VAT and the date it's valid until."
+
+msgid ""
+"Per dag de datum, wat je deed en hoeveel uur. Met het totaal en ruimte voor "
+"een handtekening van jou en je opdrachtgever."
+msgstr "Per day the date, what you did and how many hours. With the total and room for your signature and your client's."
+
+#, python-format
+msgid "%(title)s downloaden als %(format)s"
+msgstr "Download %(title)s as %(format)s"
+
+#, python-format
+msgid ""
+"De Engelse versies staan op de <a href=\"%(switch_url)s\" "
+"hreflang=\"en\">Engelse pagina</a>."
+msgstr "The English versions are on the <a href=\"%(switch_url)s\" hreflang=\"en\">English page</a>."
+
+#, python-format
+msgid ""
+"De Nederlandse versies staan op de <a href=\"%(switch_url)s\" "
+"hreflang=\"nl\">Nederlandse pagina</a>."
+msgstr "The Dutch versions are on the <a href=\"%(switch_url)s\" hreflang=\"nl\">Dutch page</a>."
+
+msgid "Zo doe je dit in Huismus"
+msgstr "How to do this in Huismus"
+
+msgid ""
+"In Huismus vul je je gegevens één keer in. Daarna kies je een klant en typ "
+"je de regels. Huismus rekent het totaal uit en geeft de factuur het volgende "
+"nummer. De factuur blijft zoals je hem verstuurde."
+msgstr "In Huismus you fill in your details once. After that you pick a customer and type the lines. Huismus works out the total and gives the invoice the next number. The invoice stays as you sent it."
+
+msgid ""
 "Alles wat Huismus kan, van facturen en bonnetjes tot je btw-aangifterapport "
 "en je export, en wat later komt."
 msgstr ""
@@ -8166,6 +8268,33 @@ msgstr "Huismus doesn’t do"
 
 msgid "Huismus telt wat jij invult."
 msgstr "Huismus adds up what you enter."
+
+msgid ""
+"Uitleg voor zzp’ers over facturen, btw en de kleineondernemersregeling, met "
+"de bron erbij."
+msgstr ""
+"Guides for freelancers in the Netherlands on invoices, VAT and the small "
+"business scheme, each with its source."
+
+#, python-format
+msgid ""
+"Hoe werkt het met facturen, btw en de kleineondernemersregeling (KOR)? Elke "
+"pagina zegt in gewone taal wat de regel is, met de bron erbij. Uitleg over "
+"Huismus zelf staat bij <a href=\"%(help_index_url)s\">Hulp</a>."
+msgstr ""
+"How do invoices, VAT and the small business scheme (KOR) work in the "
+"Netherlands? Each page says in plain words what the rule is, with its "
+"source. How Huismus itself works is under <a "
+"href=\"%(help_index_url)s\">Help</a>."
+
+#, python-format
+msgid ""
+"Een factuur, offerte of urenstaat om in te vullen staat bij <a "
+"href=\"%(examples_url)s\">Voorbeelden</a>."
+msgstr "You'll find an invoice, quote and timesheet to fill in under <a href=\"%(examples_url)s\">Examples</a>."
+
+msgid "Bronnen"
+msgstr "Sources"
 
 msgid ""
 "Uitleg bij Huismus: beginnen, overstappen, facturen, bonnetjes, btw en back-"
@@ -8299,10 +8428,10 @@ msgid ""
 "Rompslomp, Tellow, e-Boekhouden.nl, Jortt en Excel via het sjabloon. Je "
 "factuurnummers lopen door."
 msgstr ""
-"Huismus brings over your customers, invoices, quotes and expenses from "
-"your old package, with PDFs and receipts. From Moneybird it comes over "
-"exactly as it is, from Rompslomp, Tellow, e-Boekhouden.nl, Jortt and Excel "
-"through the template. Your invoice numbers continue."
+"Huismus brings over your customers, invoices, quotes and expenses from your "
+"old package, with PDFs and receipts. From Moneybird it comes over exactly as "
+"it is, from Rompslomp, Tellow, e-Boekhouden.nl, Jortt and Excel through the "
+"template. Your invoice numbers continue."
 
 msgid "Zo stap je over"
 msgstr "How to switch"
@@ -8693,23 +8822,11 @@ msgstr ""
 "Huismus is made in the Netherlands. You can read about its maker and their "
 "other work on <a href=\"https://www.arnekrijnsen.com\">arnekrijnsen.com</a>."
 
-#, python-format
+#~ msgid "Zodat je ziet welke factuur betaald is."
+#~ msgstr "So you see which invoice has been paid."
 
-msgid "Uitleg"
-msgstr "Guides"
-
-msgid "Zo doe je dit in Huismus"
-msgstr "How to do this in Huismus"
-
-msgid "Bronnen"
-msgstr "Sources"
-
-msgid "Uitleg voor zzp’ers over facturen, btw en de kleineondernemersregeling, met de bron erbij."
-msgstr "Guides for freelancers in the Netherlands on invoices, VAT and the small business scheme, each with its source."
-
-#, python-format
-msgid "Hoe werkt het met facturen, btw en de kleineondernemersregeling (KOR)? Elke pagina zegt in gewone taal wat de regel is, met de bron erbij. Uitleg over Huismus zelf staat bij <a href=\"%(help_index_url)s\">Hulp</a>."
-msgstr "How do invoices, VAT and the small business scheme (KOR) work in the Netherlands? Each page says in plain words what the rule is, with its source. How Huismus itself works is under <a href=\"%(help_index_url)s\">Help</a>."
+#~ msgid "Met één importbestand, ook als je niet van Moneybird komt."
+#~ msgstr "With one import file, even if you’re not coming from Moneybird."
 
 #~ msgid "Grens %(limit)s · waarschuwen vanaf %(percent)s%%"
 #~ msgstr "Limit %(limit)s · warn from %(percent)s%%"
@@ -9782,9 +9899,6 @@ msgstr "How do invoices, VAT and the small business scheme (KOR) work in the Net
 #~ "Import your own Excel or CSV file with expenses. Choose a file first to "
 #~ "see its columns, then map each column to a field."
 
-#~ msgid "Resultaat"
-#~ msgstr "Result"
-
 #~ msgid "Proefdraai — er is niets opgeslagen"
 #~ msgstr "Dry run — nothing was saved"
 
@@ -9996,20 +10110,3 @@ msgstr "How do invoices, VAT and the small business scheme (KOR) work in the Net
 #~ msgid_plural "%(count)s afschrijvingen"
 #~ msgstr[0] "%(count)s payment going out"
 #~ msgstr[1] "%(count)s payments going out"
-
-msgid ""
-"Je ziet welke factuur betaald is en welke uitgave bij een afschrijving "
-"hoort. Zonder verbinding met je bank."
-msgstr ""
-"You see which invoice is paid and which expense belongs to a payment out. "
-"Without a connection to your bank."
-
-msgid "Voor werk dat vrijgesteld is van btw. Jouw tekst op elke factuur."
-msgstr "For work that is exempt from VAT. Your text on every invoice."
-
-msgid ""
-"Met het sjabloon, en een handleiding voor Rompslomp, Tellow, e-Boekhouden.nl, "
-"Jortt en Excel."
-msgstr ""
-"With the template, and a guide for Rompslomp, Tellow, e-Boekhouden.nl, Jortt "
-"and Excel."

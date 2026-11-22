@@ -22,6 +22,8 @@ every invoice:
 - the VAT rate;
 - the VAT amount.
 
+An example with all these details is under [Examples](../site/voorbeelden/).
+
 ## The invoice number
 
 Your invoices have consecutive numbers, in one or more series. Each number

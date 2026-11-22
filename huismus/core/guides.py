@@ -20,8 +20,9 @@ docs/invoice-requirements.md, and every link to another site is a source
 page listed there: without a source there is no page (CLAUDE.md, "Privacy
 and safety"). tests/core/test_guides.py checks the parts and the links.
 
-A link to a help page is written as `../hulp/facturen.nl.md#uitgeven` and one
-to another page here as `kor.nl.md`, so both also work on GitHub.
+A link to a help page is written as `../hulp/facturen.nl.md#uitgeven`, one
+to another page here as `kor.nl.md` and one to the examples to download
+(core.site_examples) as `../site/voorbeelden/`, so all three also work on GitHub.
 """
 
 import re
@@ -40,6 +41,8 @@ GUIDES = ("factuureisen", "kor", "kor-grens", "btw-aangifte", "bewaarplicht")
 IN_HUISMUS = {"nl": "Zo doe je dit in Huismus", "en": "How to do this in Huismus"}
 SOURCES = {"nl": "Bronnen", "en": "Sources"}
 
+# The folder with the examples to download, as a page links to it.
+EXAMPLES_LINK = "../site/voorbeelden/"
 _LINK = re.compile(r"^(?P<help>\.\./hulp/)?(?P<slug>[a-z0-9-]+)\.(?:nl|en)\.md(?P<anchor>#.*)?$")
 
 
@@ -89,13 +92,16 @@ def render(
     language: str,
     help_link: Callable[[str, str], str],
     link: Callable[[str], str],
+    examples_link: str,
 ) -> GuidePage:
     """The page as HTML. `help_link(slug, anchor)` gives the address of a
-    help page and `link(slug)` that of another page here: the addresses are
-    the site's (core.site), which builds on this module and not the other
-    way round."""
+    help page, `link(slug)` that of another page here and `examples_link` is
+    that of Voorbeelden: the addresses are the site's (core.site), which
+    builds on this module and not the other way round."""
 
     def rewrite(href: str) -> str | None:
+        if href == EXAMPLES_LINK:
+            return examples_link
         match = _LINK.match(href)
         if not match:
             return None

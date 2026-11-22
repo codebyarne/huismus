@@ -23,6 +23,7 @@ Addresses: Dutch at the root, English under /en/.
     /hulp/<onderwerp>/  /en/help/<topic>/
     /uitleg/            /en/guides/
     /uitleg/<pagina>/   /en/guides/<page>/
+    /voorbeelden/       /en/examples/
     /waarom/            /en/why/
     /meebouwen/         /en/contribute/
     /download/<mac|windows>/  /en/download/<mac|windows>/
@@ -40,7 +41,7 @@ from django.template.loader import render_to_string
 from django.utils import translation
 from PIL import Image
 
-from . import guides, help, site_features, updates
+from . import guides, help, site_examples, site_features, updates
 
 DOMAIN = "mijnhuismus.nl"
 REPOSITORY = "https://github.com/codebyarne/huismus"
@@ -121,6 +122,16 @@ def guides_url(language: str, slug: str = "") -> str:
     (core.guides, issue #308)."""
     base = "/uitleg/" if language == "nl" else "/en/guides/"
     return base + (f"{slug}/" if slug else "")
+
+
+def examples_url(language: str) -> str:
+    """Voorbeelden: an invoice, a quote and a timesheet to download
+    (core.site_examples, issue #309)."""
+    return "/voorbeelden/" if language == "nl" else "/en/examples/"
+
+
+# Where the downloads and their pictures are: one copy, for both languages.
+EXAMPLE_FILES_URL = "/voorbeelden/bestanden/"
 
 
 def whats_new_url(language: str) -> str:
@@ -261,6 +272,27 @@ def _help_links(language: str) -> dict[str, str]:
     return {slug.replace("-", "_"): help_url(language, slug) for slug in TOPICS}
 
 
+def _examples(language: str) -> list[dict]:
+    """The cards of Voorbeelden: per example its title, its picture and its
+    downloads in this language."""
+    return [
+        {
+            "slug": example,
+            "title": site_examples.TITLES[example],
+            "preview_url": EXAMPLE_FILES_URL
+            + site_examples.file_name(example, language, site_examples.PREVIEW_FORMAT),
+            "downloads": [
+                (
+                    site_examples.FORMAT_LABELS[format],
+                    EXAMPLE_FILES_URL + site_examples.file_name(example, language, format),
+                )
+                for format in site_examples.FORMATS
+            ],
+        }
+        for example in site_examples.EXAMPLES
+    ]
+
+
 def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
     """{address: (template, context)} for one language."""
     other = "en" if language == "nl" else "nl"
@@ -367,6 +399,7 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
             language,
             help_link=lambda s, a: help_url(language, s, a),
             link=lambda s: guides_url(language, s),
+            examples_link=examples_url(language),
         )
         pages[guides_url(language, slug)] = (
             "site/guide_page.html",
@@ -377,6 +410,24 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
                 "summary": _short(page.summary),
             },
         )
+    pages[examples_url(language)] = (
+        "site/examples.html",
+        {
+            "nav": "examples",
+            "switch_url": examples_url(other),
+            "examples": _examples(language),
+            "preview_width": site_examples.PREVIEW_WIDTH,
+            # A4: 210 by 297.
+            "preview_height": round(site_examples.PREVIEW_WIDTH * 297 / 210),
+            "invoice_guide_url": guides_url(language, "factuureisen"),
+            "kor_guide_url": guides_url(language, "kor"),
+            # Where Huismus does this itself: the help pages on invoices and quotes.
+            "help_pages": [
+                (help_url(language, slug), help.title(slug, language))
+                for slug in ("facturen", "offertes")
+            ],
+        },
+    )
     return pages
 
 
@@ -391,6 +442,7 @@ def _links(language: str) -> dict[str, str]:
         "features_url": features_url(language),
         "help_index_url": help_url(language),
         "guides_index_url": guides_url(language),
+        "examples_url": examples_url(language),
         "install_url": install_url(language),
         "contribute_url": contribute_url(language),
         "why_url": why_url(language),
@@ -458,6 +510,10 @@ def build(out: Path) -> list[str]:
         shutil.copy(path, out / "beelden" / "fotos" / path.name)
     for language in help.LANGUAGES:
         shutil.copy(social_image(language), out / f"delen.{language}.png")
+    example_files = out / EXAMPLE_FILES_URL.strip("/")
+    example_files.mkdir(parents=True)
+    for path in site_examples.files():
+        shutil.copy(path, example_files / path.name)
     shutil.copy(_STATIC / "huismus.css", out / "huismus.css")
     shutil.copy(_SITE_CSS, out / "site.css")
     # huismus.css loads its letters from fonts/, next to itself.
@@ -508,8 +564,9 @@ def _for_search_engines(out: Path, addresses: list[str]) -> None:
 def _for_ai_assistants() -> str:
     """llms.txt: what Huismus is and where each page is, as Markdown, for an AI
     assistant that reads the site to answer someone's question (issue #295).
-    The titles and summaries are those of the help pages and of Uitleg
-    (core.guides), so it never says something the site doesn't."""
+    The titles and summaries are those of the help pages, of Uitleg
+    (core.guides) and of Voorbeelden, so it never says something the site
+    doesn't."""
     lines = [
         "# Huismus",
         "",
@@ -536,4 +593,8 @@ def _for_ai_assistants() -> str:
                 address = f"https://{DOMAIN}{guides_url(language, slug)}"
                 summary = _short(guides.summary(slug, language))
                 lines.append(f"- [{guides.title(slug, language)}]({address}): {summary}")
+            lines.append(
+                f"- [{site_examples.PAGE_TITLE}](https://{DOMAIN}{examples_url(language)}):"
+                f" {site_examples.PAGE_SUMMARY}"
+            )
     return "\n".join(lines) + "\n"
