@@ -8,10 +8,14 @@ de app van de assistent. In Huismus koppel je hem alleen.
 ## Wat een assistent kan
 
 - **Lezen:** het overzicht (omzet dit jaar, je grens voor de kleineondernemersregeling (KOR), wat openstaat en
-  wat te laat is), facturen, creditnota's en offertes zoeken en openen,
-  klanten zoeken, de uitgaven per jaar en de btw-aangifte van een kwartaal,
-  maand of jaar, met wat niet meegeteld is. Instellingen, pdf's, mailteksten
-  en het maillog kan hij niet lezen.
+  wat te laat is), en wat op je wacht, zoals onder Te doen. Facturen,
+  creditnota's en offertes zoeken en openen, ook als pdf. Klanten zoeken, de
+  uitgaven per jaar, je categorieën, wat onder Bank staat, het jaaroverzicht
+  en de btw-aangifte van een kwartaal, maand of jaar, met wat niet meegeteld
+  is. Van je instellingen ziet hij alleen wat hij nodig heeft: of de KOR aan
+  staat, je standaardtaal, je betaaltermijn en het volgende nummer. Je
+  adres, KvK-nummer, IBAN, wachtwoorden en sleutels ziet hij niet, en ook
+  mailteksten en het maillog niet.
 - **Concepten maken:** een concept voor een factuur of offerte maken en
   wijzigen, en een concept voor een creditnota bij een uitgegeven factuur.
   Staat de klant nog niet in Huismus, dan voeg je die eerst zelf toe.
@@ -30,9 +34,9 @@ de app van de assistent. In Huismus koppel je hem alleen.
   toestemming, met een knop die alleen jij kunt indrukken. Kies je daar
   "altijd toestaan", dan vraagt de app het niet meer. Huismus kan dat niet
   zien.
-- **Nooit:** klanten of betalingen wijzigen, een uitgave wijzigen, een
-  offerte op geaccepteerd of afgewezen zetten, iets verwijderen of "Toch
-  bewerken".
+- **Nog niet:** klanten, betalingen, uitgaven en categorieën wijzigen, een
+  offerte beantwoorden, een herinnering sturen, iets verwijderen of "Toch
+  bewerken". Dat komt in een volgende versie.
 
 Wat de assistent leest, gaat naar het bedrijf achter die assistent (OpenAI,
 Google of Anthropic). Huismus zelf wordt daarvoor niet bereikbaar vanaf
