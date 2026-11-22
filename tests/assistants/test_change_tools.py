@@ -280,6 +280,16 @@ def test_new_lines_replace_the_old_ones_and_may_make_a_category(tool, business):
     assert expense.lines.count() == 2
 
 
+def test_a_change_of_date_leaves_the_lines_alone(tool, no_kor):
+    """Also an old line without its VAT, which the form would refuse now."""
+    expense = _expense()
+    expense.lines.update(vat_info_cents=None, vat_rate="")
+    _found, _text, error = tool("update_expense", id=expense.pk, date="2026-01-02")
+    assert not error
+    expense.refresh_from_db()
+    assert (expense.date.isoformat(), expense.amount_cents) == ("2026-01-02", 6050)
+
+
 def test_without_the_kor_a_changed_line_needs_its_vat(tool, no_kor):
     expense = _expense()
     _found, text, error = tool("update_expense", id=expense.pk, lines=[{"amount": "20"}])
@@ -290,6 +300,7 @@ def test_without_the_kor_a_changed_line_needs_its_vat(tool, no_kor):
 
 def test_a_receipt_from_the_tray_onto_an_expense(tool, business):
     expense = _expense()
+    Expense.objects.filter(pk=expense.pk).update(needs_review=False)
     receipt = Attachment.objects.create(
         file=ContentFile(b"%PDF-1.4", name="bon.pdf"), kind="receipt", sha256="a" * 64
     )
@@ -298,6 +309,8 @@ def test_a_receipt_from_the_tray_onto_an_expense(tool, business):
     assert not error
     receipt.refresh_from_db()
     assert receipt.expense == expense
+    expense.refresh_from_db()
+    assert expense.needs_review
     # Not twice.
     other = _expense()
     _found, text, error = tool("attach_receipt", expense_id=other.pk, receipt_id=receipt.pk)
