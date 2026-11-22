@@ -4,7 +4,7 @@
 "Package managers"; docs/desktop.md, "winget en Homebrew").
 
 Both catalogues describe an app with a few text files that name the
-download and its SHA-256: three YAML manifests for winget, one Ruby file
+download and its SHA-256: four YAML manifests for winget, one Ruby file
 (a cask) for Homebrew. `release.yml` writes them for every release, from
 the files it just published:
 
@@ -73,9 +73,9 @@ def _winget_locale(locale: str, description: str, tags: list[str]) -> str:
 
 
 def winget_manifests(version: str, installer_sha256: str) -> dict[str, str]:
-    """The three files winget-pkgs wants for one version, by file name, plus
-    the Dutch description. The installer is per user and needs no
-    administrator (desktop/huismus.iss)."""
+    """The files winget-pkgs wants for one version, by file name: version,
+    installer, and the description in English (the default) and Dutch. The
+    installer is per user and needs no administrator (desktop/huismus.iss)."""
     installer = (
         "InstallerType: inno\n"
         "Scope: user\n"
@@ -89,12 +89,12 @@ def winget_manifests(version: str, installer_sha256: str) -> dict[str, str]:
     )
     english = _winget_locale(
         "en-US",
-        "Bookkeeping for Dutch freelancers: quotes, invoices, expenses and VAT reports.",
+        "Bookkeeping for Dutch freelancers, with quotes, invoices, expenses and VAT reports.",
         ["bookkeeping", "invoicing", "freelancer", "netherlands", "vat"],
     )
     dutch = _winget_locale(
         "nl-NL",
-        "Boekhouden voor zzp'ers: offertes, facturen, uitgaven en btw-overzichten.",
+        "Boekhouden voor zzp'ers, met offertes, facturen, uitgaven en btw-overzichten.",
         ["boekhouden", "facturen", "zzp", "btw"],
     )
     return {

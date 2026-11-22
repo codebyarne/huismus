@@ -35,6 +35,21 @@ def _fields(manifest: str) -> dict[str, str]:
     return fields
 
 
+def test_every_value_is_plain_yaml_text():
+    # Written without a YAML package, so nothing escapes a value: one that
+    # YAML would read as something else must be quoted or reworded. ": " or
+    # " #" inside, or a first character with a meaning of its own, is that.
+    for name, text in catalogs.winget_manifests("1.4.0", SHA).items():
+        for line in text.splitlines():
+            if not line or line.startswith("#") or line.endswith(":"):
+                continue
+            value = line.strip().removeprefix("- ").partition(": ")[2] or line.strip()[2:]
+            if value.startswith("'") and value.endswith("'"):
+                continue
+            assert ": " not in value and " #" not in value, (name, line)
+            assert value[0].isalnum(), (name, line)
+
+
 def _winget() -> dict[str, dict[str, str]]:
     return {name: _fields(text) for name, text in catalogs.winget_manifests("1.4.0", SHA).items()}
 
