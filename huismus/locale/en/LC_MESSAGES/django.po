@@ -10320,8 +10320,8 @@ msgstr "No expenses yet. Make an expense from this receipt."
 msgid "Lijkt op dit bonnetje"
 msgstr "Looks like this receipt"
 
-msgid "Zoek op leverancier, omschrijving of bedrag"
-msgstr "Search by supplier, description or amount"
+msgid "Leverancier, omschrijving of bedrag"
+msgstr "Supplier, description or amount"
 
 msgid "Uitgaven zonder bonnetje"
 msgstr "Expenses without a receipt"

@@ -3,6 +3,7 @@
 
 {% block title %}{% translate "Bij welke uitgave hoort dit bonnetje?" %} — Huismus{% endblock %}
 {% block content_class %}content-wide{% endblock %}
+{% block shortcut_search %}{% include "core/_shortcut_search.html" %}{% endblock %}
 
 {% block content %}
 {% comment %}A receipt from the tray onto an expense there is (#127, expenses.attach_views). The receipt large on the left as in Verwerken; on the right what it looks like, a search and the expenses without a receipt, each with "Kiezen" (a plain POST).{% endcomment %}
@@ -35,15 +36,18 @@
         {% endif %}
 
         <section class="card list-card">
-            <form class="toolbar" role="search" method="get">
+            {% comment %}Plain GET form; with HTMX the list refreshes while typing, as on Uitgaven.{% endcomment %}
+            <form class="toolbar" role="search" method="get"
+                  hx-get="{% url 'expenses:tray_attach' receipt.pk %}" hx-trigger="input changed delay:300ms from:input[name=q]"
+                  hx-target="#kiezen-resultaat" hx-select="#kiezen-resultaat" hx-swap="outerHTML" hx-push-url="true">
                 {% if back == "verwerken" %}<input type="hidden" name="terug" value="verwerken">{% endif %}
                 {% if done %}<input type="hidden" name="klaar" value="{{ done }}">{% endif %}
                 <label class="input-affix" style="flex:1">
                     <span class="sr-only">{% translate "Zoeken" %}</span>
                     <svg class="i" aria-hidden="true"><use href="#search"></use></svg>
-                    <input class="input input-sm" type="search" name="q" value="{{ query }}" autocomplete="off" placeholder="{% translate 'Zoek op leverancier, omschrijving of bedrag' %}">
+                    <input class="input input-sm" type="search" name="q" value="{{ query }}" autocomplete="off" placeholder="{% translate 'Leverancier, omschrijving of bedrag' %}">
                 </label>
-                <button type="submit" class="btn btn-secondary btn-sm">{% translate "Zoeken" %}</button>
+                <noscript><button type="submit" class="btn btn-sm">{% translate "Zoeken" %}</button></noscript>
             </form>
             <div id="kiezen-resultaat">
                 {% if not query %}<h2 class="card-title" style="padding:var(--s-3) var(--s-4) 0">{% translate "Uitgaven zonder bonnetje" %}</h2>{% endif %}

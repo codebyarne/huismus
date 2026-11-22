@@ -13,7 +13,7 @@ where the user came from, the tray or the next one in Verwerken
 maken". Every form is a plain POST, the search a plain GET."""
 
 from decimal import Decimal, InvalidOperation
-from urllib.parse import urlencode, urlsplit
+from urllib.parse import parse_qsl, urlencode, urlsplit
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -158,6 +158,21 @@ def choose(request, pk):
     )
 
 
+def _one_less_done(url: str) -> str:
+    """In Verwerken, Kiezen counted this one as done (`klaar`); undone, it
+    isn't any more, so "3 van 24" is as before Kiezen. Never below 0."""
+    parts = urlsplit(url)
+    params = dict(parse_qsl(parts.query))
+    params.pop(ATTACHED, None)
+    if "klaar" in params:
+        try:
+            done = max(int(params["klaar"]) - 1, 0)
+        except ValueError:
+            done = 0
+        params["klaar"] = str(done) if done else ""
+    return _with(parts.path, **params)
+
+
 def _is_tray_or_process(url: str) -> bool:
     """Only back to the tray or Verwerken, nowhere else."""
     try:
@@ -187,6 +202,7 @@ def undo(request, pk):
     expense = get_object_or_404(Expense, pk=request.POST.get("uitgave") or 0)
     if adding.detach_receipt(expense, receipt):
         messages.success(request, _("Het bonnetje staat weer bij de bonnetjes zonder uitgave."))
+        target = _one_less_done(target)
     else:
         messages.error(request, _("Dit bonnetje hangt niet meer aan die uitgave."))
     return redirect(target)

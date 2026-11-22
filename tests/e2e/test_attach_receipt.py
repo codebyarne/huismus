@@ -50,8 +50,8 @@ def test_from_the_tray_search_choose_and_undo(app, width):
     expect(app.get_by_role("img", name="Bonnetje kantoor.jpg")).to_be_visible()
     expect(app.locator("[id^=kies-]")).to_have_count(2)
 
+    # As you type, the list follows (HTMX); Enter does the same without JS.
     app.get_by_role("searchbox", name="Zoeken").fill("7,49")
-    app.get_by_role("button", name="Zoeken").click()
     expect(app.locator("[id^=kies-]")).to_have_count(1)
     app.get_by_role("button", name="Uitgave van 3 mrt 2026 kiezen").click()
 
