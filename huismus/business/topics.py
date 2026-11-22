@@ -58,11 +58,12 @@ TOPICS = (
     ),
     Topic(
         "kor",
-        _("Kleineondernemersregeling (KOR)"),
-        _("De KOR-tekst onder je facturen, en wanneer je hoort dat je omzet de grens nadert."),
+        _("Btw"),
+        _("Of je btw rekent, en de teksten onder je facturen die daarbij horen."),
         (
-            "kor_enabled",
+            "vat_choice",
             "kor_text",
+            "exempt_text",
             "kor_limit_cents",
             "kor_warning_percent",
             "reverse_charge_text",
@@ -126,8 +127,8 @@ def cards(settings: Settings, theme: str = "") -> list[dict]:
     # warning sign where you have to do something (huismus-intern/besluiten.md,
     # 2026-11-15). Only "te laat" has a colour.
     ok, warn, off = "state-on", "state-attention", "state-off"
-    # A context of their own: "Aan" is also "To" (a mail's recipient).
-    on_text, off_text = pgettext_lazy("setting", "Aan"), pgettext_lazy("setting", "Uit")
+    # A context of its own: in English "Uit" is "Off", not "Out".
+    off_text = pgettext_lazy("setting", "Uit")
     summary = {}
 
     place = " · ".join(part for part in (settings.business_name, settings.city) if part)
@@ -137,11 +138,21 @@ def cards(settings: Settings, theme: str = "") -> list[dict]:
     )
 
     # The limit and percentage the user set, never a rule of our own (M12).
-    summary["kor"] = (
-        _("Grens %(limit)s · waarschuwen vanaf %(percent)s%%")
-        % {"limit": money(settings.kor_limit_cents), "percent": settings.kor_warning_percent},
-        (on_text, ok) if settings.kor_enabled else (off_text, off),
-    )
+    # Instellingen → Btw: which choice, and a warning only where a text that
+    # issuing needs is missing (issue #53).
+    if settings.kor_enabled:
+        summary["kor"] = (
+            _("KOR · grens %(limit)s · waarschuwen vanaf %(percent)s%%")
+            % {"limit": money(settings.kor_limit_cents), "percent": settings.kor_warning_percent},
+            None,
+        )
+    elif settings.vat_exempt:
+        summary["kor"] = (
+            _("Geen btw om een andere reden"),
+            None if settings.exempt_text.strip() else (_("Tekst ontbreekt"), warn),
+        )
+    else:
+        summary["kor"] = (_("Btw op je facturen"), None)
 
     next_invoice = next_numbers_if_issued_today(settings)["invoice"]
     summary["facturen"] = (

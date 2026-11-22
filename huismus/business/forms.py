@@ -25,6 +25,20 @@ from . import smtp
 from .logo import validate_and_sanitize_logo
 from .models import Settings
 
+CHARGES_VAT, USES_KOR, NO_VAT_OTHER = "ja", "kor", "anders"
+VAT_CHOICES = [
+    (CHARGES_VAT, _("Ja")),
+    (USES_KOR, _("Nee, ik gebruik de KOR")),
+    (NO_VAT_OTHER, _("Nee, om een andere reden")),
+]
+
+
+def vat_choice_of(settings) -> str:
+    if settings.kor_enabled:
+        return USES_KOR
+    return NO_VAT_OTHER if settings.vat_exempt else CHARGES_VAT
+
+
 DEFAULT_KOR_TEXT = _(
     "Vrijgesteld van btw op grond van de kleineondernemersregeling (KOR). "
     "Er is geen btw in rekening gebracht."
@@ -87,7 +101,9 @@ class SettingsForm(forms.ModelForm):
             "phone",
             "website",
             "kor_enabled",
+            "vat_exempt",
             "kor_text",
+            "exempt_text",
             "kor_limit_cents",
             "kor_warning_percent",
             "reverse_charge_text",
@@ -109,6 +125,7 @@ class SettingsForm(forms.ModelForm):
         ]
         widgets = {
             "kor_text": forms.Textarea(attrs={"rows": 3}),
+            "exempt_text": forms.Textarea(attrs={"rows": 3}),
             "reverse_charge_text": forms.Textarea(attrs={"rows": 2}),
             "default_footer_text": forms.Textarea(attrs={"rows": 3}),
             # With JS, the mail fields hide while mailing is off (app.js).
@@ -129,6 +146,15 @@ class SettingsForm(forms.ModelForm):
         widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
     )
 
+    # Instellingen → Btw: one choice for the two switches kor_enabled and
+    # vat_exempt (issue #53). Not a model field; clean() sets the two.
+    vat_choice = forms.ChoiceField(
+        label=_("Reken je btw op je facturen?"),
+        choices=VAT_CHOICES,
+        widget=forms.RadioSelect,
+        required=False,
+    )
+
     kor_limit_cents = EuroCentsField(
         label=_("KOR-grens"), min_value=Decimal("0.01"), max_value=Decimal("10000000")
     )
@@ -141,6 +167,7 @@ class SettingsForm(forms.ModelForm):
         # until the user saves the form, and they can change it freely.
         if not self.instance.kor_text:
             self.initial["kor_text"] = DEFAULT_KOR_TEXT
+        self.initial["vat_choice"] = vat_choice_of(self.instance)
         # Likewise the mail texts: the standard text, placeholders and all,
         # to change rather than to write from nothing.
         for kind, part, language, name in MAIL_TEXT_FIELDS:
@@ -205,9 +232,19 @@ class SettingsForm(forms.ModelForm):
             for name in ("invoice_number_format", "quote_number_format"):
                 if "{year" in cleaned.get(name, ""):
                     self.add_error(name, message)
+        self._clean_vat_choice(cleaned)
         self._clean_smtp(cleaned)
         self._clean_mail_texts(cleaned)
         return cleaned
+
+    def _clean_vat_choice(self, cleaned):
+        if "vat_choice" not in self.fields:
+            return
+        # On the instance, not in cleaned: the two switches are not fields of
+        # the page. The model's own clean() then checks the result.
+        choice = cleaned.get("vat_choice") or vat_choice_of(self.instance)
+        self.instance.kor_enabled = choice == USES_KOR
+        self.instance.vat_exempt = choice == NO_VAT_OTHER
 
     def _clean_mail_texts(self, cleaned):
         """Only placeholders that exist for that kind of document: a typo

@@ -184,9 +184,12 @@ def how_you_work(instance) -> str:
     organisation = _label(ORGANISATIONS, instance.feedback_organisation)
     if organisation:
         parts.append(organisation)
-    parts.append(
-        _("met KOR") if instance.kor_enabled else _("btw op facturen, of nog niet gekozen")
-    )
+    if instance.kor_enabled:
+        parts.append(_("met KOR"))
+    elif instance.vat_exempt:
+        parts.append(_("geen btw om een andere reden"))
+    else:
+        parts.append(_("btw op facturen, of nog niet gekozen"))
     if instance.reverse_charge_text.strip():
         parts.append(_("btw verlegd: ja"))
     else:

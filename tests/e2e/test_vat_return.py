@@ -62,7 +62,7 @@ def test_with_the_kor_on_there_is_a_notice_and_a_way_to_its_settings(app):
 
     expect(app.locator("#kor-aan")).to_be_visible()
     expect(app.locator("#rubrieken")).to_have_count(0)
-    app.get_by_role("link", name="KOR-instellingen →").click()
+    app.get_by_role("link", name="Btw-instellingen →").click()
     expect(app).to_have_url(re.compile(r"/instellingen/kor/$"))
 
 

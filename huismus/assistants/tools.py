@@ -69,7 +69,7 @@ from huismus.documents.vat import default_rate, editor_value, rate_label
 from huismus.expenses import adding
 from huismus.expenses.models import Expense, ExpenseCategory, VatRate
 from huismus.reports.periods import Period
-from huismus.reports.vat_return import KOR_NOTE, NOT_COUNTED_TITLES, compute_vat_return
+from huismus.reports.vat_return import EXEMPT_NOTE, KOR_NOTE, NOT_COUNTED_TITLES, compute_vat_return
 from huismus.reports.year_overview import compute_year_overview
 
 from . import receipts
@@ -355,7 +355,8 @@ def get_vat_return(arguments):
     period = Period.parse(arguments.get("period"), today=timezone.localdate())
     report = compute_vat_return(period)
     if report.kor_on:
-        return {"kor": True, "note": str(KOR_NOTE)}
+        note = EXEMPT_NOTE if Settings.load().vat_exempt else KOR_NOTE
+        return {"kor": True, "note": str(note)}
 
     def document(item, *, vat=True, **extra):
         found = {

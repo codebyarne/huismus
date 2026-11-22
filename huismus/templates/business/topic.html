@@ -49,10 +49,17 @@
             </div></div>
         </section>
         {% elif topic.slug == "kor" %}
+        {% comment %}One choice, three cards (huismus-intern/besluiten.md, 2026-11-22, issue #53). With JS
+        (app.js, data-shows-group) only the card of the chosen answer shows; without JS all three show,
+        and the card's heading says which answer it goes with. A hidden card's fields keep their value.{% endcomment %}
         <section class="card settings-section">
             <div class="card-pad">
-                <label class="switch"><input type="checkbox" name="kor_enabled" role="switch" aria-describedby="kor-uit-help"{% if form.kor_enabled.value %} checked{% endif %}>{% translate "Ik gebruik de KOR" %}</label>
-                <p class="help" id="kor-uit-help" style="margin-top:var(--s-2)">{% translate "Staat de KOR uit, dan kies je per regel 0, 9 of 21% btw." %}</p>
+                {% include "core/_onboarding_choices.html" with field=form.vat_choice groups="btw" %}
+            </div>
+        </section>
+        <section class="card settings-section" data-group="btw-kor">
+            <div class="card-head"><h2>{% translate "Met de KOR" %}</h2></div>
+            <div class="card-pad">
                 {% translate "KOR-tekst" as kor_label %}
                 {% translate "Verplicht zolang de KOR aan staat. Deze tekst komt onder elke nieuwe factuur." as kor_help %}
                 {% field form.kor_text label=kor_label help=kor_help %}
@@ -62,6 +69,19 @@
                     {% translate "Vanaf dit deel van je KOR-grens krijg je een melding op het overzicht." as kor_warning_help %}
                     {% field form.kor_warning_percent span=3 extra_class="num" suffix="%" help=kor_warning_help %}
                 </div>
+            </div>
+        </section>
+        <section class="card settings-section" data-group="btw-anders">
+            <div class="card-head"><h2>{% translate "Geen btw om een andere reden" %}</h2></div>
+            <div class="card-pad">
+                {% translate "Tekst bij geen btw" as exempt_label %}
+                {% translate "Komt onder elke nieuwe factuur. Huismus stelt geen tekst voor: je schrijft hem zelf." as exempt_help %}
+                {% field form.exempt_text label=exempt_label help=exempt_help optional=True %}
+            </div>
+        </section>
+        <section class="card settings-section" data-group="btw-ja">
+            <div class="card-head"><h2>{% translate "Btw verlegd" %}</h2></div>
+            <div class="card-pad">
                 {% translate "Tekst bij btw verlegd" as reverse_label %}
                 {% translate "Komt onder elke factuur, offerte en creditnota met een regel “verlegd”." as reverse_help %}
                 {% field form.reverse_charge_text label=reverse_label help=reverse_help optional=True %}

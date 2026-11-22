@@ -54,6 +54,7 @@ def test_the_steps_are_business_work_kor_reverse_charge_invoices_and_logo():
         "bedrijf",
         "werk",
         "kor",
+        "geen-btw",
         "verlegd",
         "facturen",
         "logo",
@@ -284,6 +285,51 @@ def test_the_kor_ignores_the_question_about_reverse_charge(logged_in):
     response = logged_in.post(_url("werk"), {**WORK, "vat": "kor", "reverse_charge": "eu"})
 
     assert response.url == _url("kor")
+
+
+def test_no_vat_for_another_reason_brings_its_own_step_with_an_empty_field(logged_in):
+    # Issue #53 (huismus-intern/besluiten.md, 2026-11-22): in the place of
+    # the KOR step, and the question about reverse charge counts as for the KOR.
+    _kor_on()
+
+    response = logged_in.post(_url("werk"), {**WORK, "vat": "anders", "reverse_charge": "eu"})
+
+    assert response.url == _url("geen-btw")
+    settings = Settings.load()
+    assert (settings.kor_enabled, settings.vat_exempt) == (False, True)
+    page = logged_in.get(response.url)
+    assert _steps(page) == ["bedrijf", "werk", "geen-btw", "facturen", "logo"]
+    assert "Huismus vult niets voor je in." in page.content.decode()
+
+
+def test_the_no_vat_step_may_stay_empty_and_goes_on(logged_in):
+    logged_in.post(_url("werk"), {**WORK, "vat": "anders"})
+
+    response = logged_in.post(_url("geen-btw"), {"exempt_text": ""})
+
+    assert response.url == _url("facturen")
+    logged_in.post(_url("geen-btw"), {"exempt_text": "Geen btw."})
+    assert Settings.load().exempt_text == "Geen btw."
+
+
+def test_your_work_shows_no_vat_for_another_reason_when_it_is_on(logged_in):
+    settings = Settings.load()
+    settings.vat_exempt = True
+    settings.save()
+
+    form = logged_in.get(_url("werk")).context["form"]
+
+    assert form.initial["vat"] == "anders"
+
+
+def test_charging_vat_again_turns_no_vat_off(logged_in):
+    settings = Settings.load()
+    settings.vat_exempt = True
+    settings.save()
+
+    logged_in.post(_url("werk"), WORK)
+
+    assert not Settings.load().vat_exempt
 
 
 def test_not_knowing_yet_leaves_the_kor_off_and_the_done_page_says_where_it_goes(logged_in):

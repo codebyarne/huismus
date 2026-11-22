@@ -524,13 +524,6 @@ msgstr "On every invoice: name, address, KvK, VAT number, bank and e-mail."
 msgid "Kleineondernemersregeling (KOR)"
 msgstr "Small business scheme (KOR)"
 
-msgid ""
-"De KOR-tekst onder je facturen, en wanneer je hoort dat je omzet de grens "
-"nadert."
-msgstr ""
-"The KOR text below your invoices, and when you hear that your revenue is "
-"nearing the limit."
-
 msgid "Facturen en nummering"
 msgstr "Invoices and numbering"
 
@@ -1044,16 +1037,6 @@ msgstr "Add a logo"
 msgid "PNG, JPG of SVG. Mag ook later."
 msgstr "PNG, JPG or SVG. You can do this later."
 
-msgid "KOR of btw instellen"
-msgstr "Set up the KOR or VAT"
-
-msgid ""
-"Gebruik je de KOR, dan komt die tekst op elke factuur. Reken je btw, dan "
-"komt je btw-nummer erop."
-msgstr ""
-"If you use the KOR, its text goes on every invoice. If you charge VAT, your "
-"VAT number goes on it."
-
 msgid "Eerste klant toevoegen"
 msgstr "Add your first customer"
 
@@ -1444,13 +1427,6 @@ msgstr "preferences"
 
 msgid "Dit komt op elke factuur en offerte."
 msgstr "This goes on every invoice and quote."
-
-msgid ""
-"Gebruik je de kleineondernemersregeling? Dan komt jouw KOR-tekst onder elke "
-"factuur."
-msgstr ""
-"Using the small business scheme (KOR)? Then your KOR text goes under every "
-"invoice."
 
 msgid "KOR"
 msgstr "KOR"
@@ -2042,9 +2018,6 @@ msgstr "Add a line first, then you can issue the document."
 msgid "Kies eerst een klant, dan kun je het document uitgeven."
 msgstr "Choose a customer first, then you can issue the document."
 
-msgid "Vul eerst de KOR-tekst in, bij Instellingen → KOR."
-msgstr "Fill in the KOR text first, under Settings → KOR."
-
 msgid "Met KOR moeten nieuwe regels 0% btw hebben."
 msgstr "With KOR, new lines must have 0% VAT."
 
@@ -2073,9 +2046,6 @@ msgid ""
 msgstr ""
 "Together the credit notes come to more than the invoice amount. Lower the "
 "amount on this credit note."
-
-msgid "Vul eerst de tekst bij btw verlegd in, bij Instellingen → KOR."
-msgstr "Fill in the reverse charge text first, under Settings → KOR."
 
 msgid "Alle"
 msgstr "All"
@@ -3957,13 +3927,6 @@ msgstr "Bank"
 msgid "Controlegetal klopt"
 msgstr "Check digits are valid"
 
-msgid "Ik gebruik de KOR"
-msgstr "I use the KOR"
-
-#, python-format
-msgid "Staat de KOR uit, dan kies je per regel 0, 9 of 21%% btw."
-msgstr "With the KOR off, you choose 0, 9 or 21%% VAT per line."
-
 msgid "KOR-tekst"
 msgstr "KOR text"
 
@@ -4414,13 +4377,6 @@ msgstr "Everything Huismus does"
 
 msgid "Welkom bij Huismus"
 msgstr "Welcome to Huismus"
-
-msgid ""
-"Begin je nieuw? Dan vul je in vier stappen in wat Huismus nodig heeft voor "
-"je eerste factuur."
-msgstr ""
-"Starting fresh? Fill in what Huismus needs for your first invoice, in four "
-"steps."
 
 msgid ""
 "Kom je van Moneybird? Neem dan in één keer al je klanten, facturen en "
@@ -6261,9 +6217,6 @@ msgstr "Next period"
 msgid "CSV downloaden"
 msgstr "Download CSV"
 
-msgid "KOR-instellingen"
-msgstr "KOR settings"
-
 #, python-format
 msgid "van %(limit)s, je KOR-grens"
 msgstr "of %(limit)s, your KOR limit"
@@ -7832,6 +7785,129 @@ msgstr "Huismus looks at the columns, not the file name."
 msgid "Een export uit Huismus is op dezelfde manier ingedeeld. Zo neem je je administratie mee naar een nieuwe Huismus."
 msgstr "An export from Huismus is laid out the same way. That is how you take your books to a new Huismus."
 
+msgid "Nee, om een andere reden"
+msgstr "No, for another reason"
+
+msgid "geen btw om een andere reden"
+msgstr "no VAT, for another reason"
+
+msgid "tekst bij geen btw"
+msgstr "no-VAT text"
+
+msgid "Kies de KOR of geen btw om een andere reden, niet allebei."
+msgstr "Choose the KOR or no VAT for another reason, not both."
+
+msgid "Of je btw rekent, en de teksten onder je facturen die daarbij horen."
+msgstr ""
+"Whether you charge VAT, and the texts under your invoices that go with it."
+
+#, python-format
+msgid "KOR · grens %(limit)s · waarschuwen vanaf %(percent)s%%"
+msgstr "KOR · limit %(limit)s · warn from %(percent)s%%"
+
+msgid "Geen btw om een andere reden"
+msgstr "No VAT for another reason"
+
+msgid "Tekst ontbreekt"
+msgstr "Text missing"
+
+msgid "Btw op je facturen"
+msgstr "VAT on your invoices"
+
+msgid ""
+"Opgeslagen. Dit geldt voor wat je vanaf nu uitgeeft. Facturen die je al "
+"uitgaf, blijven zoals ze zijn."
+msgstr ""
+"Saved. This applies to what you issue from now on. Invoices you already "
+"issued stay as they are."
+
+msgid "Btw instellen"
+msgstr "Set up VAT"
+
+msgid ""
+"Kies of je btw rekent. Zonder btw komt jouw tekst onder elke factuur, met "
+"btw je btw-nummer."
+msgstr ""
+"Choose whether you charge VAT. Without VAT, your own text goes under every "
+"invoice; with VAT, your VAT number."
+
+msgid "Soort"
+msgstr "Kind"
+
+msgid "Geen btw"
+msgstr "No VAT"
+
+msgid ""
+"Deze tekst komt onder elke factuur. Schrijf zelf waarom er geen btw op "
+"staat: Huismus vult niets voor je in."
+msgstr ""
+"This text goes under every invoice. Write why there's no VAT on it: Huismus "
+"doesn't fill anything in for you."
+
+msgid "Je rekent geen btw: zet nieuwe regels op 0%."
+msgstr "You don't charge VAT: set new lines to 0%."
+
+msgid "Je rekent geen btw: een nieuwe regel kan niet verlegd zijn."
+msgstr "You don't charge VAT: a new line can't be reverse charge."
+
+msgid "Vul eerst de KOR-tekst in, bij Instellingen → Btw."
+msgstr "Fill in the KOR text first, under Settings → VAT."
+
+msgid "Vul eerst de tekst bij geen btw in, bij Instellingen → Btw."
+msgstr "Fill in the no-VAT text first, under Settings → VAT."
+
+msgid "Vul eerst de tekst bij btw verlegd in, bij Instellingen → Btw."
+msgstr "Fill in the reverse charge text first, under Settings → VAT."
+
+msgid ""
+"Je rekent geen btw. Dan telt Huismus geen btw, dus dit rapport heeft geen "
+"bedragen. Reken je btw, dan zie je hier per rubriek de omzet en btw uit je "
+"facturen en uitgaven."
+msgstr ""
+"You don't charge VAT. Then Huismus counts no VAT, so this report has no "
+"amounts. If you charge VAT, you see the revenue and VAT from your invoices "
+"and expenses here, per box."
+
+msgid "Met de KOR"
+msgstr "With the KOR"
+
+msgid "Tekst bij geen btw"
+msgstr "No-VAT text"
+
+msgid ""
+"Komt onder elke nieuwe factuur. Huismus stelt geen tekst voor: je schrijft "
+"hem zelf."
+msgstr ""
+"Goes under every new invoice. Huismus doesn't suggest a text: you write it "
+"yourself."
+
+msgid ""
+"Bijvoorbeeld voor werk dat vrijgesteld is van btw, zoals sommige zorg of "
+"onderwijs."
+msgstr ""
+"For example for work that is exempt from VAT, such as some care or teaching "
+"work."
+
+#, python-format
+msgid ""
+"Gebruik je toch de KOR? Zet hem aan bij <a href=\"%(kor_url)s\" "
+"style=\"white-space:nowrap\">Instellingen › Btw</a>."
+msgstr ""
+"Using the KOR after all? Switch it on in <a href=\"%(kor_url)s\" "
+"style=\"white-space:nowrap\">Settings › VAT</a>."
+
+msgid ""
+"Je hebt nog geen tekst bij geen btw. Zonder tekst kun je deze factuur niet "
+"uitgeven."
+msgstr ""
+"You don't have a no-VAT text yet. Without it you can't issue this invoice."
+
+msgid "Tekst invullen"
+msgstr "Add text"
+
+msgid "Btw-instellingen"
+msgstr "VAT settings"
+
 #~ msgid "KOR met je grens in beeld"
 #~ msgstr "KOR, with your limit in view"
 
@@ -7863,9 +7939,6 @@ msgstr "An export from Huismus is laid out the same way. That is how you take yo
 #~ msgstr ""
 #~ "For freelancers in the Netherlands, with or without the KOR (small "
 #~ "business scheme)"
-
-#~ msgid "Met de KOR"
-#~ msgstr "With the KOR"
 
 #~ msgid ""
 #~ "Daarna importeer je, en Huismus zet alles erin. Je oude jaren staan dan "
@@ -8263,9 +8336,6 @@ msgstr "An export from Huismus is laid out the same way. That is how you take yo
 #~ msgid_plural "Nog %(days)s dagen"
 #~ msgstr[0] "%(days)s day left"
 #~ msgstr[1] "%(days)s days left"
-
-#~ msgid "Soort"
-#~ msgstr "Kind"
 
 #~ msgid ""
 #~ "Gratis ondertekening van de Windows-versie door SignPath.io, certificaat "
@@ -9057,6 +9127,7 @@ msgid_plural "%(count)s stonden al geboekt"
 msgstr[0] "%(count)s already recorded"
 msgstr[1] "%(count)s already recorded"
 
+#, python-format
 msgid "%(count)s was al ingelezen."
 msgid_plural "%(count)s waren al ingelezen."
 msgstr[0] "%(count)s was read before."
@@ -9071,12 +9142,14 @@ msgstr "Nothing new: every incoming payment in this file was read before."
 msgid "Kies een factuur."
 msgstr "Pick an invoice."
 
+#, python-format
 msgid "Betaling geboekt op factuur %(number)s."
 msgstr "Payment recorded on invoice %(number)s."
 
 msgid "Betaling teruggedraaid. Hij staat weer bij Zelf kiezen."
 msgstr "Payment undone. It's back under Pick an invoice."
 
+#, python-format
 msgid "%(count)s betaling uit je bankafschrift wacht op je"
 msgid_plural "%(count)s betalingen uit je bankafschrift wachten op je"
 msgstr[0] "%(count)s payment from your bank statement is waiting for you"
@@ -9088,6 +9161,7 @@ msgstr "Confirm or pick the invoice."
 msgid "Kies een factuur…"
 msgstr "Pick an invoice…"
 
+#, python-format
 msgid "open %(open)s"
 msgstr "%(open)s open"
 
@@ -9120,12 +9194,15 @@ msgstr ""
 msgid "Klopt dit?"
 msgstr "Is this right?"
 
+#, python-format
 msgid "Factuur %(number)s · %(customer)s · open %(open)s"
 msgstr "Invoice %(number)s · %(customer)s · %(open)s open"
 
+#, python-format
 msgid "%(amount)s meer dan er open staat."
 msgstr "%(amount)s more than is open."
 
+#, python-format
 msgid "%(amount)s minder dan er open staat. De rest blijft open."
 msgstr "%(amount)s less than is open. The rest stays open."
 
@@ -9176,12 +9253,14 @@ msgstr ""
 "Importing the same statement again changes nothing. You can undo every "
 "payment Huismus records."
 
+#, python-format
 msgid "Overgeslagen (%(count)s)"
 msgstr "Skipped (%(count)s)"
 
 msgid "Te veel betaald"
 msgstr "Overpaid"
 
+#, python-format
 msgid "uit bankafschrift: %(name)s"
 msgstr "from bank statement: %(name)s"
 
@@ -9259,6 +9338,7 @@ msgstr "Incoming payments you skipped. Put one back and it shows on the Bank pag
 msgid "Betaling teruggedraaid. Hij staat weer bij Te doen."
 msgstr "Payment undone. It's back under To do."
 
+#, python-format
 msgid "Ingelezen · %(first)s t/m %(last)s"
 msgstr "Read · %(first)s to %(last)s"
 
@@ -9274,6 +9354,7 @@ msgstr "In"
 msgid "Af"
 msgstr "Out"
 
+#, python-format
 msgid "%(count)s betaling"
 msgid_plural "%(count)s betalingen"
 msgstr[0] "%(count)s payment"
@@ -9298,35 +9379,43 @@ msgstr "bank line"
 msgid "bankregels"
 msgstr "bank lines"
 
+#, python-format
 msgid "%(count)s betaling gelezen van rekening %(iban)s"
 msgid_plural "%(count)s betalingen gelezen van rekening %(iban)s"
 msgstr[0] "Read %(count)s payment from account %(iban)s"
 msgstr[1] "Read %(count)s payments from account %(iban)s"
 
+#, python-format
 msgid "%(count)s betaling gelezen"
 msgid_plural "%(count)s betalingen gelezen"
 msgstr[0] "Read %(count)s payment"
 msgstr[1] "Read %(count)s payments"
 
+#, python-format
 msgid "%(count)s erbij"
 msgstr "%(count)s in"
 
+#, python-format
 msgid "%(count)s eraf"
 msgstr "%(count)s out"
 
+#, python-format
 msgid "Huismus boekte er %(booked)s en %(count)s stond al geboekt."
 msgid_plural "Huismus boekte er %(booked)s en %(count)s stonden al geboekt."
 msgstr[0] "Huismus recorded %(booked)s, and %(count)s was already recorded."
 msgstr[1] "Huismus recorded %(booked)s, and %(count)s were already recorded."
 
+#, python-format
 msgid "Huismus boekte er %(booked)s."
 msgstr "Huismus recorded %(booked)s."
 
+#, python-format
 msgid "%(count)s stond al geboekt."
 msgid_plural "%(count)s stonden al geboekt."
 msgstr[0] "%(count)s was already recorded."
 msgstr[1] "%(count)s were already recorded."
 
+#, python-format
 msgid "%(count)s wacht hieronder op je."
 msgid_plural "%(count)s wachten hieronder op je."
 msgstr[0] "%(count)s is waiting for you below."
@@ -9368,9 +9457,11 @@ msgstr "In · invoice"
 msgid "Lees het afschrift van je bank in. Huismus koppelt wat erbij komt aan je facturen en wat eraf gaat aan je uitgaven. Wat zeker is, boekt Huismus zelf."
 msgstr "Read in your bank statement. Huismus links money coming in to your invoices and money going out to your expenses. What's certain, it records by itself."
 
+#, python-format
 msgid "%(fitting)s van de %(total)s horen bij je administratie"
 msgstr "%(fitting)s of %(total)s belong to your administration"
 
+#, python-format
 msgid "%(count)s hoort bij je administratie"
 msgid_plural "%(count)s horen bij je administratie"
 msgstr[0] "%(count)s belongs to your administration"
@@ -9379,6 +9470,7 @@ msgstr[1] "%(count)s belong to your administration"
 msgid "passen bij je facturen of uitgaven. Klopt het?"
 msgstr "fit your invoices or expenses. Is that right?"
 
+#, python-format
 msgid "Uitgave van %(date)s · %(supplier)s · %(amount)s"
 msgstr "Expense of %(date)s · %(supplier)s · %(amount)s"
 
@@ -9394,6 +9486,7 @@ msgstr "There's already an expense with this amount. If it's that one, pick it a
 msgid "Alles wat bij je facturen of uitgaven past, is geboekt."
 msgstr "Everything that fits your invoices or expenses is recorded."
 
+#, python-format
 msgid "Uitgave · %(name)s"
 msgstr "Expense · %(name)s"
 
@@ -9406,19 +9499,22 @@ msgstr "Private, or money to your savings account? Then leave it here. Paid for 
 msgid "Bij of af"
 msgstr "In or out"
 
+#, python-format
 msgctxt "bank"
 msgid "Alles (%(count)s)"
 msgstr "All (%(count)s)"
 
+#, python-format
 msgctxt "bank"
 msgid "Bij (%(count)s)"
 msgstr "In (%(count)s)"
 
+#, python-format
 msgctxt "bank"
 msgid "Af (%(count)s)"
 msgstr "Out (%(count)s)"
 
-
+#, python-format
 msgid "Toon meer (%(count)s nog)"
 msgid_plural "Toon meer (%(count)s nog)"
 msgstr[0] "Show more (%(count)s left)"
@@ -9430,15 +9526,20 @@ msgstr "Importing the same statement again changes nothing. Everything Huismus r
 msgid "Contant betaald? Dat staat niet op je afschrift. Zet de factuur zelf op betaald. Een uitgave met bonnetje telt gewoon mee, ook zonder bankregel."
 msgstr "Paid in cash? That's not on your statement. Mark the invoice as paid yourself. An expense with a receipt counts as usual, without a bank line too."
 
-msgid "Uit je bankafschrift: − %(amount)s aan %(name)s op %(date)s, “%(text)s”."
-msgstr "From your bank statement: − %(amount)s to %(name)s on %(date)s, “%(text)s”."
+#, python-format
+msgid ""
+"Uit je bankafschrift: − %(amount)s aan %(name)s op %(date)s, “%(text)s”."
+msgstr ""
+"From your bank statement: − %(amount)s to %(name)s on %(date)s, “%(text)s”."
 
+#, python-format
 msgid "Uit je bankafschrift: − %(amount)s aan %(name)s op %(date)s."
 msgstr "From your bank statement: − %(amount)s to %(name)s on %(date)s."
 
 msgid "Vul aan wat ontbreekt en bewaar: dan staat de afschrijving bij deze uitgave."
 msgstr "Fill in what's missing and save: then the payment is linked to this expense."
 
+#, python-format
 msgid "Afgeschreven op %(date)s"
 msgstr "Paid on %(date)s"
 
@@ -9618,11 +9719,3 @@ msgstr "More about the KOR"
 
 msgid "Alleen als je btw rekent:"
 msgstr "Only if you charge VAT:"
-
-#, python-format
-msgid ""
-"Gebruik je toch de KOR? Zet hem aan bij <a href=\"%(kor_url)s\" "
-"style=\"white-space:nowrap\">Instellingen › KOR</a>."
-msgstr ""
-"Using the KOR after all? Switch it on in <a href=\"%(kor_url)s\" "
-"style=\"white-space:nowrap\">Settings › KOR</a>."

@@ -72,6 +72,11 @@ NOT_COUNTED_TITLES = {
     "lines_missing": _("Uitgaveregels zonder btw-tarief of btw"),
 }
 # What the page says instead of figures while the KOR is on.
+EXEMPT_NOTE = _(
+    "Je rekent geen btw. Dan telt Huismus geen btw, dus dit rapport heeft geen bedragen. "
+    "Reken je btw, dan zie je hier per rubriek de omzet en btw uit je facturen en uitgaven."
+)
+
 KOR_NOTE = _(
     "De KOR staat aan. Dan telt Huismus geen btw, dus dit rapport heeft geen bedragen. "
     "Staat de KOR uit, dan zie je hier per rubriek de omzet en btw uit je facturen en "

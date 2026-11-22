@@ -1151,8 +1151,11 @@ div.hint-banner > form { position: relative; z-index: 1; }
 .settings-section + .settings-section { margin-top: var(--s-5); }
 /* A topic page: its sections one card, split by a thin line, not loose cards
    (huismus-intern/besluiten.md, 2026-11-15). */
-form > div > .settings-section + .settings-section { margin-top: 0; border-top: 0; border-top-left-radius: 0; border-top-right-radius: 0; }
-form > div > .settings-section:has(+ .settings-section) { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+/* A section can be hidden (the cards of Instellingen → Btw, app.js): the
+   ones in view still join up. */
+.settings-section[hidden] { display: none; }
+form > div > .settings-section:not([hidden]) ~ .settings-section:not([hidden]) { margin-top: 0; border-top: 0; border-top-left-radius: 0; border-top-right-radius: 0; }
+form > div > .settings-section:has(~ .settings-section:not([hidden])) { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
 form > div > .settings-section .card-head { border-bottom: 0; padding-bottom: 0; }
 .settings-preview { position: sticky; top: var(--s-6); }
 .logo-slot { position: relative; width: 120px; height: 64px; border-radius: 8px; border: 1.5px dashed var(--border-strong); display: grid; place-items: center; font-size: var(--fs-xs); color: var(--text-muted); background: var(--surface-2); }

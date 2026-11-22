@@ -13,7 +13,13 @@ from huismus.core.appearance import theme_of
 from huismus.documents.numbering import NumberingError, next_numbers_if_issued_today
 
 from . import smtp, topics
-from .forms import MAIL_TEXT_FIELDS, MAIL_TEXT_PARTS, MAIL_TEXT_TITLES, SettingsPartForm
+from .forms import (
+    MAIL_TEXT_FIELDS,
+    MAIL_TEXT_PARTS,
+    MAIL_TEXT_TITLES,
+    SettingsPartForm,
+    vat_choice_of,
+)
 from .models import Settings
 
 
@@ -46,6 +52,7 @@ def topic_page(request, slug):
     instance = Settings.load()
 
     if request.method == "POST":
+        vat_before = vat_choice_of(instance)
         form = SettingsPartForm(request.POST, request.FILES, instance=instance, fields=topic.fields)
         if form.is_valid():
             try:
@@ -53,7 +60,16 @@ def topic_page(request, slug):
             except NumberingError as error:
                 form.add_error(None, str(error))
             else:
-                messages.success(request, _("Instellingen opgeslagen."))
+                if vat_choice_of(instance) != vat_before:
+                    messages.success(
+                        request,
+                        _(
+                            "Opgeslagen. Dit geldt voor wat je vanaf nu uitgeeft. "
+                            "Facturen die je al uitgaf, blijven zoals ze zijn."
+                        ),
+                    )
+                else:
+                    messages.success(request, _("Instellingen opgeslagen."))
                 return redirect("business:topic", slug=slug)
     else:
         form = SettingsPartForm(instance=instance, fields=topic.fields)

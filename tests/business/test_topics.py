@@ -101,14 +101,25 @@ def test_kor_shows_the_limit_and_percentage_the_user_set():
     settings = Settings.load()
     settings.kor_limit_cents = 2_500_050
     settings.kor_warning_percent = 90
+    settings.kor_enabled = True
     settings.save()
 
     card = _card(settings, "kor")
 
-    assert card["line"] == "Grens €\u00a025.000,50 · waarschuwen vanaf 90%"
-    assert card["pill"][0] == "Uit"
-    settings.kor_enabled = True
-    assert _card(settings, "kor")["pill"][0] == "Aan"
+    assert card["line"] == "KOR · grens €\u00a025.000,50 · waarschuwen vanaf 90%"
+    assert card["pill"] is None
+
+
+def test_the_vat_card_says_which_choice_and_warns_only_for_a_missing_text():
+    # huismus-intern/besluiten.md, 2026-11-22 (issue #53).
+    settings = Settings.load()
+    assert _card(settings, "kor")["line"] == "Btw op je facturen"
+    assert _card(settings, "kor")["pill"] is None
+    settings.vat_exempt = True
+    assert _card(settings, "kor")["line"] == "Geen btw om een andere reden"
+    assert _card(settings, "kor")["pill"][0] == "Tekst ontbreekt"
+    settings.exempt_text = "Geen btw."
+    assert _card(settings, "kor")["pill"] is None
 
 
 def test_mailen_says_through_what_it_mails_once_set_up():
@@ -142,6 +153,4 @@ def test_the_pills_say_on_and_off_in_english():
 
     settings = Settings.load()
     with translation.override("en"):
-        assert str(_card(settings, "kor")["pill"][0]) == "Off"
-        settings.kor_enabled = True
-        assert str(_card(settings, "kor")["pill"][0]) == "On"
+        assert str(_card(settings, "mailen")["pill"][0]) == "Off"

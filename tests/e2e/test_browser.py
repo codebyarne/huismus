@@ -872,30 +872,38 @@ def test_the_trash_icon_over_the_logo_removes_it(app):
     assert not Settings.load().logo
 
 
+def _kor_on():
+    # The KOR card of Instellingen → Btw shows only while the KOR is chosen.
+    settings = Settings.load()
+    settings.kor_enabled = True
+    settings.kor_text = "Vrijgesteld van btw (KOR)."
+    settings.save()
+
+
 @pytest.mark.parametrize("width", [390, 1440])
 def test_a_settings_topic_opens_from_the_overview_and_saves_on_its_own_page(app, width):
     app.set_viewport_size({"width": width, "height": 800})
     app.goto(app.base + "/instellingen/")
-    card = app.get_by_role("link", name="Kleineondernemersregeling (KOR)", exact=True)
-    expect(card).to_contain_text("Uit")
+    card = app.get_by_role("link", name="Btw", exact=True)
+    expect(card).to_contain_text("Btw op je facturen")
 
     card.click()
-    expect(app.locator("h1")).to_have_text("Kleineondernemersregeling (KOR)")
-    app.get_by_role("switch", name="Ik gebruik de KOR").check()
+    expect(app.locator("h1")).to_have_text("Btw")
+    app.get_by_label("Nee, ik gebruik de KOR").check()
     app.get_by_role("button", name="Opslaan", exact=True).click()
 
-    expect(app.get_by_text("Instellingen opgeslagen.")).to_be_visible()
+    expect(app.get_by_text("Facturen die je al uitgaf, blijven zoals ze zijn.")).to_be_visible()
     expect(app).to_have_url(f"{app.base}/instellingen/kor/")
-    app.get_by_role("link", name="Instellingen", exact=True).first.click()
-    expect(
-        app.get_by_role("link", name="Kleineondernemersregeling (KOR)", exact=True)
-    ).to_contain_text("Aan")
+    # On a phone the three-line message covers the way back for a moment.
+    app.goto(app.base + "/instellingen/")
+    expect(app.get_by_role("link", name="Btw", exact=True)).to_contain_text("KOR · grens")
     assert Settings.load().kor_enabled
 
 
 def test_the_kor_limit_field_shows_and_takes_a_dutch_amount(app):
     # huismus-intern/besluiten.md 2026-10-29: "20.000,00", not "20000.00", in every
     # browser engine (a number input could not show it at all).
+    _kor_on()
     app.goto(app.base + "/instellingen/kor/")
     limit = app.locator("#id_kor_limit_cents")
     expect(limit).to_have_value("20.000,00")
@@ -909,6 +917,7 @@ def test_the_kor_limit_field_shows_and_takes_a_dutch_amount(app):
 
 
 def test_an_unclear_amount_gets_an_example(app):
+    _kor_on()
     app.goto(app.base + "/instellingen/kor/")
     app.locator("#id_kor_limit_cents").fill("1,2,3")
     app.get_by_role("button", name="Opslaan", exact=True).click()
@@ -1639,7 +1648,7 @@ def test_your_work_with_vat_and_reverse_charge_and_not_knowing_yet(app):
 
     expect(app.locator("#kor-later")).to_contain_text("Gebruik je toch de KOR?")
     app.locator("#kor-later").get_by_role("link").click()
-    expect(app.locator("h1")).to_have_text("Kleineondernemersregeling (KOR)")
+    expect(app.locator("h1")).to_have_text("Btw")
     settings = Settings.load()
     assert (settings.kor_enabled, settings.reverse_charge_text) == (False, "Btw verlegd.")
 
