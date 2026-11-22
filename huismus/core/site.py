@@ -465,3 +465,34 @@ def _for_search_engines(out: Path, addresses: list[str]) -> None:
     (out / "robots.txt").write_text(
         f"User-agent: *\nAllow: /\n\nSitemap: https://{DOMAIN}/sitemap.xml\n", encoding="utf-8"
     )
+    (out / "llms.txt").write_text(_for_ai_assistants(), encoding="utf-8")
+
+
+def _for_ai_assistants() -> str:
+    """llms.txt: what Huismus is and where each page is, as Markdown, for an AI
+    assistant that reads the site to answer someone's question (issue #295).
+    The titles and summaries are those of the help pages, so it never says
+    something the site doesn't."""
+    lines = [
+        "# Huismus",
+        "",
+        "> Huismus is a free, open-source bookkeeping app for Dutch freelancers"
+        " (zzp'ers), with or without the small business scheme (KOR). It runs on"
+        " your own computer (Mac, Windows) or on your own server in Docker; there"
+        " is no account and no subscription, and your records stay with you.",
+        "",
+        f"- Site: https://{DOMAIN}/ (Dutch), https://{DOMAIN}/en/ (English)",
+        f"- Source code: {REPOSITORY} (AGPL-3.0-or-later)",
+        f"- Version: {updates.current_version()}",
+    ]
+    for language, heading in (("nl", "Nederlands"), ("en", "English")):
+        with translation.override(language):
+            lines += ["", f"## {heading}", ""]
+            for address in (features_url(language), install_url(language), why_url(language)):
+                lines.append(f"- https://{DOMAIN}{address}")
+            for group in help.groups(TOPICS):
+                for slug in group.topics:
+                    address = f"https://{DOMAIN}{help_url(language, slug)}"
+                    summary = _short(help.summary(slug, language))
+                    lines.append(f"- [{help.title(slug, language)}]({address}): {summary}")
+    return "\n".join(lines) + "\n"
