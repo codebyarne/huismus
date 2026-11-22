@@ -32,6 +32,47 @@ const MAX_DATA_URL = 1_900_000;
 const panel = () => document.getElementById("feedback-paneel");
 const knop = () => document.getElementById("feedback-knop");
 
+// With an action bar (Opslaan, Uitgeven) the button sits just above it. The
+// bar is sticky, so it is not always at the bottom of the window: on a short
+// page, or at the end of a long one, the footer is below it and the bar is
+// higher. CSS can't know where it is, and the button lay on "Opslaan" (#280).
+// So this measures: the button stays in its usual corner (--fb-rust) when
+// the bar is clear of it, and goes above the bar when it is not. Without
+// this file the button keeps the fixed place from the CSS.
+const GAP = 12;
+// Where the bottom of the button is in its usual corner: an empty mark at
+// that height. Measured on the mark, not on the button: moving the button
+// there to measure it would show, and with "reduce motion" on it only gets
+// there a frame later (huismus.css makes every transition 1 ms).
+const usualBottom = document.createElement("div");
+usualBottom.style.cssText = "position:fixed;right:0;bottom:var(--fb-rust);width:0;height:0;visibility:hidden";
+function placeButton() {
+  const actionbar = document.querySelector(".actionbar");
+  const button = knop();
+  if (!button) return;
+  // On the button and the panel themselves: both read --fb-onder in the CSS.
+  const place = (value) => [button, panel()].forEach((el) => el?.style.setProperty("--fb-onder", value));
+  if (!actionbar?.checkVisibility()) {
+    place("var(--fb-rust)");
+    return;
+  }
+  if (!usualBottom.isConnected) document.body.append(usualBottom);
+  const bottom = usualBottom.getBoundingClientRect().top;
+  const top = bottom - button.offsetHeight;
+  const bar = actionbar.getBoundingClientRect();
+  const covers = bar.bottom + GAP > top && bar.top - GAP < bottom;
+  place(covers ? `${Math.round(window.innerHeight - bar.top + GAP)}px` : "var(--fb-rust)");
+}
+placeButton();
+window.addEventListener("scroll", placeButton, { passive: true });
+window.addEventListener("resize", placeButton);
+document.addEventListener("htmx:afterSettle", placeButton);
+window.addEventListener("load", placeButton);
+// The page above the bar grows (a font or picture arrives, a part opens) or
+// the bar wraps onto a second row: both move the bar without a scroll.
+const moved = new ResizeObserver(placeButton);
+document.querySelectorAll("main, .actionbar").forEach((element) => moved.observe(element));
+
 function showButtons(root) {
   root.querySelectorAll?.("[data-fb-aanwijzen]").forEach((button) => (button.hidden = false));
 }
