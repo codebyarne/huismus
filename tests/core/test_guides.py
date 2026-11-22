@@ -36,6 +36,7 @@ def _render(slug, language):
         language,
         help_link=lambda s, a: site.help_url(language, s, a),
         link=lambda s: site.guides_url(language, s),
+        examples_link=site.examples_url(language),
     )
 
 
