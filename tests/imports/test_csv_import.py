@@ -328,6 +328,7 @@ def test_only_a_pdf_or_a_photo_becomes_a_receipt(tmp_path):
     names = [a.file.name.rsplit("/", 1)[-1] for a in Expense.objects.get().attachments.all()]
     assert len(names) == 1 and names[0].endswith(".jpg")
     (note,) = run.report["notes"]
+    assert note.startswith("Een bonnetje is een pdf, png of jpg.")
     assert "plaatje.svg" in note and "pagina.html" in note and "bon.jpg" not in note
 
 

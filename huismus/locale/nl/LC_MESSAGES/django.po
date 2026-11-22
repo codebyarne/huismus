@@ -7957,3 +7957,9 @@ msgstr ""
 
 msgid "geen"
 msgstr ""
+
+#, python-format
+msgid ""
+"Een bonnetje is een pdf, png of jpg. Huismus slaat over wat een uitgave "
+"noemt en iets anders is: %(names)s."
+msgstr ""

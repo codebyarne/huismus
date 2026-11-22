@@ -307,10 +307,19 @@ def _note_files_without_a_place(parsed: ParsedCsv, receipts: dict) -> None:
     documents = {
         pdf_key(document.kind, document.number) for document in parsed.invoices + parsed.quotes
     }
+    named = {name for expense in parsed.expenses for name in expense.receipt_names}
     names = sorted(
         [f"{number}.pdf" for (kind, number) in parsed.pdfs if (kind, number) not in documents]
-        + [name for name in parsed.other_files if name not in receipts]
+        + [name for name in parsed.other_files if name not in receipts and name not in named]
     )
+    if refused := sorted(name for name in parsed.other_files if name in named - set(receipts)):
+        parsed.notes.append(
+            _(
+                "Een bonnetje is een pdf, png of jpg. Huismus slaat over wat een uitgave "
+                "noemt en iets anders is: %(names)s."
+            )
+            % {"names": ", ".join(refused[:MAX_NAMED_FILES])}
+        )
     if not names:
         return
     shown = ", ".join(names[:MAX_NAMED_FILES])

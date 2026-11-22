@@ -9722,3 +9722,9 @@ msgstr "Only if you charge VAT:"
 
 msgid "geen"
 msgstr "none"
+
+#, python-format
+msgid ""
+"Een bonnetje is een pdf, png of jpg. Huismus slaat over wat een uitgave "
+"noemt en iets anders is: %(names)s."
+msgstr "A receipt is a PDF, PNG or JPG. Huismus skips what an expense names and is something else: %(names)s."
