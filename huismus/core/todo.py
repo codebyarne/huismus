@@ -4,10 +4,11 @@
 user, the most urgent first. Overdue invoices, quotes without an answer,
 draft invoices, then receipts and expenses to check.
 
-Nothing is stored and nothing is counted anew: the view hands in what the
-overview already has (core.dashboard.outstanding_invoices, the sent quotes,
-the drafts, expenses.batch.counts). Here they only become rows with a text
-and a place to go."""
+Nothing is stored and nothing is counted anew: current_todo() gathers what
+the overview already has (core.dashboard.outstanding_invoices, the sent
+quotes, the drafts, expenses.batch.counts). Here they only become rows with
+a text and a place to go. The Overzicht and the AI connection's
+get_overview (#273) both read current_todo(), so they say the same."""
 
 from dataclasses import dataclass
 
@@ -16,8 +17,11 @@ from django.utils.formats import date_format
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
+from huismus.bank.views import to_do_count as bank_to_do_count
 from huismus.core.templatetags.money import money
-from huismus.documents.listing import contact_name
+from huismus.documents.listing import contact_name, expiry_hint
+from huismus.documents.models import Document
+from huismus.expenses import batch
 
 # Rows per kind. What doesn't fit becomes one closing row ("Nog 4 facturen
 # te laat") that goes to the list (huismus-intern/besluiten.md, 2026-11-18).
@@ -274,4 +278,27 @@ def build_todo(
         + tray_count
         + to_check_count
         + bank_count,
+    )
+
+
+def current_todo(today, outstanding) -> Todo:
+    """Te doen as it stands: `outstanding` is core.dashboard.outstanding_invoices(),
+    which the overview needs for its cards too."""
+    to_check_count, tray_count = batch.counts()
+    sent_quotes = Document.objects.filter(kind="quote", status="sent").select_related("contact")
+    waiting_quotes = [
+        (quote, expiry_hint(quote, today=today))
+        for quote in sent_quotes.order_by("expiry_date", "pk")
+        # Past its date a quote reads as expired and is under Offertes.
+        if quote.shown_status == "sent"
+    ]
+    drafts = Document.objects.filter(kind="invoice", status="draft").select_related("contact")
+    return build_todo(
+        overdue=outstanding["overdue"],
+        waiting_quotes=waiting_quotes,
+        drafts=drafts,
+        tray_count=tray_count,
+        to_check_count=to_check_count,
+        today=today,
+        bank_count=bank_to_do_count(),
     )

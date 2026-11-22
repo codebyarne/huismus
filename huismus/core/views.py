@@ -14,14 +14,11 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 from django.views.static import serve as static_serve
 
-from huismus.bank.views import to_do_count as bank_to_do_count
 from huismus.business.forms import SettingsPartForm
 from huismus.business.kor_limit import kor_limit_status
 from huismus.business.models import Settings
-from huismus.documents.listing import expiry_hint
 from huismus.documents.models import Document
 from huismus.documents.numbering import NumberingError, next_numbers_if_issued_today
-from huismus.expenses import batch
 from huismus.expenses.inbox_views import new_receipts_context
 from huismus.reports.year_overview import compute_year_overview
 
@@ -38,7 +35,7 @@ from . import (
 from .backup_views import sign_in_again
 from .dashboard import month_bars, onboarding_steps, outstanding_invoices
 from .onboarding import BY_SLUG, STEPS, Round, WorkForm, steps_for
-from .todo import build_todo
+from .todo import current_todo
 
 
 class LoginView(auth_views.LoginView):
@@ -94,18 +91,9 @@ def home(request):
         )
 
     now = timezone.localtime()
-    to_check_count, tray_count = batch.counts()
     today = now.date()
     outstanding = outstanding_invoices()
     overview = compute_year_overview(today.year)
-    sent_quotes = Document.objects.filter(kind="quote", status="sent").select_related("contact")
-    waiting_quotes = [
-        (quote, expiry_hint(quote, today=today))
-        for quote in sent_quotes.order_by("expiry_date", "pk")
-        # Past its date a quote reads as expired and is under Offertes.
-        if quote.shown_status == "sent"
-    ]
-    drafts = Document.objects.filter(kind="invoice", status="draft").select_related("contact")
     return render(
         request,
         "core/home.html",
@@ -121,15 +109,7 @@ def home(request):
             # The year overview's revenue per month, as bars (#215).
             "month_bars": month_bars(overview.monthly_revenue_cents, current_month=today.month),
             "kor_limit": kor_limit_status(today.year),
-            "todo": build_todo(
-                overdue=outstanding["overdue"],
-                waiting_quotes=waiting_quotes,
-                drafts=drafts,
-                tray_count=tray_count,
-                to_check_count=to_check_count,
-                today=today,
-                bank_count=bank_to_do_count(),
-            ),
+            "todo": current_todo(today, outstanding),
             "latest_invoices": Document.objects.filter(kind="invoice", status="issued")
             .with_payment_totals()
             .order_by("-issue_date", "-pk")[:5],
