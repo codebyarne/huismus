@@ -106,6 +106,11 @@ FEATURES = (
                 "kor-en-btw",
             ),
             Feature(
+                _("Geen btw om een andere reden"),
+                _("Voor werk dat vrijgesteld is van btw. Jouw tekst op elke factuur."),
+                "kor-en-btw",
+            ),
+            Feature(
                 _("Btw per regel, ook verlegd"),
                 _(
                     "Op je facturen kies je per regel het tarief. "
@@ -124,7 +129,10 @@ FEATURES = (
             ),
             Feature(
                 _("Je bankafschrift inlezen"),
-                _("Zodat je ziet welke factuur betaald is."),
+                _(
+                    "Je ziet welke factuur betaald is en welke uitgave bij een afschrijving "
+                    "hoort. Zonder verbinding met je bank."
+                ),
                 "bankafschrift",
             ),
             _later(_("Winst-en-verliesrekening"), _("Per jaar.")),
@@ -153,8 +161,11 @@ FEATURES = (
             ),
             Feature(
                 _("Importeren uit andere pakketten en uit Excel"),
-                _("Met één importbestand, ook als je niet van Moneybird komt."),
-                "importeren",
+                _(
+                    "Met het sjabloon, en een handleiding voor Rompslomp, Tellow, "
+                    "e-Boekhouden.nl, Jortt en Excel."
+                ),
+                "overstappen",
             ),
             _later(
                 _("Auditfile voor je boekhouder"),
