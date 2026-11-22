@@ -39,9 +39,9 @@ def navigation(request):
 def parts(request):
     """show_quotes, show_expenses, show_bank: whether a part is in the
     sidebar and under "Nieuw" (#260, core.profile.parts_shown).
-    tab: what the tab bar's fourth place holds, "expenses", else "quotes",
+    menu_tab: what the tab bar's fourth place holds, "expenses", else "quotes",
     else "contacts" (huismus-intern/besluiten.md, 2026-11-22); the values
-    are URL namespaces, like nav_section. meer: the sections behind "Meer",
+    are URL namespaces, like nav_section. menu_more: the sections behind "Meer",
     everything the tab bar has no place for; it lists their links and is
     marked on their pages. Uitgaven's Categorieën is in it as "categories",
     no section: its page marks the Uitgaven tab, like every expenses page."""
@@ -59,6 +59,7 @@ def parts(request):
         tab = "quotes"
     else:
         tab = "contacts"
+    # Named menu_*: a view's own "tab" (the tabs of Facturen) would win.
     meer = {"reports", "imports", "business", "help"}
     if QUOTES in shown:
         meer.add("quotes")
@@ -72,8 +73,8 @@ def parts(request):
         "show_quotes": QUOTES in shown,
         "show_expenses": EXPENSES in shown,
         "show_bank": BANK in shown,
-        "tab": tab,
-        "meer": meer,
+        "menu_tab": tab,
+        "menu_more": meer,
     }
 
 

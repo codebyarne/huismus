@@ -273,3 +273,11 @@ def test_an_ai_service_keeps_its_card(monkeypatch):
     settings.show_expenses = False
     assert _card(settings, "bonnetjesmap") is None
     assert _card(settings, "bonnetjes-lezen") is not None
+
+
+def test_every_page_with_a_context_of_its_own_keeps_the_menu(client_in):
+    """A view's own variable (the tabs of Facturen are "tab") must not take
+    the place of the menu's: every list keeps Uitgaven on the tab bar."""
+    for name in ("documents:list", "quotes:list", "imports:upload", "imports:upload_other"):
+        html = client_in.get(reverse(name)).content.decode()
+        assert _tab_links(html)[2] == reverse("expenses:list"), name
