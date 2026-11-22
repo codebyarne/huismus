@@ -250,7 +250,7 @@ def test_check_shows_everything_and_sends_nothing(logged_in, sends):
     assert "btw op facturen, of nog niet gekozen" in text
     # "Iets werkt niet" is no idea: the line below says where it goes, for every kind.
     assert "als idee" not in text
-    assert "Je bericht komt op GitHub, waar iedereen het kan lezen." in text
+    assert "Je bericht komt op GitHub, zodat anderen kunnen meelezen en meedenken." in text
     assert 'src="data:image/png;base64,' in text
     assert sends == []
 
