@@ -5,7 +5,7 @@ wat je er nu mee kunt. De nieuwste staat bovenaan.
 
 Na een nieuwe versie wijst een melding op het overzicht je hierheen.
 
-## 0.1.6, 22 november 2026
+## 0.1.7, 22 november 2026
 
 - **Je bankafschrift inlezen.** Onder **Bank** lees je een afschrift in als
   CAMT.053 of MT940. Huismus legt elke bijschrijving naast je facturen die nog
@@ -30,8 +30,8 @@ Na een nieuwe versie wijst een melding op het overzicht je hierheen.
   ander pakket of Excel** download je een sjabloon, vul je het in en
   importeer je alles in één keer, eerst met een proefdraai. Hoe je je
   gegevens uit Rompslomp, Tellow, e-Boekhouden.nl, Jortt of Excel haalt, lees
-  je bij [Overstappen](overstappen.nl.md). Een export uit Huismus lees je zo
-  ook weer in.
+  je bij [Overstappen](overstappen.nl.md), en die tab linkt ernaartoe. Een
+  export uit Huismus lees je zo ook weer in.
 - **Een nieuwe categorie bij je uitgave.** Typ de naam in het veld
   **Categorie**. Huismus maakt hem als je opslaat. Laat je bonnetjes lezen,
   dan kiest Huismus de categorie ook.
@@ -42,6 +42,16 @@ Na een nieuwe versie wijst een melding op het overzicht je hierheen.
   wat je opnieuw instelt: [Naar een nieuwe computer](nieuwe-computer.nl.md).
 - **De mus huppelt** terwijl Huismus bezig is: als bonnetjes binnenkomen, een
   back-up loopt of de app start of bijwerkt.
+- **Je mailwachtwoord ontbreekt.** Zet je een back-up terug op een andere
+  computer, dan gaat je mailwachtwoord niet mee. Het mailscherm zegt dat nu,
+  met een link naar **Instellingen → Mailen**. Eerder stond er dat mailen nog
+  niet was ingesteld.
+- **Je rechtsvorm kiezen.** Bij **Instellingen → Bedrijf** en bij **Stap voor
+  stap beginnen** kies je je rechtsvorm: eenmanszaak, vof, bv en zo. Die komt
+  niet op je facturen.
+- **Veiliger inlezen.** Bij een import met het sjabloon wordt alleen een pdf
+  of foto een bonnetje. Een zip met bankafschriften die uitgepakt groter is
+  dan 200 MB, weigert Huismus met een melding.
 
 ## 0.1.5, 18 november 2026
 

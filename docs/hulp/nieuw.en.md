@@ -5,7 +5,7 @@ version, what you can do with it now. The newest is at the top.
 
 After a new version, a notice on the overview points you here.
 
-## 0.1.6, 22 November 2026
+## 0.1.7, 22 November 2026
 
 - **Import your bank statement.** Under **Bank** you import a statement as
   CAMT.053 or MT940. Huismus puts each payment in next to your open invoices,
@@ -30,8 +30,8 @@ After a new version, a notice on the overview points you here.
   package or Excel** you download a template, fill it in and import
   everything at once, with a trial run first. How to get your data out of
   Rompslomp, Tellow, e-Boekhouden.nl, Jortt or Excel is in
-  [Moving to Huismus](overstappen.en.md). An export from Huismus imports this
-  way too.
+  [Moving to Huismus](overstappen.en.md), and that tab links to it. An export
+  from Huismus imports this way too.
 - **A new category on your expense.** Type its name in the **Category**
   field. Huismus makes it when you save. If you have your receipts read,
   Huismus chooses the category too.
@@ -42,6 +42,16 @@ After a new version, a notice on the overview points you here.
   what you set up again: [Moving to a new computer](nieuwe-computer.en.md).
 - **The sparrow hops** while Huismus is busy: when receipts come in, a backup
   runs, or the app starts or updates.
+- **Your mail password is missing.** When you restore a backup on another
+  computer, your mail password doesn't come along. The mail screen now says
+  so, with a link to **Settings → Mail**. Before, it said mailing wasn't set
+  up yet.
+- **Choose your legal form.** Under **Settings → Business** and in **Start
+  step by step** you choose your legal form: sole proprietorship,
+  partnership, bv and so on. It doesn't go on your invoices.
+- **Safer importing.** In an import with the template, only a PDF or a photo
+  becomes a receipt. A zip of bank statements that is larger than 200 MB
+  unpacked, Huismus refuses with a message.
 
 ## 0.1.5, 18 November 2026
 
