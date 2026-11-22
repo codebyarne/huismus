@@ -63,6 +63,14 @@ def test_how_you_work_without_the_kor_or_an_organisation():
         )
 
 
+def test_how_you_work_with_no_vat_for_another_reason():
+    instance = Settings(vat_exempt=True, default_language="nl")
+    with translation.override("nl"):
+        assert feedback.how_you_work(instance) == (
+            "geen btw om een andere reden · btw verlegd: nee · facturen in het Nederlands"
+        )
+
+
 def test_the_button_sends_the_kind_page_and_how_you_work_in_dutch(settings):
     settings.DESKTOP = False
     instance = Settings(feedback_organisation="stichting", kor_enabled=True)
