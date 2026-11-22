@@ -2,7 +2,7 @@
 
 Je kunt een AI-assistent, zoals ChatGPT, Claude of Gemini, met je
 administratie laten werken. De assistent kan dan lezen wat erin staat,
-concepten maken en, als jij het goedkeurt, uitgeven en mailen. Je werkt in
+dingen bijwerken en, als jij het goedkeurt, uitgeven, mailen en boeken. Je werkt in
 de app van de assistent. In Huismus koppel je hem alleen.
 
 ## Wat een assistent kan
@@ -17,26 +17,33 @@ de app van de assistent. In Huismus koppel je hem alleen.
   adres, KvK-nummer, IBAN, wachtwoorden en sleutels ziet hij niet, en ook
   mailteksten en het maillog niet.
 - **Concepten maken:** een concept voor een factuur of offerte maken en
-  wijzigen, en een concept voor een creditnota bij een uitgegeven factuur.
-  Staat de klant nog niet in Huismus, dan voeg je die eerst zelf toe.
-- **Uitgaven toevoegen:** een uitgave met een of meer regels, met het bedrag
-  dat je betaald hebt en een bestaande categorie. Wijzigen of verwijderen doe
-  je zelf in Huismus.
+  wijzigen, een kopie van een factuur of offerte als nieuw concept, een
+  offerte omzetten naar een conceptfactuur, en een concept voor een
+  creditnota bij een uitgegeven factuur.
+- **Klanten:** een klant toevoegen, wijzigen en archiveren. Contactpersonen
+  beheer je zelf in Huismus. Een uitgegeven document houdt de gegevens die
+  erop stonden.
+- **Uitgaven en categorieën:** een uitgave toevoegen of wijzigen, met het
+  bedrag dat je betaald hebt. Een categorie die er nog niet is, maakt hij
+  erbij. Een uitgave die de assistent maakte of wijzigde, staat bij
+  Nakijken tot jij zegt dat hij klopt. Hij kan ook categorieën toevoegen en
+  hernoemen.
 - **Bonnetjes verwerken:** je assistent leest de bonnetjes zonder uitgave en
-  maakt van elk bonnetje een uitgave, met het bonnetje eraan. Andere bijlagen
-  ziet hij niet. Wil je dat Huismus dit zelf doet, zonder dat je het vraagt?
-  Zie [Bonnetjes lezen](bonnetjes.nl.md#bonnetjes-lezen).
-- **Met jouw toestemming:** een factuur of creditnota uitgeven, een offerte
-  verzenden (die krijgt dan zijn nummer) en een document mailen naar het
-  e-mailadres van de klant, met de standaardtekst. De assistent krijgt eerst
-  een samenvatting om je te laten zien: de klant, het bedrag en het nummer
-  dat het document krijgt. Daarna vraagt de app van de assistent om je
-  toestemming, met een knop die alleen jij kunt indrukken. Kies je daar
-  "altijd toestaan", dan vraagt de app het niet meer. Huismus kan dat niet
-  zien.
-- **Nog niet:** klanten, betalingen, uitgaven en categorieën wijzigen, een
-  offerte beantwoorden, een herinnering sturen, iets verwijderen of "Toch
-  bewerken". Dat komt in een volgende versie.
+  maakt van elk bonnetje een uitgave, of hangt het aan een uitgave die er
+  al is. Andere bijlagen ziet hij niet. Wil je dat Huismus dit zelf doet,
+  zonder dat je het vraagt? Zie [Bonnetjes lezen](bonnetjes.nl.md#bonnetjes-lezen).
+- **Bank:** een regel overslaan en weer terugzetten.
+- **Met jouw toestemming:** wat niet terug kan of naar buiten gaat. Dat is
+  een factuur of creditnota uitgeven, een offerte verzenden, een document
+  mailen, een herinnering sturen voor een factuur die te laat is, een
+  betaling registreren, een offerte beantwoorden, een concept, uitgave of
+  categorie verwijderen, "Toch bewerken" en dat ongedaan maken, en op de
+  bank een voorstel bevestigen, een regel boeken of een boeking
+  terugdraaien. De assistent krijgt eerst een samenvatting om je te laten
+  zien, zoals de klant, het bedrag en het nummer, of wat er openstaat na
+  een betaling. Daarna vraagt de app van de assistent om je toestemming,
+  met een knop die alleen jij kunt indrukken. Kies je daar "altijd
+  toestaan", dan vraagt de app het niet meer. Huismus kan dat niet zien.
 
 Wat de assistent leest, gaat naar het bedrijf achter die assistent (OpenAI,
 Google of Anthropic). Huismus zelf wordt daarvoor niet bereikbaar vanaf
