@@ -41,6 +41,7 @@ TOPICS = (
         _("Staat op elke factuur: naam, adres, KvK, btw-nummer, bank en e-mail."),
         (
             "business_name",
+            "legal_entity",
             "legal_form",
             "address_line1",
             "address_line2",

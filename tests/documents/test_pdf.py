@@ -353,3 +353,25 @@ def test_pdf_addresses_the_chosen_contact_person():
 
     assert "T.a.v. Piet de Boer" in _pdf_text(render_pdf(issue(chosen)))
     assert "T.a.v." not in _pdf_text(render_pdf(issue(nobody)))
+
+
+def test_the_legal_form_choice_changes_no_snapshot_or_pdf():
+    # #302: the choice is for the profile only. The free text goes in the
+    # snapshot as before; the choice doesn't, and the PDF stays the same.
+    settings = _configure_settings()
+    settings.legal_form = "B.V."
+    settings.save()
+    before = _issued_invoice()
+    pdf_before = _pdf_text(render_pdf(before))
+
+    settings = Settings.load()
+    settings.legal_entity = "bv"
+    settings.save()
+    after = _issued_invoice()
+
+    assert after.business_snapshot == before.business_snapshot
+    assert "legal_entity" not in after.business_snapshot
+    assert after.business_snapshot["legal_form"] == "B.V."
+    assert _pdf_text(render_pdf(after)).replace(after.number, "") == pdf_before.replace(
+        before.number, ""
+    )

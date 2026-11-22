@@ -47,14 +47,20 @@ def _data_url(content):
 
 
 def test_how_you_work_says_what_the_settings_say():
-    instance = Settings(feedback_organisation="kor", kor_enabled=True, default_language="nl")
+    instance = Settings(legal_entity="bv", kor_enabled=True, default_language="nl")
     with translation.override("nl"):
         assert feedback.how_you_work(instance) == (
-            "Eenmanszaak of vof met KOR · met KOR · btw verlegd: nee · facturen in het Nederlands"
+            "Bv · met KOR · btw verlegd: nee · facturen in het Nederlands"
         )
 
 
-def test_how_you_work_without_the_kor_or_an_organisation():
+def test_how_you_work_names_the_legal_form_not_the_old_card_answer():
+    instance = Settings(feedback_organisation="bv", kor_enabled=True, default_language="nl")
+    with translation.override("nl"):
+        assert feedback.how_you_work(instance).startswith("met KOR · ")
+
+
+def test_how_you_work_without_the_kor_or_a_legal_form():
     """The start keeps no answers: KOR off may be VAT or "don't know yet"."""
     instance = Settings(kor_enabled=False, reverse_charge_text="Btw verlegd", default_language="en")
     with translation.override("nl"):
@@ -73,7 +79,7 @@ def test_how_you_work_with_no_vat_for_another_reason():
 
 def test_the_button_sends_the_kind_page_and_how_you_work_in_dutch(settings):
     settings.DESKTOP = False
-    instance = Settings(feedback_organisation="stichting", kor_enabled=True)
+    instance = Settings(legal_entity="stichting", kor_enabled=True)
     with translation.override("en"):
         data = feedback.quick_form_data(
             instance, "probleem", "Knop doet niets", "", "/facturen/", "en"
@@ -81,7 +87,8 @@ def test_the_button_sends_the_kind_page_and_how_you_work_in_dutch(settings):
     assert data == {
         "_wpcf7_unit_tag": feedback.UNIT_TAG,
         "_wpcf7_container_post": str(feedback.PAGE_ID),
-        "organisatie": "Stichting",
+        "rechtsvorm": "stichting",
+        "btw": "kor",
         "gebruik": "Docker, op een server of NAS",
         "soort": "Iets werkt niet",
         "wens": "Knop doet niets",
@@ -93,9 +100,10 @@ def test_the_button_sends_the_kind_page_and_how_you_work_in_dutch(settings):
     }
 
 
-def test_without_an_organisation_none_goes():
+def test_without_a_legal_form_it_goes_empty():
     data = feedback.quick_form_data(Settings(), "idee", "x", "", "", "nl")
-    assert data["organisatie"] == ""
+    assert data["rechtsvorm"] == ""
+    assert "organisatie" not in data
 
 
 def test_the_overview_shows_every_field_that_goes():
@@ -107,12 +115,16 @@ def test_the_overview_shows_every_field_that_goes():
             for label, value in feedback.quick_outgoing(instance, "vraag", "Hoe?", "", "/", True)
         )
     sent = feedback.quick_form_data(instance, "vraag", "Hoe?", "", "/", "nl")
-    # The organisation is part of Hoe je werkt; the picture has its own line.
-    fields = [key for key in sent if not key.startswith("_wpcf7") and key != "organisatie"]
+    # The picture has its own line.
+    fields = [key for key in sent if not key.startswith("_wpcf7")]
     assert len(shown) == len(fields) + 1
     assert str(shown["Soort"]) == "Vraag"
     assert str(shown["Afbeelding"]) == "ja, hierboven"
     assert shown["Hoe je werkt"] == feedback.how_you_work(instance)
+    assert (str(shown["Rechtsvorm"]), str(shown["Btw"])) == (
+        "niet ingevuld",
+        "btw op facturen, of nog niet gekozen",
+    )
 
 
 @pytest.mark.parametrize("choices", [feedback.KINDS])

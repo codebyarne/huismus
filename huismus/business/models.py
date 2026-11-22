@@ -5,9 +5,18 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from huismus.core import feedback
+from huismus.core import feedback, profile
 from huismus.core.models import TimestampedModel
 from huismus.core.validators import validate_dutch_postal_code, validate_iban, validate_kvk_number
+
+LEGAL_ENTITY_CHOICES = [
+    (profile.SOLE_PROPRIETOR, _("Eenmanszaak")),
+    (profile.PARTNERSHIP, _("Vof")),
+    (profile.PRIVATE_COMPANY, _("Bv")),
+    (profile.FOUNDATION, _("Stichting")),
+    (profile.ASSOCIATION, _("Vereniging")),
+    (profile.OTHER_FORM, _("Anders")),
+]
 
 
 def logo_upload_to(instance, filename):
@@ -34,7 +43,14 @@ class Settings(TimestampedModel):
     """
 
     business_name = models.CharField(_("bedrijfsnaam"), max_length=200)
+    # The free text from before #302: kept as it is and in every snapshot,
+    # but no document shows it. Only Instellingen › Bedrijf still has the
+    # field, and only while it holds text.
     legal_form = models.CharField(_("rechtsvorm"), max_length=100, blank=True)
+    # The choice, for the profile (core.profile, #302). Never in a snapshot.
+    legal_entity = models.CharField(
+        _("rechtsvorm"), max_length=20, choices=LEGAL_ENTITY_CHOICES, blank=True
+    )
     address_line1 = models.CharField(_("adresregel 1"), max_length=200)
     address_line2 = models.CharField(_("adresregel 2"), max_length=200, blank=True)
     postal_code = models.CharField(_("postcode"), max_length=10)

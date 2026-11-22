@@ -22,8 +22,9 @@ from huismus.documents.numbering import (
 )
 
 from . import smtp
+from .legal_entity import suggestion
 from .logo import validate_and_sanitize_logo
-from .models import Settings
+from .models import LEGAL_ENTITY_CHOICES, Settings
 
 CHARGES_VAT, USES_KOR, NO_VAT_OTHER = "ja", "kor", "anders"
 VAT_CHOICES = [
@@ -87,6 +88,7 @@ class SettingsForm(forms.ModelForm):
         model = Settings
         fields = [
             "business_name",
+            "legal_entity",
             "legal_form",
             "address_line1",
             "address_line2",
@@ -179,6 +181,15 @@ class SettingsForm(forms.ModelForm):
                 self.fields[name].label = format_lazy(
                     "{}: {}", MAIL_TEXT_TITLES[kind], MAIL_TEXT_PARTS[part, language]
                 )
+        # The legal form (#302): the choice, and the free text from before it.
+        if "legal_entity" in self.fields:
+            self.fields["legal_entity"].label = _("Rechtsvorm")
+            self.fields["legal_entity"].choices = [("", _("Kies…")), *LEGAL_ENTITY_CHOICES]
+        if "legal_form" in self.fields:
+            self.fields["legal_form"].label = _("Rechtsvorm, zoals je hem eerder typte")
+            self.fields["legal_form"].help_text = _(
+                "Staat niet op je facturen. Maak het leeg als je het niet meer nodig hebt."
+            )
         # The same words as the switch on the screen.
         if "number_reset_yearly" in self.fields:
             self.fields["number_reset_yearly"].label = _("Nummering elk jaar opnieuw beginnen")
@@ -319,6 +330,21 @@ class SettingsPartForm(SettingsForm):
         for name in list(self.fields):
             if name not in fields:
                 del self.fields[name]
+        # The free text from before the choice (#302): only while it holds
+        # text, so that nobody loses what they typed. Emptied and saved, it
+        # goes.
+        if "legal_form" in self.fields and not self.instance.legal_form:
+            del self.fields["legal_form"]
+        # No choice yet: preselect what the old text or card answer
+        # suggests. A suggestion, not a saved value.
+        self.legal_entity_suggested = ""
+        if "legal_entity" in self.fields and not self.is_bound:
+            self.legal_entity_suggested = suggestion(self.instance)
+            if self.legal_entity_suggested:
+                self.initial["legal_entity"] = self.legal_entity_suggested
+                self.fields["legal_entity"].help_text = _(
+                    "Voorstel op basis van wat je eerder invulde. Klopt het, sla dan op."
+                )
         # The next number by hand (issue #141), where the fields name it
         # (Facturen en nummering, the start's Facturen step), and only for a
         # kind Huismus never gave a number yet (invariant 3).
