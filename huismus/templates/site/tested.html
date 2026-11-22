@@ -1,0 +1,91 @@
+{% extends "site/base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Zo wordt Huismus getest" %} — Huismus{% endblock %}
+{% block og_title %}{% translate "Zo wordt Huismus getest" %}{% endblock %}
+{% block description %}{% translate "Wat er bij elke wijziging van Huismus wordt nagekeken: de tests, facturen die vastliggen, nummers zonder gaten en een import die elk totaal narekent." %}{% endblock %}
+{% block main_class %}wrap site-narrow why-page{% endblock %}
+
+{% block content %}
+{% comment %}How Huismus is guarded (issue #313). Every statement here is held against the code by tests/core/test_site_tested.py: change the code and that test says which sentence no longer holds.{% endcomment %}
+<div class="page-head">
+    <div class="titles">
+        <p class="kicker">{% translate "Getest" %}</p>
+        <h1>{% translate "Zo wordt Huismus getest" %}</h1>
+        <p class="lede">{% translate "Huismus wordt met hulp van AI gebouwd. Hier lees je wat er bij elke wijziging wordt nagekeken, zodat je facturen en bedragen blijven kloppen." %}</p>
+    </div>
+</div>
+
+<section class="why-part">
+    <h2>{% translate "Alle tests, bij elke wijziging" %}</h2>
+    <p>{% blocktranslate %}Huismus heeft meer dan {{ tests_at_least }} tests. Een test is een stukje code dat Huismus iets laat doen en nakijkt of de uitkomst klopt: een factuur uitgeven, een totaal uitrekenen, een export inlezen.{% endblocktranslate %}</p>
+    <p>{% translate "Bij elke wijziging draaien ze allemaal, op GitHub: eerst op de wijziging zelf, daarna op het geheel. Eén commando zegt ja of nee." %}</p>
+    <p>{% translate "Datzelfde commando kijkt ook of de database bij de code past, en of er geen echte administratie tussen de code is beland." %}</p>
+</section>
+
+<section class="why-part">
+    <h2>{% translate "Een uitgegeven factuur ligt vast" %}</h2>
+    <p>{% translate "Na het uitgeven kun je een factuur of creditnota niet meer wijzigen of verwijderen. Een fout herstel je met een creditnota." %}</p>
+    <p>{% translate "Dat wordt op twee plekken bewaakt. De code van Huismus weigert zo’n wijziging, en de database weigert hem zelf ook: voor het document, voor de regels en voor de btw per tarief. Zit er een fout in de code, dan houdt de database de wijziging alsnog tegen." %}</p>
+    <p>{% translate "Er is één uitzondering, en die kies je zelf: met Toch bewerken zet je een factuur terug naar concept, met hetzelfde nummer. Dat kan niet meer als er een creditnota voor die factuur is uitgegeven." %}</p>
+</section>
+
+<section class="why-part">
+    <h2>{% translate "Nummers zonder gaten" %}</h2>
+    <p>{% translate "Een factuur krijgt zijn nummer pas bij het uitgeven, in dezelfde stap waarin hij wordt vastgelegd. Mislukt het uitgeven, dan is er ook geen nummer verbruikt." %}</p>
+    <p>{% translate "Een test vraagt twintig nummers tegelijk aan en kijkt of het precies 1 tot en met 20 worden: geen gat en geen dubbel nummer." %}</p>
+</section>
+
+<section class="why-part">
+    <h2>{% translate "Bedragen in hele centen" %}</h2>
+    <p>{% translate "Huismus slaat elk bedrag op in hele centen, zodat er bij het rekenen geen cent verdwijnt. Eén stuk code rekent de totalen uit, voor het scherm, de pdf en de import." %}</p>
+    <p>{% translate "Tests met willekeurige facturen kijken of het subtotaal altijd de som van de regels is, en het totaal altijd het subtotaal plus de btw." %}</p>
+</section>
+
+<section class="why-part">
+    <h2>{% translate "De import rekent elk totaal na" %}</h2>
+    <p>{% translate "Een import begint met een proefdraai: je ziet wat er zou gebeuren, en er is nog niets opgeslagen. Huismus rekent van elke factuur het totaal opnieuw uit en vergelijkt het met het totaal uit je oude pakket, tot op de cent. Wijkt er een af, dan zie je welke en hoeveel." %}</p>
+    <p>{% translate "Lees je dezelfde export twee keer in, dan verandert er de tweede keer niets. Ook dat kijkt een test na." %}</p>
+</section>
+
+<section class="why-part">
+    <h2>{% translate "In een echte browser" %}</h2>
+    <p>{% translate "Een deel van de tests bedient Huismus in een echte browser, zoals jij dat doet: klikken, typen, een factuur uitgeven. Ze openen elke pagina in het Nederlands en het Engels, op drie schermbreedtes van telefoon tot breed scherm, en lopen de app door met negen jaar verzonnen administratie." %}</p>
+    <p>{% translate "Bij elke wijziging gebeurt dat in Chromium, de motor van Chrome en Edge. Verandert er iets aan wat je ziet, dan ook in de motoren van Safari en Firefox." %}</p>
+</section>
+
+<section class="why-part">
+    <h2>{% translate "Voor elke nieuwe versie" %}</h2>
+    <p>{% translate "Een nieuwe versie komt pas online als twee controles slagen: er zit geen bekend lek in de pakketten waar Huismus op bouwt, en de veiligheidscontrole van Django, het raamwerk onder Huismus, geeft geen waarschuwing." %}</p>
+    <p>{% translate "Daarvoor loopt een aparte AI-reviewer alles na wat sinds de vorige versie is veranderd: wachtwoorden en sleutels, verbindingen naar buiten, ingangen zonder inloggen en alles wat je inleest. Een bevinding die zwaar genoeg is, houdt de versie tegen tot hij is opgelost." %}</p>
+</section>
+
+<section class="why-part">
+    <h2>{% translate "AI schrijft, vaste regels bewaken" %}</h2>
+    <p>{% translate "De regels waar Huismus zich aan houdt, staan in gewone tekst bij de code: bedragen in centen, uitgegeven ligt vast, nummers zonder gaten, één plek voor de totalen. AI-reviewers met elk één opdracht leggen een wijziging naast die regels." %}</p>
+    <p>{% translate "Een nieuw scherm bekijkt de maker zelf, voordat het in Huismus komt." %}</p>
+</section>
+
+<section class="why-part">
+    <h2>{% translate "Wat een test niet vangt" %}</h2>
+    <p>{% translate "Een test vangt alleen wat iemand heeft bedacht. Sommige fouten vindt pas iemand die Huismus gebruikt. Voor zo’n fout komt er eerst een test die hem laat zien, dan de oplossing, en waar het kan een controle die elke fout van die soort vangt." %}</p>
+    <p>{% blocktranslate with bugs=sources.bugs %}De lijst van die fouten staat <a href="{{ repository }}/blob/main/{{ bugs }}">bij de code</a>, ook de soorten waar nog geen controle voor is. Vind je zelf een fout, <a href="{{ repository }}/issues">meld hem dan</a>.{% endblocktranslate %}</p>
+</section>
+
+<section class="why-part">
+    <h2>{% translate "Zelf nalopen" %}</h2>
+    <p>{% translate "De broncode staat openbaar, en de tests ook. Dit zijn de plekken waar deze pagina over gaat:" %}</p>
+    <ul class="tested-sources">
+        <li><a href="{{ repository }}/tree/main/{{ sources.tests }}">{% translate "De tests" %}</a></li>
+        <li><a href="{{ repository }}/blob/main/{{ sources.gate }}">{% translate "Het commando dat ja of nee zegt" %}</a></li>
+        <li><a href="{{ repository }}/actions">{% translate "De uitslag van elke wijziging, op GitHub" %}</a></li>
+        <li><a href="{{ repository }}/blob/main/{{ sources.triggers }}">{% translate "De regel in de database die een uitgegeven factuur vasthoudt" %}</a></li>
+        <li><a href="{{ repository }}/blob/main/{{ sources.rules }}">{% translate "De regels waar Huismus zich aan houdt" %}</a></li>
+    </ul>
+    <p class="why-links"><a class="more" href="{{ why_url }}">{% translate "Waarom Huismus bestaat" %} <span aria-hidden="true">→</span></a></p>
+</section>
+
+<section class="band band-final" id="downloaden">
+    {% include "site/_final.html" %}
+</section>
+{% endblock %}
