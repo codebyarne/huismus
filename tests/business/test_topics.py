@@ -55,7 +55,9 @@ def test_every_topic_page_opens_on_a_fresh_installation(client_in, slug):
 
 @pytest.mark.parametrize("topic", TOPICS, ids=lambda topic: topic.slug)
 def test_every_field_of_a_topic_is_on_its_page(client_in, topic):
-    # A field in the form but not on the page would fail invisibly.
+    # A field in the form but not on the page would fail invisibly. The
+    # old free text for the legal form shows only while it holds text (#302).
+    Settings.objects.filter(pk=Settings.load().pk).update(legal_form="B.V.")
     page = client_in.get(reverse("business:topic", args=[topic.slug])).content.decode()
 
     for name in topic.fields:

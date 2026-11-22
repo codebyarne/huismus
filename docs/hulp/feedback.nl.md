@@ -6,12 +6,12 @@ Wil je het vertellen, dan kan dat hieronder.
 
 ## Zo gaat het
 
-1. Kies wat voor organisatie je hebt. Wat je mist en je e-mailadres mogen
-   leeg blijven.
+1. Schrijf wat je mist, en je e-mailadres als je wilt. Beide mogen leeg
+   blijven.
 2. Druk op **Controleer gegevens**. Je ziet alles wat meegaat, ook wat Huismus
-   zelf invult: waar het draait, de versie, de taal van de app, of je een tekst
-   bij btw verlegd hebt ingesteld (ja of nee, niet de tekst zelf) en de taal
-   van je facturen.
+   zelf invult: je rechtsvorm (uit **Instellingen → Bedrijf**), KOR of btw, waar
+   het draait, de versie, de taal van de app, of je een tekst bij btw verlegd
+   hebt ingesteld (ja of nee, niet de tekst zelf) en de taal van je facturen.
 3. Druk op **Versturen**. Pas dan stuurt Huismus het naar een formulier op
    arnekrijnsen.com. Je e-mailadres en wat je mist bewaart Huismus niet.
    Wat je mist komt daarna als idee op GitHub, waar anderen het kunnen lezen.
@@ -33,7 +33,7 @@ het je opvalt.
    grijze balken.
 4. Druk op **Controleer wat er meegaat**. Je ziet de afbeelding en alles wat
    meegaat: de pagina, de versie, waar Huismus draait, en hoe je werkt (je
-   organisatie, KOR of btw, btw verlegd en de taal van je facturen).
+   rechtsvorm, KOR of btw, btw verlegd en de taal van je facturen).
 5. Druk op **Versturen**. Je bericht komt op GitHub, zodat anderen kunnen
    meelezen en meedenken. De afbeelding en je e-mailadres blijven bij de
    appbouwer.

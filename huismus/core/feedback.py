@@ -1,20 +1,22 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""Hoe gebruik je Huismus?: what kind of organisation someone has, what
-they miss and how to reach them, sent to the app's maker only if they
-choose to (huismus-intern/besluiten.md, 2026-11-01 and 2026-11-02).
+"""Hoe gebruik je Huismus?: what someone misses and how to reach them,
+with their profile, sent to the app's maker only if they choose to
+(huismus-intern/besluiten.md, 2026-11-01, 2026-11-02 and 2026-11-22).
 
 Huismus sends it itself, to the Contact Form 7 form on arnekrijnsen.com,
 but only when the user presses Versturen after seeing everything that goes
 along: the third kind of outgoing request of SPEC.md principle 6. Where
 Huismus runs, its version and its language Huismus fills in itself, and
-from the profile (profile.py) whether there is a text for reverse-charge invoices and
-the language invoices are in (#268); they are in that overview too.
+from the profile (profile.py) the legal form and VAT (#302), whether there is a
+text for reverse-charge invoices and the language invoices are in (#268);
+they are in that overview too. The card no longer asks the organisation:
+the profile knows the legal form and the VAT (#302).
 
-The choices are those of the issue form (.github/ISSUE_TEMPLATE/idee.yml).
-The form on the site takes a choice only when the value is exactly its
-option text, so each choice has that text here, the same in every language
-of the app; `taal` says which language the app speaks.
+The profile's values go as they are (bv, kor), in hidden fields on the
+site. Where Huismus runs and the kind of message go as the option text of
+the site's choices, the same in every language of the app; `taal` says
+which language the app speaks.
 """
 
 import base64
@@ -41,8 +43,9 @@ logger = logging.getLogger("huismus.feedback")
 # The site lets this form skip reCAPTCHA for a User-Agent "Huismus/<version>"
 # (plugin Huismus-formulier, huismus-intern/wordpress/), but only when the
 # request looks exactly like this one (the same version in "versie", a known
-# "taal" and "gebruik", and "btw_verlegd" and "factuurtaal" either missing,
-# as from Huismus before #268, or a value of invoice_setup()) and only a
+# "taal" and "gebruik", and "btw_verlegd", "factuurtaal", "rechtsvorm" and
+# "btw" either missing, as from older versions, or a value Huismus sends:
+# invoice_setup(), profile()) and only a
 # few times an hour: the User-Agent is public,
 # so anyone could copy it. Change those fields here, change the plugin too.
 FORM_ID = 2943
@@ -56,7 +59,10 @@ TIMEOUT_SECONDS = 15
 MAX_WISH = 2000
 MAX_EMAIL = 400
 
-# (key stored in Settings, option text on the form, label in the app)
+# (key stored in Settings, option text on the form, label in the app). The
+# card asked this until #302; what was sent last stays in
+# Settings.feedback_organisation, only for the legal form suggestion
+# (business.legal_entity).
 ORGANISATIONS = (
     ("kor", "Eenmanszaak of vof met KOR", _("Eenmanszaak of vof met KOR")),
     ("btw", "Eenmanszaak of vof met btw", _("Eenmanszaak of vof met btw")),
@@ -143,15 +149,24 @@ def invoice_setup() -> tuple[str, str]:
     return ("ja" if you.reverse_charge_text else "nee"), you.invoice_language
 
 
-def outgoing(organisation: str, wish: str, email: str, language: str | None = None) -> list:
+def legal_form_label(you) -> str:
+    """The legal form of the profile in words, or "" when not chosen."""
+    from huismus.business.models import LEGAL_ENTITY_CHOICES
+
+    return next((str(label) for key, label in LEGAL_ENTITY_CHOICES if key == you.legal_form), "")
+
+
+def outgoing(wish: str, email: str, language: str | None = None) -> list:
     """Everything that goes, as (label, value) for the overview. send()
     sends exactly these fields and nothing more. What Huismus fills in
     itself is read again at Versturen, like the version: a setting changed
     in between goes as it is then."""
     language = form_language(language)
     reverse_charge, invoice_language = invoice_setup()
+    you = profile()
     return [
-        (_("Organisatie"), _label(ORGANISATIONS, organisation)),
+        (_("Rechtsvorm"), legal_form_label(you) or _("niet ingevuld")),
+        (_("Btw"), VAT_WORDS[you.vat]),
         (_("Wat je mist"), wish),
         (_("E-mailadres"), email),
         (_("Draait op"), _label(PLATFORMS, runs_on())),
@@ -162,14 +177,19 @@ def outgoing(organisation: str, wish: str, email: str, language: str | None = No
     ]
 
 
-def form_data(organisation: str, wish: str, email: str, language: str | None = None) -> dict:
+def profile_fields(you) -> dict:
+    """The legal form ("" when not chosen) and the VAT, as they are."""
+    return {"rechtsvorm": you.legal_form, "btw": you.vat}
+
+
+def form_data(wish: str, email: str, language: str | None = None) -> dict:
     """The fields of the form on the site, plus the hidden ones its REST
-    endpoint needs. An unknown organisation stays empty: the site refuses it."""
+    endpoint needs."""
     reverse_charge, invoice_language = invoice_setup()
     return {
         "_wpcf7_unit_tag": UNIT_TAG,
         "_wpcf7_container_post": str(PAGE_ID),
-        "organisatie": _form_text(ORGANISATIONS, organisation),
+        **profile_fields(profile()),
         "gebruik": _form_text(PLATFORMS, runs_on()),
         "wens": wish,
         "email": email,
@@ -181,15 +201,14 @@ def form_data(organisation: str, wish: str, email: str, language: str | None = N
 
 
 def how_you_work(instance) -> str:
-    """Hoe je werkt, in the language that is active: the organisation last
-    sent from "Hoe gebruik je Huismus?" and what the step-by-step start set
-    (huismus-intern/besluiten.md, 2026-11-21), as profile() reads it from
-    `instance`."""
+    """Hoe je werkt, in the language that is active: the legal form, when
+    chosen, and what the step-by-step start set (huismus-intern/besluiten.md,
+    2026-11-21 and 2026-11-22), as profile() reads it from `instance`."""
     you = profile(instance)
     parts = []
-    organisation = _label(ORGANISATIONS, instance.feedback_organisation)
-    if organisation:
-        parts.append(organisation)
+    legal_form = legal_form_label(you)
+    if legal_form:
+        parts.append(legal_form)
     parts.append(VAT_WORDS[you.vat])
     parts.append(_("btw verlegd: ja") if you.reverse_charge_text else _("btw verlegd: nee"))
     if you.invoice_language == "en":
@@ -218,6 +237,7 @@ def quick_outgoing(instance, kind, message, email, page, has_image, language=Non
     overview. send_quick() sends these fields and the picture; like the
     choices, the kind and Hoe je werkt go in Dutch, whatever the app's language."""
     language = form_language(language)
+    you = profile(instance)
     return [
         (_("Soort"), _label(KINDS, kind)),
         (_("Bericht"), message),
@@ -225,6 +245,8 @@ def quick_outgoing(instance, kind, message, email, page, has_image, language=Non
         (_("Afbeelding"), _("ja, hierboven") if has_image else _("geen")),
         (_("E-mailadres"), email),
         (_("Hoe je werkt"), how_you_work(instance)),
+        (_("Rechtsvorm"), legal_form_label(you) or _("niet ingevuld")),
+        (_("Btw"), VAT_WORDS[you.vat]),
         (_("Draait op"), _label(PLATFORMS, runs_on())),
         (_("Versie"), current_version()),
         (_("Taal van de app"), "English" if language == "en" else "Nederlands"),
@@ -233,15 +255,14 @@ def quick_outgoing(instance, kind, message, email, page, has_image, language=Non
 
 def quick_form_data(instance, kind, message, email, page, language=None) -> dict:
     """The fields of the form on the site for the feedback button: the same
-    form as form_data(), with soort, pagina and werkwijze besides. The
-    organisation goes only when it was sent before; the site does not need
-    it from the button. Hoe je werkt goes in Dutch, like the choices."""
+    form as form_data(), with soort, pagina and werkwijze besides. Hoe je
+    werkt goes in Dutch, like the choices."""
     with translation.override("nl"):
         work = how_you_work(instance)
     return {
         "_wpcf7_unit_tag": UNIT_TAG,
         "_wpcf7_container_post": str(PAGE_ID),
-        "organisatie": _form_text(ORGANISATIONS, instance.feedback_organisation),
+        **profile_fields(profile(instance)),
         "gebruik": _form_text(PLATFORMS, runs_on()),
         "soort": _form_text(KINDS, kind),
         "wens": message,
@@ -274,10 +295,10 @@ def multipart(fields: dict, files: dict | None = None) -> tuple[bytes, str]:
     return body, f"multipart/form-data; boundary={boundary}"
 
 
-def send(organisation: str, wish: str, email: str, language: str | None = None) -> None:
+def send(wish: str, email: str, language: str | None = None) -> None:
     """Post the answers to the form. Raises SendError unless the site says
     it mailed them."""
-    _post(*multipart(form_data(organisation, wish, email, language)))
+    _post(*multipart(form_data(wish, email, language)))
 
 
 def send_quick(instance, kind, message, email, page, image=None, language=None) -> None:

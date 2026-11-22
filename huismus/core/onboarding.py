@@ -42,7 +42,7 @@ STEPS = (
         _("Dit komt op elke factuur en offerte."),
         (
             "business_name",
-            "legal_form",
+            "legal_entity",
             "address_line1",
             "postal_code",
             "city",

@@ -10,7 +10,8 @@ Klik op het overzicht op **Stap voor stap beginnen**. Stap voor stap vul je
 in wat Huismus nodig heeft voor je eerste factuur:
 
 1. **Bedrijf:** je bedrijfsnaam, adres, KvK-nummer en IBAN. Dit komt op elke
-   factuur en offerte.
+   factuur en offerte. Je rechtsvorm (eenmanszaak, vof, bv en zo) mag je
+   kiezen; die komt niet op je facturen.
 2. **Je werk:** drie vragen. Reken je btw, gebruik je de
    kleineondernemersregeling (KOR), reken je om een andere reden geen btw, of
    weet je het nog niet? Heb je klanten

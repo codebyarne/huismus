@@ -7,6 +7,7 @@ The site is never reached: feedback.send is replaced."""
 import pytest
 from playwright.sync_api import expect
 
+from huismus.business.models import Settings
 from huismus.core import feedback
 
 pytestmark = pytest.mark.django_db(transaction=True)
@@ -20,22 +21,27 @@ def sends(monkeypatch):
 
 
 def test_fill_in_see_what_goes_and_send(app, sends):
+    # The card doesn't ask the organisation: the legal form and VAT come
+    # from the profile (#302).
+    Settings.objects.filter(pk=Settings.load().pk).update(legal_entity="stichting")
     app.goto(app.base + "/welkom/klaar/")
     card = app.locator("#vertel")
     expect(card.get_by_role("heading")).to_have_text("Hoe gebruik je Huismus?")
-    card.get_by_label("Wat voor organisatie heb je?").select_option(label="Stichting")
+    expect(card.locator("select")).to_have_count(0)
     card.get_by_label("Wat mis je").fill("Uren bijhouden\nper project")
     card.get_by_role("button", name="Controleer gegevens").click()
 
     overview = card.locator("#vertel-wat-er-gaat")
+    expect(overview).to_contain_text("Rechtsvorm")
     expect(overview).to_contain_text("Stichting")
+    expect(overview).to_contain_text("btw op facturen, of nog niet gekozen")
     expect(overview).to_contain_text("Uren bijhouden")
     expect(overview).to_contain_text("Docker, op een server of NAS")
     assert sends == []
 
     card.get_by_role("button", name="Versturen").click()
     expect(card.locator("#vertel-verstuurd")).to_have_text("Verstuurd. Dank je wel!")
-    assert sends == [("stichting", "Uren bijhouden\nper project", "")]
+    assert sends == [("Uren bijhouden\nper project", "")]
     # The only primary button on the page stays "Eerste klant toevoegen".
     expect(app.locator("main .btn-primary")).to_have_count(1)
 
@@ -43,12 +49,10 @@ def test_fill_in_see_what_goes_and_send(app, sends):
 def test_change_keeps_what_you_typed(app, sends):
     app.goto(app.base + "/welkom/klaar/")
     card = app.locator("#vertel")
-    card.get_by_label("Wat voor organisatie heb je?").select_option(label="Bv of holding")
     card.get_by_label("E-mailadres").fill("lotte@example.com")
     card.get_by_role("button", name="Controleer gegevens").click()
     card.get_by_role("button", name="Aanpassen").click()
     expect(card.get_by_label("E-mailadres")).to_have_value("lotte@example.com")
-    expect(card.get_by_label("Wat voor organisatie heb je?")).to_have_value("bv")
     assert sends == []
 
 
@@ -59,20 +63,21 @@ def test_a_failed_send_says_so(app, monkeypatch):
     monkeypatch.setattr(feedback, "send", fail)
     app.goto(app.base + "/hulp/feedback/")
     card = app.locator("#vertel")
-    card.get_by_label("Wat voor organisatie heb je?").select_option(label="Anders")
     card.get_by_role("button", name="Controleer gegevens").click()
     card.get_by_role("button", name="Versturen").click()
     expect(card.locator("#vertel-mislukt")).to_be_visible()
     expect(card.get_by_role("button", name="Versturen")).to_be_visible()
 
 
-def test_without_an_organisation_it_says_what_to_fill_in(app, sends):
+def test_with_nothing_filled_in_the_profile_goes(app, sends):
     app.goto(app.base + "/welkom/klaar/")
     card = app.locator("#vertel")
-    # The browser's own check first; without it Huismus says the same.
-    card.locator("select").first.evaluate("el => el.form.noValidate = true")
     card.get_by_role("button", name="Controleer gegevens").click()
-    expect(card.locator(".error").first).to_be_visible()
+    overview = card.locator("#vertel-wat-er-gaat")
+    expect(overview).to_contain_text("niet ingevuld")
+    card.get_by_role("button", name="Versturen").click()
+    expect(card.locator("#vertel-verstuurd")).to_be_visible()
+    assert sends == [("", "")]
 
 
 def test_skip_and_the_done_page_no_longer_asks(app):
@@ -83,7 +88,7 @@ def test_skip_and_the_done_page_no_longer_asks(app):
     expect(app.locator("#vertel")).to_have_count(0)
 
     app.goto(app.base + "/hulp/feedback/")
-    expect(app.locator("#vertel").get_by_label("Wat voor organisatie heb je?")).to_be_visible()
+    expect(app.locator("#vertel").get_by_label("Wat mis je")).to_be_visible()
 
 
 # The feedback button on every page (huismus-intern/besluiten.md, 2026-11-21).

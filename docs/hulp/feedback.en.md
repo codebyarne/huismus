@@ -6,12 +6,13 @@ you're missing. If you'd like to say, you can do it below.
 
 ## How it works
 
-1. Choose what kind of organisation you have. What you're missing and your
-   email address can stay empty.
+1. Write what you're missing, and your email address if you like. Both can
+   stay empty.
 2. Press **Check details**. You see everything that goes along, including
-   what Huismus fills in itself: where it runs, the version, the language of
-   the app, whether you've set a text for reverse charge (yes or no, not the
-   text itself) and the language of your invoices.
+   what Huismus fills in itself: your legal form (from **Settings → Business**),
+   KOR or VAT, where it runs, the version, the language of the app, whether
+   you've set a text for reverse charge (yes or no, not the text itself) and
+   the language of your invoices.
 3. Press **Send**. Only then does Huismus send it to a form on
    arnekrijnsen.com. Huismus doesn't keep your email address or what you're
    missing. What you're missing then goes on GitHub as an idea, where others
@@ -32,7 +33,7 @@ the moment you notice it.
    names can be read. Names, amounts and anything you typed become grey bars.
 4. Press **Check what goes**. You see the picture and everything that goes
    along: the page, the version, where Huismus runs, and how you work (your
-   organisation, KOR or VAT, reverse charge and the language of your
+   legal form, KOR or VAT, reverse charge and the language of your
    invoices).
 5. Press **Send**. Your message goes on GitHub, so others can read along and
    think with you. The picture and your email address stay with the app's

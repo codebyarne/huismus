@@ -30,6 +30,16 @@ QUOTES = "offertes"
 EXPENSES = "uitgaven"
 BANK = "bank"
 
+# Rechtsvorm: the one axis that is stored (Settings.legal_entity, #302),
+# because no setting or data says it. Empty: not chosen.
+SOLE_PROPRIETOR = "eenmanszaak"
+PARTNERSHIP = "vof"
+PRIVATE_COMPANY = "bv"
+FOUNDATION = "stichting"
+ASSOCIATION = "vereniging"
+OTHER_FORM = "anders"
+LEGAL_FORMS = (SOLE_PROPRIETOR, PARTNERSHIP, PRIVATE_COMPANY, FOUNDATION, ASSOCIATION, OTHER_FORM)
+
 # Herkomst (rompslomp comes with #119): ImportRun.source → origin. A new
 # import source gets its own line here.
 NEW = "nieuw"
@@ -54,6 +64,13 @@ class Profile:
         if self.settings.vat_exempt:
             return NO_VAT
         return VAT
+
+    @property
+    def legal_form(self) -> str:
+        """eenmanszaak, vof, bv, stichting, vereniging, anders, or "" when
+        not chosen. Only the saved choice: never the suggestion
+        (business.legal_entity), which counts only once someone saves it."""
+        return self.settings.legal_entity
 
     @property
     def reverse_charge_text(self) -> bool:

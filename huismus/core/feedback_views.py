@@ -32,12 +32,9 @@ SENT_PARAM = "verstuurd"
 
 
 class FeedbackForm(forms.Form):
-    """Only the organisation is needed; skipping is its own button."""
+    """Nothing is needed: the profile always goes along (#302). Skipping is
+    its own button."""
 
-    organisation = forms.ChoiceField(
-        label=_("Wat voor organisatie heb je?"),
-        choices=[("", _("Kies…")), *feedback.ORGANISATION_CHOICES],
-    )
     wish = forms.CharField(
         label=_("Wat mis je, of wat wil je met Huismus doen?"),
         help_text=_("Komt als idee op GitHub, waar anderen het kunnen lezen. Je e-mailadres niet."),
@@ -63,7 +60,7 @@ def card_context(
 ) -> dict:
     """What _feedback.html shows. preview needs a valid form: the overview
     is made from its cleaned data."""
-    form = form or FeedbackForm(initial={"organisation": instance.feedback_organisation})
+    form = form or FeedbackForm()
     context = {
         "show_feedback_card": True,
         "feedback_form": form,
@@ -75,9 +72,7 @@ def card_context(
     }
     if preview:
         data = form.cleaned_data
-        context["feedback_outgoing"] = feedback.outgoing(
-            data["organisation"], data["wish"], data["email"]
-        )
+        context["feedback_outgoing"] = feedback.outgoing(data["wish"], data["email"])
     return context
 
 
@@ -129,12 +124,11 @@ def save(request):
 
     data = form.cleaned_data
     try:
-        feedback.send(data["organisation"], data["wish"], data["email"])
+        feedback.send(data["wish"], data["email"])
     except feedback.SendError:
         return render_page(request, form=form, preview=True, failed=True)
-    instance.feedback_organisation = data["organisation"]
     instance.feedback_status = feedback.SENT
-    instance.save(update_fields=["feedback_organisation", "feedback_status", "updated_at"])
+    instance.save(update_fields=["feedback_status", "updated_at"])
     return redirect(f"{back}?{SENT_PARAM}#vertel")
 
 

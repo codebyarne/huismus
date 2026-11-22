@@ -10,7 +10,8 @@ On the overview, click **Start step by step**. Step by step you fill in what
 Huismus needs for your first invoice:
 
 1. **Business:** your business name, address, KvK number and IBAN. This goes
-   on every invoice and quote.
+   on every invoice and quote. You can choose your legal form (sole
+   proprietorship, partnership, bv and so on); it doesn't go on your invoices.
 2. **Your work:** three questions. Do you charge VAT, do you use the
    small business scheme (KOR), do you charge no VAT for another reason, or
    don't you know yet? Do you have customers where the VAT is reverse-charged?

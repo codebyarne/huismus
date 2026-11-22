@@ -22,7 +22,8 @@
         <section class="card settings-section">
             <div class="card-pad"><div class="fieldset">
                 {% field form.business_name span=4 %}
-                {% field form.legal_form span=2 optional=True %}
+                {% field form.legal_entity span=2 optional=True %}
+                {% if "legal_form" in form.fields %}{% field form.legal_form span=6 optional=True %}{% endif %}
                 {% field form.address_line1 %}
                 {% field form.address_line2 optional=True %}
                 {% field form.postal_code span=2 %}
