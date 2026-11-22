@@ -208,6 +208,23 @@ def _waiting(open_invoices, open_expenses):
     return found["proposed"], found["choose"], found["unknown"]
 
 
+def to_do_and_unknown() -> tuple[list[Waiting], list[Waiting]]:
+    """Te doen, on date with money in and out together as on the statement,
+    and Niet herkend. The page and the AI connection (#273) read this."""
+    proposed, to_choose, unknown = _waiting(reading.open_invoices(), reading.open_expenses())
+    to_do = sorted(proposed + to_choose, key=lambda item: (item.line.booked_on, item.line.pk))
+    return to_do, unknown
+
+
+def booked_lines(statement) -> list[BankTransaction]:
+    """Geboekt: a statement's lines that are booked, by Huismus, by the
+    user, or before the statement came in."""
+    if statement is None:
+        return []
+    lines = statement.transactions.select_related("payment__document", "expense")
+    return [t for t in lines if t.state in (State.BOOKED, State.CONFIRMED, State.ALREADY_BOOKED)]
+
+
 def to_do_count() -> int:
     """The lines under Te doen, for the overview (core.todo): a line that
     fits nothing doesn't ask for anything."""
@@ -338,15 +355,8 @@ def statement_page(request):
     if statement is None:
         statement = BankStatement.objects.first()
 
-    proposed, to_choose, unknown = _waiting(reading.open_invoices(), reading.open_expenses())
-    booked = []
-    if statement is not None:
-        lines = statement.transactions.select_related("payment__document", "expense")
-        booked = [
-            t for t in lines if t.state in (State.BOOKED, State.CONFIRMED, State.ALREADY_BOOKED)
-        ]
-    # On date, money in and out together, as on the statement.
-    to_do = sorted(proposed + to_choose, key=lambda item: (item.line.booked_on, item.line.pk))
+    to_do, unknown = to_do_and_unknown()
+    booked = booked_lines(statement)
     to_do_pks = {item.line.pk for item in to_do}
     waiting_here = sum(1 for item in to_do if statement and item.line.statement_id == statement.pk)
     return render(
