@@ -39,6 +39,18 @@ de app, maak ze dan opnieuw en commit ze:
 ./scripts/site-beelden.sh
 ```
 
+[`site/voorbeelden/`](site/voorbeelden/): de voorbeelden die je op de site kunt
+downloaden (een factuur met en zonder btw, een offerte en een urenstaat, elk als
+Word, Excel en pdf, in het Nederlands en Engels) en een plaatje van elke eerste
+pagina. Alles is verzonnen. De facturen en de offerte maakt Huismus zelf, in een
+tijdelijke administratie; de namen staan in `huismus/core/site_examples.py`.
+Verandert de pdf van Huismus of een voorbeeld, maak ze dan opnieuw en commit ze
+(`tests/core/test_site_examples.py` zegt het als ze niet meer kloppen):
+
+```
+./scripts/site-voorbeelden.sh
+```
+
 Twee promofilms (1920×1080 mp4, licht, in de huisstijl van de app en de site),
 van dezelfde verzonnen administratie. Ze komen in `~/Downloads/huismus-films/`,
 niet in de repo:
