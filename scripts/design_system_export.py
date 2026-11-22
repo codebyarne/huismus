@@ -419,8 +419,8 @@ koel, bijna wit; de inhoud op één wit vel, één diep petrol blikvanger per sc
 
 Gewoon Nederlands, kort, de gebruiker spreekt met "je". Domeintermen in het Nederlands:
 factuur, offerte, creditnota, klant. Een knop zegt wat er gebeurt ("Uitgeven",
-"Verwijderen"). Geen beweringen over wet of belasting in de interface; de KOR-tekst
-onder een factuur is de tekst van de gebruiker zelf. Engels komt via vertalingen.
+"Verwijderen"). Over wet of belasting geeft de interface richting, met een bron; de
+KOR-tekst onder een factuur is de tekst van de gebruiker zelf. Engels komt via vertalingen.
 
 ## Letters
 

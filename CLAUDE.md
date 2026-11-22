@@ -73,7 +73,13 @@ above is therefore optional.
 - **Never** put real customer data, real invoices, IBANs, or Moneybird exports in the repo, tests, fixtures, logs or issues. Fixtures and demo data are fictional or fully anonymised.
 - Never ask for or store API tokens or passwords in chat or in files. Secrets come from environment variables.
 - `.env`, `data/`, `data-import/`, `*.sqlite3` and real exports are gitignored, and `scripts/verify.sh` fails if any of them end up tracked. If you see them staged, stop.
-- Do not write legal or tax claims into UI text or code comments. Legal invoice requirements live in `docs/invoice-requirements.md` with source links; UI text for the KOR notice is a user-configurable setting.
+- Huismus makes bookkeeping easy, and giving direction is part of that (owner, 2026-11-22):
+  UI text, help and docs may say plainly what a rule means and what the user does next. Every
+  such statement comes from an official source in `docs/belastingregels.md` or
+  `docs/invoice-requirements.md` (with link and date), never from memory; where a source is
+  missing ("Bron ontbreekt"), say nothing rather than guess. Link the source page where the
+  user decides for their own case. Texts printed under an invoice stay the user's own
+  settings (KOR text, reverse charge text, no-VAT text).
 
 ## Testing expectations
 
@@ -378,7 +384,8 @@ eigenaar staan standaard op Remote Control, zodat het ook vanaf de telefoon gaat
 **Escalatielijst.** Alleen dit vraag je aan de eigenaar zelf, in producttaal en met
 een advies:
 
-1. tekst over wet of belasting (in de UI, de PDF of de docs);
+1. tekst over wet of belasting zonder bron in `docs/belastingregels.md` of
+   `docs/invoice-requirements.md` (met bron mag het: richting geven hoort bij Huismus);
 2. alles wat geld kost: betaalde diensten, abonnementen, certificaten;
 3. een migratie die bestaande gegevens wijzigt of verwijdert;
 4. wijzigingen in `scripts/verify.sh`;

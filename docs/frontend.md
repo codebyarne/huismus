@@ -125,7 +125,7 @@ Improviseer geen ontwerp.
    `tests/test_design_system.py` faalt anders.
 4. Alle tekst via `{% translate %}`; daarna `makemessages` en de Engelse
    vertaling in `huismus/locale/en/`.
-5. Geen juridische of fiscale claims in UI-tekst (CLAUDE.md).
+5. Over wet of belasting alleen wat een bron in `docs/belastingregels.md` zegt (CLAUDE.md).
 
 ## Grote schermen
 

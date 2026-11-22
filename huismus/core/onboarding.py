@@ -79,8 +79,8 @@ STEPS = (
         "geen-btw",
         _("Geen btw"),
         _(
-            "Deze tekst komt onder elke factuur. Schrijf zelf waarom er geen btw op staat: "
-            "Huismus vult niets voor je in."
+            "Deze tekst komt onder elke factuur. Bij vrijgesteld werk zet je erin dat een "
+            "vrijstelling van toepassing is, bijvoorbeeld “Vrijgesteld van btw.”"
         ),
         ("exempt_text",),
     ),

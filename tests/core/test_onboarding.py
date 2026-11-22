@@ -299,7 +299,7 @@ def test_no_vat_for_another_reason_brings_its_own_step_with_an_empty_field(logge
     assert (settings.kor_enabled, settings.vat_exempt) == (False, True)
     page = logged_in.get(response.url)
     assert _steps(page) == ["bedrijf", "werk", "geen-btw", "facturen", "logo"]
-    assert "Huismus vult niets voor je in." in page.content.decode()
+    assert "dat een vrijstelling van toepassing is" in page.content.decode()
 
 
 def test_the_no_vat_step_may_stay_empty_and_goes_on(logged_in):

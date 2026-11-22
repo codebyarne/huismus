@@ -6,9 +6,12 @@ is die van de maker: vriendelijk, direct en eerlijk, zonder opsmuk. Een nieuwe
 tekst voldoet hier meteen aan; een oude tekst gaat mee zodra je hem aanraakt.
 Besluit: `huismus-intern/besluiten.md`, 2026-11-01, "Teksten in de Huismus-stem".
 
-Teksten over wet of belasting (de KOR-tekst, wat er op een factuur moet
-staan, de teksten in de pdf) herschrijf je niet zelf: dat is een vraag aan
-de eigenaar (`CLAUDE.md`, escalatielijst).
+Over wet of belasting geef je richting (besluit eigenaar 2026-11-22): zeg in
+gewone taal wat een regel betekent en wat de gebruiker doet, en link de
+bronpagina als hij het voor zijn eigen geval moet nagaan. Alles komt uit een
+bron in `docs/belastingregels.md` of `docs/invoice-requirements.md`; staat het
+er niet, dan beweer je het niet. De teksten onder een factuur (KOR-tekst,
+tekst bij btw verlegd, tekst bij geen btw) blijven van de gebruiker.
 
 ## De toon
 
