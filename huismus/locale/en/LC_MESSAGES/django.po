@@ -9715,3 +9715,6 @@ msgstr "More about the KOR"
 
 msgid "Alleen als je btw rekent:"
 msgstr "Only if you charge VAT:"
+
+msgid "geen"
+msgstr "none"
