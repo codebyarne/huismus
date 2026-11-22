@@ -1,20 +1,34 @@
 {% extends "site/base.html" %}
 {% load i18n %}
 
-{% block title %}{% translate "Zo wordt Huismus getest" %} — Huismus{% endblock %}
-{% block og_title %}{% translate "Zo wordt Huismus getest" %}{% endblock %}
-{% block description %}{% translate "Wat er bij elke wijziging van Huismus wordt nagekeken: de tests, facturen die vastliggen, nummers zonder gaten en een import die elk totaal narekent." %}{% endblock %}
+{% block title %}{% translate "Zo wordt Huismus gemaakt" %} — Huismus{% endblock %}
+{% block og_title %}{% translate "Zo wordt Huismus gemaakt" %}{% endblock %}
+{% block description %}{% translate "Hoe Huismus gemaakt wordt: AI schrijft veel, de maker beslist en kijkt mee, en bij elke wijziging wordt nagekeken of je facturen en bedragen kloppen." %}{% endblock %}
 {% block main_class %}wrap site-narrow why-page{% endblock %}
 
 {% block content %}
-{% comment %}How Huismus is guarded (issue #313). Every statement here is held against the code by tests/core/test_site_tested.py: change the code and that test says which sentence no longer holds.{% endcomment %}
+{% comment %}How Huismus is made (issue #313; the owner, 2026-11-22: quality first, AI makes a lot, a person stays in the loop; testing is a part of it). Every statement here is held against the code and the working agreements by tests/core/test_site_made.py: change the code and that test says which sentence no longer holds.{% endcomment %}
 <div class="page-head">
     <div class="titles">
-        <p class="kicker">{% translate "Getest" %}</p>
-        <h1>{% translate "Zo wordt Huismus getest" %}</h1>
-        <p class="lede">{% translate "Huismus wordt met hulp van AI gebouwd. Hier lees je wat er bij elke wijziging wordt nagekeken, zodat je facturen en bedragen blijven kloppen." %}</p>
+        <p class="kicker">{% translate "Gemaakt" %}</p>
+        <h1>{% translate "Zo wordt Huismus gemaakt" %}</h1>
+        <p class="lede">{% translate "Bij Huismus staat kwaliteit voorop: het gaat om je boekhouding. AI schrijft veel van de code, de maker beslist en kijkt mee, en bij elke wijziging wordt nagekeken of je facturen en bedragen blijven kloppen." %}</p>
     </div>
 </div>
+
+<section class="why-part">
+    <h2>{% translate "AI maakt veel, de maker beslist" %}</h2>
+    <p>{% translate "De maker bepaalt wat er gebouwd wordt en in welke volgorde. De lijst met werk staat openbaar bij de code. AI schrijft daarna het plan, de code, de tests en de teksten." %}</p>
+    <p>{% translate "Een nieuw scherm, of een taak die anders gaat lopen, bekijkt de maker zelf voordat het in Huismus komt. Ook over geld, over tekst over wet of belasting zonder bron, en over alles wat bestaande gegevens wijzigt, beslist de maker en niet de AI." %}</p>
+    <p>{% translate "De code zelf leest de maker niet regel voor regel na. Dat doen de tests en de reviewers hieronder. De maker doet de eigen administratie in Huismus en probeert een nieuwe versie daar eerst." %}</p>
+</section>
+
+<section class="why-part">
+    <h2>{% translate "Vaste regels, in gewone tekst" %}</h2>
+    <p>{% translate "De regels waar Huismus zich aan houdt, staan in gewone tekst bij de code: bedragen in centen, uitgegeven ligt vast, nummers zonder gaten, één plek voor de totalen. Tijdens het bouwen kijken AI-reviewers met elk één opdracht naar een wijziging: houdt hij zich aan die regels, doet hij wat er was afgesproken, en is de code uit te leggen." %}</p>
+    <p>{% translate "Het werk gaat in kleine stappen: één onderwerp per wijziging, met eerst een plan. Voor alles wat met facturen rekent, komen de tests vóór de code." %}</p>
+    <p>{% translate "Wat Huismus over belasting zegt, komt uit een officiële bron, met de link en de datum erbij. Is er geen bron, dan zegt Huismus het niet." %}</p>
+</section>
 
 <section class="why-part">
     <h2>{% translate "Alle tests, bij elke wijziging" %}</h2>
@@ -61,12 +75,6 @@
 </section>
 
 <section class="why-part">
-    <h2>{% translate "AI schrijft de code, vaste regels bewaken hem" %}</h2>
-    <p>{% translate "De regels waar Huismus zich aan houdt, staan in gewone tekst bij de code: bedragen in centen, uitgegeven ligt vast, nummers zonder gaten, één plek voor de totalen. Tijdens het bouwen kijken AI-reviewers met elk één opdracht naar een wijziging: houdt hij zich aan die regels, doet hij wat er was afgesproken, en is de code uit te leggen." %}</p>
-    <p>{% translate "De maker beslist wat Huismus doet en bekijkt een nieuw scherm zelf, voordat het in Huismus komt. De code zelf leest de maker niet na: dat doen de tests en de reviewers." %}</p>
-</section>
-
-<section class="why-part">
     <h2>{% translate "Wat een test niet vangt" %}</h2>
     <p>{% translate "Een test vangt alleen wat iemand heeft bedacht. Sommige fouten vindt pas iemand die Huismus gebruikt. Voor zo’n fout komt er eerst een test die hem laat zien, dan de oplossing, en waar het kan een controle die elke fout van die soort vangt." %}</p>
     <p>{% blocktranslate with bugs=sources.bugs %}De lijst van die fouten staat <a href="{{ repository }}/blob/main/{{ bugs }}">bij de code</a>, ook de soorten waar nog geen controle voor is. Vind je zelf een fout, <a href="{{ repository }}/issues">meld hem dan</a>.{% endblocktranslate %}</p>
@@ -74,15 +82,16 @@
 
 <section class="why-part">
     <h2>{% translate "Zelf nalopen" %}</h2>
-    <p>{% translate "De broncode staat openbaar, en de tests ook. Dit zijn de plekken waar deze pagina over gaat:" %}</p>
-    <ul class="tested-sources">
+    <p>{% translate "De broncode staat openbaar, en de tests en de afspraken ook. Dit zijn de plekken waar deze pagina over gaat:" %}</p>
+    <ul class="made-sources">
         <li><a href="{{ repository }}/tree/main/{{ sources.tests }}">{% translate "De tests" %}</a></li>
         <li><a href="{{ repository }}/blob/main/{{ sources.gate }}">{% translate "Het commando dat ja of nee zegt" %}</a></li>
         <li><a href="{{ repository }}/actions">{% translate "De uitslag van elke wijziging, op GitHub" %}</a></li>
         <li><a href="{{ repository }}/blob/main/{{ sources.immutability }}">{% translate "De tests die een uitgegeven factuur proberen te wijzigen" %}</a></li>
-        <li><a href="{{ repository }}/blob/main/{{ sources.rules }}">{% translate "De regels waar Huismus zich aan houdt" %}</a></li>
+        <li><a href="{{ repository }}/blob/main/{{ sources.rules }}">{% translate "De regels en afspraken waar Huismus zich aan houdt" %}</a></li>
+        <li><a href="{{ repository }}/issues">{% translate "De lijst met werk" %}</a></li>
     </ul>
-    <p class="why-links"><a class="more" href="{{ why_url }}">{% translate "Waarom Huismus bestaat" %} <span aria-hidden="true">→</span></a></p>
+    <p class="why-links"><a class="more" href="{{ why_url }}">{% translate "Waarom Huismus bestaat" %} <span aria-hidden="true">→</span></a> <a class="more" href="{{ contribute_url }}">{% translate "Zo bouw je mee" %} <span aria-hidden="true">→</span></a></p>
 </section>
 
 <section class="band band-final" id="downloaden">

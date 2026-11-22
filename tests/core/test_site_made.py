@@ -1,13 +1,14 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""The site's page "Zo wordt Huismus getest" (issue #313).
+"""The site's page "Zo wordt Huismus gemaakt" (issue #313).
 
-The page says what guards Huismus. Each test below holds one of its
+The page says who decides, who writes and what guards Huismus. Each test below holds one of its
 statements against the code as it is, so the page can't keep saying
 something the code stopped doing: change the code, and the test names the
-sentence to rewrite (huismus/templates/site/tested.html).
+sentence to rewrite (huismus/templates/site/made.html).
 
-Where a statement is about how another test or a workflow is written, the
+Where a statement is about how another test, a workflow or a working
+agreement in CLAUDE.md is written, the
 check here reads that file's text: it is a tripwire for the sentence, not a
 second test of the behaviour, which the named test itself covers."""
 
@@ -49,21 +50,21 @@ def _foot(html: str) -> str:
 
 @pytest.mark.parametrize("language", help.LANGUAGES)
 def test_the_page_is_reached_from_why_and_every_foot_but_not_from_the_menu(out, language):
-    tested = site.tested_url(language)
-    page = _html(out, tested)
-    link = f'href="{tested}"'
+    made = site.made_url(language)
+    page = _html(out, made)
+    link = f'href="{made}"'
     assert link in _html(out, site.why_url(language)).split('<footer class="site-foot')[0]
     assert link in _foot(_html(out, site.help_url(language)))
     assert link not in _menu(page)
     assert f'href="{site.why_url(language)}"' in page.split('<footer class="site-foot')[0]
-    assert f"https://{site.DOMAIN}{tested}" in (out / "sitemap.xml").read_text()
-    assert f"https://{site.DOMAIN}{tested}" in (out / "llms.txt").read_text()
+    assert f"https://{site.DOMAIN}{made}" in (out / "sitemap.xml").read_text()
+    assert f"https://{site.DOMAIN}{made}" in (out / "llms.txt").read_text()
 
 
 @pytest.mark.parametrize("language", help.LANGUAGES)
 def test_every_link_to_the_source_is_a_file_that_exists(out, language):
-    page = _html(out, site.tested_url(language))
-    for path in site.TESTED_SOURCES.values():
+    page = _html(out, site.made_url(language))
+    for path in site.MADE_SOURCES.values():
         assert (ROOT / path).exists(), path
         assert f"{site.REPOSITORY}/" in page and f"/main/{path}" in page, path
 
@@ -78,7 +79,7 @@ def test_it_says_how_many_tests_there_are_and_never_more_than_there_are(out, lan
     )
     assert functions > site.TESTS_AT_LEAST
     assert site._thousands(site.TESTS_AT_LEAST, language) == number
-    assert number in _html(out, site.tested_url(language))
+    assert number in _html(out, site.made_url(language))
 
 
 def test_one_command_runs_every_check_and_github_runs_it_on_every_change():
@@ -210,14 +211,45 @@ def test_a_release_waits_for_the_security_checks():
         assert f"**{subject}**" in reviewer, subject
 
 
-def test_the_rules_and_the_bugs_found_by_hand_are_where_the_page_says():
+def test_the_maker_decides_and_the_agreements_say_so():
+    """ "De maker bepaalt wat er gebouwd wordt en in welke volgorde", the
+    public list of work, what the maker sees and decides, "leest de maker
+    niet regel voor regel na" and trying a new version on the maker's own
+    records: all agreements in CLAUDE.md, which the page links to."""
+    rules = _text(site.MADE_SOURCES["rules"])
+    for agreement in (
+        "De backlog staat openbaar in de issues",
+        "eigenaar sleept wat eerst moet naar boven",
+        "Een grote wijziging met UI gaat pas naar `main` als de eigenaar de flow heeft\ngezien",
+        "een nieuw scherm, of een taak waarvan de stappen veranderen",
+        "tekst over wet of belasting zonder bron",
+        "alles wat geld kost",
+        "een migratie die bestaande gegevens wijzigt of verwijdert",
+        "De eigenaar is product owner en leest geen code.",
+        "eigenaar draait de voorproef op de echte administratie",
+    ):
+        assert agreement in rules, agreement
+
+
+def test_the_rules_the_small_steps_and_the_sources_are_agreements_too():
     """ "De regels […] staan in gewone tekst bij de code", reviewers with one
-    task each, the owner sees a new screen, and the list of bugs found by
-    hand also names the kinds without a check."""
-    rules = _text(site.TESTED_SOURCES["rules"])
-    assert "## Hard rules (invariants)" in rules and "### Flow voorleggen" in rules
+    task each, small steps with a plan, tests before the code for invoicing,
+    and tax statements only from an official source."""
+    rules = _text(site.MADE_SOURCES["rules"])
+    for agreement in (
+        "## Hard rules (invariants)",
+        "write a short plan",
+        "**write the tests first**",
+        "One concern per commit.",
+        "never from memory",
+    ):
+        assert agreement in rules, agreement
     for reviewer in ("review-invarianten", "review-uitlegbaarheid", "review-spec"):
         assert (ROOT / ".claude" / "agents" / f"{reviewer}.md").exists(), reviewer
-    assert "De eigenaar is product owner en leest geen code." in rules
-    # The list names the kinds of bug that have no check yet as "nog geen".
-    assert "nog geen" in _text(site.TESTED_SOURCES["bugs"])
+    assert (ROOT / "docs" / "belastingregels.md").exists()
+
+
+def test_the_bugs_found_by_hand_are_where_the_page_says():
+    """The list of bugs found by hand names the kinds without a check yet
+    as "nog geen"."""
+    assert "nog geen" in _text(site.MADE_SOURCES["bugs"])
