@@ -284,6 +284,95 @@ Vanuit de broncode, zonder in te pakken:
 uv run --group desktop python -m desktop
 ```
 
+## winget en Homebrew
+
+Huismus installeren met de pakketbeheerder van je systeem: `winget` op
+Windows, `brew` op de Mac. Beide catalogi beschrijven een app met een paar
+tekstbestanden die de download en zijn SHA-256 noemen. Die bestanden maakt
+elke release zelf (`desktop/catalogs.py`, de laatste stappen van de job
+`publish`): ze staan 90 dagen als bijlage `catalogs` bij de run, in de mappen
+die de catalogi zelf gebruiken:
+
+- `winget/manifests/h/Huismus/Huismus/<versie>/`: vier manifesten voor
+  `Huismus.Huismus` (versie, installer, Engels en Nederlands);
+- `homebrew/Casks/huismus.rb`: de cask.
+
+Met de hand, voor een release die er al staat:
+
+```bash
+python3 -m desktop.catalogs 1.4.0 --windows Huismus-1.4.0-windows.exe \
+    --macos Huismus-1.4.0-macos.dmg --out catalogs
+```
+
+De release stuurt niets in. Inzenden is een aparte stap, en wie het doet
+staat hieronder.
+
+Beide wijzen naar het bestand met de versie in de naam
+(`releases/download/v<versie>/Huismus-<versie>-…`): de inhoud daarvan
+verandert nooit, dus de SHA-256 blijft kloppen. Huismus blijft zichzelf
+bijwerken zoals altijd. winget ziet de nieuwe versie daarna vanzelf, omdat
+de installer hem bij Windows aanmeldt onder hetzelfde `AppId`; de cask zegt
+`auto_updates true`, zodat `brew upgrade` de app met rust laat. De cask heeft
+geen `zap`: de administratie in `~/Library/Application Support/Huismus` is
+van de gebruiker en blijft staan.
+
+### Wat de catalogi vragen
+
+Nagelezen op 2026-11-22 in hun eigen documentatie.
+
+**winget** ([microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs),
+[beleid](https://github.com/microsoft/winget-pkgs/blob/master/doc/Policies.md),
+[controles](https://github.com/microsoft/winget-pkgs/blob/master/doc/Validation.md),
+[indienen](https://learn.microsoft.com/windows/package-manager/package/repository)):
+
+- Een pull request per versie, met alleen de manifesten. Een robot
+  installeert de app stil als gewone gebruiker, scant hem met meerdere
+  virusscanners en kijkt naar de reputatie van het downloadadres; daarna
+  keurt een moderator.
+- Een ondertekende installer staat niet in de eisen, en een eis aan
+  bekendheid of leeftijd van het project ook niet. Wat een scanner afkeurt,
+  komt er niet in, ook als het vals alarm is.
+- Het downloadadres moet van de uitgever zelf zijn en per versie uniek.
+- Een nieuwe versie is weer een pull request. `wingetcreate update --submit`
+  kan dat vanuit een workflow doen, met een klassiek GitHub-token (recht
+  `public_repo`) als geheim; een fijnmazig token werkt daar niet.
+- De eerste inzending vraagt dat de indiener Microsofts CLA tekent.
+- De versie uit de Microsoft Store (hierboven) heeft geen manifest nodig:
+  zodra hij in de Store staat, werkt `winget install 9NKWHBHSFMHN -s msstore`.
+
+**Homebrew**, de officiële catalogus `homebrew/cask`
+([Acceptable Casks](https://docs.brew.sh/Acceptable-Casks),
+[Package Acceptance Policy](https://docs.brew.sh/Package-Acceptance-Policy)):
+
+- De app moet door Gatekeeper komen zonder dat de gebruiker iets omzeilt:
+  ondertekend met een Developer ID en genotariseerd.
+- Het project moet bekend zijn buiten de maker: 75 sterren, 30 forks of 30
+  volgers op GitHub, en drie keer zoveel (225, 90, 90) als de maker zelf
+  indient. Een repository jonger dan 30 dagen komt normaal niet in aanmerking.
+- Nieuwe versies haalt Homebrew daarna zelf op (autobump, elke drie uur).
+- Wie met AI indient, zegt dat erbij; elke commit heeft een mens als auteur,
+  en de indiener beantwoordt vragen van de beheerders zelf.
+
+**Homebrew, een eigen tap** ([Taps](https://docs.brew.sh/Taps),
+[Tap Trust](https://docs.brew.sh/Tap-Trust)): een repository
+`codebyarne/homebrew-huismus` met `Casks/huismus.rb`. Dan werkt
+`brew install --cask codebyarne/huismus/huismus`. Een tap heeft geen eisen
+aan ondertekening of bekendheid. Homebrew zet wel het quarantainekenmerk op
+de download, dus een niet-genotariseerde app vraagt ook zo de eerste keer om
+"Toch openen".
+
+### Stand
+
+| Weg | Kan nu | Wacht op |
+|---|---|---|
+| winget, communitycatalogus | de manifesten staan bij elke release klaar | de eerste inzending, door de eigenaar van het project |
+| winget, uit de Store | nee | de Store-pagina |
+| Homebrew, eigen tap | de cask staat bij elke release klaar | de repository voor de tap |
+| Homebrew, `homebrew/cask` | nee | de notarisatie (zie "Ondertekenen op de Mac") en de eis aan bekendheid |
+
+De hulp en de site noemen `winget` en `brew` pas als het commando voor
+iedereen werkt.
+
 ## De eerste keer openen
 
 De Windows-installer wordt gratis ondertekend via SignPath Foundation
