@@ -10,10 +10,13 @@ adds up.
 1. **Get everything out of your old package.** Every year you want to bring
    along, with the PDFs and receipts. Where to find it is on the page of your
    package below.
-2. **Do a trial run.** Huismus shows what it would take over and checks every
-   invoice, to the cent. Nothing has been saved yet.
+2. **Do a trial run.** Huismus shows what it would take over, checks every
+   invoice, to the cent, and says what doesn't add up. Nothing has been saved
+   yet.
 3. **Import.** Is the trial run right? Then Huismus puts everything in. Your
-   invoice numbers stay as they were, and your next invoice counts on.
+   invoice numbers stay as they were, and your next invoice counts on. Want
+   a different next number? You set it under **Settings → Invoices and
+   numbering**.
 4. **Check it.** Check your business details under **Settings**, your IBAN
    above all. Put a few invoices next to the PDF from your old package.
    Compare your revenue per year under **Reports › Year overview** with the
@@ -57,9 +60,9 @@ adds up.
 
 ## What you have afterwards
 
-Your old years are on your own computer and in your backups, without a
-subscription. With [Exporting](exporteren.en.md) you always get them out
-again, as files that open without Huismus too.
+Your old years are in Huismus and in your backups, without a subscription.
+With [Exporting](exporteren.en.md) you always get them out again, as files
+that open without Huismus too.
 
 How long you keep your records is on the site of the
 [Belastingdienst](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/administratie_bijhouden/administratie_bewaren/)
