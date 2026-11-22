@@ -15,6 +15,8 @@ from pathlib import Path
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
+from . import help
+
 EXAMPLES_DIR = Path(settings.BASE_DIR) / "docs" / "site" / "voorbeelden"
 
 INVOICE_WITH_VAT = "factuur-met-btw"
@@ -38,7 +40,6 @@ PAGE_SUMMARY = _(
     "Voorbeeld van een factuur met en zonder btw, een offerte en een urenstaat. "
     "Gratis te downloaden als Word, Excel en pdf."
 )
-LANGUAGES = ("nl", "en")
 
 # What a visitor's download is called: the language is in the name itself.
 FILE_NAMES = {
@@ -69,7 +70,7 @@ def files(folder: Path = EXAMPLES_DIR) -> list[Path]:
     """Every download and every picture, in both languages."""
     return [
         folder / file_name(example, language, format)
-        for language in LANGUAGES
+        for language in help.LANGUAGES
         for example in EXAMPLES
         for format in (*FORMATS, PREVIEW_FORMAT)
     ]

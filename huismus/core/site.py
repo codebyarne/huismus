@@ -415,6 +415,9 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
         {
             "nav": "examples",
             "switch_url": examples_url(other),
+            # Also the page's line in llms.txt (_for_ai_assistants).
+            "page_title": site_examples.PAGE_TITLE,
+            "page_summary": site_examples.PAGE_SUMMARY,
             "examples": _examples(language),
             "preview_width": site_examples.PREVIEW_WIDTH,
             # A4: 210 by 297.

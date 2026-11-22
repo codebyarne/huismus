@@ -28,7 +28,7 @@ from scripts import site_voorbeelden
 
 FOLDER = names.EXAMPLES_DIR
 DOCUMENTS = (names.INVOICE_WITH_VAT, names.INVOICE_WITHOUT_VAT, names.QUOTE)
-EVERY = [(example, language) for language in names.LANGUAGES for example in names.EXAMPLES]
+EVERY = [(example, language) for language in help.LANGUAGES for example in names.EXAMPLES]
 EVERY_DOCUMENT = [(example, language) for example, language in EVERY if example in DOCUMENTS]
 
 
@@ -108,7 +108,7 @@ def test_the_picture_is_the_first_page_twice_as_wide_as_shown(example, language)
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize("language", names.LANGUAGES)
+@pytest.mark.parametrize("language", help.LANGUAGES)
 def test_the_files_are_what_the_script_makes(language, tmp_path):
     """Changed the script, the PDF template or a translation? Then run
     scripts/site-voorbeelden.sh and commit the files."""
@@ -123,7 +123,7 @@ def test_the_files_are_what_the_script_makes(language, tmp_path):
             assert _cells(made, calculated) == _cells(kept, calculated), kept.name
 
 
-@pytest.mark.parametrize("language", names.LANGUAGES)
+@pytest.mark.parametrize("language", help.LANGUAGES)
 def test_the_invoice_with_vat_has_every_required_detail(language):
     """The list "Verplichte gegevens op een factuur" of
     docs/invoice-requirements.md, in its order."""
@@ -153,15 +153,19 @@ def test_the_invoice_with_vat_has_every_required_detail(language):
     assert business["vat_number"].startswith("NL")
 
 
-@pytest.mark.parametrize("language", names.LANGUAGES)
+@pytest.mark.parametrize("language", help.LANGUAGES)
 def test_the_invoice_without_vat_charges_none_and_says_its_text_is_an_example(language):
     text = _pdf_text(_path(names.INVOICE_WITHOUT_VAT, language, "pdf"))
     assert "21%" not in text and _money(148000) in text and _money(179080) not in text
     assert re.sub(r"\s+", "", site_voorbeelden.KOR_TEXT[language]) in text
     assert re.search(r"voorbeeldtekst|sample text", site_voorbeelden.KOR_TEXT[language])
+    # It keeps the business's VAT number and says when was supplied
+    # (huismus-intern/besluiten.md, 2026-11-22).
+    assert site_voorbeelden.BUSINESS["vat_number"] in text
+    assert site_voorbeelden.DELIVERY_DATE.strftime("%d-%m-%Y") in text
 
 
-@pytest.mark.parametrize("language", names.LANGUAGES)
+@pytest.mark.parametrize("language", help.LANGUAGES)
 def test_the_quote_says_until_when_it_is_valid(language):
     text = _pdf_text(_path(names.QUOTE, language, "pdf"))
     assert site_voorbeelden.QUOTE_VALID_UNTIL.strftime("%d-%m-%Y") in text
@@ -220,7 +224,7 @@ def test_the_formulas_count_like_the_app(example, language):
     assert len(by_formula) == len(lines) + 2 + len(taxes)
 
 
-@pytest.mark.parametrize("language", names.LANGUAGES)
+@pytest.mark.parametrize("language", help.LANGUAGES)
 def test_the_timesheet_adds_up_its_hours_in_every_format(language):
     hours = sum(Decimal(h) for _day, _what, h in site_voorbeelden.TIMESHEET_ROWS)
     assert hours == site_voorbeelden.LINES[language][0][0], "the hours on the invoice"

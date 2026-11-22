@@ -1,16 +1,16 @@
 {% extends "site/base.html" %}
 {% load i18n %}
 
-{% block title %}{% translate "Voorbeelden om te downloaden" %} — Huismus{% endblock %}
-{% block og_title %}{% translate "Voorbeelden om te downloaden" %} — Huismus{% endblock %}
-{% block description %}{% translate "Voorbeeld van een factuur met en zonder btw, een offerte en een urenstaat. Gratis te downloaden als Word, Excel en pdf." %}{% endblock %}
+{% block title %}{{ page_title }} — Huismus{% endblock %}
+{% block og_title %}{{ page_title }} — Huismus{% endblock %}
+{% block description %}{{ page_summary }}{% endblock %}
 
 {% block main_class %}wrap examples-page{% endblock %}
 
 {% block content %}
 <div class="page-head">
     <div class="titles">
-        <h1>{% translate "Voorbeelden om te downloaden" %}</h1>
+        <h1>{{ page_title }}</h1>
         <p class="lede">{% translate "Een factuur, een offerte en een urenstaat om zelf in te vullen, elk als Word, Excel en pdf. De gegevens zijn verzonnen: vervang ze door die van jezelf. Het Excel-bestand rekent de bedragen voor je uit. In Word reken je ze zelf uit." %}</p>
     </div>
 </div>
@@ -28,7 +28,7 @@
             <p>{% blocktranslate %}Voor wie de kleineondernemersregeling (KOR) gebruikt: er staat geen btw op. Onderaan staat een voorbeeldtekst. Zet er je eigen tekst voor in de plaats. Meer lees je bij <a href="{{ kor_guide_url }}">De kleineondernemersregeling (KOR)</a>.{% endblocktranslate %}</p>
             {% elif example.slug == "offerte" %}
             <p>{% translate "Een offerte met 21% btw en de datum tot wanneer hij geldig is." %}</p>
-            {% else %}
+            {% elif example.slug == "urenstaat" %}
             <p>{% translate "Per dag de datum, wat je deed en hoeveel uur. Met het totaal en ruimte voor een handtekening van jou en je opdrachtgever." %}</p>
             {% endif %}
             <p class="example-downloads">
