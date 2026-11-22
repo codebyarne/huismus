@@ -793,7 +793,15 @@ def _mailable(arguments) -> tuple[Document, str, str, str]:
                 "kun je mailen."
             )
         )
-    if not smtp.is_configured(Settings.load()):
+    business = Settings.load()
+    if smtp.password_is_missing(business):
+        raise ToolError(
+            _(
+                "Je mailwachtwoord ontbreekt in Huismus. Vul het in bij Instellingen → Mailen. "
+                "Een back-up neemt het niet mee."
+            )
+        )
+    if not smtp.is_configured(business):
         raise ToolError(
             _("Mailen is nog niet ingesteld. Dat doe je in Huismus, onder Instellingen → Mailen.")
         )

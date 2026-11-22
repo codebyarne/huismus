@@ -1446,6 +1446,29 @@ def test_without_a_password_the_mail_page_says_where_to_set_it_up(app, contact):
     expect(app).to_have_url(re.compile(r"/instellingen/mailen/$"))
 
 
+def test_without_only_the_password_the_mail_page_says_the_password_is_missing(
+    app, contact, settings
+):
+    # A backup restored on another computer (#250): the settings are there,
+    # the password is not.
+    from huismus.business import smtp
+    from huismus.documents.issuing import issue
+    from huismus.documents.models import DocumentLine
+
+    _mail_set_up(settings)
+    smtp.set_password("")
+    invoice = Document.objects.create(kind="invoice", status="draft", contact=contact)
+    DocumentLine.objects.create(document=invoice, description="Brood", unit_price_cents=1250)
+    issue(invoice)
+    app.goto(f"{app.base}/facturen/{invoice.pk}/mailen/")
+
+    expect(app.get_by_text("Je mailwachtwoord ontbreekt.")).to_be_visible()
+    expect(app.get_by_text("Mailen is nog niet ingesteld.")).to_have_count(0)
+    expect(app.locator(".actionbar").get_by_role("button", name="Versturen")).to_be_disabled()
+    app.get_by_role("link", name="Instellingen → Mailen").click()
+    expect(app).to_have_url(re.compile(r"/instellingen/mailen/$"))
+
+
 def test_mailing_is_set_up_in_the_settings_screen_password_included(app):
     from huismus.business import smtp
 

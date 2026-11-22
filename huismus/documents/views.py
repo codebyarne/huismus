@@ -716,11 +716,19 @@ def document_reminder(request, pk):
 
 
 def _mail_page(request, document, *, reminder):
-    configured = smtp.is_configured(Settings.load())
+    business = Settings.load()
+    configured = smtp.is_configured(business)
+    # Set up, but no password here: a backup restored on another computer
+    # (#250). That one says what is missing, not "not set up".
+    password_missing = smtp.password_is_missing(business)
     failed = None
     if request.method == "POST":
         form = MailForm(request.POST)
-        if not configured:
+        if password_missing:
+            messages.error(
+                request, _("Je mailwachtwoord ontbreekt. Vul het in bij Instellingen → Mailen.")
+            )
+        elif not configured:
             messages.error(request, _("Mailen is nog niet ingesteld."))
         elif form.is_valid():
             log = send_document(
@@ -752,6 +760,7 @@ def _mail_page(request, document, *, reminder):
             "reminder": reminder,
             "form": form,
             "mail_configured": configured,
+            "mail_password_missing": password_missing,
             "failed": failed,
             "back_url": _edit_url(document),
             "attachment_name": f"{document.number}.pdf",

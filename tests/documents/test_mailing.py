@@ -406,6 +406,40 @@ def test_without_a_provider_nothing_is_sent(client_in, business_settings):
     assert mail.outbox == []
 
 
+def test_only_the_password_missing_says_so_not_that_mailing_is_not_set_up(client_in):
+    # What a backup restored on another computer leaves (#250): the settings
+    # came along, the password stays out of every backup.
+    smtp.set_password("")
+    invoice = _invoice()
+
+    content = client_in.get(_mail_url(invoice)).content.decode()
+
+    assert "Je mailwachtwoord ontbreekt." in content
+    assert "Mailen is nog niet ingesteld." not in content
+    assert reverse("business:topic", args=["mailen"]) in content
+
+
+def test_nothing_set_up_still_says_mailing_is_not_set_up(client_in, business_settings):
+    smtp.set_password("")
+    business_settings.smtp_provider = ""
+    business_settings.save()
+
+    content = client_in.get(_mail_url(_invoice())).content.decode()
+
+    assert "Mailen is nog niet ingesteld." in content
+    assert "Je mailwachtwoord ontbreekt." not in content
+
+
+def test_sending_without_the_password_says_the_password_is_missing(client_in):
+    smtp.set_password("")
+
+    response = _post(client_in, _invoice())
+
+    messages = [str(m) for m in response.context["messages"]]
+    assert messages == ["Je mailwachtwoord ontbreekt. Vul het in bij Instellingen → Mailen."]
+    assert mail.outbox == []
+
+
 # --- The log ---
 
 
