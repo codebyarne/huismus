@@ -8374,3 +8374,52 @@ msgstr ""
 #~ msgid_plural "%(count)s afschrijvingen"
 #~ msgstr[0] "%(count)s afschrijving"
 #~ msgstr[1] "%(count)s afschrijvingen"
+
+msgid "Het bonnetje staat weer bij de bonnetjes zonder uitgave."
+msgstr ""
+
+msgid "Dit bonnetje hangt niet meer aan die uitgave."
+msgstr ""
+
+#, python-format
+msgid "Uitgave van %(date)s kiezen"
+msgstr ""
+
+msgid "Kiezen"
+msgstr ""
+
+#, python-format
+msgid "Bonnetje hangt nu aan je uitgave van %(date)s (%(amount)s)."
+msgstr ""
+
+msgid "Ongedaan maken"
+msgstr ""
+
+msgid "Bij welke uitgave hoort dit bonnetje?"
+msgstr ""
+
+msgid "Nog geen uitgaven. Maak een uitgave van dit bonnetje."
+msgstr ""
+
+msgid "Lijkt op dit bonnetje"
+msgstr ""
+
+msgid "Zoek op leverancier, omschrijving of bedrag"
+msgstr ""
+
+msgid "Uitgaven zonder bonnetje"
+msgstr ""
+
+msgid "Geen uitgave gevonden."
+msgstr ""
+
+msgid ""
+"Elke uitgave heeft al een bonnetje. Zoek hierboven, of maak een uitgave van "
+"dit bonnetje."
+msgstr ""
+
+msgid "Hoort bij een uitgave die er al is?"
+msgstr ""
+
+msgid "Bij bestaande uitgave"
+msgstr ""

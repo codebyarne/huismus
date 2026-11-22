@@ -78,3 +78,38 @@ def test_the_amounts_stay_as_they_were():
     expense.refresh_from_db()
     assert expense.amount_cents == 1250
     assert [line.amount_cents for line in expense.lines.all()] == [1250]
+
+
+# -- Ongedaan maken ---------------------------------------------------------------
+
+
+def test_undo_puts_the_receipt_back_in_the_tray():
+    expense, receipt = _expense(), _receipt()
+    adding.attach_receipt(expense, receipt, to_check=False)
+
+    assert adding.detach_receipt(expense, receipt)
+
+    assert Attachment.objects.in_tray().filter(pk=receipt.pk).exists()
+    assert not expense.attachments.exists()
+
+
+def test_undo_only_from_the_expense_it_hangs_on():
+    first, second, receipt = _expense(), _expense(), _receipt()
+    adding.attach_receipt(first, receipt, to_check=False)
+
+    assert not adding.detach_receipt(second, receipt)
+
+    receipt.refresh_from_db()
+    assert receipt.expense == first
+
+
+def test_undo_never_takes_a_receipt_uploaded_on_the_expense():
+    expense = _expense()
+    uploaded = Attachment.objects.create(
+        expense=expense, file=ContentFile(b"%PDF-1.4", name="eigen.pdf"), kind="receipt"
+    )
+
+    assert not adding.detach_receipt(expense, uploaded)
+
+    uploaded.refresh_from_db()
+    assert uploaded.expense == expense

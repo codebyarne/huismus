@@ -10290,3 +10290,54 @@ msgstr ""
 #~ msgid_plural "%(count)s afschrijvingen"
 #~ msgstr[0] "%(count)s payment going out"
 #~ msgstr[1] "%(count)s payments going out"
+
+msgid "Het bonnetje staat weer bij de bonnetjes zonder uitgave."
+msgstr "The receipt is back with the receipts without an expense."
+
+msgid "Dit bonnetje hangt niet meer aan die uitgave."
+msgstr "This receipt is no longer attached to that expense."
+
+#, python-format
+msgid "Uitgave van %(date)s kiezen"
+msgstr "Choose expense of %(date)s"
+
+msgid "Kiezen"
+msgstr "Choose"
+
+#, python-format
+msgid "Bonnetje hangt nu aan je uitgave van %(date)s (%(amount)s)."
+msgstr "The receipt is now attached to your expense of %(date)s (%(amount)s)."
+
+msgid "Ongedaan maken"
+msgstr "Undo"
+
+msgid "Bij welke uitgave hoort dit bonnetje?"
+msgstr "Which expense is this receipt for?"
+
+msgid "Nog geen uitgaven. Maak een uitgave van dit bonnetje."
+msgstr "No expenses yet. Make an expense from this receipt."
+
+msgid "Lijkt op dit bonnetje"
+msgstr "Looks like this receipt"
+
+msgid "Zoek op leverancier, omschrijving of bedrag"
+msgstr "Search by supplier, description or amount"
+
+msgid "Uitgaven zonder bonnetje"
+msgstr "Expenses without a receipt"
+
+msgid "Geen uitgave gevonden."
+msgstr "No expense found."
+
+msgid ""
+"Elke uitgave heeft al een bonnetje. Zoek hierboven, of maak een uitgave van "
+"dit bonnetje."
+msgstr ""
+"Every expense already has a receipt. Search above, or make an expense from "
+"this receipt."
+
+msgid "Hoort bij een uitgave die er al is?"
+msgstr "For an expense you already have?"
+
+msgid "Bij bestaande uitgave"
+msgstr "Add to existing expense"

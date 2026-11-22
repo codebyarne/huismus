@@ -21,6 +21,7 @@ from django.utils.translation import gettext as _
 from huismus.core.models import Attachment
 
 from . import batch, reading
+from .attach_views import attached_notice
 from .forms import ExpenseLineFormSet, ReceiptUploadForm
 from .models import Expense
 from .views import TrayReceiptGone, all_valid, bind_forms, save_expense
@@ -48,7 +49,7 @@ def process(request):
         return redirect(stack[0].url(_done(request)))
     # Opening Verwerken makes the overview's "nieuwe uitgaven" seen.
     reading.seen()
-    return render(request, "expenses/process.html", {"empty": True})
+    return render(request, "expenses/process.html", {"empty": True, **attached_notice(request)})
 
 
 def _one_more_line(request, instance):
@@ -121,6 +122,7 @@ def process_item(request, kind, pk):
         request,
         "expenses/process.html",
         {
+            **attached_notice(request),
             "kind": kind,
             "expense": expense,
             "tray_receipt": tray_receipt,

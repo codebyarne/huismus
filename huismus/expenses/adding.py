@@ -171,6 +171,29 @@ def attach_receipt(expense: Expense, receipt: Attachment, *, to_check: bool = Tr
             Expense.objects.filter(pk=expense.pk).update(needs_review=True)
 
 
+TRAY_FOLDER = "attachments/bakje/"
+
+
+def came_from_tray(receipt: Attachment) -> bool:
+    """A receipt that was in the tray keeps its place there (core.models
+    attachment_upload_to); one uploaded on the expense page doesn't."""
+    return receipt.kind == "receipt" and receipt.file.name.startswith(TRAY_FOLDER)
+
+
+def detach_receipt(expense: Expense, receipt: Attachment) -> bool:
+    """ "Ongedaan maken" after the tray's "Kiezen" (#127): the receipt back
+    into the tray, only while it still hangs on this expense and came from
+    the tray. False, and nothing changed, otherwise."""
+    if not came_from_tray(receipt):
+        return False
+    with transaction.atomic():
+        return bool(
+            Attachment.objects.filter(pk=receipt.pk, expense=expense, kind="receipt").update(
+                expense=None
+            )
+        )
+
+
 def delete_expense(expense: Expense) -> None:
     """As Verwijderen on the expense page: its receipts and other
     attachments go with it, files included. A bank line it was linked to

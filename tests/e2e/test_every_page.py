@@ -112,6 +112,14 @@ def _pages():
             f"/uitgaven/verwerken/bonnetje/{receipt.pk}/"
             for receipt in Attachment.objects.in_tray()
         ),
+        # "Bij welke uitgave hoort dit bonnetje?" (#127): every receipt in
+        # the tray (one looks like an expense), also from Verwerken and with
+        # a search; the flow: tests/e2e/test_attach_receipt.py.
+        *(f"/uitgaven/bonnetjes/{receipt.pk}/uitgave/" for receipt in Attachment.objects.in_tray()),
+        *(
+            f"/uitgaven/bonnetjes/{receipt.pk}/uitgave/?terug=verwerken&q=a"
+            for receipt in Attachment.objects.in_tray()[:1]
+        ),
         # A new expense on a phone, the photo first (#188): any receipt in
         # the tray can be that photo.
         *(f"/uitgaven/nieuw/foto/{receipt.pk}/" for receipt in Attachment.objects.in_tray()[:1]),
