@@ -1,0 +1,17 @@
+{% load i18n %}
+{% comment %}The receipt large, as Verwerken and "Bij welke uitgave hoort dit bonnetje?" show it.{% endcomment %}
+{% blocktranslate with name=receipt.filename asvar receipt_label %}Bonnetje {{ name }}{% endblocktranslate %}
+{% if receipt.is_pdf %}
+{% comment %}The browser's own PDF viewer, with every page, only on a
+wide screen: app.js sets the src there. A phone shows the file and
+"Bonnetje openen" instead: an iPhone shows only the first page in a
+frame, Android often nothing.{% endcomment %}
+<iframe class="process-pdf" data-wide-src="{{ receipt.file.url }}" title="{{ receipt_label }}" hidden></iframe>
+<div class="process-file" data-pdf-file>
+    <svg class="i i-lg" aria-hidden="true"><use href="#file"></use></svg>
+    <span class="r-name" title="{{ receipt.filename }}">{{ receipt.filename }}</span>
+</div>
+{% else %}
+<img class="process-img" src="{{ receipt.file.url }}" alt="{{ receipt_label }}">
+{% endif %}
+<a class="small" id="bonnetje-openen" href="{{ receipt.file.url }}" hx-boost="false" target="_blank" rel="noopener" data-view-receipt="bonnetje-bekijken" data-name="{{ receipt.filename }}" data-label="{{ receipt_label }}"{% if receipt.is_pdf %} data-pdf{% endif %}>{% translate "Bonnetje openen" %} ↗</a>

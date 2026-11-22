@@ -25,6 +25,7 @@
 </div>
 {% endif %}
 
+{% include "expenses/_attached_notice.html" %}
 <div id="bonnetjes-lijst">
 {% comment %}Inside the list, so it goes along with each refresh while a look or reading runs.{% endcomment %}
 {% if reading_failure %}
@@ -49,6 +50,7 @@
             {% if item.waiting %}<span class="small muted row" style="gap:var(--s-1)" data-bonnetje-bezig>{% include "core/_bird.svg" %}{% translate "Huismus leest dit bonnetje…" %}</span>
             {% elif item.reason %}<span class="small muted" data-bonnetje-reden>{% if receipt.read_similar %}<a href="{% url 'expenses:edit' receipt.read_similar.pk %}">{{ item.reason }}</a>{% else %}{{ item.reason }}{% endif %}</span>{% endif %}
             <a class="btn btn-primary btn-sm" href="{% url 'expenses:process_item' 'bonnetje' receipt.pk %}">{% translate "Uitgave maken" %}</a>
+            <a class="btn btn-secondary btn-sm" style="white-space:normal" href="{% url 'expenses:tray_attach' receipt.pk %}">{% translate "Bij bestaande uitgave" %}</a>
         </div>
         <dialog class="dialog" id="verwijder-bon-{{ receipt.pk }}" aria-labelledby="verwijder-bon-{{ receipt.pk }}-titel">
             <form method="post" action="{% url 'expenses:tray_delete' receipt.pk %}">

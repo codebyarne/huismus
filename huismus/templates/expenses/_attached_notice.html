@@ -1,0 +1,19 @@
+{% load i18n money %}
+{% comment %}After "Kiezen" on "Bij welke uitgave hoort dit bonnetje?" (#127, expenses.attach_views): on the tray and in Verwerken, with "Bekijken" and "Ongedaan maken" (a plain POST, back to this same page).{% endcomment %}
+{% if attached %}
+<div class="flash flash-success" id="bonnetje-gekoppeld" role="status" style="margin-bottom:var(--s-4)">
+    <svg class="i" aria-hidden="true"><use href="#check-circle"></use></svg>
+    <div class="flash-body">
+        <strong>{% blocktranslate with date=attached_expense.date|date:"SHORT_DATE_FORMAT" amount=attached_expense.amount_cents|money trimmed %}Bonnetje hangt nu aan je uitgave van {{ date }} ({{ amount }}).{% endblocktranslate %}</strong>
+        <div class="row" style="gap:var(--s-3)">
+            <a class="small" href="{% url 'expenses:edit' attached_expense.pk %}">{% translate "Bekijken" %}</a>
+            <form method="post" action="{% url 'expenses:tray_attach_undo' attached.pk %}">
+                {% csrf_token %}
+                <input type="hidden" name="uitgave" value="{{ attached_expense.pk }}">
+                <input type="hidden" name="plek" value="{{ request.get_full_path }}">
+                <button type="submit" class="btn btn-secondary btn-sm" id="ongedaan-maken">{% translate "Ongedaan maken" %}</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}

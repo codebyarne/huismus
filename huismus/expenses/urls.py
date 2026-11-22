@@ -3,7 +3,7 @@
 from django.urls import path
 from django.views.generic import RedirectView
 
-from . import inbox_views, photo_views, process_views, views
+from . import attach_views, inbox_views, photo_views, process_views, views
 
 app_name = "expenses"
 
@@ -22,6 +22,9 @@ urlpatterns = [
     path("bonnetjes/", inbox_views.tray, name="tray"),
     path("bonnetjes/nieuw/", inbox_views.new_receipts_notice, name="new_receipts_notice"),
     path("bonnetjes/<int:pk>/verwijderen/", inbox_views.tray_delete, name="tray_delete"),
+    # A receipt from the tray onto an expense there is (#127).
+    path("bonnetjes/<int:pk>/uitgave/", attach_views.choose, name="tray_attach"),
+    path("bonnetjes/<int:pk>/terug/", attach_views.undo, name="tray_attach_undo"),
     # The year overview moved to "Rapporten"; old bookmarks still arrive.
     path(
         "jaaroverzicht/",

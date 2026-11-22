@@ -15,6 +15,7 @@ from huismus.core import auto_backups, cloud_backups, help
 from huismus.core.models import Attachment
 
 from . import inbox, reading
+from .attach_views import attached_notice
 
 # The radio buttons besides a suggested folder's path.
 OTHER_FOLDER, DROPBOX, WEBDAV = "other", inbox.DROPBOX, inbox.WEBDAV
@@ -139,6 +140,7 @@ def tray(request):
         "expenses/tray.html",
         {
             **_state(),
+            **attached_notice(request),
             "receipts": [
                 {
                     "receipt": receipt,

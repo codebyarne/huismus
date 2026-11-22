@@ -1,0 +1,29 @@
+{% load i18n money %}
+{% comment %}The expenses to choose from on "Bij welke uitgave hoort dit bonnetje?": as a row of the expense list, with "Kiezen" (a plain POST) at the end.{% endcomment %}
+<div class="table-wrap">
+    <table class="table stackable">
+        <tbody>
+            {% for expense in rows %}
+            {% with date=expense.date|date:"SHORT_DATE_FORMAT" %}
+            <tr id="kies-{{ expense.pk }}">
+                <td data-cell="secondary" class="num">{{ date }}</td>
+                <td data-cell="primary">
+                    {{ expense.supplier|default:expense.description|default:_("Uitgave") }}
+                    {% if expense.has_receipt %}<svg class="i i-sm muted" role="img" aria-label="{% translate 'Met bonnetje' %}"><use href="#paperclip"></use></svg>{% endif %}
+                </td>
+                <td data-cell="amount" class="r amount">{{ expense.amount_cents|money }}</td>
+                <td data-cell="status" class="r w-min">
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="uitgave" value="{{ expense.pk }}">
+                        {% if back == "verwerken" %}<input type="hidden" name="terug" value="verwerken">{% endif %}
+                        {% if done %}<input type="hidden" name="klaar" value="{{ done }}">{% endif %}
+                        <button type="submit" class="btn btn-secondary btn-sm" aria-label="{% blocktranslate %}Uitgave van {{ date }} kiezen{% endblocktranslate %}">{% translate "Kiezen" %}</button>
+                    </form>
+                </td>
+            </tr>
+            {% endwith %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

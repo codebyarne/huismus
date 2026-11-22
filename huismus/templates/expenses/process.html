@@ -19,6 +19,7 @@ above the fields.{% endcomment %}
     </div>
 </div>
 
+{% include "expenses/_attached_notice.html" %}
 {% if empty %}
 <div class="card">
     <div class="empty" id="niets-te-verwerken">
@@ -31,21 +32,7 @@ above the fields.{% endcomment %}
 <div class="process">
     <section class="card process-receipt" aria-label="{% translate 'Bonnetje' %}">
         {% if receipt %}
-        {% blocktranslate with name=receipt.filename asvar receipt_label %}Bonnetje {{ name }}{% endblocktranslate %}
-        {% if receipt.is_pdf %}
-        {% comment %}The browser's own PDF viewer, with every page, only on a
-        wide screen: app.js sets the src there. A phone shows the file and
-        "Bonnetje openen" instead: an iPhone shows only the first page in a
-        frame, Android often nothing.{% endcomment %}
-        <iframe class="process-pdf" data-wide-src="{{ receipt.file.url }}" title="{{ receipt_label }}" hidden></iframe>
-        <div class="process-file" data-pdf-file>
-            <svg class="i i-lg" aria-hidden="true"><use href="#file"></use></svg>
-            <span class="r-name" title="{{ receipt.filename }}">{{ receipt.filename }}</span>
-        </div>
-        {% else %}
-        <img class="process-img" src="{{ receipt.file.url }}" alt="{{ receipt_label }}">
-        {% endif %}
-        <a class="small" id="bonnetje-openen" href="{{ receipt.file.url }}" hx-boost="false" target="_blank" rel="noopener" data-view-receipt="bonnetje-bekijken" data-name="{{ receipt.filename }}" data-label="{{ receipt_label }}"{% if receipt.is_pdf %} data-pdf{% endif %}>{% translate "Bonnetje openen" %} ↗</a>
+        {% include "expenses/_receipt_large.html" %}
         {% else %}
         <p class="muted" id="geen-bonnetje">{% translate "Geen bonnetje bij deze uitgave." %}</p>
         <form method="post" action="{% url 'expenses:receipt_upload' expense.pk %}" enctype="multipart/form-data" class="dropzone" data-dropzone>
@@ -75,6 +62,7 @@ above the fields.{% endcomment %}
             {% else %}<svg class="i" aria-hidden="true"><use href="#info"></use></svg><div class="flash-body" data-bonnetje-reden>{% if tray_receipt.read_similar %}<a href="{% url 'expenses:edit' tray_receipt.read_similar.pk %}">{{ reason }}</a>{% else %}{{ reason }}{% endif %}</div>{% endif %}
         </div>
         {% endif %}
+        {% if tray_receipt %}<p class="small" id="bij-bestaande"><a href="{% url 'expenses:tray_attach' tray_receipt.pk %}?terug=verwerken{% if done %}&amp;klaar={{ done }}{% endif %}">{% translate "Hoort bij een uitgave die er al is?" %}</a></p>{% endif %}
         <form class="card card-pad stack" id="uitgave-form" method="post" style="gap:var(--s-5)">
             {% csrf_token %}
             <input type="hidden" name="klaar" value="{{ done }}">

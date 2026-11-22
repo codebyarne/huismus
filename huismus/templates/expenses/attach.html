@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load i18n money %}
+
+{% block title %}{% translate "Bij welke uitgave hoort dit bonnetje?" %} — Huismus{% endblock %}
+{% block content_class %}content-wide{% endblock %}
+
+{% block content %}
+{% comment %}A receipt from the tray onto an expense there is (#127, expenses.attach_views). The receipt large on the left as in Verwerken; on the right what it looks like, a search and the expenses without a receipt, each with "Kiezen" (a plain POST).{% endcomment %}
+<div class="page-head">
+    <div class="titles">
+        <a class="back" href="{{ back_url }}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% if back == "verwerken" %}{% translate "Verwerken" %}{% else %}{% translate "Bonnetjes zonder uitgave" %}{% endif %}</a>
+        <h1>{% translate "Bij welke uitgave hoort dit bonnetje?" %}</h1>
+    </div>
+</div>
+
+<div class="process">
+    <section class="card process-receipt" aria-label="{% translate 'Bonnetje' %}">
+        {% include "expenses/_receipt_large.html" %}
+    </section>
+
+    <div class="stack process-fields">
+        {% if not has_any %}
+        <div class="card">
+            <div class="empty" id="geen-uitgaven">
+                <p>{% translate "Nog geen uitgaven. Maak een uitgave van dit bonnetje." %}</p>
+                <div class="row"><a class="btn btn-primary" href="{{ make_url }}">{% translate "Uitgave maken" %}</a></div>
+            </div>
+        </div>
+        {% else %}
+        {% if similar %}
+        <section class="card" id="lijkt-op" aria-labelledby="lijkt-op-titel">
+            <h2 class="card-title" id="lijkt-op-titel" style="padding:var(--s-4) var(--s-4) 0">{% translate "Lijkt op dit bonnetje" %}</h2>
+            {% include "expenses/_attach_rows.html" with rows=similar_rows %}
+        </section>
+        {% endif %}
+
+        <section class="card list-card">
+            <form class="toolbar" role="search" method="get">
+                {% if back == "verwerken" %}<input type="hidden" name="terug" value="verwerken">{% endif %}
+                {% if done %}<input type="hidden" name="klaar" value="{{ done }}">{% endif %}
+                <label class="input-affix" style="flex:1">
+                    <span class="sr-only">{% translate "Zoeken" %}</span>
+                    <svg class="i" aria-hidden="true"><use href="#search"></use></svg>
+                    <input class="input input-sm" type="search" name="q" value="{{ query }}" autocomplete="off" placeholder="{% translate 'Zoek op leverancier, omschrijving of bedrag' %}">
+                </label>
+                <button type="submit" class="btn btn-secondary btn-sm">{% translate "Zoeken" %}</button>
+            </form>
+            <div id="kiezen-resultaat">
+                {% if not query %}<h2 class="card-title" style="padding:var(--s-3) var(--s-4) 0">{% translate "Uitgaven zonder bonnetje" %}</h2>{% endif %}
+                {% if expenses %}
+                {% include "expenses/_attach_rows.html" with rows=expenses %}
+                {% if more_url %}<div class="sum-row"><a class="btn btn-ghost btn-sm" href="{{ more_url }}">{% translate "Meer laden" %}</a></div>{% endif %}
+                {% elif query %}
+                <div class="empty" id="niets-gevonden"><p>{% translate "Geen uitgave gevonden." %}</p></div>
+                {% else %}
+                <div class="empty" id="alles-met-bonnetje">
+                    <p>{% translate "Elke uitgave heeft al een bonnetje. Zoek hierboven, of maak een uitgave van dit bonnetje." %}</p>
+                    <div class="row"><a class="btn" href="{{ make_url }}">{% translate "Uitgave maken" %}</a></div>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+        {% endif %}
+    </div>
+</div>
+{% include "expenses/_receipt_dialog.html" %}
+{% endblock %}
