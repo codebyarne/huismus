@@ -14,9 +14,9 @@ totaal van alle bedragen die je aan je klanten berekent.
 Zodra je omzet in een kalenderjaar boven de € 20.000 komt, mag je de KOR niet
 meer gebruiken. Je meldt je op dat moment direct af.
 
-De factuur waarmee je over de grens gaat, valt al niet meer onder de
-vrijstelling. Je rekent btw over het hele bedrag van die levering of dienst.
-Sta je op € 19.500 en factureer je € 1.000, dan reken je btw over die hele
+De levering of dienst waarmee je over de grens gaat, valt al niet meer onder
+de vrijstelling. Je rekent btw over het hele bedrag daarvan. Sta je op
+€ 19.500 en lever je een dienst van € 1.000, dan reken je btw over die hele
 € 1.000.
 
 ## Afmelden

@@ -6,8 +6,8 @@ and in which form you keep it.
 ## Seven years
 
 You are required to keep your records for 7 years. The basic records you
-always keep for 7 years: your sales and purchase records, your debtors and
-creditors, and the general ledger. For records about real estate another
+always keep for 7 years, such as your sales and purchase records, your
+debtors and creditors, and the general ledger. For records about real estate another
 period applies. It is on the source page below.
 
 ## What you keep

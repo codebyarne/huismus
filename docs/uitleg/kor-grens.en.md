@@ -12,12 +12,11 @@ total of all amounts you charge your customers.
 ## When you go over it
 
 As soon as your revenue in a calendar year goes over € 20,000, you may no
-longer use the KOR. You leave the scheme at that moment.
+longer use the KOR. You deregister at that moment, right away.
 
-The invoice that takes you over the limit already falls outside the
-exemption. You charge VAT on the whole amount of that supply or service. If
-you are at € 19,500 and you invoice € 1,000, you charge VAT on the whole
-€ 1,000.
+The supply or service that takes you over the limit already falls outside
+the exemption. You charge VAT on its whole amount. If you are at € 19,500
+and you supply a service of € 1,000, you charge VAT on the whole € 1,000.
 
 ## Leaving the scheme
 

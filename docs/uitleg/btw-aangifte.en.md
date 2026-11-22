@@ -22,7 +22,7 @@ after that quarter or month. Per quarter that is:
 | January to March | 30 April |
 | April to June | 31 July |
 | July to September | 31 October |
-| October to December | 31 January |
+| October to December | 31 January of the year after |
 
 If you file per year, it is before 1 April of the year after.
 
@@ -40,14 +40,15 @@ deduct. The example of the Belastingdienst names these boxes:
 - **5a, VAT due:** the total of boxes 1 to 4.
 - **5b, input VAT:** the VAT on your purchases that you can deduct.
 
-You pay the difference between 5a and 5b, or you get it back.
+You pay the difference, or you get it back.
 
 ## How to do this in Huismus
 
 Under **Reports → VAT return** you see the revenue and the VAT from your
 invoices and expenses per quarter, month or year, per box, and what you pay
-or get back. You copy the amounts into your return yourself. Huismus sends
-nothing to the tax office.
+or get back. What Huismus can't count is below it under **Not counted**. You
+copy the amounts into your return yourself. Huismus sends nothing to the tax
+office.
 
 [The VAT return report](../hulp/kor-en-btw.en.md#vat-return)
 

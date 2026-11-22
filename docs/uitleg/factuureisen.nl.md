@@ -46,11 +46,12 @@ bij [De kleineondernemersregeling (KOR)](kor.nl.md).
 
 ## Zo doe je dit in Huismus
 
-Huismus zet deze gegevens op elke factuur. Je naam, adres, KVK-nummer en
-btw-nummer vul je één keer in bij **Instellingen → Bedrijf**. Het nummer krijgt
-een factuur als je hem uitgeeft: het volgende in de reeks, zonder gaten.
-Huismus gebruikt voor elk bedrag dezelfde volledige indeling, ook tot en met
-€ 100.
+Huismus heeft voor elk van deze gegevens een plek op de factuur. Je naam,
+adres, KVK-nummer en btw-nummer vul je één keer in bij **Instellingen →
+Bedrijf**. De leverdatum vul je per factuur in. Het
+nummer krijgt een factuur als je hem uitgeeft: het volgende in de reeks,
+zonder gaten. Huismus gebruikt voor elk bedrag dezelfde volledige indeling,
+ook tot en met € 100.
 
 [Facturen maken en uitgeven](../hulp/facturen.nl.md)
 
