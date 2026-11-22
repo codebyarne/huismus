@@ -129,3 +129,17 @@ def test_kor_stays_as_it_was():
     settings = _settings(exempt=False, kor=True)
     assert issue(_draft(0)).kor_text_snapshot == "KOR-tekst."
     assert not settings.vat_exempt
+
+
+def test_issuing_a_reverse_charge_line_is_refused_in_the_words_of_the_choice():
+    _settings()
+    document = _draft(0)
+    document.lines.update(reverse_charge=True)
+    with pytest.raises(IssueError, match="Je rekent geen btw: een nieuwe regel kan niet verlegd"):
+        issue(document)
+
+
+def test_a_line_with_vat_is_refused_in_the_words_of_the_choice():
+    _settings()
+    with pytest.raises(IssueError, match="Je rekent geen btw: zet nieuwe regels op 0%"):
+        issue(_draft(2100))

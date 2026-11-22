@@ -17,7 +17,7 @@ from django import forms
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from huismus.business.forms import DEFAULT_KOR_TEXT
+from huismus.business.forms import CHARGES_VAT, DEFAULT_KOR_TEXT, NO_VAT_OTHER, USES_KOR
 from huismus.business.models import Settings
 
 
@@ -118,7 +118,10 @@ STEPS = (
 
 BY_SLUG = {step.slug: step for step in STEPS}
 
-VAT_YES, VAT_KOR, VAT_OTHER, VAT_LATER = "ja", "kor", "anders", "later"
+# The answers with VAT, under the KOR and without VAT for another reason
+# are those of Instellingen → Btw (one shared template shows both).
+VAT_YES, VAT_KOR, VAT_OTHER = CHARGES_VAT, USES_KOR, NO_VAT_OTHER
+VAT_LATER = "later"
 REVERSE_NO = "nee"
 REVERSE_PLACES = ("nl", "eu", "buiten-eu")
 
@@ -178,8 +181,9 @@ def steps_for(settings: Settings, current: Round) -> list[Step]:
 
 class WorkForm(forms.Form):
     """Je werk: three choices, no free fields. Only kor_enabled (with the
-    settings page's suggestion for the KOR text), vat_exempt and
-    default_language are saved; the answer about btw verlegd only decides the next step."""
+    settings page's suggestion for the KOR text when kor_text is empty),
+    vat_exempt and default_language are saved; the answer about btw
+    verlegd only decides the next step."""
 
     vat = forms.ChoiceField(
         label=_("Reken je btw op je facturen?"),

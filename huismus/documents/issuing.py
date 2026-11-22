@@ -71,17 +71,27 @@ def issue(document: Document) -> Document:
     # Without VAT for another reason (issue #53) the same guard holds, with
     # the user's own text in place of the KOR text.
     if settings.no_vat and not was_issued:
+        # Each refusal in the words of the choice made: the KOR, or no VAT
+        # for another reason.
         if not settings.no_vat_text.strip():
             raise IssueError(missing_no_vat_text_message(settings))
         rates = allowed_rates(document, settings)
         if any(line.tax_rate_bp not in rates for line in lines):
-            if settings.kor_enabled:
-                raise IssueError(str(_("Met KOR moeten nieuwe regels 0% btw hebben.")))
-            raise IssueError(str(_("Je rekent geen btw: zet nieuwe regels op 0%.")))
+            raise IssueError(
+                _for_choice(
+                    settings,
+                    kor=_("Met KOR moeten nieuwe regels 0% btw hebben."),
+                    other=_("Je rekent geen btw: zet nieuwe regels op 0%."),
+                )
+            )
         if lines_have_reverse_charge(lines) and not reverse_charge_allowed(document, settings):
-            if settings.kor_enabled:
-                raise IssueError(str(_("Met de KOR kan een nieuwe regel niet verlegd zijn.")))
-            raise IssueError(str(_("Je rekent geen btw: een nieuwe regel kan niet verlegd zijn.")))
+            raise IssueError(
+                _for_choice(
+                    settings,
+                    kor=_("Met de KOR kan een nieuwe regel niet verlegd zijn."),
+                    other=_("Je rekent geen btw: een nieuwe regel kan niet verlegd zijn."),
+                )
+            )
     missing = missing_reverse_charge_text(document, lines, settings)
     if missing:
         raise IssueError(missing)
@@ -144,7 +154,7 @@ def issue(document: Document) -> Document:
 
         if not was_issued:
             document.business_snapshot = business_snapshot(settings)
-            document.kor_text_snapshot = kor_text_for(document, settings)
+            document.kor_text_snapshot = no_vat_text_for(document, settings)
         # Also for a reopened document: it may have got its first "verlegd"
         # line; one that had one keeps its old text (reverse_charge_text_for).
         document.reverse_charge_text_snapshot = reverse_charge_text_for(document, lines, settings)
@@ -217,7 +227,7 @@ def validate_credit_note_amount(document, new_total_cents):
         )
 
 
-def kor_text_for(document, settings) -> str:
+def no_vat_text_for(document, settings) -> str:
     """The text under a document without VAT (the KOR text, or the text for
     no VAT for another reason, issue #53) that it gets when issued or sent. A credit
     note follows the invoice it credits (decided 2026-11-02): an
@@ -235,9 +245,16 @@ def kor_text_for(document, settings) -> str:
 
 
 def missing_no_vat_text_message(settings) -> str:
-    if settings.kor_enabled:
-        return str(_("Vul eerst de KOR-tekst in, bij Instellingen → Btw."))
-    return str(_("Vul eerst de tekst bij geen btw in, bij Instellingen → Btw."))
+    return _for_choice(
+        settings,
+        kor=_("Vul eerst de KOR-tekst in, bij Instellingen → Btw."),
+        other=_("Vul eerst de tekst bij geen btw in, bij Instellingen → Btw."),
+    )
+
+
+def _for_choice(settings, *, kor, other) -> str:
+    """A message without VAT: its KOR words under the KOR, else the other."""
+    return str(kor if settings.kor_enabled else other)
 
 
 def missing_reverse_charge_text(document, lines, settings) -> str | None:

@@ -186,6 +186,8 @@ class Settings(TimestampedModel):
                     )
                 }
             )
+        # The one choice on Instellingen → Btw and in Je werk can't set both;
+        # this guards every other way in (a form, the shell, a future import).
         if self.kor_enabled and self.vat_exempt:
             raise ValidationError(_("Kies de KOR of geen btw om een andere reden, niet allebei."))
         if self.country == "NL" and self.postal_code:

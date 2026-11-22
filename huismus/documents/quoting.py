@@ -16,7 +16,7 @@ from django.utils.translation import gettext_lazy as _
 from huismus.business.models import Settings
 
 from .drafts import recompute_stored_totals
-from .issuing import kor_text_for, missing_reverse_charge_text, reverse_charge_text_for
+from .issuing import missing_reverse_charge_text, no_vat_text_for, reverse_charge_text_for
 from .models import Document, DocumentLine
 from .numbering import NumberingError, number_for
 from .snapshots import business_snapshot, contact_snapshot
@@ -59,7 +59,7 @@ def send_quote(document: Document) -> Document:
 
         document.business_snapshot = business_snapshot(settings)
         document.contact_snapshot = contact_snapshot(document.contact)
-        document.kor_text_snapshot = kor_text_for(document, settings)
+        document.kor_text_snapshot = no_vat_text_for(document, settings)
         document.reverse_charge_text_snapshot = reverse_charge_text_for(document, lines, settings)
 
         document.subtotal_cents = totals.subtotal_cents
