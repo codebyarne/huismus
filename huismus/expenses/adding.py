@@ -161,11 +161,14 @@ def change_expense(
     return saved
 
 
-def attach_receipt(expense: Expense, receipt: Attachment) -> None:
-    """A receipt from the tray onto an expense there is; "Nakijken" again."""
+def attach_receipt(expense: Expense, receipt: Attachment, *, to_check: bool = True) -> None:
+    """A receipt from the tray onto an expense there is. `to_check`: the
+    expense goes on "Nakijken" again, when an AI assistant did it (#273);
+    the user's own choice in the tray (#127) leaves it as it was."""
     with transaction.atomic():
         _take_from_tray(receipt, expense)
-        Expense.objects.filter(pk=expense.pk).update(needs_review=True)
+        if to_check:
+            Expense.objects.filter(pk=expense.pk).update(needs_review=True)
 
 
 def delete_expense(expense: Expense) -> None:
