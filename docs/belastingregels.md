@@ -7,7 +7,7 @@ de bronpagina erbij. **Dit is geen boekhoudkundig of fiscaal advies.** Regels
 kunnen wijzigen na het nakijken. Controleer bij twijfel de bronpagina's zelf
 of vraag een boekhouder.
 
-Nagekeken op 6 november 2026. Alleen officiële bronnen: belastingdienst.nl (ook
+Nagekeken op 6 november 2026; sectie 6 op 22 november 2026. Alleen officiële bronnen: belastingdienst.nl (ook
 de pdf's op `download.belastingdienst.nl`) en
 Ondernemersplein (sinds kort `ondernemersplein.overheid.nl`; het oude adres
 `ondernemersplein.kvk.nl` stuurt daarheen door). Citaten staan tussen
@@ -335,3 +335,126 @@ Bron: [Hoe lang moet u uw administratie bewaren voor de btw: 7 of 10 jaar?](http
 (Belastingdienst), [Hoe bewaart u uw administratie?](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/administratie_bijhouden/administratie_bewaren/hoe_bewaart_u_uw_administratie)
 (Belastingdienst), [Uw geautomatiseerde administratie en de fiscale bewaarplicht](https://download.belastingdienst.nl/belastingdienst/docs/geautomatiseerde_administratie_en_fiscale_bewaarplicht_al0401z14fd.pdf)
 (Belastingdienst, pdf, juli 2026)
+
+## 6. Vrijgestelde prestaties en geen ondernemer
+
+Nagekeken op 22 november 2026 (issue #262).
+
+### Wat vrijgesteld is
+
+- "In een aantal branches en voor een aantal activiteiten bent u vrijgesteld
+  van btw. U brengt dan geen btw in rekening."
+- De lijst op de bronpagina: beleggingsgoud; collectieve
+  belangenbehartiging; componisten, schrijvers, cartoonisten en journalisten;
+  financiële diensten en verzekeringen; fondsenwervende activiteiten;
+  gezondheidszorg; jeugd- en jongerenwerk; kansspelen; kantines;
+  kinderopvang; levering roerende bedrijfsmiddelen; lezingen, excursies en
+  rondleidingen; onderwijs; onroerende zaken; postdiensten; radio en
+  televisie; samenwerkingsverbanden (koepelvrijstelling); sociaal-culturele
+  instellingen; sportorganisaties en sportclubs; uitvaartondernemers. Elke
+  categorie heeft een eigen pagina met de voorwaarden; die staan hier niet.
+- Ondernemersplein: "Bijvoorbeeld als u bepaalde diensten verricht als zzp'er
+  in de zorg. Of in het onderwijs."
+- Zorg: "Medische handelingen die gericht zijn op de persoonlijke
+  gezondheidskundige verzorging van de mens zijn vrijgesteld van btw."
+- Onderwijs: "Onderwijs is vrijgesteld van btw. Dat geldt voor
+  basisonderwijs tot en met hoger onderwijs, ook als een zelfstandig
+  ondernemer dat uitvoert."
+- Zorg en onderwijs, per opdracht: "Hebt u meerdere opdrachtgevers? Of
+  verschillende overeenkomsten bij dezelfde opdrachtgever? Bepaal dan voor
+  elke opdracht afzonderlijk of u btw moet berekenen of dat een vrijstelling
+  geldt."
+
+Bron: [Vrijstellingen van btw](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/tarieven_en_vrijstellingen/vrijstellingen/)
+(Belastingdienst), [Vrijstelling in de gezondheidszorg](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/tarieven_en_vrijstellingen/vrijstellingen/gezondheidszorg/vrijstelling_in_de_gezondheidszorg)
+(Belastingdienst), [Vrijstelling in het onderwijs](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/tarieven_en_vrijstellingen/vrijstellingen/onderwijs/vrijstelling_in_het_onderwijs)
+(Belastingdienst), [Btw-regelingen en -vrijstellingen](https://ondernemersplein.overheid.nl/geldzaken-en-belastingen/omzetbelasting-btw/btw-regelingen/)
+(Ondernemersplein)
+
+### Wat een vrijstelling betekent
+
+- "Over vrijgestelde prestaties brengt u geen btw in rekening. [...] U mag
+  de btw die u hiervoor hebt betaald over kosten en inkoop niet aftrekken in
+  uw btw-aangifte."
+- "Over vrijgestelde omzet hoeft u geen btw-aangifte te doen. Hebt u alleen
+  vrijgestelde omzet? In een aantal gevallen moet u dan toch btw-aangifte
+  doen." Welke gevallen: het hulpmiddel Incidentele btw-aangifte op de
+  bronpagina.
+- Alleen vrijgestelde prestaties: "U hoeft geen btw-aangifte te doen." "U
+  hebt geen recht op teruggaaf van btw die u aan leveranciers hebt betaald."
+- Wel ondernemer, geen aangifte: "Uw goederen of diensten zijn vrijgesteld
+  van btw en er staat geen btw-aangifte voor u klaar in Mijn Belastingdienst
+  Zakelijk." Dan: "U berekent dan ook geen btw aan uw klanten en trekt geen
+  btw af."
+
+Bron: [Wat moet u doen als u vrijgestelde goederen of diensten levert?](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/tarieven_en_vrijstellingen/vrijstellingen/wat_moet_u_doen_als_u_vrijgestelde_goederen_of_diensten_levert)
+(Belastingdienst), [Vrijgestelde goederen of diensten leveren](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/administratie_bijhouden/wie_moeten_een_btw_administratie_bijhouden/vrijgestelde_goederen_of_diensten_leveren)
+(Belastingdienst), [Ondernemer voor de btw](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/hoe_werkt_de_btw/voor_wie_geldt_de_btw/ondernemer)
+(Belastingdienst)
+
+### Facturen
+
+- "U bent niet verplicht facturen uit te schrijven."
+- "Als u wel facturen uitschrijft, mag u hierop geen btw in rekening brengen.
+  U vermeldt op de factuur dat een vrijstelling van toepassing is."
+- "U vermeldt dus geen btw op uw facturen."
+- Een vaste formulering voor die vermelding: **Bron ontbreekt**. De pagina's
+  noemen er geen (net als bij de KOR, sectie 1).
+
+Bron: [Vrijgestelde goederen of diensten leveren](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/administratie_bijhouden/wie_moeten_een_btw_administratie_bijhouden/vrijgestelde_goederen_of_diensten_leveren)
+(Belastingdienst), [Wat moet u doen als u vrijgestelde goederen of diensten levert?](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/tarieven_en_vrijstellingen/vrijstellingen/wat_moet_u_doen_als_u_vrijgestelde_goederen_of_diensten_levert)
+(Belastingdienst)
+
+### Vrijgesteld en belast naast elkaar
+
+- "Hebt u zowel vrijgestelde als belaste omzet? Dan splitst u deze in uw
+  administratie."
+- "Levert u deels vrijgestelde en deels niet-vrijgestelde goederen of
+  diensten? Dan bent u verplicht een btw-administratie bij te houden."
+- Drie soorten uitgaven: alleen voor belaste omzet ("geheel aftrekbaar"),
+  alleen voor vrijgestelde omzet ("niet aftrekbaar"), voor beide
+  ("gedeeltelijk aftrekbaar"). Voor dat laatste: "U berekent dan welk
+  percentage van uw omzet bestaat uit belaste bedrijfsactiviteiten. De btw
+  die over deze goederen en diensten is berekend, mag u voor dit percentage
+  aftrekken."
+- Zorg en onderwijs: "Bent u door ons geregistreerd als ondernemer met alleen
+  vrijgestelde prestaties? En verricht u nu ook diensten waarvoor u wel btw
+  moet berekenen? Dan moet u periodiek btw-aangifte gaan doen."
+
+Bron: [Vrijgestelde goederen of diensten leveren](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/administratie_bijhouden/wie_moeten_een_btw_administratie_bijhouden/vrijgestelde_goederen_of_diensten_leveren)
+(Belastingdienst), [Btw aftrekken bij belaste en vrijgestelde omzet](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aftrekken/belaste_en_vrijgestelde_omzet/belaste_en_vrijgestelde_omzet)
+(Belastingdienst), [Vrijstelling in de gezondheidszorg](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/tarieven_en_vrijstellingen/vrijstellingen/gezondheidszorg/vrijstelling_in_de_gezondheidszorg)
+(Belastingdienst)
+
+### Vrijstelling en de KOR
+
+- Een voorwaarde van de KOR is dat de geleverde goederen of diensten met
+  btw belast zijn (sectie 1). Van de vrijgestelde omzet telt alleen een deel mee voor de
+  omzetgrens: "Ook telt btw-vrijgestelde omzet mee van leveringen van
+  goederen en diensten die betrekking hebben op onroerende zaken,
+  betaalmiddelen en effecten, financiële diensten en verzekeringsdiensten in
+  Nederland (overige vrijgestelde omzet telt niet mee voor de omzetgrens)."
+
+Bron: [Voorwaarden voor deelname aan de kleineondernemersregeling (KOR)](https://www.belastingdienst.nl/wps/wcm/connect/nl/btw/content/kor-voorwaarden)
+(Belastingdienst)
+
+### Geen ondernemer voor de btw
+
+- "U bent ondernemer voor de btw als u zelfstandig een bedrijf of een beroep
+  uitoefent."
+- Waar de Belastingdienst op let: zelfstandig een bedrijf of beroep
+  uitoefenen, "regelmatig inkomsten" hebben ("Het maakt niet uit of u winst
+  of verlies maakt."), of "U exploiteert een vermogensbestanddeel of een
+  recht."
+- "Nadat u uw onderneming bij de Kamer van Koophandel hebt ingeschreven,
+  laten wij u weten of u ondernemer bent voor de btw."
+- "Maakt u deel uit van een samenwerkingsverband, zoals een maatschap of vof?
+  Dan bent u meestal geen ondernemer voor de btw. Het samenwerkingsverband is
+  wél ondernemer voor de btw."
+- Een holding die alleen aandelen houdt, of een stichting of vereniging
+  zonder economische activiteit: **Bron ontbreekt**. De nagekeken pagina's
+  noemen ze niet.
+
+Bron: [Voor wie geldt de btw?](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/hoe_werkt_de_btw/voor_wie_geldt_de_btw)
+(Belastingdienst), [Ondernemer voor de btw](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/hoe_werkt_de_btw/voor_wie_geldt_de_btw/ondernemer)
+(Belastingdienst)
