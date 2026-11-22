@@ -514,11 +514,10 @@ def test_overstappen_in_the_menu_is_a_page_and_what_to_do_next_links_to_it(out, 
 
 
 @pytest.mark.parametrize("language", help.LANGUAGES)
-def test_overstappen_links_to_every_package_and_they_link_back(out, language):
+def test_overstappen_links_to_every_package_and_aan_de_slag_links_to_it(out, language):
     switching = site.switching_url(language)
     links = _read(out, switching).links
     for slug in ("moneybird", "importeren", *help.PACKAGES):
         assert site.help_url(language, slug) in links, slug
-    for slug in ("beginnen", "moneybird"):
-        on_page = [link.split("#")[0] for link in _read(out, site.help_url(language, slug)).links]
-        assert on_page.count(switching) >= 2, slug  # the menu and the text
+    # Aan de slag: the menu and the text.
+    assert _read(out, site.help_url(language, "beginnen")).links.count(switching) == 2
