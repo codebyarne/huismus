@@ -5,7 +5,11 @@
 The page says what guards Huismus. Each test below holds one of its
 statements against the code as it is, so the page can't keep saying
 something the code stopped doing: change the code, and the test names the
-sentence to rewrite (huismus/templates/site/tested.html)."""
+sentence to rewrite (huismus/templates/site/tested.html).
+
+Where a statement is about how another test or a workflow is written, the
+check here reads that file's text: it is a tripwire for the sentence, not a
+second test of the behaviour, which the named test itself covers."""
 
 import re
 from pathlib import Path
@@ -84,6 +88,7 @@ def test_one_command_runs_every_check_and_github_runs_it_on_every_change():
     gate = _text("scripts/verify.sh")
     assert "uv run pytest" in gate
     assert "makemigrations --check" in gate
+    # "Geen bestanden van een echte administratie": by their place and kind.
     assert "git ls-files -- 'data-import/*' 'data/*' '*.sqlite3' '.env'" in gate
     ci = _text(".github/workflows/ci.yml")
     assert "run: ./scripts/verify.sh" in ci
@@ -123,7 +128,11 @@ def test_toch_bewerken_is_the_one_way_back_and_stops_at_a_credit_note():
 
 def test_a_number_is_taken_while_issuing_and_twenty_at_once_leave_no_gap():
     """ "Een factuur krijgt zijn nummer pas bij het uitgeven, in dezelfde
-    stap" and "Een test vraagt twintig nummers tegelijk aan"."""
+    stap", "Mislukt het uitgeven, dan is er ook geen nummer verbruikt" and
+    "Een test vraagt twintig nummers tegelijk aan"."""
+    assert "def test_issue_refuses_a_number_that_already_exists_and_uses_no_number(" in _text(
+        "tests/documents/test_issuing.py"
+    )
     assert "allocate_number() must be called inside transaction.atomic()" in _text(
         "huismus/documents/numbering.py"
     )
@@ -172,6 +181,8 @@ def test_browser_tests_open_every_page_in_three_widths_and_three_engines():
     and Chromium for every change, Safari's and Firefox's engines as well
     when something you see changes."""
     assert "WIDTHS = [390, 1024, 1440]" in _text("tests/e2e/test_every_page.py")
+    # "Een factuur uitgeven", in a browser.
+    assert 'app.click("#uitgeven-knop")' in _text("tests/e2e/test_browser.py")
     assert "WIDTHS = [390, 1024, 1440]" in _text("tests/e2e/test_walkthrough.py")
     assert demo_history.LAST_YEAR - demo_history.FIRST_YEAR + 1 == 9
     ci = _text(".github/workflows/ci.yml")
@@ -186,6 +197,9 @@ def test_a_release_waits_for_the_security_checks():
     assert "pip-audit" in release and "check --deploy --fail-level WARNING" in release
     assert "  build-and-push:\n    needs: security\n" in release
     assert re.search(r"^    needs: \[security, .*\]$", release, re.M)
+    # The reviewer is an agreement in CLAUDE.md, as the page says; no job runs it.
+    assert "een bevinding met ernst\nhoog of middel houdt de release tegen" in _text("CLAUDE.md")
+    assert "een lage wordt een\nissue" in _text("CLAUDE.md")
     reviewer = _text(".claude/agents/review-veiligheid.md")
     for subject in (
         "Geheimen",
@@ -204,4 +218,6 @@ def test_the_rules_and_the_bugs_found_by_hand_are_where_the_page_says():
     assert "## Hard rules (invariants)" in rules and "### Flow voorleggen" in rules
     for reviewer in ("review-invarianten", "review-uitlegbaarheid", "review-spec"):
         assert (ROOT / ".claude" / "agents" / f"{reviewer}.md").exists(), reviewer
+    assert "De eigenaar is product owner en leest geen code." in rules
+    # The list names the kinds of bug that have no check yet as "nog geen".
     assert "nog geen" in _text(site.TESTED_SOURCES["bugs"])
