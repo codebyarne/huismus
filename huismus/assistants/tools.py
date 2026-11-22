@@ -5,30 +5,39 @@ huismus-intern/besluiten.md, 2026-11-21 "een assistent mag wat jij mag"
 (#273): what the user may do in the app, an assistant may do here, and what
 can't be undone or goes outside asks the user first.
 
-Four kinds of tool:
+Five kinds of tool:
 
 - "read": changes nothing. Marked read-only, so the assistant's app may
   run it without asking: the overview with Te doen, documents and their
   PDF, contacts, expenses, categories, the receipts without an expense,
   the bank page, the year overview, the VAT return, and the settings an
-  assistant needs (never passwords, keys or backups).
+  assistant needs (never passwords, keys or backups). The previews before
+  a "confirm" are read tools too.
 - "draft": makes or changes a draft, through the editor's own forms and
-  documents.drafts.
+  documents.drafts: a new one, a copy, a quote turned into an invoice, a
+  credit note.
 - "add": adds an expense, through the expense page's own forms and
-  expenses.lines, with a receipt from the tray if given (SPEC.md M20,
+  expenses.adding, with a receipt from the tray if given (SPEC.md M20,
   part 2). It gets no number and the user can still change or delete it
   in the app, so it is not marked destructive.
-- "confirm": issuing, sending a quote, mailing. Marked destructive and never
-  read-only, so the assistant's app asks the user first; the button is the
-  app's, the assistant cannot press it. Each has a preview tool before it
-  that says what will happen.
+- "change": changes what the user can change back: an expense (marked to
+  check again), a receipt from the tray onto an expense, categories,
+  customers and archiving them, skipping a bank line. Not destructive
+  either; the answer has the path to the place in Huismus.
+- "confirm": what can't be undone or goes outside (huismus-intern/
+  besluiten.md, 2026-11-22, "AI-koppeling deel 2"): issuing, sending a
+  quote, mailing, a reminder, recording a payment, a quote's answer,
+  deleting, "Toch bewerken" and undoing it, booking a bank line and
+  undoing that. Marked destructive and never read-only, so the
+  assistant's app asks the user first; the button is the app's, the
+  assistant cannot press it. Each has a preview tool before it that says
+  what will happen (a quote's answer: get_document).
 
-Not yet here, coming in the next steps of #273: changing contacts,
-expenses and categories, payments, a quote's answer, reminders, the bank's
-actions, deleting a draft, "Toch bewerken". Every action goes through the
-same function as in the app (issue(), send_quote(), send_document(),
-core.todo, bank.views), so numbering, totals and immutability are checked
-where they always are.
+Every action goes through the same function as the app's screen (issue(),
+send_quote(), send_document(), documents.drafts, documents.payments,
+documents.quoting, documents.reopening, expenses.adding, ContactForm,
+bank.reading), so numbering, totals and immutability are checked where
+they always are. Contact persons stay in the app for now.
 
 Titles are gettext, shown in the default language from the settings
 (assistants.views); descriptions are English, for the assistant.
@@ -47,11 +56,13 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
+from huismus.bank import reading as bank_reading
 from huismus.bank import views as bank
-from huismus.bank.models import BankStatement
+from huismus.bank.models import BankStatement, BankTransaction
 from huismus.business import smtp
 from huismus.business.kor_limit import kor_limit_crossed_by, kor_limit_status
 from huismus.business.models import Settings
+from huismus.contacts.forms import ContactForm
 from huismus.contacts.models import Contact
 from huismus.core import form_messages
 from huismus.core.dashboard import outstanding_invoices
@@ -59,12 +70,16 @@ from huismus.core.models import Attachment
 from huismus.core.templatetags.money import euros, money
 from huismus.core.todo import current_todo
 from huismus.documents.drafts import (
+    copy_document,
     create_credit_note,
+    deletable_drafts,
+    delete_draft,
     document_form,
     line_formset,
     peek_number_for,
     save_draft,
 )
+from huismus.documents.forms import PAYMENT_METHOD_CHOICES, PaymentForm
 from huismus.documents.issuing import IssueError, issue
 from huismus.documents.listing import contact_name
 from huismus.documents.mailing import (
@@ -76,11 +91,21 @@ from huismus.documents.mailing import (
 )
 from huismus.documents.models import Document
 from huismus.documents.numbering import NumberingError, next_numbers_if_issued_today
+from huismus.documents.payments import record_payment
 from huismus.documents.pdf import render_pdf
-from huismus.documents.quoting import QuoteError, send_quote
+from huismus.documents.quoting import (
+    QuoteError,
+    accept_quote,
+    convert_to_invoice,
+    decline_quote,
+    expire_quote,
+    send_quote,
+)
+from huismus.documents.reopening import NOTHING_TO_UNDO, ReopenError, reopen, undo_reopen
 from huismus.documents.totals import compute_totals
 from huismus.documents.vat import default_rate, editor_value, rate_label
 from huismus.expenses import adding
+from huismus.expenses.forms import ExpenseCategoryForm
 from huismus.expenses.models import Expense, ExpenseCategory, VatRate
 from huismus.reports.periods import Period
 from huismus.reports.vat_return import EXEMPT_NOTE, KOR_NOTE, NOT_COUNTED_TITLES, compute_vat_return
@@ -107,7 +132,7 @@ class Tool:
     name: str
     title: str
     # Decides what the assistant's app asks first (see the module docstring).
-    kind: Literal["read", "draft", "add", "confirm"]
+    kind: Literal["read", "draft", "add", "change", "confirm"]
     description: str
     properties: dict
     required: tuple[str, ...]
@@ -862,63 +887,40 @@ def create_credit_note_draft(arguments):
 # --- Expenses ---
 
 
-def _category(name, categories: list[ExpenseCategory]) -> ExpenseCategory | None:
-    """An existing category by its name, in any case. No name is "Geen
-    categorie", as in the app. The assistant makes no categories: the user
-    keeps the list (Uitgaven → Categorieën)."""
-    if not name:
-        return None
-    for category in categories:
-        if category.name.casefold() == str(name).casefold():
-            return category
-    if not categories:
-        raise ToolError(
-            _(
-                "Er zijn nog geen categorieën in Huismus. Laat de categorie weg, "
-                "of maak er een onder Uitgaven → Categorieën."
-            )
-        )
-    names = ", ".join(category.name for category in categories)
-    raise ToolError(
-        _("Deze categorie staat niet in Huismus. Kies een van deze: %(names)s.") % {"names": names}
+def _expense_line(line: dict) -> adding.Line:
+    """A line as the expense page takes it. The category by its name, in
+    any case: a name that isn't there yet makes a new category when the
+    expense is saved, as typing one on the expense page does."""
+    return adding.Line(
+        description=str(line.get("description") or ""),
+        amount=str(line.get("amount", "")),
+        vat_info=None if line.get("vat_info") is None else str(line["vat_info"]),
+        category=None,
+        vat_rate=None if line.get("vat_rate") is None else str(line["vat_rate"]),
+        new_category=str(line.get("category") or ""),
     )
 
 
-def add_expense(arguments):
-    """Validates and saves like "Opslaan" on the expense page, through
-    expenses.adding, as Huismus does with a receipt it read itself."""
+def _expense_lines(arguments, *, required: bool) -> list[adding.Line] | None:
     lines = arguments.get("lines")
+    if lines is None and not required:
+        return None
     if not lines or not all(isinstance(line, dict) for line in lines):
         raise ToolError(_("Vul minstens één regel in met een bedrag."))
-    categories = list(ExpenseCategory.objects.all())
-    inputs = [
-        adding.Line(
-            description=str(line.get("description") or ""),
-            amount=str(line.get("amount", "")),
-            vat_info=None if line.get("vat_info") is None else str(line["vat_info"]),
-            category=_category(line.get("category"), categories),
-            vat_rate=None if line.get("vat_rate") is None else str(line["vat_rate"]),
-        )
-        for line in lines
-    ]
-    receipt = None
-    if arguments.get("receipt_id") is not None:
-        receipt = _tray_receipt(arguments["receipt_id"])
-    try:
-        saved = adding.add_expense(
-            date=arguments.get("date") or timezone.localdate().isoformat(),
-            supplier=arguments.get("supplier") or "",
-            description=arguments.get("description") or "",
-            lines=inputs,
-            receipt=receipt,
-        )
-    except adding.NotAdded as error:
-        raise ToolError(str(error)) from error
+    return [_expense_line(line) for line in lines]
+
+
+def _expense_answer(expense: Expense, categories_before: set[int]) -> dict:
+    lines = list(expense.lines.select_related("category"))
+    new = sorted(
+        {line.category.name for line in lines if line.category}
+        - {line.category.name for line in lines if line.category_id in categories_before}
+    )
     return {
-        "id": saved.pk,
-        "date": _date(saved.date),
-        "supplier": saved.supplier,
-        "description": saved.description,
+        "id": expense.pk,
+        "date": _date(expense.date),
+        "supplier": expense.supplier,
+        "description": expense.description,
         "lines": [
             {
                 "description": line.description,
@@ -927,15 +929,399 @@ def add_expense(arguments):
                 "vat_rate": line.vat_rate or None,
                 "category": line.category.name if line.category else None,
             }
-            for line in saved.lines.select_related("category")
+            for line in lines
         ],
-        "amount": _amount(saved.amount_cents),
+        "amount": _amount(expense.amount_cents),
+        # Made for this expense: the user may want to know.
+        "new_categories": new,
+        "to_check": expense.needs_review,
         # The page to change it or add the receipt, after Huismus's address.
-        "path": reverse("expenses:edit", kwargs={"pk": saved.pk}),
+        "path": reverse("expenses:edit", kwargs={"pk": expense.pk}),
+    }
+
+
+def _category_ids() -> set[int]:
+    return set(ExpenseCategory.objects.values_list("pk", flat=True))
+
+
+def add_expense(arguments):
+    """Validates and saves like "Opslaan" on the expense page, through
+    expenses.adding, as Huismus does with a receipt it read itself."""
+    lines = _expense_lines(arguments, required=True)
+    receipt = None
+    if arguments.get("receipt_id") is not None:
+        receipt = _tray_receipt(arguments["receipt_id"])
+    before = _category_ids()
+    try:
+        saved = adding.add_expense(
+            date=arguments.get("date") or timezone.localdate().isoformat(),
+            supplier=arguments.get("supplier") or "",
+            description=arguments.get("description") or "",
+            lines=lines,
+            receipt=receipt,
+        )
+    except adding.NotAdded as error:
+        raise ToolError(str(error)) from error
+    return {
+        **_expense_answer(saved, before),
         "receipt": _("Het bonnetje zit eraan vast.")
         if receipt
         else _("Een bonnetje voeg je toe in Huismus, bij de uitgave."),
     }
+
+
+def _expense(arguments, name="id") -> Expense:
+    expense_id = arguments.get(name)
+    expense = Expense.objects.filter(pk=expense_id).first() if isinstance(expense_id, int) else None
+    if expense is None:
+        raise ToolError(_("Deze uitgave bestaat niet in Huismus."))
+    return expense
+
+
+def update_expense(arguments):
+    expense = _expense(arguments)
+    lines = _expense_lines(arguments, required=False)
+    before = _category_ids()
+    try:
+        saved = adding.change_expense(
+            expense,
+            date=arguments.get("date"),
+            supplier=arguments.get("supplier"),
+            description=arguments.get("description"),
+            lines=lines,
+        )
+    except adding.NotAdded as error:
+        raise ToolError(str(error)) from error
+    return _expense_answer(saved, before)
+
+
+def attach_receipt(arguments):
+    expense = _expense(arguments, "expense_id")
+    receipt = _tray_receipt(arguments.get("receipt_id"))
+    try:
+        adding.attach_receipt(expense, receipt)
+    except adding.NotAdded as error:
+        raise ToolError(str(error)) from error
+    expense.refresh_from_db()
+    return {**_expense_answer(expense, _category_ids()), "receipt": receipt.filename}
+
+
+def delete_expense_tool(arguments):
+    expense = _expense(arguments)
+    found = {"id": expense.pk, "deleted": True}
+    adding.delete_expense(expense)
+    return found
+
+
+# --- Categories (Uitgaven → Categorieën) ---
+
+
+def _category(arguments) -> ExpenseCategory:
+    category_id = arguments.get("id")
+    category = (
+        ExpenseCategory.objects.filter(pk=category_id).first()
+        if isinstance(category_id, int)
+        else None
+    )
+    if category is None:
+        raise ToolError(_("Deze categorie bestaat niet in Huismus."))
+    return category
+
+
+def _save_category(form) -> dict:
+    """As the row on Categorieën: ExpenseCategoryForm, an empty sort order
+    puts it at the bottom."""
+    if not form.is_valid():
+        raise ToolError(form_messages.as_text(form))
+    category = form.save()
+    return {
+        "id": category.pk,
+        "name": category.name,
+        "path": reverse("expenses:category_list"),
+    }
+
+
+def add_category(arguments):
+    return _save_category(ExpenseCategoryForm({"name": arguments.get("name") or ""}))
+
+
+def rename_category(arguments):
+    category = _category(arguments)
+    form = ExpenseCategoryForm(
+        {"name": arguments.get("name") or "", "sort_order": category.sort_order},
+        instance=category,
+    )
+    return _save_category(form)
+
+
+def delete_category_tool(arguments):
+    category = _category(arguments)
+    found = {"id": category.pk, "name": category.name, "deleted": True}
+    try:
+        adding.delete_category(category)
+    except adding.CategoryInUse as refusal:
+        raise ToolError(str(refusal)) from refusal
+    return found
+
+
+# --- Deleting: what goes ---
+
+
+def preview_delete(arguments):
+    """What delete_draft, delete_expense or delete_category will remove."""
+    what = arguments.get("what")
+    if what == "draft":
+        document = _deletable_draft(arguments)
+        return {
+            "action": "delete_draft",
+            "id": document.pk,
+            "kind": document.kind,
+            "customer": contact_name(document),
+            "total": _amount(document.total_cents),
+            "after": _("Het concept heeft nog geen nummer. Het gaat weg en komt niet terug."),
+        }
+    if what == "expense":
+        expense = _expense(arguments)
+        receipts_with_it = expense.attachments.count()
+        found = {
+            "action": "delete_expense",
+            "id": expense.pk,
+            "date": _date(expense.date),
+            "supplier": expense.supplier,
+            "amount": _amount(expense.amount_cents),
+            "attachments": receipts_with_it,
+        }
+        notes = []
+        if receipts_with_it:
+            notes.append(_("Het bonnetje gaat mee weg. Dat is je bewijs van de uitgave."))
+        if hasattr(expense, "bank_transaction"):
+            notes.append(_("De afschrijving op de bank staat daarna weer bij Te doen."))
+        found["after"] = " ".join(str(note) for note in notes) or _(
+            "De uitgave gaat weg en komt niet terug."
+        )
+        return found
+    if what == "category":
+        category = _category(arguments)
+        used = Expense.objects.filter(lines__category=category).distinct().count()
+        if used:
+            raise ToolError(str(adding.CATEGORY_IN_USE))
+        return {"action": "delete_category", "id": category.pk, "name": category.name}
+    raise ToolError(_("Verwijderen kan bij een concept, een uitgave of een categorie."))
+
+
+# --- Contacts ---
+
+CONTACT_FIELDS = tuple(ContactForm._meta.fields)
+
+
+def _any_contact(arguments) -> Contact:
+    """A contact, archived or not: for changing or archiving it."""
+    contact_id = arguments.get("id")
+    contact = Contact.objects.filter(pk=contact_id).first() if isinstance(contact_id, int) else None
+    if contact is None:
+        raise ToolError(_("Deze klant staat niet in Huismus."))
+    return contact
+
+
+def _contact_answer(contact: Contact) -> dict:
+    return {
+        "id": contact.pk,
+        "name": contact.display_name,
+        "customer_number": contact.customer_number,
+        "archived": contact.archived,
+        **{name: getattr(contact, name) for name in CONTACT_FIELDS},
+        "path": reverse("contacts:edit", kwargs={"pk": contact.pk}),
+    }
+
+
+def _save_contact(form) -> dict:
+    """As Opslaan on the customer page: ContactForm, which gives a new
+    customer the next customer number. Contact persons stay as they are."""
+    if not form.is_valid():
+        raise ToolError(form_messages.as_text(form))
+    return _contact_answer(form.save())
+
+
+def add_contact(arguments):
+    data = {name: arguments[name] for name in CONTACT_FIELDS if name in arguments}
+    return _save_contact(ContactForm({name: str(value) for name, value in data.items()}))
+
+
+def update_contact(arguments):
+    contact = _any_contact(arguments)
+    # The form as the page shows it, posted back with the changes: what
+    # the assistant leaves out stays as it is.
+    form = ContactForm(instance=contact)
+    data = {name: form[name].value() for name in form.fields}
+    data = {name: "" if value is None else value for name, value in data.items()}
+    data.update({name: str(arguments[name]) for name in CONTACT_FIELDS if name in arguments})
+    return _save_contact(ContactForm(data, instance=contact))
+
+
+def archive_contact(arguments):
+    """As Archiveren and Dearchiveren on the customer page
+    (contacts.views.contact_archive_toggle), with the wanted state."""
+    contact = _any_contact(arguments)
+    contact.archived = bool(arguments.get("archived", True))
+    contact.save()
+    return _contact_answer(contact)
+
+
+# --- Bank: the buttons of the bank page (bank.views, bank.reading) ---
+
+
+def _bank_transaction(arguments) -> BankTransaction:
+    line_id = arguments.get("id")
+    line = BankTransaction.objects.filter(pk=line_id).first() if isinstance(line_id, int) else None
+    if line is None:
+        raise ToolError(_("Deze bankregel staat niet in Huismus."))
+    return line
+
+
+def _chosen(line, arguments):
+    """The invoice (money in) or expense (money out) the assistant chose,
+    as the page's choice; None when it chose nothing."""
+    if line.is_outgoing:
+        if arguments.get("expense_id") is None:
+            return None
+        return _expense(arguments, "expense_id")
+    if arguments.get("invoice_id") is None:
+        return None
+    return _document({"id": arguments["invoice_id"]}, kind="invoice", status="issued")
+
+
+def _proposal(line):
+    if line.state != BankTransaction.State.PROPOSED:
+        return None
+    return line.proposed_expense if line.is_outgoing else line.proposed_document
+
+
+def preview_bank_booking(arguments):
+    """What confirm_bank_match, book_bank_line or undo_bank_booking will do
+    with this line."""
+    line = _bank_transaction(arguments)
+    found = {"line": _bank_line(line)}
+    if line.can_undo:
+        if line.is_outgoing:
+            return {
+                **found,
+                "action": "undo_bank_booking",
+                "expense_id": line.expense_id,
+                "after": _(
+                    "Alleen de koppeling gaat weg. De uitgave blijft staan en de "
+                    "afschrijving staat weer bij Te doen."
+                ),
+            }
+        invoice = Document.objects.with_payment_totals().get(pk=line.payment.document_id)
+        return {
+            **found,
+            "action": "undo_bank_booking",
+            "invoice": {"id": invoice.pk, "number": invoice.number},
+            "payment_removed": _amount(line.payment.amount_cents),
+            "outstanding_after": _amount(invoice.outstanding_cents + line.payment.amount_cents),
+            "after": _("De betaling gaat van de factuur af. De regel staat weer bij Te doen."),
+        }
+    if not BankTransaction.objects.waiting().filter(pk=line.pk).exists():
+        raise ToolError(_("Deze bankregel staat niet bij Te doen."))
+    target = _chosen(line, arguments)
+    action = "book_bank_line"
+    if target is None:
+        target = _proposal(line)
+        action = "confirm_bank_match"
+    if target is None:
+        raise ToolError(_NO_CHOICE[line.is_outgoing])
+    if line.is_outgoing:
+        return {
+            **found,
+            "action": action,
+            "expense": {
+                "id": target.pk,
+                "date": _date(target.date),
+                "supplier": target.supplier,
+                "amount": _amount(target.amount_cents),
+            },
+        }
+    invoice = Document.objects.with_payment_totals().get(pk=target.pk)
+    return {
+        **found,
+        "action": action,
+        "invoice": {
+            "id": invoice.pk,
+            "number": invoice.number,
+            "customer": contact_name(invoice),
+            "outstanding_now": _amount(invoice.outstanding_cents),
+        },
+        **_after_payment(invoice, line.amount_cents),
+    }
+
+
+# The page's own words when nothing is chosen (bank.views.book).
+_NO_CHOICE = {True: gettext_lazy("Kies een uitgave."), False: gettext_lazy("Kies een factuur.")}
+_ALREADY = {
+    True: gettext_lazy("Deze afschrijving of uitgave is al geboekt."),
+    False: gettext_lazy("Deze bijschrijving is al geboekt."),
+}
+
+
+def _book_to(line, target) -> dict:
+    """As the page's _book and _link."""
+    try:
+        if line.is_outgoing:
+            bank_reading.link_expense(line, target)
+        else:
+            bank_reading.book(line, target)
+    except ValueError as refusal:
+        raise ToolError(str(_ALREADY[line.is_outgoing])) from refusal
+    line.refresh_from_db()
+    return {**_booked_line(line), "path": reverse("bank:statement")}
+
+
+def confirm_bank_match(arguments):
+    line = _bank_transaction(arguments)
+    target = _proposal(line)
+    if target is None:
+        raise ToolError(
+            _("Huismus heeft voor deze regel geen voorstel. Kies een factuur of uitgave.")
+        )
+    return _book_to(line, target)
+
+
+def book_bank_line(arguments):
+    line = _bank_transaction(arguments)
+    target = _chosen(line, arguments)
+    if target is None:
+        raise ToolError(str(_NO_CHOICE[line.is_outgoing]))
+    return _book_to(line, target)
+
+
+def skip_bank_line(arguments):
+    line = _bank_transaction(arguments)
+    try:
+        bank_reading.skip(line)
+    except ValueError as refusal:
+        raise ToolError(_("Deze bankregel staat niet bij Te doen.")) from refusal
+    line.refresh_from_db()
+    return {**_bank_line(line), "state": str(line.get_state_display())}
+
+
+def restore_bank_line(arguments):
+    line = _bank_transaction(arguments)
+    try:
+        bank_reading.unskip(line)
+    except ValueError as refusal:
+        raise ToolError(_("Deze bankregel is niet overgeslagen.")) from refusal
+    line.refresh_from_db()
+    return {**_bank_line(line), "state": str(line.get_state_display())}
+
+
+def undo_bank_booking(arguments):
+    line = _bank_transaction(arguments)
+    try:
+        bank_reading.undo(line)
+    except ValueError as refusal:
+        raise ToolError(_("Deze betaling was al teruggedraaid.")) from refusal
+    line.refresh_from_db()
+    return {**_bank_line(line), "state": str(line.get_state_display())}
 
 
 # --- Confirm ---
@@ -1023,6 +1409,16 @@ def _mailable(arguments) -> tuple[Document, str, str, str]:
                 "kun je mailen."
             )
         )
+    _mail_ready(document)
+    to = default_recipients(document)
+    if not to:
+        raise ToolError(_("Deze klant heeft geen e-mailadres in Huismus."))
+    subject, body = default_message(document)
+    return document, to, subject, body
+
+
+def _mail_ready(document):
+    """Mailing is set up, and the customer has an address."""
     business = Settings.load()
     if smtp.password_is_missing(business):
         raise ToolError(
@@ -1035,11 +1431,8 @@ def _mailable(arguments) -> tuple[Document, str, str, str]:
         raise ToolError(
             _("Mailen is nog niet ingesteld. Dat doe je in Huismus, onder Instellingen → Mailen.")
         )
-    to = default_recipients(document)
-    if not to:
+    if not default_recipients(document):
         raise ToolError(_("Deze klant heeft geen e-mailadres in Huismus."))
-    subject, body = default_message(document)
-    return document, to, subject, body
 
 
 def preview_mail(arguments):
@@ -1062,12 +1455,233 @@ def mail_document(arguments):
     return {"id": document.pk, "number": document.number, "to": to, "sent": True}
 
 
+# --- Documents: payments, reminders, quotes, copies, deleting, reopening ---
+
+
+def _invoice_for_payment(arguments) -> Document:
+    return _document(arguments, kind="invoice", status="issued")
+
+
+def _payment_form(arguments) -> PaymentForm:
+    """The form of "Betaling registreren", as the user fills it in."""
+    form = PaymentForm(
+        {
+            "paid_on": arguments.get("paid_on") or timezone.localdate().isoformat(),
+            "amount_cents": str(arguments.get("amount", "")),
+            "method": arguments.get("method") or PAYMENT_METHOD_CHOICES[0][0],
+            "note": arguments.get("note") or "",
+        }
+    )
+    if not form.is_valid():
+        raise ToolError(form_messages.as_text(form))
+    return form
+
+
+def _after_payment(invoice, cents) -> dict:
+    left = invoice.outstanding_cents - cents
+    if left < 0:
+        return {"overpaid": _amount(-left)}
+    return {"outstanding_after": _amount(left)}
+
+
+def preview_payment(arguments):
+    invoice = _invoice_for_payment(arguments)
+    form = _payment_form(arguments)
+    cents = form.cleaned_data["amount_cents"]
+    return {
+        "action": "record_payment",
+        "id": invoice.pk,
+        "number": invoice.number,
+        "customer": contact_name(invoice),
+        "amount": _amount(cents),
+        "paid_on": _date(form.cleaned_data["paid_on"]),
+        "method": form.cleaned_data["method"],
+        "outstanding_now": _amount(invoice.outstanding_cents),
+        **_after_payment(invoice, cents),
+    }
+
+
+def record_payment_tool(arguments):
+    invoice = _invoice_for_payment(arguments)
+    record_payment(invoice, _payment_form(arguments))
+    return {
+        **_detail(Document.objects.with_payment_totals().get(pk=invoice.pk)),
+        "path": reverse("documents:edit", kwargs={"pk": invoice.pk}),
+    }
+
+
+def _reminder(arguments) -> tuple[Document, str, str, str]:
+    """As the button Herinnering sturen: only an invoice that is overdue
+    (documents.views.document_reminder), then the same checks as mailing."""
+    invoice = _document(arguments, kind="invoice", status="issued")
+    if invoice.days_overdue is None:
+        raise ToolError(
+            _("Factuur %(number)s is niet te laat. Er is geen herinnering gestuurd.")
+            % {"number": invoice.number}
+        )
+    _mail_ready(invoice)
+    subject, body = default_message(invoice, reminder=True)
+    return invoice, default_recipients(invoice), subject, body
+
+
+def preview_reminder(arguments):
+    invoice, to, subject, _body = _reminder(arguments)
+    return {
+        "action": "send_reminder",
+        "id": invoice.pk,
+        "number": invoice.number,
+        "to": to,
+        "subject": subject,
+        "outstanding": _amount(invoice.outstanding_cents),
+        "days_overdue": invoice.days_overdue,
+        "attachment": f"{invoice.number}.pdf",
+    }
+
+
+def send_reminder(arguments):
+    invoice, to, subject, body = _reminder(arguments)
+    log = send_document(invoice, to=[to], subject=subject, body=body, bcc_self=False, reminder=True)
+    if not log.succeeded:
+        raise ToolError(f"{log.plain_error} {log.error}")
+    return {"id": invoice.pk, "number": invoice.number, "to": to, "sent": True}
+
+
+QUOTE_ANSWERS = {"accepted": accept_quote, "declined": decline_quote, "expired": expire_quote}
+
+
+def answer_quote(arguments):
+    quote = _document(arguments, kind="quote")
+    answer = QUOTE_ANSWERS.get(arguments.get("answer"))
+    if answer is None:
+        raise ToolError(_("Een offerte is geaccepteerd, afgewezen of verlopen."))
+    try:
+        answer(quote)
+    except QuoteError as refusal:
+        raise ToolError(str(refusal)) from refusal
+    return _detail(Document.objects.with_payment_totals().get(pk=quote.pk))
+
+
+def _with_path(document) -> dict:
+    url = "quotes:edit" if document.kind == "quote" else "documents:edit"
+    return {
+        **_detail(Document.objects.with_payment_totals().get(pk=document.pk)),
+        "path": reverse(url, kwargs={"pk": document.pk}),
+    }
+
+
+def convert_quote(arguments):
+    try:
+        invoice = convert_to_invoice(_document(arguments, kind="quote"))
+    except QuoteError as refusal:
+        raise ToolError(str(refusal)) from refusal
+    return _with_path(invoice)
+
+
+def copy_document_tool(arguments):
+    return _with_path(copy_document(_document(arguments, kind__in=["invoice", "quote"])))
+
+
+def _deletable_draft(arguments) -> Document:
+    document = _document(arguments, status="draft")
+    if not deletable_drafts().filter(pk=document.pk).exists():
+        raise ToolError(
+            _(
+                "Dit concept heeft al een nummer, dus het kan niet weg. "
+                "Zet het terug of geef het opnieuw uit."
+            )
+        )
+    return document
+
+
+def delete_draft_tool(arguments):
+    document = _deletable_draft(arguments)
+    found = {"id": document.pk, "kind": document.kind, "deleted": True}
+    delete_draft(document)
+    return found
+
+
+def _reopenable(arguments) -> Document:
+    return _document(arguments, kind__in=["invoice", "credit_note"])
+
+
+def preview_reopen(arguments):
+    """What Toch bewerken, or undoing it, will do, in the words of the
+    detail page's dialog."""
+    document = _reopenable(arguments)
+    found = {"id": document.pk, "kind": document.kind, "number": document.number or None}
+    if document.status == "issued":
+        if document.kind == "credit_note":
+            advice = _(
+                "%(number)s is uitgegeven. Een uitgegeven creditnota corrigeer je meestal "
+                "met een nieuw document: dan blijft wat je klant kreeg zoals het was, en "
+                "staat de correctie er apart naast."
+            )
+        else:
+            advice = _(
+                "%(number)s is uitgegeven. Een uitgegeven factuur corrigeer je meestal "
+                "met een creditnota: dan blijft wat je klant kreeg zoals het was, en "
+                "staat de correctie er apart naast."
+            )
+        return {
+            **found,
+            "action": "reopen_document",
+            "advice": advice % {"number": document.number},
+            "after": _(
+                "Hij is weer een concept, met hetzelfde nummer. Pas aan wat nodig is "
+                "en geef hem opnieuw uit."
+            ),
+        }
+    if document.before_reopening is None:
+        raise ToolError(str(NOTHING_TO_UNDO))
+    return {
+        **found,
+        "action": "undo_reopen",
+        "after": _(
+            "Wat je sinds Toch bewerken veranderde, gaat weg. Het document staat weer "
+            "zoals je klant het kreeg."
+        ),
+    }
+
+
+def reopen_document(arguments):
+    document = _reopenable(arguments)
+    try:
+        reopen(document)
+    except ReopenError as refusal:
+        raise ToolError(str(refusal)) from refusal
+    return _with_path(document)
+
+
+def undo_reopen_tool(arguments):
+    document = _reopenable(arguments)
+    if document.status != "draft":
+        raise ToolError(str(NOTHING_TO_UNDO))
+    try:
+        undo_reopen(document)
+    except ReopenError as refusal:
+        raise ToolError(str(refusal)) from refusal
+    return _with_path(document)
+
+
 # --- The list ---
 
 _ID = {"id": {"type": "integer", "description": "The document's id in Huismus."}}
+
+
+def _id_of(what: str) -> dict:
+    return {"id": {"type": "integer", "description": f"The {what}'s id in Huismus."}}
+
+
 _YEAR = {"year": {"type": "integer", "description": "Calendar year; default: this year."}}
 _LIMIT = {"limit": {"type": "integer", "minimum": 1, "maximum": 100, "description": "Default 20."}}
 _DATE = {"type": "string", "format": "date", "description": "YYYY-MM-DD"}
+_PAYMENT = {
+    "id": {"type": "integer", "description": "The issued invoice's id."},
+    "amount": {"type": ["string", "number"], "description": 'In euros, for example "1.250,00".'},
+    "paid_on": {**_DATE, "description": "YYYY-MM-DD; default: today."},
+    "method": {"type": "string", "enum": [value for value, _label in PAYMENT_METHOD_CHOICES]},
+    "note": {"type": "string"},
+}
 _LINES = {
     "type": "array",
     "minItems": 1,
@@ -1096,6 +1710,60 @@ _LINES = {
         "required": ["description", "unit_price"],
         "additionalProperties": False,
     },
+}
+_EXPENSE_LINES = {
+    "type": "array",
+    "minItems": 1,
+    "items": {
+        "type": "object",
+        "properties": {
+            "description": {"type": "string"},
+            "amount": {
+                "type": ["string", "number"],
+                "description": 'Gross, in euros, for example "42,35".',
+            },
+            "vat_info": {
+                "type": ["string", "number", "null"],
+                "description": "The VAT on the receipt, for information "
+                "only. Required when the user doesn't use the KOR; 0 when "
+                "the receipt shows no VAT.",
+            },
+            "vat_rate": {
+                "type": ["string", "null"],
+                "enum": [*VatRate.values, None],
+                "description": "The VAT rate on the receipt: 21, 9, 0 (0% or "
+                "no VAT), or reverse charged by a supplier in the Netherlands "
+                "(reverse_nl), another EU country (reverse_eu) or outside the "
+                "EU (reverse_non_eu). Required when the user doesn't use the "
+                "KOR; never guess it.",
+            },
+            "category": {
+                "type": "string",
+                "description": "A category by its name (list_categories); a "
+                "new name makes a new category. Omit for none.",
+            },
+        },
+        "required": ["amount"],
+        "additionalProperties": False,
+    },
+}
+_EXPENSE_FIELDS = {
+    "date": {**_DATE, "description": "YYYY-MM-DD; default: today."},
+    "supplier": {"type": "string"},
+    "description": {"type": "string"},
+}
+_CONTACT_FIELDS = {
+    name: {"type": "integer"} if name == "payment_terms_days" else {"type": "string"}
+    for name in CONTACT_FIELDS
+}
+_CONTACT_FIELDS["delivery_method"] = {
+    "type": "string",
+    "enum": [value for value, _label in Contact._meta.get_field("delivery_method").choices] + [""],
+}
+_BANK_LINE = {"id": {"type": "integer", "description": "The bank line's id, from list_bank."}}
+_BANK_TARGET = {
+    "invoice_id": {"type": "integer", "description": "Money in: an issued invoice's id."},
+    "expense_id": {"type": "integer", "description": "Money out: an expense's id."},
 }
 _DRAFT_FIELDS = {
     "reference": {"type": "string", "description": "The customer's own reference (kenmerk)."},
@@ -1152,8 +1820,8 @@ TOOLS = (
         "search_contacts",
         gettext_lazy("Klanten zoeken"),
         "read",
-        "Find customers by name, e-mail or city. Their id is what create_draft needs. "
-        "Contacts cannot be added or changed here: the user does that in Huismus.",
+        "Find customers by name, e-mail or city, archived ones left out. Their id is what "
+        "create_draft needs. A new customer is made with add_contact.",
         {"query": {"type": "string"}, **_LIMIT},
         (),
         search_contacts,
@@ -1292,46 +1960,11 @@ TOOLS = (
         "With receipt_id, the receipt from list_receipts goes onto the expense; other "
         "receipts the user adds in Huismus, at path. "
         "Huismus marks it 'to check' until the user says it's right there. "
-        "Changing or deleting an expense is done in Huismus too.",
+        "A category name that isn't there yet makes a new category: new_categories in the "
+        "answer names them, tell the user.",
         {
-            "date": {**_DATE, "description": "YYYY-MM-DD; default: today."},
-            "supplier": {"type": "string"},
-            "description": {"type": "string"},
-            "lines": {
-                "type": "array",
-                "minItems": 1,
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "description": {"type": "string"},
-                        "amount": {
-                            "type": ["string", "number"],
-                            "description": 'Gross, in euros, for example "42,35".',
-                        },
-                        "vat_info": {
-                            "type": ["string", "number", "null"],
-                            "description": "The VAT on the receipt, for information "
-                            "only. Required when the user doesn't use the KOR; 0 when "
-                            "the receipt shows no VAT.",
-                        },
-                        "vat_rate": {
-                            "type": ["string", "null"],
-                            "enum": [*VatRate.values, None],
-                            "description": "The VAT rate on the receipt: 21, 9, 0 (0% or "
-                            "no VAT), or reverse charged by a supplier in the Netherlands "
-                            "(reverse_nl), another EU country (reverse_eu) or outside the "
-                            "EU (reverse_non_eu). Required when the user doesn't use the "
-                            "KOR; never guess it.",
-                        },
-                        "category": {
-                            "type": "string",
-                            "description": "One of list_expenses' categories; omit for none.",
-                        },
-                    },
-                    "required": ["amount"],
-                    "additionalProperties": False,
-                },
-            },
+            **_EXPENSE_FIELDS,
+            "lines": _EXPENSE_LINES,
             "receipt_id": {
                 "type": "integer",
                 "description": "A receipt from list_receipts that this expense is for.",
@@ -1339,6 +1972,173 @@ TOOLS = (
         },
         ("lines",),
         add_expense,
+    ),
+    Tool(
+        "update_expense",
+        gettext_lazy("Uitgave wijzigen"),
+        "change",
+        "Change an expense through the expense page's forms. Fields left out stay as they "
+        "are; lines, when given, replace all lines (same rules as add_expense). Huismus "
+        "marks it 'to check' again, so the user sees the change.",
+        {**_id_of("expense"), **_EXPENSE_FIELDS, "lines": _EXPENSE_LINES},
+        ("id",),
+        update_expense,
+    ),
+    Tool(
+        "attach_receipt",
+        gettext_lazy("Bonnetje aan uitgave hangen"),
+        "change",
+        "Put a receipt from list_receipts onto an expense there is. Huismus marks the "
+        "expense 'to check' again. Other files the user adds in Huismus.",
+        {
+            "expense_id": {"type": "integer"},
+            "receipt_id": {"type": "integer", "description": "A receipt from list_receipts."},
+        },
+        ("expense_id", "receipt_id"),
+        attach_receipt,
+    ),
+    Tool(
+        "preview_delete",
+        gettext_lazy("Verwijderen voorbereiden"),
+        "read",
+        "What delete_draft, delete_expense or delete_category will remove, and what follows "
+        "from it (a receipt goes with an expense). Show this to the user first.",
+        {
+            "what": {"type": "string", "enum": ["draft", "expense", "category"]},
+            "id": {"type": "integer"},
+        },
+        ("what", "id"),
+        preview_delete,
+    ),
+    Tool(
+        "delete_expense",
+        gettext_lazy("Uitgave verwijderen"),
+        "confirm",
+        "Delete an expense with its receipts and other attachments. Call preview_delete first.",
+        _id_of("expense"),
+        ("id",),
+        delete_expense_tool,
+    ),
+    Tool(
+        "add_category",
+        gettext_lazy("Categorie toevoegen"),
+        "change",
+        "Add an expense category, at the bottom of the list.",
+        {"name": {"type": "string"}},
+        ("name",),
+        add_category,
+    ),
+    Tool(
+        "rename_category",
+        gettext_lazy("Categorie hernoemen"),
+        "change",
+        "Give a category another name. Its expenses keep it.",
+        {**_id_of("category"), "name": {"type": "string"}},
+        ("id", "name"),
+        rename_category,
+    ),
+    Tool(
+        "delete_category",
+        gettext_lazy("Categorie verwijderen"),
+        "confirm",
+        "Delete a category without expenses. One with expenses is refused: give them "
+        "another category first. Call preview_delete first.",
+        _id_of("category"),
+        ("id",),
+        delete_category_tool,
+    ),
+    Tool(
+        "add_contact",
+        gettext_lazy("Klant toevoegen"),
+        "change",
+        "Add a customer: a company name, or a first and last name. Without "
+        "customer_number Huismus gives the next one.",
+        _CONTACT_FIELDS,
+        (),
+        add_contact,
+    ),
+    Tool(
+        "update_contact",
+        gettext_lazy("Klant wijzigen"),
+        "change",
+        "Change a customer, archived or not. Fields left out stay as they are. Issued "
+        "documents keep the details they were issued with. Contact persons the user "
+        "manages in Huismus.",
+        {**_id_of("customer"), **_CONTACT_FIELDS},
+        ("id",),
+        update_contact,
+    ),
+    Tool(
+        "archive_contact",
+        gettext_lazy("Klant archiveren"),
+        "change",
+        "Archive a customer (archived true) or bring one back (false). An archived "
+        "customer is left out of search_contacts and of new documents; nothing is deleted.",
+        {**_id_of("customer"), "archived": {"type": "boolean"}},
+        ("id", "archived"),
+        archive_contact,
+    ),
+    Tool(
+        "preview_bank_booking",
+        gettext_lazy("Boeking voorbereiden"),
+        "read",
+        "What a bank line's booking will do. For a line under to_do: with invoice_id "
+        "(money in) or expense_id (money out) what book_bank_line does, without them "
+        "what confirm_bank_match does with Huismus's proposal. For a booked line: what "
+        "undo_bank_booking takes away. Show this to the user first.",
+        {**_BANK_LINE, **_BANK_TARGET},
+        ("id",),
+        preview_bank_booking,
+    ),
+    Tool(
+        "confirm_bank_match",
+        gettext_lazy("Voorstel bevestigen"),
+        "confirm",
+        "Book a bank line under to_do as Huismus proposed: a payment on the invoice, or "
+        "the link to the expense. Call preview_bank_booking first.",
+        _BANK_LINE,
+        ("id",),
+        confirm_bank_match,
+    ),
+    Tool(
+        "book_bank_line",
+        gettext_lazy("Bankregel boeken"),
+        "confirm",
+        "Book a bank line under to_do on an invoice the user chose (money in: a payment) "
+        "or link it to an expense (money out). Call preview_bank_booking first.",
+        {**_BANK_LINE, **_BANK_TARGET},
+        ("id",),
+        book_bank_line,
+    ),
+    Tool(
+        "skip_bank_line",
+        gettext_lazy("Bankregel overslaan"),
+        "change",
+        "Move a bank line from to_do to Overgeslagen: nothing to book, for example "
+        "private money. restore_bank_line brings it back.",
+        _BANK_LINE,
+        ("id",),
+        skip_bank_line,
+    ),
+    Tool(
+        "restore_bank_line",
+        gettext_lazy("Bankregel terugzetten"),
+        "change",
+        "Bring a skipped bank line back to to_do.",
+        _BANK_LINE,
+        ("id",),
+        restore_bank_line,
+    ),
+    Tool(
+        "undo_bank_booking",
+        gettext_lazy("Boeking terugdraaien"),
+        "confirm",
+        "Undo a booked bank line: money in loses its payment on the invoice, money out "
+        "only its link (the expense stays). The line goes back to to_do. Call "
+        "preview_bank_booking first.",
+        _BANK_LINE,
+        ("id",),
+        undo_bank_booking,
     ),
     Tool(
         "create_draft",
@@ -1405,6 +2205,125 @@ TOOLS = (
         _ID,
         ("id",),
         send_quote_tool,
+    ),
+    Tool(
+        "convert_quote",
+        gettext_lazy("Offerte omzetten naar factuur"),
+        "draft",
+        "Make a draft invoice from a quote, with its customer, lines and texts, as the "
+        "button in Huismus does. The quote stays as it is.",
+        _ID,
+        ("id",),
+        convert_quote,
+    ),
+    Tool(
+        "copy_document",
+        gettext_lazy("Kopie als concept"),
+        "draft",
+        "A new draft of the same kind with the customer, lines and texts of an invoice or "
+        "quote, in any status. It has no number, dates or notes yet. Credit notes are not "
+        "copied.",
+        _ID,
+        ("id",),
+        copy_document_tool,
+    ),
+    Tool(
+        "preview_payment",
+        gettext_lazy("Betaling voorbereiden"),
+        "read",
+        "What record_payment will do with these values: the invoice, the amount, and what "
+        "is outstanding after it (or overpaid). Show this to the user first.",
+        _PAYMENT,
+        ("id", "amount"),
+        preview_payment,
+    ),
+    Tool(
+        "record_payment",
+        gettext_lazy("Betaling registreren"),
+        "confirm",
+        "Record a payment by hand on an issued invoice, as Betaling registreren in Huismus. "
+        "A payment from the bank is booked with book_bank_line instead. Call "
+        "preview_payment first.",
+        _PAYMENT,
+        ("id", "amount"),
+        record_payment_tool,
+    ),
+    Tool(
+        "preview_reminder",
+        gettext_lazy("Herinnering voorbereiden"),
+        "read",
+        "Who send_reminder will mail, with what subject, for an overdue invoice. Show this "
+        "to the user first.",
+        _ID,
+        ("id",),
+        preview_reminder,
+    ),
+    Tool(
+        "send_reminder",
+        gettext_lazy("Herinnering sturen"),
+        "confirm",
+        "Mail a payment reminder for an overdue invoice to the customer's e-mail address, "
+        "with the standard reminder text and the invoice as PDF. Call preview_reminder "
+        "first.",
+        _ID,
+        ("id",),
+        send_reminder,
+        open_world=True,
+    ),
+    Tool(
+        "answer_quote",
+        gettext_lazy("Offerte beantwoorden"),
+        "confirm",
+        "Mark a sent quote as accepted, declined or expired. Huismus can't undo this. Show "
+        "the quote with get_document first.",
+        {
+            **_ID,
+            "answer": {"type": "string", "enum": list(QUOTE_ANSWERS)},
+        },
+        ("id", "answer"),
+        answer_quote,
+    ),
+    Tool(
+        "delete_draft",
+        gettext_lazy("Concept verwijderen"),
+        "confirm",
+        "Delete a draft invoice, credit note or quote that has no number. Issued "
+        "documents are never deleted. Call preview_delete first.",
+        _ID,
+        ("id",),
+        delete_draft_tool,
+    ),
+    Tool(
+        "preview_reopen",
+        gettext_lazy("Toch bewerken voorbereiden"),
+        "read",
+        "What reopen_document (for an issued invoice or credit note) or undo_reopen (for "
+        "one reopened before) will do, with Huismus's advice. Show this to the user first.",
+        _ID,
+        ("id",),
+        preview_reopen,
+    ),
+    Tool(
+        "reopen_document",
+        gettext_lazy("Toch bewerken"),
+        "confirm",
+        "Turn an issued invoice or credit note back into a draft with the same number. "
+        "The user then changes it in Huismus and issues it again; update_draft leaves a "
+        "draft with a number alone. Usually a credit note is the better correction. Call "
+        "preview_reopen first.",
+        _ID,
+        ("id",),
+        reopen_document,
+    ),
+    Tool(
+        "undo_reopen",
+        gettext_lazy("Toch bewerken ongedaan maken"),
+        "confirm",
+        "Put a reopened invoice or credit note back exactly as it was issued. Call "
+        "preview_reopen first.",
+        _ID,
+        ("id",),
+        undo_reopen_tool,
     ),
     Tool(
         "preview_mail",

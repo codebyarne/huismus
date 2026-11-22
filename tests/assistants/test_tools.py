@@ -38,16 +38,6 @@ def _issued(customer, **kwargs):
     return issue(_draft(customer, **kwargs))
 
 
-@pytest.fixture
-def mail_set_up(business):
-    smtp.set_password("app-password-for-tests")
-    business.smtp_provider = "gmail"
-    business.smtp_host = "smtp.gmail.com"
-    business.smtp_port = 587
-    business.smtp_security = "starttls"
-    business.save()
-
-
 LINES = [{"description": "Fotografie", "quantity": 6, "unit": "uur", "unit_price": "85"}]
 
 
@@ -376,10 +366,7 @@ def test_an_expense_from_the_assistant(tool, business):
     assert data["receipt"]
 
 
-def test_without_categories_the_category_is_left_out(tool, business):
-    _data, text, is_error = tool("add_expense", lines=[{"amount": "10", "category": "Lunch"}])
-    assert is_error
-    assert "Laat de categorie weg" in text
+def test_without_a_category_the_line_has_none(tool, business):
     data, _text, is_error = tool("add_expense", lines=[{"amount": "10"}])
     assert not is_error
     assert data["lines"][0]["category"] is None
@@ -431,13 +418,24 @@ def test_an_expense_with_lines_adds_them_up(tool, business):
     assert [line.position for line in expense.lines.all()] == [0, 1]
 
 
-def test_an_unknown_category_names_the_ones_there_are(tool, business):
+def test_an_unknown_category_is_made_as_on_the_expense_page(tool, business):
+    """#273: as typing a new name on the expense page (ExpenseLineForm),
+    at the bottom of the list; an existing name in another case is that one."""
     ExpenseCategory.objects.create(name="Kantoor", sort_order=0)
-    ExpenseCategory.objects.create(name="Reizen", sort_order=1)
-    _data, text, is_error = tool("add_expense", lines=[{"amount": "10", "category": "Lunch"}])
+    data, _text, is_error = tool(
+        "add_expense",
+        lines=[{"amount": "10", "category": "Lunch"}, {"amount": "5", "category": "kantoor"}],
+    )
+    assert not is_error
+    assert data["new_categories"] == ["Lunch"]
+    assert [line["category"] for line in data["lines"]] == ["Lunch", "Kantoor"]
+    lunch = ExpenseCategory.objects.get(name="Lunch")
+    assert lunch.sort_order == 1
+
+
+def test_a_refused_expense_makes_no_category(tool, business):
+    _data, _text, is_error = tool("add_expense", lines=[{"amount": "tien", "category": "Lunch"}])
     assert is_error
-    assert "Kantoor, Reizen" in text
-    assert not Expense.objects.exists()
     assert not ExpenseCategory.objects.filter(name="Lunch").exists()
 
 

@@ -5,6 +5,7 @@ import json
 import pytest
 
 from huismus.assistants import key
+from huismus.business import smtp
 from huismus.business.models import Settings
 from huismus.contacts.models import Contact
 
@@ -58,7 +59,7 @@ def mcp(client):
 def tool(mcp):
     """Calls one tool; returns (structured result or None, text, isError)."""
 
-    def call(name, **arguments):
+    def call(name, /, **arguments):
         answer = mcp("tools/call", {"name": name, "arguments": arguments})
         result = answer["result"]
         return (
@@ -68,3 +69,13 @@ def tool(mcp):
         )
 
     return call
+
+
+@pytest.fixture
+def mail_set_up(business):
+    smtp.set_password("app-password-for-tests")
+    business.smtp_provider = "gmail"
+    business.smtp_host = "smtp.gmail.com"
+    business.smtp_port = 587
+    business.smtp_security = "starttls"
+    business.save()

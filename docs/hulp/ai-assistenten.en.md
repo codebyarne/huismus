@@ -1,8 +1,8 @@
 # AI assistants
 
 You can let an AI assistant, such as ChatGPT, Claude or Gemini, work with
-your records. The assistant can then read what's in them, make drafts and,
-if you approve, issue and mail. You work in the assistant's app. In Huismus
+your records. The assistant can then read what's in them, update things and,
+if you approve, issue, mail and record payments. You work in the assistant's app. In Huismus
 you only connect it.
 
 ## What an assistant can do
@@ -16,26 +16,32 @@ you only connect it.
   default language, your payment terms and the next number. It doesn't see
   your address, KvK number, IBAN, passwords or keys, nor mail texts or the
   mail log.
-- **Make drafts:** make and change a draft invoice or quote, and a draft
-  credit note for an issued invoice. If the customer isn't in Huismus yet,
-  you add them yourself first.
-- **Add expenses:** an expense with one or more lines, with the amount you
-  paid and an existing category. You change or delete it yourself in
-  Huismus.
+- **Make drafts:** make and change a draft invoice or quote, copy an
+  invoice or quote as a new draft, turn a quote into a draft invoice, and
+  make a draft credit note for an issued invoice.
+- **Customers:** add, change and archive a customer. You manage contact
+  persons yourself in Huismus. An issued document keeps the details that
+  were on it.
+- **Expenses and categories:** add or change an expense, with the amount
+  you paid. A category that isn't there yet, it adds. An expense the
+  assistant made or changed stays under To check until you say it's right.
+  It can also add and rename categories.
 - **Process receipts:** your assistant reads the receipts without an
-  expense and makes an expense from each one, with the receipt attached. It
-  doesn't see other attachments. Want Huismus to do this by itself, without
-  you asking? See [Receipt reading](bonnetjes.en.md#receipt-reading).
-- **With your permission:** issue an invoice or credit note, send a quote
-  (it then gets its number) and mail a document to the customer's e-mail
-  address, with the standard text. The assistant first gets a summary to
-  show you: the customer, the amount and the number the document will get.
-  Then the assistant's app asks for your permission, with a button only you
-  can press. If you choose "always allow" there, the app stops asking.
-  Huismus can't see that.
-- **Not yet:** change customers, payments, expenses or categories, answer
-  a quote, send a reminder, delete anything, or "Edit anyway". That comes in
-  a later version.
+  expense and makes an expense from each one, or attaches it to an expense
+  that's already there. It doesn't see other attachments. Want Huismus to
+  do this by itself, without you asking? See
+  [Receipt reading](bonnetjes.en.md#receipt-reading).
+- **Bank:** skip a line and put it back.
+- **With your permission:** what can't be undone or goes outside. That is
+  issuing an invoice or credit note, sending a quote, mailing a document,
+  sending a reminder for an overdue invoice, recording a payment, answering
+  a quote, deleting a draft, expense or category, "Edit anyway" and undoing
+  it, and at the bank confirming a match, recording a line or undoing a
+  booking. The assistant first gets a summary to show you, such as the
+  customer, the amount and the number, or what's outstanding after a
+  payment. Then the assistant's app asks for your permission, with a
+  button only you can press. If you choose "always allow" there, the app
+  stops asking. Huismus can't see that.
 
 What the assistant reads goes to the company behind that assistant (OpenAI,
 Google or Anthropic). Huismus itself doesn't become reachable from the

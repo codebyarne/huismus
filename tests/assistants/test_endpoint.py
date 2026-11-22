@@ -164,22 +164,76 @@ def test_get_is_not_offered(client):
     assert client.get("/mcp").status_code == 405
 
 
-def test_only_issuing_sending_and_mailing_are_destructive(client):
+# What can't be undone or goes outside: the assistant's app asks first
+# (huismus-intern/besluiten.md, 2026-11-21 and 2026-11-22, #273).
+DESTRUCTIVE = {
+    "issue_document",
+    "send_quote",
+    "mail_document",
+    "record_payment",
+    "send_reminder",
+    "answer_quote",
+    "delete_draft",
+    "reopen_document",
+    "undo_reopen",
+    "delete_expense",
+    "delete_category",
+    "confirm_bank_match",
+    "book_bank_line",
+    "undo_bank_booking",
+}
+
+
+def test_only_what_cannot_be_undone_or_goes_outside_is_destructive(client):
     tools = _post(
         client, {"jsonrpc": "2.0", "id": 1, "method": "tools/list"}, secret=key.create()
     ).json()["result"]["tools"]
     destructive = {t["name"] for t in tools if t["annotations"]["destructiveHint"]}
-    assert destructive == {"issue_document", "send_quote", "mail_document"}
+    assert destructive == DESTRUCTIVE
     for tool in tools:
         if tool["name"] in destructive:
             assert tool["annotations"]["readOnlyHint"] is False
     assert len(tools) == len(TOOLS)
 
 
-def test_nothing_deletes_or_reopens():
-    names = " ".join(tool.name for tool in TOOLS)
-    for word in ("delete", "remove", "reopen", "contact", "payment", "update_expense"):
-        assert word not in names.replace("search_contacts", "")
+def test_each_destructive_action_has_a_preview_that_names_it(client):
+    """The read action before it says what will happen (SPEC.md M16);
+    answer_quote shows the quote with get_document."""
+    previews = {
+        "preview_issue",
+        "preview_mail",
+        "preview_payment",
+        "preview_reminder",
+        "preview_delete",
+        "preview_reopen",
+        "preview_bank_booking",
+    }
+    by_name = {tool.name: tool for tool in TOOLS}
+    for name in previews:
+        assert by_name[name].kind == "read"
+    for name in DESTRUCTIVE - {"answer_quote"}:
+        assert any(name in by_name[preview].description for preview in previews), name
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        "update_expense",
+        "attach_receipt",
+        "add_category",
+        "rename_category",
+        "add_contact",
+        "update_contact",
+        "archive_contact",
+        "skip_bank_line",
+        "restore_bank_line",
+    ],
+)
+def test_a_change_that_can_be_undone_asks_nothing(mcp, name):
+    tools = {t["name"]: t for t in mcp("tools/list")["result"]["tools"]}
+    annotations = tools[name]["annotations"]
+    assert annotations["readOnlyHint"] is False
+    assert annotations["destructiveHint"] is False
 
 
 def test_adding_an_expense_is_neither_read_only_nor_destructive(mcp):
