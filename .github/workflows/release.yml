@@ -477,3 +477,25 @@ jobs:
               gh release create "$GITHUB_REF_NAME" --draft --verify-tag --generate-notes --title "Huismus ${version}" "${files[@]}"
           fi
           gh release edit "$GITHUB_REF_NAME" --draft=false
+
+      # What winget and Homebrew need for this version (desktop/catalogs.py;
+      # docs/desktop.md, "winget en Homebrew"): text files that name the two
+      # files above and their SHA-256. Kept with the run; nothing is sent.
+      - uses: actions/checkout@v4
+        with:
+          path: source
+
+      - name: Write the files for winget and Homebrew
+        working-directory: source
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          python3 -m desktop.catalogs "$version" \
+            --windows "../dist/Huismus-${version}-windows.exe" \
+            --macos "../dist/Huismus-${version}-macos.dmg" \
+            --out ../catalogs
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: catalogs
+          path: catalogs
+          retention-days: 90
