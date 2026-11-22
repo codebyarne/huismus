@@ -70,6 +70,7 @@ def test_every_link_inside_the_site_lands_on_a_page_and_heading(out):
     addresses += [site.features_url(lang) for lang in help.LANGUAGES]
     addresses += [site.why_url(lang) for lang in help.LANGUAGES]
     addresses += [site.contribute_url(lang) for lang in help.LANGUAGES]
+    addresses += [site.tested_url(lang) for lang in help.LANGUAGES]
     addresses += [
         site.download_page_url(lang, n) for lang in help.LANGUAGES for n in site.PLATFORMS
     ]

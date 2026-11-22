@@ -25,6 +25,7 @@ Addresses: Dutch at the root, English under /en/.
     /uitleg/<pagina>/   /en/guides/<page>/
     /voorbeelden/       /en/examples/
     /waarom/            /en/why/
+    /getest/            /en/tested/
     /meebouwen/         /en/contribute/
     /download/<mac|windows>/  /en/download/<mac|windows>/
 
@@ -103,6 +104,20 @@ PHOTOS = {
     "schrijver": (360, 720),
 }
 
+# "Zo wordt Huismus getest" (issue #313) says "meer dan … tests": a round
+# number under the count of test functions in tests/, so it stays true while
+# tests are added. tests/core/test_site_tested.py holds it, and every other
+# statement on that page, against the code.
+TESTS_AT_LEAST = 2500
+# What that page links to in the repository, for a visitor who wants to check.
+TESTED_SOURCES = {
+    "tests": "tests",
+    "gate": "scripts/verify.sh",
+    "triggers": "huismus/documents/migrations/0003_immutability_triggers.py",
+    "rules": "CLAUDE.md",
+    "bugs": "BUGS-BY-HAND.md",
+}
+
 _STATIC = Path(settings.BASE_DIR) / "huismus" / "core" / "static" / "core"
 _FONTS = ("inter-latin-wght-normal.woff2", "bricolage-grotesque-latin-opsz-normal.woff2")
 _SITE_CSS = Path(settings.BASE_DIR) / "huismus" / "templates" / "site" / "site.css"
@@ -164,6 +179,17 @@ def switching_url(language: str) -> str:
 
 def why_url(language: str) -> str:
     return "/waarom/" if language == "nl" else "/en/why/"
+
+
+def tested_url(language: str) -> str:
+    """Zo wordt Huismus getest: what guards the app (issue #313). Not in the
+    menu; Waarom Huismus bestaat and the foot link to it."""
+    return "/getest/" if language == "nl" else "/en/tested/"
+
+
+def _thousands(number: int, language: str) -> str:
+    """2500 as a Dutch (2.500) or an English (2,500) reader writes it."""
+    return f"{number:,}".replace(",", "." if language == "nl" else ",")
 
 
 def contribute_url(language: str) -> str:
@@ -343,6 +369,15 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
             "site/why.html",
             {"nav": "why", "switch_url": why_url(other)},
         ),
+        tested_url(language): (
+            "site/tested.html",
+            {
+                "nav": "tested",
+                "switch_url": tested_url(other),
+                "tests_at_least": _thousands(TESTS_AT_LEAST, language),
+                "sources": TESTED_SOURCES,
+            },
+        ),
         contribute_url(language): (
             "site/contribute.html",
             {"nav": "contribute", "switch_url": contribute_url(other)},
@@ -449,6 +484,7 @@ def _links(language: str) -> dict[str, str]:
         "install_url": install_url(language),
         "contribute_url": contribute_url(language),
         "why_url": why_url(language),
+        "tested_url": tested_url(language),
     }
 
 
@@ -585,7 +621,12 @@ def _for_ai_assistants() -> str:
     for language, heading in (("nl", "Nederlands"), ("en", "English")):
         with translation.override(language):
             lines += ["", f"## {heading}", ""]
-            for address in (features_url(language), install_url(language), why_url(language)):
+            for address in (
+                features_url(language),
+                install_url(language),
+                why_url(language),
+                tested_url(language),
+            ):
                 lines.append(f"- https://{DOMAIN}{address}")
             for group in help.groups(TOPICS):
                 for slug in group.topics:
