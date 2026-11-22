@@ -39,8 +39,9 @@ different name on every computer.
   Until you do, Huismus makes no backups. The overview says so with an
   orange notice.
 - **Your mail password.** Enter it again under **Settings → Mail**. The rest
-  of your mail settings is already there. After restoring, Huismus tells you
-  if your password is missing.
+  of your mail settings is already there. If your password is missing,
+  Huismus tells you after restoring, and again when you want to mail an
+  invoice.
 - **Your receipts folder.** Choose it again under **Settings → Receipts
   folder**. Receipts that Huismus had already picked up are in your
   administration as before.

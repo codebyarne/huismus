@@ -263,7 +263,18 @@ def test_a_draft_is_not_mailed(tool, mail_set_up, customer):
 def test_without_mail_set_up_nothing_is_mailed(tool, business, customer):
     _data, text, is_error = tool("preview_mail", id=_issued(customer).pk)
     assert is_error
-    assert "Mailen" in text
+    assert "Mailen is nog niet ingesteld" in text
+
+
+def test_without_only_the_password_the_assistant_says_the_password_is_missing(
+    tool, mail_set_up, customer
+):
+    smtp.set_password("")
+    _data, text, is_error = tool("preview_mail", id=_issued(customer).pk)
+    assert is_error
+    assert "mailwachtwoord ontbreekt" in text
+    assert "Instellingen → Mailen" in text
+    assert len(mail.outbox) == 0
 
 
 # --- Reading ---

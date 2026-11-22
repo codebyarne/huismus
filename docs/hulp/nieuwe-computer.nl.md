@@ -39,8 +39,8 @@ computer anders heten.
   je dat niet doet, maakt Huismus geen back-ups. Het overzicht zegt dat met
   een oranje melding.
 - **Je mailwachtwoord.** Vul het opnieuw in bij **Instellingen → Mailen**.
-  De rest van je mailinstellingen staat er al. Huismus zegt het na het
-  terugzetten als je wachtwoord ontbreekt.
+  De rest van je mailinstellingen staat er al. Ontbreekt je wachtwoord, dan
+  zegt Huismus dat na het terugzetten, en ook als je een factuur wilt mailen.
 - **Je bonnetjesmap.** Kies hem opnieuw bij **Instellingen → Bonnetjesmap**.
   Bonnetjes die Huismus al had opgehaald, staan gewoon in je administratie.
 - **De AI-dienst die je bonnetjes leest.** Kies de dienst opnieuw bij
