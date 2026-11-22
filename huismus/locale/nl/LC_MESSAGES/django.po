@@ -7728,10 +7728,7 @@ msgstr ""
 msgid "Hoe je werkt"
 msgstr ""
 
-msgid "Vertel het in je eigen woorden"
-msgstr ""
-
-msgid "Vul dit alleen in als de appbouwer je over je bericht mag mailen."
+msgid "Laat je e-mailadres achter als de appbouwer je over je bericht mag mailen."
 msgstr ""
 
 msgid "Deze afbeelding kan niet mee. Maak hem opnieuw."
