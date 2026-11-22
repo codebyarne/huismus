@@ -7610,8 +7610,10 @@ msgid "Neem al je jaren mee"
 msgstr ""
 
 msgid ""
-"Huismus neemt je klanten, facturen, offertes en uitgaven uit Moneybird één "
-"op één over, met pdf’s en bonnetjes. Je factuurnummers lopen door."
+"Huismus neemt je klanten, facturen, offertes en uitgaven mee uit je oude "
+"pakket, met pdf’s en bonnetjes. Uit Moneybird gaat het één op één, uit "
+"Rompslomp, Tellow, e-Boekhouden.nl, Jortt en Excel via het sjabloon. Je "
+"factuurnummers lopen door."
 msgstr ""
 
 msgid "Zo stap je over"
@@ -7620,7 +7622,7 @@ msgstr ""
 msgid "Exporteer alles"
 msgstr ""
 
-msgid "Je downloadt je administratie uit Moneybird."
+msgid "Je downloadt je administratie uit je oude pakket."
 msgstr ""
 
 msgid "Eerst een proefdraai"
