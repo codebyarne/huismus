@@ -10625,9 +10625,6 @@ msgstr "Download your invoices, quotes, customers and expenses as CSV, with the 
 msgid "Bedrag zonder uitgaveregel"
 msgstr "Amount without an expense line"
 
-msgid "Onderdelen"
-msgstr "Sections"
-
 msgid "Kies wat je in het menu ziet. Waar al iets in staat, blijft erin."
 msgstr "Choose what you see in the menu. Whatever already has something in it stays."
 

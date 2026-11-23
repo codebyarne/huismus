@@ -8630,24 +8630,6 @@ msgstr ""
 msgid "Nieuwe uitgave maken"
 msgstr ""
 
-msgid "Kies wat je in het menu ziet. Waar al iets in staat, blijft erin."
-msgstr ""
-
-msgid "Alleen facturen"
-msgstr ""
-
-msgid "Met je bonnetjes en categorieën."
-msgstr ""
-
-msgid "Je hebt offertes, dus Offertes blijft in het menu."
-msgstr ""
-
-msgid "Je hebt uitgaven of bonnetjes, dus Uitgaven blijft in het menu."
-msgstr ""
-
-msgid "Je hebt een bankafschrift ingelezen, dus Bank blijft in het menu."
-msgstr ""
-
 msgid "Hoog tarief"
 msgstr ""
 
@@ -8725,8 +8707,25 @@ msgid "Download je facturen, offertes, klanten en uitgaven als CSV, met de pdf's
 msgstr ""
 
 msgid "Bedrag zonder uitgaveregel"
+msgstr ""
 
-msgid "Offertes staat uit bij Instellingen › Onderdelen. Zet het daar aan om een offerte te maken."
+msgid "Kies wat je in het menu ziet. Waar al iets in staat, blijft erin."
+msgstr ""
+
+msgid "Alleen facturen"
+msgstr ""
+
+msgid "Met je bonnetjes en categorieën."
+msgstr ""
+
+msgid "Je hebt offertes, dus Offertes blijft in het menu."
+msgstr ""
+
+msgid "Je hebt uitgaven of bonnetjes, dus Uitgaven blijft in het menu."
+msgstr ""
+
+msgid "Je hebt een bankafschrift ingelezen, dus Bank blijft in het menu."
+msgstr ""
 
 msgid "Offertes staat uit bij Instellingen › Menu. Zet het daar aan om een offerte te maken."
 msgstr ""
