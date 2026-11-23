@@ -80,6 +80,11 @@ _ELSEWHERE = (
     "{{ authorize_url }}",
     "{{ release.page_url }}",
     "{{ belastingdienst_url }}",
+    # The Belastingdienst's pages under the profit and loss statement (M28).
+    "{{ source_profit }}",
+    "{{ source_figures }}",
+    "{{ source_costs }}",
+    "{{ source_kor }}",
 )
 
 
