@@ -20,10 +20,16 @@ LOCALE = ROOT / "huismus" / "locale"
 HELP = ROOT / "docs" / "hulp"
 
 # The README and docs/*.md hold Dutch and English side by side, so both
-# lists apply. Three are left out on purpose: the writing guide quotes the
-# words it forbids, and the invoice requirements and tax rules quote the
-# Belastingdienst (text about law or tax is a question for the owner, CLAUDE.md).
-DOCS_NOT_CHECKED = {"schrijfwijzer.md", "invoice-requirements.md", "belastingregels.md"}
+# lists apply. Four are left out on purpose: the writing guide quotes the
+# words it forbids, and the invoice requirements, tax rules and auditfile
+# sources quote the Belastingdienst and RGS word for word (text about law or
+# tax is a question for the owner, CLAUDE.md).
+DOCS_NOT_CHECKED = {
+    "schrijfwijzer.md",
+    "invoice-requirements.md",
+    "belastingregels.md",
+    "auditfile.md",
+}
 
 # A sentence joined with an em dash; the writing guide wants a full stop,
 # a colon or a comma. (A title like "Back-ups — Huismus" is not a msgid.)
