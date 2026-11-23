@@ -8628,10 +8628,7 @@ msgid "Kies bestaande uitgave"
 msgstr ""
 
 msgid "Nieuwe uitgave maken"
-
-msgid "Onderdelen"
 msgstr ""
-
 
 msgid "Kies wat je in het menu ziet. Waar al iets in staat, blijft erin."
 msgstr ""
