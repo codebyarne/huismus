@@ -8629,3 +8629,79 @@ msgstr ""
 
 msgid "Nieuwe uitgave maken"
 msgstr ""
+
+msgid "Hoog tarief"
+msgstr ""
+
+msgid "Laag tarief"
+msgstr ""
+
+msgid "0% of niet bij jou belast"
+msgstr ""
+
+msgid "Btw verlegd, klant in een ander EU-land"
+msgstr ""
+
+msgid "Btw verlegd naar jou"
+msgstr ""
+
+msgid "Btw verlegd, uit landen buiten de EU"
+msgstr ""
+
+msgid "Btw verlegd, uit landen binnen de EU"
+msgstr ""
+
+msgid "Debiteuren"
+msgstr ""
+
+msgid "Beginbalans, nog in te delen"
+msgstr ""
+
+msgid "Btw 1a hoog tarief"
+msgstr ""
+
+msgid "Btw 1b laag tarief"
+msgstr ""
+
+msgid "Btw 2a verlegd naar jou"
+msgstr ""
+
+msgid "Btw 4a uit landen buiten de EU"
+msgstr ""
+
+msgid "Btw 4b uit landen binnen de EU"
+msgstr ""
+
+msgid "Btw, niet in een rubriek"
+msgstr ""
+
+msgid "Omzet 1a hoog tarief"
+msgstr ""
+
+msgid "Omzet 1b laag tarief"
+msgstr ""
+
+msgid "Omzet 1e 0% of niet bij jou belast"
+msgstr ""
+
+msgid "Omzet 3b binnen de EU"
+msgstr ""
+
+msgid "Omzet, niet in een rubriek"
+msgstr ""
+
+msgid "Verkoop"
+msgstr ""
+
+msgid "Inkoop"
+msgstr ""
+
+#, python-format
+msgid "Betaling %(number)s"
+msgstr ""
+
+msgid "Kosten zonder categorie"
+msgstr ""
+
+msgid "Download je facturen, offertes, klanten en uitgaven als CSV, met de pdf's, bonnetjes en een auditfile erbij. Werkt ook zonder Huismus."
+msgstr ""

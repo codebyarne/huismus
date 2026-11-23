@@ -20,9 +20,9 @@ your accountant doesn't log in, but works with what you download.
 The PDFs in the export are the same ones your client received. Each expense
 has its receipt, named after the expense's number.
 
-## What isn't there yet
+## The audit file
 
-Huismus doesn't make an XAF audit file yet, the file many accounting
-programs read. So your accountant works with the CSVs and the PDFs. The audit
-file is on the list; for what else Huismus does and what comes later, see
-[mijnhuismus.nl/en/features](https://mijnhuismus.nl/en/features/).
+The export holds an audit file (XAF 4.0) per year, the file many accounting
+programs read. What's in it and what isn't, see
+[Exporting](exporteren.en.md#the-audit-file). For what else Huismus does and
+what comes later, see [mijnhuismus.nl/en/features](https://mijnhuismus.nl/en/features/).

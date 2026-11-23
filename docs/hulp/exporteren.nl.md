@@ -2,8 +2,8 @@
 
 Wil je je administratie buiten Huismus gebruiken, bijvoorbeeld voor je
 boekhouder of in een spreadsheet? Download dan een export: één ZIP met je
-facturen, offertes, klanten en uitgaven als CSV, en de pdf's en bonnetjes
-erbij. Die kun je openen zonder Huismus.
+facturen, offertes, klanten en uitgaven als CSV, de pdf's en bonnetjes, en
+een auditfile per jaar. Die kun je openen zonder Huismus.
 
 ## Een export downloaden
 
@@ -29,6 +29,8 @@ op haar eigen datum. Klanten gaan altijd allemaal mee, ook gearchiveerde.
   het nummer als naam. Het is dezelfde pdf als die je met **Downloaden**
   krijgt. Voor een factuur uit Moneybird is dat de originele pdf.
 - **bonnetjes**: elk bonnetje, met het nummer van de uitgave ervoor.
+- **auditfile-2025.xaf**: de auditfile van dat jaar. Kies je **Alles**, dan
+  zit er een auditfile per jaar in. Zie [De auditfile](#de-auditfile).
 
 Concepten gaan niet mee. Een factuur die je met **Toch bewerken** weer
 concept hebt gemaakt ook niet, tot je hem opnieuw uitgeeft.
@@ -43,6 +45,30 @@ Per btw-tarief staan er twee kolommen, bijvoorbeeld **omzet 21%** en **btw
 uit Moneybird met afwijkende btw (bijvoorbeeld door een korting) toont in
 Huismus één regel "Btw". Bij zo'n factuur blijven de kolommen per tarief
 leeg en staan alleen de totalen er.
+
+## De auditfile
+
+Een auditfile is het bestand dat een boekhoudprogramma inleest: je
+boekhouder of een ander pakket krijgt je jaar dan in één keer binnen.
+Huismus maakt hem in versie 4.0 (XAF), zoals de Belastingdienst die
+beschrijft op
+[odb.belastingdienst.nl](https://odb.belastingdienst.nl/documentatie/xml-auditfile-financieel-xaf-4-0-3/).
+
+Erin staan je klanten, je facturen en creditnota's, de betalingen en je
+uitgaven, geboekt op een vast rekeningschema. De omzet en de kosten zijn
+gelijk aan het jaaroverzicht. Reken je btw, dan is de btw per rubriek gelijk
+aan het btw-aangifterapport. Elke uitgavencategorie krijgt een eigen
+rekening met de naam van de categorie.
+
+Wat er niet in staat, omdat Huismus het niet bijhoudt:
+
+- je banksaldo, je eigen vermogen en wat je privé opnam of stortte;
+- investeringen en afschrijving;
+- of je een uitgave privé betaalde: elke uitgave staat tegenover de bank.
+
+Aan het begin van het jaar staat alleen wat klanten je toen nog moesten
+betalen. Het bedrag ertegenover staat op **Beginbalans, nog in te delen**;
+dat deelt je boekhouder zelf in. Een echte beginstand invullen komt later.
 
 ## Openen in een spreadsheet
 
