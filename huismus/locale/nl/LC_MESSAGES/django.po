@@ -8162,9 +8162,9 @@ msgid "Je boekhouding op <span class=\"underline\">je eigen computer</span>"
 msgstr ""
 
 msgid ""
-"Huismus is een gratis app voor je facturen, offertes en bonnetjes, met de "
-"bedragen voor je btw-aangifte. Kom je van Moneybird? Neem al je jaren mee, "
-"tot op de cent."
+"Huismus is een gratis app voor je facturen, offertes, bonnetjes en "
+"bankafschriften, met de bedragen voor je btw-aangifte. Kom je van Moneybird, "
+"een ander pakket of Excel? Neem al je jaren mee."
 msgstr ""
 
 msgid "Geen abonnement"
