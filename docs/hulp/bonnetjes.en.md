@@ -59,7 +59,7 @@ says which file it is and why.
 ## Making an expense of a receipt
 
 On **Expenses** there is a **Receipts** button, with how many receipts have
-no expense yet. Click **Create expense** next to a receipt: you go to
+no expense yet. Click **Create new expense** next to a receipt: you go to
 **Process** (see below), with the receipt large beside the fields. Fill them
 in and click **Save**. You get the next one right away.
 
@@ -147,7 +147,7 @@ expense, with the reason, when:
 - the VAT isn't on it, while you don't use the small business scheme (KOR);
 - it looks like an expense you already have: the same day and the same amount.
 
-Make that expense yourself, with **Create expense**. Huismus never sends the
+Make that expense yourself, with **Create new expense**. Already have it? Choose it with **Choose existing expense**. Huismus never sends the
 same receipt to the service twice.
 
 Can't Huismus read for a while, because the service refuses your key or can't

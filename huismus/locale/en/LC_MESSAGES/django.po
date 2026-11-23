@@ -10341,3 +10341,6 @@ msgstr "For an expense you already have?"
 
 msgid "Kies bestaande uitgave"
 msgstr "Choose existing expense"
+
+msgid "Nieuwe uitgave maken"
+msgstr "Create new expense"

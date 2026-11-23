@@ -58,7 +58,7 @@ Bonnetjesmap zegt dan welk bestand het is en waarom.
 ## Een uitgave maken van een bonnetje
 
 Bij **Uitgaven** staat de knop **Bonnetjes**, met hoeveel bonnetjes er nog
-geen uitgave hebben. Klik op **Uitgave maken** bij een bonnetje: je komt in
+geen uitgave hebben. Klik op **Nieuwe uitgave maken** bij een bonnetje: je komt in
 **Verwerken** (zie hieronder), met het bonnetje groot naast de velden. Vul
 ze in en klik op **Opslaan**. Je krijgt meteen het volgende.
 
@@ -149,7 +149,7 @@ uitgave, met de reden erbij, als:
 - de btw er niet bij staat, terwijl je de kleineondernemersregeling (KOR) niet gebruikt;
 - het lijkt op een uitgave die je al hebt: dezelfde dag en hetzelfde bedrag.
 
-Maak die uitgave dan zelf, met **Uitgave maken**. Huismus stuurt hetzelfde
+Maak die uitgave dan zelf, met **Nieuwe uitgave maken**. Heb je hem al, kies hem dan met **Kies bestaande uitgave**. Huismus stuurt hetzelfde
 bonnetje nooit twee keer naar de dienst.
 
 Lukt het lezen even niet, omdat de dienst je sleutel weigert of niet
