@@ -10621,3 +10621,6 @@ msgstr "Costs without a category"
 
 msgid "Download je facturen, offertes, klanten en uitgaven als CSV, met de pdf's, bonnetjes en een auditfile erbij. Werkt ook zonder Huismus."
 msgstr "Download your invoices, quotes, customers and expenses as CSV, with the PDFs, receipts and an audit file. Works without Huismus too."
+
+msgid "Bedrag zonder uitgaveregel"
+msgstr "Amount without an expense line"

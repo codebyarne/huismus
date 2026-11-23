@@ -8705,3 +8705,6 @@ msgstr ""
 
 msgid "Download je facturen, offertes, klanten en uitgaven als CSV, met de pdf's, bonnetjes en een auditfile erbij. Werkt ook zonder Huismus."
 msgstr ""
+
+msgid "Bedrag zonder uitgaveregel"
+msgstr ""
