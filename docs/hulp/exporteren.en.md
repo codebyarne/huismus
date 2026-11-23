@@ -68,8 +68,8 @@ What isn't in it, because Huismus doesn't keep track of it:
   bank.
 
 At the start of the year there's only what customers still owed you then.
-The amount against it is on **Beginbalans, nog in te delen** (opening
-balance, to be allocated); your accountant allocates it. Entering a real
+The amount against it is on **Opening balance, to be allocated**; your
+accountant allocates it. Entering a real
 opening position comes later.
 
 ## Opening it in a spreadsheet
