@@ -31,6 +31,8 @@ OUTSIDE_EU = "buiten_eu"
 QUOTES = "offertes"
 EXPENSES = "uitgaven"
 BANK = "bank"
+# Not a part of its own: a page under Facturen once there is a series (#82).
+RECURRING = "periodiek"
 
 # Rechtsvorm: the one axis that is stored (Settings.legal_entity, #302),
 # because no setting or data says it. Empty: not chosen.
@@ -137,15 +139,15 @@ class Profile:
     @cached_property
     def parts_in_use(self) -> frozenset[str]:
         """The parts with data in them: a quote (a draft too), an expense or
-        a receipt waiting in the tray, a bank statement. Categories don't
-        count: they are there from the start."""
-        return self._with_data({QUOTES, EXPENSES, BANK})
+        a receipt waiting in the tray, a bank statement, a recurring series.
+        Categories don't count: they are there from the start."""
+        return self._with_data({QUOTES, EXPENSES, BANK, RECURRING})
 
     def _with_data(self, parts) -> frozenset[str]:
         """Those of `parts` with data in them; asks only about those."""
         from huismus.bank.models import BankStatement
         from huismus.core.models import Attachment
-        from huismus.documents.models import Document
+        from huismus.documents.models import Document, RecurringInvoice
         from huismus.expenses.models import Expense
 
         found = set()
@@ -157,6 +159,8 @@ class Profile:
             found.add(EXPENSES)
         if BANK in parts and BankStatement.objects.exists():
             found.add(BANK)
+        if RECURRING in parts and RecurringInvoice.objects.exists():
+            found.add(RECURRING)
         return frozenset(found)
 
     @cached_property

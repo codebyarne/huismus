@@ -109,6 +109,12 @@ One table for quotes, invoices and credit notes.
 ### NumberSequence
 `kind`, `year` (nullable), `last_value`. Allocated at issue time, inside the same transaction as the status change.
 
+### RecurringInvoice
+`frequency` (`month` | `quarter` | `year`), `day` (the day of the month it runs on; a shorter month takes its last day), `next_date`, `stopped_on`. A series of recurring invoices (M27). Never deleted: stopping sets `stopped_on`.
+
+### RecurringInvoiceDocument
+`series` FK, `document` FK, `planned_on` (the period a draft was made for; empty for the invoice the series started from). Which invoices belong to a series; its own table, so an issued invoice joins a series without its row changing (invariant 1). A deleted draft takes its link along.
+
 ### EmailLog (append-only)
 `document` FK, `sent_at`, `to`, `bcc`, `subject`, `body`, `attachment_name`, `attachment_sha256`, `succeeded`, `error`. One row per attempt to mail a document (M10), successful or not. Never updated or deleted.
 
@@ -217,7 +223,7 @@ Huismus mails an issued invoice, an issued credit note or a quote that has been 
 - **Mailing changes nothing about the document**: no status, snapshot, number or total (invariants 1 and 4). A draft quote is sent first, then mailed: two steps.
 - Sending happens in the request, with a timeout; there is no queue (principle 6). Tests use Django's locmem mail backend and never send real mail.
 - **Payment reminder** (added 2026-11-15, #114): an issued invoice that is overdue (due date passed, not fully paid) has "Herinnering sturen" as the main action of its page, and "Betaling registreren" turns secondary there. It opens the same mail form, filled with the reminder text (its own subject and body per language in the same settings screen, with `{openstaand}`, what is still open after payments and credit notes, and `{vervaldatum}`), with the invoice's PDF attached. The page says how many days the invoice is overdue and when the last reminder that went out was sent; the timeline marks reminders as such (`EmailLog.reminder`). An invoice that is not overdue gets none: the form sends you back to the invoice. Never automatic, and no collection costs or interest.
-- Out of scope: recurring invoices, automatic reminders, AI/MCP access, retrying in the background, configurable default texts.
+- Out of scope: automatic reminders, AI/MCP access, retrying in the background, configurable default texts.
 *Done when:* mailing works against a real SMTP server from the running container, tests cover the log, the attachment and the untouched document, there is an e2e test for the button, strings exist in Dutch and English, and `docs/hulp/mailen.*.md` explains both setups, including how to make a Gmail app password (M17).
 
 ### M11 — Desktop app (macOS and Windows)
@@ -429,6 +435,16 @@ Issue #123; scope by the product-owner agent on 2026-11-13, version and build ch
 - **Every platform:** the file is in the ZIP each installation already downloads; Docker, the Mac app and the Windows app get the same.
 *Done when:* tests, written first, validate the file against the official XSD (also every year of the demo history), check that every booking closes, and that revenue, costs and input VAT equal the year overview and the VAT per box the VAT return, with the KOR on and off; credit notes, payments, an import without VAT per rate, drafts and reopened documents, and the opening balance are covered; the export test finds one auditfile per year; strings exist in Dutch and English.
 
+### M27 — Recurring invoices
+Issue #82; plan and eight questions decided by the product-owner agent on 2026-11-23 (`huismus-intern/besluiten.md`). An invoice that comes back every month, quarter or year, as a draft: issuing stays the user's click, so no number is ever handed out unseen (invariant 2).
+- **Start:** "Periodiek maken…" on an issued invoice (also an imported one) that is in no running series: how often, and the date of the next draft. That date defaults to the first date in the rhythm of the invoice's date after today, and is never today or earlier, also when changed later. Not from a draft or a credit note.
+- **The draft:** when its date has come, Huismus makes a draft copy of the newest invoice in the series (`documents.drafts.copy_document`: customer, lines, texts, T.a.v., reference; the VAT of the lines follows the settings as for any copy). No number, no issue date: issuing gives the day it is issued, so numbers and dates stay in the same order. Something changed in a draft goes on to the next one; there is no separate template. A deleted draft leaves the series running.
+- **When:** nothing runs in the background (principle 6). Opening the Overzicht, Facturen or Periodiek makes what is due, one draft per period missed, without a maximum, each remembering the date it was planned for. A message says how many; "Te doen" lists them ("gepland op 1 oktober"). Each period is claimed by moving `next_date` on with a conditional update in the same transaction as its draft (`huismus/documents/recurring.py`), so two requests at once never make it twice and a failure leaves neither.
+- **Screens:** the invoice's page says the series runs and when the next one comes; the draft's editor says it is recurring and that changes carry over. Facturen gets a button "Periodiek" once there is a series (`periodiek` in the profile's axis Werk, from the data): a page with the running and the stopped series, and per series a page to change how often and the next date, to stop it, and its invoices. A stopped series stays; the invoice can start a new one.
+- **Every platform:** the same in Docker, the Mac app and the Windows app: the draft appears when Huismus is opened, not while it is closed.
+- **Not in this milestone:** issuing directly with a number, mailing by itself, a period in the line text ("Hosting {maand}"), and importing Moneybird's schedule (its own issue).
+*Done when:* tests, written first, cover the dates (month ends, back to the start day), catching up, never twice under concurrency, no number, copying the newest, VAT after a change of settings, stopping and starting again; view tests cover every screen; a browser test makes an invoice recurring, sees its draft and stops it on a phone and a desktop; the pages are in `test_every_page`; strings exist in Dutch and English; `docs/hulp/facturen` explains it.
+
 ## 7. Moneybird import (M5)
 
 ### What Moneybird exports (as documented by Moneybird)
@@ -519,7 +535,7 @@ Collect **anonymised sample exports** (contacts, invoices per invoice/per line, 
 
 ## 12. Later / out of scope for v1
 
-Peppol, multi-currency. Decided by the owner on 2026-11-07 and now in scope, each with its own issue: recurring invoices (#82), time tracking (#80, #81), bank statement import as a file (CAMT.053 or MT940, #77, now M23), payment reminders (#114, now in M10), a profit and loss statement per year (#109), and importing from other packages (#108, now M22). Decided by the owner on 2026-11-13 (`huismus-intern/besluiten.md`, "Sprintplanning") and in scope, after the ones above: a UBL e-invoice attached to an invoice, made locally (#169; sending through Peppol stays with the central server, #64), simple mileage records without a computed allowance (#125), investments and depreciation after the profit and loss statement (#124), a summary for the ICP return with its source first (#168), and saved articles to pick as invoice lines (#167).
+Peppol, multi-currency. Decided by the owner on 2026-11-07 and now in scope, each with its own issue: recurring invoices (#82, now M27), time tracking (#80, #81), bank statement import as a file (CAMT.053 or MT940, #77, now M23), payment reminders (#114, now in M10), a profit and loss statement per year (#109), and importing from other packages (#108, now M22). Decided by the owner on 2026-11-13 (`huismus-intern/besluiten.md`, "Sprintplanning") and in scope, after the ones above: a UBL e-invoice attached to an invoice, made locally (#169; sending through Peppol stays with the central server, #64), simple mileage records without a computed allowance (#125), investments and depreciation after the profit and loss statement (#124), a summary for the ICP return with its source first (#168), and saved articles to pick as invoice lines (#167).
 
 ## 13. Open questions
 

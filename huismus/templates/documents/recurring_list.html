@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load i18n money %}
+
+{% block title %}{% translate "Periodiek" %} — Huismus{% endblock %}
+
+{% block content %}
+{% comment %}Recurring invoices (#82). Only reachable once there is a series: the
+button "Periodiek" on Facturen appears then. Every series stays, also a
+stopped one; nothing here is ever deleted.{% endcomment %}
+<div class="page-head">
+    <div class="titles">
+        <a class="back" href="{% url 'documents:list' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Facturen" %}</a>
+        <h1>{% translate "Periodiek" %}</h1>
+        <p class="lede">{% translate "Facturen die vanzelf terugkomen. Op de geplande dag staat er een concept klaar; uitgeven doe je zelf." %}</p>
+    </div>
+</div>
+
+{% if not running and not stopped %}
+<div class="card">
+    <div class="empty">
+        <h2>{% translate "Nog geen periodieke facturen" %}</h2>
+        <p>{% translate "Open een uitgegeven factuur en kies Periodiek maken." %}</p>
+    </div>
+</div>
+{% endif %}
+
+{% if running %}
+<section class="card list-card" aria-labelledby="lopend">
+    <div class="card-head"><h2 id="lopend">{% translate "Lopend" %}</h2></div>
+    {% include "documents/_recurring_rows.html" with rows=running %}
+</section>
+{% endif %}
+{% if stopped %}
+<section class="card list-card" aria-labelledby="gestopt" style="margin-top:var(--s-4)">
+    <div class="card-head"><h2 id="gestopt">{% translate "Gestopt" %}</h2></div>
+    {% include "documents/_recurring_rows.html" with rows=stopped %}
+</section>
+{% endif %}
+{% endblock %}

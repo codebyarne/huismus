@@ -85,6 +85,7 @@ def create_history(seed: int = 1, last_day: date = LAST_DAY) -> None:
     # Open work in the current year: a draft invoice and a sent quote.
     _draft(rng, contacts[0])
     _quote(rng, last_day.year, contacts[1], last_day, status="sent")
+    _recurring(last_day)
     # Two expenses an AI assistant filled in, still to check ("Nakijken",
     # SPEC.md M20 part 2b). Without rng, so the rest stays the same.
     for supplier, cents, category in (
@@ -110,6 +111,22 @@ def create_history(seed: int = 1, last_day: date = LAST_DAY) -> None:
             supplier=supplier,
             description=text,
         )
+
+
+def _recurring(last_day: date) -> None:
+    """Recurring invoices (#82): hosting every month, still running, and a
+    yearly one that stopped. The running one's next date lies after today,
+    so opening a page makes no drafts behind a test's back."""
+    from django.utils import timezone
+
+    from huismus.documents.recurring import first_date_after, start_series, stop_series
+
+    issued = Document.objects.filter(kind="invoice", status="issued").order_by("-issue_date", "-pk")
+    monthly, yearly = issued[0], issued[1]
+    today = max(last_day, timezone.localdate())
+    start_series(monthly, "month", first_date_after(monthly.issue_date, "month", today))
+    stopped = start_series(yearly, "year", first_date_after(yearly.issue_date, "year", today))
+    stop_series(stopped, last_day)
 
 
 def _settings() -> None:
