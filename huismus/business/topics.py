@@ -109,16 +109,13 @@ TOPICS = (
     ),
 )
 
-# Instellingen › Onderdelen (#260): a topic like the others, but in the
+# Instellingen › Menu (#260): a topic like the others, but in the
 # group Huismus (GROUPS below).
 TOPICS += (
     Topic(
-        "onderdelen",
-        _("Onderdelen"),
-        _(
-            "Wat je niet gebruikt, haal je uit het menu. "
-            "Een onderdeel waar iets in staat, blijft erin."
-        ),
+        "menu",
+        _("Menu"),
+        _("Kies wat je in het menu ziet. Waar al iets in staat, blijft erin."),
         ("show_quotes", "show_expenses", "show_bank"),
     ),
 )
@@ -201,7 +198,7 @@ def cards(settings: Settings, theme: str = "") -> list[dict]:
     # page itself says.
     shown = profile_axes.profile(settings).parts_shown
     names = [str(name) for part, name in PART_NAMES if part in shown]
-    summary["onderdelen"] = (", ".join(names) or _("Alleen facturen"), None)
+    summary["menu"] = (", ".join(names) or _("Alleen facturen"), None)
 
     result = [
         {
@@ -395,7 +392,7 @@ GROUPS = (
     (_("Bedrijf en facturen"), ("bedrijf", "kor", "facturen", "huisstijl", "mailen")),
     (_("Bonnetjes"), ("bonnetjesmap", "bonnetjes-lezen")),
     (_("Back-ups en export"), ("back-ups", "exporteren")),
-    (_("Huismus"), ("onderdelen", "ai-assistenten", "updates", "wachtwoord", "weergave")),
+    (_("Huismus"), ("menu", "ai-assistenten", "updates", "wachtwoord", "weergave")),
 )
 
 # An icon per card, from huismus/templates/icons.svg.
@@ -409,7 +406,7 @@ ICONS = {
     "bonnetjes-lezen": "sparkles",
     "back-ups": "archive",
     "exporteren": "download",
-    "onderdelen": "menu",
+    "menu": "menu",
     "ai-assistenten": "chat",
     "updates": "refresh",
     "wachtwoord": "lock",

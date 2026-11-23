@@ -37,7 +37,7 @@
         <nav class="nav" aria-label="{% translate 'Hoofdmenu' %}">
             <a href="{% url 'home' %}"{% if nav_section == "home" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#home"></use></svg>{% translate "Overzicht" %}</a>
             <a href="{% url 'documents:list' %}"{% if nav_section == "documents" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#file"></use></svg>{% translate "Facturen" %}</a>
-            {% comment %}Offertes, Uitgaven and Bank only when shown (#260, Instellingen › Onderdelen; core.context_processors.parts).{% endcomment %}
+            {% comment %}Offertes, Uitgaven and Bank only when shown (#260, Instellingen › Menu; core.context_processors.parts).{% endcomment %}
             {% if show_quotes %}<a href="{% url 'quotes:list' %}"{% if nav_section == "quotes" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#tag"></use></svg>{% translate "Offertes" %}</a>{% endif %}
             {% if show_expenses %}<a href="{% url 'expenses:list' %}"{% if nav_section == "expenses" and not nav_subsection %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#wallet"></use></svg>{% translate "Uitgaven" %}</a>
             {% if nav_section == "expenses" %}

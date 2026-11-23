@@ -10628,8 +10628,9 @@ msgstr "Amount without an expense line"
 msgid "Onderdelen"
 msgstr "Sections"
 
-msgid "Wat je niet gebruikt, haal je uit het menu. Een onderdeel waar iets in staat, blijft erin."
-msgstr "Take what you don't use out of the menu. A section with something in it stays."
+
+msgid "Kies wat je in het menu ziet. Waar al iets in staat, blijft erin."
+msgstr "Choose what you see in the menu. Whatever already has something in it stays."
 
 msgid "Alleen facturen"
 msgstr "Invoices only"
@@ -10646,8 +10647,8 @@ msgstr "You have expenses or receipts, so Expenses stays in the menu."
 msgid "Je hebt een bankafschrift ingelezen, dus Bank blijft in het menu."
 msgstr "You've imported a bank statement, so Bank stays in the menu."
 
-msgid "Offertes staat uit bij Instellingen › Onderdelen. Zet het daar aan om een offerte te maken."
-msgstr "Quotes is off at Settings › Sections. Switch it on there to make a quote."
+msgid "Offertes staat uit bij Instellingen › Menu. Zet het daar aan om een offerte te maken."
+msgstr "Quotes is off at Settings › Menu. Switch it on there to make a quote."
 
-msgid "Uitgaven staat uit bij Instellingen › Onderdelen. Zet het daar aan om een uitgave of categorie toe te voegen."
-msgstr "Expenses is off at Settings › Sections. Switch it on there to add an expense or category."
+msgid "Uitgaven staat uit bij Instellingen › Menu. Zet het daar aan om een uitgave of categorie toe te voegen."
+msgstr "Expenses is off at Settings › Menu. Switch it on there to add an expense or category."

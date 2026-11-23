@@ -507,7 +507,7 @@ def test_skipping_and_restoring_a_line(tool, business):
     assert error and "niet overgeslagen" in text
 
 
-# --- Onderdelen (#260): what "Nieuw" doesn't offer, an assistant doesn't make ---
+# --- Menu (#260): what "Nieuw" doesn't offer, an assistant doesn't make ---
 
 
 def _switch_off(**parts):
@@ -522,7 +522,7 @@ def test_with_quotes_off_an_assistant_makes_no_quote(tool, business, customer):
     lines = [{"description": "Ontwerp", "unit_price": "100"}]
     _found, text, error = tool("create_draft", kind="quote", contact_id=customer.pk, lines=lines)
     assert error
-    assert "Instellingen › Onderdelen" in text
+    assert "Instellingen › Menu" in text
     assert not Document.objects.filter(kind="quote").exists()
     # An invoice still can.
     _found, _text, error = tool("create_draft", kind="invoice", contact_id=customer.pk, lines=lines)
@@ -532,7 +532,7 @@ def test_with_quotes_off_an_assistant_makes_no_quote(tool, business, customer):
 def test_with_expenses_off_an_assistant_adds_no_expense_or_category(tool, business):
     _switch_off(expenses=True)
     _found, text, error = tool("add_expense", lines=[{"amount": "10"}])
-    assert error and "Instellingen › Onderdelen" in text
+    assert error and "Instellingen › Menu" in text
     _found, _text, error = tool("add_category", name="Reizen")
     assert error
     assert not Expense.objects.exists()

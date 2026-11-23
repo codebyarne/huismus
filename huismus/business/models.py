@@ -180,7 +180,7 @@ class Settings(TimestampedModel):
     )
     feedback_status = models.CharField(max_length=10, choices=feedback.STATUS_CHOICES, blank=True)
 
-    # Instellingen › Onderdelen (#260, SPEC.md principle 7): whether a whole
+    # Instellingen › Menu (#260, SPEC.md principle 7): whether a whole
     # part is in the menu and under "Nieuw". A choice of the user, not a
     # feature flag. A part with data in it shows whatever this says
     # (core.profile.Profile.parts_shown); the data itself is never hidden.
