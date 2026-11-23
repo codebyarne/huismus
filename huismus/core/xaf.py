@@ -19,6 +19,11 @@ user's own: under the KOR, or without VAT for another reason, its VAT
 counts nowhere and the costs are gross (CLAUDE.md, hard rule 7), as on the
 year overview. So the accounts add up to the cent to both reports.
 
+Master data (the business, the customers as relations) is as it is now,
+like klanten.csv; a booking names the customer of the document's snapshot.
+A 3b row counts on the invoice date here; the VAT return counts it on the
+delivery date when there is one, so such a row can fall in another year.
+
 Every amount is written positive with its side, D or C, as the format asks;
 here a booking line carries one signed number, debit positive.
 """
@@ -27,7 +32,6 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import date
 
-from django.db.models import Prefetch
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 from lxml import etree
@@ -69,8 +73,6 @@ VAT_CODES = {
     "4b": gettext_lazy("Btw verlegd, uit landen binnen de EU"),
     "5b": gettext_lazy("Voorbelasting"),
 }
-# Each expense line's rate as a percentage, for its VAT code.
-INPUT_VAT_PERCENT = {"21": "21", "9": "9", "0": "0"}
 
 
 @dataclass(frozen=True)
@@ -135,18 +137,14 @@ def _sign(document) -> int:
     return -1 if document.kind == "credit_note" else 1
 
 
-def _rows_that_add_up(document) -> list:
-    """The VAT per rate stored at issue, when it is the document's: none for
-    a document with the KOR text (the VAT return names it apart) or for an
-    import whose stored totals are not those of its lines."""
-    rows = list(document.vat_rows.all())
-    if document.kor_text_snapshot or not rows:
+def _vat_rows(document) -> list:
+    """The VAT per rate stored at issue, as the VAT return reads it: none
+    for a document with the KOR text, which the VAT return names apart.
+    An import whose stored totals are not those of its lines has no rows
+    (documents.totals.vat_rows)."""
+    if document.kor_text_snapshot:
         return []
-    revenue = sum(row.revenue_cents for row in rows)
-    tax = sum(row.tax_cents for row in rows)
-    if (revenue, tax) != (document.subtotal_cents, document.tax_cents):
-        return []
-    return rows
+    return list(document.vat_rows.all())
 
 
 def _percent(rate_bp: int) -> str:
@@ -165,19 +163,26 @@ def _sale(document) -> Transaction:
         invoice=document.number,
     )
     transaction.lines.append(Line(DEBTORS, sign * document.total_cents, "", document.contact_id))
-    rows = _rows_that_add_up(document)
-    if not rows:
+    rows = _vat_rows(document)
+    if rows:
+        country = customer_country(document)
+        for row in rows:
+            code = sales_box(row.rate_bp, row.reverse_charge, country)
+            vat = (code, _percent(row.rate_bp), -sign * row.tax_cents) if code else None
+            transaction.lines.append(
+                Line(REVENUE.get(code, REVENUE_ELSEWHERE), -sign * row.revenue_cents, vat=vat)
+            )
+            transaction.lines.append(
+                Line(VAT_TO_PAY.get(code, VAT_ELSEWHERE), -sign * row.tax_cents)
+            )
+    else:
         transaction.lines.append(Line(REVENUE_ELSEWHERE, -sign * document.subtotal_cents))
-        transaction.lines.append(Line(VAT_ELSEWHERE, -sign * document.tax_cents))
-        return transaction
-    country = customer_country(document)
-    for row in rows:
-        code = sales_box(row.rate_bp, row.reverse_charge, country)
-        vat = (code, _percent(row.rate_bp), -sign * row.tax_cents) if code else None
-        transaction.lines.append(
-            Line(REVENUE.get(code, REVENUE_ELSEWHERE), -sign * row.revenue_cents, vat=vat)
-        )
-        transaction.lines.append(Line(VAT_TO_PAY.get(code, VAT_ELSEWHERE), -sign * row.tax_cents))
+    # Whatever the rows leave of the stored total: the VAT of a document
+    # without rows, or an import whose stated total is not its subtotal
+    # plus VAT (a rounding cent of the package it came from).
+    rest = -sum(line.cents for line in transaction.lines)
+    if rest:
+        transaction.lines.append(Line(VAT_ELSEWHERE, rest))
     return transaction
 
 
@@ -205,12 +210,13 @@ def _purchase(expense, cost_account: dict, no_vat: bool) -> Transaction:
         str(expense.pk),
     )
     lines = transaction.lines
-    for line in expense.lines.all():
+    expense_lines = list(expense.lines.all())
+    for line in expense_lines:
         account = cost_account.get(line.category_id, NO_CATEGORY)
         gross, vat = line.amount_cents, line.vat_info_cents
         counts = not no_vat and vat is not None
         if counts and line.vat_rate in INPUT_VAT_RATES:
-            code = ("5b", INPUT_VAT_PERCENT[line.vat_rate], vat)
+            code = ("5b", line.vat_rate, vat)  # "21", "9" or "0": the percentage
             lines.append(Line(account, gross - vat, line.description, vat=code))
             lines.append(Line(INPUT_VAT, vat, line.description))
         elif counts and line.vat_rate in PURCHASE_BOX_BY_RATE:
@@ -224,9 +230,9 @@ def _purchase(expense, cost_account: dict, no_vat: bool) -> Transaction:
             lines.append(Line(account, gross, line.description))
     # The expense's own amount is what left the bank, as the year overview
     # counts it; lines that don't add up to it leave the rest uncategorised.
-    rest = expense.amount_cents - sum(line.amount_cents for line in expense.lines.all())
+    rest = expense.amount_cents - sum(line.amount_cents for line in expense_lines)
     if rest:
-        lines.append(Line(NO_CATEGORY, rest))
+        lines.append(Line(NO_CATEGORY, rest, _("Bedrag zonder uitgaveregel")))
     lines.append(Line(BANK, -expense.amount_cents))
     return transaction
 
@@ -335,9 +341,7 @@ def auditfile(year: int) -> bytes:
         .order_by("paid_on", "pk")
     )
     expenses = (
-        Expense.objects.filter(date__year=year)
-        .prefetch_related(Prefetch("lines"))
-        .order_by("date", "pk")
+        Expense.objects.filter(date__year=year).prefetch_related("lines").order_by("date", "pk")
     )
     transactions = [_sale(document) for document in sales]
     transactions += [_payment(payment) for payment in payments]
@@ -451,6 +455,8 @@ def auditfile(year: int) -> bytes:
         _add(journal, "jrnID", journal_id)
         _add(journal, "desc", str(name))
         _add(journal, "jrnTp", kind)
+        # A booking whose amounts are all 0 (an invoice of € 0) is left out.
+        # Within a journal the numbers follow date, then document number.
         in_journal = [t for t in transactions if t.journal == journal_id and t.lines]
         for number, transaction in enumerate(in_journal, 1):
             element = _add(journal, "transaction")

@@ -178,6 +178,25 @@ Met de KOR, of zonder btw om een andere reden, telt de btw op uitgaven nergens
 (harde regel 7): de kosten zijn bruto en er is geen voorbelasting. Dat geldt dan
 voor elk jaar, net als in het jaaroverzicht en het btw-aangifterapport.
 
+Wat niet in een rubriek valt, maakt de boeking toch sluitend:
+
+- Een factuur zonder btw per tarief zet zijn omzet op "Omzet, niet in een
+  rubriek" en de rest van het totaal op "Btw, niet in een rubriek". Zo ook een
+  import waarvan het totaal één cent afwijkt van subtotaal plus btw (een
+  afronding van het pakket waar hij vandaan kwam): dat verschil staat daar.
+- Een uitgave waarvan de regels samen minder zijn dan het bedrag: het verschil
+  staat op "Kosten zonder categorie", met de omschrijving "Bedrag zonder
+  uitgaveregel". Het jaaroverzicht telt het bedrag van de uitgave, dus de kosten
+  blijven gelijk.
+
+Een rij in rubriek 3b staat op de factuurdatum. Het btw-aangifterapport telt
+hem op de leverdatum als die er is; valt die in een ander jaar, dan staat de
+rij in de auditfile in een ander jaar dan in het rapport.
+
+De stamgegevens (je bedrijf, je klanten als relatie) zijn zoals ze nu zijn,
+net als in `klanten.csv`. De omschrijving van een boeking noemt de klant zoals
+op het document (de snapshot).
+
 De openingsbalans op 1 januari: per klant wat er openstond, uit alle facturen,
 creditnota's en betalingen van vóór dat jaar, op Debiteuren, tegenover
 "Beginbalans, nog in te delen". Het totaal is het eindsaldo van Debiteuren in

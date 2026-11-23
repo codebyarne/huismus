@@ -4,6 +4,7 @@
 valid against the Belastingdienst's own XSD, every transaction closes, and
 its accounts add up to the cent to the year overview and the VAT return."""
 
+import hashlib
 import io
 import zipfile
 from collections import defaultdict
@@ -20,7 +21,7 @@ from huismus.core.demo_history import FIRST_YEAR, LAST_YEAR, create_history
 from huismus.documents.models import Document, DocumentLine, Payment
 from huismus.documents.reopening import reopen
 from huismus.expenses.lines import ExpenseLineInput, create_expense
-from huismus.expenses.models import ExpenseCategory
+from huismus.expenses.models import Expense, ExpenseCategory
 from huismus.reports.periods import YEAR, Period
 from huismus.reports.vat_return import compute_vat_return
 from huismus.reports.year_overview import compute_year_overview
@@ -320,3 +321,46 @@ def test_nine_years_of_demo_data_are_valid_and_close(schema):
         overview = compute_year_overview(year)
         revenue = -sum(c for a, c in _balances(root).items() if a.startswith("8"))
         assert revenue == overview.revenue_cents, year
+
+
+def test_an_import_whose_total_is_not_subtotal_plus_vat_still_closes():
+    # A package's own stated total, a cent off its subtotal plus VAT.
+    document = Document.objects.create(
+        kind="invoice",
+        status="draft",
+        number="2025-0043",
+        contact=_contact(),
+        issue_date="2025-05-01",
+        source="moneybird",
+        external_id="43",
+    )
+    DocumentLine.objects.create(
+        document=document, description="Werk", quantity=1, unit_price_cents=9000, tax_rate_bp=2100
+    )
+    Document.objects.filter(pk=document.pk).update(
+        status="issued", subtotal_cents=9000, tax_cents=1890, total_cents=10891
+    )
+
+    balances = _balances(_parse(2025))
+
+    assert balances[xaf.DEBTORS] == 10891
+    assert balances["8090"] == -9000
+    assert balances["1590"] == -1891
+
+
+def test_an_expense_whose_lines_fall_short_puts_the_rest_without_a_category():
+    expense = create_expense([ExpenseLineInput("Papier", 1000, None, None)], date="2025-02-03")
+    Expense.objects.filter(pk=expense.pk).update(amount_cents=1500)
+
+    balances = _balances(_parse(2025))
+
+    assert balances["4999"] == 1500
+    assert balances[xaf.BANK] == -1500
+    assert compute_year_overview(2025).expenses_cents == 1500
+
+
+def test_the_xsd_is_the_one_the_belastingdienst_publishes():
+    # docs/auditfile.md, section 1: unchanged from XAF 4.0.3.
+    assert hashlib.sha256(XSD.read_bytes()).hexdigest() == (
+        "a6f35d4639deb3c4a4dc1b060cbf946558c8d3291a84ff6a75de2a0f6590dd82"
+    )
