@@ -2,8 +2,8 @@
 
 Want to use your administration outside Huismus, for your accountant or in
 a spreadsheet? Download an export: one ZIP with your invoices, quotes,
-customers and expenses as CSV, with the PDFs and receipts. You can open it
-without Huismus.
+customers and expenses as CSV, the PDFs and receipts, and an audit file per
+year. You can open it without Huismus.
 
 ## Downloading an export
 
@@ -30,6 +30,8 @@ its own date. All customers are always included, archived ones too.
   named after its number. It's the same PDF **Download** gives you. For an
   invoice from Moneybird, that's the original PDF.
 - **receipts**: every receipt, with the expense's number in front.
+- **auditfile-2025.xaf**: the year's audit file. Choose **Everything** and
+  there's an audit file per year. See [The audit file](#the-audit-file).
 
 Drafts aren't included. Neither is an invoice you turned back into a draft
 with **Edit anyway**, until you issue it again.
@@ -44,6 +46,31 @@ Lines with VAT reverse charged go in **revenue reverse charge**. An invoice
 from Moneybird with different VAT (from a discount, say) shows one "VAT" row
 in Huismus. For such an invoice the columns per rate stay empty and only the
 totals are filled in.
+
+## The audit file
+
+An audit file is the file an accounting program reads: your accountant or
+another package gets your year in one go. Huismus makes it in version 4.0
+(XAF), as the Dutch tax authority describes it on
+[odb.belastingdienst.nl](https://odb.belastingdienst.nl/documentatie/xml-auditfile-financieel-xaf-4-0-3/).
+
+It holds your customers, your invoices and credit notes, the payments and
+your expenses, booked on a fixed chart of accounts. Revenue and costs are
+the same as on the year overview. If you charge VAT, the VAT per box is the
+same as on the VAT return report. Each expense category gets an account of
+its own, with the category's name.
+
+What isn't in it, because Huismus doesn't keep track of it:
+
+- your bank balance, your equity and what you took out or put in privately;
+- investments and depreciation;
+- whether you paid an expense privately: every expense is set against the
+  bank.
+
+At the start of the year there's only what customers still owed you then.
+The amount against it is on **Beginbalans, nog in te delen** (opening
+balance, to be allocated); your accountant allocates it. Entering a real
+opening position comes later.
 
 ## Opening it in a spreadsheet
 

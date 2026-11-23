@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""Exporteren (SPEC.md M19) as a user does it: from the year overview to the
+"""Exporteren (SPEC.md M19, M26) as a user does it: from the year overview to the
 export page with that year chosen, then the ZIP, opened and looked into."""
 
 import csv
@@ -46,6 +46,11 @@ def test_export_a_year_from_the_year_overview_and_look_inside(app, history):
     assert len(pdfs) == issued.filter(kind="invoice").count()
     expenses = archive.read("uitgaven.csv").decode("utf-8-sig").splitlines()
     assert len(expenses) - 1 == Expense.objects.filter(date__year=year).count()
+    # The auditfile of that year (issue #123): one, with the year in it.
+    assert [name for name in archive.namelist() if name.endswith(".xaf")] == [
+        f"auditfile-{year}.xaf"
+    ]
+    assert f"<fiscalYear>{year}</fiscalYear>" in archive.read(f"auditfile-{year}.xaf").decode()
 
 
 def test_from_settings_everything_is_chosen_and_english_names_follow_the_screen(app, contact):

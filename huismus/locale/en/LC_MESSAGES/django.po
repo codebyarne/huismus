@@ -10545,3 +10545,79 @@ msgstr "Choose existing expense"
 
 msgid "Nieuwe uitgave maken"
 msgstr "Create new expense"
+
+msgid "Hoog tarief"
+msgstr "High rate"
+
+msgid "Laag tarief"
+msgstr "Low rate"
+
+msgid "0% of niet bij jou belast"
+msgstr "0% or not taxed with you"
+
+msgid "Btw verlegd, klant in een ander EU-land"
+msgstr "VAT reverse charged, customer in another EU country"
+
+msgid "Btw verlegd naar jou"
+msgstr "VAT reverse charged to you"
+
+msgid "Btw verlegd, uit landen buiten de EU"
+msgstr "VAT reverse charged, from countries outside the EU"
+
+msgid "Btw verlegd, uit landen binnen de EU"
+msgstr "VAT reverse charged, from countries within the EU"
+
+msgid "Debiteuren"
+msgstr "Debtors"
+
+msgid "Beginbalans, nog in te delen"
+msgstr "Opening balance, to be allocated"
+
+msgid "Btw 1a hoog tarief"
+msgstr "VAT 1a high rate"
+
+msgid "Btw 1b laag tarief"
+msgstr "VAT 1b low rate"
+
+msgid "Btw 2a verlegd naar jou"
+msgstr "VAT 2a reverse charged to you"
+
+msgid "Btw 4a uit landen buiten de EU"
+msgstr "VAT 4a from countries outside the EU"
+
+msgid "Btw 4b uit landen binnen de EU"
+msgstr "VAT 4b from countries within the EU"
+
+msgid "Btw, niet in een rubriek"
+msgstr "VAT, not in a box"
+
+msgid "Omzet 1a hoog tarief"
+msgstr "Revenue 1a high rate"
+
+msgid "Omzet 1b laag tarief"
+msgstr "Revenue 1b low rate"
+
+msgid "Omzet 1e 0% of niet bij jou belast"
+msgstr "Revenue 1e 0% or not taxed with you"
+
+msgid "Omzet 3b binnen de EU"
+msgstr "Revenue 3b within the EU"
+
+msgid "Omzet, niet in een rubriek"
+msgstr "Revenue, not in a box"
+
+msgid "Verkoop"
+msgstr "Sales"
+
+msgid "Inkoop"
+msgstr "Purchases"
+
+#, python-format
+msgid "Betaling %(number)s"
+msgstr "Payment %(number)s"
+
+msgid "Kosten zonder categorie"
+msgstr "Costs without a category"
+
+msgid "Download je facturen, offertes, klanten en uitgaven als CSV, met de pdf's, bonnetjes en een auditfile erbij. Werkt ook zonder Huismus."
+msgstr "Download your invoices, quotes, customers and expenses as CSV, with the PDFs, receipts and an audit file. Works without Huismus too."

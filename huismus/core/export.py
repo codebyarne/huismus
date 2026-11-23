@@ -5,8 +5,9 @@ read without Huismus. A backup is for putting Huismus back; this is for the
 accountant, and for keeping invoices readable anywhere else.
 
 In the ZIP: a CSV each for invoices and credit notes, quotes, their lines,
-customers, their contact persons, expenses and expense lines (core.csv_files), and the PDF of
-every document and every receipt. Never a draft, nor a document back in
+customers, their contact persons, expenses and expense lines (core.csv_files), the
+PDF of every document and every receipt, and an auditfile per year
+(core.xaf). Never a draft, nor a document back in
 draft through "Toch bewerken". A year counts by document date, as on the
 year overview, and an expense by its own date; customers are always all of
 them.
@@ -34,7 +35,7 @@ from huismus.documents.pdf import render_pdf
 from huismus.documents.totals import compute_totals, revenue_by_rate
 from huismus.expenses.models import Expense
 
-from . import export_format
+from . import export_format, xaf
 from .csv_files import Amount, csv_bytes
 from .export_format import expense_labels, labels
 
@@ -369,6 +370,10 @@ def write_zip(file, year: int | None) -> None:
     with zipfile.ZipFile(file, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         for stem, header, table in tables:
             archive.writestr(f"{stem}.csv", csv_bytes(header, table))
+        # The auditfile has the same name in both languages: the name of
+        # the format (issue #123).
+        for each_year in [year] if year else sorted(years()):
+            archive.writestr(f"auditfile-{each_year}.xaf", xaf.auditfile(each_year))
 
         # PDFs and receipts are compressed already: stored as they are.
         taken = set()

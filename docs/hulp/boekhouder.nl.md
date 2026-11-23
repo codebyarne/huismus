@@ -21,9 +21,9 @@ jij downloadt.
 De pdf's in de export zijn dezelfde als die je klant kreeg. Bij elke uitgave
 zit het bonnetje, met het nummer van de uitgave ervoor.
 
-## Wat er nog niet is
+## De auditfile
 
-Een XAF-auditfile, het bestand dat veel boekhoudprogramma's inlezen, maakt
-Huismus nog niet. Je boekhouder werkt dus met de CSV's en de pdf's. De
-auditfile staat op de lijst; wat Huismus verder kan en wat later komt, lees je op
-[mijnhuismus.nl/functies](https://mijnhuismus.nl/functies/).
+In de export zit per jaar een auditfile (XAF 4.0), het bestand dat veel
+boekhoudprogramma's inlezen. Wat erin staat en wat niet, lees je bij
+[Exporteren](exporteren.nl.md#de-auditfile). Wat Huismus verder kan en wat
+later komt, lees je op [mijnhuismus.nl/functies](https://mijnhuismus.nl/functies/).
