@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from huismus.core.form_messages import NOT_AN_EMAIL_ADDRESS
 from huismus.core.forms import EuroCentsField, HTML5DateInput
 
-from .models import Document, DocumentLine, Payment, RecurringInvoice
+from .models import FREQUENCY_CHOICES, Document, DocumentLine, Payment, RecurringInvoice
 from .vat import REVERSE_CHARGE, editor_value, rate_label
 
 
@@ -254,6 +254,8 @@ class RecurringForm(forms.ModelForm):
     def __init__(self, *args, today, **kwargs):
         super().__init__(*args, **kwargs)
         self.today = today
+        # Always one of the three: no empty "---------" to pick.
+        self.fields["frequency"].choices = FREQUENCY_CHOICES
 
     def clean_next_date(self):
         next_date = self.cleaned_data["next_date"]

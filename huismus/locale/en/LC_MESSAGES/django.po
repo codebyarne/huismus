@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-23 09:59+0100\n"
+"POT-Creation-Date: 2026-11-23 10:03+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -6809,6 +6809,9 @@ msgstr "Recurring invoice for %(name)s"
 
 msgid "Gestopt"
 msgstr "Stopped"
+
+msgid "Planning"
+msgstr "Schedule"
 
 #, python-format
 msgid "Gestopt op %(date)s. Er komen geen nieuwe concepten meer."

@@ -20,7 +20,7 @@ newest invoice listed here.{% endcomment %}
 
 <div class="split">
     <section class="card">
-        <div class="card-head"><h2>{% translate "Hoe vaak" %}</h2></div>
+        <div class="card-head"><h2>{% if series.stopped_on %}{% translate "Gestopt" %}{% else %}{% translate "Planning" %}{% endif %}</h2></div>
         {% if series.stopped_on %}
         <div class="card-pad">
             <p class="muted">{% blocktranslate with date=series.stopped_on|date:"j F Y" %}Gestopt op {{ date }}. Er komen geen nieuwe concepten meer.{% endblocktranslate %}</p>
@@ -48,7 +48,7 @@ newest invoice listed here.{% endcomment %}
             {% for d in documents %}
             <li>
                 <div class="grow">
-                    <a class="title" href="{% url 'documents:edit' d.pk %}">{% translate "Factuur" %} {{ d.number|default:_("(concept)") }}</a>
+                    <a class="title" href="{% url 'documents:edit' d.pk %}">{% translate "Factuur" %} <span style="white-space:nowrap">{{ d.number|default:_("(concept)") }}</span></a>
                     <div class="small muted">{% if d.issue_date %}{{ d.issue_date|date:"SHORT_DATE_FORMAT" }}{% elif d.planned_on %}{% blocktranslate with date=d.planned_on|date:"SHORT_DATE_FORMAT" %}gepland op {{ date }}{% endblocktranslate %}{% endif %}</div>
                 </div>
                 <span class="stack" style="gap:4px;align-items:flex-end">
