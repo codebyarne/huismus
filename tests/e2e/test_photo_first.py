@@ -294,11 +294,19 @@ def test_a_new_line_starts_with_the_category_above(app):
 
 
 def test_while_the_photo_uploads_the_sparrow_hops(phone):
-    held = []
-    phone.route(
-        "**/*",
-        lambda route: held.append(route) if route.request.method == "POST" else route.continue_(),
-    )
+    # The upload is held until the toast has been seen. Released by the
+    # handler itself, not by unroute(): an unroute while a request is held
+    # let Playwright handle it first, now and then ("Route is already
+    # handled", under load; on main too).
+    held, released = [], []
+
+    def hold_posts(route):
+        if route.request.method == "POST" and not released:
+            held.append(route)
+        else:
+            route.continue_()
+
+    phone.route("**/*", hold_posts)
     phone.goto(phone.base + "/uitgaven/")
     with phone.expect_file_chooser() as chooser:
         phone.get_by_role("link", name="Nieuwe uitgave").first.tap()
@@ -308,7 +316,7 @@ def test_while_the_photo_uploads_the_sparrow_hops(phone):
     toast = phone.locator("[data-camera-toast]")
     expect(toast).to_contain_text("Bonnetje uploaden…")
     expect(toast.locator(".bird")).to_be_visible()
-    phone.unroute("**/*")
+    released.append(True)
     for route in held:
         route.continue_()
     expect(phone.get_by_role("img", name="Bonnetje IMG_3001.jpg")).to_be_visible()
