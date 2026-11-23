@@ -62,7 +62,7 @@ geen uitgave hebben. Klik op **Uitgave maken** bij een bonnetje: je komt in
 **Verwerken** (zie hieronder), met het bonnetje groot naast de velden. Vul
 ze in en klik op **Opslaan**. Je krijgt meteen het volgende.
 
-Heb je de uitgave al? Klik dan op **Bij bestaande uitgave**. Je ziet de
+Heb je de uitgave al? Klik dan op **Kies bestaande uitgave**. Je ziet de
 uitgaven zonder bonnetje, de nieuwste eerst. Zoek op leverancier,
 omschrijving of bedrag, en klik op **Kiezen**. Het bonnetje hangt dan aan
 die uitgave. Verkeerd gekozen? Klik in de melding op **Ongedaan maken**. In

@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """A receipt from the tray onto an expense there is (#127;
-huismus-intern/besluiten.md, 2026-11-22): "Bij bestaande uitgave" in the
+huismus-intern/besluiten.md, 2026-11-22): "Kies bestaande uitgave" in the
 tray and "Hoort bij een uitgave die er al is?" in Verwerken open the same
 page, "Bij welke uitgave hoort dit bonnetje?".
 

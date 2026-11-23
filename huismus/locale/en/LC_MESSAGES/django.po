@@ -10339,5 +10339,5 @@ msgstr ""
 msgid "Hoort bij een uitgave die er al is?"
 msgstr "For an expense you already have?"
 
-msgid "Bij bestaande uitgave"
-msgstr "Add to existing expense"
+msgid "Kies bestaande uitgave"
+msgstr "Choose existing expense"

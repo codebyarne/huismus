@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-""" "Bij bestaande uitgave" in the tray and "Hoort bij een uitgave die er al
+""" "Kies bestaande uitgave" in the tray and "Hoort bij een uitgave die er al
 is?" in Verwerken: "Bij welke uitgave hoort dit bonnetje?" (#127)."""
 
 import datetime
@@ -64,7 +64,7 @@ def test_the_tray_offers_it_for_every_receipt(client, user):
     receipt = _receipt()
     response = client.get(reverse("expenses:tray"))
     assert reverse("expenses:tray_attach", args=[receipt.pk]).encode() in response.content
-    assert "Bij bestaande uitgave" in response.text
+    assert "Kies bestaande uitgave" in response.text
 
 
 def test_without_a_search_it_lists_the_expenses_without_a_receipt(client, user):
