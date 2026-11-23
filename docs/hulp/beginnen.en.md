@@ -73,5 +73,5 @@ to the right place.
   [Mail](mailen.en.md).
 - **Your first invoice:** see [Invoices](facturen.en.md).
 - **What you don't use:** if you send no quotes or keep no expenses, take
-  them out of the menu at **Settings › Sections**. Your data stays. A section
+  them out of the menu at **Settings › Menu**. Your data stays. Anything
   with something in it stays in the menu.

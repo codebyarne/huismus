@@ -833,7 +833,7 @@ def _save(document, data: dict):
 
 def _part_shown(part, refusal):
     """What "Nieuw" doesn't offer, an assistant doesn't make either: a part
-    out of the menu (#260, Instellingen › Onderdelen; huismus-intern/besluiten.md,
+    out of the menu (#260, Instellingen › Menu; huismus-intern/besluiten.md,
     2026-11-22, #273 Q7). A part with something in it is shown."""
     if part not in profile().parts_shown:
         raise ToolError(refusal)
@@ -845,7 +845,7 @@ def create_draft(arguments):
         _part_shown(
             QUOTES,
             _(
-                "Offertes staat uit bij Instellingen › Onderdelen. "
+                "Offertes staat uit bij Instellingen › Menu. "
                 "Zet het daar aan om een offerte te maken."
             ),
         )
@@ -966,7 +966,7 @@ def add_expense(arguments):
     _part_shown(
         EXPENSES,
         _(
-            "Uitgaven staat uit bij Instellingen › Onderdelen. "
+            "Uitgaven staat uit bij Instellingen › Menu. "
             "Zet het daar aan om een uitgave of categorie toe te voegen."
         ),
     )
@@ -1072,7 +1072,7 @@ def add_category(arguments):
     _part_shown(
         EXPENSES,
         _(
-            "Uitgaven staat uit bij Instellingen › Onderdelen. "
+            "Uitgaven staat uit bij Instellingen › Menu. "
             "Zet het daar aan om een uitgave of categorie toe te voegen."
         ),
     )

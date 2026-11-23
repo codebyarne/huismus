@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""Instellingen › Onderdelen (#260): a whole part out of the menu, the tab
+"""Instellingen › Menu (#260): a whole part out of the menu, the tab
 bar, "Meer" and "Nieuw". A part with something in it stays; the data is
 never hidden."""
 
@@ -21,7 +21,7 @@ from huismus.expenses.models import Expense
 
 pytestmark = pytest.mark.django_db
 
-ONDERDELEN = reverse("business:topic", args=["onderdelen"])
+MENU_PAGE = reverse("business:topic", args=["menu"])
 
 
 @pytest.fixture
@@ -178,11 +178,11 @@ def test_a_bank_statement_keeps_bank_in_the_menu(client_in):
     assert reverse("bank:statement") in _sidebar(_html(client_in))
 
 
-# ---------- Instellingen › Onderdelen ----------
+# ---------- Instellingen › Menu ----------
 
 
 def test_the_page_saves_the_choice(client_in):
-    response = client_in.post(ONDERDELEN, {"show_expenses": "on"})
+    response = client_in.post(MENU_PAGE, {"show_expenses": "on"})
     assert response.status_code == 302
     settings = Settings.load()
     assert (settings.show_quotes, settings.show_expenses, settings.show_bank) == (
@@ -200,7 +200,7 @@ def test_saving_another_topic_leaves_the_parts_alone(client_in):
 
 def test_a_part_with_data_is_on_and_says_why(client_in):
     Expense.objects.create(date="2026-01-01", amount_cents=1000)
-    html = client_in.get(ONDERDELEN).content.decode()
+    html = client_in.get(MENU_PAGE).content.decode()
     field = re.search(r'<input[^>]*name="show_expenses"[^>]*>', html).group()
     assert "checked" in field and "disabled" in field
     assert "Je hebt uitgaven of bonnetjes, dus Uitgaven blijft in het menu." in html
@@ -208,7 +208,7 @@ def test_a_part_with_data_is_on_and_says_why(client_in):
 
 
 def test_without_data_expenses_says_what_it_holds(client_in):
-    html = client_in.get(ONDERDELEN).content.decode()
+    html = client_in.get(MENU_PAGE).content.decode()
     field = re.search(r'<input[^>]*name="show_expenses"[^>]*>', html).group()
     assert "disabled" not in field
     assert "Met je bonnetjes en categorieën." in html
@@ -219,7 +219,7 @@ def test_a_kept_part_keeps_what_was_saved(client_in):
     part goes once it is empty again."""
     _switch_off(quotes=True)
     Document.objects.create(kind="quote", contact=Contact.objects.create(company_name="Klant"))
-    client_in.post(ONDERDELEN, {"show_quotes": "on", "show_expenses": "on", "show_bank": "on"})
+    client_in.post(MENU_PAGE, {"show_quotes": "on", "show_expenses": "on", "show_bank": "on"})
     assert Settings.load().show_quotes is False
     Document.objects.all().delete()
     assert reverse("quotes:list") not in _sidebar(_html(client_in))
@@ -227,7 +227,7 @@ def test_a_kept_part_keeps_what_was_saved(client_in):
 
 def test_a_kept_part_ignores_a_post_to_switch_it_off(client_in):
     BankStatement.objects.create(filename="afschrift.csv", sha256="0" * 64, format="csv")
-    client_in.post(ONDERDELEN, {})
+    client_in.post(MENU_PAGE, {})
     assert Settings.load().show_bank is True
 
 
@@ -240,16 +240,16 @@ def _card(settings, slug):
 
 def test_the_card_names_what_is_in_the_menu():
     settings = Settings.load()
-    assert _card(settings, "onderdelen")["line"] == "Offertes, Uitgaven, Bank"
+    assert _card(settings, "menu")["line"] == "Offertes, Uitgaven, Bank"
     settings.show_quotes = False
-    assert _card(settings, "onderdelen")["line"] == "Uitgaven, Bank"
+    assert _card(settings, "menu")["line"] == "Uitgaven, Bank"
     settings.show_expenses = settings.show_bank = False
-    assert _card(settings, "onderdelen")["line"] == "Alleen facturen"
+    assert _card(settings, "menu")["line"] == "Alleen facturen"
 
 
 def test_the_card_comes_first_in_the_group_huismus(client_in):
     html = client_in.get(reverse("business:overview")).content.decode()
-    assert html.index(ONDERDELEN) < html.index(reverse("business:assistants"))
+    assert html.index(MENU_PAGE) < html.index(reverse("business:assistants"))
 
 
 def test_expenses_off_takes_the_receipt_cards_away():

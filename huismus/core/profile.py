@@ -125,7 +125,7 @@ class Profile:
 
     @property
     def parts_chosen(self) -> frozenset[str]:
-        """The parts you want in the menu: Instellingen › Onderdelen (#260).
+        """The parts you want in the menu: Instellingen › Menu (#260).
         Only the settings, no data."""
         choices = {
             QUOTES: self.settings.show_quotes,

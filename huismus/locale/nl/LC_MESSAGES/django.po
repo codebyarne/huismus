@@ -8632,7 +8632,8 @@ msgid "Nieuwe uitgave maken"
 msgid "Onderdelen"
 msgstr ""
 
-msgid "Wat je niet gebruikt, haal je uit het menu. Een onderdeel waar iets in staat, blijft erin."
+
+msgid "Kies wat je in het menu ziet. Waar al iets in staat, blijft erin."
 msgstr ""
 
 msgid "Alleen facturen"
@@ -8729,7 +8730,9 @@ msgstr ""
 msgid "Bedrag zonder uitgaveregel"
 
 msgid "Offertes staat uit bij Instellingen › Onderdelen. Zet het daar aan om een offerte te maken."
+
+msgid "Offertes staat uit bij Instellingen › Menu. Zet het daar aan om een offerte te maken."
 msgstr ""
 
-msgid "Uitgaven staat uit bij Instellingen › Onderdelen. Zet het daar aan om een uitgave of categorie toe te voegen."
+msgid "Uitgaven staat uit bij Instellingen › Menu. Zet het daar aan om een uitgave of categorie toe te voegen."
 msgstr ""

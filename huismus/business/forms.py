@@ -85,7 +85,7 @@ MAIL_TEXT_PARTS = {
 }
 
 
-# Instellingen › Onderdelen (#260): the checkbox per part, and why it stays
+# Instellingen › Menu (#260): the checkbox per part, and why it stays
 # on while the part has something in it (huismus-intern/besluiten.md,
 # 2026-11-22, "Onderdelen verbergen").
 PART_FIELDS = {
