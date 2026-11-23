@@ -45,6 +45,9 @@ def clean_up_issued_documents_for_flush():
         # Bank lines point to payments and documents (huismus/bank).
         cursor.execute("DELETE FROM bank_banktransaction")
         cursor.execute("DELETE FROM bank_bankstatement")
+        # Recurring series point to their invoices (documents.recurring).
+        cursor.execute("DELETE FROM documents_recurringinvoicedocument")
+        cursor.execute("DELETE FROM documents_recurringinvoice")
         cursor.execute("DELETE FROM documents_documentvatrow")
         cursor.execute("DELETE FROM documents_payment")
         cursor.execute("DELETE FROM core_attachment WHERE document_id IS NOT NULL")
