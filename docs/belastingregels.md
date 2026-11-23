@@ -2,12 +2,13 @@
 
 Naslag voor de `product-owner`-agent (`.claude/agents/product-owner.md`,
 "Boekhouden in Nederland") en voor wie aan bedragen, btw of uitgaven in deze
-codebase werkt. Hier staat wat de Belastingdienst over de btw publiceert, met
-de bronpagina erbij. **Dit is geen boekhoudkundig of fiscaal advies.** Regels
+codebase werkt. Hier staat wat de Belastingdienst over de btw publiceert, en sinds
+sectie 7 over de winst voor de inkomstenbelasting, met de bronpagina erbij. **Dit is geen boekhoudkundig of fiscaal advies.** Regels
 kunnen wijzigen na het nakijken. Controleer bij twijfel de bronpagina's zelf
 of vraag een boekhouder.
 
-Nagekeken op 6 november 2026; sectie 6 op 22 november 2026. Op 22 november
+Nagekeken op 6 november 2026; sectie 6 op 22 november 2026; sectie 7 op 23
+november 2026. Op 22 november
 2026 ook opnieuw nagekeken, voor de pagina's van Uitleg op de site
 (`docs/uitleg/`, issue #308): de bronpagina's van sectie 1 (voorwaarden,
 meedoen, aanmelden, afmelden), sectie 4 (de eerste twee bronpagina's) en
@@ -473,3 +474,83 @@ Bron: [Voorwaarden voor deelname aan de kleineondernemersregeling (KOR)](https:/
 Bron: [Voor wie geldt de btw?](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/hoe_werkt_de_btw/voor_wie_geldt_de_btw)
 (Belastingdienst), [Ondernemer voor de btw](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/hoe_werkt_de_btw/voor_wie_geldt_de_btw/ondernemer)
 (Belastingdienst)
+
+## 7. Winst-en-verliesrekening (inkomstenbelasting)
+
+Voor issue #109 (winst-en-verliesrekening per jaar). Wat de aangifte
+inkomstenbelasting van een ondernemer vraagt; investeringen en afschrijving
+komen in #124 en staan hier alleen voor zover de aangifte er een regel voor heeft.
+
+### Winst en de aangifte
+
+- "In uw aangifte vermeldt u uw winst uit onderneming."
+- "Winst uit onderneming berekent u door bepaalde fiscale regels toe te passen
+  op uw commerciële winst-en-verliesrekening en balans."
+- "Bij waardering en winstbepaling bepaalt u de jaarwinst volgens goed
+  koopmansgebruik."
+- "Het zakelijk deel is alleen voor ondernemers." Dat deel is de
+  winst-en-verliesrekening ("Hierop staan de inkomsten en kosten van uw bedrijf
+  in het afgelopen jaar.") en de balans.
+- "Als ondernemer voor de inkomstenbelasting moet u uw aangifte digitaal doen."
+
+### Rubrieken van de winst-en-verliesrekening
+
+De pagina met de cijfers voor de aangifte noemt deze rubrieken (versie voor
+de aangifte over 2025; een versie voor 2026 is op 23 november 2026 niet
+gevonden):
+
+- **Opbrengsten**: "Uw totale omzet." Je berekent die met je verkoopfacturen.
+- **Inkoopkosten**: "Alle kosten voor het inkopen van grondstoffen en
+  voorraad."
+- **Afschrijvingen**: "Het totaalbedrag dat u in het afgelopen jaar hebt
+  afgeschreven op uw bedrijfsmiddelen." (#124)
+- **Bedrijfskosten**: "Alle kosten die u maakt om uw werk te kunnen doen."
+  Voorbeelden op de pagina: "kosten voor uw auto, telefoon, internet,
+  adviseurs, inventaris."
+- **Financiële baten en lasten**: rente en notariskosten voor een lening.
+- **Buitengewone baten en lasten**: "Denk bijvoorbeeld aan de bijtelling voor
+  uw auto" (ook privégebruik van een fiets of woning).
+
+Een verdere indeling van de bedrijfskosten (personeel, huisvesting, auto,
+verkoop): **Bron ontbreekt**. De pagina geeft alleen voorbeelden. De
+categorieën van de uitgaven in Huismus zijn dus de indeling van de gebruiker,
+geen rubrieken van de aangifte.
+
+### Btw in omzet en kosten
+
+- Omzet: "Berekent u btw aan uw klanten? Ga dan uit van uw omzet zonder btw."
+  En: "Brengt u geen btw in rekening? Ga dan uit van uw totale omzet." Dat
+  laatste geldt ook met de KOR: daar breng je geen btw in rekening (sectie 1).
+- Kosten: kun je de btw aftrekken als voorbelasting, "In dat geval trekt u bij
+  de winstberekening de kosten af exclusief btw." En: "Soms kunt u de btw niet
+  aftrekken. Dan mag u bij de winstberekening de kosten aftrekken inclusief
+  btw."
+- Met de KOR: "Ook doet u geen btw-aangifte en kunt u geen btw terugvragen
+  over uw kosten en investeringen." Samen met de vorige regel: kosten dan
+  inclusief btw. Geen nagekeken pagina zegt dat in één zin voor de KOR; noem
+  in de app beide bronnen.
+- Zo telt Huismus het al (harde regel 7, `CLAUDE.md`): zonder KOR kosten zonder
+  btw, met de KOR of zonder btw om een andere reden bruto.
+
+### Kleine kosten en bedragen
+
+- "Koopt u een bedrijfsmiddel voor minder dan € 450? Dan trekt u het bedrag
+  wel in 1 keer af als kosten." Met recht op btw-aftrek "neemt u de kostprijs
+  exclusief btw"; zonder, "dan gaat u uit van € 450 inclusief btw."
+- "Zakelijke kosten mag u helemaal aftrekken." "Kosten die geen zakelijk
+  karakter hebben, mag u niet aftrekken."
+- "Voor sommige kosten geldt een drempel van € 5.700." Dat gaat om voeding,
+  drank en genotmiddelen, representatie, en congressen, seminars en
+  studiereizen (Fiscale informatie 2025 en 2026).
+- Een staat van baten en lasten in plaats van een winst-en-verliesrekening,
+  of een vrijstelling voor kleine ondernemers: **Bron ontbreekt**. De
+  nagekeken pagina's noemen het niet.
+
+Bron: [Ondernemer? Bekijk welke cijfers nodig zijn voor uw belastingaangifte 2025](https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/ondernemer-bekijk-welke-cijfers-u-nodig-hebt-voor-uw-aangifte-inkomstenbelasting)
+(Belastingdienst), [Aangifte inkomstenbelasting voor ondernemers](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/aangifte_inkomstenbelasting_voor_ondernemers)
+(Belastingdienst), [Winst uit onderneming](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/winst_uit_onderneming)
+(Belastingdienst), [Zakelijke kosten](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijke_kosten/zakelijke_kosten)
+(Belastingdienst), [Kosten die u in 1 jaar mag aftrekken](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijke_kosten/kosten_die_u_in_1_jaar_mag_aftrekken)
+(Belastingdienst), [Kleineondernemersregeling (KOR)](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/hoe_werkt_de_btw/kleineondernemersregeling/)
+(Belastingdienst), [Winst-en-verliesrekening en balans](https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/winst_en_verliesrekening_en_balans)
+(Belastingdienst, Fiscale informatie 2026)
