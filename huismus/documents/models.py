@@ -538,3 +538,69 @@ class EmailLog(TimestampedModel):
 
     def delete(self, *args, **kwargs):
         raise ImmutableDocumentError(str(_("Een verstuurde e-mail is onveranderlijk.")))
+
+
+FREQUENCY_CHOICES = [
+    ("month", _("elke maand")),
+    ("quarter", _("elk kwartaal")),
+    ("year", _("elk jaar")),
+]
+
+
+class RecurringInvoice(TimestampedModel):
+    """A recurring invoice (#82, SPEC.md M27): a series that makes a draft
+    every period, a copy of the latest invoice in it (documents.recurring).
+    It never issues anything; a number is still the user's click.
+
+    Never deleted: stopping sets stopped_on, and its invoices keep pointing
+    to it (RecurringInvoiceDocument)."""
+
+    frequency = models.CharField(_("hoe vaak"), max_length=10, choices=FREQUENCY_CHOICES)
+    # The day of the month the series runs on. next_date may be earlier in a
+    # short month (the 31st becomes 28 February); the month after, it is
+    # this day again.
+    day = models.PositiveSmallIntegerField(_("dag"))
+    next_date = models.DateField(_("volgende factuur op"))
+    stopped_on = models.DateField(_("gestopt op"), null=True, blank=True)
+
+    class Meta:
+        verbose_name = _("periodieke factuur")
+        verbose_name_plural = _("periodieke facturen")
+        ordering = ["next_date", "pk"]
+
+    def __str__(self):
+        return f"{self.get_frequency_display()} ({self.pk})"
+
+
+class RecurringInvoiceDocument(TimestampedModel):
+    """Which invoices belong to a series: the one it started from and every
+    draft it made, with the date that draft was planned for. Its own table,
+    so an issued invoice can join a series without its row changing
+    (invariant 1). A draft deleted by the user takes its link along; an
+    issued invoice is never deleted. An invoice can be in a stopped series
+    and later start a new one, so a document may have more than one link."""
+
+    series = models.ForeignKey(
+        RecurringInvoice,
+        on_delete=models.PROTECT,
+        related_name="links",
+        verbose_name=_("periodieke factuur"),
+    )
+    document = models.ForeignKey(
+        Document,
+        on_delete=models.CASCADE,
+        related_name="recurring_links",
+        verbose_name=_("document"),
+    )
+    # The period this draft is for ("gepland op 1 oktober"); empty for the
+    # invoice the series started from.
+    planned_on = models.DateField(_("gepland op"), null=True, blank=True)
+
+    class Meta:
+        verbose_name = _("factuur in een periodieke reeks")
+        verbose_name_plural = _("facturen in een periodieke reeks")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["series", "document"], name="documents_unique_recurring_link"
+            )
+        ]
