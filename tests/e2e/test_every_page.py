@@ -24,7 +24,7 @@ from huismus.business.models import Settings
 from huismus.contacts.models import Contact
 from huismus.core import help
 from huismus.core.models import Attachment
-from huismus.documents.models import Document
+from huismus.documents.models import Document, RecurringInvoice
 from huismus.expenses.models import Expense, ExpenseCategory
 
 pytestmark = pytest.mark.django_db(transaction=True)
@@ -79,6 +79,8 @@ def _pages():
         f"/facturen/{overdue.pk}/",
         f"/facturen/{overdue.pk}/herinnering/",
         f"/facturen/{issued.pk}/pdf/bekijken/",
+        "/facturen/periodiek/",
+        *(f"/facturen/periodiek/{series.pk}/" for series in RecurringInvoice.objects.all()),
         f"/offertes/{_first(documents.filter(kind='quote', status='sent'), 'quote').pk}/mailen/",
         f"/offertes/{sent_quote.pk}/pdf/bekijken/",
         "/offertes/",

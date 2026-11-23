@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load i18n money documents_tags forms %}
+
+{% block title %}{% translate "Periodieke factuur" %} — Huismus{% endblock %}
+
+{% block content %}
+{% comment %}One recurring series (#82): how often and when the next draft
+comes, stopping it, and the invoices it made. Each new draft copies the
+newest invoice listed here.{% endcomment %}
+<div class="page-head">
+    <div class="titles">
+        <a class="back" href="{% url 'documents:recurring_list' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Periodiek" %}</a>
+        <div class="row">
+            <h1>{% if customer %}{% blocktranslate with name=customer %}Periodieke factuur voor {{ name }}{% endblocktranslate %}{% else %}{% translate "Periodieke factuur" %}{% endif %}</h1>
+            {% if series.stopped_on %}<span class="pill pill-concept">{% translate "Gestopt" %}</span>{% endif %}
+        </div>
+        {% if description %}<p class="lede">{{ description }}</p>{% endif %}
+    </div>
+</div>
+
+<div class="split">
+    <section class="card">
+        <div class="card-head"><h2>{% translate "Hoe vaak" %}</h2></div>
+        {% if series.stopped_on %}
+        <div class="card-pad">
+            <p class="muted">{% blocktranslate with date=series.stopped_on|date:"j F Y" %}Gestopt op {{ date }}. Er komen geen nieuwe concepten meer.{% endblocktranslate %}</p>
+            <p class="small muted">{% translate "Wil je weer periodiek factureren? Open de laatste uitgegeven factuur en kies Periodiek maken." %}</p>
+        </div>
+        {% else %}
+        <form method="post" class="card-pad stack">
+            {% csrf_token %}
+            {% field form.frequency %}
+            {% translate "Het concept verschijnt als je Huismus op of na die dag opent." as next_help %}
+            {% field form.next_date help=next_help %}
+            <p class="small muted">{% translate "Elk nieuw concept is een kopie van de nieuwste factuur hieronder. Pas je in een concept iets aan, dan gaat dat mee naar de volgende." %}</p>
+            <div class="row">
+                <button type="submit" class="btn btn-primary">{% translate "Opslaan" %}<span class="spinner"></span></button>
+                <span class="spacer"></span>
+                <button type="button" class="btn btn-ghost" command="show-modal" commandfor="stoppen">{% translate "Stoppen…" %}</button>
+            </div>
+        </form>
+        {% endif %}
+    </section>
+
+    <section class="card">
+        <div class="card-head"><h2>{% translate "Facturen" %}</h2></div>
+        <ul class="list">
+            {% for d in documents %}
+            <li>
+                <div class="grow">
+                    <a class="title" href="{% url 'documents:edit' d.pk %}">{% translate "Factuur" %} {{ d.number|default:_("(concept)") }}</a>
+                    <div class="small muted">{% if d.issue_date %}{{ d.issue_date|date:"SHORT_DATE_FORMAT" }}{% elif d.planned_on %}{% blocktranslate with date=d.planned_on|date:"SHORT_DATE_FORMAT" %}gepland op {{ date }}{% endblocktranslate %}{% endif %}</div>
+                </div>
+                <span class="stack" style="gap:4px;align-items:flex-end">
+                    <span class="amount small">{{ d.total_cents|money }}</span>
+                    {% if d.status == "draft" %}<span class="pill pill-concept">{% translate "Concept" %}</span>
+                    {% elif d.is_overdue %}{% include "documents/_pill_overdue.html" with doc=d %}
+                    {% else %}<span class="pill pill-{{ d.payment_state }}">{{ d.payment_state|payment_state_label|capfirst }}</span>{% endif %}
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+</div>
+
+{% if not series.stopped_on %}
+<dialog id="stoppen" class="dialog" aria-labelledby="stoppen-titel">
+    <form method="post" action="{% url 'documents:recurring_stop' series.pk %}">
+        {% csrf_token %}
+        <div class="dialog-body">
+            <span class="dialog-icon"><svg class="i i-lg" aria-hidden="true"><use href="#alert"></use></svg></span>
+            <h2 id="stoppen-titel">{% translate "Periodieke factuur stoppen?" %}</h2>
+            <p class="muted">{% translate "Er komen geen nieuwe concepten meer. De facturen en concepten die er al zijn, blijven staan." %}</p>
+        </div>
+        <div class="dialog-foot"><button type="button" class="btn btn-secondary" command="close" commandfor="stoppen">{% translate "Annuleren" %}</button><button type="submit" class="btn btn-danger">{% translate "Stoppen" %}</button></div>
+    </form>
+</dialog>
+{% endif %}
+{% endblock %}

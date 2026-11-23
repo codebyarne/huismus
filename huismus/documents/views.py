@@ -54,7 +54,7 @@ from .mailing import (
     default_recipients,
     send_document,
 )
-from .models import Document
+from .models import Document, RecurringInvoice
 from .payments import record_payment
 from .pdf import render_pdf
 from .preview import render_preview_pdf
@@ -66,6 +66,9 @@ from .quoting import (
     expire_quote,
     send_quote,
 )
+from .recurring import planned_on, series_of
+from .recurring_views import detail_context as recurring_detail_context
+from .recurring_views import make_drafts_and_say_so
 from .reopening import ReopenError, reopen, undo_reopen
 from .totals import tax_rows
 
@@ -90,6 +93,7 @@ def document_list(request):
     history is all there) and toon (how many rows to show). Drafts have no
     issue date yet and show in every year.
     """
+    make_drafts_and_say_so(request)
     this_year = timezone.localdate().year
     year_param = request.GET.get("jaar", "alle")
     year = None if year_param == "alle" else _int_param(request, "jaar", this_year)
@@ -141,6 +145,7 @@ def document_list(request):
             "year": year,
             "years": years,
             "has_any": Document.objects.filter(kind__in=["invoice", "credit_note"]).exists(),
+            "has_recurring": RecurringInvoice.objects.exists(),
             "sort": sort_headers(
                 sort, INVOICE_SORT_KEYS, lambda value: list_url(sorteer=value), own_order="status"
             ),
@@ -225,8 +230,14 @@ def _editor_context(document, form, formset):
     kor_crossed = None
     if document.kind == "invoice":
         kor_crossed = kor_limit_crossed_by(issue_date.year, totals.subtotal_cents)
+    # A draft a recurring series made (#82): which series, and its period.
+    series = series_of(document) if document.pk and document.kind == "invoice" else None
+    if series is not None and series.stopped_on is not None:
+        series = None  # nothing goes on to a next one
     return {
         "document": document,
+        "series": series,
+        "series_planned_on": planned_on(document) if series else None,
         "is_quote": is_quote,
         "form_action": form_action,
         "preview_url": preview_url,
@@ -497,6 +508,8 @@ def _detail_context(document):
         "customer_has_old_version": bool(
             last_mail and document.reopened_at and last_mail.sent_at < document.reopened_at
         ),
+        # Recurring (#82): its running series, or the form to start one.
+        **recurring_detail_context(document),
     }
     if document.kind == "credit_note":
         invoice = document.related_document

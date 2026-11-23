@@ -25,6 +25,9 @@
     {% elif not is_quote and document.number %}
     <div class="flash flash-info" style="max-width:860px;margin:0 auto var(--s-4)"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><div class="flash-body small">{% blocktranslate with number=document.number %}Dit concept heeft al nummer {{ number }} uit Moneybird. Bij uitgeven houdt hij dat nummer.{% endblocktranslate %}</div></div>
     {% endif %}
+    {% if series %}
+    <div class="flash flash-info" style="max-width:860px;margin:0 auto var(--s-4)"><svg class="i" aria-hidden="true"><use href="#refresh"></use></svg><div class="flash-body small">{% if series_planned_on %}{% blocktranslate with frequency=series.get_frequency_display date=series_planned_on|date:"j F Y" %}Periodieke factuur, {{ frequency }}, gepland op {{ date }}.{% endblocktranslate %}{% else %}{% blocktranslate with frequency=series.get_frequency_display %}Periodieke factuur, {{ frequency }}.{% endblocktranslate %}{% endif %} {% translate "Wat je hier aanpast, gaat mee naar de volgende." %} <a href="{% url 'documents:recurring_detail' series.pk %}">{% translate "Beheren" %}</a></div></div>
+    {% endif %}
     {% comment %}Only while the quote still waits for an answer; after that there is nothing to send again.{% endcomment %}
     {% if is_quote and document.status == "sent" %}
     <div class="flash flash-info" style="max-width:860px;margin:0 auto var(--s-4)"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><div class="flash-body small">{% blocktranslate with number=document.number %}Offerte {{ number }} is al verzonden. Pas je iets aan, download dan de nieuwe PDF en stuur die opnieuw naar de klant. De klant kun je niet meer wijzigen.{% endblocktranslate %}</div></div>

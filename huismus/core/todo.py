@@ -21,6 +21,7 @@ from huismus.bank.views import to_do_count as bank_to_do_count
 from huismus.core.templatetags.money import money
 from huismus.documents.listing import contact_name, expiry_hint
 from huismus.documents.models import Document
+from huismus.documents.recurring import planned_on
 from huismus.expenses import batch
 
 # Rows per kind. What doesn't fit becomes one closing row ("Nog 4 facturen
@@ -149,13 +150,19 @@ def _quote_item(quote, hint, today) -> TodoItem:
 
 def _draft_item(draft) -> TodoItem:
     customer = contact_name(draft)
-    if customer:
+    # Made by a recurring series (#82): the row says which period it is for.
+    planned = planned_on(draft)
+    if planned and customer:
+        title = _("Je periodieke factuur voor %(customer)s staat klaar") % {"customer": customer}
+    elif customer:
         title = _("Je concept voor %(customer)s staat klaar") % {"customer": customer}
     else:
         title = _("Je concept heeft nog geen klant")
     # Back in draft through "Toch bewerken", it kept its number
     # (documents.reopening): it was sent before, so the row names it.
     state = draft.number or _("nog niet verstuurd")
+    if planned:
+        state = _("gepland op %(date)s") % {"date": date_format(planned, "j F")}
     return TodoItem(
         kind=DRAFT,
         title=title,

@@ -30,12 +30,16 @@ the live settings or contact.{% endcomment %}
         <button class="btn btn-ghost" type="button" command="show-modal" commandfor="heropenen"><svg class="i" aria-hidden="true"><use href="#edit"></use></svg>{% translate "Toch bewerken…" %}</button>
         {% if document.kind == "invoice" %}
         <form method="post" action="{% url 'documents:copy' document.pk %}">{% csrf_token %}<button class="btn btn-secondary" type="submit"><svg class="i" aria-hidden="true"><use href="#copy"></use></svg>{% translate "Kopiëren" %}<span class="spinner"></span></button></form>
+        {% if recurring_form %}<button class="btn btn-ghost" type="button" command="show-modal" commandfor="periodiek"><svg class="i" aria-hidden="true"><use href="#refresh"></use></svg>{% translate "Periodiek maken…" %}</button>{% endif %}
         {% endif %}
         <a class="btn btn-secondary" href="{% url 'documents:mail' document.pk %}"><svg class="i" aria-hidden="true"><use href="#mail"></use></svg>{% translate "Mailen" %}</a>
         <a class="btn btn-secondary" href="{% url 'documents:pdf_page' document.pk %}"><svg class="i" aria-hidden="true"><use href="#file"></use></svg>PDF</a>
     </div>
 </div>
 
+{% if series %}
+<div class="flash flash-info" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#refresh"></use></svg><div class="flash-body small">{% blocktranslate with frequency=series.get_frequency_display date=series.next_date|date:"j F Y" %}Komt {{ frequency }} terug. De volgende staat op {{ date }} klaar als concept.{% endblocktranslate %} <a href="{% url 'documents:recurring_detail' series.pk %}">{% translate "Beheren" %}</a></div></div>
+{% endif %}
 {% if customer_has_old_version %}
 <div class="flash flash-warning" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><div class="flash-body small">{% blocktranslate with date=last_mail.sent_at|date:"SHORT_DATE_FORMAT" %}Je klant heeft nog de versie van vóór het bewerken (gemaild op {{ date }}).{% endblocktranslate %} <a href="{% url 'documents:mail' document.pk %}">{% translate "Mail de nieuwe versie" %}</a></div></div>
 {% endif %}
@@ -204,6 +208,22 @@ the live settings or contact.{% endcomment %}
 </dialog>
 
 {% if document.kind == "invoice" %}
+{% if recurring_form %}
+<dialog id="periodiek" class="sheet" aria-labelledby="periodiek-titel">
+    <form method="post" action="{% url 'documents:recurring_start' document.pk %}" style="display:contents">
+        {% csrf_token %}
+        <div class="sheet-head"><h2 id="periodiek-titel">{% translate "Periodiek maken" %}</h2><button type="button" class="btn btn-ghost btn-icon" command="close" commandfor="periodiek" aria-label="{% translate 'Sluiten' %}"><svg class="i" aria-hidden="true"><use href="#x"></use></svg></button></div>
+        <div class="sheet-body">
+            <p class="small muted">{% translate "Huismus zet deze factuur op de datum die je kiest weer klaar als concept, met dezelfde klant en regels. Je kijkt hem na en geeft hem zelf uit. Pas je in een concept iets aan, dan gaat dat mee naar de volgende." %}</p>
+            {% field recurring_form.frequency %}
+            {% translate "Het concept verschijnt als je Huismus op of na die dag opent." as next_help %}
+            {% field recurring_form.next_date help=next_help %}
+        </div>
+        <div class="sheet-foot"><button type="button" class="btn btn-secondary" command="close" commandfor="periodiek">{% translate "Annuleren" %}</button><button type="submit" class="btn btn-primary">{% translate "Periodiek maken" %}<span class="spinner"></span></button></div>
+    </form>
+</dialog>
+{% endif %}
+
 <dialog id="betaling" class="sheet" aria-labelledby="betaling-titel">
     <form method="post" action="{% url 'documents:payment_create' document.pk %}" style="display:contents">
         {% csrf_token %}

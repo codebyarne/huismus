@@ -323,3 +323,126 @@ def test_two_requests_at_once_make_one_draft():
     assert len(made) == 1
     assert Document.objects.filter(status="draft").count() == 1
     clean_up_issued_documents_for_flush()
+
+
+# --- screens --------------------------------------------------------------
+
+
+@pytest.fixture
+def logged_in(client):
+    from django.contrib.auth import get_user_model
+
+    get_user_model().objects.create_user(username="freelancer", password="s3cret-pass")
+    client.login(username="freelancer", password="s3cret-pass")
+    return client
+
+
+def _today(monkeypatch, day):
+    from django.utils import timezone
+
+    monkeypatch.setattr(timezone, "localdate", lambda *args: day)
+
+
+def test_an_issued_invoice_offers_periodiek_maken(logged_in, monkeypatch):
+    _today(monkeypatch, D(2026, 11, 23))
+    invoice = _issued_invoice()
+    page = logged_in.get(f"/facturen/{invoice.pk}/").content.decode()
+    assert "Periodiek maken…" in page
+    # The first date in the rhythm of the invoice (1 October) after today.
+    assert 'value="2026-12-01"' in page
+
+
+def test_starting_a_series_from_the_invoice(logged_in, monkeypatch):
+    _today(monkeypatch, D(2026, 11, 23))
+    invoice = _issued_invoice()
+    response = logged_in.post(
+        f"/facturen/{invoice.pk}/periodiek/",
+        {"frequency": "quarter", "next_date": "2027-01-01"},
+        follow=True,
+    )
+    page = response.content.decode()
+    assert "Deze factuur komt elk kwartaal terug." in page
+    assert "Komt elk kwartaal terug." in page
+    assert "Periodiek maken…" not in page
+    series = series_of(invoice)
+    assert (series.frequency, series.next_date) == ("quarter", D(2027, 1, 1))
+
+
+def test_a_date_that_has_passed_is_refused(logged_in, monkeypatch):
+    _today(monkeypatch, D(2026, 11, 23))
+    invoice = _issued_invoice()
+    response = logged_in.post(
+        f"/facturen/{invoice.pk}/periodiek/",
+        {"frequency": "month", "next_date": "2026-11-23"},
+        follow=True,
+    )
+    assert "Kies een datum na vandaag." in response.content.decode()
+    assert RecurringInvoice.objects.count() == 0
+
+
+def test_opening_facturen_makes_the_draft_and_says_so(logged_in, monkeypatch):
+    _today(monkeypatch, D(2026, 11, 23))
+    invoice = _issued_invoice()
+    start_series(invoice, "month", D(2026, 11, 1))
+    page = logged_in.get("/facturen/").content.decode()
+    assert "Er staat 1 periodieke factuur klaar als concept." in page
+    assert "Periodiek" in page
+    [draft] = Document.objects.filter(status="draft")
+    editor = logged_in.get(f"/facturen/{draft.pk}/").content.decode()
+    assert "Periodieke factuur, elke maand, gepland op 1 november 2026." in editor
+    assert "Wat je hier aanpast, gaat mee naar de volgende." in editor
+    # Opening again makes nothing more.
+    assert "periodieke factuur klaar" not in logged_in.get("/facturen/").content.decode()
+
+
+def test_the_overview_makes_drafts_and_lists_them_to_do(logged_in, monkeypatch):
+    _today(monkeypatch, D(2026, 11, 23))
+    invoice = _issued_invoice()
+    start_series(invoice, "month", D(2026, 10, 1))
+    page = logged_in.get("/").content.decode()
+    assert "Er staan 2 periodieke facturen klaar als concept." in page
+    assert "Je periodieke factuur voor Bakkerij Vos staat klaar" in page
+    assert "gepland op 1 november" in page
+
+
+def test_the_page_periodiek_and_one_series(logged_in, monkeypatch):
+    _today(monkeypatch, D(2026, 11, 23))
+    invoice = _issued_invoice()
+    series = start_series(invoice, "month", D(2026, 12, 1))
+    page = logged_in.get("/facturen/periodiek/").content.decode()
+    assert "Bakkerij Vos" in page and "Hosting en onderhoud" in page and "Elke maand" in page
+
+    detail = logged_in.get(f"/facturen/periodiek/{series.pk}/").content.decode()
+    assert "Periodieke factuur voor Bakkerij Vos" in detail
+    assert "2026-0001" in detail
+
+    response = logged_in.post(
+        f"/facturen/periodiek/{series.pk}/",
+        {"frequency": "year", "next_date": "2027-10-01"},
+        follow=True,
+    )
+    assert "De volgende factuur staat op 1 oktober 2027 klaar als concept." in (
+        response.content.decode()
+    )
+    series.refresh_from_db()
+    assert (series.frequency, series.next_date, series.day) == ("year", D(2027, 10, 1), 1)
+
+
+def test_stopping_a_series(logged_in, monkeypatch):
+    _today(monkeypatch, D(2026, 11, 23))
+    invoice = _issued_invoice()
+    series = start_series(invoice, "month", D(2026, 12, 1))
+    response = logged_in.post(f"/facturen/periodiek/{series.pk}/stoppen/", follow=True)
+    page = response.content.decode()
+    assert "Er komen geen nieuwe concepten meer." in page
+    series.refresh_from_db()
+    assert series.stopped_on == D(2026, 11, 23)
+    # The invoice offers a new series again.
+    assert "Periodiek maken…" in logged_in.get(f"/facturen/{invoice.pk}/").content.decode()
+    # And the page lists it under Gestopt.
+    assert "Gestopt" in logged_in.get("/facturen/periodiek/").content.decode()
+
+
+def test_without_a_series_facturen_has_no_link_periodiek(logged_in):
+    _issued_invoice()
+    assert "/facturen/periodiek/" not in logged_in.get("/facturen/").content.decode()

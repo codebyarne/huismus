@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from huismus.core.form_messages import NOT_AN_EMAIL_ADDRESS
 from huismus.core.forms import EuroCentsField, HTML5DateInput
 
-from .models import Document, DocumentLine, Payment
+from .models import Document, DocumentLine, Payment, RecurringInvoice
 from .vat import REVERSE_CHARGE, editor_value, rate_label
 
 
@@ -238,3 +238,25 @@ class MailForm(forms.Form):
             except forms.ValidationError as exc:
                 raise forms.ValidationError(NOT_AN_EMAIL_ADDRESS % {"value": address}) from exc
         return addresses
+
+
+class RecurringForm(forms.ModelForm):
+    """ "Periodiek maken…" and "Wijzigen" on the page Periodiek (#82):
+    how often, and the date of the next draft. Never a date that has passed
+    (huismus-intern/besluiten.md, 2026-11-23): a series makes nothing
+    behind the user's back."""
+
+    class Meta:
+        model = RecurringInvoice
+        fields = ["frequency", "next_date"]
+        widgets = {"next_date": HTML5DateInput()}
+
+    def __init__(self, *args, today, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.today = today
+
+    def clean_next_date(self):
+        next_date = self.cleaned_data["next_date"]
+        if next_date <= self.today:
+            raise forms.ValidationError(_("Kies een datum na vandaag."))
+        return next_date

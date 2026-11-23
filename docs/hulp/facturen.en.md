@@ -73,9 +73,27 @@ first. **Cancel** in the draft takes you back to the invoice as it was.
 
 ## Copying
 
-Do you send the same invoice more often, every month for example? Open the
-last one and click **Copy**. You get a new draft with the same customer and
-lines.
+Sending the same invoice once more? Open the last one and click **Copy**. You
+get a new draft with the same customer and lines.
+
+## Recurring
+
+Do you send the same invoice every month, quarter or year? Open an issued
+invoice and click **Make recurring…**. Choose how often, and on which day the
+next one should be ready.
+
+On that day a draft is ready for you, with the same customer and lines. It
+appears when you open Huismus on or after that day, and you see it under **To
+do** on the Overview. Huismus never issues it by itself: you check it and click
+**Issue…**. Only then does it get a number and that day's date. If Huismus was
+closed for a while, there is a draft for every time you missed.
+
+Each new draft is a copy of the previous invoice in the series. Raise the
+price in a draft, and the next one has it too.
+
+Under **Invoices** › **Recurring** you see everything that comes back. There
+you change how often and the next date, or click **Stop…**. What is already
+there stays.
 
 ## Searching and sorting
 

@@ -19,6 +19,7 @@ from huismus.business.kor_limit import kor_limit_status
 from huismus.business.models import Settings
 from huismus.documents.models import Document
 from huismus.documents.numbering import NumberingError, next_numbers_if_issued_today
+from huismus.documents.recurring_views import make_drafts_and_say_so
 from huismus.expenses.inbox_views import new_receipts_context
 from huismus.reports.year_overview import compute_year_overview
 
@@ -90,6 +91,8 @@ def home(request):
             },
         )
 
+    # Recurring invoices (#82) make their drafts when Huismus is opened.
+    make_drafts_and_say_so(request)
     now = timezone.localtime()
     today = now.date()
     outstanding = outstanding_invoices()

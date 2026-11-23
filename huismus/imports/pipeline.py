@@ -446,7 +446,8 @@ def _run_import(exports: list[Export], *, commit: bool, settings_values=None) ->
                 _(
                     "Huismus neemt je periodieke facturen niet mee: Moneybird exporteert "
                     "alleen de planning, niet de facturen zelf. Wat al gefactureerd is, "
-                    "staat gewoon bij je facturen."
+                    "staat gewoon bij je facturen. Open daar de laatste en kies Periodiek "
+                    "maken om hem weer te laten terugkomen."
                 )
             )
 

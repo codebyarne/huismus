@@ -1,0 +1,25 @@
+{% load i18n money documents_tags %}
+<div class="table-wrap">
+    <table class="table stackable">
+        <thead>
+            <tr>
+                <th>{% translate "Klant" %}</th>
+                <th>{% translate "Omschrijving" %}</th>
+                <th>{% translate "Hoe vaak" %}</th>
+                <th>{% if rows.0.series.stopped_on %}{% translate "Gestopt op" %}{% else %}{% translate "Volgende" %}{% endif %}</th>
+                <th class="r">{% translate "Bedrag" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr class="is-link">
+                <td data-cell="primary"><a class="row-link" href="{% url 'documents:recurring_detail' row.series.pk %}">{{ row.customer|default:_("Nog geen klant") }}</a></td>
+                <td data-cell="secondary" class="muted">{{ row.description|truncatechars:60 }}</td>
+                <td data-cell="hide" class="muted">{{ row.series.get_frequency_display|capfirst }}</td>
+                <td data-cell="status" class="num muted">{% if row.series.stopped_on %}{{ row.series.stopped_on|date:"SHORT_DATE_FORMAT" }}{% else %}{{ row.series.next_date|date:"SHORT_DATE_FORMAT" }}{% endif %}</td>
+                <td data-cell="amount" class="r amount">{{ row.latest.total_cents|money }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

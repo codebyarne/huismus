@@ -77,9 +77,28 @@ de factuur zoals hij was.
 
 ## Kopiëren
 
-Stuur je vaker dezelfde factuur, bijvoorbeeld elke maand? Open de vorige en
-klik op **Kopiëren**. Je krijgt een nieuw concept met dezelfde klant en
-regels.
+Stuur je een keer dezelfde factuur opnieuw? Open de vorige en klik op
+**Kopiëren**. Je krijgt een nieuw concept met dezelfde klant en regels.
+
+## Periodiek
+
+Stuur je dezelfde factuur elke maand, elk kwartaal of elk jaar? Open een
+uitgegeven factuur en klik op **Periodiek maken…**. Kies hoe vaak, en op welke
+dag de volgende klaar moet staan.
+
+Op die dag staat er een concept voor je klaar, met dezelfde klant en regels.
+Het verschijnt als je Huismus op of na die dag opent, en je ziet het bij
+**Te doen** op het Overzicht. Huismus geeft het nooit zelf uit: je kijkt het
+na en klikt op **Uitgeven…**. Pas dan krijgt het een nummer en de datum van die
+dag. Had je Huismus een tijd niet open, dan staat er voor elke gemiste keer een
+concept.
+
+Elk nieuw concept is een kopie van de vorige factuur in de reeks. Verhoog je in
+een concept de prijs, dan gaat die mee naar de volgende.
+
+Onder **Facturen** › **Periodiek** zie je alles wat terugkomt. Daar wijzig je
+hoe vaak en de volgende datum, of klik je op **Stoppen…**. Wat er al is, blijft
+staan.
 
 ## Zoeken en sorteren
 
