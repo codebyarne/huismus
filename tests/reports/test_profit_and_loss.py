@@ -88,7 +88,7 @@ def test_without_the_kor_costs_are_without_vat(year):
 
     by_name = {line.name: line.amount_cents for line in statement.cost_lines}
     assert by_name == {"Kantoor": 10000, "Reizen": 61000, "Zonder categorie": 2420}
-    assert statement.without_vat
+    assert statement.costs_without_vat
 
 
 def test_with_the_kor_costs_are_what_was_paid(year):
@@ -98,7 +98,7 @@ def test_with_the_kor_costs_are_what_was_paid(year):
 
     by_name = {line.name: line.amount_cents for line in statement.cost_lines}
     assert by_name == {"Kantoor": 12100, "Reizen": 61090, "Zonder categorie": 2420}
-    assert not statement.without_vat
+    assert not statement.costs_without_vat
 
 
 def test_the_largest_category_comes_first_and_no_category_last(year):

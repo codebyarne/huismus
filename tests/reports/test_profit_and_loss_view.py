@@ -124,7 +124,7 @@ def test_the_csv_has_a_row_per_heading_and_category(logged_in, year):
         "Opbrengsten;Omzet;1000,00",
         "Bedrijfskosten;Software;100,00",
         "Bedrijfskosten;Zonder categorie;5,00",
-        "Bedrijfskosten;Kosten zonder btw;105,00",
+        "Totaal bedrijfskosten;Kosten zonder btw;105,00",
         "Winst;;895,00",
     ]
 

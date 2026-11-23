@@ -163,6 +163,7 @@ def profit_and_loss_pdf(request):
     context = _profit_and_loss_context(year)
     context["business"] = Settings.load()
     context["made_on"] = timezone.localdate()
+    # No base_url: the template loads no files, its CSS is inline.
     html = render_to_string("pdf/profit_and_loss.html", context, request=request)
     response = HttpResponse(HTML(string=html).write_pdf(), content_type="application/pdf")
     response["Content-Disposition"] = f'attachment; filename="winst-en-verlies-{year}.pdf"'
@@ -176,7 +177,9 @@ def profit_and_loss_csv(request):
     revenue, costs = _("Opbrengsten"), _("Bedrijfskosten")
     rows = [[revenue, _("Omzet"), Amount(statement.revenue_cents)]]
     rows += [[costs, line.name, Amount(line.amount_cents)] for line in statement.cost_lines]
-    rows.append([costs, statement.costs_label, Amount(statement.costs_cents)])
+    # Its own heading, so adding up a heading in a spreadsheet never counts
+    # the costs twice.
+    rows.append([_("Totaal bedrijfskosten"), statement.costs_label, Amount(statement.costs_cents)])
     rows.append([_("Winst"), "", Amount(statement.profit_cents)])
     header = [_("rubriek"), _("regel"), _("bedrag")]
     return csv_response(f"winst-en-verlies-{year}.csv", header, rows)

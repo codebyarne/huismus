@@ -7,7 +7,7 @@ only the headings Huismus knows; the notes say what isn't in it.{% endcomment %}
         <tr><td style="padding-left:var(--s-6)">{% translate "Omzet" %}</td><td class="r amount">{{ statement.revenue_cents|money }}</td></tr>
     </tbody>
     <tbody>
-        <tr><th scope="rowgroup" colspan="2" style="text-align:left;font-weight:var(--fw-bold)">{% translate "Bedrijfskosten" %}{% if statement.without_vat %} <span class="muted small" style="font-weight:normal">{% translate "zonder btw" %}</span>{% endif %}</th></tr>
+        <tr><th scope="rowgroup" colspan="2" style="text-align:left;font-weight:var(--fw-bold)">{% translate "Bedrijfskosten" %}{% if statement.costs_without_vat %} <span class="muted small" style="font-weight:normal">{% translate "zonder btw" %}</span>{% endif %}</th></tr>
         {% for line in statement.cost_lines %}
         <tr><td style="padding-left:var(--s-6);overflow-wrap:anywhere">{% if line.uncategorised %}<span class="muted">{{ line.name }}</span>{% else %}{{ line.name }}{% endif %}</td><td class="r amount">{{ line.amount_cents|money }}</td></tr>
         {% empty %}

@@ -32,7 +32,10 @@ class ProfitAndLoss:
     def cost_lines(self) -> list[CategoryTotal]:
         """The year overview's categories, largest first, and the lines
         without a category last: they are what's left to sort out."""
-        return sorted(self.overview.by_category, key=lambda line: line.uncategorised)
+        return sorted(
+            self.overview.by_category,
+            key=lambda line: (line.uncategorised, -line.amount_cents),
+        )
 
     @property
     def costs_cents(self) -> int:
@@ -43,8 +46,9 @@ class ProfitAndLoss:
         return self.overview.profit_cents
 
     @property
-    def without_vat(self) -> bool:
-        """Costs are without VAT (the KOR is off), else what was paid."""
+    def costs_without_vat(self) -> bool:
+        """The costs are without their input VAT: the user charges VAT
+        (`Settings.no_vat` is off). Else they are what was paid."""
         return self.overview.shows_input_vat
 
     @property
