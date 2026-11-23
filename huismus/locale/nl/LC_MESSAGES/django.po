@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-28 20:32+0100\n"
+"POT-Creation-Date: 2026-11-28 21:06+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -4314,6 +4314,21 @@ msgstr ""
 msgid "kosten"
 msgstr ""
 
+msgid "Opbrengsten"
+msgstr ""
+
+msgid "Bedrijfskosten"
+msgstr ""
+
+msgid "Omzet"
+msgstr ""
+
+msgid "Winst"
+msgstr ""
+
+msgid "regel"
+msgstr ""
+
 #, python-format
 msgid "%(quarter)se kwartaal %(year)s"
 msgstr ""
@@ -7728,6 +7743,14 @@ msgstr ""
 msgid "Bedrag incl. btw"
 msgstr "Bedrag incl. btw"
 
+#, python-format
+msgid "Winst-en-verliesrekening %(year)s"
+msgstr ""
+
+#, python-format
+msgid "Gemaakt op %(date)s"
+msgstr ""
+
 msgid "Inloggen"
 msgstr ""
 
@@ -7752,7 +7775,51 @@ msgstr ""
 msgid "Draait op je eigen netwerk"
 msgstr ""
 
-msgid "Omzet"
+msgid ""
+"Dit is de winst uit je administratie. Voor je aangifte pas je daar nog "
+"fiscale regels op toe."
+msgstr ""
+
+msgid "Winst uit onderneming"
+msgstr ""
+
+#, python-format
+msgid ""
+"Omzet is zonder btw, op de factuurdatum. Kosten zijn zonder de btw die je "
+"bij een uitgave invulde, bij 21, 9 of 0%%. Bij btw verlegd of zonder tarief "
+"is het wat je betaald hebt."
+msgstr ""
+
+msgid "Cijfers voor je aangifte"
+msgstr ""
+
+msgid "Zakelijke kosten"
+msgstr ""
+
+msgid ""
+"Je rekent geen btw, dus omzet is je totale omzet, op de factuurdatum. Je "
+"vraagt ook geen btw terug: kosten zijn wat je betaald hebt, met btw."
+msgstr ""
+
+msgid ""
+"Alle uitgaven staan onder bedrijfskosten, ingedeeld in je eigen categorieën. "
+"Kocht je grondstoffen of voorraad in, of betaalde je rente op een lening? "
+"Dan hoort dat in je aangifte bij een andere rubriek."
+msgstr ""
+
+msgid "Afschrijvingen houdt Huismus nog niet bij."
+msgstr ""
+
+msgid "zonder btw"
+msgstr ""
+
+msgid "Je hebt dit jaar geen uitgaven."
+msgstr ""
+
+msgid "Totaal bedrijfskosten"
+msgstr ""
+
+msgid "Winst en verlies"
 msgstr ""
 
 msgid "Btw-aangifte"
@@ -7810,6 +7877,18 @@ msgid ""
 "Het totaal is gelijk aan rubriek 3b van je btw-aangifte over dezelfde "
 "periode. Een dienst telt op de leverdatum, als je die invulde, anders op de "
 "factuurdatum. Een creditnota telt af."
+msgstr ""
+
+msgid "Vorig jaar"
+msgstr ""
+
+msgid "Volgend jaar"
+msgstr ""
+
+msgid "Pdf downloaden"
+msgstr ""
+
+msgid "Zo telt Huismus"
 msgstr ""
 
 msgid "Btw-instellingen"
@@ -7879,12 +7958,6 @@ msgstr ""
 msgid "Vul het tarief en de btw aan in de uitgave, dan tellen ze mee."
 msgstr ""
 
-msgid "Vorig jaar"
-msgstr ""
-
-msgid "Volgend jaar"
-msgstr ""
-
 #, python-format
 msgid "%(count)s creditnota"
 msgid_plural "%(count)s creditnota's"
@@ -7893,9 +7966,6 @@ msgstr[1] ""
 
 #, python-format
 msgid "Voorbelasting %(amount)s"
-msgstr ""
-
-msgid "Winst"
 msgstr ""
 
 msgid "omzet min kosten"
@@ -7920,9 +7990,6 @@ msgid "Kosten zonder btw per categorie"
 msgstr ""
 
 msgid "Kosten per categorie"
-msgstr ""
-
-msgid "Je hebt dit jaar geen uitgaven."
 msgstr ""
 
 #, python-format

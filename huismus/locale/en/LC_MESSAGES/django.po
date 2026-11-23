@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-28 20:32+0100\n"
+"POT-Creation-Date: 2026-11-28 21:06+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -4594,6 +4594,21 @@ msgstr "profit"
 msgid "kosten"
 msgstr "costs"
 
+msgid "Opbrengsten"
+msgstr "Income"
+
+msgid "Bedrijfskosten"
+msgstr "Business costs"
+
+msgid "Omzet"
+msgstr "Revenue"
+
+msgid "Winst"
+msgstr "Profit"
+
+msgid "regel"
+msgstr "line"
+
 #, python-format
 msgid "%(quarter)se kwartaal %(year)s"
 msgstr "Q%(quarter)s %(year)s"
@@ -8303,6 +8318,14 @@ msgstr "Credits invoice"
 msgid "Bedrag incl. btw"
 msgstr "Amount incl. VAT"
 
+#, python-format
+msgid "Winst-en-verliesrekening %(year)s"
+msgstr "Profit and loss statement %(year)s"
+
+#, python-format
+msgid "Gemaakt op %(date)s"
+msgstr "Made on %(date)s"
+
 msgid "Inloggen"
 msgstr "Log in"
 
@@ -8327,8 +8350,62 @@ msgstr "Open"
 msgid "Draait op je eigen netwerk"
 msgstr "Runs on your own network"
 
-msgid "Omzet"
-msgstr "Revenue"
+msgid ""
+"Dit is de winst uit je administratie. Voor je aangifte pas je daar nog "
+"fiscale regels op toe."
+msgstr ""
+"This is the profit from your records. For your tax return you still apply "
+"tax rules to it."
+
+msgid "Winst uit onderneming"
+msgstr "Profit from business (Dutch)"
+
+#, python-format
+msgid ""
+"Omzet is zonder btw, op de factuurdatum. Kosten zijn zonder de btw die je "
+"bij een uitgave invulde, bij 21, 9 of 0%%. Bij btw verlegd of zonder tarief "
+"is het wat je betaald hebt."
+msgstr ""
+"Revenue is without VAT, on the invoice date. Costs are without the VAT you "
+"entered for an expense, at 21, 9 or 0%%. With reverse charge or without a "
+"rate, it is what you paid."
+
+msgid "Cijfers voor je aangifte"
+msgstr "Figures for your tax return (Dutch)"
+
+msgid "Zakelijke kosten"
+msgstr "Business costs (Dutch)"
+
+msgid ""
+"Je rekent geen btw, dus omzet is je totale omzet, op de factuurdatum. Je "
+"vraagt ook geen btw terug: kosten zijn wat je betaald hebt, met btw."
+msgstr ""
+"You charge no VAT, so revenue is your total revenue, on the invoice date. "
+"You don't reclaim VAT either: costs are what you paid, VAT included."
+
+msgid ""
+"Alle uitgaven staan onder bedrijfskosten, ingedeeld in je eigen categorieën. "
+"Kocht je grondstoffen of voorraad in, of betaalde je rente op een lening? "
+"Dan hoort dat in je aangifte bij een andere rubriek."
+msgstr ""
+"All expenses are under business costs, sorted into your own categories. Did "
+"you buy raw materials or stock, or pay interest on a loan? Then that goes "
+"under another heading in your tax return."
+
+msgid "Afschrijvingen houdt Huismus nog niet bij."
+msgstr "Huismus doesn't keep track of depreciation yet."
+
+msgid "zonder btw"
+msgstr "without VAT"
+
+msgid "Je hebt dit jaar geen uitgaven."
+msgstr "You have no expenses this year."
+
+msgid "Totaal bedrijfskosten"
+msgstr "Total business costs"
+
+msgid "Winst en verlies"
+msgstr "Profit and loss"
 
 msgid "Btw-aangifte"
 msgstr "VAT return"
@@ -8397,6 +8474,18 @@ msgstr ""
 "The total equals box 3b of your VAT return for the same period. A service "
 "counts on its delivery date, if you filled one in, otherwise on the invoice "
 "date. A credit note counts negative."
+
+msgid "Vorig jaar"
+msgstr "Previous year"
+
+msgid "Volgend jaar"
+msgstr "Next year"
+
+msgid "Pdf downloaden"
+msgstr "Download PDF"
+
+msgid "Zo telt Huismus"
+msgstr "How Huismus counts"
 
 msgid "Btw-instellingen"
 msgstr "VAT settings"
@@ -8472,12 +8561,6 @@ msgstr "You put these invoices back in draft. Issue them again and they count."
 msgid "Vul het tarief en de btw aan in de uitgave, dan tellen ze mee."
 msgstr "Add the rate and the VAT in the expense and they count."
 
-msgid "Vorig jaar"
-msgstr "Previous year"
-
-msgid "Volgend jaar"
-msgstr "Next year"
-
 #, python-format
 msgid "%(count)s creditnota"
 msgid_plural "%(count)s creditnota's"
@@ -8487,9 +8570,6 @@ msgstr[1] "%(count)s credit notes"
 #, python-format
 msgid "Voorbelasting %(amount)s"
 msgstr "Input VAT %(amount)s"
-
-msgid "Winst"
-msgstr "Profit"
 
 msgid "omzet min kosten"
 msgstr "revenue minus costs"
@@ -8514,9 +8594,6 @@ msgstr "Costs excluding VAT by category"
 
 msgid "Kosten per categorie"
 msgstr "Costs per category"
-
-msgid "Je hebt dit jaar geen uitgaven."
-msgstr "You have no expenses this year."
 
 #, python-format
 msgid ""

@@ -154,6 +154,10 @@ def _pages():
         f"/uren/{_first(TimeEntry.objects.filter(invoice__status='issued'), 'invoiced').pk}/",
         f"/uren/{_first(TimeEntry.objects.filter(invoice__status='draft'), 'on a draft').pk}/",
         "/rapporten/jaaroverzicht/",
+        # The profit and loss statement (SPEC.md M28): this year and a full
+        # year of the history.
+        "/rapporten/winst-en-verlies/",
+        "/rapporten/winst-en-verlies/?jaar=2025",
         # The VAT return (SPEC.md M21, part 4): a year of the history, with
         # imports and lines without a rate under "Niet meegeteld".
         "/rapporten/btw-aangifte/",

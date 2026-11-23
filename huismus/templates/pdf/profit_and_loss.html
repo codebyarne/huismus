@@ -1,0 +1,35 @@
+{% load i18n %}<!DOCTYPE html>
+{% comment %}Rapporten → Winst en verlies as a PDF for an accountant (SPEC.md M28).
+A report, not an issued document: today's settings, the user's language.
+The same table and notes as the page.{% endcomment %}
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+<meta charset="utf-8">
+<title>{% blocktranslate %}Winst-en-verliesrekening {{ year }}{% endblocktranslate %}</title>
+<style>
+@page { size: A4; margin: 18mm 18mm 20mm 18mm; }
+body { --s-2: 2mm; --s-5: 5mm; --s-6: 6mm; --fw-bold: bold; --fw-semibold: bold;
+  margin: 0; font: 10pt/1.5 Helvetica, Arial, "Liberation Sans", sans-serif; color: #000; }
+h1 { font-size: 20pt; font-weight: normal; line-height: 1.1; margin: 10mm 0 2mm; }
+p { margin: 0; }
+.muted { color: #555; }
+.small { font-size: 8.5pt; }
+.sr-only { display: none; }
+.table { width: 100%; border-collapse: collapse; margin-top: 8mm; }
+.table th, .table td { padding: 1.6mm 0; border-bottom: 0.5pt solid #B3B3B3; vertical-align: top; }
+.table th { padding-top: 4mm; border-bottom: 0.75pt solid #000; }
+.table .r { text-align: right; white-space: nowrap; }
+.table tfoot td { font-weight: bold; border-top: 0.75pt solid #000; border-bottom: 0; font-size: 11pt; }
+.stack { margin-top: 10mm !important; }
+.stack li + li { margin-top: 1.5mm; }
+a { color: inherit; }
+</style>
+</head>
+<body>
+<p><strong>{{ business.business_name }}</strong>{% if business.kvk_number %}<br>{% translate "KvK" %}: {{ business.kvk_number }}{% endif %}</p>
+<h1>{% blocktranslate %}Winst-en-verliesrekening {{ year }}{% endblocktranslate %}</h1>
+<p class="muted">{% blocktranslate with date=made_on|date:"j F Y" %}Gemaakt op {{ date }}{% endblocktranslate %}</p>
+{% include "reports/_profit_and_loss_table.html" %}
+{% include "reports/_profit_and_loss_notes.html" %}
+</body>
+</html>

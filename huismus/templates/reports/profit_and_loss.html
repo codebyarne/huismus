@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% blocktranslate %}Winst-en-verliesrekening {{ year }}{% endblocktranslate %} — Huismus{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles"><span class="small muted">{% translate "Rapporten" %}</span><h1>{% blocktranslate %}Winst-en-verliesrekening {{ year }}{% endblocktranslate %}</h1></div>
+    <div class="actions">
+        <nav class="year-nav" aria-label="{% translate 'Jaar' %}">
+            <a href="?jaar={{ year|add:'-1' }}" aria-label="{% translate 'Vorig jaar' %}"><svg class="i i-sm" aria-hidden="true"><use href="#chevron-left"></use></svg></a>
+            <a href="?jaar={{ year|add:'-1' }}">{{ year|add:"-1" }}</a>
+            <a href="?jaar={{ year }}" aria-current="page">{{ year }}</a>
+            {% if year < this_year %}<a href="?jaar={{ year|add:'1' }}">{{ year|add:"1" }}</a>{% endif %}
+            <a href="?jaar={{ year|add:'1' }}" aria-label="{% translate 'Volgend jaar' %}"><svg class="i i-sm" aria-hidden="true"><use href="#chevron-right"></use></svg></a>
+        </nav>
+        <a class="btn btn-secondary" href="{% url 'reports:profit_and_loss_pdf' %}?jaar={{ year }}" hx-boost="false" data-file download><svg class="i" aria-hidden="true"><use href="#download"></use></svg>{% translate "Pdf downloaden" %}</a>
+        <a class="btn btn-secondary" href="{% url 'reports:profit_and_loss_csv' %}?jaar={{ year }}" hx-boost="false" data-file download><svg class="i" aria-hidden="true"><use href="#download"></use></svg>{% translate "CSV downloaden" %}</a>
+    </div>
+</div>
+
+{% include "reports/_tabs.html" with current="profit_and_loss" %}
+
+<section class="card" style="margin-bottom:var(--s-5)">
+    <div class="table-wrap">{% include "reports/_profit_and_loss_table.html" %}</div>
+</section>
+
+<h2 style="margin-bottom:var(--s-3)">{% translate "Zo telt Huismus" %}</h2>
+{% include "reports/_profit_and_loss_notes.html" %}
+{% endblock %}

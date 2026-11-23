@@ -58,6 +58,8 @@ class QuarterTotals:
 class CategoryTotal:
     name: str
     amount_cents: int
+    # The lines without a category, whatever a category happens to be called.
+    uncategorised: bool = False
 
 
 @dataclass
@@ -150,6 +152,7 @@ def compute_year_overview(year: int) -> YearOverview:
             CategoryTotal(
                 name=name or str(_("Zonder categorie")),
                 amount_cents=gross - input_vat_by_category.get(name, 0),
+                uncategorised=name is None,
             )
             for name, gross in gross_by_category.items()
         ),

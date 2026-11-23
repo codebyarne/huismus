@@ -1,11 +1,14 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.formats import date_format
 from django.utils.translation import gettext_lazy as _
+from weasyprint import HTML
 
 from huismus.business.kor_limit import kor_limit_status
 from huismus.business.models import Settings
@@ -18,6 +21,7 @@ from .icp import compute_icp
 from .icp_csv import header as icp_header
 from .icp_csv import rows as icp_rows
 from .periods import MONTH, QUARTER, YEAR, Period
+from .profit_and_loss import compute_profit_and_loss
 from .vat_return import EXEMPT_NOTE, KOR_NOTE, NOT_COUNTED_TITLES, compute_vat_return
 from .vat_return_csv import header as vat_return_header
 from .vat_return_csv import rows as vat_return_rows
@@ -131,6 +135,51 @@ def year_overview_csv(request):
             for label, totals in lines
         ]
     return csv_response(f"jaaroverzicht-{year}.csv", header, rows)
+
+
+def _profit_and_loss_context(year: int) -> dict:
+    """What the page and its PDF both show (SPEC.md M28)."""
+    settings = Settings.load()
+    return {
+        "statement": compute_profit_and_loss(year),
+        "year": year,
+        "kor_enabled": settings.kor_enabled,
+    }
+
+
+@login_required
+def profit_and_loss(request):
+    year = _requested_year(request)
+    context = _profit_and_loss_context(year)
+    context["this_year"] = timezone.localdate().year
+    return render(request, "reports/profit_and_loss.html", context)
+
+
+@login_required
+def profit_and_loss_pdf(request):
+    """A report, not an issued document: the business name and KvK number
+    are today's settings, and the language is the user's (SPEC.md M28)."""
+    year = _requested_year(request)
+    context = _profit_and_loss_context(year)
+    context["business"] = Settings.load()
+    context["made_on"] = timezone.localdate()
+    html = render_to_string("pdf/profit_and_loss.html", context, request=request)
+    response = HttpResponse(HTML(string=html).write_pdf(), content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename="winst-en-verlies-{year}.pdf"'
+    return response
+
+
+@login_required
+def profit_and_loss_csv(request):
+    year = _requested_year(request)
+    statement = compute_profit_and_loss(year)
+    revenue, costs = _("Opbrengsten"), _("Bedrijfskosten")
+    rows = [[revenue, _("Omzet"), Amount(statement.revenue_cents)]]
+    rows += [[costs, line.name, Amount(line.amount_cents)] for line in statement.cost_lines]
+    rows.append([costs, statement.costs_label, Amount(statement.costs_cents)])
+    rows.append([_("Winst"), "", Amount(statement.profit_cents)])
+    header = [_("rubriek"), _("regel"), _("bedrag")]
+    return csv_response(f"winst-en-verlies-{year}.csv", header, rows)
 
 
 def _period_name(period: Period) -> str:
