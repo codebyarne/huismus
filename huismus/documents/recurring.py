@@ -14,12 +14,15 @@ Huismus was closed: one draft per period.
 
 import calendar
 import datetime
+import logging
 
 from django.db import transaction
 from django.utils.translation import gettext as _
 
 from .drafts import copy_document
 from .models import Document, RecurringInvoice, RecurringInvoiceDocument
+
+logger = logging.getLogger(__name__)
 
 MONTHS = {"month": 1, "quarter": 3, "year": 12}
 
@@ -51,10 +54,11 @@ def first_date_after(start: datetime.date, frequency: str, today: datetime.date)
 def series_of(document: Document) -> RecurringInvoice | None:
     """The series a document is in: the running one, else the newest
     stopped one; None when it was never in one."""
-    links = RecurringInvoiceDocument.objects.filter(document=document).select_related("series")
-    series = [link.series for link in links]
-    running = [s for s in series if s.stopped_on is None]
-    return max(running or series, key=lambda s: s.pk, default=None)
+    series = RecurringInvoice.objects.filter(links__document=document).order_by("-pk")
+    running = series.filter(stopped_on=None).first()
+    if running is not None:
+        return running
+    return series.first()
 
 
 def planned_on(document: Document) -> datetime.date | None:
@@ -107,21 +111,36 @@ def make_due_drafts(today: datetime.date) -> list[Document]:
     series; returns the new drafts. Safe to call on every page load: each
     period is claimed by moving next_date on with a conditional UPDATE, in
     the same transaction as its draft, so two requests at once never make
-    one period twice, and a failure leaves neither."""
+    one period twice, and a failure leaves neither. A series that fails is
+    logged and tried again on the next page load; it never breaks the page
+    that opened it."""
     made = []
     for series in RecurringInvoice.objects.filter(stopped_on=None, next_date__lte=today):
-        while series.next_date <= today:
-            following = following_date(series.next_date, series.frequency, series.day)
-            with transaction.atomic():
-                claimed = RecurringInvoice.objects.filter(
-                    pk=series.pk, stopped_on=None, next_date=series.next_date
-                ).update(next_date=following)
-                if not claimed:
-                    break  # another request made this period, or it stopped
-                draft = copy_document(latest_in_series(series))
-                RecurringInvoiceDocument.objects.create(
-                    series=series, document=draft, planned_on=series.next_date
-                )
-            made.append(draft)
-            series.next_date = following
+        try:
+            made += _make_due_drafts_of(series, today)
+        except Exception:
+            logger.exception("Recurring invoice %s: making its draft failed", series.pk)
     return made
+
+
+def _make_due_drafts_of(series: RecurringInvoice, today: datetime.date) -> list[Document]:
+    made = []
+    while True:
+        # The database decides, not this copy: another request may have
+        # made a period or stopped the series meanwhile.
+        series.refresh_from_db()
+        if series.stopped_on is not None or series.next_date > today:
+            return made
+        period = series.next_date
+        following = following_date(period, series.frequency, series.day)
+        with transaction.atomic():
+            claimed = RecurringInvoice.objects.filter(
+                pk=series.pk, stopped_on=None, next_date=period
+            ).update(next_date=following)
+            if not claimed:
+                continue  # another request made this period first
+            draft = copy_document(latest_in_series(series))
+            RecurringInvoiceDocument.objects.create(
+                series=series, document=draft, planned_on=period
+            )
+        made.append(draft)

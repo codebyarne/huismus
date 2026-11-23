@@ -25,6 +25,8 @@ flowchart TB
         DocumentVatRow --> |document| Document
         Payment --> |document| Document
         EmailLog --> |document| Document
+        RecurringInvoiceDocument --> |reeks| RecurringInvoice
+        RecurringInvoiceDocument --> |document| Document
         Document --> |related_document| Document
         NumberSequence
     end

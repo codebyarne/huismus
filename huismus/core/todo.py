@@ -152,17 +152,17 @@ def _draft_item(draft) -> TodoItem:
     customer = contact_name(draft)
     # Made by a recurring series (#82): the row says which period it is for.
     planned = planned_on(draft)
-    if planned and customer:
-        title = _("Je periodieke factuur voor %(customer)s staat klaar") % {"customer": customer}
-    elif customer:
-        title = _("Je concept voor %(customer)s staat klaar") % {"customer": customer}
-    else:
-        title = _("Je concept heeft nog geen klant")
-    # Back in draft through "Toch bewerken", it kept its number
-    # (documents.reopening): it was sent before, so the row names it.
-    state = draft.number or _("nog niet verstuurd")
     if planned:
+        title = _("Je periodieke factuur voor %(customer)s staat klaar") % {"customer": customer}
         state = _("gepland op %(date)s") % {"date": date_format(planned, "j F")}
+    else:
+        if customer:
+            title = _("Je concept voor %(customer)s staat klaar") % {"customer": customer}
+        else:
+            title = _("Je concept heeft nog geen klant")
+        # Back in draft through "Toch bewerken", it kept its number
+        # (documents.reopening): it was sent before, so the row names it.
+        state = draft.number or _("nog niet verstuurd")
     return TodoItem(
         kind=DRAFT,
         title=title,
