@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-23 00:11+0100\n"
+"POT-Creation-Date: 2026-11-23 09:59+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -56,6 +56,11 @@ msgid ""
 "Klanten."
 msgstr ""
 
+msgid ""
+"Offertes staat uit bij Instellingen › Menu. Zet het daar aan om een offerte "
+"te maken."
+msgstr ""
+
 msgid "Een concept heeft minstens één regel nodig."
 msgstr ""
 
@@ -66,6 +71,11 @@ msgid "Dit concept heeft al een nummer. Wijzig het in Huismus zelf."
 msgstr ""
 
 msgid "Vul minstens één regel in met een bedrag."
+msgstr ""
+
+msgid ""
+"Uitgaven staat uit bij Instellingen › Menu. Zet het daar aan om een uitgave "
+"of categorie toe te voegen."
 msgstr ""
 
 msgid "Het bonnetje zit eraan vast."
@@ -601,6 +611,15 @@ msgstr ""
 msgid "tekst in het Engels"
 msgstr ""
 
+msgid "Je hebt offertes, dus Offertes blijft in het menu."
+msgstr ""
+
+msgid "Je hebt uitgaven of bonnetjes, dus Uitgaven blijft in het menu."
+msgstr ""
+
+msgid "Je hebt een bankafschrift ingelezen, dus Bank blijft in het menu."
+msgstr ""
+
 msgid "Wachtwoord"
 msgstr ""
 
@@ -659,6 +678,9 @@ msgid "Vul dit in om via je eigen mailserver te mailen."
 msgstr ""
 
 msgid "Voorstel op basis van wat je eerder invulde. Klopt het, sla dan op."
+msgstr ""
+
+msgid "Met je bonnetjes en categorieën."
 msgstr ""
 
 #, python-format
@@ -843,6 +865,15 @@ msgstr ""
 msgid "organisatie"
 msgstr ""
 
+msgid "Offertes"
+msgstr ""
+
+msgid "Uitgaven"
+msgstr ""
+
+msgid "Bank"
+msgstr ""
+
 msgid "instellingen"
 msgstr ""
 
@@ -911,6 +942,12 @@ msgstr ""
 msgid "Hoe Huismus je facturen en offertes mailt, en met welke tekst."
 msgstr ""
 
+msgid "Menu"
+msgstr ""
+
+msgid "Kies wat je in het menu ziet. Waar al iets in staat, blijft erin."
+msgstr ""
+
 msgctxt "setting"
 msgid "Uit"
 msgstr ""
@@ -955,6 +992,9 @@ msgid "via %(address)s"
 msgstr ""
 
 msgid "Nog niet ingesteld"
+msgstr ""
+
+msgid "Alleen facturen"
 msgstr ""
 
 msgid "Nog geen map gekozen"
@@ -2033,9 +2073,6 @@ msgstr ""
 msgid "Een factuur die het boekhoudpakket van je klant kan inlezen."
 msgstr ""
 
-msgid "Uitgaven"
-msgstr ""
-
 msgid "Bonnetjes als foto of pdf"
 msgstr ""
 
@@ -2270,6 +2307,14 @@ msgstr[0] ""
 msgstr[1] ""
 
 #, python-format
+msgid "Je periodieke factuur voor %(customer)s staat klaar"
+msgstr ""
+
+#, python-format
+msgid "gepland op %(date)s"
+msgstr ""
+
+#, python-format
 msgid "Je concept voor %(customer)s staat klaar"
 msgstr ""
 
@@ -2433,6 +2478,87 @@ msgid ""
 "keer in."
 msgstr ""
 
+msgid "Hoog tarief"
+msgstr ""
+
+msgid "Laag tarief"
+msgstr ""
+
+#, python-format
+msgid "0% of niet bij jou belast"
+msgstr ""
+
+msgid "Btw verlegd, klant in een ander EU-land"
+msgstr ""
+
+msgid "Btw verlegd naar jou"
+msgstr ""
+
+msgid "Btw verlegd, uit landen buiten de EU"
+msgstr ""
+
+msgid "Btw verlegd, uit landen binnen de EU"
+msgstr ""
+
+msgid "Voorbelasting"
+msgstr ""
+
+msgid "Debiteuren"
+msgstr ""
+
+msgid "Beginbalans, nog in te delen"
+msgstr ""
+
+msgid "Btw 1a hoog tarief"
+msgstr ""
+
+msgid "Btw 1b laag tarief"
+msgstr ""
+
+msgid "Btw 2a verlegd naar jou"
+msgstr ""
+
+msgid "Btw 4a uit landen buiten de EU"
+msgstr ""
+
+msgid "Btw 4b uit landen binnen de EU"
+msgstr ""
+
+msgid "Btw, niet in een rubriek"
+msgstr ""
+
+msgid "Omzet 1a hoog tarief"
+msgstr ""
+
+msgid "Omzet 1b laag tarief"
+msgstr ""
+
+#, python-format
+msgid "Omzet 1e 0% of niet bij jou belast"
+msgstr ""
+
+msgid "Omzet 3b binnen de EU"
+msgstr ""
+
+msgid "Omzet, niet in een rubriek"
+msgstr ""
+
+msgid "Verkoop"
+msgstr ""
+
+msgid "Inkoop"
+msgstr ""
+
+#, python-format
+msgid "Betaling %(number)s"
+msgstr ""
+
+msgid "Bedrag zonder uitgaveregel"
+msgstr ""
+
+msgid "Kosten zonder categorie"
+msgstr ""
+
 msgid "Vul een getal in, zoals 2 of 1,5."
 msgstr ""
 
@@ -2464,6 +2590,9 @@ msgid "Onderwerp"
 msgstr ""
 
 msgid "Stuur mij een kopie (BCC)"
+msgstr ""
+
+msgid "Kies een datum na vandaag."
 msgstr ""
 
 msgid "Dit document is al uitgegeven."
@@ -2776,6 +2905,42 @@ msgstr ""
 msgid "Een verstuurde e-mail is onveranderlijk."
 msgstr ""
 
+msgid "elke maand"
+msgstr ""
+
+msgid "elk kwartaal"
+msgstr ""
+
+msgid "elk jaar"
+msgstr ""
+
+msgid "hoe vaak"
+msgstr ""
+
+msgid "dag"
+msgstr ""
+
+msgid "volgende factuur op"
+msgstr ""
+
+msgid "gestopt op"
+msgstr ""
+
+msgid "periodieke factuur"
+msgstr ""
+
+msgid "periodieke facturen"
+msgstr ""
+
+msgid "gepland op"
+msgstr ""
+
+msgid "factuur in een periodieke reeks"
+msgstr ""
+
+msgid "facturen in een periodieke reeks"
+msgstr ""
+
 msgid "[klantnummer]"
 msgstr ""
 
@@ -2820,6 +2985,36 @@ msgid "Je kunt alleen een verzonden offerte op verlopen zetten."
 msgstr ""
 
 msgid "Je kunt alleen een offerte omzetten naar een factuur."
+msgstr ""
+
+msgid "Alleen een uitgegeven factuur kan periodiek worden."
+msgstr ""
+
+msgid "Deze factuur is al periodiek."
+msgstr ""
+
+#, python-format
+msgid ""
+"Er staat %(count)s periodieke factuur klaar als concept. Kijk hem na en geef "
+"hem uit."
+msgid_plural ""
+"Er staan %(count)s periodieke facturen klaar als concept. Kijk ze na en geef "
+"ze uit."
+msgstr[0] ""
+msgstr[1] ""
+
+#, python-format
+msgid ""
+"Deze factuur komt %(frequency)s terug. De volgende staat op %(date)s klaar "
+"als concept."
+msgstr ""
+
+#, python-format
+msgid "Opgeslagen. De volgende factuur staat op %(date)s klaar als concept."
+msgstr ""
+
+msgid ""
+"Gestopt. Er komen geen nieuwe concepten meer. Wat er al is, blijft staan."
 msgstr ""
 
 msgid "Dit document is niet heropend, dus er is niets terug te zetten."
@@ -2955,6 +3150,12 @@ msgstr ""
 
 #, python-format
 msgid "%(service)s gaf een antwoord dat Huismus niet begrijpt."
+msgstr ""
+
+msgid "Het bonnetje staat weer bij de bonnetjes zonder uitgave."
+msgstr ""
+
+msgid "Dit bonnetje hangt niet meer aan die uitgave."
 msgstr ""
 
 msgid "nieuwe categorie"
@@ -3711,7 +3912,8 @@ msgstr ""
 msgid ""
 "Huismus neemt je periodieke facturen niet mee: Moneybird exporteert alleen "
 "de planning, niet de facturen zelf. Wat al gefactureerd is, staat gewoon bij "
-"je facturen."
+"je facturen. Open daar de laatste en kies Periodiek maken om hem weer te "
+"laten terugkomen."
 msgstr ""
 
 #, python-format
@@ -3736,9 +3938,6 @@ msgid "Contactpersonen"
 msgstr ""
 
 msgid "Factuurregels"
-msgstr ""
-
-msgid "Offertes"
 msgstr ""
 
 msgid "Offerteregels"
@@ -3925,9 +4124,6 @@ msgstr ""
 msgid "Verschuldigde btw"
 msgstr ""
 
-msgid "Voorbelasting"
-msgstr ""
-
 msgid "waarvan verlegd"
 msgstr ""
 
@@ -4068,9 +4264,6 @@ msgid "Meer uitleg per bank"
 msgstr "Meer uitleg per bank"
 
 msgid "Overgeslagen"
-msgstr ""
-
-msgid "Bank"
 msgstr ""
 
 msgid ""
@@ -4635,8 +4828,8 @@ msgid "Maak bij je opslagdienst een apart wachtwoord voor Huismus."
 msgstr ""
 
 msgid ""
-"Download je facturen, offertes, klanten en uitgaven als CSV, met de pdf's en "
-"bonnetjes erbij. Werkt ook zonder Huismus."
+"Download je facturen, offertes, klanten en uitgaven als CSV, met de pdf's, "
+"bonnetjes en een auditfile erbij. Werkt ook zonder Huismus."
 msgstr ""
 
 msgid "Wat zit erin"
@@ -5666,6 +5859,18 @@ msgstr ""
 msgid "Markeer als verlopen"
 msgstr ""
 
+msgid "Hoe vaak"
+msgstr ""
+
+msgid "Gestopt op"
+msgstr ""
+
+msgid "Volgende"
+msgstr ""
+
+msgid "Nog geen klant"
+msgstr ""
+
 #, python-format
 msgid "%(rate)s btw"
 msgstr ""
@@ -5730,6 +5935,14 @@ msgid "Creditnota maken…"
 msgstr ""
 
 msgid "Toch bewerken…"
+msgstr ""
+
+msgid "Periodiek maken…"
+msgstr ""
+
+#, python-format
+msgid ""
+"Komt %(frequency)s terug. De volgende staat op %(date)s klaar als concept."
 msgstr ""
 
 #, python-format
@@ -5862,6 +6075,18 @@ msgid ""
 "niet meer met de factuur."
 msgstr ""
 
+msgid "Periodiek maken"
+msgstr ""
+
+msgid ""
+"Huismus zet deze factuur op de datum die je kiest weer klaar als concept, "
+"met dezelfde klant en regels. Je kijkt hem na en geeft hem zelf uit. Pas je "
+"in een concept iets aan, dan gaat dat mee naar de volgende."
+msgstr ""
+
+msgid "Het concept verschijnt als je Huismus op of na die dag opent."
+msgstr ""
+
 #, python-format
 msgid "Voor factuur %(number)s aan %(name)s."
 msgstr ""
@@ -5924,6 +6149,17 @@ msgstr ""
 msgid ""
 "Dit concept heeft al nummer %(number)s uit Moneybird. Bij uitgeven houdt hij "
 "dat nummer."
+msgstr ""
+
+#, python-format
+msgid "Periodieke factuur, %(frequency)s, gepland op %(date)s."
+msgstr ""
+
+#, python-format
+msgid "Periodieke factuur, %(frequency)s."
+msgstr ""
+
+msgid "Wat je hier aanpast, gaat mee naar de volgende."
 msgstr ""
 
 #, python-format
@@ -6014,6 +6250,9 @@ msgid ""
 "je met een creditnota."
 msgstr ""
 
+msgid "Periodiek"
+msgstr ""
+
 msgid "Maak je eerste factuur. Hij blijft een concept tot je hem uitgeeft."
 msgstr ""
 
@@ -6027,9 +6266,6 @@ msgid "Zoek op nummer of klant"
 msgstr ""
 
 msgid "Alle jaren"
-msgstr ""
-
-msgid "Nog geen klant"
 msgstr ""
 
 #, python-format
@@ -6116,7 +6352,73 @@ msgid ""
 "de klant kun je dan nog vastleggen."
 msgstr ""
 
+msgid "Periodieke factuur"
+msgstr ""
+
+#, python-format
+msgid "Periodieke factuur voor %(name)s"
+msgstr ""
+
+msgid "Gestopt"
+msgstr ""
+
+#, python-format
+msgid "Gestopt op %(date)s. Er komen geen nieuwe concepten meer."
+msgstr ""
+
+msgid ""
+"Wil je weer periodiek factureren? Open de laatste uitgegeven factuur en kies "
+"Periodiek maken."
+msgstr ""
+
+msgid ""
+"Elk nieuw concept is een kopie van de nieuwste factuur hieronder. Pas je in "
+"een concept iets aan, dan gaat dat mee naar de volgende."
+msgstr ""
+
+msgid "Stoppen…"
+msgstr ""
+
+msgid "Periodieke factuur stoppen?"
+msgstr ""
+
+msgid ""
+"Er komen geen nieuwe concepten meer. De facturen en concepten die er al "
+"zijn, blijven staan."
+msgstr ""
+
+msgid ""
+"Facturen die vanzelf terugkomen. Op de geplande dag staat er een concept "
+"klaar; uitgeven doe je zelf."
+msgstr ""
+
+msgid "Nog geen periodieke facturen"
+msgstr ""
+
+msgid "Open een uitgegeven factuur en kies Periodiek maken."
+msgstr ""
+
+msgid "Lopend"
+msgstr ""
+
 msgid "Naar inloggen"
+msgstr ""
+
+msgid "Met bonnetje"
+msgstr ""
+
+#, python-format
+msgid "Uitgave van %(date)s kiezen"
+msgstr ""
+
+msgid "Kiezen"
+msgstr ""
+
+#, python-format
+msgid "Bonnetje hangt nu aan je uitgave van %(date)s (%(amount)s)."
+msgstr ""
+
+msgid "Ongedaan maken"
 msgstr ""
 
 msgid "Categorie"
@@ -6167,6 +6469,13 @@ msgstr ""
 msgid "Je AI-assistent vulde deze uitgave in. Klopt alles?"
 msgstr ""
 
+#, python-format
+msgid "Bonnetje %(name)s"
+msgstr ""
+
+msgid "Bonnetje openen"
+msgstr ""
+
 msgid "Bezig met ophalen…"
 msgstr ""
 
@@ -6192,6 +6501,35 @@ msgstr ""
 
 #, python-format
 msgid "%(name)s is niet opgehaald. %(reason)s"
+msgstr ""
+
+msgid "Bij welke uitgave hoort dit bonnetje?"
+msgstr ""
+
+msgid "Bonnetjes zonder uitgave"
+msgstr ""
+
+msgid "Bonnetje"
+msgstr ""
+
+msgid "Nog geen uitgaven. Maak een uitgave van dit bonnetje."
+msgstr ""
+
+msgid "Lijkt op dit bonnetje"
+msgstr ""
+
+msgid "Leverancier, omschrijving of bedrag"
+msgstr ""
+
+msgid "Uitgaven zonder bonnetje"
+msgstr ""
+
+msgid "Geen uitgave gevonden."
+msgstr ""
+
+msgid ""
+"Elke uitgave heeft al een bonnetje. Zoek hierboven, of maak een uitgave van "
+"dit bonnetje."
 msgstr ""
 
 msgid ""
@@ -6285,10 +6623,6 @@ msgid_plural "%(count)s bestanden"
 msgstr[0] ""
 msgstr[1] ""
 
-#, python-format
-msgid "Bonnetje %(name)s"
-msgstr ""
-
 msgid "Bonnetje verwijderen"
 msgstr ""
 
@@ -6308,9 +6642,6 @@ msgid "Sleep een bonnetje hierheen"
 msgstr ""
 
 msgid "of kies een bestand · JPG, PNG, HEIC, PDF"
-msgstr ""
-
-msgid "Bonnetje"
 msgstr ""
 
 msgid ""
@@ -6365,9 +6696,6 @@ msgstr ""
 msgid "Alle uitgaven"
 msgstr ""
 
-msgid "Met bonnetje"
-msgstr ""
-
 #, python-format
 msgid "Totaal van %(total)s uitgave in %(year)s"
 msgid_plural "Totaal van %(total)s uitgaven in %(year)s"
@@ -6414,13 +6742,13 @@ msgstr ""
 msgid "Naar Uitgaven"
 msgstr ""
 
-msgid "Bonnetje openen"
-msgstr ""
-
 msgid "Geen bonnetje bij deze uitgave."
 msgstr ""
 
 msgid "Huismus leest dit bonnetje…"
+msgstr ""
+
+msgid "Hoort bij een uitgave die er al is?"
 msgstr ""
 
 msgid ""
@@ -6497,9 +6825,6 @@ msgstr ""
 msgid "Huismus haalt dan niets meer op. De bonnetjes die er al zijn, blijven."
 msgstr ""
 
-msgid "Bonnetjes zonder uitgave"
-msgstr ""
-
 #, python-format
 msgid "Uit de map %(place)s."
 msgstr ""
@@ -6510,6 +6835,12 @@ msgstr ""
 
 #, python-format
 msgid "Opgehaald %(moment)s"
+msgstr ""
+
+msgid "Nieuwe uitgave maken"
+msgstr ""
+
+msgid "Kies bestaande uitgave"
 msgstr ""
 
 msgid "Huismus haalt het bonnetje weg. Het bestand blijft in de map Opgehaald."
@@ -7374,9 +7705,6 @@ msgid ""
 msgstr ""
 
 msgid "Naar de inhoud"
-msgstr ""
-
-msgid "Menu"
 msgstr ""
 
 msgid "Home"
@@ -8539,9 +8867,6 @@ msgstr ""
 #~ msgid "Alles wat bij je facturen past, is geboekt."
 #~ msgstr "Alles wat bij je facturen past, is geboekt."
 
-#~ msgid "privé, of geen factuur"
-#~ msgstr "privé, of geen factuur"
-
 #~ msgid ""
 #~ "Huismus vond hier geen factuur bij. Privé, of geld van je spaarrekening? "
 #~ "Dan laat je het hier staan. Is het toch een betaling van een klant? Kies "
@@ -8577,158 +8902,3 @@ msgstr ""
 #~ msgid_plural "%(count)s afschrijvingen"
 #~ msgstr[0] "%(count)s afschrijving"
 #~ msgstr[1] "%(count)s afschrijvingen"
-
-msgid "Het bonnetje staat weer bij de bonnetjes zonder uitgave."
-msgstr ""
-
-msgid "Dit bonnetje hangt niet meer aan die uitgave."
-msgstr ""
-
-#, python-format
-msgid "Uitgave van %(date)s kiezen"
-msgstr ""
-
-msgid "Kiezen"
-msgstr ""
-
-#, python-format
-msgid "Bonnetje hangt nu aan je uitgave van %(date)s (%(amount)s)."
-msgstr ""
-
-msgid "Ongedaan maken"
-msgstr ""
-
-msgid "Bij welke uitgave hoort dit bonnetje?"
-msgstr ""
-
-msgid "Nog geen uitgaven. Maak een uitgave van dit bonnetje."
-msgstr ""
-
-msgid "Lijkt op dit bonnetje"
-msgstr ""
-
-msgid "Leverancier, omschrijving of bedrag"
-msgstr ""
-
-msgid "Uitgaven zonder bonnetje"
-msgstr ""
-
-msgid "Geen uitgave gevonden."
-msgstr ""
-
-msgid ""
-"Elke uitgave heeft al een bonnetje. Zoek hierboven, of maak een uitgave van "
-"dit bonnetje."
-msgstr ""
-
-msgid "Hoort bij een uitgave die er al is?"
-msgstr ""
-
-msgid "Kies bestaande uitgave"
-msgstr ""
-
-msgid "Nieuwe uitgave maken"
-msgstr ""
-
-msgid "Hoog tarief"
-msgstr ""
-
-msgid "Laag tarief"
-msgstr ""
-
-msgid "0% of niet bij jou belast"
-msgstr ""
-
-msgid "Btw verlegd, klant in een ander EU-land"
-msgstr ""
-
-msgid "Btw verlegd naar jou"
-msgstr ""
-
-msgid "Btw verlegd, uit landen buiten de EU"
-msgstr ""
-
-msgid "Btw verlegd, uit landen binnen de EU"
-msgstr ""
-
-msgid "Debiteuren"
-msgstr ""
-
-msgid "Beginbalans, nog in te delen"
-msgstr ""
-
-msgid "Btw 1a hoog tarief"
-msgstr ""
-
-msgid "Btw 1b laag tarief"
-msgstr ""
-
-msgid "Btw 2a verlegd naar jou"
-msgstr ""
-
-msgid "Btw 4a uit landen buiten de EU"
-msgstr ""
-
-msgid "Btw 4b uit landen binnen de EU"
-msgstr ""
-
-msgid "Btw, niet in een rubriek"
-msgstr ""
-
-msgid "Omzet 1a hoog tarief"
-msgstr ""
-
-msgid "Omzet 1b laag tarief"
-msgstr ""
-
-msgid "Omzet 1e 0% of niet bij jou belast"
-msgstr ""
-
-msgid "Omzet 3b binnen de EU"
-msgstr ""
-
-msgid "Omzet, niet in een rubriek"
-msgstr ""
-
-msgid "Verkoop"
-msgstr ""
-
-msgid "Inkoop"
-msgstr ""
-
-#, python-format
-msgid "Betaling %(number)s"
-msgstr ""
-
-msgid "Kosten zonder categorie"
-msgstr ""
-
-msgid "Download je facturen, offertes, klanten en uitgaven als CSV, met de pdf's, bonnetjes en een auditfile erbij. Werkt ook zonder Huismus."
-msgstr ""
-
-msgid "Bedrag zonder uitgaveregel"
-msgstr ""
-
-msgid "Kies wat je in het menu ziet. Waar al iets in staat, blijft erin."
-msgstr ""
-
-msgid "Alleen facturen"
-msgstr ""
-
-msgid "Met je bonnetjes en categorieën."
-msgstr ""
-
-msgid "Je hebt offertes, dus Offertes blijft in het menu."
-msgstr ""
-
-msgid "Je hebt uitgaven of bonnetjes, dus Uitgaven blijft in het menu."
-msgstr ""
-
-msgid "Je hebt een bankafschrift ingelezen, dus Bank blijft in het menu."
-msgstr ""
-
-msgid "Offertes staat uit bij Instellingen › Menu. Zet het daar aan om een offerte te maken."
-msgstr ""
-
-msgid "Uitgaven staat uit bij Instellingen › Menu. Zet het daar aan om een uitgave of categorie toe te voegen."
-msgstr ""
