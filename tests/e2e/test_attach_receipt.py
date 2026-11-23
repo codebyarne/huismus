@@ -45,7 +45,7 @@ def test_from_the_tray_search_choose_and_undo(app, width):
     app.set_viewport_size({"width": width, "height": 900})
 
     app.goto(app.base + "/uitgaven/bonnetjes/")
-    app.get_by_role("link", name="Bij bestaande uitgave").click()
+    app.get_by_role("link", name="Kies bestaande uitgave").click()
     expect(app.get_by_role("heading", name="Bij welke uitgave hoort dit bonnetje?")).to_be_visible()
     expect(app.get_by_role("img", name="Bonnetje kantoor.jpg")).to_be_visible()
     expect(app.locator("[id^=kies-]")).to_have_count(2)

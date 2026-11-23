@@ -63,7 +63,7 @@ no expense yet. Click **Create expense** next to a receipt: you go to
 **Process** (see below), with the receipt large beside the fields. Fill them
 in and click **Save**. You get the next one right away.
 
-Already have the expense? Click **Add to existing expense**. You see the
+Already have the expense? Click **Choose existing expense**. You see the
 expenses without a receipt, newest first. Search by supplier, description
 or amount, and click **Choose**. The receipt is then attached to that
 expense. Chose the wrong one? Click **Undo** in the notice. In **Process**

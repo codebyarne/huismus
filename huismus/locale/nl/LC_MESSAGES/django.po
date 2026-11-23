@@ -8624,5 +8624,5 @@ msgstr ""
 msgid "Hoort bij een uitgave die er al is?"
 msgstr ""
 
-msgid "Bij bestaande uitgave"
+msgid "Kies bestaande uitgave"
 msgstr ""
