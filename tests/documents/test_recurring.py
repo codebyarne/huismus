@@ -44,7 +44,7 @@ def _configure_settings():
     settings.save()
 
 
-def _issued_invoice(price_cents=5000):
+def _issued_invoice(price_cents=5000, **fields):
     _configure_settings()
     invoice = Document.objects.create(
         kind="invoice",
@@ -54,6 +54,7 @@ def _issued_invoice(price_cents=5000):
         attention="Mila Vos",
         reference="PO-12",
         issue_date=D(2026, 10, 1),
+        **fields,
     )
     DocumentLine.objects.create(
         document=invoice,
@@ -446,3 +447,33 @@ def test_stopping_a_series(logged_in, monkeypatch):
 def test_without_a_series_facturen_has_no_link_periodiek(logged_in):
     _issued_invoice()
     assert "/facturen/periodiek/" not in logged_in.get("/facturen/").content.decode()
+
+
+def test_an_imported_invoice_can_start_a_series():
+    invoice = _issued_invoice(source="moneybird", external_id="123")
+    series = start_series(invoice, "month", D(2026, 11, 1))
+    [draft] = make_due_drafts(D(2026, 11, 1))
+    assert series_of(draft) == series
+    # The copy is the user's own, not an import.
+    assert (draft.source, draft.external_id) == ("", "")
+
+
+def test_changing_to_a_date_that_has_passed_is_refused(logged_in, monkeypatch):
+    _today(monkeypatch, D(2026, 11, 23))
+    invoice = _issued_invoice()
+    series = start_series(invoice, "month", D(2026, 12, 1))
+    response = logged_in.post(
+        f"/facturen/periodiek/{series.pk}/", {"frequency": "month", "next_date": "2026-11-20"}
+    )
+    assert "Kies een datum na vandaag." in response.content.decode()
+    series.refresh_from_db()
+    assert series.next_date == D(2026, 12, 1)
+
+
+def test_opening_a_series_with_a_passed_date_makes_its_draft_first(logged_in, monkeypatch):
+    _today(monkeypatch, D(2026, 11, 23))
+    invoice = _issued_invoice()
+    series = start_series(invoice, "month", D(2026, 11, 1))
+    page = logged_in.get(f"/facturen/periodiek/{series.pk}/").content.decode()
+    assert "Er staat 1 periodieke factuur klaar als concept." in page
+    assert 'value="2026-12-01"' in page

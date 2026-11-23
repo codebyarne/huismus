@@ -17,6 +17,7 @@ from .forms import RecurringForm
 from .models import Document, RecurringInvoice
 from .recurring import (
     RecurringError,
+    change_series,
     first_date_after,
     latest_in_series,
     make_due_drafts,
@@ -123,14 +124,15 @@ def recurring_list(request):
 
 @login_required
 def recurring_detail(request, pk):
+    # First what is due: the form then shows a date after today, which it
+    # also asks for.
+    make_drafts_and_say_so(request)
     series = get_object_or_404(RecurringInvoice, pk=pk)
     today = timezone.localdate()
     if request.method == "POST" and series.stopped_on is None:
         form = RecurringForm(request.POST, instance=series, today=today)
         if form.is_valid():
-            series = form.save(commit=False)
-            series.day = series.next_date.day
-            series.save()
+            change_series(series, form.cleaned_data["frequency"], form.cleaned_data["next_date"])
             messages.success(
                 request,
                 _("Opgeslagen. De volgende factuur staat op %(date)s klaar als concept.")

@@ -16,12 +16,15 @@ import random
 from datetime import date, timedelta
 from decimal import Decimal
 
+from django.utils import timezone
+
 from huismus.business.models import Settings
 from huismus.contacts.models import Contact
 from huismus.documents.drafts import recompute_stored_totals
 from huismus.documents.issuing import issue
 from huismus.documents.models import Document, DocumentLine, Payment
 from huismus.documents.quoting import accept_quote, decline_quote, expire_quote, send_quote
+from huismus.documents.recurring import first_date_after, start_series, stop_series
 from huismus.expenses.lines import ExpenseLineInput, create_expense
 from huismus.expenses.models import ExpenseCategory
 
@@ -115,12 +118,9 @@ def create_history(seed: int = 1, last_day: date = LAST_DAY) -> None:
 
 def _recurring(last_day: date) -> None:
     """Recurring invoices (#82): hosting every month, still running, and a
-    yearly one that stopped. The running one's next date lies after today,
-    so opening a page makes no drafts behind a test's back."""
-    from django.utils import timezone
-
-    from huismus.documents.recurring import first_date_after, start_series, stop_series
-
+    yearly one that stopped, from the two newest of the ~80 invoices. The
+    running one's next date lies after today (the real one, which may be
+    past last_day), so opening a page makes no drafts behind a test's back."""
     issued = Document.objects.filter(kind="invoice", status="issued").order_by("-issue_date", "-pk")
     monthly, yearly = issued[0], issued[1]
     today = max(last_day, timezone.localdate())
