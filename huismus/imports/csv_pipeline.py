@@ -11,6 +11,7 @@ report; nothing is left out without a word.
 """
 
 import hashlib
+import re
 from dataclasses import dataclass, field
 from functools import cache
 from pathlib import PurePosixPath
@@ -88,6 +89,10 @@ def _pdf_kinds() -> dict[str, str]:
     return kinds
 
 
+# The auditfile the export writes per year (core.export.write_zip).
+AUDITFILE_NAME = re.compile(r"auditfile-\d{4}\.xaf")
+
+
 @cache
 def _readme_names() -> set[str]:
     names = set()
@@ -137,13 +142,16 @@ def _tables(export: Export, notes: list) -> dict[CsvKind, Table]:
 
 def _keep_other_files(export: Export, tables: dict[CsvKind, Table], parsed: ParsedCsv) -> None:
     """What isn't a table: a PDF in a folder of pdf/ is that kind of
-    document's, the template's note is nothing, and the rest may be a
-    receipt (_receipts)."""
+    document's, the template's note and the export's auditfiles are
+    nothing (an auditfile is made from the files beside it, SPEC.md M26),
+    and the rest may be a receipt (_receipts)."""
     table_files = {table.file_name for table in tables.values()}
     for name, content in export.files.items():
         path = PurePosixPath(name)
         folder = normalised(path.parent.name)
         if path.name in table_files or normalised(path.name) in _readme_names():
+            continue
+        if AUDITFILE_NAME.fullmatch(path.name):
             continue
         if path.suffix.lower() == ".pdf" and folder in _pdf_kinds():
             parsed.pdfs[(_pdf_kinds()[folder], path.stem)] = content
