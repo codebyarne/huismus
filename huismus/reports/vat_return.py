@@ -168,6 +168,23 @@ class VatReturn:
         )
 
 
+def customer_country(document) -> str:
+    """The customer's country as on the document (invariant 4)."""
+    return ((document.contact_snapshot or {}).get("country") or "").strip().upper()
+
+
+def sales_box(rate_bp: int, reverse_charge: bool, country: str) -> str | None:
+    """The box of one VAT row of a sale, or None when the row is named
+    under "Niet meegeteld": reverse charged to a customer outside the EU or
+    without a country, or another rate. The auditfile (core.xaf) puts its
+    rows in the same boxes."""
+    if reverse_charge:
+        if country in EU_COUNTRIES and country != "NL":
+            return "3b"
+        return "1e" if country == "NL" else None
+    return SALES_BOX_BY_RATE.get(rate_bp)
+
+
 def _in(period: Period, day: date) -> bool:
     return period.first_day <= day <= period.last_day
 
@@ -211,10 +228,11 @@ def compute_vat_return(period: Period) -> VatReturn:
                     )
                 )
             continue
-        country = ((document.contact_snapshot or {}).get("country") or "").strip().upper()
+        country = customer_country(document)
         for row in rows:
             revenue, tax = sign * row.revenue_cents, sign * row.tax_cents
-            if row.reverse_charge and country in EU_COUNTRIES and country != "NL":
+            code = sales_box(row.rate_bp, row.reverse_charge, country)
+            if code == "3b":
                 # 3b: the date that counts is the delivery date, and
                 # without one the invoice date.
                 if _in(period, document.delivery_date or document.issue_date):
@@ -225,19 +243,14 @@ def compute_vat_return(period: Period) -> VatReturn:
             # Every other row counts on the invoice date.
             if not invoiced_here:
                 continue
-            if row.reverse_charge:
-                if country == "NL":
-                    box = boxes["1e"]
-                else:
+            if code is None:
+                if row.reverse_charge:
                     elsewhere.append(DocumentAmount(document, revenue, tax, country=country))
-                    continue
-            elif row.rate_bp in SALES_BOX_BY_RATE:
-                box = boxes[SALES_BOX_BY_RATE[row.rate_bp]]
-            else:
-                other_rates.append(DocumentAmount(document, revenue, tax, rate_bp=row.rate_bp))
+                else:
+                    other_rates.append(DocumentAmount(document, revenue, tax, rate_bp=row.rate_bp))
                 continue
-            box.revenue_cents += revenue
-            box.tax_cents += tax
+            boxes[code].revenue_cents += revenue
+            boxes[code].tax_cents += tax
 
     input_vat = reverse_charged = 0
     lines_missing = []
