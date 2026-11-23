@@ -89,6 +89,7 @@ def test_with_the_kor_costs_are_what_was_paid(logged_in, year):
     page = logged_in.get(reverse("reports:profit_and_loss"), {"jaar": "2026"}).content.decode()
 
     assert "zonder btw" not in page
+    assert "met btw" in page
     assert "126,00" in page  # 121 + 5
 
 
@@ -152,3 +153,72 @@ def test_the_pdf_is_in_the_language_of_the_user(logged_in, year):
 
     text = _text(response)
     assert "Profit and loss statement 2026" in text
+
+
+FIGURES = "ondernemer-bekijk-welke-cijfers-u-nodig-hebt-voor-uw-aangifte-inkomstenbelasting"
+COSTS = "zakelijke_kosten/zakelijke_kosten"
+KOR = "kleineondernemersregeling"
+PROFIT = "winst_uit_onderneming"
+
+
+def _notes(client) -> str:
+    page = client.get(reverse("reports:profit_and_loss"), {"jaar": "2026"}).content.decode()
+    return page.split('id="zo-telt-huismus"')[1].split("</ul>")[0]
+
+
+def test_with_vat_the_notes_say_without_vat_and_link_their_sources(logged_in):
+    _kor(False)
+
+    notes = _notes(logged_in)
+
+    assert "Omzet is zonder btw" in notes
+    assert FIGURES in notes and COSTS in notes and PROFIT in notes
+    assert KOR not in notes
+
+
+def test_with_the_kor_the_notes_say_with_vat_and_link_the_kor(logged_in):
+    _kor(True)
+
+    notes = _notes(logged_in)
+
+    assert "Je rekent geen btw, dus omzet is je totale omzet" in notes
+    assert FIGURES in notes and KOR in notes
+
+
+def test_without_vat_for_another_reason_there_is_no_kor_link(logged_in):
+    settings = Settings.load()
+    settings.vat_exempt = True
+    settings.save()
+
+    notes = _notes(logged_in)
+
+    assert "Je rekent geen btw" in notes
+    assert KOR not in notes
+
+
+def test_the_notes_say_what_is_not_in_it_and_nothing_without_a_source(logged_in):
+    notes = _notes(logged_in)
+
+    assert "Alle uitgaven staan onder bedrijfskosten" in notes
+    assert "Afschrijvingen houdt Huismus nog niet bij." in notes
+    assert "fiscale regels" in notes
+    # docs/belastingregels.md, section 7: not asked, or no source.
+    for unsourced in ("450", "5.700", "baten en lasten", "vrijstelling"):
+        assert unsourced not in notes
+
+
+def test_the_pdf_has_the_notes(logged_in, year):
+    _kor(False)
+
+    text = _text(logged_in.get(reverse("reports:profit_and_loss_pdf"), {"jaar": "2026"}))
+
+    assert "Afschrijvingen houdt Huismus nog niet bij." in text
+    assert "zonder btw" in text
+
+
+def test_with_the_kor_the_csv_total_is_called_costs(logged_in, year):
+    _kor(True)
+
+    response = logged_in.get(reverse("reports:profit_and_loss_csv"), {"jaar": "2026"})
+
+    assert "Totaal bedrijfskosten;Kosten;126,00" in response.content.decode("utf-8-sig")

@@ -4323,6 +4323,9 @@ msgstr ""
 msgid "Omzet"
 msgstr ""
 
+msgid "Totaal bedrijfskosten"
+msgstr ""
+
 msgid "Winst"
 msgstr ""
 
@@ -7813,10 +7816,10 @@ msgstr ""
 msgid "zonder btw"
 msgstr ""
 
-msgid "Je hebt dit jaar geen uitgaven."
+msgid "met btw"
 msgstr ""
 
-msgid "Totaal bedrijfskosten"
+msgid "Je hebt dit jaar geen uitgaven."
 msgstr ""
 
 msgid "Winst en verlies"

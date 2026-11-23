@@ -4603,6 +4603,9 @@ msgstr "Business costs"
 msgid "Omzet"
 msgstr "Revenue"
 
+msgid "Totaal bedrijfskosten"
+msgstr "Total business costs"
+
 msgid "Winst"
 msgstr "Profit"
 
@@ -8398,11 +8401,11 @@ msgstr "Huismus doesn't keep track of depreciation yet."
 msgid "zonder btw"
 msgstr "without VAT"
 
+msgid "met btw"
+msgstr "with VAT"
+
 msgid "Je hebt dit jaar geen uitgaven."
 msgstr "You have no expenses this year."
-
-msgid "Totaal bedrijfskosten"
-msgstr "Total business costs"
 
 msgid "Winst en verlies"
 msgstr "Profit and loss"
