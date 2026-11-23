@@ -58,7 +58,7 @@ def test_set_up_a_folder_pick_up_now_and_make_an_expense(app, tmp_path):
 
     app.get_by_role("link", name="Naar de bonnetjes zonder uitgave").click()
     expect(app.locator("h1")).to_have_text("Bonnetjes zonder uitgave")
-    app.get_by_role("link", name="Uitgave maken").click()
+    app.get_by_role("link", name="Nieuwe uitgave maken").click()
 
     expect(app.locator("h1")).to_have_text("Verwerken")
     expect(app.locator(".process-receipt")).to_contain_text("bouwmarkt.pdf")
@@ -106,7 +106,7 @@ def test_make_expenses_of_three_receipts_one_after_the_other(app, tmp_path):
         app.get_by_role("button", name="Opslaan").click()
 
     app.goto(app.base + "/uitgaven/bonnetjes/")
-    app.get_by_role("link", name="Uitgave maken").first.click()
+    app.get_by_role("link", name="Nieuwe uitgave maken").first.click()
     expect(count).to_have_text("1 van 3")
     expect(receipt).to_contain_text(first)
     fill("Bouwmarkt")

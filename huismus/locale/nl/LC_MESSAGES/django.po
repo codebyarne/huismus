@@ -8626,3 +8626,6 @@ msgstr ""
 
 msgid "Kies bestaande uitgave"
 msgstr ""
+
+msgid "Nieuwe uitgave maken"
+msgstr ""

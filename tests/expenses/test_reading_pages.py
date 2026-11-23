@@ -91,7 +91,7 @@ def test_the_tray_says_why_a_receipt_stayed(client_in, service):
     reading.read_waiting()
     page = client_in.get("/uitgaven/bonnetjes/").content.decode()
     assert "Niet gelezen: er staat geen totaal op." in page
-    assert "Uitgave maken" in page
+    assert "Nieuwe uitgave maken" in page
     assert f'id="bonnetje-{receipt.pk}"' in page
 
 
