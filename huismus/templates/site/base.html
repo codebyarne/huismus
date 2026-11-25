@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Huismus{% endblock %}</title>
     <meta name="description" content="{% filter truncatechars:160 %}{% block description %}{% translate 'Boekhouden voor zzp’ers: facturen, bonnetjes en de bedragen voor je btw-aangifte. Gratis, en alles blijft op je eigen computer.' %}{% endblock %}{% endfilter %}">
-    {% if nav == "download" or nav == "404" %}<meta name="robots" content="noindex">
+    {% if nav == "download" or nav == "404" or noindex %}<meta name="robots" content="noindex">
     {% else %}<link rel="canonical" href="https://{{ domain }}{{ address }}">
     {% if switch_url %}<link rel="alternate" hreflang="{{ language }}" href="https://{{ domain }}{{ address }}">
     <link rel="alternate" hreflang="{{ other_language }}" href="https://{{ domain }}{{ switch_url }}">
@@ -72,6 +72,7 @@
         <nav class="foot-nav" aria-label="{% translate 'Voet' %}">
             <a href="{{ features_url }}">{% translate "Functies" %}</a>
             <a href="{{ why_url }}"{% if nav == "why" %} aria-current="page"{% endif %}>{% translate "Waarom Huismus" %}</a>
+            <a href="{{ question_url }}"{% if nav == "question" %} aria-current="page"{% endif %}>{% translate "Stel een vraag" %}</a>
             <a href="{{ made_url }}"{% if nav == "made" %} aria-current="page"{% endif %}>{% translate "Zo wordt het gemaakt" %}</a>
             <a href="{{ install_url }}">{% translate "Installeren" %}</a>
             <a href="{{ guides_index_url }}">{% translate "Uitleg" %}</a>

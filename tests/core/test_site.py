@@ -10,7 +10,7 @@ import pytest
 from django.core.management import CommandError, call_command
 from django.utils import translation
 
-from huismus.core import help, site
+from huismus.core import help, site, site_question
 
 
 class _Page(HTMLParser):
@@ -594,3 +594,94 @@ def test_windows_goes_to_the_store_and_the_installer_stays_reachable(out, langua
     page = out / site.download_page_url(language, "windows").strip("/") / "index.html"
     html = page.read_text(encoding="utf-8")
     assert site.STORE_URL in html and "<details" not in html
+
+
+class _Form(HTMLParser):
+    """The fields of the question form: name → attributes, and the options
+    of each select."""
+
+    def __init__(self):
+        super().__init__()
+        self.form: dict = {}
+        self.fields: dict[str, dict] = {}
+        self.options: dict[str, list[str]] = {}
+        self._select = None
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if tag == "form":
+            self.form = attrs
+        if tag in ("input", "textarea", "select") and "name" in attrs:
+            self.fields[attrs["name"]] = attrs
+        if tag == "select":
+            self._select = attrs["name"]
+            self.options[self._select] = []
+        if tag == "option" and self._select:
+            self.options[self._select].append(attrs["value"])
+
+    def handle_endtag(self, tag):
+        if tag == "select":
+            self._select = None
+
+
+@pytest.mark.parametrize("language", help.LANGUAGES)
+def test_the_question_form_posts_to_the_form_on_arnekrijnsen_com(out, language):
+    """Stel een vraag (huismus-intern/besluiten.md, 2026-11-25): a plain form,
+    no JavaScript, with the names the form on arnekrijnsen.com knows."""
+    html = (out / site.question_url(language).strip("/") / "index.html").read_text()
+    form = _Form()
+    form.feed(html)
+    assert form.form["action"] == site_question.ACTION_URL
+    assert form.form["method"] == "post"
+    assert "<script" not in html
+    hidden = {
+        name: attrs["value"] for name, attrs in form.fields.items() if attrs.get("type") == "hidden"
+    }
+    assert hidden == dict(site_question.hidden_fields(language))
+    assert hidden["taal"] == language
+    assert "required" in form.fields["vraag"] and "required" in form.fields["email"]
+    assert form.fields["email"]["type"] == "email"
+    assert "required" not in form.fields["gebruik"]
+    # The values the select on arnekrijnsen.com accepts, the same in both languages.
+    assert form.options["gebruik"] == ["", *(value for value, _label in site_question.PLATFORMS)]
+    # The honeypot: in the form, empty, out of reach of the keyboard and screen readers.
+    trap = form.fields[site_question.HONEYPOT]
+    assert trap["tabindex"] == "-1" and not trap.get("value")
+    assert re.search(r'<div class="question-trap" aria-hidden="true">', html)
+    # Only these go: no version, no name.
+    assert set(form.fields) == {*hidden, "vraag", "email", "gebruik", site_question.HONEYPOT}
+
+
+@pytest.mark.parametrize("language", help.LANGUAGES)
+def test_sent_and_failed_are_pages_a_search_engine_skips(out, language):
+    sitemap = (out / "sitemap.xml").read_text()
+    llms = (out / "llms.txt").read_text(encoding="utf-8")
+    question = site.question_url(language)
+    assert f"https://{site.DOMAIN}{question}<" in sitemap
+    assert f"https://{site.DOMAIN}{question}\n" in llms
+    for state in ("sent", "failed"):
+        address = site.question_url(language, state)
+        page = (out / address.strip("/") / "index.html").read_text()
+        assert '<meta name="robots" content="noindex">' in page
+        assert address not in sitemap and address not in llms
+    failed = (out / site.question_url(language, "failed").strip("/") / "index.html").read_text()
+    assert "mailto:hallo@mijnhuismus.nl" in failed
+
+
+@pytest.mark.parametrize("language", help.LANGUAGES)
+def test_the_foot_and_the_help_link_to_the_question_but_uitleg_does_not(out, language):
+    """In the foot of every page and below the help; not in the menu, and not
+    below Uitleg, which is about tax (huismus-intern/besluiten.md, 2026-11-25)."""
+    question = site.question_url(language)
+    for address in (
+        site.home_url(language),
+        site.help_url(language),
+        site.help_url(language, "facturen"),
+    ):
+        assert question in _read(out, address).links, address
+    help_page = (out / site.help_url(language, "facturen").strip("/") / "index.html").read_text()
+    assert help_page.count(f'href="{question}"') == 2
+    guide = (out / site.guides_url(language, "kor").strip("/") / "index.html").read_text()
+    assert guide.count(f'href="{question}"') == 1
+    menu = guide.split('id="site-nav"')[1].split("</nav>")[0]
+    assert question not in menu

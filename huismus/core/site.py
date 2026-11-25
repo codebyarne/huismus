@@ -27,6 +27,9 @@ Addresses: Dutch at the root, English under /en/.
     /waarom/            /en/why/
     /gemaakt/           /en/made/
     /meebouwen/         /en/contribute/
+    /vraag/             /en/question/
+    /vraag/verstuurd/   /en/question/sent/
+    /vraag/mislukt/     /en/question/failed/
     /download/<mac|windows>/  /en/download/<mac|windows>/
 
 Visits are counted only when COUNTER_VARIABLE holds a GoatCounter code: a
@@ -42,7 +45,7 @@ from django.template.loader import render_to_string
 from django.utils import translation
 from PIL import Image
 
-from . import guides, help, site_examples, site_features, updates
+from . import guides, help, site_examples, site_features, site_question, updates
 
 DOMAIN = "mijnhuismus.nl"
 REPOSITORY = "https://github.com/codebyarne/huismus"
@@ -198,6 +201,20 @@ def _thousands(number: int, language: str) -> str:
 
 def contribute_url(language: str) -> str:
     return "/meebouwen/" if language == "nl" else "/en/contribute/"
+
+
+# Stel een vraag (core.site_question): the form, and where the plugin on
+# arnekrijnsen.com sends the visitor back to after it.
+QUESTION_STATES = {
+    "form": ("", ""),
+    "sent": ("verstuurd/", "sent/"),
+    "failed": ("mislukt/", "failed/"),
+}
+
+
+def question_url(language: str, state: str = "form") -> str:
+    nl, en = QUESTION_STATES[state]
+    return f"/vraag/{nl}" if language == "nl" else f"/en/question/{en}"
 
 
 def download_page_url(language: str, platform: str) -> str:
@@ -386,6 +403,26 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
             "site/contribute.html",
             {"nav": "contribute", "switch_url": contribute_url(other)},
         ),
+        **{
+            question_url(language, state): (
+                "site/question.html",
+                {
+                    "nav": "question",
+                    "switch_url": question_url(other, state),
+                    "state": state,
+                    # Verstuurd and Mislukt only follow the form.
+                    "noindex": state != "form",
+                    "promise": site_question.PROMISE,
+                    "action_url": site_question.ACTION_URL,
+                    "hidden_fields": site_question.hidden_fields(language),
+                    "platforms": site_question.PLATFORMS,
+                    "honeypot": site_question.HONEYPOT,
+                    "max_question": site_question.MAX_QUESTION,
+                    "max_email": site_question.MAX_EMAIL,
+                },
+            )
+            for state in QUESTION_STATES
+        },
         help_url(language): (
             "site/help_index.html",
             {
@@ -492,6 +529,7 @@ def _links(language: str) -> dict[str, str]:
         "examples_url": examples_url(language),
         "install_url": install_url(language),
         "contribute_url": contribute_url(language),
+        "question_url": question_url(language),
         "why_url": why_url(language),
         "made_url": made_url(language),
     }
@@ -590,9 +628,13 @@ def _last_frame(animation: Path, target: Path) -> None:
 
 
 def _for_search_engines(out: Path, addresses: list[str]) -> None:
-    """robots.txt and a sitemap. The download pages only start a download, so
-    they stay out (they also say noindex)."""
+    """robots.txt and a sitemap. The download pages only start a download,
+    and Verstuurd and Mislukt only follow the question form, so they stay out
+    (they also say noindex)."""
     downloads = {download_page_url(lang, name) for lang in help.LANGUAGES for name in PLATFORMS}
+    downloads |= {
+        question_url(lang, state) for lang in help.LANGUAGES for state in ("sent", "failed")
+    }
     urls = "".join(
         f"<url><loc>https://{DOMAIN}{address}</loc></url>\n"
         for address in addresses
@@ -635,6 +677,7 @@ def _for_ai_assistants() -> str:
                 install_url(language),
                 why_url(language),
                 made_url(language),
+                question_url(language),
             ):
                 lines.append(f"- https://{DOMAIN}{address}")
             for group in help.groups(TOPICS):
