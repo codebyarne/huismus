@@ -33,7 +33,7 @@
     </div>
 </div>
 
-<p>{% blocktranslate %}Vragen over Huismus: installeren, overstappen, hoe iets werkt. Advies over belasting of je eigen situatie geeft de maker niet; kijk daarvoor bij <a href="{{ guides_index_url }}">Uitleg</a> of vraag je boekhouder.{% endblocktranslate %}</p>
+<p>{% translate "Vragen over Huismus: installeren, overstappen, hoe iets werkt." %}</p>
 
 <form class="card card-pad question-form" method="post" action="{{ action_url }}" accept-charset="UTF-8">
     {% for name, value in hidden_fields %}<input type="hidden" name="{{ name }}" value="{{ value }}">
