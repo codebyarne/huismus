@@ -39,7 +39,7 @@ de rest in die met de KOR. Het bankafschrift is verzonnen, voor die administrati
 
 Sinds 2026-11-25 staat dezelfde film in het Engels op de Engelse homepage: de app
 in het Engels, de labels in beeld en het slot in het Engels, dezelfde muziek.
-Roos spreekt ook de Engelse tekst in. Ze leest Huismus als "Heuys-mus", omdat ze de
+Roos spreekt ook de Engelse tekst in. Ze leest Huismus als "Huysmus", omdat ze de
 naam dan goed uitspreekt (gekozen door de eigenaar); in de ondertitels staat
 Huismus. De nepgegevens blijven Nederlands, zoals bij een Nederlandse zzp'er: het
 bonnetje, de categorieën, de omschrijvingen op het afschrift en de KOR-tekst.
@@ -53,7 +53,7 @@ bonnetje, de categorieën, de omschrijvingen op het afschrift en de KOR-tekst.
 | 5 | Save photos of your receipts in a folder, even from your phone. Huismus picks them up, and you check them. |
 | 6 | Import your bank statement. Huismus puts every payment next to your invoices and expenses. |
 | 7 | Your whole year on one screen! Revenue, costs and profit. Charging VAT? Then the amounts for your return are ready every quarter. |
-| 8 | Coming from Moneybird, another package or Excel? Bring all your years with you! Huismus does a trial run first, and only saves when you say so. |
+| 8 | Coming from Moneybird, another bookkeeping app, or Excel? Bring all your years with you! Huismus does a trial run first, and only saves when you say so. |
 | 9 | Huismus runs on your Mac, your PC, or your own server. Completely free! No subscription, and no account. And your data? It simply stays with you. |
 | 10 | Huismus. Your bookkeeping, on your own computer! |
 
