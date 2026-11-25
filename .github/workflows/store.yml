@@ -1,0 +1,102 @@
+name: Store
+
+# Submits a released version's MSIX package to the Microsoft Store
+# (docs/desktop.md, "Microsoft Store"): msstore makes a new submission from
+# the last published one, uploads the package and sends it for
+# certification; after that the Store updates its users.
+#
+# release.yml calls this after publish, with the package from its own run.
+# By hand (workflow_dispatch) it submits an existing release again, for
+# example after a failed submission: it takes the windows-store artifact
+# from that tag's release run (kept 30 days).
+#
+# The credentials are an Entra application with the Manager role in Partner
+# Center, in four repository secrets. Without them the job only warns, and
+# the package waits as the windows-store artifact for a submission by hand.
+on:
+  workflow_call:
+    inputs:
+      tag:
+        description: The release tag, for example v0.1.8
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: The release tag to submit, for example v0.1.8
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  store:
+    runs-on: windows-2022
+    permissions:
+      contents: read
+      # To download the artifact of the tag's release run (by hand).
+      actions: read
+    env:
+      PARTNER_CENTER_TENANT_ID: ${{ secrets.PARTNER_CENTER_TENANT_ID }}
+      PARTNER_CENTER_SELLER_ID: ${{ secrets.PARTNER_CENTER_SELLER_ID }}
+      PARTNER_CENTER_CLIENT_ID: ${{ secrets.PARTNER_CENTER_CLIENT_ID }}
+      PARTNER_CENTER_CLIENT_SECRET: ${{ secrets.PARTNER_CENTER_CLIENT_SECRET }}
+      STORE_ID: 9NKWHBHSFMHN
+      TAG: ${{ inputs.tag }}
+    steps:
+      - name: Are the Partner Center credentials there?
+        id: credentials
+        shell: bash
+        run: |
+          if [ -n "$PARTNER_CENTER_TENANT_ID" ] && [ -n "$PARTNER_CENTER_SELLER_ID" ] \
+              && [ -n "$PARTNER_CENTER_CLIENT_ID" ] && [ -n "$PARTNER_CENTER_CLIENT_SECRET" ]; then
+              echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+              echo "::warning::No Partner Center credentials: submit the windows-store artifact by hand (docs/desktop.md, \"Microsoft Store\")."
+          fi
+
+      - name: Which release run has the package?
+        id: run
+        if: steps.credentials.outputs.present == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Called from release.yml: the package is in this run. By hand:
+          # the latest release run of this tag.
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+              id=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow release.yml \
+                  --event push --branch "$TAG" --limit 1 --json databaseId --jq '.[0].databaseId')
+              if [ -z "$id" ]; then
+                  echo "::error::No release run found for $TAG."
+                  exit 1
+              fi
+          else
+              id="$GITHUB_RUN_ID"
+          fi
+          echo "id=$id" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/download-artifact@v4
+        if: steps.credentials.outputs.present == 'true'
+        with:
+          name: windows-store
+          path: store
+          run-id: ${{ steps.run.outputs.id }}
+          github-token: ${{ github.token }}
+
+      - uses: microsoft/microsoft-store-apppublisher@v1.1
+        if: steps.credentials.outputs.present == 'true'
+
+      - name: Submit the package to the Microsoft Store
+        if: steps.credentials.outputs.present == 'true'
+        shell: pwsh
+        run: |
+          $version = "$env:TAG".TrimStart('v')
+          $package = "store\Huismus-$version-windows.msix"
+          msstore reconfigure --tenantId $env:PARTNER_CENTER_TENANT_ID --sellerId $env:PARTNER_CENTER_SELLER_ID --clientId $env:PARTNER_CENTER_CLIENT_ID --clientSecret $env:PARTNER_CENTER_CLIENT_SECRET
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          # msstore takes the .msix itself as its path: it then publishes
+          # that package (MSIXProjectPublisher); there is no --inputFile.
+          msstore publish $package --appId $env:STORE_ID
+          if ($LASTEXITCODE -ne 0) { exit 1 }

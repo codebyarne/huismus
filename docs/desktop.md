@@ -271,7 +271,7 @@ via zijn alias, binnen het pakket. Het pakket staat 30 dagen als artifact
 `windows-store` bij de run. Het komt niet op de GitHub-release: de updates
 van de installer zoeken daar alleen de `.exe` en de `.dmg`.
 
-**Inzenden** doet de job `store`, na `publish`: de
+**Inzenden** doet de job `store`, na `publish` (de workflow `store.yml`): de
 [Microsoft Store Developer CLI](https://learn.microsoft.com/windows/apps/publish/msstore-dev-cli/github-actions)
 (`msstore publish`) maakt een nieuwe inzending als kopie van de laatst
 gepubliceerde, zet het pakket erin en stuurt hem naar de keuring. Daarna werkt
@@ -279,6 +279,11 @@ de Store zijn gebruikers bij. Elke versie moet hoger zijn dan de vorige
 inzending. Of Microsoft na de keuring zelf publiceert of op **Publish now**
 wacht, neemt de inzending over van de vorige (Partner Center, inzending →
 **Submission options**).
+
+Mislukte het inzenden, dan zend je dezelfde versie opnieuw in zonder nieuwe
+release: Actions → **Store** → **Run workflow**, met de tag (bijvoorbeeld
+`v0.1.8`). Die run pakt het pakket uit de release-run van die tag, zolang het
+artifact er nog is (30 dagen).
 
 De job logt in met een Entra-applicatie met de rol **Manager** in Partner
 Center. Eén keer opzetten, in Partner Center (tandwiel → Account settings):
