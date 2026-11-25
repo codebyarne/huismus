@@ -11,13 +11,16 @@ newer.
 time. Go to System Settings → Privacy & Security and choose **Open
 Anyway**.
 
-**Windows.** The installer isn't signed either. The first time, Windows
+**Windows.** Install Huismus from the [Microsoft Store](https://apps.microsoft.com/detail/9NKWHBHSFMHN). Windows
+won't warn you, and the Store keeps the app up to date. Can't find Huismus in
+the Store, or prefer to go without it? Then use the installer from the
+download page. It isn't signed yet. The first time, Windows
 says "Windows protected your PC". Choose **More info** and then **Run
 anyway**. You don't need administrator rights to install Huismus.
 
 ### No "Run anyway" button, or error 4551
 
-Then Smart App Control in Windows 11 is blocking the installer. It blocks apps
+This only applies to the installer, not to the Store. Then Smart App Control in Windows 11 is blocking the installer. It blocks apps
 that aren't signed, and Huismus isn't signed yet. It has no button to allow
 a single app. The only way to use Huismus then is to turn Smart App Control
 off:
@@ -35,6 +38,18 @@ without reinstalling Windows, Microsoft says.
 
 On a work laptop, your IT department decides about this setting. You can't
 change it yourself then.
+
+### From the installer to the Microsoft Store
+
+Already using Huismus with the installer? You can switch. Your records stay
+where they are: both versions use the same folder.
+
+1. To be safe, make a [backup](#backups) first.
+2. Close Huismus and remove it through **Settings → Apps**.
+3. Install Huismus from the Microsoft Store and open it. Your records are
+   back.
+
+You can't use both versions at the same time.
 
 On Windows, Huismus needs Microsoft Edge WebView2 for its window. Windows 11
 and an up-to-date Windows 10 already have it. If it's missing, Huismus asks
@@ -94,6 +109,9 @@ minute. The overview then says "Huismus was updated to …", with a link to
 [What's new](nieuw.en.md). Huismus never updates while
 you're working.
 
+If Huismus comes from the Microsoft Store, the Store updates it. Even then,
+Huismus first makes a backup when you open it, if the new version needs one.
+
 Don't want to wait? Choose **Check now** under **Settings → Updates**, or
 **Update to …** when there's already a new version, and confirm.
 
@@ -112,7 +130,7 @@ backup** and **Save log file**. Then install the previous version again.
 | Your records | `~/Library/Application Support/Huismus` | `%APPDATA%\Huismus` |
 | Log file | `~/Library/Logs/Huismus/huismus.log` | `%LOCALAPPDATA%\Huismus\huismus.log` |
 | Backups from before restoring, when no folder is chosen | `~/Library/Application Support/Huismus back-ups` | `%APPDATA%\Huismus back-ups` |
-| The app itself | wherever you put `Huismus.app` | `%LOCALAPPDATA%\Programs\Huismus` |
+| The app itself | wherever you put `Huismus.app` | `%LOCALAPPDATA%\Programs\Huismus` (installer); from the Store, Windows picks the place |
 
 ## Removing Huismus
 

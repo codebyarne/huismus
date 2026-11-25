@@ -11,14 +11,17 @@ nieuwer.
 eerste keer te openen. Ga dan naar Systeeminstellingen → Privacy en
 beveiliging en kies **Toch openen**.
 
-**Windows.** Ook de installer is niet ondertekend. De eerste keer zegt
+**Windows.** Installeer Huismus uit de [Microsoft Store](https://apps.microsoft.com/detail/9NKWHBHSFMHN). Windows
+waarschuwt dan niet, en de Store houdt de app bij. Vind je Huismus niet in de
+Store, of wil je liever zonder Store, gebruik dan de installer van de
+downloadpagina. Die is nog niet ondertekend. De eerste keer zegt
 Windows "Windows heeft uw pc beschermd". Kies **Meer informatie** en dan
 **Toch uitvoeren**. Je hebt geen beheerdersrechten nodig om Huismus te
 installeren.
 
 ### Geen knop "Toch uitvoeren", of fout 4551
 
-Dan blokkeert Smart App Control van Windows 11 de installer. Dat blokkeert
+Dit geldt alleen voor de installer, niet voor de Store. Dan blokkeert Smart App Control van Windows 11 de installer. Dat blokkeert
 apps die niet ondertekend zijn, en Huismus is nog niet ondertekend. Een knop om één
 app toch toe te laten heeft het niet. Je kunt Huismus dan alleen gebruiken
 als je Smart App Control uitzet:
@@ -37,6 +40,18 @@ bijgewerkte Windows 11 kan dat zonder Windows opnieuw te installeren, zegt Micro
 
 Is het een laptop van je werk, dan beslist de IT-afdeling over deze
 instelling. Je kunt hem dan zelf niet veranderen.
+
+### Van de installer naar de Microsoft Store
+
+Gebruik je Huismus al met de installer? Dan kun je overstappen. Je
+administratie blijft staan: beide versies gebruiken dezelfde map.
+
+1. Maak voor de zekerheid eerst een [back-up](#back-ups).
+2. Sluit Huismus en verwijder hem via **Instellingen → Apps**.
+3. Installeer Huismus uit de Microsoft Store en open hem. Je ziet je
+   administratie weer.
+
+Twee versies tegelijk gebruiken kan niet.
 
 Op Windows heeft Huismus Microsoft Edge WebView2 nodig voor zijn venster.
 Windows 11 en een bijgewerkt Windows 10 hebben dat al. Ontbreekt het, dan
@@ -96,6 +111,9 @@ ongeveer een minuut. Op het overzicht staat daarna "Huismus is bijgewerkt
 naar …", met een link naar [Wat is er nieuw](nieuw.nl.md).
 Terwijl je werkt, wordt Huismus nooit bijgewerkt.
 
+Komt Huismus uit de Microsoft Store, dan werkt de Store hem bij. Ook dan maakt
+Huismus bij het openen eerst een back-up als de nieuwe versie dat nodig heeft.
+
 Wil je niet wachten? Kies dan bij **Instellingen → Updates** **Nu zoeken**,
 of **Bijwerken naar …** als er al een nieuwe versie is, en bevestig.
 
@@ -116,7 +134,7 @@ opnieuw.
 | Je administratie | `~/Library/Application Support/Huismus` | `%APPDATA%\Huismus` |
 | Logbestand | `~/Library/Logs/Huismus/huismus.log` | `%LOCALAPPDATA%\Huismus\huismus.log` |
 | Back-ups van vóór terugzetten, als er geen map gekozen is | `~/Library/Application Support/Huismus back-ups` | `%APPDATA%\Huismus back-ups` |
-| De app zelf | waar je `Huismus.app` neerzet | `%LOCALAPPDATA%\Programs\Huismus` |
+| De app zelf | waar je `Huismus.app` neerzet | `%LOCALAPPDATA%\Programs\Huismus` (installer); uit de Store kiest Windows de plek |
 
 ## Huismus verwijderen
 
