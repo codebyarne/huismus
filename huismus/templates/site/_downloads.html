@@ -9,4 +9,4 @@
     <a class="btn btn-lg {% if on_petrol %}btn-on-petrol-quiet{% else %}btn-secondary{% endif %}" href="{{ windows_url }}"><svg class="i os" width="18" height="18" aria-hidden="true"><use href="#os-windows"></use></svg>{% translate "Download voor Windows" %}</a>
 </div>
 {% if nav == "install" %}<p class="downloads-note small">{% translate "macOS 15 of nieuwer met een Apple-chip · Windows 10 of nieuwer" %}</p>{% endif %}
-{% if try_hint %}<p class="downloads-note small">{% blocktranslate %}Eerst rondkijken? Kies bij de eerste start <strong>Probeer met nepdata</strong>.{% endblocktranslate %}</p>{% endif %}
+{% if try_hint %}{% include "site/_try_hint.html" %}{% endif %}

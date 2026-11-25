@@ -269,20 +269,30 @@ def test_nothing_is_loaded_from_another_site(out):
 def test_the_top_of_the_home_page_is_a_person(out):
     """The owner, 2026-11-25 (docs/design/ronde-9/video-kop.md): the furniture
     maker in a card at the top, with the words and the download buttons on it,
-    loaded first. She is in the card only, not also under Voor wie."""
+    loaded first, and one made-up card from the app that a screen reader skips.
+    The line about trying first comes right under the card. She is in the card
+    only: Voor wie shows the four others."""
     for language in help.LANGUAGES:
         home = (out / site.home_url(language).strip("/") / "index.html").read_text()
-        card = home[
-            home.index('<div class="hero-card">') : home.index('<p class="downloads-note small">')
-        ]
+        card = home[home.index('<div class="hero-card">') : home.index('class="hero-chip"')]
         assert re.search(
-            rf'<img src="/beelden/fotos/werkplaats\.{language}\.1600\.webp"[^>]*fetchpriority="high"',
+            rf'<img [^>]*src="/beelden/fotos/werkplaats\.{language}\.1600\.webp"'
+            r'[^>]*fetchpriority="high"',
             card,
         )
         assert "<h1>" in card and 'class="downloads"' in card
         assert 'loading="lazy"' not in card
+        assert re.search(r'<p class="hero-chip" aria-hidden="true">', home)
+        after_card = home[home.index('class="hero-chip"') :]
+        assert re.match(
+            r'class="hero-chip".*?</p>\s*</div>\s*<p class="downloads-note small">',
+            after_card,
+            re.S,
+        )
         people = home[home.index('<div class="people">') :]
-        assert "werkplaats" not in people[: people.index("</div>")]
+        people = people[: people.index('<div class="kor-lines">')]
+        assert people.count('<figure class="person">') == 4
+        assert "werkplaats" not in people
 
 
 def test_every_photo_is_there_in_both_widths(out):
