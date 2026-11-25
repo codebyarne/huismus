@@ -50,8 +50,8 @@ totals are filled in.
 ## The audit file
 
 An audit file is the file an accounting program reads: your accountant or
-another package gets your year in one go. Huismus makes it in version 4.0
-(XAF), as the Dutch tax authority describes it on
+another bookkeeping app gets your year in one go. Huismus makes it in version
+4.0 (XAF), as the Dutch tax authority describes it on
 [odb.belastingdienst.nl](https://odb.belastingdienst.nl/documentatie/xml-auditfile-financieel-xaf-4-0-3/).
 
 It holds your customers, your invoices and credit notes, the payments and
@@ -83,7 +83,7 @@ If a text starts with `=`, `+`, `-` or `@`, Huismus puts a `'` in front.
 Otherwise a spreadsheet takes it for a formula and runs it.
 
 You can import an export again, into a new Huismus: see
-[Importing from another package or Excel](importeren.en.md).
+[Importing from another bookkeeping app or Excel](importeren.en.md).
 
 An export isn't a backup. You restore a backup into Huismus; an export is
 for using your data somewhere else. How backups work is explained in

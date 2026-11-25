@@ -1,16 +1,16 @@
-# Importing from another package or Excel
+# Importing from another bookkeeping app or Excel
 
-Are your books in another package than Moneybird, or in Excel? Then you put
-your customers, invoices, quotes and expenses into Huismus's template and
-import them in one go. Huismus does a trial run first and only saves something
-when you choose to.
+Are your books in another bookkeeping app than Moneybird, or in Excel? Then
+you put your customers, invoices, quotes and expenses into Huismus's template
+and import them in one go. Huismus does a trial run first and only saves
+something when you choose to.
 
 The import is meant for a Huismus that is still empty, or new. It doesn't
 change what is already there.
 
 ## Filling in the template
 
-1. Open **Import** and choose **From another package or Excel**.
+1. Open **Import** and choose **From another bookkeeping app or Excel**.
 2. Click **Download template**. You get a zip with seven CSV files and a
    README.
 3. Open the files in Excel or Numbers. Each file holds one example. Replace
@@ -107,12 +107,12 @@ with ` | `.
 
 ## Help from an AI assistant
 
-An AI assistant can convert the export of your old package into the
+An AI assistant can convert the export of your old bookkeeping app into the
 template. Give it the template and your export, and ask it to fill the
 files. You then let that service read your books. The trial run shows whether
 the result is right: every total is checked to the cent.
 
-For each package there's a guide with instructions you can copy as they are:
+For each app there's a guide with instructions you can copy as they are:
 [Rompslomp](rompslomp.en.md), [Tellow](tellow.en.md),
 [e-Boekhouden.nl](e-boekhouden.en.md), [Jortt](jortt.en.md) and
 [Excel](excel.en.md).

@@ -29,8 +29,8 @@ PDFs.
 
 ## Converting with an AI assistant
 
-1. In Huismus, open **Import**, choose **From another package or Excel** and
-   click **Download template**.
+1. In Huismus, open **Import**, choose **From another bookkeeping app or
+   Excel** and click **Download template**.
 2. Open an AI assistant, such as ChatGPT or Claude. This is an ordinary chat
    you add files to, not the connection under
    [AI assistants](ai-assistenten.en.md).
@@ -74,10 +74,10 @@ copy, you add yourself or leave out.
 
 ## Importing and checking
 
-In Huismus, drag the zip to the box under **From another package or Excel**
-and click **Start trial run**. The trial run saves nothing. Huismus checks
-every invoice, to the cent, and tells you what doesn't add up. What you see
-then is explained in [Importing from another package or
+In Huismus, drag the zip to the box under **From another bookkeeping app or
+Excel** and click **Start trial run**. The trial run saves nothing. Huismus
+checks every invoice, to the cent, and tells you what doesn't add up. What you
+see then is explained in [Importing from another bookkeeping app or
 Excel](importeren.en.md#what-the-trial-run-shows).
 
 If everything is right, click **Import now**. Then compare your revenue per

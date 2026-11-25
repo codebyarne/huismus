@@ -27,8 +27,8 @@ Huismus needs for your first invoice:
    Huismus doesn't fill it in for you; you can leave it empty.
 6. **Invoices:** your default payment term and how Huismus numbers your
    invoices and quotes. The default is usually fine. Coming from another
-   package? Enter the sequence number that follows your last invoice, so
-   your numbers carry on.
+   bookkeeping app? Enter the sequence number that follows your last
+   invoice, so your numbers carry on.
 7. **Logo:** your logo goes at the top of your invoices and quotes. This can
    wait.
 
@@ -45,7 +45,7 @@ customers, invoices, quotes and expenses along in one go. Huismus does a trial
 run first and only saves anything when you choose to. How it works is in
 [Moving from Moneybird](moneybird.en.md).
 
-Coming from another package or from Excel? That works too: see
+Coming from another bookkeeping app or from Excel? That works too: see
 [Moving to Huismus](overstappen.en.md).
 
 ## Look around first
