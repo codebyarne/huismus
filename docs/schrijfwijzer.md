@@ -70,6 +70,25 @@ tekst bij btw verlegd, tekst bij geen btw) blijven van de gebruiker.
   gebruik een punt, een dubbele punt of een komma. Een em-dash in de
   titelbalk ("Back-ups — Instellingen — Huismus") is geen zin en mag.
 
+## Site: waarom en hoe
+
+Op de site vertelt Huismus waarom het bestaat en hoe het gemaakt wordt. Wat
+de eigenaar daar zelf aan herschreef (pagina "Waarom Huismus bestaat",
+2026-11-25):
+
+- **Een kopje noemt het onderwerp**, geen slogan: "Efficiënt gebruik van
+  rekenkracht", niet "Eén keer goed, in plaats van duizend keer".
+- **Een feit in plaats van beeldspraak of moraal.** Niet "Het is
+  gereedschap, net als je zaag" of "hoort geen abonnement te kosten", maar
+  "Veel boekhoudapps kosten geld. Daarom doet Huismus het anders: …".
+- **Geen slimme wending aan het eind.** Niet "Juist daarom: …", maar gewoon
+  zeggen hoe het zit en waarom het klopt: "slimme coding-assistenten, met
+  veel testautomatisering, want een boekhouding moet 100% kloppen".
+- **Kun je, in plaats van doe je.** "Dan kun je het zelf toevoegen", niet
+  "dan bouw je het zelf". Het is een uitnodiging, geen opdracht.
+- **Vulwoorden eruit:** "ook", "tegenwoordig", "laten maken".
+- **De maker heeft een naam.** Wie het maakt, staat er gewoon.
+
 `tests/core/test_schrijfwijzer.py` bewaakt het meetbare deel: u/uw, de
 verboden woorden en em-dashes in de Nederlandse teksten en de hulppagina's.
 De rest is aan de schrijver en de review.
@@ -112,6 +131,9 @@ something to rewrite.
   "It's not X, it's Y", triples of adjectives, rhetorical questions you
   answer yourself, em dashes (—) inside sentences. Sentence case in headings
   and buttons.
+- **On the site** (why and how Huismus is made): headings name the topic, not
+  a slogan; a fact instead of a metaphor or a "should"; no clever twist at
+  the end; "you can add it yourself" rather than "you build it yourself".
 - **Translate the meaning, not the words.** Rewrite a sentence that turns
   stiff in English.
 
