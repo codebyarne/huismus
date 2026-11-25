@@ -233,3 +233,16 @@ def counts() -> tuple[int, int]:
     every = [feature for _group, items in FEATURES for feature in items]
     later = sum(feature.later for feature in every)
     return len(every) - later, later
+
+
+def roadmap() -> list[tuple[str, list[Feature], list[Feature]]]:
+    """Per group: (name, what works now, what comes later), for the roadmap at
+    the top of the page Functies. Made from FEATURES, so it says the same."""
+    return [
+        (
+            group,
+            [feature for feature in items if not feature.later],
+            [feature for feature in items if feature.later],
+        )
+        for group, items in FEATURES
+    ]
