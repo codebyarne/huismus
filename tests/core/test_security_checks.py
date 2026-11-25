@@ -18,8 +18,11 @@ PUBLISH_JOB = WORKFLOW.split("\n  publish:\n", 1)[1]
 
 
 def test_nothing_goes_out_before_the_security_job_is_green():
-    assert "needs: security\n" in DOCKER_JOB
-    needs = "needs: [security, macos-app, windows-app, macos-window-test, windows-window-test]\n"
+    assert "needs: [security, macos-window-test, windows-window-test]\n" in DOCKER_JOB
+    needs = (
+        "needs: [security, macos-app, windows-app, macos-window-test, windows-window-test, "
+        "build-and-push]\n"
+    )
     assert needs in PUBLISH_JOB
 
 

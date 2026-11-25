@@ -464,7 +464,7 @@ als eigen versie, en de downloadpagina.
 
 Een versie-tag bouwt beide apps in GitHub Actions
 (`.github/workflows/release.yml`, jobs `macos-app` en `windows-app`) en
-test ze in hun venster, naast het Docker-image:
+test ze in hun venster. Pas daarna komt het Docker-image online, en dan de apps:
 
 1. Zet de nieuwe versie in `pyproject.toml` en zet die op `main`.
 2. Tag die commit met precies `v` plus die versie (`git tag v1.4.0 && git push
@@ -473,8 +473,8 @@ test ze in hun venster, naast het Docker-image:
    steeds opnieuw aanbieden.
 3. Eerst de job `security`: `pip-audit` zoekt bekende kwetsbaarheden in de
    pakketten van `uv.lock`, en `manage.py check --deploy` draait met de
-   instellingen van Docker, waar elke waarschuwing de release stopt. Het
-   Docker-image en de publicatie wachten op deze job.
+   instellingen van Docker, waar elke waarschuwing de release stopt. Alles
+   hierna wacht op deze job.
 4. Op een Apple Silicon-runner (`macos-15`) installeert de job Pango uit
    Homebrew, draait `scripts/build-mac.sh` en daarna `Huismus --check` op een
    lege administratie. Faalt die controle, dan komt er niets online.
@@ -515,7 +515,11 @@ test ze in hun venster, naast het Docker-image:
    hand: zoek en download bij elke release op één platform een echte update.
    De scripts weigeren buiten een runner van GitHub, want ze gebruiken de
    echte administratie van de computer.
-7. Pas als alles gelukt is en `security` groen is, zet de job `publish` `Huismus-<versie>-macos.dmg`
+7. Slagen beide venstertests, dan bouwt de job `build-and-push` het
+   Docker-image (arm64 en amd64) en zet het online als de versie en als
+   `:latest`. Faalt een venstertest, dan komt er dus ook geen image: bij 0.1.6
+   stond het image al online terwijl de apps nooit kwamen.
+8. Pas als alles gelukt is, ook het image, zet de job `publish` `Huismus-<versie>-macos.dmg`
    en `Huismus-<versie>-windows.exe` op de GitHub-release van de tag.
    Bestaat die release nog niet, dan maakt hij hem als concept (met de
    release-notities die GitHub uit de PR-titels maakt), voegt de bestanden

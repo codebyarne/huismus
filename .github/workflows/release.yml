@@ -1,13 +1,14 @@
 name: Release
 
-# On a version tag (v*): builds and publishes the Docker image, and builds the
-# desktop apps, Huismus-<version>-macos.dmg and Huismus-<version>-windows.exe,
-# which the publish job puts on the GitHub release once both are checked: the
-# files the desktop app's updates look for (huismus/core/updates.py, docs/desktop.md).
+# On a version tag (v*): builds the desktop apps, Huismus-<version>-macos.dmg
+# and Huismus-<version>-windows.exe, which the publish job puts on the GitHub
+# release once both are checked: the files the desktop app's updates look for
+# (huismus/core/updates.py, docs/desktop.md).
 # It also puts a copy of each without the version on it, for the site's buttons.
 # Before publishing, both apps are opened with their window and used as a
 # user would, and updated from the previous release (the window-test jobs,
 # SPEC.md M11, "Release test in the window"); a failure stops the release.
+# Only then is the Docker image built and published, and after it the apps.
 # By hand (workflow_dispatch): a trial build and window test of both apps,
 # with a version above the latest release, which publishes nothing
 # (huismus-intern/besluiten.md, "Windows-app: bouwkeuzes", 2026-11-13). CLAUDE.md's
@@ -58,7 +59,10 @@ jobs:
           HUISMUS_DATA_DIR="$RUNNER_TEMP/huismus-check" uv run python manage.py check --deploy --fail-level WARNING
 
   build-and-push:
-    needs: security
+    # After both window tests: Docker users get :latest without a window test
+    # of their own, so the image waits until the apps from the same code are
+    # checked. 0.1.6 went out as :latest while its apps failed and never came.
+    needs: [security, macos-window-test, windows-window-test]
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
@@ -437,10 +441,10 @@ jobs:
           if-no-files-found: warn
 
   publish:
-    # Only once both apps are built, checked and tested in their window, and
-    # the security job is green: never half a release.
+    # Only once both apps are built, checked and tested in their window, the
+    # security job is green and the Docker image is online: never half a release.
     if: github.event_name == 'push'
-    needs: [security, macos-app, windows-app, macos-window-test, windows-window-test]
+    needs: [security, macos-app, windows-app, macos-window-test, windows-window-test, build-and-push]
     runs-on: ubuntu-latest
     permissions:
       contents: write
