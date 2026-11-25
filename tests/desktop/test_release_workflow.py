@@ -24,6 +24,7 @@ WINDOWS_WINDOW_TEST = WORKFLOW.split("\n  windows-window-test:\n", 1)[1].split("
 ]
 PUBLISH_JOB = WORKFLOW.split("\n  publish:\n", 1)[1].split("\n  store:\n", 1)[0]
 STORE_JOB = WORKFLOW.split("\n  store:\n", 1)[1]
+STORE_WORKFLOW = (ROOT / ".github" / "workflows" / "store.yml").read_text()
 
 
 def _asset(platform: str, monkeypatch) -> str:
@@ -181,10 +182,24 @@ def test_the_store_gets_the_package_once_the_release_is_out():
     """The store job sends the package for certification only after publish,
     so the Store never gets a version the GitHub release doesn't have, and
     never on a trial by hand."""
+    assert "if: github.event_name == 'push'" in STORE_JOB
     assert "needs: [windows-app, publish]" in STORE_JOB
-    assert "name: windows-store" in STORE_JOB
-    assert "msstore publish" in STORE_JOB and "--appId $env:STORE_ID" in STORE_JOB
-    assert "STORE_ID: 9NKWHBHSFMHN" in STORE_JOB
+    assert "uses: ./.github/workflows/store.yml" in STORE_JOB
+    assert "tag: ${{ github.ref_name }}" in STORE_JOB
+    assert "secrets: inherit" in STORE_JOB
+
+
+def test_the_store_workflow_submits_the_package_of_the_tag():
+    """store.yml, also by hand for an existing release (docs/desktop.md):
+    the windows-store package of that tag's release run, published by path.
+    msstore has no --inputFile; with it the v0.1.8 submission failed."""
+    assert "workflow_call:" in STORE_WORKFLOW and "workflow_dispatch:" in STORE_WORKFLOW
+    assert "name: windows-store" in STORE_WORKFLOW
+    assert "run-id: ${{ steps.run.outputs.id }}" in STORE_WORKFLOW
+    assert "--workflow release.yml" in STORE_WORKFLOW and '--branch "$TAG"' in STORE_WORKFLOW
+    assert "msstore publish $package --appId $env:STORE_ID" in STORE_WORKFLOW
+    assert "--inputFile" not in STORE_WORKFLOW
+    assert "STORE_ID: 9NKWHBHSFMHN" in STORE_WORKFLOW
 
 
 def test_the_partner_center_credentials_come_from_repository_secrets():
@@ -196,8 +211,8 @@ def test_the_partner_center_credentials_come_from_repository_secrets():
         "PARTNER_CENTER_CLIENT_ID",
         "PARTNER_CENTER_CLIENT_SECRET",
     ):
-        assert f"{name}: ${{{{ secrets.{name} }}}}" in STORE_JOB
-        assert f"--{name}" not in STORE_JOB
-    run_lines = [line for line in STORE_JOB.splitlines() if "msstore" in line]
+        assert f"{name}: ${{{{ secrets.{name} }}}}" in STORE_WORKFLOW
+        assert f"--{name}" not in STORE_WORKFLOW
+    run_lines = [line for line in STORE_WORKFLOW.splitlines() if "msstore" in line]
     assert all("secrets." not in line for line in run_lines)
-    assert "::warning::" in STORE_JOB
+    assert "::warning::" in STORE_WORKFLOW
