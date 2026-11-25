@@ -101,7 +101,7 @@ SMALL_WIDTH = 1280
 # The photos of people at work (scripts/site_fotos.py), each in two widths.
 PHOTOS = {
     "werkplaats": (800, 1600),
-    "keukentafel": (600, 1200),
+    "keukentafel": (750, 1500),
     "fotograaf": (360, 720),
     "hovenier": (360, 720),
     "schrijver": (360, 720),

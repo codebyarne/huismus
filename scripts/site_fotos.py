@@ -29,7 +29,7 @@ SITE_PHOTOS = {
     "werkplaats": ("foto-1-kop-leeg-scherm.jpg", (1600, 800), ("overzicht", 0, (1520, 450))),
     "keukentafel": (
         "foto-2-overstappen-leeg-scherm.jpg",
-        (1200, 600),
+        (1500, 750),
         ("importeren", 2, (630, 540)),
     ),
     "fotograaf": ("foto-3-fotograaf.jpg", (720, 360), None),

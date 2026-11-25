@@ -8,11 +8,11 @@
 {% block content %}
 {% comment %}The home page (docs/design/ronde-8/, redesign of 2026-11-18): one headline, the app large on a petrol stage, who it is for, switching, privacy, the year in four parts, and one next step: download.{% endcomment %}
 <section class="hero wrap">
-    {% comment %}A person at the top (the owner, 2026-11-25, after shine.co): the furniture maker in a card with round corners, the words on it. docs/design/ronde-9/video-kop.md.{% endcomment %}
+    {% comment %}A person at the top (the owner, 2026-11-25, after shine.co): the man at the kitchen table in a card with round corners, the words on it. docs/design/ronde-9/video-kop.md.{% endcomment %}
     <div class="hero-card">
         <div class="hero-media">
-            {% translate "Een meubelmaker met een stofmasker op schuurt een stoel in haar werkplaats. Op de werkbank staat een laptop met Huismus open." as alt %}
-            {% include "site/_foto.html" with name="werkplaats" screen=True priority=True alt=alt small=800 large=1600 width=1600 height=640 sizes="(min-width: 1264px) 1200px, 100vw" %}
+            {% translate "Een man zit aan de keukentafel bij een bureaulamp, achter een laptop met Huismus open. Naast hem ligt een stapel papieren." as alt %}
+            {% include "site/_foto.html" with name="keukentafel" screen=True priority=True alt=alt small=750 large=1500 width=1500 height=1000 sizes="(min-width: 1264px) 1200px, 100vw" %}
         </div>
         <div class="hero-text">
             <span class="eyebrow">{% translate "Voor zzp’ers" %}</span>
@@ -59,8 +59,8 @@
             {% include "site/_foto.html" with name="schrijver" alt=alt small=360 large=720 width=720 height=720 sizes="(min-width: 1264px) 288px, (min-width: 901px) 24vw, 50vw" %}
         </figure>
         <figure class="person">
-            {% translate "Een man zit aan de keukentafel bij een bureaulamp, achter een laptop met Huismus open. Naast hem ligt een stapel papieren." as alt %}
-            {% include "site/_foto.html" with name="keukentafel" screen=True alt=alt small=600 large=1200 width=1200 height=800 sizes="(min-width: 1264px) 288px, (min-width: 901px) 24vw, 50vw" %}
+            {% translate "Een meubelmaker met een stofmasker op schuurt een stoel in haar werkplaats. Op de werkbank staat een laptop met Huismus open." as alt %}
+            {% include "site/_foto.html" with name="werkplaats" screen=True alt=alt small=800 large=1600 width=1600 height=640 sizes="(min-width: 1264px) 288px, (min-width: 901px) 24vw, 50vw" %}
         </figure>
     </div>
     <div class="kor-lines">
