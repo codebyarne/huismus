@@ -7,7 +7,7 @@
 {% block main_class %}wrap site-narrow why-page{% endblock %}
 
 {% block content %}
-{% comment %}Who makes Huismus and why, in the owner's words (huismus-intern/besluiten.md, 2026-11-18): bookkeeping for everyone, one program made well instead of everyone having AI build their own, and everyone can build along.{% endcomment %}
+{% comment %}Who makes Huismus and why, in the owner's words (huismus-intern/besluiten.md, 2026-11-18; text rewritten by the owner 2026-11-25): bookkeeping for everyone, one program made well instead of everyone having AI build their own, and everyone can build along.{% endcomment %}
 <div class="page-head">
     <div class="titles">
         <p class="kicker">{% translate "Waarom" %}</p>
@@ -23,8 +23,8 @@
 
 <section class="why-part">
     <h2>{% translate "Boekhouden voor iedereen" %}</h2>
-    <p>{% translate "Facturen maken, bonnetjes bewaren, de bedragen voor je btw-aangifte bij elkaar zoeken: elke zzp’er doet het, of je nu meubels maakt, foto’s of teksten. Het is gereedschap, net als je zaag of je camera." %}</p>
-    <p>{% translate "Gereedschap dat iedereen nodig heeft, hoort geen abonnement te kosten. Huismus is gratis, zonder einddatum en zonder account, en je administratie staat op je eigen computer." %}</p>
+    <p>{% translate "Facturen maken, bonnetjes bewaren, de bedragen voor je btw-aangifte bij elkaar zoeken: elke zzp’er doet het, of je nu meubels maakt, foto’s of teksten. Veel boekhoudapps kosten geld, terwijl software vandaag de dag niet veel hoeft te kosten." %}</p>
+    <p>{% translate "Daarom doet Huismus het anders: het is gratis, er is geen einddatum en je hoeft geen account te hebben, en je administratie staat alleen op je eigen computer." %}</p>
     <div class="photo-row">
         {% translate "Een fotograaf knielt in een park en stelt haar camera in." as alt %}
         {% include "site/_foto.html" with name="fotograaf" alt=alt small=360 large=720 width=720 height=720 sizes="(min-width: 792px) 243px, 33vw" %}
@@ -36,23 +36,23 @@
 </section>
 
 <section class="why-part">
-    <h2>{% translate "Eén keer goed, in plaats van duizend keer" %}</h2>
-    <p>{% translate "Met AI kan tegenwoordig iedereen software laten maken. Dat is mooi, maar het is niet gratis: elk stuk code dat een AI schrijft, kost rekenkracht in een datacenter, met de stroom en de koeling die daarbij horen." %}</p>
-    <p>{% translate "Als elke zzp’er zijn eigen boekhoudprogramma laat bouwen, gebeurt hetzelfde werk duizenden keren, voor iets wat iedereen hetzelfde nodig heeft. Het is zuiniger als één programma goed gemaakt wordt en iedereen het gebruikt." %}</p>
-    <p>{% translate "Ook Huismus wordt met hulp van AI gebouwd. Juist daarom: dat werk gebeurt hier één keer, en dan heeft iedereen het." %}</p>
+    <h2>{% translate "Efficiënt gebruik van rekenkracht" %}</h2>
+    <p>{% translate "AI heeft software toegankelijk gemaakt. Iedereen kan nu software maken. Dat is mooi, maar het is niet gratis: elk stuk code dat AI schrijft, kost rekenkracht in een datacenter, met de stroom en de koeling die daarbij horen." %}</p>
+    <p>{% translate "Als elke zzp’er zijn eigen boekhoudprogramma laat bouwen, gebeurt hetzelfde werk duizenden keren, voor iets wat iedereen hetzelfde nodig heeft. Het is efficiënter als één programma goed gemaakt wordt en iedereen het kan gebruiken." %}</p>
+    <p>{% translate "Ook Huismus maakt gebruik van slimme coding-assistenten, in combinatie met veel testautomatisering, want een boekhouding moet 100% kloppen." %}</p>
     <p class="why-links"><a class="more" href="{{ made_url }}">{% translate "Zo wordt Huismus gemaakt" %} <span aria-hidden="true">→</span></a></p>
 </section>
 
 <section class="why-part">
     <h2>{% translate "Iedereen kan meebouwen" %}</h2>
-    <p>{% translate "De broncode staat openbaar, dus iedereen kan zien hoe Huismus rekent. Mis je iets en ben je handig, dan bouw je het zelf, en dan heeft iedereen er wat aan. Dat kan code zijn, maar ook een vertaling, een test op Windows of een goed idee." %}</p>
-    <p>{% translate "Zo blijft Huismus ook van iedereen. Stopt de maker ooit, dan opent je export nog steeds zonder Huismus, en kan iedereen met de code verder." %}</p>
+    <p>{% translate "De broncode staat openbaar, dus iedereen kan zien hoe Huismus is gemaakt. Mis je iets en ben je handig, dan kun je het zelf toevoegen, en dan heeft iedereen er wat aan. Dat kan code zijn, maar ook een vertaling, een test op Windows of een goed idee." %}</p>
+    <p>{% translate "Zo blijft Huismus van iedereen. Stopt de maker ooit, dan opent je export nog steeds zonder Huismus, en kan iedereen met de code verder." %}</p>
     <p class="why-links"><a class="more" href="{{ contribute_url }}">{% translate "Zo bouw je mee" %} <span aria-hidden="true">→</span></a></p>
 </section>
 
 <section class="why-part">
     <h2>{% translate "Wie Huismus maakt" %}</h2>
-    <p>{% blocktranslate %}Huismus wordt gemaakt in Nederland. Over de maker en wat die nog meer doet, lees je op <a href="https://www.arnekrijnsen.com">arnekrijnsen.com</a>.{% endblocktranslate %}</p>
+    <p>{% blocktranslate %}Huismus wordt gemaakt in Nederland door Arne Krijnsen. Over de maker en wat die nog meer doet, lees je op <a href="https://www.arnekrijnsen.com">arnekrijnsen.com</a>.{% endblocktranslate %}</p>
 </section>
 
 <section class="band band-final" id="downloaden">
