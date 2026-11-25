@@ -266,6 +266,25 @@ def test_nothing_is_loaded_from_another_site(out):
             assert "<script src" not in html
 
 
+def test_the_top_of_the_home_page_is_a_person(out):
+    """The owner, 2026-11-25 (docs/design/ronde-9/video-kop.md): the furniture
+    maker in a card at the top, with the words and the download buttons on it,
+    loaded first. She is in the card only, not also under Voor wie."""
+    for language in help.LANGUAGES:
+        home = (out / site.home_url(language).strip("/") / "index.html").read_text()
+        card = home[
+            home.index('<div class="hero-card">') : home.index('<p class="downloads-note small">')
+        ]
+        assert re.search(
+            rf'<img src="/beelden/fotos/werkplaats\.{language}\.1600\.webp"[^>]*fetchpriority="high"',
+            card,
+        )
+        assert "<h1>" in card and 'class="downloads"' in card
+        assert 'loading="lazy"' not in card
+        people = home[home.index('<div class="people">') :]
+        assert "werkplaats" not in people[: people.index("</div>")]
+
+
 def test_every_photo_is_there_in_both_widths(out):
     """scripts/site-beelden.sh makes them (scripts/site_fotos.py); a photo
     with the app on the laptop shows it in the language of the page."""
