@@ -30,12 +30,12 @@ the number the invoice will get. With **Issue for good**:
 Then download the PDF with **PDF**, or mail it with **Mail**. See
 [Mail](mailen.en.md).
 
-## Carrying on from another package
+## Carrying on from another bookkeeping app
 
-Coming from another package? Then you want your numbers to carry on. Go to
-**Settings → Invoices and numbering** and under **Sequence number of your
-next invoice** enter the number that follows your last invoice. If your last
-invoice was 2026-0042, enter 43. Quotes work the same way.
+Coming from another bookkeeping app? Then you want your numbers to carry on.
+Go to **Settings → Invoices and numbering** and under **Sequence number of
+your next invoice** enter the number that follows your last invoice. If your
+last invoice was 2026-0042, enter 43. Quotes work the same way.
 
 You can do this until your first invoice in Huismus. After that the number
 counts up by itself, so your series has no gap.
