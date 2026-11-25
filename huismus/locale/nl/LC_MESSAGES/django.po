@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-25 09:39+0100\n"
+"POT-Creation-Date: 2026-11-25 13:49+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -7600,11 +7600,6 @@ msgstr ""
 msgid "macOS 15 of nieuwer met een Apple-chip · Windows 10 of nieuwer"
 msgstr ""
 
-msgid ""
-"Eerst rondkijken? Kies bij de eerste start <strong>Probeer met nepdata</"
-"strong>."
-msgstr ""
-
 msgid "Je browser speelt deze film niet af."
 msgstr ""
 
@@ -7697,6 +7692,11 @@ msgid ""
 msgstr ""
 
 msgid "Huismus heeft geen betaalde handtekening van Apple of Microsoft."
+msgstr ""
+
+msgid ""
+"Eerst rondkijken? Kies bij de eerste start <strong>Probeer met nepdata</"
+"strong>."
 msgstr ""
 
 msgid ""
@@ -8165,6 +8165,12 @@ msgid ""
 "Huismus is een gratis app voor je facturen, offertes, bonnetjes en "
 "bankafschriften, met de bedragen voor je btw-aangifte. Kom je van Moneybird, "
 "een ander pakket of Excel? Neem al je jaren mee."
+msgstr ""
+
+msgid "Factuur 2026-014"
+msgstr ""
+
+msgid "€ 890,00"
 msgstr ""
 
 msgid "Geen abonnement"
