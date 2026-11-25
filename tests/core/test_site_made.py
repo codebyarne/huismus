@@ -196,7 +196,8 @@ def test_a_release_waits_for_the_security_checks():
     the reviewer that reads everything since the last release."""
     release = _text(".github/workflows/release.yml")
     assert "pip-audit" in release and "check --deploy --fail-level WARNING" in release
-    assert "  build-and-push:\n    needs: security\n" in release
+    docker = release.split("\n  build-and-push:\n", 1)[1].split("\n  macos-app:\n", 1)[0]
+    assert "    needs: [security, " in docker
     assert re.search(r"^    needs: \[security, .*\]$", release, re.M)
     # The reviewer is an agreement in CLAUDE.md, as the page says; no job runs it.
     assert "een bevinding met ernst\nhoog of middel houdt de release tegen" in _text("CLAUDE.md")

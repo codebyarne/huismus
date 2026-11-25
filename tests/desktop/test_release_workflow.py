@@ -82,8 +82,19 @@ def test_only_the_publish_job_may_write_releases():
 
 
 def test_the_release_waits_for_both_apps_and_their_window_tests():
-    needs = "needs: [security, macos-app, windows-app, macos-window-test, windows-window-test]"
+    needs = (
+        "needs: [security, macos-app, windows-app, macos-window-test, windows-window-test, "
+        "build-and-push]"
+    )
     assert needs in PUBLISH_JOB
+
+
+def test_the_docker_image_waits_for_the_window_tests_and_the_release_for_the_image():
+    # 0.1.6 put its image online as :latest while a window test failed and the
+    # apps never came out. Now the image goes out only after both window tests,
+    # and the release with the apps only after the image: all of it, or nothing.
+    assert "needs: [security, macos-window-test, windows-window-test]\n" in DOCKER_JOB
+    assert "build-and-push" in PUBLISH_JOB.split("needs:", 1)[1].split("\n", 1)[0]
 
 
 def test_the_window_tests_use_the_built_apps_and_keep_their_screenshots():
