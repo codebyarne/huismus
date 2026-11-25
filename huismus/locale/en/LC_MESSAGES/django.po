@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-25 09:39+0100\n"
+"POT-Creation-Date: 2026-11-25 14:52+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2361,6 +2361,24 @@ msgstr "An online shop"
 
 msgid "Belastingadvies"
 msgstr "Tax advice"
+
+msgid ""
+"Je krijgt een persoonlijk antwoord van de maker, per mail. Meestal binnen "
+"twee werkdagen."
+msgstr "You get a personal answer from the maker, by email. Usually within two working days."
+
+msgid "Mac-app"
+msgstr "Mac app"
+
+#
+msgid "Windows-app"
+msgstr "Windows app"
+
+msgid "Docker (in de browser)"
+msgstr "Docker (in your browser)"
+
+msgid "Nog niet"
+msgstr "Not yet"
 
 #, python-format
 msgid "vandaag %(time)s"
@@ -6065,9 +6083,6 @@ msgstr ""
 msgid "Controleer het document goed."
 msgstr "Check the document carefully."
 
-msgid "Nog niet"
-msgstr "Not yet"
-
 msgid "Verzenden"
 msgstr "Send"
 
@@ -8154,6 +8169,12 @@ msgstr "This page doesn’t exist. Start at the home page or look under Help."
 msgid "Naar de homepage"
 msgstr "To the home page"
 
+msgid "Staat je antwoord er niet bij?"
+msgstr "Can't find your answer?"
+
+msgid "Stel een vraag"
+msgstr "Ask a question"
+
 msgid "Huismus installeer je op je Mac of pc."
 msgstr "You install Huismus on your Mac or PC."
 
@@ -9564,6 +9585,66 @@ msgstr "The list of work"
 msgid "Zo bouw je mee"
 msgstr "How to contribute"
 
+#
+msgid "Verstuurd"
+msgstr "Sent"
+
+#
+msgid "Dat lukte niet"
+msgstr "That didn't work"
+
+msgid ""
+"Bedankt voor je vraag. Je krijgt meestal binnen twee werkdagen antwoord op "
+"het adres dat je opgaf. Kijk ook even in je spam."
+msgstr "Thanks for your question. You'll usually get an answer within two working days, at the address you gave. Check your spam folder too."
+
+#
+msgid "Naar de hulp"
+msgstr "To the help"
+
+msgid ""
+"Je vraag is niet verstuurd. Ga terug met de terugknop van je browser en "
+"probeer het later nog eens. Lukt het weer niet, mail dan naar <a "
+"href=\"mailto:hallo@mijnhuismus.nl\">hallo@mijnhuismus.nl</a>."
+msgstr "Your question wasn't sent. Go back with your browser's back button and try again later. Still not working? Email <a href=\"mailto:hallo@mijnhuismus.nl\">hallo@mijnhuismus.nl</a>."
+
+#, python-format
+msgid ""
+"Vragen over Huismus: installeren, overstappen, hoe iets werkt. Advies over "
+"belasting of je eigen situatie geeft de maker niet; kijk daarvoor bij <a "
+"href=\"%(guides_index_url)s\">Uitleg</a> of vraag je boekhouder."
+msgstr "Questions about Huismus: installing, switching, how something works. The maker can't give advice on tax or your own situation; see <a href=\"%(guides_index_url)s\">Guides</a> or ask your accountant."
+
+#
+msgid "Je vraag"
+msgstr "Your question"
+
+#
+msgid "Je e-mailadres"
+msgstr "Your email address"
+
+#
+msgid "Hierop krijg je antwoord."
+msgstr "We'll answer you here."
+
+#
+msgid "Waar gebruik je Huismus?"
+msgstr "Where do you use Huismus?"
+
+#
+msgid "niet verplicht"
+msgstr "optional"
+
+msgid "Laat dit veld leeg"
+msgstr "Leave this field empty"
+
+msgid ""
+"Je vraag en je e-mailadres gaan via een formulier op arnekrijnsen.com per "
+"mail naar de maker. Ze komen niet op GitHub, en je adres gebruikt de maker "
+"alleen om je te antwoorden. Zet geen klantgegevens, IBAN’s of bedragen in je "
+"vraag."
+msgstr "Your question and email address go to the maker by email, through a form on arnekrijnsen.com. They don't end up on GitHub, and the maker only uses your address to answer you. Don't include customer details, IBANs or amounts."
+
 msgid ""
 "Een boekhouding heb je nodig als zzp’er. Huismus maakt hem één keer goed, "
 "gratis voor iedereen, en iedereen kan meebouwen."
@@ -9586,13 +9667,19 @@ msgid ""
 "elkaar zoeken: elke zzp’er doet het, of je nu meubels maakt, foto’s of "
 "teksten. Veel boekhoudapps kosten geld, terwijl software vandaag de dag niet "
 "veel hoeft te kosten."
-msgstr "Making invoices, keeping receipts, gathering the amounts for your VAT return: every freelancer does it, whether you make furniture, photos or texts. Many bookkeeping apps cost money, while software doesn’t have to cost much these days."
+msgstr ""
+"Making invoices, keeping receipts, gathering the amounts for your VAT "
+"return: every freelancer does it, whether you make furniture, photos or "
+"texts. Many bookkeeping apps cost money, while software doesn’t have to cost "
+"much these days."
 
 msgid ""
 "Daarom doet Huismus het anders: het is gratis, er is geen einddatum en je "
 "hoeft geen account te hebben, en je administratie staat alleen op je eigen "
 "computer."
-msgstr "That’s why Huismus does it differently: it’s free, there’s no end date, you don’t need an account, and your records are only on your own computer."
+msgstr ""
+"That’s why Huismus does it differently: it’s free, there’s no end date, you "
+"don’t need an account, and your records are only on your own computer."
 
 msgid "Efficiënt gebruik van rekenkracht"
 msgstr "Using computing power efficiently"
@@ -9601,20 +9688,28 @@ msgid ""
 "AI heeft software toegankelijk gemaakt. Iedereen kan nu software maken. Dat "
 "is mooi, maar het is niet gratis: elk stuk code dat AI schrijft, kost "
 "rekenkracht in een datacenter, met de stroom en de koeling die daarbij horen."
-msgstr "AI has made software accessible. Anyone can make software now. That’s great, but it isn’t free: every piece of code AI writes costs computing power in a data centre, with the electricity and cooling that come with it."
+msgstr ""
+"AI has made software accessible. Anyone can make software now. That’s great, "
+"but it isn’t free: every piece of code AI writes costs computing power in a "
+"data centre, with the electricity and cooling that come with it."
 
 msgid ""
 "Als elke zzp’er zijn eigen boekhoudprogramma laat bouwen, gebeurt hetzelfde "
 "werk duizenden keren, voor iets wat iedereen hetzelfde nodig heeft. Het is "
 "efficiënter als één programma goed gemaakt wordt en iedereen het kan "
 "gebruiken."
-msgstr "If every freelancer has their own bookkeeping program built, the same work happens thousands of times, for something everyone needs in the same way. It’s more efficient to make one program well that everyone can use."
+msgstr ""
+"If every freelancer has their own bookkeeping program built, the same work "
+"happens thousands of times, for something everyone needs in the same way. "
+"It’s more efficient to make one program well that everyone can use."
 
 #, python-format
 msgid ""
 "Ook Huismus maakt gebruik van slimme coding-assistenten, in combinatie met "
 "veel testautomatisering, want een boekhouding moet 100%% kloppen."
-msgstr "Huismus also uses smart coding assistants, together with a lot of automated testing, because bookkeeping has to be 100%% right."
+msgstr ""
+"Huismus also uses smart coding assistants, together with a lot of automated "
+"testing, because bookkeeping has to be 100%% right."
 
 msgid "Iedereen kan meebouwen"
 msgstr "Anyone can help build it"
@@ -9624,12 +9719,18 @@ msgid ""
 "Mis je iets en ben je handig, dan kun je het zelf toevoegen, en dan heeft "
 "iedereen er wat aan. Dat kan code zijn, maar ook een vertaling, een test op "
 "Windows of een goed idee."
-msgstr "The source code is public, so anyone can see how Huismus is made. If you miss something and you’re handy, you can add it yourself, and then everyone benefits. That can be code, but also a translation, a test on Windows or a good idea."
+msgstr ""
+"The source code is public, so anyone can see how Huismus is made. If you "
+"miss something and you’re handy, you can add it yourself, and then everyone "
+"benefits. That can be code, but also a translation, a test on Windows or a "
+"good idea."
 
 msgid ""
 "Zo blijft Huismus van iedereen. Stopt de maker ooit, dan opent je export nog "
 "steeds zonder Huismus, en kan iedereen met de code verder."
-msgstr "That keeps Huismus everyone’s. If its maker ever stops, your export still opens without Huismus, and anyone can carry on with the code."
+msgstr ""
+"That keeps Huismus everyone’s. If its maker ever stops, your export still "
+"opens without Huismus, and anyone can carry on with the code."
 
 msgid "Wie Huismus maakt"
 msgstr "Who makes Huismus"
@@ -9638,7 +9739,10 @@ msgid ""
 "Huismus wordt gemaakt in Nederland door Arne Krijnsen. Over de maker en wat "
 "die nog meer doet, lees je op <a href=\"https://"
 "www.arnekrijnsen.com\">arnekrijnsen.com</a>."
-msgstr "Huismus is made in the Netherlands by Arne Krijnsen. You can read about him and his other work on <a href=\"https://www.arnekrijnsen.com\">arnekrijnsen.com</a>."
+msgstr ""
+"Huismus is made in the Netherlands by Arne Krijnsen. You can read about him "
+"and his other work on <a href=\"https://"
+"www.arnekrijnsen.com\">arnekrijnsen.com</a>."
 
 #~ msgid "Eén keer goed, in plaats van duizend keer"
 #~ msgstr "Made well once, instead of a thousand times"

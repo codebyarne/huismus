@@ -503,3 +503,14 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 /* Op Windows on Installeren: the installer folded away under the Store. */
 #windows summary { cursor: pointer; color: var(--primary); }
 #windows .installer-steps { margin-top: var(--s-4); }
+
+/* Stel een vraag (site/question.html): the parts of the feedback panel in the app. */
+.question-page .page-head .kicker { margin-bottom: var(--s-1); }
+.question-form { display: flex; flex-direction: column; gap: var(--s-5); }
+.question-form .select { max-width: 22rem; }
+.question-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.question-done { display: flex; flex-direction: column; align-items: center; gap: var(--s-4); margin-top: var(--s-8); text-align: center; }
+.question-done h1 { font-weight: var(--fw-bold); font-size: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem); line-height: 1.1; letter-spacing: -0.02em; }
+.question-done .lede { max-width: 30em; color: var(--text-muted); font-size: 1.125rem; }
+.question-done .row { justify-content: center; gap: var(--s-3); }
+.ask-line { width: 100%; max-width: 760px; margin: var(--s-8) auto 0; color: var(--text-muted); }

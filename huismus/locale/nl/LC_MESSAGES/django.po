@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-25 09:39+0100\n"
+"POT-Creation-Date: 2026-11-25 14:52+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2254,6 +2254,23 @@ msgstr ""
 
 msgid "Belastingadvies"
 msgstr ""
+
+msgid ""
+"Je krijgt een persoonlijk antwoord van de maker, per mail. Meestal binnen "
+"twee werkdagen."
+msgstr "Je krijgt een persoonlijk antwoord van de maker, per mail. Meestal binnen twee werkdagen."
+
+msgid "Mac-app"
+msgstr "Mac-app"
+
+msgid "Windows-app"
+msgstr "Windows-app"
+
+msgid "Docker (in de browser)"
+msgstr "Docker (in de browser)"
+
+msgid "Nog niet"
+msgstr "Nog niet"
 
 #, python-format
 msgid "vandaag %(time)s"
@@ -5665,9 +5682,6 @@ msgstr ""
 msgid "Controleer het document goed."
 msgstr ""
 
-msgid "Nog niet"
-msgstr ""
-
 msgid "Verzenden"
 msgstr ""
 
@@ -7580,7 +7594,13 @@ msgid "Deze pagina bestaat niet. Begin op de homepage of kijk bij Hulp."
 msgstr ""
 
 msgid "Naar de homepage"
-msgstr ""
+msgstr "Naar de homepage"
+
+msgid "Staat je antwoord er niet bij?"
+msgstr "Staat je antwoord er niet bij?"
+
+msgid "Stel een vraag"
+msgstr "Stel een vraag"
 
 msgid "Huismus installeer je op je Mac of pc."
 msgstr ""
@@ -8718,6 +8738,58 @@ msgstr ""
 
 msgid "Zo bouw je mee"
 msgstr ""
+
+msgid "Verstuurd"
+msgstr "Verstuurd"
+
+msgid "Dat lukte niet"
+msgstr "Dat lukte niet"
+
+msgid ""
+"Bedankt voor je vraag. Je krijgt meestal binnen twee werkdagen antwoord op "
+"het adres dat je opgaf. Kijk ook even in je spam."
+msgstr "Bedankt voor je vraag. Je krijgt meestal binnen twee werkdagen antwoord op het adres dat je opgaf. Kijk ook even in je spam."
+
+msgid "Naar de hulp"
+msgstr "Naar de hulp"
+
+msgid ""
+"Je vraag is niet verstuurd. Ga terug met de terugknop van je browser en "
+"probeer het later nog eens. Lukt het weer niet, mail dan naar <a "
+"href=\"mailto:hallo@mijnhuismus.nl\">hallo@mijnhuismus.nl</a>."
+msgstr "Je vraag is niet verstuurd. Ga terug met de terugknop van je browser en probeer het later nog eens. Lukt het weer niet, mail dan naar <a href=\"mailto:hallo@mijnhuismus.nl\">hallo@mijnhuismus.nl</a>."
+
+#, python-format
+msgid ""
+"Vragen over Huismus: installeren, overstappen, hoe iets werkt. Advies over "
+"belasting of je eigen situatie geeft de maker niet; kijk daarvoor bij <a "
+"href=\"%(guides_index_url)s\">Uitleg</a> of vraag je boekhouder."
+msgstr "Vragen over Huismus: installeren, overstappen, hoe iets werkt. Advies over belasting of je eigen situatie geeft de maker niet; kijk daarvoor bij <a href=\"%(guides_index_url)s\">Uitleg</a> of vraag je boekhouder."
+
+msgid "Je vraag"
+msgstr "Je vraag"
+
+msgid "Je e-mailadres"
+msgstr "Je e-mailadres"
+
+msgid "Hierop krijg je antwoord."
+msgstr "Hierop krijg je antwoord."
+
+msgid "Waar gebruik je Huismus?"
+msgstr "Waar gebruik je Huismus?"
+
+msgid "niet verplicht"
+msgstr "niet verplicht"
+
+msgid "Laat dit veld leeg"
+msgstr "Laat dit veld leeg"
+
+msgid ""
+"Je vraag en je e-mailadres gaan via een formulier op arnekrijnsen.com per "
+"mail naar de maker. Ze komen niet op GitHub, en je adres gebruikt de maker "
+"alleen om je te antwoorden. Zet geen klantgegevens, IBAN’s of bedragen in je "
+"vraag."
+msgstr "Je vraag en je e-mailadres gaan via een formulier op arnekrijnsen.com per mail naar de maker. Ze komen niet op GitHub, en je adres gebruikt de maker alleen om je te antwoorden. Zet geen klantgegevens, IBAN’s of bedragen in je vraag."
 
 msgid ""
 "Een boekhouding heb je nodig als zzp’er. Huismus maakt hem één keer goed, "
