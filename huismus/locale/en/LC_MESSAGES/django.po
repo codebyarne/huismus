@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-25 15:09+0100\n"
+"POT-Creation-Date: 2026-11-25 15:37+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -8783,6 +8783,21 @@ msgid_plural "%(count)s staan op de lijst"
 msgstr[0] "%(count)s is on the list"
 msgstr[1] "%(count)s are on the list"
 
+msgid "Wat er is en wat eraan komt"
+msgstr "What is there and what is coming"
+
+msgid "Gemaakt"
+msgstr "Made"
+
+msgid "Nu"
+msgstr "Now"
+
+#, python-format
+msgid "%(count)s werkt nu"
+msgid_plural "%(count)s werken nu"
+msgstr[0] "%(count)s works today"
+msgstr[1] "%(count)s work today"
+
 msgid ""
 "Een meubelmaker met een stofmasker op schuurt een stoel in haar werkplaats. "
 "Op de werkbank staat een laptop met Huismus open."
@@ -9298,9 +9313,6 @@ msgstr ""
 "How Huismus is made: AI writes a lot, the maker decides and keeps watch, and "
 "every change is checked so your invoices and amounts stay right."
 
-msgid "Gemaakt"
-msgstr "Made"
-
 msgid ""
 "Bij Huismus staat kwaliteit voorop: het gaat om je boekhouding. AI schrijft "
 "veel van de code, de maker beslist en kijkt mee, en bij elke wijziging wordt "
@@ -9746,16 +9758,6 @@ msgstr ""
 "and his other work on <a href=\"https://"
 "www.arnekrijnsen.com\">arnekrijnsen.com</a>."
 
-#, python-format
-#~ msgid ""
-#~ "Vragen over Huismus: installeren, overstappen, hoe iets werkt. Advies "
-#~ "over belasting of je eigen situatie geeft de maker niet; kijk daarvoor "
-#~ "bij <a href=\"%(guides_index_url)s\">Uitleg</a> of vraag je boekhouder."
-#~ msgstr ""
-#~ "Questions about Huismus: installing, switching, how something works. The "
-#~ "maker can't give advice on tax or your own situation; see <a "
-#~ "href=\"%(guides_index_url)s\">Guides</a> or ask your accountant."
-
 #~ msgid "Eén keer goed, in plaats van duizend keer"
 #~ msgstr "Made well once, instead of a thousand times"
 
@@ -9868,9 +9870,6 @@ msgstr ""
 
 #~ msgid "Rechtstreeks importeren uit meer pakketten"
 #~ msgstr "Import directly from more packages"
-
-#~ msgid "Wat Huismus kan, en wat er komt"
-#~ msgstr "What Huismus can do, and what is coming"
 
 #~ msgid ""
 #~ "Huismus groeit snel. Hier staat alles wat er nu in zit, en wat je wanneer "

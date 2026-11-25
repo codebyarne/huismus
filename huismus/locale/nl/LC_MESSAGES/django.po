@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-25 15:09+0100\n"
+"POT-Creation-Date: 2026-11-25 15:37+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -8099,6 +8099,21 @@ msgid_plural "%(count)s staan op de lijst"
 msgstr[0] "%(count)s staat op de lijst"
 msgstr[1] "%(count)s staan op de lijst"
 
+msgid "Wat er is en wat eraan komt"
+msgstr ""
+
+msgid "Gemaakt"
+msgstr ""
+
+msgid "Nu"
+msgstr ""
+
+#, python-format
+msgid "%(count)s werkt nu"
+msgid_plural "%(count)s werken nu"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid ""
 "Een meubelmaker met een stofmasker op schuurt een stoel in haar werkplaats. "
 "Op de werkbank staat een laptop met Huismus open."
@@ -8528,9 +8543,6 @@ msgid ""
 "en bij elke wijziging wordt nagekeken of je facturen en bedragen kloppen."
 msgstr ""
 
-msgid "Gemaakt"
-msgstr ""
-
 msgid ""
 "Bij Huismus staat kwaliteit voorop: het gaat om je boekhouding. AI schrijft "
 "veel van de code, de maker beslist en kijkt mee, en bij elke wijziging wordt "
@@ -8864,16 +8876,6 @@ msgid ""
 "die nog meer doet, lees je op <a href=\"https://"
 "www.arnekrijnsen.com\">arnekrijnsen.com</a>."
 msgstr ""
-
-#, python-format
-#~ msgid ""
-#~ "Vragen over Huismus: installeren, overstappen, hoe iets werkt. Advies "
-#~ "over belasting of je eigen situatie geeft de maker niet; kijk daarvoor "
-#~ "bij <a href=\"%(guides_index_url)s\">Uitleg</a> of vraag je boekhouder."
-#~ msgstr ""
-#~ "Vragen over Huismus: installeren, overstappen, hoe iets werkt. Advies "
-#~ "over belasting of je eigen situatie geeft de maker niet; kijk daarvoor "
-#~ "bij <a href=\"%(guides_index_url)s\">Uitleg</a> of vraag je boekhouder."
 
 #~ msgid "bijschrijving"
 #~ msgstr "bijschrijving"

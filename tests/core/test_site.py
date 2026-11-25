@@ -242,6 +242,27 @@ def test_functies_and_the_home_page_show_the_whole_list_with_a_check_or_later(ou
     assert "Verwacht in" not in features and "Expected in" not in features
 
 
+@pytest.mark.parametrize("language", help.LANGUAGES)
+def test_the_roadmap_on_functies_says_the_same_as_the_list(out, language):
+    """The roadmap at the top of Functies: per group one block for every feature
+    that works now, and the name of every feature that comes later."""
+    from django.utils.html import escape
+
+    from huismus.core import site_features
+
+    page = (out / site.features_url(language).strip("/") / "index.html").read_text()
+    roadmap = page.split('<section class="roadmap"', 1)[1].split("</section>", 1)[0]
+    now, _later = site_features.counts()
+    assert roadmap.count("<i title=") == now
+    with translation.override(language):
+        for _group, _done, later in site_features.roadmap():
+            for feature in later:
+                assert f"<li>{escape(str(feature.name))}</li>" in roadmap, feature.name
+    for number in range(1, len(site_features.FEATURES) + 1):
+        assert f'href="#onderdeel-{number}"' in roadmap
+        assert f'id="onderdeel-{number}"' in page
+
+
 def test_every_help_link_of_a_feature_is_a_help_page():
     from huismus.core import site_features
 
@@ -431,9 +452,18 @@ def test_the_films_are_on_the_dutch_home_page_and_the_receipts_help(out):
     )
 
 
-def test_the_english_pages_have_no_film_while_the_films_are_dutch(out):
+def test_the_english_home_page_has_the_english_tour_and_no_other_film(out):
+    """The tour exists in English too (2026-11-25); the receipts film is
+    Dutch only, so no other English page shows a film."""
+    home = (out / "en" / "index.html").read_text()
+    (video,) = re.findall(r"<video [^>]*>", home)
+    assert 'poster="/beelden/film-rondleiding.en.webp"' in video
+    assert '<source src="/beelden/film-rondleiding.en.mp4" type="video/mp4">' in home
+    assert 'srclang="en" label="English" src="/beelden/film-rondleiding.en.vtt"' in home
+    assert ".nl." not in home[home.index("<video") : home.index("</video>")]
     for page in (out / "en").rglob("index.html"):
-        assert "<video" not in page.read_text(), page
+        if page != out / "en" / "index.html":
+            assert "<video" not in page.read_text(), page
 
 
 def test_a_film_is_small_enough_for_a_phone_on_the_road():

@@ -1,10 +1,10 @@
-{% load i18n %}{% comment %}A film from docs/site/. name, label (what a screen reader calls it), caption (optional, under it), captions (True for a film with a voice: its words as a text track, shown from the start), sharp_from (a width in px: from there the browser takes the sharp film, ….hd.mp4; a phone keeps the small one). Nothing plays or loads until the visitor presses play: only the still is fetched. A film has a sound track only once the owner has heard it (core.site.FILMS_WITH_VOICE). Dutch only, so only on Dutch pages (core.site.FILMS).{% endcomment %}
+{% load i18n %}{% comment %}A film from docs/site/. name, label (what a screen reader calls it), caption (optional, under it), captions (True for a film with a voice: its words as a text track, shown from the start), sharp_from (a width in px: from there the browser takes the sharp film, ….hd.mp4; a phone keeps the small one). Nothing plays or loads until the visitor presses play: only the still is fetched. A film has a sound track only once the owner has heard it (core.site.FILMS_WITH_VOICE). A page shows a film in its own language, if it exists in it (core.site.FILMS).{% endcomment %}{% get_current_language as lang %}
 <figure class="film">
-    <video controls preload="none" playsinline poster="/beelden/film-{{ name }}.nl.webp" width="1280" height="720" aria-label="{{ label }}">
-        {% if sharp_from %}<source src="/beelden/film-{{ name }}.nl.hd.mp4" type="video/mp4" media="(min-width: {{ sharp_from }}px)">{% endif %}
-        <source src="/beelden/film-{{ name }}.nl.mp4" type="video/mp4">
-        {% if captions %}<track kind="captions" srclang="nl" label="Nederlands" src="/beelden/film-{{ name }}.nl.vtt" default>{% endif %}
-        <p>{% translate "Je browser speelt deze film niet af." %} <a href="/beelden/film-{{ name }}.nl.mp4">{% translate "Download de film" %}</a></p>
+    <video controls preload="none" playsinline poster="/beelden/film-{{ name }}.{{ lang }}.webp" width="1280" height="720" aria-label="{{ label }}">
+        {% if sharp_from %}<source src="/beelden/film-{{ name }}.{{ lang }}.hd.mp4" type="video/mp4" media="(min-width: {{ sharp_from }}px)">{% endif %}
+        <source src="/beelden/film-{{ name }}.{{ lang }}.mp4" type="video/mp4">
+        {% if captions %}<track kind="captions" srclang="{{ lang }}" label="{% if lang == 'en' %}English{% else %}Nederlands{% endif %}" src="/beelden/film-{{ name }}.{{ lang }}.vtt" default>{% endif %}
+        <p>{% translate "Je browser speelt deze film niet af." %} <a href="/beelden/film-{{ name }}.{{ lang }}.mp4">{% translate "Download de film" %}</a></p>
     </video>
     {% if caption %}<figcaption>{{ caption }}</figcaption>{% endif %}
 </figure>
