@@ -29,9 +29,9 @@ het herontwerp hieronder (huismus-intern/besluiten.md, 2026-11-18).
 | Blok | Nu |
 |---|---|
 | Kop van de pagina | blijft staan bij scrollen, half doorzichtig; taalkeuze zonder vlag |
-| Kop van de homepage | gecentreerd, één kolom; de kop groter (tot 88 px), de vier punten als één regel met vinkjes |
+| Kop van de homepage | sinds 25 november een petrol kaart (`ronde-9/kop.md`): links de tekst en de knoppen, rechts de meubelmaker, met een kaartje uit de app; onder 900 px de foto boven en de tekst eronder. Eronder "Eerst rondkijken?" en de vier punten als één regel met vinkjes |
 | Het overzicht | groot op een petrol vlak (tot 1120 px breed), onderaan afgesneden; op de telefoon het telefoonscherm |
-| Voor wie | de vijf foto's samen, de meubelmaker over de hele breedte, zonder bijschrift; de twee zinnen over de KOR als tekst |
+| Voor wie | vier foto's op één rij (telefoon: twee bij twee), zonder bijschrift; de meubelmaker staat sinds 25 november in de kop; de twee zinnen over de KOR als tekst |
 | Film (19 november, alleen Nederlands) | tussen "Voor wie" en "Overstappen": de kicker "Film", de kop "Huismus in één minuut" en de overzichtsfilm, gecentreerd, hooguit 960 px breed; altijd donker, zoals het deelplaatje; speelt pas als je op afspelen drukt. De bonnetjesfilm staat boven het hulpstuk "Bonnetjes onderweg" |
 | Overstappen | de petrol band zonder foto; links tekst en de drie stappen, rechts de animatie |
 | Van jou | zonder wit vel; de kaart met schakelaars als object |
