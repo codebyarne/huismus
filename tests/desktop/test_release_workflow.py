@@ -22,7 +22,8 @@ MAC_WINDOW_TEST = WORKFLOW.split("\n  macos-window-test:\n", 1)[1].split(
 WINDOWS_WINDOW_TEST = WORKFLOW.split("\n  windows-window-test:\n", 1)[1].split("\n  publish:\n", 1)[
     0
 ]
-PUBLISH_JOB = WORKFLOW.split("\n  publish:\n", 1)[1]
+PUBLISH_JOB = WORKFLOW.split("\n  publish:\n", 1)[1].split("\n  store:\n", 1)[0]
+STORE_JOB = WORKFLOW.split("\n  store:\n", 1)[1]
 
 
 def _asset(platform: str, monkeypatch) -> str:
@@ -44,7 +45,7 @@ def test_it_runs_on_a_version_tag_and_by_hand_as_a_trial():
 def test_a_trial_builds_and_tests_both_apps_and_publishes_nothing():
     # The repository is public, so the Mac's minutes cost nothing either
     # (2026-11-13; before, a trial built Windows only).
-    for job in (DOCKER_JOB, PUBLISH_JOB):
+    for job in (DOCKER_JOB, PUBLISH_JOB, STORE_JOB):
         assert "if: github.event_name == 'push'\n" in job
     for job in (MAC_JOB, WINDOWS_JOB, MAC_WINDOW_TEST, WINDOWS_WINDOW_TEST):
         assert "if: github.event_name" not in job.split("steps:", 1)[0]
@@ -162,8 +163,8 @@ def test_the_publish_job_downloads_only_the_two_apps():
 
 
 def test_the_store_package_is_built_and_installed_but_not_on_the_release():
-    """The Microsoft Store version (desktop/msix.py) goes to Partner Center
-    by hand; the GitHub release keeps the two files the updates look for."""
+    """The Microsoft Store version (desktop/msix.py) goes to Partner Center,
+    not on the GitHub release: that keeps the two files the updates look for."""
     assert "./scripts/build-msix.sh" in WINDOWS_JOB
     assert "Add-AppxPackage" in WINDOWS_JOB and "--check" in WINDOWS_JOB
     assert "name: windows-store" in WINDOWS_JOB
@@ -174,3 +175,29 @@ def test_the_store_identity_comes_from_repository_secrets():
     # The publisher's display name is a person's name (CLAUDE.md, "Privé").
     for name in ("MSIX_IDENTITY_NAME", "MSIX_PUBLISHER", "MSIX_PUBLISHER_DISPLAY_NAME"):
         assert f"{name}: ${{{{ secrets.{name} }}}}" in WINDOWS_JOB
+
+
+def test_the_store_gets_the_package_once_the_release_is_out():
+    """The store job sends the package for certification only after publish,
+    so the Store never gets a version the GitHub release doesn't have, and
+    never on a trial by hand."""
+    assert "needs: [windows-app, publish]" in STORE_JOB
+    assert "name: windows-store" in STORE_JOB
+    assert "msstore publish" in STORE_JOB and "--appId $env:STORE_ID" in STORE_JOB
+    assert "STORE_ID: 9NKWHBHSFMHN" in STORE_JOB
+
+
+def test_the_partner_center_credentials_come_from_repository_secrets():
+    """Only through the environment, never expanded into a command line by
+    the workflow, and without them the job warns instead of failing."""
+    for name in (
+        "PARTNER_CENTER_TENANT_ID",
+        "PARTNER_CENTER_SELLER_ID",
+        "PARTNER_CENTER_CLIENT_ID",
+        "PARTNER_CENTER_CLIENT_SECRET",
+    ):
+        assert f"{name}: ${{{{ secrets.{name} }}}}" in STORE_JOB
+        assert f"--{name}" not in STORE_JOB
+    run_lines = [line for line in STORE_JOB.splitlines() if "msstore" in line]
+    assert all("secrets." not in line for line in run_lines)
+    assert "::warning::" in STORE_JOB

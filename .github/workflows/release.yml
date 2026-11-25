@@ -503,3 +503,53 @@ jobs:
           name: catalogs
           path: catalogs
           retention-days: 90
+
+  store:
+    # The Store version goes to Partner Center once the release is out
+    # (docs/desktop.md, "Microsoft Store"): msstore makes a new submission
+    # from the last published one, uploads this version's package and sends
+    # it for certification; after that the Store updates its users. The
+    # credentials are an Entra application with the Manager role in Partner
+    # Center, in four repository secrets. Without them the job only warns,
+    # and the package waits as the windows-store artifact for a submission
+    # by hand.
+    if: github.event_name == 'push'
+    needs: [windows-app, publish]
+    runs-on: windows-2022
+    env:
+      PARTNER_CENTER_TENANT_ID: ${{ secrets.PARTNER_CENTER_TENANT_ID }}
+      PARTNER_CENTER_SELLER_ID: ${{ secrets.PARTNER_CENTER_SELLER_ID }}
+      PARTNER_CENTER_CLIENT_ID: ${{ secrets.PARTNER_CENTER_CLIENT_ID }}
+      PARTNER_CENTER_CLIENT_SECRET: ${{ secrets.PARTNER_CENTER_CLIENT_SECRET }}
+      STORE_ID: 9NKWHBHSFMHN
+    steps:
+      - name: Are the Partner Center credentials there?
+        id: credentials
+        shell: bash
+        run: |
+          if [ -n "$PARTNER_CENTER_TENANT_ID" ] && [ -n "$PARTNER_CENTER_SELLER_ID" ] \
+              && [ -n "$PARTNER_CENTER_CLIENT_ID" ] && [ -n "$PARTNER_CENTER_CLIENT_SECRET" ]; then
+              echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+              echo "::warning::No Partner Center credentials: submit the windows-store artifact by hand (docs/desktop.md, \"Microsoft Store\")."
+          fi
+
+      - uses: actions/download-artifact@v4
+        if: steps.credentials.outputs.present == 'true'
+        with:
+          name: windows-store
+          path: store
+
+      - uses: microsoft/microsoft-store-apppublisher@v1.1
+        if: steps.credentials.outputs.present == 'true'
+
+      - name: Submit the package to the Microsoft Store
+        if: steps.credentials.outputs.present == 'true'
+        shell: pwsh
+        run: |
+          $version = "$env:GITHUB_REF_NAME".TrimStart('v')
+          $package = "store\Huismus-$version-windows.msix"
+          msstore reconfigure --tenantId $env:PARTNER_CENTER_TENANT_ID --sellerId $env:PARTNER_CENTER_SELLER_ID --clientId $env:PARTNER_CENTER_CLIENT_ID --clientSecret $env:PARTNER_CENTER_CLIENT_SECRET
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          msstore publish $package --inputFile $package --appId $env:STORE_ID
+          if ($LASTEXITCODE -ne 0) { exit 1 }
