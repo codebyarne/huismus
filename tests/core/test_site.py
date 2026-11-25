@@ -431,9 +431,18 @@ def test_the_films_are_on_the_dutch_home_page_and_the_receipts_help(out):
     )
 
 
-def test_the_english_pages_have_no_film_while_the_films_are_dutch(out):
+def test_the_english_home_page_has_the_english_tour_and_no_other_film(out):
+    """The tour exists in English too (2026-11-25); the receipts film is
+    Dutch only, so no other English page shows a film."""
+    home = (out / "en" / "index.html").read_text()
+    (video,) = re.findall(r"<video [^>]*>", home)
+    assert 'poster="/beelden/film-rondleiding.en.webp"' in video
+    assert '<source src="/beelden/film-rondleiding.en.mp4" type="video/mp4">' in home
+    assert 'srclang="en" label="English" src="/beelden/film-rondleiding.en.vtt"' in home
+    assert ".nl." not in home[home.index("<video") : home.index("</video>")]
     for page in (out / "en").rglob("index.html"):
-        assert "<video" not in page.read_text(), page
+        if page != out / "en" / "index.html":
+            assert "<video" not in page.read_text(), page
 
 
 def test_a_film_is_small_enough_for_a_phone_on_the_road():

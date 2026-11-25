@@ -77,14 +77,13 @@ MEDIA_DIR = Path(settings.BASE_DIR) / "docs" / "site"
 # The site is always light, whatever the visitor's system is (the owner,
 # 2026-11-19, huismus-intern/besluiten.md).
 SITE_SCHEMES = ("light",)
-# The films, each as film-<name>.nl.mp4 with the still it shows until you
-# press play (….webp). Their titles and the app in them are Dutch, so only the
-# Dutch pages show them, until there is an English film
-# (huismus-intern/besluiten.md, 2026-11-18). "rondleiding" is the tour of the
-# app with a voice (docs/design/films/rondleiding.md); "bonnetjes" comes from
-# scripts/promo-film.sh site.
-FILMS = ("rondleiding", "bonnetjes")
-FILM_LANGUAGE = "nl"
+# The films, each as film-<name>.<language>.mp4 with the still it shows until
+# you press play (….webp), in the languages it exists in: a page shows a film
+# only in its own language (huismus-intern/besluiten.md, 2026-11-18).
+# "rondleiding" is the tour of the app with a voice, in Dutch and in English
+# since 2026-11-25 (docs/design/films/rondleiding.md); "bonnetjes" comes from
+# scripts/promo-film.sh site and is Dutch only.
+FILMS = {"rondleiding": ("nl", "en"), "bonnetjes": ("nl",)}
 # The films with a voice and music, which the owner has heard
 # (huismus-intern/besluiten.md, 2026-11-19): each has its words as captions
 # too (….vtt). Every other film on the site has no sound track.
@@ -227,8 +226,9 @@ def media_files(schemes: tuple[str, ...] = ("light", "dark")) -> list[Path]:
 
 def film_files() -> list[Path]:
     return [
-        MEDIA_DIR / f"film-{name}.{FILM_LANGUAGE}.{kind}"
-        for name in FILMS
+        MEDIA_DIR / f"film-{name}.{language}.{kind}"
+        for name, languages in FILMS.items()
+        for language in languages
         for kind in (
             "mp4",
             "webp",
@@ -335,7 +335,7 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
                 "help": _help_links(language),
                 "features": _features(),
                 "shot": _shot_sizes(),
-                "film": language == FILM_LANGUAGE,
+                "film": language in FILMS["rondleiding"],
                 "film_sharp_from": FILM_SHARP_FROM,
             },
         ),
@@ -418,7 +418,11 @@ def _pages(language: str, version: str) -> dict[str, tuple[str, dict]]:
                 "switch_url": help_url(other, slug),
                 "page": page,
                 "summary": _short(help.summary(slug, language)),
-                "film": FILM_WITH_HELP.get(slug) if language == FILM_LANGUAGE else None,
+                "film": (
+                    FILM_WITH_HELP[slug]
+                    if slug in FILM_WITH_HELP and language in FILMS[FILM_WITH_HELP[slug]]
+                    else None
+                ),
             },
         )
     pages[guides_url(language)] = (
