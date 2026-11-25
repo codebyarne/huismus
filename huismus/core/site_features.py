@@ -62,7 +62,7 @@ FEATURES = (
                 _("Betaalherinnering"),
                 _("Bij een factuur die te laat is, met de factuur als bijlage."),
             ),
-            _later(_("Periodieke facturen"), _("Zoals elke maand dezelfde.")),
+            Feature(_("Periodieke facturen"), _("Zoals elke maand dezelfde."), "facturen"),
             _later(_("Uren bijhouden"), _("En daar een factuur van maken.")),
             _later(_("Artikelen"), _("Vaste regels met prijs en btw-tarief.")),
             _later(
@@ -167,9 +167,10 @@ FEATURES = (
                 ),
                 "overstappen",
             ),
-            _later(
+            Feature(
                 _("Auditfile voor je boekhouder"),
                 _("Het bestand dat boekhoudpakketten van boekhouders inlezen."),
+                "exporteren",
             ),
             _later(
                 _(

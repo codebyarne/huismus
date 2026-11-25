@@ -5,6 +5,40 @@ version, what you can do with it now. The newest is at the top.
 
 After a new version, a notice on the overview points you here.
 
+## 0.1.8, 25 November 2026
+
+- **Recurring invoices.** Do you send the same invoice every month, quarter
+  or year? Open an issued invoice and click **Make recurring…**. On the day
+  you choose a draft is ready, under **To do** on the overview. Huismus never
+  issues it by itself: you check it and click **Issue…**. Under **Invoices**
+  › **Recurring** you change or stop what comes back. See
+  [Invoices](facturen.en.md#recurring).
+- **A receipt onto an expense you already have.** Is the expense in Huismus
+  already and does the receipt come later? Click **Choose existing expense**
+  next to the receipt, find the expense and click **Choose**. Chose the wrong
+  one? Click **Undo** in the notice. See
+  [Receipts](bonnetjes.en.md#making-an-expense-of-a-receipt).
+- **An audit file for your accountant.** Your export now holds an audit file
+  (XAF 4.0) per year, the file many accounting programs read. See
+  [Exporting](exporteren.en.md#the-audit-file).
+- **Take what you don't use out of the menu.** Do you send no quotes, or
+  don't you use **Expenses** or **Bank**? Turn them off at **Settings ›
+  Menu**. Anything with something in it stays in the menu.
+- **Your AI assistant can do more.** A connected assistant now also reads
+  what is under **To do**, the year overview and what is under **Bank**. It
+  can update customers and expenses, turn a quote into a draft invoice and
+  attach a receipt to an expense. Recording a payment, sending a reminder or
+  deleting something it only does when you approve. See
+  [AI assistants](ai-assistenten.en.md#what-an-assistant-can-do).
+- **Windows: Huismus is in the Microsoft Store.** Install Huismus from there
+  and Windows doesn't warn, and the Store keeps the app up to date. Already
+  using the installer? You can switch; your records stay. See
+  [The desktop app](desktop-app.en.md#from-the-installer-to-the-microsoft-store).
+- **On the site** there are now guides on invoices, VAT and the
+  small business scheme (KOR), each with its source: [mijnhuismus.nl/en/guides](https://mijnhuismus.nl/en/guides/).
+  And examples of an invoice, a quote and a timesheet to download:
+  [mijnhuismus.nl/en/examples](https://mijnhuismus.nl/en/examples/).
+
 ## 0.1.7, 22 November 2026
 
 - **Import your bank statement.** Under **Bank** you import a statement as
