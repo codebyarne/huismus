@@ -271,12 +271,36 @@ via zijn alias, binnen het pakket. Het pakket staat 30 dagen als artifact
 `windows-store` bij de run. Het komt niet op de GitHub-release: de updates
 van de installer zoeken daar alleen de `.exe` en de `.dmg`.
 
-**Inzenden** gaat met de hand in Partner Center: Start submission, het
-`.msix` uit het artifact uploaden, en bij `unvirtualizedResources` deze reden:
+**Inzenden** doet de job `store`, na `publish`: de
+[Microsoft Store Developer CLI](https://learn.microsoft.com/windows/apps/publish/msstore-dev-cli/github-actions)
+(`msstore publish`) maakt een nieuwe inzending als kopie van de laatst
+gepubliceerde, zet het pakket erin en stuurt hem naar de keuring. Daarna werkt
+de Store zijn gebruikers bij. Elke versie moet hoger zijn dan de vorige
+inzending. Of Microsoft na de keuring zelf publiceert of op **Publish now**
+wacht, neemt de inzending over van de vorige (Partner Center, inzending →
+**Submission options**).
+
+De job logt in met een Entra-applicatie met de rol **Manager** in Partner
+Center. Eén keer opzetten, in Partner Center (tandwiel → Account settings):
+
+1. **Tenants** → **Create Microsoft Entra ID** (gratis), als er nog geen
+   tenant is.
+2. **User management** → **Microsoft Entra applications** → **Create
+   Microsoft Entra application**, rol **Manager**. Daar staan de tenant-ID
+   en de client-ID; **Add new key** geeft het geheim, één keer zichtbaar.
+3. De seller-ID staat bij **Legal info** (of **Identifiers**).
+4. Zet ze als secrets in de repository, elk met `gh secret set <naam>`
+   (dat vraagt de waarde, die dan niet in je shellgeschiedenis komt):
+   `PARTNER_CENTER_TENANT_ID`, `PARTNER_CENTER_SELLER_ID`,
+   `PARTNER_CENTER_CLIENT_ID` en `PARTNER_CENTER_CLIENT_SECRET`.
+
+Een sleutel verloopt; zet bij het aanmaken een herinnering. Ontbreken de
+secrets, dan waarschuwt de job alleen en zend je met de hand in: Start
+submission, het `.msix` uit het artifact uploaden, en bij
+`unvirtualizedResources` deze reden:
 "The app stores the user's own bookkeeping records in %APPDATA%\Huismus, the
 same place as our installer version, so users who move to the Store version
-keep their data, and uninstalling never deletes their records." Elke versie
-moet hoger zijn dan de vorige inzending.
+keep their data, and uninstalling never deletes their records."
 
 Vanuit de broncode, zonder in te pakken:
 
