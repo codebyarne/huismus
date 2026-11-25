@@ -290,6 +290,7 @@ def _features() -> dict:
     now, later = site_features.counts()
     return {
         "groups": site_features.FEATURES,
+        "roadmap": site_features.roadmap(),
         "now_count": now,
         "later_count": later,
         "maybe": site_features.MAYBE,
