@@ -500,3 +500,6 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(68px + var(--s-4)); }
 .film-block { display: flex; flex-direction: column; align-items: center; text-align: center; }
 .film-block .section-head { align-items: center; }
 .film-block .film { width: 100%; max-width: 960px; }
+/* Op Windows on Installeren: the installer folded away under the Store. */
+#windows summary { cursor: pointer; color: var(--primary); }
+#windows .installer-steps { margin-top: var(--s-4); }

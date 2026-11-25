@@ -109,8 +109,8 @@ def test_the_download_buttons_always_get_the_newest_release(out, language):
     version in the address, so it never points at an old release."""
     for address in (site.home_url(language), site.install_url(language)):
         links = _read(out, address).links
-        for name in site.PLATFORMS:
-            assert site.download_page_url(language, name) in links
+        assert site.download_page_url(language, "mac") in links
+        assert site.STORE_URL in links
     for name, platform in site.PLATFORMS.items():
         page = out / site.download_page_url(language, name).strip("/") / "index.html"
         html = page.read_text(encoding="utf-8")
@@ -547,3 +547,21 @@ def test_the_home_page_tells_a_search_engine_what_the_app_is(out, language):
     assert data["@type"] == "SoftwareApplication" and data["isAccessibleForFree"] is True
     assert data["description"] and data["sameAs"] == site.REPOSITORY
     assert data["downloadUrl"].endswith("#downloaden")
+
+
+@pytest.mark.parametrize("language", help.LANGUAGES)
+def test_windows_goes_to_the_store_and_the_installer_stays_reachable(out, language):
+    """The Windows button leads to the Microsoft Store; Installeren keeps the
+    unsigned installer behind a details element, and the installer's own
+    page points back to the Store (huismus-intern/besluiten.md, 2026-11-25)."""
+    install = (out / site.install_url(language).strip("/") / "index.html").read_text(
+        encoding="utf-8"
+    )
+    windows = install.split('id="windows"', 1)[1].split("</section>", 1)[0]
+    assert site.STORE_URL in windows
+    details = windows.split("<details", 1)[1].split("</details>", 1)[0]
+    assert site.download_page_url(language, "windows") in details
+    assert "how-to" in details
+    page = out / site.download_page_url(language, "windows").strip("/") / "index.html"
+    html = page.read_text(encoding="utf-8")
+    assert site.STORE_URL in html and "<details" not in html
