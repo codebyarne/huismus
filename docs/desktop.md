@@ -364,8 +364,9 @@ Nagelezen op 2026-11-22 in hun eigen documentatie.
 - Een app uit de Microsoft Store heeft geen manifest nodig: winget
   installeert hem met zijn Store-ID uit de bron `msstore`
   ([winget install](https://learn.microsoft.com/windows/package-manager/winget/install)),
-  voor Huismus `winget install 9NKWHBHSFMHN -s msstore` zodra de Store-pagina
-  er is.
+  voor Huismus `winget install 9NKWHBHSFMHN -s msstore`. Dat werkt alleen in
+  de markten waar de Store-versie staat (nu Nederland), dus het staat niet in
+  de hulp of op de site (#311).
 
 **Homebrew**, de officiële catalogus `homebrew/cask`
 ([Acceptable Casks](https://docs.brew.sh/Acceptable-Casks),

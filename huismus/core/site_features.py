@@ -184,7 +184,7 @@ FEATURES = (
         (
             Feature(
                 _("Mac en Windows, werkt zichzelf bij"),
-                _("Downloaden, installeren, beginnen."),
+                _("Downloaden, installeren, beginnen. Op Windows uit de Microsoft Store."),
                 "desktop-app",
             ),
             Feature(
@@ -210,7 +210,6 @@ FEATURES = (
                 _("Huismus op je telefoon via je eigen wifi"),
                 _("Ook als Huismus op je Mac of pc staat."),
             ),
-            _later(_("Huismus in de Microsoft Store")),
         ),
     ),
 )

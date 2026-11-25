@@ -54,6 +54,9 @@ TOPICS = tuple(slug for slug in help.TOPICS if slug != help.FEEDBACK)
 LATEST_ASSETS = {"darwin": "Huismus-macos.dmg", "win32": "Huismus-windows.exe"}
 # The platforms of the download pages, by their address.
 PLATFORMS = {"mac": "darwin", "windows": "win32"}
+
+# Huismus in the Microsoft Store (docs/desktop.md, "Microsoft Store").
+STORE_URL = "https://apps.microsoft.com/detail/9NKWHBHSFMHN"
 # Opens System Settings › Privacy & Security on a Mac, where "Toch openen" is
 # the first time you open the unsigned app. Elsewhere the link does nothing.
 MAC_PRIVACY_SETTINGS = "x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension"
@@ -475,7 +478,12 @@ def _links(language: str) -> dict[str, str]:
     return {
         "language": language,
         "mac_url": download_page_url(language, "mac"),
-        "windows_url": download_page_url(language, "windows"),
+        # The Windows button goes to the Microsoft Store; the unsigned
+        # installer has its own page, linked from the Windows steps
+        # (huismus-intern/besluiten.md, 2026-11-25).
+        "windows_url": STORE_URL,
+        "store_url": STORE_URL,
+        "windows_installer_url": download_page_url(language, "windows"),
         "home_url": home_url(language),
         "switching_url": switching_url(language),
         "features_url": features_url(language),

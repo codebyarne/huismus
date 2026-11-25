@@ -1,12 +1,17 @@
-{% load i18n %}{% comment %}How to open the app the first time on Windows: on Installeren and the Windows download page.{% endcomment %}
+{% load i18n %}{% comment %}Windows on Installeren (store=True): the Microsoft Store first, the unsigned installer folded away. On the installer's own download page: its steps open, with a pointer to the Store (huismus-intern/besluiten.md, 2026-11-25).{% endcomment %}
 <section class="card card-pad stack" id="windows">
     <h2>{% translate "Op Windows" %}</h2>
-    <ol class="how-to">
-        <li><span>{% translate "Open het gedownloade installatiebestand." %}</span></li>
-        <li><span>{% blocktranslate %}Windows toont "Windows heeft uw pc beschermd": klik op <strong>Meer informatie</strong>.{% endblocktranslate %}</span></li>
-        <li><span>{% blocktranslate %}Klik op <strong>Toch uitvoeren</strong>.{% endblocktranslate %}</span></li>
-    </ol>
-    <p><strong>{% translate "Geen knop Toch uitvoeren, of fout 4551?" %}</strong> {% blocktranslate %}Dan blokkeert Smart App Control van Windows 11 de app, omdat hij niet ondertekend is. Zet Smart App Control uit: <strong>Windows-beveiliging › App- en browserbeheer › Instellingen voor Smart App Control › Uit</strong>, en open het bestand opnieuw.{% endblocktranslate %}</p>
-    <p class="small muted">{% translate "Laat Smart App Control uit zolang je Huismus gebruikt, anders blokkeert Windows de app weer. Je levert er wat bescherming mee in." %} <a href="{{ help.desktop_app }}">{% translate "Meer over de desktop-app" %} →</a></p>
+    {% if store %}
+    <p>{% blocktranslate %}Installeer Huismus uit de <a href="{{ store_url }}">Microsoft Store</a>. Windows waarschuwt dan niet, en de Store houdt de app bij.{% endblocktranslate %}</p>
+    <details>
+        <summary>{% translate "Liever de installer, zonder Store?" %}</summary>
+        <div class="stack installer-steps">
+            <p><a href="{{ windows_installer_url }}">{% translate "Download de installer" %} →</a></p>
+            {% include "site/_installer_steps.html" %}
+        </div>
+    </details>
+    {% else %}
+    <p>{% blocktranslate %}Liever geen waarschuwing van Windows? Haal Huismus uit de <a href="{{ store_url }}">Microsoft Store</a>.{% endblocktranslate %}</p>
+    {% include "site/_installer_steps.html" %}
+    {% endif %}
 </section>
-

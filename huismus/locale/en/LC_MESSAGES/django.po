@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-23 10:03+0100\n"
+"POT-Creation-Date: 2026-11-25 08:53+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2284,8 +2284,8 @@ msgid "Importeren uit andere pakketten en uit Excel"
 msgstr "Import from other packages and from Excel"
 
 msgid ""
-"Met het sjabloon, en een handleiding voor Rompslomp, Tellow, e-Boekhouden."
-"nl, Jortt en Excel."
+"Met het sjabloon, en een handleiding voor Rompslomp, Tellow, e-"
+"Boekhouden.nl, Jortt en Excel."
 msgstr ""
 "With the template, and a guide for Rompslomp, Tellow, e-Boekhouden.nl, Jortt "
 "and Excel."
@@ -2309,8 +2309,8 @@ msgstr "The app"
 msgid "Mac en Windows, werkt zichzelf bij"
 msgstr "Mac and Windows, updates itself"
 
-msgid "Downloaden, installeren, beginnen."
-msgstr "Download, install, start."
+msgid "Downloaden, installeren, beginnen. Op Windows uit de Microsoft Store."
+msgstr "Download, install, start. On Windows from the Microsoft Store."
 
 msgid "Ook op een eigen server, en dan ook op je telefoon"
 msgstr "Also on your own server, and then on your phone too"
@@ -2346,9 +2346,6 @@ msgstr "Huismus on your phone over your own Wi-Fi"
 
 msgid "Ook als Huismus op je Mac of pc staat."
 msgstr "Also when Huismus is on your Mac or PC."
-
-msgid "Huismus in de Microsoft Store"
-msgstr "Huismus in the Microsoft Store"
 
 msgid "Een betaallink op je factuur"
 msgstr "A payment link on your invoice"
@@ -2601,7 +2598,6 @@ msgstr "High rate"
 msgid "Laag tarief"
 msgstr "Low rate"
 
-#, python-format
 msgid "0% of niet bij jou belast"
 msgstr "0% or not taxed with you"
 
@@ -2650,7 +2646,6 @@ msgstr "Revenue 1a high rate"
 msgid "Omzet 1b laag tarief"
 msgstr "Revenue 1b low rate"
 
-#, python-format
 msgid "Omzet 1e 0% of niet bij jou belast"
 msgstr "Revenue 1e 0% or not taxed with you"
 
@@ -3320,7 +3315,6 @@ msgstr "Fill in the VAT amount. No VAT paid? Then fill in 0."
 msgid "Kies het btw-tarief."
 msgstr "Choose the VAT rate."
 
-#, python-format
 msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
 msgstr "With 0% or no VAT, the VAT amount is € 0.00."
 
@@ -3395,7 +3389,6 @@ msgstr "Saved. Huismus picks up new receipts from %(place)s by itself."
 msgid "Bonnetje verwijderd."
 msgstr "Receipt deleted."
 
-#, python-format
 msgid "0% of geen btw"
 msgstr "0% or no VAT"
 
@@ -4328,7 +4321,6 @@ msgstr "Supplies/services subject to the high VAT rate"
 msgid "Leveringen/diensten belast met laag tarief"
 msgstr "Supplies/services subject to the low VAT rate"
 
-#, python-format
 msgid "Leveringen/diensten belast met 0% of niet bij u belast"
 msgstr "Supplies/services taxed at 0% or not taxed to you"
 
@@ -8227,6 +8219,28 @@ msgstr "Confirm with <strong>Open Anyway</strong> and your password."
 msgid "Op Windows"
 msgstr "On Windows"
 
+#, python-format
+msgid ""
+"Installeer Huismus uit de <a href=\"%(store_url)s\">Microsoft Store</a>. "
+"Windows waarschuwt dan niet, en de Store houdt de app bij."
+msgstr ""
+"Install Huismus from the <a href=\"%(store_url)s\">Microsoft Store</a>. "
+"Windows won't warn you, and the Store keeps the app up to date."
+
+msgid "Liever de installer, zonder Store?"
+msgstr "Prefer the installer, without the Store?"
+
+msgid "Download de installer"
+msgstr "Download the installer"
+
+#, python-format
+msgid ""
+"Liever geen waarschuwing van Windows? Haal Huismus uit de <a "
+"href=\"%(store_url)s\">Microsoft Store</a>."
+msgstr ""
+"Prefer no warning from Windows? Get Huismus from the <a "
+"href=\"%(store_url)s\">Microsoft Store</a>."
+
 msgid "Open het gedownloade installatiebestand."
 msgstr "Open the downloaded installer."
 
@@ -9642,6 +9656,9 @@ msgid ""
 msgstr ""
 "Huismus is made in the Netherlands. You can read about its maker and their "
 "other work on <a href=\"https://www.arnekrijnsen.com\">arnekrijnsen.com</a>."
+
+#~ msgid "Huismus in de Microsoft Store"
+#~ msgstr "Huismus in the Microsoft Store"
 
 #~ msgid ""
 #~ "Download je facturen, offertes, klanten en uitgaven als CSV, met de pdf's "
