@@ -97,6 +97,6 @@ jobs:
           msstore reconfigure --tenantId $env:PARTNER_CENTER_TENANT_ID --sellerId $env:PARTNER_CENTER_SELLER_ID --clientId $env:PARTNER_CENTER_CLIENT_ID --clientSecret $env:PARTNER_CENTER_CLIENT_SECRET
           if ($LASTEXITCODE -ne 0) { exit 1 }
           # msstore takes the .msix itself as its path: it then publishes
-          # that package (MSIXProjectPublisher); there is no --inputFile.
+          # that package (MSIXProjectPublisher).
           msstore publish $package --appId $env:STORE_ID
           if ($LASTEXITCODE -ne 0) { exit 1 }
