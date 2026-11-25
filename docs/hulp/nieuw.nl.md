@@ -5,6 +5,41 @@ wat je er nu mee kunt. De nieuwste staat bovenaan.
 
 Na een nieuwe versie wijst een melding op het overzicht je hierheen.
 
+## 0.1.8, 25 november 2026
+
+- **Periodieke facturen.** Stuur je dezelfde factuur elke maand, elk kwartaal
+  of elk jaar? Open een uitgegeven factuur en klik op **Periodiek maken…**.
+  Op de dag die je kiest staat er een concept klaar, bij **Te doen** op het
+  overzicht. Huismus geeft het nooit zelf uit: je kijkt het na en klikt op
+  **Uitgeven…**. Onder **Facturen** › **Periodiek** wijzig of stop je wat
+  terugkomt. Zie [Facturen](facturen.nl.md#periodiek).
+- **Een bonnetje bij een uitgave die er al is.** Staat de uitgave al in
+  Huismus en komt het bonnetje later? Klik bij het bonnetje op **Kies
+  bestaande uitgave**, zoek de uitgave en klik op **Kiezen**. Verkeerd
+  gekozen? Klik in de melding op **Ongedaan maken**. Zie
+  [Bonnetjes](bonnetjes.nl.md#een-uitgave-maken-van-een-bonnetje).
+- **Een auditfile voor je boekhouder.** In je export zit nu per jaar een
+  auditfile (XAF 4.0), het bestand dat veel boekhoudprogramma's inlezen. Zie
+  [Exporteren](exporteren.nl.md#de-auditfile).
+- **Haal uit het menu wat je niet gebruikt.** Stuur je geen offertes, of
+  gebruik je **Uitgaven** of **Bank** niet? Zet ze uit bij **Instellingen ›
+  Menu**. Waar al iets in staat, blijft in het menu.
+- **Je AI-assistent kan meer.** Een gekoppelde assistent leest nu ook wat
+  onder **Te doen** staat, het jaaroverzicht en wat onder **Bank** staat. Hij
+  kan klanten en uitgaven bijwerken, een offerte omzetten naar een
+  conceptfactuur en een bonnetje aan een uitgave hangen. Een betaling
+  registreren, een herinnering sturen of iets verwijderen doet hij pas als jij
+  het goedkeurt. Zie
+  [AI-assistenten](ai-assistenten.nl.md#wat-een-assistent-kan).
+- **Windows: Huismus staat in de Microsoft Store.** Installeer je Huismus
+  daar, dan waarschuwt Windows niet en houdt de Store de app bij. Gebruik je
+  de installer al, dan kun je overstappen; je administratie blijft staan. Zie
+  [De desktop-app](desktop-app.nl.md#van-de-installer-naar-de-microsoft-store).
+- **Op de site** staat nu uitleg over facturen, btw en de
+  kleineondernemersregeling (KOR), elk met de bron erbij: [mijnhuismus.nl/uitleg](https://mijnhuismus.nl/uitleg/). En
+  voorbeelden van een factuur, een offerte en een urenstaat om te
+  downloaden: [mijnhuismus.nl/voorbeelden](https://mijnhuismus.nl/voorbeelden/).
+
 ## 0.1.7, 22 november 2026
 
 - **Je bankafschrift inlezen.** Onder **Bank** lees je een afschrift in als
