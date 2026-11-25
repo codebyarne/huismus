@@ -35,6 +35,28 @@ de eigenaar keurde beeld en geluid op 2026-11-25.
 Scène 5 tot en met 7 spelen in de administratie met btw (`demo_data --site --zonder-kor`),
 de rest in die met de KOR. Het bankafschrift is verzonnen, voor die administratie.
 
+## In het Engels
+
+Sinds 2026-11-25 staat dezelfde film in het Engels op de Engelse homepage: de app
+in het Engels, de labels in beeld en het slot in het Engels, dezelfde muziek.
+Roos spreekt ook de Engelse tekst in. Ze leest Huismus als "Heuys-mus", omdat ze de
+naam dan goed uitspreekt (gekozen door de eigenaar); in de ondertitels staat
+Huismus. De nepgegevens blijven Nederlands, zoals bij een Nederlandse zzp'er: het
+bonnetje, de categorieën, de omschrijvingen op het afschrift en de KOR-tekst.
+
+| # | Stem |
+|---|---|
+| 1 | Your invoices, your customers, your receipts. It's your bookkeeping! So why should it live with someone else? |
+| 2 | This is Huismus! Bookkeeping for freelancers, right on your own computer. |
+| 3 | At a glance you see what's still open, what you earned this year, and which quote is waiting for an answer. |
+| 4 | An invoice takes just a few clicks. Pick a customer, type what you did, and Huismus adds up the total. Issue it, and it gets a fixed number! |
+| 5 | Save photos of your receipts in a folder, even from your phone. Huismus picks them up, and you check them. |
+| 6 | Import your bank statement. Huismus puts every payment next to your invoices and expenses. |
+| 7 | Your whole year on one screen! Revenue, costs and profit. Charging VAT? Then the amounts for your return are ready every quarter. |
+| 8 | Coming from Moneybird, another package or Excel? Bring all your years with you! Huismus does a trial run first, and only saves when you say so. |
+| 9 | Huismus runs on your Mac, your PC, or your own server. Completely free! No subscription, and no account. And your data? It simply stays with you. |
+| 10 | Huismus. Your bookkeeping, on your own computer! |
+
 ## Opnieuw maken
 
 De film is niet met `scripts/promo-film.sh` gemaakt. Een script speelt de
@@ -48,4 +70,5 @@ Verandert een scherm uit de film, maak hem dan daar opnieuw en zet vier
 bestanden in `docs/site/`: `film-rondleiding.nl.mp4` (1280×720, onder de 3 MB,
 voor een telefoon), `film-rondleiding.nl.hd.mp4` (1920×1080, onder de 8 MB,
 voor een breed scherm), `film-rondleiding.nl.webp` (het stilstaande beeld) en
-`film-rondleiding.nl.vtt` (de ondertitels). Verandert de tekst, wijzig hem dan ook in de tabel hierboven.
+`film-rondleiding.nl.vtt` (de ondertitels); voor de Engelse film dezelfde vier met
+`.en.` (`FILM_LANG=en`, zie de README daar). Verandert de tekst, wijzig hem dan ook in de tabel hierboven.
