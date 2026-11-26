@@ -19,7 +19,10 @@ class Command(BaseCommand):
         parser.add_argument(
             "--history",
             action="store_true",
-            help="Een administratie van negen jaar (~80 facturen) in plaats van vijf documenten.",
+            help=(
+                "Een administratie van negen jaar (~130 facturen, met btw) "
+                "in plaats van vijf documenten."
+            ),
         )
         parser.add_argument(
             "--site",

@@ -114,11 +114,14 @@ def test_money_going_out_make_an_expense_undo_and_confirm(app, history, tmp_path
     bol = app.locator("#niet-herkend li", has_text="Bol.com")
     bol.get_by_role("link", name="Uitgave maken").click()
 
-    # Nieuwe uitgave, with what the bank knows; the demo uses the KOR.
+    # Nieuwe uitgave, with what the bank knows; the demo charges VAT, so
+    # the rate and the VAT on the receipt are the user's to fill in.
     expect(app.locator("h1")).to_have_text("Nieuwe uitgave")
     expect(app.locator("#uit-bankafschrift")).to_contain_text("Bol.com")
     expect(app.locator("input[name=supplier]")).to_have_value("Bol.com")
     expect(app.locator("input[name=lines-0-amount_cents]")).to_have_value("412,00")
+    app.locator("[name=lines-0-vat_info_cents]").fill("71,50")
+    app.locator("[name=lines-0-vat_rate]").select_option("21")
     app.get_by_role("button", name="Opslaan").click()
 
     # Back on Bank, on the same tab, and the line is under Geboekt.

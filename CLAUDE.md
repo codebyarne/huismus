@@ -20,7 +20,7 @@ uv run ruff check . && uv run ruff format --check .
 SECRET_KEY=dev DEBUG=true uv run python manage.py makemigrations --check
 uv run python manage.py makemessages -l nl -l en --no-location  # after adding UI strings
 uv run python manage.py compilemessages --ignore=.venv           # to see translations locally
-uv run python manage.py demo_data --yes --history  # lege database: 9 jaar nepdata (~80 facturen), voor handmatig kijken
+uv run python manage.py demo_data --yes --history  # lege database: 9 jaar nepdata (~130 facturen, met btw), voor handmatig kijken
 ./scripts/site-beelden.sh                    # schermafbeeldingen voor de site opnieuw maken (docs/site/)
 ./scripts/site-voorbeelden.sh                # voorbeelden voor de site opnieuw maken: factuur, offerte, urenstaat als Word, Excel en pdf (docs/site/voorbeelden/)
 ./scripts/promo-film.sh                      # promofilms (bonnetjes 29 s, overzicht 63 s met stem) naar ~/Downloads/huismus-films
