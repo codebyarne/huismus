@@ -80,3 +80,17 @@ def test_history_shows_every_kind_of_thing_huismus_keeps():
     rates = set(ExpenseLine.objects.values_list("vat_rate", flat=True))
     assert {"21", "9", "reverse_eu", "reverse_non_eu"} <= rates
     assert ExpenseLine.objects.values("expense").annotate(n=Count("pk")).filter(n__gt=1).exists()
+
+
+def test_the_mess_for_the_browser_tests_goes_on_top_and_adds_up():
+    from huismus.core.demo_messy import HTML, add_mess
+
+    create_history()
+    add_mess()
+
+    invoices = Document.objects.with_payment_totals().filter(kind="invoice", status="issued")
+    assert invoices.filter(lines__position=39).exists()
+    assert invoices.filter(total_cents__gt=100_000_000).exists()
+    assert invoices.filter(contact__company_name=HTML).exists()
+    late = [d for d in invoices if d.is_overdue]
+    assert len(late) > 15
