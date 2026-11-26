@@ -543,6 +543,8 @@ input[type="search"]::-webkit-search-cancel-button {
 .tab[aria-current="page"] .count, .tab[aria-selected="true"] .count { color: inherit; opacity: .75; }
 .toolbar { display: flex; align-items: center; gap: var(--s-2); flex-wrap: wrap; padding: var(--s-3) var(--s-4); border-bottom: 1px solid var(--border); }
 .toolbar .input-affix { flex: 1; min-width: 200px; max-width: 360px; }
+/* Een keuzelijst groeit mee met zijn langste optie (een lange categorienaam) en drukt dan het zoekveld zo smal dat de placeholder wegvalt. Daarom een grens; de lijst zelf toont de hele naam. */
+.toolbar .select { max-width: 10rem; text-overflow: ellipsis; }
 /* Op een telefoon krijgt het zoekveld een eigen regel, zodat de placeholder past; de keuzelijsten schuiven eronder. */
 @media (max-width: 560px) { .toolbar .input-affix { flex-basis: 100%; max-width: none; } }
 
