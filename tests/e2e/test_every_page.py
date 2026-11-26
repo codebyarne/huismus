@@ -79,6 +79,12 @@ def _pages():
         f"/facturen/{overdue.pk}/",
         f"/facturen/{overdue.pk}/herinnering/",
         f"/facturen/{issued.pk}/pdf/bekijken/",
+        # What the demo history has besides plain invoices: a credit note,
+        # one in English with VAT reverse charged, and one changed with
+        # "Toch bewerken".
+        f"/facturen/{_first(documents.filter(kind='credit_note'), 'credit note').pk}/",
+        f"/facturen/{_first(documents.filter(language='en', kind='invoice'), 'English').pk}/",
+        f"/facturen/{_first(documents.exclude(reopened_at=None), 'reopened invoice').pk}/",
         "/facturen/periodiek/",
         *(f"/facturen/periodiek/{series.pk}/" for series in RecurringInvoice.objects.all()),
         f"/offertes/{_first(documents.filter(kind='quote', status='sent'), 'quote').pk}/mailen/",
@@ -93,6 +99,10 @@ def _pages():
         "/contacten/",
         "/contacten/nieuw/",
         f"/contacten/{_first(Contact.objects, 'contact').pk}/",
+        # Archived customers, a private customer and one with contact persons.
+        "/contacten/?archived=1",
+        f"/contacten/{_first(Contact.objects.filter(company_name=''), 'private customer').pk}/",
+        f"/contacten/{_first(Contact.objects.filter(persons__isnull=False), 'persons').pk}/",
         "/uitgaven/",
         "/uitgaven/nieuw/",
         # Receipts without an expense (SPEC.md M20); with receipts and

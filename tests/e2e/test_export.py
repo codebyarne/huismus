@@ -19,7 +19,8 @@ pytestmark = pytest.mark.django_db(transaction=True)
 
 def _download(app):
     with app.expect_download(timeout=60000) as download:
-        app.get_by_role("button", name="ZIP downloaden").click()
+        # The click waits for the response: a year of PDFs takes a while.
+        app.get_by_role("button", name="ZIP downloaden").click(timeout=60000)
     return download.value
 
 

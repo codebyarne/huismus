@@ -52,7 +52,8 @@ Kom je van een ander pakket of van Excel? Dat kan ook: zie
 
 Wil je eerst zien hoe Huismus werkt? Kies **Probeer met nepdata**. Huismus
 vult zich dan met een verzonnen administratie van negen jaar, met klanten,
-facturen, offertes en uitgaven. Klik overal op wat je wilt: het is niet echt.
+facturen, creditnota's, offertes en uitgaven. De nepdata rekent btw, ook als
+jij de KOR gebruikt. Klik overal op wat je wilt: het is niet echt.
 
 Klaar met kijken? Met **Nepdata leegmaken** gaat Huismus terug naar hoe het
 was. Wat je in de tussentijd hebt gemaakt of ingesteld, is dan ook weg.

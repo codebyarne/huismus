@@ -75,6 +75,7 @@ def add_receipts() -> None:
                     "Verf wit 1 l        10,86",
                     "",
                     "TOTAAL              42,35",
+                    "waarvan btw 21%      7,35",
                     "Pin                 42,35",
                 ],
                 "PNG",
@@ -99,6 +100,7 @@ def add_receipts() -> None:
                         "Utrecht - Amsterdam   9,45",
                         "",
                         "Totaal               18,90",
+                        "waarvan btw 9%        1,56",
                     ],
                 ]
             ),

@@ -52,7 +52,8 @@ Coming from another bookkeeping app or from Excel? That works too: see
 
 Want to see how Huismus works first? Choose **Try with sample data**. Huismus
 then fills itself with nine years of made-up records: customers, invoices,
-quotes and expenses. Click anything you like: none of it is real.
+credit notes, quotes and expenses. The sample data charges VAT, even if you
+use the KOR. Click anything you like: none of it is real.
 
 Done looking? **Clear sample data** takes Huismus back to how it was. Anything
 you made or set up in the meantime is gone too. While the sample data is in,
