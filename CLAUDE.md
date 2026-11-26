@@ -20,7 +20,7 @@ uv run ruff check . && uv run ruff format --check .
 SECRET_KEY=dev DEBUG=true uv run python manage.py makemigrations --check
 uv run python manage.py makemessages -l nl -l en --no-location  # after adding UI strings
 uv run python manage.py compilemessages --ignore=.venv           # to see translations locally
-uv run python manage.py demo_data --yes --history  # lege database: 9 jaar nepdata (~130 facturen, met btw), voor handmatig kijken
+uv run python manage.py demo_data --yes --history  # lege database: 9 jaar nepdata (~130 facturen, met btw), voor handmatig kijken; --rommelig erbij voor de uitersten
 ./scripts/site-beelden.sh                    # schermafbeeldingen voor de site opnieuw maken (docs/site/)
 ./scripts/site-voorbeelden.sh                # voorbeelden voor de site opnieuw maken: factuur, offerte, urenstaat als Word, Excel en pdf (docs/site/voorbeelden/)
 ./scripts/promo-film.sh                      # promofilms (bonnetjes 29 s, overzicht 63 s met stem) naar ~/Downloads/huismus-films
@@ -90,7 +90,7 @@ above is therefore optional.
 - Import tests use fixtures in `tests/fixtures/moneybird/`, including dry-run and re-import (zero changes) cases.
 - PDF smoke test: renders, contains number and total.
 - Browser tests (`tests/e2e`, pytest-playwright) for what server-side tests can't see: HTMX, JS, language switching. Add one for every new interactive path.
-- UI-bugs zitten vaak pas op een echte administratie. `tests/e2e/test_walkthrough.py` loopt de hele app door op `huismus/core/demo_history.py` (9 jaar nepdata) in drie schermbreedtes; gebruik de `history` fixture voor alles met lijsten, filters of doorklikken.
+- UI-bugs zitten vaak pas op een echte administratie. `tests/e2e/test_walkthrough.py` loopt de hele app door op `huismus/core/demo_history.py` (9 jaar nepdata) in drie schermbreedtes; gebruik de `history` fixture voor alles met lijsten, filters of doorklikken. Die fixture legt er `huismus/core/demo_messy.py` overheen: de uitersten (naam zonder spaties, HTML in een naam, 40 regels, miljoenen en centen). Bewaart Huismus iets nieuws, zet het dan in de nepdata en in `tests/core/test_demo_history.py`.
 - `tests/e2e/test_every_page.py` bezoekt elke pagina in beide talen en drie breedtes en vangt hele soorten UI-bugs (templatesyntax, onvertaalde tekst, opzij scrollen, dubbele menu-items). Nieuwe pagina → toevoegen aan `_pages()`.
 - Een bug die iemand met de hand vond: test die faalt, fix, en een check die de hele *soort* vangt. Bijhouden in `BUGS-BY-HAND.md`.
 - Een test die één keer faalt, bij herhaling groen is en niet binnen een uur na te doen valt, krijgt géén issue (besluit eigenaar 2026-11-05). Noem hem in je melding en ga door. Pas oppakken als hij terugkomt (een falende browsertest toont dan "Wat de pagina deed", `tests/e2e/page_log.js`) of als een gebruiker het merkt. Een fout die je wél kunt nadoen, los je gewoon op.

@@ -235,7 +235,10 @@ def history(transactional_db):
     one. Use it for what only shows on long lists: filters, pagination,
     clicking through."""
     from huismus.core.demo_history import create_history
+    from huismus.core.demo_messy import add_mess
     from huismus.core.demo_receipts import add_receipts
 
     create_history()
+    # The extremes on top (huismus/core/demo_messy.py): where screens break.
+    add_mess()
     add_receipts()

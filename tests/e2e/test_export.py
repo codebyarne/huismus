@@ -45,8 +45,11 @@ def test_export_a_year_from_the_year_overview_and_look_inside(app, history):
     assert sorted(row["nummer"] for row in invoices) == sorted(d.number for d in issued)
     pdfs = [name for name in archive.namelist() if name.startswith("pdf/facturen/")]
     assert len(pdfs) == issued.filter(kind="invoice").count()
-    expenses = archive.read("uitgaven.csv").decode("utf-8-sig").splitlines()
-    assert len(expenses) - 1 == Expense.objects.filter(date__year=year).count()
+    # Rows, not lines: a description can have a line break in it.
+    expenses = list(
+        csv.DictReader(io.StringIO(archive.read("uitgaven.csv").decode("utf-8-sig")), delimiter=";")
+    )
+    assert len(expenses) == Expense.objects.filter(date__year=year).count()
     # The auditfile of that year (issue #123): one, with the year in it.
     assert [name for name in archive.namelist() if name.endswith(".xaf")] == [
         f"auditfile-{year}.xaf"

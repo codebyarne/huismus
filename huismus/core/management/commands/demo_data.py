@@ -7,6 +7,7 @@ from django.core.management.base import BaseCommand, CommandError
 from huismus.contacts.models import Contact
 from huismus.core.demo_data import create_demo_data
 from huismus.core.demo_history import create_history
+from huismus.core.demo_messy import add_mess
 from huismus.core.demo_receipts import add_receipts
 from huismus.core.site_data import create_site_data
 from huismus.documents.models import Document
@@ -22,6 +23,14 @@ class Command(BaseCommand):
             help=(
                 "Een administratie van negen jaar (~130 facturen, met btw) "
                 "in plaats van vijf documenten."
+            ),
+        )
+        parser.add_argument(
+            "--rommelig",
+            action="store_true",
+            help=(
+                "Bij --history: met de uitersten erbij die de browsertests gebruiken "
+                "(lange namen, 40 regels, miljoenen en centen)."
             ),
         )
         parser.add_argument(
@@ -61,12 +70,16 @@ class Command(BaseCommand):
                 "een lege database."
             )
 
+        if options["rommelig"] and not options["history"]:
+            raise CommandError("--rommelig hoort bij --history.")
         if options["zonder_kor"] and not options["site"]:
             raise CommandError("--zonder-kor hoort bij --site.")
         if options["site"]:
             create_site_data(kor=not options["zonder_kor"])
         elif options["history"]:
             create_history()
+            if options["rommelig"]:
+                add_mess()
             # Something to show in Verwerken (huismus/core/demo_receipts.py).
             add_receipts()
         else:
