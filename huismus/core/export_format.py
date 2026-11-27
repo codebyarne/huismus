@@ -169,6 +169,20 @@ EXPENSE_LINE_COLUMNS = (
 RECEIPT_SEPARATOR = " | "
 
 
+# Uren (#80): only exported, not read by the import yet (product-owner
+# agent 2026-11-27: reading them back comes with the Moneybird import of
+# hours). The amount is empty for hours without a rate.
+HOURS_COLUMNS = (
+    Column("date", gettext_noop("datum"), required=True),
+    Column("customer_number", gettext_noop("klantnummer")),
+    Column("customer", gettext_noop("klant")),
+    Column("description", gettext_noop("omschrijving")),
+    Column("hours", gettext_noop("uren"), required=True),
+    Column("rate", gettext_noop("tarief per uur")),
+    Column("amount", gettext_noop("bedrag")),
+)
+
+
 def expense_labels(columns, *, kor_enabled: bool) -> list[str]:
     """The header row of an expense file: its VAT column says "ter info"
     under the KOR, as on the expense page."""
