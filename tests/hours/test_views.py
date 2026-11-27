@@ -355,3 +355,15 @@ def test_the_pages_need_a_login(client, studio):
         assert client.get(url).status_code == 302
     client.post(reverse("hours:delete", args=[entry.pk]))
     assert TimeEntry.objects.exists()
+
+
+def test_a_day_in_the_list_reads_as_dutch(client_in, studio):
+    _entry(studio, date(2026, 9, 30), "1")
+    assert "wo 30 sep" in _page(client_in, f"{LIST}?maand=2026-09")
+
+
+def test_only_the_filter_form_refreshes_the_list(client_in, studio):
+    """The quick form has a select of its own: a change there is no filter."""
+    _entry(studio, date(2026, 11, 3), "1")
+    toolbar = re.search(r'<form class="toolbar"[^>]*>', _page(client_in)).group()
+    assert 'hx-trigger="change"' in toolbar

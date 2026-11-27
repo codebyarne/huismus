@@ -1218,8 +1218,13 @@ form > div > .settings-section .card-head { border-bottom: 0; padding-bottom: 0;
   .quick-add { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .quick-add > .field:nth-of-type(-n+3), .quick-add > .btn { grid-column: 1 / -1; }
   .quick-add > .btn { margin-top: 0; }
-  .table.stackable .week-head { background: var(--surface-2); }
-  .table.stackable .week-head th { padding: 0; border: 0; background: none; }
+}
+/* Gestapeld (zelfde grens als .table.stackable): de weekkop is één grijze balk, de
+   week links en het totaal rechts, en een lange week loopt om in plaats van eroverheen. */
+@container (max-width: 720px) {
+  .table.stackable tbody tr.week-head { background: var(--surface-2); align-items: baseline; }
+  .table.stackable tr.week-head th { padding: 0; border: 0; background: none; white-space: normal; }
+  .table.stackable tr.week-head th.r { grid-column: 2; white-space: nowrap; }
 }
 /* Inline bewerkbare rij */
 .table tr.is-editing td { background: var(--primary-soft); }

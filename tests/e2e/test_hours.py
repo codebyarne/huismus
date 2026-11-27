@@ -118,6 +118,14 @@ def test_on_a_phone_nieuw_uren_opens_the_form_and_says_what_is_wrong(app, custom
     hours.fill("8")
     app.get_by_role("button", name="Toevoegen").click()
     expect(app.get_by_text("Uren toegevoegd.")).to_be_visible()
+    # A long week's head wraps beside its total instead of running into it.
+    overlaps = app.evaluate(
+        """() => [...document.querySelectorAll("tr.week-head")].some((row) => {
+            const [week, total] = [...row.cells].map((cell) => cell.getBoundingClientRect());
+            return week.right > total.left && week.bottom > total.top && week.top < total.bottom;
+        })"""
+    )
+    assert not overlaps
     # Uren lives behind "Meer" on a phone, never in the tab bar.
     expect(app.locator("nav.tabbar").get_by_role("link", name="Uren", exact=True)).to_have_count(0)
     assert TimeEntry.objects.filter(hours=8, date=timezone.localdate()).exists()

@@ -45,7 +45,7 @@ stay in view below.{% endcomment %}
     {% comment %}Plain GET form; with HTMX the list refreshes on a choice,
     and only #uren-resultaat is swapped.{% endcomment %}
     <form class="toolbar" role="search" method="get"
-          hx-get="{% url 'hours:list' %}" hx-trigger="change from:select"
+          hx-get="{% url 'hours:list' %}" hx-trigger="change"
           hx-target="#uren-resultaat" hx-select="#uren-resultaat" hx-select-oob="#uren-filters-wissen"
           hx-swap="outerHTML" hx-push-url="true">
         <select class="select input-sm" style="width:auto" aria-label="{% translate 'Klant' %}" name="klant">
@@ -85,7 +85,7 @@ stay in view below.{% endcomment %}
                     </tr>
                     {% for entry in week.entries %}
                     <tr class="is-link">
-                        <td data-cell="secondary" class="num">{{ entry.date|date:"D j M" }}</td>
+                        <td data-cell="secondary" class="num">{{ entry.date|date:day_format }}</td>
                         <td data-cell="primary"><a class="row-link" href="{% url 'hours:edit' entry.pk %}">{{ entry.contact.display_name }}</a></td>
                         <td data-cell="order"><span class="small">{{ entry.description }}</span></td>
                         <td data-cell="status" class="r num">{{ entry.hours|hours }}</td>

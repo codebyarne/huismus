@@ -14,6 +14,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import formats, timezone
+from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 
@@ -149,6 +150,8 @@ def hours_list(request):
             "filtered": month != this_month or contact_pk is not None,
             "all_months_url": _query(maand=ALL_MONTHS, klant=contact_pk),
             "with_vat": not Settings.load().no_vat,
+            # "wo 30 sep" in Dutch, "Wed 30 Sep" in English.
+            "day_format": "D j M" if get_language().startswith("en") else "D j b",
         },
     )
 
