@@ -1196,6 +1196,31 @@ form > div > .settings-section .card-head { border-bottom: 0; padding-bottom: 0;
 /* Totaalregel onder een lijst */
 .sum-row { display: flex; align-items: center; gap: var(--s-3); padding: 12px 16px; border-top: 1.5px solid var(--border-strong); font-variant-numeric: tabular-nums; }
 .sum-row .amount { margin-left: auto; font-family: var(--font-display); font-weight: var(--fw-semibold); font-size: var(--fs-xl); letter-spacing: -0.01em; }
+
+/* Uren (#80): het snelle formulier boven de lijst, de kop van een week en het totaal.
+   Breed: alles op één regel. Smaller: drie per regel. Telefoon: Datum, Klant en
+   Omschrijving over de hele breedte, dan Uren en Tarief naast elkaar, dan de knop.
+   De volgorde in de HTML is de volgorde op het scherm, dus ook van Tab. */
+.quick-add { display: grid; grid-template-columns: 9.5rem minmax(0, 1.1fr) minmax(0, 1.6fr) 6.5rem 8.5rem auto; gap: var(--s-3); align-items: start; padding: var(--s-4); }
+.quick-add > .btn { margin-top: 26px; }
+.hours-add-card { margin-bottom: var(--s-6); }
+.hours-add-card:focus { outline: none; }
+.hours-add-card:focus-visible { box-shadow: 0 0 0 3px var(--ring); }
+.week-head th { background: var(--surface-2); color: var(--text); font-weight: var(--fw-semibold); font-size: var(--fs-sm); }
+.week-head th.r { text-align: right; font-variant-numeric: tabular-nums; }
+.no-rate { color: var(--text-muted); font-weight: 400; }
+.hours-total { display: flex; align-items: baseline; gap: var(--s-2); flex-wrap: wrap; padding: var(--s-3) var(--s-4); border-bottom: 1px solid var(--border); }
+.hours-total strong { font-variant-numeric: tabular-nums; }
+@media (max-width: 1180px) {
+  .quick-add { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .quick-add { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .quick-add > .field:nth-of-type(-n+3), .quick-add > .btn { grid-column: 1 / -1; }
+  .quick-add > .btn { margin-top: 0; }
+  .table.stackable .week-head { background: var(--surface-2); }
+  .table.stackable .week-head th { padding: 0; border: 0; background: none; }
+}
 /* Inline bewerkbare rij */
 .table tr.is-editing td { background: var(--primary-soft); }
 .table .input-sm { max-width: 320px; }

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 14:52+0100\n"
+"POT-Creation-Date: 2026-11-27 15:22+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -650,6 +650,9 @@ msgstr ""
 msgid "Je hebt offertes, dus Offertes blijft in het menu."
 msgstr ""
 
+msgid "Je hebt uren ingevuld, dus Uren blijft in het menu."
+msgstr ""
+
 msgid "Je hebt uitgaven of bonnetjes, dus Uitgaven blijft in het menu."
 msgstr ""
 
@@ -717,6 +720,9 @@ msgid "Voorstel op basis van wat je eerder invulde. Klopt het, sla dan op."
 msgstr ""
 
 msgid "Met je bonnetjes en categorieën."
+msgstr ""
+
+msgid "Je uren per klant, met je tarief."
 msgstr ""
 
 #, python-format
@@ -908,6 +914,9 @@ msgid "Uitgaven"
 msgstr ""
 
 msgid "Bank"
+msgstr ""
+
+msgid "Uren"
 msgstr ""
 
 msgid "instellingen"
@@ -1565,6 +1574,10 @@ msgctxt "export file"
 msgid "uitgaveregels"
 msgstr ""
 
+msgctxt "export file"
+msgid "uren"
+msgstr ""
+
 msgctxt "export folder"
 msgid "bonnetjes"
 msgstr ""
@@ -1683,6 +1696,15 @@ msgid "btw-tarief"
 msgstr ""
 
 msgid "categorie"
+msgstr ""
+
+msgid "uren"
+msgstr ""
+
+msgid "tarief per uur"
+msgstr ""
+
+msgid "bedrag"
 msgstr ""
 
 msgid "Eenmanszaak of vof met KOR"
@@ -2602,9 +2624,6 @@ msgstr ""
 msgid "Contant"
 msgstr ""
 
-msgid "bedrag"
-msgstr ""
-
 msgid "methode"
 msgstr ""
 
@@ -3463,6 +3482,61 @@ msgstr ""
 msgid "Categorie verwijderd."
 msgstr ""
 
+msgid "Vul je uren in, bijvoorbeeld 1,5 of 1:30."
+msgstr ""
+
+msgid "Vul meer dan 0 uur in."
+msgstr ""
+
+msgid "Eén regel kan hoogstens 24 uur zijn."
+msgstr ""
+
+msgid "Bijvoorbeeld 1,5 of 1:30."
+msgstr ""
+
+msgid "Tarief per uur"
+msgstr ""
+
+msgid "Datum"
+msgstr ""
+
+msgid "Klant"
+msgstr ""
+
+msgid "Omschrijving"
+msgstr ""
+
+msgid "Kies een klant."
+msgstr ""
+
+msgid "Laat leeg voor uren die je niet factureert."
+msgstr ""
+
+msgid "Zonder btw. Laat leeg voor uren die je niet factureert."
+msgstr ""
+
+msgid "Een tarief kan niet negatief zijn."
+msgstr ""
+
+#, python-format
+msgid "%(hours)s uur"
+msgid_plural "%(hours)s uur"
+msgstr[0] ""
+msgstr[1] ""
+
+#, python-format
+msgid "Week %(week)s · %(start)s t/m %(end)s"
+msgstr ""
+
+msgid "Uren toegevoegd."
+msgstr ""
+
+msgid "Uren opgeslagen."
+msgstr ""
+
+msgid "Uren verwijderd."
+msgstr ""
+
 msgid "de klanten"
 msgstr ""
 
@@ -3670,9 +3744,6 @@ msgid ""
 msgstr ""
 
 msgid "de klant"
-msgstr ""
-
-msgid "Klant"
 msgstr ""
 
 msgid "de factuur"
@@ -5561,9 +5632,6 @@ msgstr ""
 msgid "Nummer"
 msgstr ""
 
-msgid "Datum"
-msgstr ""
-
 msgid "Status"
 msgstr ""
 
@@ -5783,9 +5851,6 @@ msgstr ""
 
 msgid ""
 "Huismus legt je bedrijfsgegevens en die van de klant vast zoals ze nu zijn."
-msgstr ""
-
-msgid "Omschrijving"
 msgstr ""
 
 msgid "Aantal"
@@ -6894,6 +6959,50 @@ msgstr ""
 msgid ""
 "Stel een bonnetjesmap in. Wat je onderweg in die map zet, komt hier vanzelf "
 "binnen."
+msgstr ""
+
+msgid "Uren wijzigen"
+msgstr ""
+
+msgid "Deze uren verwijderen?"
+msgstr ""
+
+msgid "Dat kun je niet ongedaan maken."
+msgstr ""
+
+msgid "Voeg eerst een klant toe."
+msgstr ""
+
+msgid "Uren schrijf je altijd op een klant."
+msgstr ""
+
+msgid "Alle klanten"
+msgstr ""
+
+msgid "Alle maanden"
+msgstr ""
+
+msgid "Tonen"
+msgstr ""
+
+#, python-format
+msgid "Totaal: <strong>%(total)s</strong>"
+msgstr ""
+
+msgid "Bedragen zonder btw."
+msgstr ""
+
+msgid "Geen tarief"
+msgstr ""
+
+msgid "Nog geen uren"
+msgstr ""
+
+msgid "Vul ze hierboven in."
+msgstr ""
+
+#, python-format
+msgid "Geen uren in %(month)s"
 msgstr ""
 
 #, python-format

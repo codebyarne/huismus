@@ -38,6 +38,8 @@ IGNORED = (
     "ViewTransition",
     "Transition was aborted",
     "view transition aborted",
+    # Chromium's words when a click starts the next page during one.
+    "Transition was skipped",
     # WebKit's words for the same, when a test resizes the window during one.
     "Skipping view transition",
 )
