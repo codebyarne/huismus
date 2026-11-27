@@ -14,11 +14,14 @@
     {% if statement %}<div class="actions"><a class="btn btn-primary" href="#inlezen"><svg class="i" aria-hidden="true"><use href="#upload"></use></svg>{% translate "Afschrift inlezen" %}</a></div>{% endif %}
 </div>
 
-{% if not statement %}{% include "bank/_read_in.html" with top=True %}{% else %}
-
 {% if gap_notices %}<div class="notices" id="saldo-gaten">{% for notice in gap_notices %}<div class="hint-banner is-warn"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{{ notice }}</span></div>{% endfor %}</div>{% endif %}
-{% if report %}
+{% if not statement %}{% if balances %}<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--s-3);margin-bottom:var(--s-5)" id="rapport">
+    {% include "bank/_balances.html" %}
+</div>{% endif %}{% include "bank/_read_in.html" with top=True %}{% else %}
+
+{% if report or balances %}
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--s-3)" id="rapport">
+    {% if report %}
     <div class="card kpi">
         <span class="kpi-label">{% if report.first_day %}{% blocktranslate with first=report.first_day|date:"SHORT_DATE_FORMAT" last=report.last_day|date:"SHORT_DATE_FORMAT" %}Ingelezen · {{ first }} t/m {{ last }}{% endblocktranslate %}{% else %}{% translate "Ingelezen" %}{% endif %}</span>
         <span class="kpi-value">{% blocktranslate count count=report.total %}{{ count }} betaling{% plural %}{{ count }} betalingen{% endblocktranslate %}</span>
@@ -35,13 +38,8 @@
         <span class="kpi-value">{{ report.outgoing_cents|money }}</span>
         <span class="kpi-sub">{% blocktranslate count count=report.outgoing %}{{ count }} betaling{% plural %}{{ count }} betalingen{% endblocktranslate %}</span>
     </div>
-    {% for item in balances %}
-    <div class="card kpi" data-saldo>
-        <span class="kpi-label">{% blocktranslate with date=item.balance.on|date:"SHORT_DATE_FORMAT" %}Saldo op {{ date }}{% endblocktranslate %}</span>
-        <span class="kpi-value">{{ item.balance.cents|money }}</span>
-        <span class="kpi-sub">{% if balances|length > 1 %}{{ item.iban }}{% else %}{% translate "volgens je afschrift" %}{% endif %}</span>
-    </div>
-    {% endfor %}
+    {% endif %}
+    {% include "bank/_balances.html" %}
 </div>
 {% endif %}
 {% if summary %}<p class="small muted" id="samenvatting" style="margin-top:var(--s-3)">{{ summary }}</p>{% endif %}

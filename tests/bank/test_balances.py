@@ -345,3 +345,15 @@ def test_an_older_statement_with_the_same_balance_doesnt_hide_a_gap():
     _balance(date(2026, 4, 1), 0, date(2026, 4, 30), 500)
     _balance(date(2026, 6, 1), 0, date(2026, 6, 30), 0)
     assert balances.gaps() == [balances.Gap(ACCOUNT, date(2026, 4, 30), 500, date(2026, 6, 1), 0)]
+
+
+def test_camt_an_available_balance_in_another_currency_doesnt_drop_the_booked_ones():
+    data = _camt_balances(
+        ("OPBD", "10.00", "CRDT", "2026-11-01"),
+        ("CLBD", "30.00", "CRDT", "2026-11-30"),
+    ).replace(
+        b"</Stmt>",
+        b'<Bal><Tp><CdOrPrtry><Cd>CLAV</Cd></CdOrPrtry></Tp><Amt Ccy="USD">1.00</Amt>'
+        b"<CdtDbtInd>CRDT</CdtDbtInd><Dt><Dt>2026-11-30</Dt></Dt></Bal></Stmt>",
+    )
+    assert camt.read(data).balances[0].closing_cents == 3000

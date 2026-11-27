@@ -68,7 +68,7 @@ def read(data: bytes) -> Statement:
         account = clean_iban(_text(stmt, "Acct", "Id", "IBAN"))
         if account:
             statement.accounts.add(account)
-        balance = _balance(stmt, account)
+        balance = _statement_balance(stmt, account)
         if balance is not None:
             statement.balances.append(balance)
         for entry in _children(stmt, "Ntry"):
@@ -84,14 +84,16 @@ _OPENING = ("OPBD", "PRCD")
 _CLOSING = ("CLBD", "ITBD")
 
 
-def _balance(stmt, account: str) -> StatementBalance | None:
+def _statement_balance(stmt, account: str) -> StatementBalance | None:
     """The opening and closing balance of one `Stmt`, or None when it
     doesn't state both in euros."""
     found = {}
     for bal in _children(stmt, "Bal"):
         code = _text(bal, "Tp", "CdOrPrtry", "Cd")
         amount = _child(bal, "Amt")
-        if amount is None or code in found:
+        # Only the balances used below count, also for the currency: an
+        # available balance in dollars doesn't drop the booked ones.
+        if amount is None or code in found or code not in _OPENING + _CLOSING:
             continue
         if amount.get("Ccy", "EUR") != "EUR":
             return None

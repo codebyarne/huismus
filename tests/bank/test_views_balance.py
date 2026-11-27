@@ -102,3 +102,20 @@ def test_the_balance_in_english(client):  # noqa: F811
     page = client.get(PAGE)
     assert "Balance on" in page.text
     assert "from your bank statement" in page.text
+
+
+def test_a_balance_without_any_statement_row_still_shows(client):  # noqa: F811
+    """A file without lines that only brought a balance makes no
+    statement row; its balance shows all the same."""
+    _balance(date(2026, 3, 1), 0, date(2026, 3, 31), 100000)
+    page = client.get(PAGE)
+    assert "data-saldo" in page.text
+
+
+def test_the_missing_statement_in_english(client):  # noqa: F811
+    _upload(client, (FIXTURES / "camt053-001-02.xml").read_bytes())
+    _balance(date(2026, 3, 1), 0, date(2026, 3, 31), 50000)
+    client.cookies["django_language"] = "en"
+    page = client.get(PAGE)
+    assert "A statement for NL91 ABNA 0417 1643 00 is missing between" in page.text
+    assert "Read that statement in too." in page.text

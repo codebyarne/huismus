@@ -97,10 +97,11 @@ def read(data: bytes) -> Statement:
         if tag == "20":
             opening = None
         elif tag in ("60F", "60M"):
-            opening = _balance(lines[0])
+            opening = _balance_field(lines[0])
         elif tag in ("62F", "62M"):
-            closing = _balance(lines[0])
-            if opening is not None and closing is not None:
+            closing = _balance_field(lines[0])
+            # :25: comes before the balances; without an account, no balance.
+            if account and opening is not None and closing is not None:
                 statement.balances.append(StatementBalance(account, *opening, *closing))
             opening = None
         elif tag == "25":
@@ -128,7 +129,7 @@ def _account(text: str) -> str:
     return clean_iban(text) if _IBAN.match(text) else text
 
 
-def _balance(text: str) -> tuple[date, int] | None:
+def _balance_field(text: str) -> tuple[date, int] | None:
     """(date, cents) of a balance field, None when not in euros."""
     found = _BALANCE.match(text.strip())
     if not found:

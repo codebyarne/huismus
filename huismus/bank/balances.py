@@ -75,41 +75,46 @@ def _last_per_account(rows) -> list[AccountBalance]:
 
 
 def gaps() -> list[Gap]:
-    """Every place where a statement is missing, per account in date order.
-
-    For each statement, the ones before it closed before it opened, or on
-    that day while opening earlier (so two pages of one day are never each
-    other's predecessor). The first statement of an account has none and
-    is never a gap: there is nothing to compare it with. Any other one
-    connects when a statement closed with the balance it opens with,
-    between the last one before it and its own opening date: the page
-    before it on the same day, or the last statement before it. If none
-    did, a statement is missing. A statement that overlaps others (a year
-    statement next to the monthly ones) connects the same way, or is the
-    first. Only from the last one before it: an account that is often at
-    the same balance (zero) must not hide a gap with an older statement.
-    """
+    """Per account in date order, every statement that doesn't start
+    where the statement before it ended: one is missing in between. The
+    first statement of an account has nothing before it, so it is never a
+    gap."""
     found = []
     for account, group in _per_account(BankBalance.objects.all()):
         rows = list(group)
         for row in rows:
             others = [o for o in rows if o.pk != row.pk]
-            before = [
-                o
-                for o in others
-                if o.closing_on < row.opening_on
-                or (o.closing_on == row.opening_on and o.opening_on < row.opening_on)
-            ]
-            if not before:
-                continue
-            last = before[-1]
-            if any(
-                o.closing_cents == row.opening_cents
-                and last.closing_on <= o.closing_on <= row.opening_on
-                for o in others
-            ):
-                continue
-            found.append(
-                Gap(account, last.closing_on, last.closing_cents, row.opening_on, row.opening_cents)
-            )
+            before = [o for o in others if _is_before(o, row)]
+            if before and not _connects(row, before[-1], others):
+                last = before[-1]
+                found.append(
+                    Gap(
+                        account,
+                        last.closing_on,
+                        last.closing_cents,
+                        row.opening_on,
+                        row.opening_cents,
+                    )
+                )
     return found
+
+
+def _is_before(other: BankBalance, row: BankBalance) -> bool:
+    """`other` closed before `row` opened. On the same day only when it
+    also opened earlier: two pages of one day (MT940 :62M: and :60M:) have
+    the same dates, and neither comes before the other."""
+    if other.closing_on == row.opening_on:
+        return other.opening_on < row.opening_on
+    return other.closing_on < row.opening_on
+
+
+def _connects(row: BankBalance, last: BankBalance, others: list[BankBalance]) -> bool:
+    """Some statement closed with the balance `row` opens with, from the
+    last statement before it (`last`) up to its own opening day: that last
+    one, or a page of the same day. Not an older one: on an account that
+    is often at zero, an old zero must not hide a missing statement. A
+    year statement next to the monthly ones connects the same way."""
+    return any(
+        o.closing_cents == row.opening_cents and last.closing_on <= o.closing_on <= row.opening_on
+        for o in others
+    )
