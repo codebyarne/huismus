@@ -335,3 +335,13 @@ def test_the_update_without_kept_files_does_nothing(settings, tmp_path):
     settings.DATA_DIR = tmp_path
     migration.balances_from_kept_files(apps, None)
     assert BankBalance.objects.count() == 0
+
+
+@db
+def test_an_older_statement_with_the_same_balance_doesnt_hide_a_gap():
+    # A savings account at zero: March and July end at 0, May starts at 0
+    # after a missing April that brought it to 500.
+    _balance(date(2026, 3, 1), 0, date(2026, 3, 31), 0)
+    _balance(date(2026, 4, 1), 0, date(2026, 4, 30), 500)
+    _balance(date(2026, 6, 1), 0, date(2026, 6, 30), 0)
+    assert balances.gaps() == [balances.Gap(ACCOUNT, date(2026, 4, 30), 500, date(2026, 6, 1), 0)]
