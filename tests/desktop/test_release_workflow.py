@@ -5,6 +5,7 @@ they must publish the files core.updates looks for, and only once both apps
 are checked. The builds only run on a Mac and a Windows runner, on a version
 tag, so these read the workflow as text."""
 
+import re
 from pathlib import Path
 
 from huismus.core import updates
@@ -24,6 +25,12 @@ WINDOWS_WINDOW_TEST = WORKFLOW.split("\n  windows-window-test:\n", 1)[1].split("
 ]
 PUBLISH_JOB = WORKFLOW.split("\n  publish:\n", 1)[1].split("\n  store:\n", 1)[0]
 STORE_JOB = WORKFLOW.split("\n  store:\n", 1)[1]
+PARTNER_CENTER = (
+    "PARTNER_CENTER_TENANT_ID",
+    "PARTNER_CENTER_SELLER_ID",
+    "PARTNER_CENTER_CLIENT_ID",
+    "PARTNER_CENTER_CLIENT_SECRET",
+)
 STORE_WORKFLOW = (ROOT / ".github" / "workflows" / "store.yml").read_text()
 
 
@@ -186,7 +193,10 @@ def test_the_store_gets_the_package_once_the_release_is_out():
     assert "needs: [windows-app, publish]" in STORE_JOB
     assert "uses: ./.github/workflows/store.yml" in STORE_JOB
     assert "tag: ${{ github.ref_name }}" in STORE_JOB
-    assert "secrets: inherit" in STORE_JOB
+    # Only the four Partner Center secrets, not every secret of the repo (#343).
+    assert "secrets: inherit" not in STORE_JOB
+    for name in PARTNER_CENTER:
+        assert f"{name}: ${{{{ secrets.{name} }}}}" in STORE_JOB
 
 
 def test_the_store_workflow_submits_the_package_of_the_tag():
@@ -205,14 +215,34 @@ def test_the_store_workflow_submits_the_package_of_the_tag():
 def test_the_partner_center_credentials_come_from_repository_secrets():
     """Only through the environment, never expanded into a command line by
     the workflow, and without them the job warns instead of failing."""
-    for name in (
-        "PARTNER_CENTER_TENANT_ID",
-        "PARTNER_CENTER_SELLER_ID",
-        "PARTNER_CENTER_CLIENT_ID",
-        "PARTNER_CENTER_CLIENT_SECRET",
-    ):
+    for name in PARTNER_CENTER:
         assert f"{name}: ${{{{ secrets.{name} }}}}" in STORE_WORKFLOW
         assert f"--{name}" not in STORE_WORKFLOW
     run_lines = [line for line in STORE_WORKFLOW.splitlines() if "msstore" in line]
     assert all("secrets." not in line for line in run_lines)
     assert "::warning::" in STORE_WORKFLOW
+
+
+def _steps(workflow: str) -> list[str]:
+    """The steps of a workflow, each as its own text."""
+    return re.split(r"\n(?=      - )", workflow.split("\n    steps:\n", 1)[1])
+
+
+def test_only_our_own_steps_see_the_partner_center_secrets():
+    """The secrets go to the steps of our own that use them, never to the
+    whole job, so an action of someone else in between can't read them (#343)."""
+    job_env = STORE_WORKFLOW.split("\n    steps:\n", 1)[0]
+    assert "${{ secrets." not in job_env
+    for step in _steps(STORE_WORKFLOW):
+        if "secrets.PARTNER_CENTER" in step:
+            assert "uses:" not in step, step
+            assert "run: |" in step, step
+
+
+def test_the_actions_of_others_in_the_store_job_are_pinned_on_a_commit():
+    """A tag can be moved to other code; a commit can't (#343). Actions of
+    GitHub itself (actions/...) may stay on a version tag."""
+    for step in _steps(STORE_WORKFLOW):
+        match = re.search(r"uses: (\S+)@(\S+)", step)
+        if match and not match.group(1).startswith("actions/"):
+            assert re.fullmatch(r"[0-9a-f]{40}", match.group(2)), step

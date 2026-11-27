@@ -515,4 +515,9 @@ jobs:
     uses: ./.github/workflows/store.yml
     with:
       tag: ${{ github.ref_name }}
-    secrets: inherit
+    # Only the four Partner Center secrets, not all of them (#343).
+    secrets:
+      PARTNER_CENTER_TENANT_ID: ${{ secrets.PARTNER_CENTER_TENANT_ID }}
+      PARTNER_CENTER_SELLER_ID: ${{ secrets.PARTNER_CENTER_SELLER_ID }}
+      PARTNER_CENTER_CLIENT_ID: ${{ secrets.PARTNER_CENTER_CLIENT_ID }}
+      PARTNER_CENTER_CLIENT_SECRET: ${{ secrets.PARTNER_CENTER_CLIENT_SECRET }}

@@ -20,6 +20,16 @@ on:
         description: The release tag, for example v0.1.8
         required: true
         type: string
+    # Optional: without them the job only warns (see above).
+    secrets:
+      PARTNER_CENTER_TENANT_ID:
+        required: false
+      PARTNER_CENTER_SELLER_ID:
+        required: false
+      PARTNER_CENTER_CLIENT_ID:
+        required: false
+      PARTNER_CENTER_CLIENT_SECRET:
+        required: false
   workflow_dispatch:
     inputs:
       tag:
@@ -37,17 +47,20 @@ jobs:
       contents: read
       # To download the artifact of the tag's release run (by hand).
       actions: read
+    # The Partner Center secrets go only to the two steps of our own that
+    # use them, not to the job: the actions in between never see them (#343).
     env:
-      PARTNER_CENTER_TENANT_ID: ${{ secrets.PARTNER_CENTER_TENANT_ID }}
-      PARTNER_CENTER_SELLER_ID: ${{ secrets.PARTNER_CENTER_SELLER_ID }}
-      PARTNER_CENTER_CLIENT_ID: ${{ secrets.PARTNER_CENTER_CLIENT_ID }}
-      PARTNER_CENTER_CLIENT_SECRET: ${{ secrets.PARTNER_CENTER_CLIENT_SECRET }}
       STORE_ID: 9NKWHBHSFMHN
       TAG: ${{ inputs.tag }}
     steps:
       - name: Are the Partner Center credentials there?
         id: credentials
         shell: bash
+        env:
+          PARTNER_CENTER_TENANT_ID: ${{ secrets.PARTNER_CENTER_TENANT_ID }}
+          PARTNER_CENTER_SELLER_ID: ${{ secrets.PARTNER_CENTER_SELLER_ID }}
+          PARTNER_CENTER_CLIENT_ID: ${{ secrets.PARTNER_CENTER_CLIENT_ID }}
+          PARTNER_CENTER_CLIENT_SECRET: ${{ secrets.PARTNER_CENTER_CLIENT_SECRET }}
         run: |
           if [ -n "$PARTNER_CENTER_TENANT_ID" ] && [ -n "$PARTNER_CENTER_SELLER_ID" ] \
               && [ -n "$PARTNER_CENTER_CLIENT_ID" ] && [ -n "$PARTNER_CENTER_CLIENT_SECRET" ]; then
@@ -85,12 +98,18 @@ jobs:
           run-id: ${{ steps.run.outputs.id }}
           github-token: ${{ github.token }}
 
-      - uses: microsoft/microsoft-store-apppublisher@v1.1
+      # Pinned on the commit of v1.1: a tag can move, a commit can't (#343).
+      - uses: microsoft/microsoft-store-apppublisher@15abd1c50fcc164b19cb240fb04ef3c49bf715a2 # v1.1
         if: steps.credentials.outputs.present == 'true'
 
       - name: Submit the package to the Microsoft Store
         if: steps.credentials.outputs.present == 'true'
         shell: pwsh
+        env:
+          PARTNER_CENTER_TENANT_ID: ${{ secrets.PARTNER_CENTER_TENANT_ID }}
+          PARTNER_CENTER_SELLER_ID: ${{ secrets.PARTNER_CENTER_SELLER_ID }}
+          PARTNER_CENTER_CLIENT_ID: ${{ secrets.PARTNER_CENTER_CLIENT_ID }}
+          PARTNER_CENTER_CLIENT_SECRET: ${{ secrets.PARTNER_CENTER_CLIENT_SECRET }}
         run: |
           $version = "$env:TAG".TrimStart('v')
           $package = "store\Huismus-$version-windows.msix"
