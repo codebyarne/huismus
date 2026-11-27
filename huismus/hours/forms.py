@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 from django import forms
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 from huismus.business.models import Settings
@@ -71,13 +72,10 @@ class TimeEntryForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        customers = Contact.objects.filter(archived=False)
-        if self.instance.pk:
-            customers = Contact.objects.filter(archived=False) | Contact.objects.filter(
-                pk=self.instance.contact_id
-            )
         contact = self.fields["contact"]
-        contact.queryset = customers
+        contact.queryset = Contact.objects.filter(
+            Q(archived=False) | Q(pk=self.instance.contact_id)
+        )
         contact.empty_label = None
         contact.error_messages["invalid_choice"] = _("Kies een klant.")
         rate_help = _("Laat leeg voor uren die je niet factureert.")
@@ -97,9 +95,11 @@ def last_rates() -> dict[int, str]:
     ("90,00"); a customer whose newest entry has no rate isn't in it. The
     quick form starts with it, and with JS a change of customer fills it
     in (app.js), so the browser never works out a rate itself."""
-    rates: dict[int, str] = {}
+    # Newest first per customer, so the first rate seen of each is his
+    # last one, also when that is None: hours without a rate then count as
+    # his last, and the field starts empty.
+    newest: dict[int, int | None] = {}
     newest_first = TimeEntry.objects.order_by("contact_id", "-date", "-id")
     for contact_id, rate in newest_first.values_list("contact_id", "rate_cents"):
-        if contact_id not in rates:
-            rates[contact_id] = rate
-    return {pk: euros(rate) for pk, rate in rates.items() if rate is not None}
+        newest.setdefault(contact_id, rate)
+    return {pk: euros(rate) for pk, rate in newest.items() if rate is not None}

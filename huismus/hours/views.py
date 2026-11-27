@@ -76,17 +76,22 @@ def _new_form(data=None) -> TimeEntryForm:
     return form
 
 
-def _after_adding(entry: TimeEntry, contact_pk: int | None, this_month: date) -> str:
-    """Back to the list, on the month of what was added or changed, so it
-    is in view."""
-    params = {}
+def _query(**params) -> str:
+    """ "?klant=3&maand=alle" for the list, leaving out what is None or "":
+    the list's defaults (all customers, this month). Empty without any."""
+    kept = {name: value for name, value in params.items() if value not in (None, "")}
+    return f"?{urlencode(kept)}" if kept else ""
+
+
+def _back_to_list(entry: TimeEntry, this_month: date, contact_pk: int | None = None) -> str:
+    """The list on the month of what was added or changed, so it is in
+    view. contact_pk: the customer the list was filtered on; kept only when
+    the entry is his."""
     month = entry.date.replace(day=1)
-    if month != this_month:
-        params["maand"] = _month_param(month)
-    if contact_pk == entry.contact_id:
-        params["klant"] = contact_pk
-    url = reverse("hours:list")
-    return f"{url}?{urlencode(params)}" if params else url
+    return reverse("hours:list") + _query(
+        maand=_month_param(month) if month != this_month else None,
+        klant=contact_pk if contact_pk == entry.contact_id else None,
+    )
 
 
 @login_required
@@ -101,7 +106,7 @@ def hours_list(request):
         if form.is_valid():
             entry = form.save()
             messages.success(request, _("Uren toegevoegd."))
-            return redirect(_after_adding(entry, contact_pk, this_month))
+            return redirect(_back_to_list(entry, this_month, contact_pk))
     else:
         form = _new_form()
 
@@ -114,16 +119,10 @@ def hours_list(request):
     more_url = None
     if len(page) > shown:
         page = page[:shown]
-        more_url = "?" + urlencode(
-            {
-                k: v
-                for k, v in {
-                    "klant": contact_pk or "",
-                    "maand": _month_param(month) if month != this_month else "",
-                    "toon": shown + LIST_PAGE_SIZE,
-                }.items()
-                if v
-            }
+        more_url = _query(
+            klant=contact_pk,
+            maand=_month_param(month) if month != this_month else None,
+            toon=shown + LIST_PAGE_SIZE,
         )
 
     months = {d.replace(day=1) for d in TimeEntry.objects.dates("date", "month")}
@@ -148,8 +147,7 @@ def hours_list(request):
             "contact_pk": contact_pk,
             "customers": customers,
             "filtered": month != this_month or contact_pk is not None,
-            "all_months_url": "?"
-            + urlencode({k: v for k, v in {"maand": ALL_MONTHS, "klant": contact_pk}.items() if v}),
+            "all_months_url": _query(maand=ALL_MONTHS, klant=contact_pk),
             "with_vat": not Settings.load().no_vat,
         },
     )
@@ -162,8 +160,7 @@ def hours_edit(request, pk):
     if request.method == "POST" and form.is_valid():
         form.save()
         messages.success(request, _("Uren opgeslagen."))
-        this_month = timezone.localdate().replace(day=1)
-        return redirect(_after_adding(entry, None, this_month))
+        return redirect(_back_to_list(entry, timezone.localdate().replace(day=1)))
     return render(request, "hours/edit.html", {"form": form, "entry": entry})
 
 

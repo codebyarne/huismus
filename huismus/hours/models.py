@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -27,20 +26,11 @@ class TimeEntry(TimestampedModel):
     )
     description = models.CharField(_("omschrijving"), max_length=500, blank=True)
     # Hours with two decimals: "1:20" is stored, shown and billed as 1,33.
-    hours = models.DecimalField(
-        _("uren"),
-        max_digits=4,
-        decimal_places=2,
-        validators=[MinValueValidator(0), MaxValueValidator(MAX_HOURS)],
-    )
+    # More than 0 and at most MAX_HOURS: the constraint below guards the
+    # table, HoursField says it in words (hours.forms).
+    hours = models.DecimalField(_("uren"), max_digits=4, decimal_places=2)
     # Cents per hour, excluding VAT when you charge VAT. Empty: not billed.
-    rate_cents = models.BigIntegerField(
-        _("tarief per uur"), null=True, blank=True, validators=[MinValueValidator(0)]
-    )
-    # For an import later (Moneybird, Huismus's own format); empty when
-    # entered here.
-    source = models.CharField(max_length=20, blank=True)
-    external_id = models.CharField(max_length=100, blank=True)
+    rate_cents = models.BigIntegerField(_("tarief per uur"), null=True, blank=True)
 
     class Meta:
         verbose_name = _("uren")
@@ -54,11 +44,6 @@ class TimeEntry(TimestampedModel):
             models.CheckConstraint(
                 condition=models.Q(rate_cents__isnull=True) | models.Q(rate_cents__gte=0),
                 name="hours_rate_not_negative",
-            ),
-            models.UniqueConstraint(
-                fields=["source", "external_id"],
-                condition=~models.Q(external_id=""),
-                name="hours_unique_source_external_id",
             ),
         ]
 

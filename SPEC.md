@@ -110,7 +110,7 @@ One table for quotes, invoices and credit notes.
 `name`, `sort_order`, `made_for` (the expense Huismus made the category for while reading its receipt, M20 part 3; else empty).
 
 ### TimeEntry
-`date`, `contact` FK (PROTECT: a customer is archived, never deleted), `description`, `hours` (Decimal, 2 dp, more than 0 and at most 24), `rate_cents` (per hour, excluding VAT when you charge VAT; empty = hours you don't bill), `source`, `external_id`. Hours worked for a customer (M30). Not a document: changed and deleted freely. The amount is never stored: it is `line_total_cents(hours, rate_cents)`, the rule of an invoice line (`huismus/hours/entries.py`, invariant 3).
+`date`, `contact` FK (PROTECT: a customer is archived, never deleted), `description`, `hours` (Decimal, 2 dp, more than 0 and at most 24), `rate_cents` (per hour, excluding VAT when you charge VAT; empty = hours you don't bill). Hours worked for a customer (M30). Not a document: changed and deleted freely. The amount is never stored: it is `line_total_cents(hours, rate_cents)`, the rule of an invoice line (`huismus/hours/entries.py`, invariant 3).
 
 ### NumberSequence
 `kind`, `year` (nullable), `last_value`. Allocated at issue time, inside the same transaction as the status change.

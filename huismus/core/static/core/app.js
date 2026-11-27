@@ -982,12 +982,8 @@ document.addEventListener("change", (event) => {
   if (!select.matches?.("select[data-rates]")) return;
   const rate = document.querySelector(`input[data-rate-for="${select.id}"]`);
   if (!rate || rate.dataset.typed) return;
-  let rates = {};
-  try {
-    rates = JSON.parse(select.dataset.rates);
-  } catch {
-    return;
-  }
+  // The server writes data-rates (hours.views._new_form).
+  const rates = JSON.parse(select.dataset.rates);
   rate.value = rates[select.value] ?? "";
 });
 
@@ -1002,6 +998,8 @@ function focusFirstField() {
 }
 focusFirstField();
 window.addEventListener("hashchange", focusFirstField);
-// A boosted link (hx-boost) changes the address without a page load. After
-// the swap has settled: the menu the link was in hands focus back first.
+// A boosted link (hx-boost) changes the address without a page load. A frame
+// after the swap has settled: first the "Nieuw" popover closes and gives the
+// focus back to its + button (the browser does that), then this takes it.
+// tests/e2e/test_hours.py checks the order.
 document.addEventListener("htmx:afterSettle", () => requestAnimationFrame(focusFirstField));

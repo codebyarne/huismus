@@ -781,7 +781,7 @@ def _expense_day(rng: random.Random, year: int, last_day: date) -> date:
 # -- Hours (#80) -----------------------------------------------------------
 
 HOURS_WORK = {
-    "Studio Noordwind": ["Huisstijl: schetsen", "Huisstijl: logo-varianten", "Drukwerk nakijken"],
+    "Studio Noordwind": ["Logo: schetsen", "Logo: varianten", "Drukproef"],
     "Ooievaar Advies": ["Website: teksten", "Website: overleg met de bouwer", "Nieuwsbrief"],
     "Zuiderlicht Fotografie": ["Fotoboek opmaken", "Beeldselectie", "Portfolio-site"],
     "Hengelo Haven Horeca": ["Menukaart", "Menukaart: correcties"],

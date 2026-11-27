@@ -23,6 +23,8 @@ def hours_text(hours: Decimal) -> str:
     text = format(Decimal(hours).normalize(), "f")
     if not (get_language() or "").startswith("en"):
         text = text.replace(".", ",")
+    # Dutch says "uur" either way; the count only lets English choose
+    # between "hour" and "hours".
     count = 1 if hours == 1 else 2
     return ngettext("%(hours)s uur", "%(hours)s uur", count) % {"hours": text}
 
@@ -69,7 +71,10 @@ class Week:
 def weeks(shown, everything) -> list[Week]:
     """The entries in `shown` (a page of the list, newest first) per week.
     Each week's total is of all entries in `everything` (what the filter
-    shows) in that week, also the ones "Meer laden" hasn't shown yet."""
+    shows) in that week, also the ones "Meer laden" hasn't shown yet. With
+    a month chosen that is only the days of that month, while the label
+    names the whole week (product-owner agent 2026-11-27: the list shows
+    what the filter asks, under the week it belongs to)."""
     by_week: dict[date, Week] = {}
     for entry in shown:
         start = monday(entry.date)
