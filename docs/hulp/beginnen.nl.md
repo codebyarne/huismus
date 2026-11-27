@@ -74,4 +74,5 @@ krijgt een vinkje. Met **Doen** ga je meteen naar de goede plek.
 - **Je eerste factuur:** zie [Facturen](facturen.nl.md).
 - **Wat je niet gebruikt:** stuur je geen offertes of houd je geen uitgaven
   bij, haal ze dan uit het menu bij **Instellingen › Menu**. Je
-  gegevens blijven. Waar al iets in staat, blijft in het menu.
+  gegevens blijven. Waar al iets in staat, blijft in het menu. Houd je uren
+  bij? Zet dan daar **Uren** aan. Zie [Uren](uren.nl.md).
