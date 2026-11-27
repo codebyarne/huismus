@@ -5,7 +5,8 @@ read without Huismus. A backup is for putting Huismus back; this is for the
 accountant, and for keeping invoices readable anywhere else.
 
 In the ZIP: a CSV each for invoices and credit notes, quotes, their lines,
-customers, their contact persons, expenses and expense lines (core.csv_files), the
+customers, their contact persons, expenses and expense lines, and hours when
+there are any in the period (core.csv_files), the
 PDF of every document and every receipt, and an auditfile per year
 (core.xaf). Never a draft, nor a document back in
 draft through "Toch bewerken". A year counts by document date, as on the
@@ -34,6 +35,7 @@ from huismus.documents.models import Document
 from huismus.documents.pdf import render_pdf
 from huismus.documents.totals import compute_totals, revenue_by_rate
 from huismus.expenses.models import Expense
+from huismus.hours.models import TimeEntry
 
 from . import export_format, xaf
 from .csv_files import Amount, csv_bytes
@@ -334,6 +336,27 @@ def _expenses(year):
     return expenses, (header, table), (line_header, line_table)
 
 
+def _hours(year):
+    """uren.csv (#80): every entry of the period, oldest first. The amount
+    is the entry's own (hours.entries), empty without a rate."""
+    entries = TimeEntry.objects.select_related("contact").order_by("date", "pk")
+    if year:
+        entries = entries.filter(date__year=year)
+    table = [
+        [
+            entry.date,
+            entry.contact.customer_number,
+            entry.contact.display_name,
+            entry.description,
+            entry.hours,
+            None if entry.rate_cents is None else Amount(entry.rate_cents),
+            None if entry.amount_cents is None else Amount(entry.amount_cents),
+        ]
+        for entry in entries
+    ]
+    return labels(export_format.HOURS_COLUMNS), table
+
+
 def pdf_folder(kind: str) -> str:
     return {
         "invoice": pgettext("export folder", "facturen"),
@@ -370,6 +393,9 @@ def write_zip(file, year: int | None) -> None:
         (pgettext("export file", "uitgaven"), *expense_csv),
         (pgettext("export file", "uitgaveregels"), *expense_line_csv),
     ]
+    hours_header, hours_table = _hours(year)
+    if hours_table:
+        tables.append((pgettext("export file", "uren"), hours_header, hours_table))
 
     with zipfile.ZipFile(file, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         for stem, header, table in tables:
