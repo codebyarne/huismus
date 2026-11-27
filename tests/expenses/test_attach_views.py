@@ -4,6 +4,7 @@
 is?" in Verwerken: "Bij welke uitgave hoort dit bonnetje?" (#127)."""
 
 import datetime
+from urllib.parse import urlsplit
 
 import pytest
 from django.contrib.auth import get_user_model
@@ -208,6 +209,36 @@ def test_undo_goes_nowhere_else(client, user):
         {"uitgave": expense.pk, "plek": "https://elders.example/"},
     )
     assert response.url == reverse("expenses:tray")
+
+
+def _elsewhere(path: str) -> list[str]:
+    """Addresses that end in a page of Huismus but lead to another site (#342)."""
+    return [
+        f"//elders.example{path}",
+        f"https://elders.example{path}",
+        f"/\\elders.example{path}",
+        f"///elders.example{path}",
+    ]
+
+
+@pytest.mark.parametrize("how", ["undone", "no longer hangs there", "get"])
+@pytest.mark.parametrize("page", ["expenses:tray", "expenses:process"])
+@pytest.mark.parametrize("which", range(4))
+def test_undo_never_sends_you_to_another_site(client, user, how, page, which):
+    first, second, receipt = _expense(), _expense(), _receipt()
+    client.post(_page(receipt)[0], {"uitgave": first.pk})
+    place = _elsewhere(reverse(page))[which]
+    url = reverse("expenses:tray_attach_undo", args=[receipt.pk])
+
+    if how == "get":
+        response = client.get(url, {"plek": place})
+    else:
+        expense = first if how == "undone" else second
+        response = client.post(url, {"uitgave": expense.pk, "plek": place})
+
+    parts = urlsplit(response.url)
+    assert not parts.scheme and not parts.netloc
+    assert response.url.startswith("/") and not response.url.startswith(("//", "/\\"))
 
 
 def test_undo_once_it_no_longer_hangs_there(client, user):
