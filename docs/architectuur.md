@@ -46,6 +46,7 @@ flowchart TB
     end
     subgraph bank
         BankTransaction --> |statement| BankStatement
+        BankBalance["BankBalance<br/>(saldo per afschrift)"]
     end
     subgraph assistants
         MCP["geen modellen<br/>(MCP op /mcp)"]
@@ -105,6 +106,11 @@ uit het diagram haalt:
   gewone `Payment`; de bijschrijving wijst ernaar (`payment`), zodat Huismus
   weet welke betalingen het zelf boekte en alleen die terugdraait. Wat er op
   een factuur openstaat, blijft `Document.outstanding_cents`.
+- **`BankBalance`** is het begin- en eindsaldo dat één afschrift noemt, per
+  rekening (M29). Het hangt nergens aan: hetzelfde afschrift uit een ander
+  bestand is dezelfde rij. Huismus telt nooit regels op tot een saldo;
+  `huismus/bank/balances.py` geeft het laatste saldo, het saldo op een dag en
+  waar een afschrift mist.
 - `SPEC.md` noemt ook een `AuditLog`; die bestaat nog niet.
 
 ## Wat doet welke app
