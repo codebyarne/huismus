@@ -373,11 +373,15 @@ def statement_page(request):
                 error = NOT_A_STATEMENT
             else:
                 if result.statement is None:
-                    nothing_new = _(
-                        "Niets nieuws: alle betalingen in dit bestand waren al ingelezen."
-                    )
                     if result.balances_added:
-                        nothing_new += " " + _("Het saldo is bijgewerkt.")
+                        nothing_new = _(
+                            "Niets nieuws: alle betalingen in dit bestand waren al ingelezen. "
+                            "Het saldo is bijgewerkt."
+                        )
+                    else:
+                        nothing_new = _(
+                            "Niets nieuws: alle betalingen in dit bestand waren al ingelezen."
+                        )
                     messages.info(request, nothing_new)
                     return redirect("bank:statement")
                 return redirect(f"{reverse('bank:statement')}?afschrift={result.statement.pk}")

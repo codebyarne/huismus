@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 14:48+0100\n"
+"POT-Creation-Date: 2026-11-27 14:52+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -570,10 +570,12 @@ msgstr ""
 "Deze zip is uitgepakt groter dan %(max_mb)s MB, te groot om in te lezen. "
 "Kies bij je bank een kortere periode."
 
-msgid "Niets nieuws: alle betalingen in dit bestand waren al ingelezen."
+msgid ""
+"Niets nieuws: alle betalingen in dit bestand waren al ingelezen. Het saldo "
+"is bijgewerkt."
 msgstr ""
 
-msgid "Het saldo is bijgewerkt."
+msgid "Niets nieuws: alle betalingen in dit bestand waren al ingelezen."
 msgstr ""
 
 #, python-format
@@ -4220,6 +4222,13 @@ msgstr "Af"
 msgid "Bij"
 msgstr "Bij"
 
+#, python-format
+msgid "Saldo op %(date)s"
+msgstr ""
+
+msgid "volgens je afschrift"
+msgstr ""
+
 msgid "Kies een factuur…"
 msgstr "Kies een factuur…"
 
@@ -4333,13 +4342,6 @@ msgid "%(count)s hoort bij je administratie"
 msgid_plural "%(count)s horen bij je administratie"
 msgstr[0] "%(count)s hoort bij je administratie"
 msgstr[1] "%(count)s horen bij je administratie"
-
-#, python-format
-msgid "Saldo op %(date)s"
-msgstr ""
-
-msgid "volgens je afschrift"
-msgstr ""
 
 msgid "Te doen"
 msgstr ""
@@ -8878,11 +8880,6 @@ msgstr ""
 
 #~ msgid "Van rekening %(iban)s."
 #~ msgstr "Van rekening %(iban)s."
-
-#~ msgid ""
-#~ "Niets nieuws: alle bijschrijvingen in dit bestand waren al ingelezen."
-#~ msgstr ""
-#~ "Niets nieuws: alle bijschrijvingen in dit bestand waren al ingelezen."
 
 #~ msgid "Betaling teruggedraaid. Hij staat weer bij Zelf kiezen."
 #~ msgstr "Betaling teruggedraaid. Hij staat weer bij Zelf kiezen."

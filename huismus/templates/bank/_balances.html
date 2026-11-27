@@ -1,0 +1,8 @@
+{% load i18n money %}{% comment %}The balance per account (#159, huismus.bank.balances.latest): a tile in the grid of statement.html, also when no statement is shown yet.{% endcomment %}
+    {% for item in balances %}
+    <div class="card kpi" data-saldo>
+        <span class="kpi-label">{% blocktranslate with date=item.balance.on|date:"SHORT_DATE_FORMAT" %}Saldo op {{ date }}{% endblocktranslate %}</span>
+        <span class="kpi-value">{{ item.balance.cents|money }}</span>
+        <span class="kpi-sub">{% if balances|length > 1 %}{{ item.iban }}{% else %}{% translate "volgens je afschrift" %}{% endif %}</span>
+    </div>
+    {% endfor %}

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 14:48+0100\n"
+"POT-Creation-Date: 2026-11-27 14:52+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -608,11 +608,15 @@ msgstr ""
 "This zip is larger than %(max_mb)s MB unpacked, too big to import. Choose a "
 "shorter period at your bank."
 
+msgid ""
+"Niets nieuws: alle betalingen in dit bestand waren al ingelezen. Het saldo "
+"is bijgewerkt."
+msgstr ""
+"Nothing new: every payment in this file was read before. The balance has "
+"been updated."
+
 msgid "Niets nieuws: alle betalingen in dit bestand waren al ingelezen."
 msgstr "Nothing new: every payment in this file was read before."
-
-msgid "Het saldo is bijgewerkt."
-msgstr "The balance has been updated."
 
 #, python-format
 msgid "Betaling geboekt op factuur %(number)s."
@@ -4494,6 +4498,13 @@ msgstr "Out"
 msgid "Bij"
 msgstr "In"
 
+#, python-format
+msgid "Saldo op %(date)s"
+msgstr "Balance on %(date)s"
+
+msgid "volgens je afschrift"
+msgstr "from your bank statement"
+
 msgid "Kies een factuur…"
 msgstr "Pick an invoice…"
 
@@ -4614,13 +4625,6 @@ msgid "%(count)s hoort bij je administratie"
 msgid_plural "%(count)s horen bij je administratie"
 msgstr[0] "%(count)s belongs to your administration"
 msgstr[1] "%(count)s belong to your administration"
-
-#, python-format
-msgid "Saldo op %(date)s"
-msgstr "Balance on %(date)s"
-
-msgid "volgens je afschrift"
-msgstr "from your bank statement"
 
 msgid "Te doen"
 msgstr "To do"

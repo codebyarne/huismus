@@ -281,15 +281,16 @@ def read_statement(filename: str, data: bytes) -> ReadResult:
     if stored.pk is not None or result.balances_added:
         # The file is the evidence of what was booked or of a balance; a
         # file that only adds a balance gets no BankStatement row, which
-        # would show as a statement without lines. Only once the rows are
-        # in the database: a rollback keeps no file.
+        # would show as a statement without lines. `stored` is then not
+        # saved: archived_path needs only its filename and sha256. Only
+        # once the rows are in the database: a rollback keeps no file.
         transaction.on_commit(lambda: _keep_file(stored, data))
     return result
 
 
 def store_balances(statement: Statement) -> int:
     """The balances of one parsed file Huismus didn't know yet (#159);
-    how many. Also used by the migration that reads the kept files."""
+    how many. Migration bank.0004 does the same with its own model."""
     added = 0
     for balance in statement.balances:
         _, created = BankBalance.objects.get_or_create(
