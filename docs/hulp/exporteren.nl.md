@@ -25,6 +25,8 @@ op haar eigen datum. Klanten gaan altijd allemaal mee, ook gearchiveerde.
 - **contactpersonen.csv**: de contactpersonen bij je klanten.
 - **uitgaven.csv** en **uitgaveregels.csv**: je uitgaven, en per regel de
   categorie.
+- **uren.csv**: je uren, met de klant, het tarief en het bedrag. Alleen als
+  je in die periode uren hebt.
 - **pdf/facturen**, **pdf/creditnotas** en **pdf/offertes**: elke pdf, met
   het nummer als naam. Het is dezelfde pdf als die je met **Downloaden**
   krijgt. Voor een factuur uit Moneybird is dat de originele pdf.

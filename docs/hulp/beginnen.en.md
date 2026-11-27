@@ -75,4 +75,5 @@ to the right place.
 - **Your first invoice:** see [Invoices](facturen.en.md).
 - **What you don't use:** if you send no quotes or keep no expenses, take
   them out of the menu at **Settings › Menu**. Your data stays. Anything
-  with something in it stays in the menu.
+  with something in it stays in the menu. Do you track hours? Switch on
+  **Hours** there. See [Hours](uren.en.md).

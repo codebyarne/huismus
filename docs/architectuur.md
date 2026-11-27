@@ -6,7 +6,7 @@ elke map doet. Het *waarom* van het ontwerp staat in `SPEC.md`; de afspraken
 voor bijdragen in `CONTRIBUTING.md` en `CLAUDE.md`. Factuureisen met
 bronnen: `docs/invoice-requirements.md`.
 
-Huismus is één Django-project met zeven apps. Alle code staat in `huismus/`:
+Huismus is één Django-project met tien apps. Alle code staat in `huismus/`:
 de apps, de instellingen (`huismus/config/`), de templates en de vertalingen.
 De hoofdmap bevat alleen wat eromheen hoort: tests, docs, de desktop-app,
 Docker, uitrollen en scripts. Server-rendered templates met HTMX, SQLite, geen
@@ -39,6 +39,9 @@ flowchart TB
         ExpenseLine --> |expense| Expense
         ExpenseLine --> |category| ExpenseCategory
     end
+    subgraph hours
+        TimeEntry["TimeEntry<br/>(uren)"]
+    end
     subgraph business
         Settings["Settings<br/>(één rij)"]
     end
@@ -62,6 +65,7 @@ flowchart TB
     Attachment --> |"expense (óf)"| Expense
     BankTransaction --> |"payment (1-1)"| Payment
     BankTransaction --> |proposed_document| Document
+    TimeEntry --> |contact| Contact
     UserPreferences --> |"1-1"| User
 ```
 
@@ -112,6 +116,10 @@ uit het diagram haalt:
   bestand is dezelfde rij. Huismus telt nooit regels op tot een saldo;
   `huismus/bank/balances.py` geeft het laatste saldo, het saldo op een dag en
   waar een afschrift mist.
+- **`TimeEntry`** is een aantal uren voor een klant op een dag (M30). Geen
+  document: wijzigen en verwijderen mag. Het bedrag wordt nooit bewaard,
+  maar is altijd `line_total_cents(uren, tarief)`, de regel van een
+  factuurregel (`huismus/hours/entries.py`).
 - **`Article`** is een regel die je vaak gebruikt (M31). Kies je hem in de
   editor, dan kopieert `huismus/documents/articles.py` zijn waarden in een
   gewone regel; die wijst niet terug, dus een artikel wijzigen of verwijderen
@@ -127,6 +135,7 @@ uit het diagram haalt:
 | `contacts` | Klanten en hun contactpersonen. | `models.py`, `numbering.py` (klantnummers) |
 | `documents` | Offertes, facturen en creditnota's: bewerken, uitgeven, pdf, betalingen, mailen. Het hart van Huismus. | `totals.py`, `issuing.py`, `numbering.py`, `reopening.py`, `snapshots.py`, `quoting.py`, `drafts.py`, `pdf.py`, `mailing.py` |
 | `expenses` | Uitgaven met regels (elk een eigen categorie, zoals in Moneybird), categorieën, bonnetjes, en de bonnetjesmap die bonnetjes van onderweg ophaalt. | `models.py`, `lines.py` (de regels en het totaal van een uitgave), `receipts.py`, `inbox.py` (de bonnetjesmap) |
+| `hours` | Uren per klant, met datum, omschrijving en tarief: de lijst per week met het snelle formulier, wijzigen en verwijderen. | `entries.py` (uren lezen, het bedrag), `listing.py` (weken en totalen), `views.py` |
 | `reports` | Rapporten, nu alleen het jaaroverzicht: omzet, kosten en winst per kwartaal en per categorie, de KOR-grens, CSV. Alleen lezen. | `year_overview.py`, `views.py` |
 | `imports` | De Moneybird-import: herkennen, inlezen, proefdraai, doorvoeren, en bewaren wat er in de export stond. | `pipeline.py`, `detect.py`, `columns.py` (waar elke kolom heen gaat), `archive.py` (ruwe rijen en de originele export), `contacts.py`, `invoices.py`, `quotes.py`, `expenses.py` (inkomende documenten → uitgaven met bonnetjes), `commit.py`, `staging.py` |
 | `assistants` | De koppeling met AI-assistenten via MCP op `/mcp`, en de pagina Instellingen → AI-assistenten. | `protocol.py`, `tools.py`, `key.py`, `views.py` |
@@ -139,11 +148,12 @@ tests):
 | `contacts` | `core`, `business`, `documents` |
 | `documents` | `core`, `business`, `contacts` |
 | `expenses` | `core`, `documents` |
+| `hours` | `core`, `business`, `contacts`, `documents` |
 | `reports` | `core`, `business`, `documents`, `expenses` |
 | `imports` | `core`, `business`, `contacts`, `documents` |
 | `assistants` | `core`, `business`, `contacts`, `documents`, `expenses`, `reports` |
 | `business` | `core`, `documents`, `reports`, `assistants` |
-| `core` | `business`, `contacts`, `documents`, `expenses`, `reports`, `assistants` (overzicht, back-ups, export, nepdata) |
+| `core` | `business`, `contacts`, `documents`, `expenses`, `hours`, `reports`, `assistants` (overzicht, back-ups, export, nepdata, het profiel) |
 
 Imports binnen een functie tellen mee. Er is dus geen strikte gelaagdheid,
 en er zijn kringen: `business` haalt de MCP-sleutel en de pagina

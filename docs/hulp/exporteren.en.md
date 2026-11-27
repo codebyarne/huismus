@@ -26,6 +26,8 @@ its own date. All customers are always included, archived ones too.
 - **contact-persons.csv**: the contact persons at your customers.
 - **expenses.csv** and **expense-lines.csv**: your expenses, and the
   category per line.
+- **hours.csv**: your hours, with the customer, the rate and the amount.
+  Only if you have hours in that period.
 - **pdf/invoices**, **pdf/credit-notes** and **pdf/quotes**: every PDF,
   named after its number. It's the same PDF **Download** gives you. For an
   invoice from Moneybird, that's the original PDF.

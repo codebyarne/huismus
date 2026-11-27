@@ -73,6 +73,7 @@ GROUPS = (
             # Right after Facturen: it is a page of Facturen (#77).
             "bankafschrift",
             "offertes",
+            "uren",
             "mailen",
             "uitgaven",
             "bonnetjes",
