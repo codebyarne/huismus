@@ -77,40 +77,39 @@ def _last_per_account(rows) -> list[AccountBalance]:
 def gaps() -> list[Gap]:
     """Every place where a statement is missing, per account in date order.
 
-    A statement connects when one of the other statements closed with the
-    balance it opens with, on or before its opening date. If none did,
-    and there is a statement before it, one is missing between the last
-    of those and this one. "Before" is strict: closed before this one
-    opened, or on that day while opening earlier, so two pages of one day
-    are never each other's predecessor. A statement that overlaps others
-    (a year statement next to the monthly ones) connects to what came
-    before it, or is the first. The first statement of an account is
-    never a gap: there is nothing to compare it with."""
+    For each statement, the ones before it closed before it opened, or on
+    that day while opening earlier (so two pages of one day are never each
+    other's predecessor). The first statement of an account has none and
+    is never a gap: there is nothing to compare it with. Any other one
+    connects when a statement closed with the balance it opens with,
+    between the last one before it and its own opening date: the page
+    before it on the same day, or the last statement before it. If none
+    did, a statement is missing. A statement that overlaps others (a year
+    statement next to the monthly ones) connects the same way, or is the
+    first. Only from the last one before it: an account that is often at
+    the same balance (zero) must not hide a gap with an older statement.
+    """
     found = []
     for account, group in _per_account(BankBalance.objects.all()):
         rows = list(group)
         for row in rows:
             others = [o for o in rows if o.pk != row.pk]
-            if any(
-                o.closing_cents == row.opening_cents and o.closing_on <= row.opening_on
-                for o in others
-            ):
-                continue
             before = [
                 o
                 for o in others
                 if o.closing_on < row.opening_on
                 or (o.closing_on == row.opening_on and o.opening_on < row.opening_on)
             ]
-            if before:
-                last = before[-1]
-                found.append(
-                    Gap(
-                        account,
-                        last.closing_on,
-                        last.closing_cents,
-                        row.opening_on,
-                        row.opening_cents,
-                    )
-                )
+            if not before:
+                continue
+            last = before[-1]
+            if any(
+                o.closing_cents == row.opening_cents
+                and last.closing_on <= o.closing_on <= row.opening_on
+                for o in others
+            ):
+                continue
+            found.append(
+                Gap(account, last.closing_on, last.closing_cents, row.opening_on, row.opening_cents)
+            )
     return found
