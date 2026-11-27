@@ -1,0 +1,68 @@
+{% extends "site/base.html" %}
+{% load i18n %}
+
+{% block title %}{% if state == "sent" %}{% translate "Verstuurd" %}{% elif state == "failed" %}{% translate "Dat lukte niet" %}{% else %}{% translate "Stel een vraag" %}{% endif %} — Huismus{% endblock %}
+{% block og_title %}{% translate "Stel een vraag" %} — Huismus{% endblock %}
+{% block description %}{{ promise }}{% endblock %}
+{% block main_class %}wrap site-narrow question-page{% endblock %}
+
+{% block content %}
+{% comment %}Stel een vraag (huismus/core/site_question.py, huismus-intern/besluiten.md, 2026-11-25): a plain HTML form, no JavaScript, that posts to Contact Form 7 on arnekrijnsen.com. The plugin there sends the visitor back to Verstuurd or Mislukt, this template with another state. The parts are those of the feedback panel in the app (_feedback_panel.html).{% endcomment %}
+{% if state == "sent" %}
+<section class="card card-pad question-done" role="status">
+    <span class="fb-vink" aria-hidden="true"><svg class="i i-lg"><use href="#check"></use></svg></span>
+    <h1>{% translate "Verstuurd" %}</h1>
+    <p class="lede">{% translate "Bedankt voor je vraag. Je krijgt meestal binnen twee werkdagen antwoord op het adres dat je opgaf. Kijk ook even in je spam." %}</p>
+    <div class="row">
+        <a class="btn btn-primary" href="{{ help_index_url }}">{% translate "Naar de hulp" %}</a>
+        <a class="btn btn-ghost" href="{{ home_url }}">{% translate "Naar de homepage" %}</a>
+    </div>
+</section>
+{% elif state == "failed" %}
+{% comment %}The browser's back button, not a link to the form: then the question someone typed is usually still there. The mail address is the way when the form itself is broken.{% endcomment %}
+<section class="card card-pad question-done" role="alert">
+    <h1>{% translate "Dat lukte niet" %}</h1>
+    <p class="lede">{% blocktranslate %}Je vraag is niet verstuurd. Ga terug met de terugknop van je browser en probeer het later nog eens. Lukt het weer niet, mail dan naar <a href="mailto:hallo@mijnhuismus.nl">hallo@mijnhuismus.nl</a>.{% endblocktranslate %}</p>
+</section>
+{% else %}
+<div class="page-head">
+    <div class="titles">
+        <p class="kicker">{% translate "Hulp" %}</p>
+        <h1>{% translate "Stel een vraag" %}</h1>
+        <p class="lede">{{ promise }}</p>
+    </div>
+</div>
+
+<p>{% translate "Vragen over Huismus: installeren, overstappen, hoe iets werkt." %}</p>
+
+<form class="card card-pad question-form" method="post" action="{{ action_url }}" accept-charset="UTF-8">
+    {% for name, value in hidden_fields %}<input type="hidden" name="{{ name }}" value="{{ value }}">
+    {% endfor %}
+    <div class="field">
+        <label class="label" for="vraag">{% translate "Je vraag" %}</label>
+        <textarea class="textarea" id="vraag" name="vraag" rows="6" maxlength="{{ max_question }}" required></textarea>
+    </div>
+    <div class="field">
+        <label class="label" for="email">{% translate "Je e-mailadres" %}</label>
+        <input class="input" id="email" name="email" type="email" maxlength="{{ max_email }}" autocomplete="email" required aria-describedby="email-uitleg">
+        <span class="help" id="email-uitleg">{% translate "Hierop krijg je antwoord." %}</span>
+    </div>
+    <div class="field">
+        <label class="label" for="gebruik">{% translate "Waar gebruik je Huismus?" %} <span class="opt">({% translate "niet verplicht" %})</span></label>
+        <select class="select" id="gebruik" name="gebruik">
+            <option value=""></option>
+            {% for value, label in platforms %}<option value="{{ value }}">{{ label }}</option>{% endfor %}
+        </select>
+    </div>
+    {% comment %}The honeypot: people don't see it and screen readers skip it; a bot fills it in, and then the form on arnekrijnsen.com calls it spam.{% endcomment %}
+    <div class="question-trap" aria-hidden="true">
+        <label for="{{ honeypot }}">{% translate "Laat dit veld leeg" %}</label>
+        <input id="{{ honeypot }}" name="{{ honeypot }}" tabindex="-1" autocomplete="off">
+    </div>
+    <div>
+        <button class="btn btn-primary btn-lg" type="submit">{% translate "Versturen" %}</button>
+    </div>
+    <p class="small muted">{% translate "Je vraag en je e-mailadres gaan via een formulier op arnekrijnsen.com per mail naar de maker. Ze komen niet op GitHub, en je adres gebruikt de maker alleen om je te antwoorden. Zet geen klantgegevens, IBAN’s of bedragen in je vraag." %}</p>
+</form>
+{% endif %}
+{% endblock %}
