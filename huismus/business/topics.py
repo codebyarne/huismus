@@ -117,7 +117,7 @@ TOPICS += (
         "menu",
         _("Menu"),
         _("Kies wat je in het menu ziet. Waar al iets in staat, blijft erin."),
-        ("show_quotes", "show_expenses", "show_bank"),
+        ("show_quotes", "show_hours", "show_expenses", "show_bank"),
     ),
 )
 
@@ -126,6 +126,7 @@ BY_SLUG = {topic.slug: topic for topic in TOPICS}
 # The parts in the order of the menu, for the card's line.
 PART_NAMES = (
     (profile_axes.QUOTES, _("Offertes")),
+    (profile_axes.HOURS, _("Uren")),
     (profile_axes.EXPENSES, _("Uitgaven")),
     (profile_axes.BANK, _("Bank")),
 )
