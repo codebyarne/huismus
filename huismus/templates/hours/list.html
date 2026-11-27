@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% load i18n forms money hours %}
+
+{% block title %}{% translate "Uren" %} — Huismus{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <h1>{% translate "Uren" %}</h1>
+    </div>
+</div>
+
+{% if has_customers %}
+{% comment %}The quick form (design: richting A, huismus-intern/besluiten.md,
+2026-11-27). A plain POST to this page, with the filters in its address.
+"Nieuw › Uren" links to #uren-toevoegen, which puts the focus on it.{% endcomment %}
+<section class="card hours-add-card" id="uren-toevoegen" tabindex="-1" data-focus-first>
+    {% form_errors form %}
+    <form class="quick-add" method="post" action="{{ request.get_full_path }}">
+        {% csrf_token %}
+        {% field form.date %}
+        {% field form.contact %}
+        {% field form.description optional=True %}
+        {% field form.hours %}
+        {% field form.rate_cents money=True %}
+        <button type="submit" class="btn btn-primary"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Toevoegen" %}</button>
+    </form>
+</section>
+{% else %}
+{% comment %}Only the quick form gives way: hours on archived customers
+stay in view below.{% endcomment %}
+<section class="card hours-add-card" id="uren-toevoegen" tabindex="-1">
+    <div class="empty">
+        <div class="empty-art"><svg class="mark" width="56" height="56" aria-hidden="true"><use href="#mus-vogel"></use></svg></div>
+        <h2>{% translate "Voeg eerst een klant toe." %}</h2>
+        <p>{% translate "Uren schrijf je altijd op een klant." %}</p>
+        <div class="row"><a class="btn btn-primary" href="{% url 'contacts:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Klant toevoegen" %}</a></div>
+    </div>
+</section>
+{% endif %}
+
+{% if has_any or has_customers %}
+<section class="card list-card">
+    {% if has_any %}
+    {% comment %}Plain GET form; with HTMX the list refreshes on a choice,
+    and only #uren-resultaat is swapped.{% endcomment %}
+    <form class="toolbar" role="search" method="get"
+          hx-get="{% url 'hours:list' %}" hx-trigger="change"
+          hx-target="#uren-resultaat" hx-select="#uren-resultaat" hx-select-oob="#uren-filters-wissen"
+          hx-swap="outerHTML" hx-push-url="true">
+        <select class="select input-sm" style="width:auto" aria-label="{% translate 'Klant' %}" name="klant">
+            <option value="">{% translate "Alle klanten" %}</option>
+            {% for customer in customers %}<option value="{{ customer.pk }}"{% if customer.pk == contact_pk %} selected{% endif %}>{{ customer.display_name }}</option>{% endfor %}
+        </select>
+        <select class="select input-sm" style="width:auto" aria-label="{% translate 'Maand' %}" name="maand">
+            {% for value, label in month_options %}<option value="{{ value }}"{% if value == month %} selected{% endif %}>{{ label }}</option>{% endfor %}
+            <option value="alle"{% if month == "alle" %} selected{% endif %}>{% translate "Alle maanden" %}</option>
+        </select>
+        <span id="uren-filters-wissen">{% if filtered %}<a class="btn btn-ghost btn-sm" href="{% url 'hours:list' %}">{% translate "Filters wissen" %}</a>{% endif %}</span>
+        <noscript><button type="submit" class="btn btn-sm">{% translate "Tonen" %}</button></noscript>
+    </form>
+    {% endif %}
+    <div id="uren-resultaat">
+        {% if weeks %}
+        <div class="hours-total">
+            <span>{% blocktranslate %}Totaal: <strong>{{ total }}</strong>{% endblocktranslate %}</span>
+            {% if with_vat %}<span class="small muted">{% translate "Bedragen zonder btw." %}</span>{% endif %}
+        </div>
+        <div class="table-wrap">
+            <table class="table stackable">
+                <thead>
+                    <tr>
+                        <th>{% translate "Datum" %}</th>
+                        <th>{% translate "Klant" %}</th>
+                        <th>{% translate "Omschrijving" %}</th>
+                        <th class="r">{% translate "Uren" %}</th>
+                        <th class="r">{% translate "Bedrag" %}</th>
+                    </tr>
+                </thead>
+                {% for week in weeks %}
+                <tbody>
+                    <tr class="week-head">
+                        <th colspan="3" scope="colgroup" data-cell="primary">{{ week.label }}</th>
+                        <th colspan="2" class="r" data-cell="amount">{{ week.total }}</th>
+                    </tr>
+                    {% for entry in week.entries %}
+                    <tr class="is-link">
+                        <td data-cell="secondary" class="num">{{ entry.date|date:day_format }}</td>
+                        <td data-cell="primary"><a class="row-link" href="{% url 'hours:edit' entry.pk %}">{{ entry.contact.display_name }}</a></td>
+                        <td data-cell="order"><span class="small">{{ entry.description }}</span></td>
+                        <td data-cell="status" class="r num">{{ entry.hours|hours }}</td>
+                        <td data-cell="amount" class="r amount">{% if entry.rate_cents is None %}<span class="no-rate">{% translate "Geen tarief" %}</span>{% else %}{{ entry.amount_cents|money }}{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                {% endfor %}
+            </table>
+        </div>
+        {% if more_url %}
+        <div class="sum-row">
+            <a class="btn btn-ghost btn-sm" href="{{ more_url }}"
+               hx-get="{{ more_url }}" hx-target="#uren-resultaat" hx-select="#uren-resultaat"
+               hx-swap="outerHTML show:none" hx-push-url="true">{% translate "Meer laden" %}<span class="spinner"></span></a>
+        </div>
+        {% endif %}
+        {% elif not has_any %}
+        <div class="empty">
+            <h2>{% translate "Nog geen uren" %}</h2>
+            <p>{% translate "Vul ze hierboven in." %}</p>
+        </div>
+        {% elif month_name %}
+        <div class="empty">
+            <h2>{% blocktranslate with month=month_name %}Geen uren in {{ month }}{% endblocktranslate %}</h2>
+            <div class="row"><a class="btn" href="{{ all_months_url }}">{% translate "Alle maanden" %}</a></div>
+        </div>
+        {% else %}
+        <div class="empty">
+            <h2>{% translate "Niets gevonden" %}</h2>
+            <div class="row"><a class="btn" href="{% url 'hours:list' %}">{% translate "Filters wissen" %}</a></div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}
