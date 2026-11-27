@@ -299,6 +299,10 @@ Center. Eén keer opzetten, in Partner Center (tandwiel → Account settings):
    `PARTNER_CENTER_TENANT_ID`, `PARTNER_CENTER_SELLER_ID`,
    `PARTNER_CENTER_CLIENT_ID` en `PARTNER_CENTER_CLIENT_SECRET`.
 
+`release.yml` geeft alleen deze vier door aan `store.yml`, en daar krijgen
+alleen de twee eigen stappen die ze gebruiken ze te zien. De actie van
+Microsoft staat vast op een commit, niet op een tag.
+
 Een sleutel verloopt; zet bij het aanmaken een herinnering. Ontbreken de
 secrets, dan waarschuwt de job alleen en zend je met de hand in: Start
 submission, het `.msix` uit het artifact uploaden, en bij
