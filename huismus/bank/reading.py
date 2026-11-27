@@ -37,7 +37,7 @@ from huismus.expenses.models import Expense
 from . import camt, expense_matching, mt940
 from .lines import Statement, StatementLine, StatementReadError, clean_iban
 from .matching import LIKELY, SURE, OpenInvoice, fits_without_amount, match
-from .models import BankStatement, BankTransaction
+from .models import BankBalance, BankStatement, BankTransaction
 
 State = BankTransaction.State
 
@@ -75,6 +75,8 @@ class ReadResult:
     open: list[BankTransaction] = field(default_factory=list)
     already_booked: list[BankTransaction] = field(default_factory=list)
     seen_before: int = 0
+    # Balances (#159) not known before: also from a file without new lines.
+    balances_added: int = 0
     other_currency: int = 0
     accounts: set[str] = field(default_factory=set)
     statement: BankStatement | None = None
@@ -253,6 +255,7 @@ def read_statement(filename: str, data: bytes) -> ReadResult:
     for statement in statements:
         result.other_currency += statement.other_currency
         result.accounts |= statement.accounts
+        result.balances_added += store_balances(statement)
         # How often an equal line came before in this file.
         equal_before = Counter()
         for line in statement.lines:
@@ -275,9 +278,29 @@ def read_statement(filename: str, data: bytes) -> ReadResult:
         result.statement = stored
         stored.summary = result.summary()
         stored.save(update_fields=["summary", "updated_at"])
-        # Only once the lines are in the database: a rollback keeps no file.
+    if stored.pk is not None or result.balances_added:
+        # The file is the evidence of what was booked or of a balance; a
+        # file that only adds a balance gets no BankStatement row, which
+        # would show as a statement without lines. Only once the rows are
+        # in the database: a rollback keeps no file.
         transaction.on_commit(lambda: _keep_file(stored, data))
     return result
+
+
+def store_balances(statement: Statement) -> int:
+    """The balances of one parsed file Huismus didn't know yet (#159);
+    how many. Also used by the migration that reads the kept files."""
+    added = 0
+    for balance in statement.balances:
+        _, created = BankBalance.objects.get_or_create(
+            account_iban=balance.account_iban,
+            opening_on=balance.opening_on,
+            opening_cents=balance.opening_cents,
+            closing_on=balance.closing_on,
+            closing_cents=balance.closing_cents,
+        )
+        added += created
+    return added
 
 
 def archive_dir() -> Path:

@@ -143,3 +143,36 @@ class BankTransaction(TimestampedModel):
         was there before the statement is never taken back."""
         linked = self.payment_id is not None or self.expense_id is not None
         return linked and self.state in (self.State.BOOKED, self.State.CONFIRMED)
+
+
+class BankBalance(TimestampedModel):
+    """The opening and closing balance one statement states (#159), as the
+    bank gives them: Huismus never adds lines up to get a balance. The
+    same statement from another or an overlapping file is one row. What
+    Huismus does with them is in balances.py."""
+
+    account_iban = models.CharField(_("rekening"), max_length=34)
+    opening_on = models.DateField(_("datum beginsaldo"))
+    opening_cents = models.BigIntegerField(_("beginsaldo (cent)"))
+    closing_on = models.DateField(_("datum eindsaldo"))
+    closing_cents = models.BigIntegerField(_("eindsaldo (cent)"))
+
+    class Meta:
+        verbose_name = _("banksaldo")
+        verbose_name_plural = _("banksaldi")
+        ordering = ["account_iban", "closing_on", "pk"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=[
+                    "account_iban",
+                    "opening_on",
+                    "opening_cents",
+                    "closing_on",
+                    "closing_cents",
+                ],
+                name="bank_balance_once",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.account_iban} {self.closing_on} {self.closing_cents}"
