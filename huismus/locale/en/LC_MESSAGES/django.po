@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-28 13:47+0100\n"
+"POT-Creation-Date: 2026-11-28 14:41+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -696,6 +696,9 @@ msgstr "text in English"
 msgid "Je hebt offertes, dus Offertes blijft in het menu."
 msgstr "You have quotes, so Quotes stays in the menu."
 
+msgid "Je hebt uren ingevuld, dus Uren blijft in het menu."
+msgstr "You've entered hours, so Hours stays in the menu."
+
 msgid "Je hebt uitgaven of bonnetjes, dus Uitgaven blijft in het menu."
 msgstr "You have expenses or receipts, so Expenses stays in the menu."
 
@@ -770,6 +773,9 @@ msgstr "Suggested from what you filled in before. If it's right, save."
 
 msgid "Met je bonnetjes en categorieën."
 msgstr "Including your receipts and categories."
+
+msgid "Je uren per klant, met je tarief."
+msgstr "Your hours per customer, at your rate."
 
 #, python-format
 msgid "Dit logo is groter dan %(max_mb)s MB. Kies een kleiner bestand."
@@ -966,6 +972,9 @@ msgstr "Expenses"
 
 msgid "Bank"
 msgstr "Bank"
+
+msgid "Uren"
+msgstr "Hours"
 
 msgid "instellingen"
 msgstr "settings"
@@ -1648,6 +1657,10 @@ msgctxt "export file"
 msgid "uitgaveregels"
 msgstr "expense-lines"
 
+msgctxt "export file"
+msgid "uren"
+msgstr "hours"
+
 msgctxt "export folder"
 msgid "bonnetjes"
 msgstr "receipts"
@@ -1773,6 +1786,15 @@ msgstr "VAT rate"
 
 msgid "categorie"
 msgstr "category"
+
+msgid "uren"
+msgstr "hours"
+
+msgid "tarief per uur"
+msgstr "rate per hour"
+
+msgid "bedrag"
+msgstr "amount"
 
 msgid "Eenmanszaak of vof met KOR"
 msgstr "Sole trader or partnership using the KOR"
@@ -2337,8 +2359,8 @@ msgid "Importeren uit andere pakketten en uit Excel"
 msgstr "Import from other bookkeeping apps and from Excel"
 
 msgid ""
-"Met het sjabloon, en een handleiding voor Rompslomp, Tellow, e-Boekhouden."
-"nl, Jortt en Excel."
+"Met het sjabloon, en een handleiding voor Rompslomp, Tellow, e-"
+"Boekhouden.nl, Jortt en Excel."
 msgstr ""
 "With the template, and a guide for Rompslomp, Tellow, e-Boekhouden.nl, Jortt "
 "and Excel."
@@ -2651,7 +2673,6 @@ msgstr "High rate"
 msgid "Laag tarief"
 msgstr "Low rate"
 
-#, python-format
 msgid "0% of niet bij jou belast"
 msgstr "0% or not taxed with you"
 
@@ -2700,7 +2721,6 @@ msgstr "Revenue 1a high rate"
 msgid "Omzet 1b laag tarief"
 msgstr "Revenue 1b low rate"
 
-#, python-format
 msgid "Omzet 1e 0% of niet bij jou belast"
 msgstr "Revenue 1e 0% or not taxed with you"
 
@@ -2749,9 +2769,6 @@ msgstr "Bank transfer"
 
 msgid "Contant"
 msgstr "Cash"
-
-msgid "bedrag"
-msgstr "amount"
 
 msgid "methode"
 msgstr "method"
@@ -3391,7 +3408,6 @@ msgstr "Fill in the VAT amount. No VAT paid? Then fill in 0."
 msgid "Kies het btw-tarief."
 msgstr "Choose the VAT rate."
 
-#, python-format
 msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
 msgstr "With 0% or no VAT, the VAT amount is € 0.00."
 
@@ -3466,7 +3482,6 @@ msgstr "Saved. Huismus picks up new receipts from %(place)s by itself."
 msgid "Bonnetje verwijderd."
 msgstr "Receipt deleted."
 
-#, python-format
 msgid "0% of geen btw"
 msgstr "0% or no VAT"
 
@@ -3658,6 +3673,61 @@ msgstr "Category saved."
 msgid "Categorie verwijderd."
 msgstr "Category deleted."
 
+msgid "Vul je uren in, bijvoorbeeld 1,5 of 1:30."
+msgstr "Enter your hours, for example 1.5 or 1:30."
+
+msgid "Vul meer dan 0 uur in."
+msgstr "Enter more than 0 hours."
+
+msgid "Eén regel kan hoogstens 24 uur zijn."
+msgstr "One entry can be 24 hours at most."
+
+msgid "Bijvoorbeeld 1,5 of 1:30."
+msgstr "For example 1.5 or 1:30."
+
+msgid "Tarief per uur"
+msgstr "Rate per hour"
+
+msgid "Datum"
+msgstr "Date"
+
+msgid "Klant"
+msgstr "Customer"
+
+msgid "Omschrijving"
+msgstr "Description"
+
+msgid "Kies een klant."
+msgstr "Choose a customer."
+
+msgid "Laat leeg voor uren die je niet factureert."
+msgstr "Leave empty for hours you don't bill."
+
+msgid "Zonder btw. Laat leeg voor uren die je niet factureert."
+msgstr "Excluding VAT. Leave empty for hours you don't bill."
+
+msgid "Een tarief kan niet negatief zijn."
+msgstr "A rate can't be negative."
+
+#, python-format
+msgid "%(hours)s uur"
+msgid_plural "%(hours)s uur"
+msgstr[0] "%(hours)s hour"
+msgstr[1] "%(hours)s hours"
+
+#, python-format
+msgid "Week %(week)s · %(start)s t/m %(end)s"
+msgstr "Week %(week)s · %(start)s–%(end)s"
+
+msgid "Uren toegevoegd."
+msgstr "Hours added."
+
+msgid "Uren opgeslagen."
+msgstr "Hours saved."
+
+msgid "Uren verwijderd."
+msgstr "Hours deleted."
+
 msgid "de klanten"
 msgstr "the customers"
 
@@ -3842,6 +3912,10 @@ msgid "een offerte hoort in het offertebestand."
 msgstr "a quote belongs in the quotes file."
 
 #, python-format
+msgid "Je uren (%(file)s) neemt Huismus nog niet mee. Ze blijven in je export."
+msgstr "Huismus doesn't bring your hours (%(file)s) over yet. They stay in your export."
+
+#, python-format
 msgid ""
 "In %(export)s staan twee bestanden met dezelfde soort gegevens (%(first)s en "
 "%(second)s). Zip elke export apart, of importeer ze één voor één."
@@ -3900,9 +3974,6 @@ msgstr ""
 
 msgid "de klant"
 msgstr "the customer"
-
-msgid "Klant"
-msgstr "Customer"
 
 msgid "de factuur"
 msgstr "the invoice"
@@ -4399,7 +4470,6 @@ msgstr "Supplies/services subject to the high VAT rate"
 msgid "Leveringen/diensten belast met laag tarief"
 msgstr "Supplies/services subject to the low VAT rate"
 
-#, python-format
 msgid "Leveringen/diensten belast met 0% of niet bij u belast"
 msgstr "Supplies/services taxed at 0% or not taxed to you"
 
@@ -6000,9 +6070,6 @@ msgstr "All invoices"
 msgid "Nummer"
 msgstr "Number"
 
-msgid "Datum"
-msgstr "Date"
-
 msgid "Status"
 msgstr "Status"
 
@@ -6094,9 +6161,6 @@ msgstr ""
 
 msgid "Leegmaken"
 msgstr "Clear"
-
-msgid "Omschrijving"
-msgstr "Description"
 
 msgid "Eenheid"
 msgstr "Unit"
@@ -7489,6 +7553,50 @@ msgid ""
 msgstr ""
 "Set up a receipts folder. What you save there on the road shows up here by "
 "itself."
+
+msgid "Uren wijzigen"
+msgstr "Edit hours"
+
+msgid "Deze uren verwijderen?"
+msgstr "Delete these hours?"
+
+msgid "Dat kun je niet ongedaan maken."
+msgstr "You can't undo this."
+
+msgid "Voeg eerst een klant toe."
+msgstr "Add a customer first."
+
+msgid "Uren schrijf je altijd op een klant."
+msgstr "Hours always go on a customer."
+
+msgid "Alle klanten"
+msgstr "All customers"
+
+msgid "Alle maanden"
+msgstr "All months"
+
+msgid "Tonen"
+msgstr "Show"
+
+#, python-format
+msgid "Totaal: <strong>%(total)s</strong>"
+msgstr "Total: <strong>%(total)s</strong>"
+
+msgid "Bedragen zonder btw."
+msgstr "Amounts excluding VAT."
+
+msgid "Geen tarief"
+msgstr "No rate"
+
+msgid "Nog geen uren"
+msgstr "No hours yet"
+
+msgid "Vul ze hierboven in."
+msgstr "Fill them in above."
+
+#, python-format
+msgid "Geen uren in %(month)s"
+msgstr "No hours in %(month)s"
 
 #, python-format
 msgid "%(count)s punt om na te lopen"
@@ -9832,12 +9940,12 @@ msgstr "Who makes Huismus"
 
 msgid ""
 "Huismus wordt gemaakt in Nederland door Arne Krijnsen. Over de maker en wat "
-"die nog meer doet, lees je op <a href=\"https://www.arnekrijnsen."
-"com\">arnekrijnsen.com</a>."
+"die nog meer doet, lees je op <a href=\"https://"
+"www.arnekrijnsen.com\">arnekrijnsen.com</a>."
 msgstr ""
 "Huismus is made in the Netherlands by Arne Krijnsen. You can read about him "
-"and his other work on <a href=\"https://www.arnekrijnsen.com\">arnekrijnsen."
-"com</a>."
+"and his other work on <a href=\"https://"
+"www.arnekrijnsen.com\">arnekrijnsen.com</a>."
 
 #~ msgid "Eén keer goed, in plaats van duizend keer"
 #~ msgstr "Made well once, instead of a thousand times"
@@ -9964,10 +10072,6 @@ msgstr ""
 
 #~ msgid "Komt eraan"
 #~ msgstr "Coming up"
-
-#, python-format
-#~ msgid "Verwacht in %(month)s"
-#~ msgstr "Expected in %(month)s"
 
 #~ msgid "Later, zonder maand"
 #~ msgstr "Later, without a month"
@@ -10658,9 +10762,6 @@ msgstr ""
 
 #~ msgid "Contacten"
 #~ msgstr "Contacts"
-
-#~ msgid "Facturen per factuur"
-#~ msgstr "Invoices per invoice"
 
 #, python-format
 #~ msgid ""

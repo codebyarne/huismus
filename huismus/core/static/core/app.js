@@ -1009,3 +1009,37 @@ for (const input of document.querySelectorAll("input[type=file][data-camera]")) 
     break;
   }
 }
+
+// Uren (#80): a change of customer in the quick form fills in his last
+// rate, a value the server put in data-rates ("90,00"), never one worked
+// out here. Only while the rate is still Huismus's: once you typed in it,
+// it stays yours. Without JS the rate stays what the page came with.
+document.addEventListener("input", (event) => {
+  if (event.target.matches?.("input[data-rate-for]")) event.target.dataset.typed = "1";
+});
+document.addEventListener("change", (event) => {
+  const select = event.target;
+  if (!select.matches?.("select[data-rates]")) return;
+  const rate = document.querySelector(`input[data-rate-for="${select.id}"]`);
+  if (!rate || rate.dataset.typed) return;
+  // The server writes data-rates (hours.views._new_form).
+  const rates = JSON.parse(select.dataset.rates);
+  rate.value = rates[select.value] ?? "";
+});
+
+// "Nieuw › Uren" opens Uren at #uren-toevoegen: the focus goes to the
+// quick form's first field, so you can type at once. Also when you are on
+// Uren already and only the address's #… changes.
+function focusFirstField() {
+  const id = location.hash.slice(1);
+  const target = id ? document.getElementById(id) : null;
+  if (!target || !target.hasAttribute("data-focus-first")) return;
+  target.querySelector("input:not([type=hidden]), select, textarea")?.focus();
+}
+focusFirstField();
+window.addEventListener("hashchange", focusFirstField);
+// A boosted link (hx-boost) changes the address without a page load. A frame
+// after the swap has settled: first the "Nieuw" popover closes and gives the
+// focus back to its + button (the browser does that), then this takes it.
+// tests/e2e/test_hours.py checks the order.
+document.addEventListener("htmx:afterSettle", () => requestAnimationFrame(focusFirstField));

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load i18n forms %}
+
+{% block title %}{% translate "Uren wijzigen" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <a class="back" href="{% url 'hours:list' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Uren" %}</a>
+        <h1>{% translate "Uren wijzigen" %}</h1>
+    </div>
+</div>
+
+{% form_errors form %}
+
+<form class="card card-pad stack" method="post" style="gap:var(--s-6)">
+    {% csrf_token %}
+    <div class="fieldset">
+        {% field form.date span=2 %}
+        {% field form.contact span=4 %}
+        {% field form.description optional=True %}
+        {% field form.hours span=3 %}
+        {% field form.rate_cents span=3 money=True %}
+    </div>
+    <div class="row" style="flex-wrap:wrap">
+        <button type="submit" class="btn btn-primary">{% translate "Opslaan" %}<span class="spinner"></span></button>
+        <a class="btn btn-ghost" href="{% url 'hours:list' %}">{% translate "Annuleren" %}</a>
+        <span class="spacer"></span>
+        <button class="btn btn-danger-quiet" type="button" command="show-modal" commandfor="verwijder-uren"><svg class="i" aria-hidden="true"><use href="#trash"></use></svg>{% translate "Verwijderen…" %}</button>
+    </div>
+</form>
+
+<dialog class="dialog" id="verwijder-uren" aria-labelledby="verwijder-uren-titel">
+    <form method="post" action="{% url 'hours:delete' entry.pk %}">
+        {% csrf_token %}
+        <div class="dialog-body">
+            <div class="dialog-icon is-danger"><svg class="i" aria-hidden="true"><use href="#trash"></use></svg></div>
+            <h2 id="verwijder-uren-titel">{% translate "Deze uren verwijderen?" %}</h2>
+            <p class="muted">{% translate "Dat kun je niet ongedaan maken." %}</p>
+        </div>
+        <div class="dialog-foot">
+            <button type="button" class="btn" command="close" commandfor="verwijder-uren">{% translate "Annuleren" %}</button>
+            <button type="submit" class="btn btn-danger">{% translate "Verwijderen" %}</button>
+        </div>
+    </form>
+</dialog>
+{% endblock %}
