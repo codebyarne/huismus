@@ -90,6 +90,7 @@ MAIL_TEXT_PARTS = {
 # 2026-11-22, "Onderdelen verbergen").
 PART_FIELDS = {
     "show_quotes": (profile_axes.QUOTES, _("Je hebt offertes, dus Offertes blijft in het menu.")),
+    "show_hours": (profile_axes.HOURS, _("Je hebt uren ingevuld, dus Uren blijft in het menu.")),
     "show_expenses": (
         profile_axes.EXPENSES,
         _("Je hebt uitgaven of bonnetjes, dus Uitgaven blijft in het menu."),
@@ -382,6 +383,8 @@ class SettingsPartForm(SettingsForm):
                 self.initial[name] = True
         if "show_expenses" in self.fields and "show_expenses" not in self.parts_kept:
             self.fields["show_expenses"].help_text = _("Met je bonnetjes en categorieën.")
+        if "show_hours" in self.fields and "show_hours" not in self.parts_kept:
+            self.fields["show_hours"].help_text = _("Je uren per klant, met je tarief.")
         # The next number by hand (issue #141), where the fields name it
         # (Facturen en nummering, the start's Facturen step), and only for a
         # kind Huismus never gave a number yet (invariant 3).

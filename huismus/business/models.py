@@ -187,6 +187,9 @@ class Settings(TimestampedModel):
     show_quotes = models.BooleanField(_("Offertes"), default=True)
     show_expenses = models.BooleanField(_("Uitgaven"), default=True)
     show_bank = models.BooleanField(_("Bank"), default=True)
+    # Off by default, unlike the three above (huismus-intern/besluiten.md,
+    # 2026-11-22, "Uren en Kilometers standaard uit").
+    show_hours = models.BooleanField(_("Uren"), default=False)
 
     class Meta:
         verbose_name = _("instellingen")

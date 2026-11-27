@@ -39,6 +39,7 @@
             <a href="{% url 'documents:list' %}"{% if nav_section == "documents" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#file"></use></svg>{% translate "Facturen" %}</a>
             {% comment %}Offertes, Uitgaven and Bank only when shown (#260, Instellingen › Menu; core.context_processors.parts).{% endcomment %}
             {% if show_quotes %}<a href="{% url 'quotes:list' %}"{% if nav_section == "quotes" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#tag"></use></svg>{% translate "Offertes" %}</a>{% endif %}
+            {% if show_hours %}<a href="{% url 'hours:list' %}"{% if nav_section == "hours" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% translate "Uren" %}</a>{% endif %}
             {% if show_expenses %}<a href="{% url 'expenses:list' %}"{% if nav_section == "expenses" and not nav_subsection %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#wallet"></use></svg>{% translate "Uitgaven" %}</a>
             {% if nav_section == "expenses" %}
             <div class="sub">
@@ -84,12 +85,14 @@
     <div id="plus-menu" class="menu" popover="auto">
         <a href="{% url 'documents:create' %}"><svg class="i" aria-hidden="true"><use href="#file"></use></svg>{% translate "Factuur" %}</a>
         {% if show_quotes %}<a href="{% url 'quotes:create' %}"><svg class="i" aria-hidden="true"><use href="#clipboard"></use></svg>{% translate "Offerte" %}</a>{% endif %}
+        {% if show_hours %}<a href="{% url 'hours:list' %}#uren-toevoegen"><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% translate "Uren" %}</a>{% endif %}
         <a href="{% url 'contacts:create' %}"><svg class="i" aria-hidden="true"><use href="#users"></use></svg>{% translate "Klant" %}</a>
         {% if show_expenses %}<a href="{% url 'expenses:create' %}"><svg class="i" aria-hidden="true"><use href="#receipt"></use></svg>{% translate "Uitgave" %}</a>{% endif %}
     </div>
     {# Everything the tab bar has no place for. #}
     <div id="meer-menu" class="menu" popover="auto">
         {% if "quotes" in menu_more %}<a href="{% url 'quotes:list' %}"><svg class="i" aria-hidden="true"><use href="#tag"></use></svg>{% translate "Offertes" %}</a>{% endif %}
+        {% if "hours" in menu_more %}<a href="{% url 'hours:list' %}"><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% translate "Uren" %}</a>{% endif %}
         {% if "categories" in menu_more %}<a href="{% url 'expenses:category_list' %}"><svg class="i" aria-hidden="true"><use href="#archive"></use></svg>{% translate "Categorieën" %}</a>{% endif %}
         {% if "bank" in menu_more %}<a href="{% url 'bank:statement' %}"><svg class="i" aria-hidden="true"><use href="#euro"></use></svg>{% translate "Bank" %}</a>{% endif %}
         {% if "contacts" in menu_more %}<a href="{% url 'contacts:list' %}"><svg class="i" aria-hidden="true"><use href="#users"></use></svg>{% translate "Klanten" %}</a>{% endif %}
