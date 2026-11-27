@@ -7,7 +7,7 @@ from collections import Counter
 
 import pytest
 
-from huismus.bank import demo, reading
+from huismus.bank import balances, demo, reading
 from huismus.bank.models import BankTransaction
 from huismus.core.demo_history import LAST_DAY, create_history
 
@@ -34,3 +34,13 @@ def test_every_kind_of_line():
         State.OPEN: 5,
     }
     assert result.summary()["outgoing"] == 8
+
+
+def test_the_demo_statement_has_a_balance_that_fits_its_lines():
+    create_history()
+    reading.read_statement("demo.xml", demo.demo_statement(LAST_DAY))
+    (balance,) = balances.latest()
+    lines = sum(BankTransaction.objects.values_list("amount_cents", flat=True))
+    assert balance.on == LAST_DAY
+    assert balance.cents == demo.OPENING_CENTS + lines
+    assert balances.gaps() == []

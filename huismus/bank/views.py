@@ -19,15 +19,17 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils.formats import date_format
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy, ngettext
 from django.views.decorators.http import require_POST
 
+from huismus.core.templatetags.money import money
 from huismus.documents.models import Document
 from huismus.expenses.models import Expense
 
-from . import expense_matching, reading
+from . import balances, expense_matching, reading
 from .expense_matching import OpenExpense
 from .lines import StatementReadError
 from .matching import OpenInvoice, match
@@ -274,6 +276,39 @@ def _report(statement, to_do_pks) -> Report | None:
     )
 
 
+def gap_notices() -> list[str]:
+    """One warning per account where a statement is missing (#159;
+    product-owner agent 2026-11-27, point 3): the first gap, and how many
+    there are when more."""
+    notices = []
+    per_account: dict[str, list[balances.Gap]] = {}
+    for gap in balances.gaps():
+        per_account.setdefault(gap.account_iban, []).append(gap)
+    for account, found in per_account.items():
+        first = found[0]
+        values = {
+            "iban": _grouped(account),
+            "end": date_format(first.closed_on, "SHORT_DATE_FORMAT"),
+            "start": date_format(first.opened_on, "SHORT_DATE_FORMAT"),
+            "closing": money(first.closing_cents),
+            "opening": money(first.opening_cents),
+            "count": len(found),
+        }
+        if len(found) == 1:
+            text = _(
+                "Er mist een afschrift van %(iban)s tussen %(end)s en %(start)s. Het saldo "
+                "was %(closing)s en begint daarna op %(opening)s. Lees dat afschrift ook in."
+            )
+        else:
+            text = _(
+                "Er missen afschriften van %(iban)s: het saldo sluit %(count)s keer niet aan. "
+                "De eerste keer is tussen %(end)s en %(start)s. Lees de afschriften van die "
+                "periodes in."
+            )
+        notices.append(text % values)
+    return notices
+
+
 # Niet herkend: which side (?kant=), and how many lines (?toon=), 20 more
 # per "Toon meer" (product-owner agent 2026-11-21, point 3).
 SHOW_STEP = 20
@@ -338,10 +373,12 @@ def statement_page(request):
                 error = NOT_A_STATEMENT
             else:
                 if result.statement is None:
-                    messages.info(
-                        request,
-                        _("Niets nieuws: alle betalingen in dit bestand waren al ingelezen."),
+                    nothing_new = _(
+                        "Niets nieuws: alle betalingen in dit bestand waren al ingelezen."
                     )
+                    if result.balances_added:
+                        nothing_new += " " + _("Het saldo is bijgewerkt.")
+                    messages.info(request, nothing_new)
                     return redirect("bank:statement")
                 return redirect(f"{reverse('bank:statement')}?afschrift={result.statement.pk}")
 
@@ -370,6 +407,12 @@ def statement_page(request):
             if statement and requested
             else "",
             "report": _report(statement, to_do_pks),
+            # The latest balance per account, whatever statement is shown
+            # (product-owner agent 2026-11-27, point 1).
+            "balances": [
+                {"balance": b, "iban": _grouped(b.account_iban)} for b in balances.latest()
+            ],
+            "gap_notices": gap_notices(),
             "booked": booked,
             "to_do": to_do,
             "skipped_count": BankTransaction.objects.filter(state=State.SKIPPED).count(),

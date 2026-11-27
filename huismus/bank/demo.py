@@ -16,9 +16,20 @@ from xml.sax.saxutils import escape
 
 from huismus.documents.models import Payment
 
+from . import camt
 from .reading import open_invoices
 
 ACCOUNT = "NL91ABNA0417164300"
+# What was on the account before the statement's day (#159): made up.
+OPENING_CENTS = 834_250
+
+
+def _balance(code, cents, day):
+    euros = f"{abs(cents) // 100}.{abs(cents) % 100:02d}"
+    direction = "CRDT" if cents >= 0 else "DBIT"
+    return f"""<Bal><Tp><CdOrPrtry><Cd>{code}</Cd></CdOrPrtry></Tp>
+<Amt Ccy="EUR">{euros}</Amt><CdtDbtInd>{direction}</CdtDbtInd>
+<Dt><Dt>{day.isoformat()}</Dt></Dt></Bal>"""
 
 
 def _entry(amount_cents, booked_on, name, text, credit=True, iban=""):
@@ -86,11 +97,23 @@ def demo_statement(booked_on: date) -> bytes:
                 f"Factuur {paid.document.number}",
             )
         )
+    # The balances as a bank gives them: the closing one is the opening one
+    # plus the lines, read back the way Huismus reads them (#159).
+    lines = camt.read(_document(booked_on, "", entries)).lines
+    balances = _balance("OPBD", OPENING_CENTS, min(line.booked_on for line in lines))
+    balances += _balance(
+        "CLBD", OPENING_CENTS + sum(line.amount_cents for line in lines), booked_on
+    )
+    return _document(booked_on, balances, entries)
+
+
+def _document(booked_on: date, balances: str, entries: list[str]) -> bytes:
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <!-- Fictional statement made by Huismus for its demo data (huismus/bank/demo.py). -->
 <Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.02"><BkToCstmrStmt>
 <GrpHdr><MsgId>HUISMUS-DEMO</MsgId><CreDtTm>{booked_on.isoformat()}T06:00:00</CreDtTm></GrpHdr>
 <Stmt><Id>HUISMUS-DEMO-1</Id><Acct><Id><IBAN>{ACCOUNT}</IBAN></Id></Acct>
+{balances}
 {"".join(entries)}
 </Stmt></BkToCstmrStmt></Document>
 """.encode()
