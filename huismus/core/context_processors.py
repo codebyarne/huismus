@@ -9,7 +9,7 @@ from huismus.core import auto_backups
 from huismus.core.appearance import theme_of
 from huismus.core.desktop import has_no_password
 from huismus.core.feedback_views import QuickFeedbackForm
-from huismus.core.profile import BANK, EXPENSES, QUOTES, profile
+from huismus.core.profile import BANK, EXPENSES, HOURS, QUOTES, profile
 
 # Routes that have their own item in the sidebar's sub-navigation, per
 # section. Every other route of the section (list, form, receipts, delete)
@@ -43,7 +43,7 @@ def navigation(request):
 
 
 def parts(request):
-    """show_quotes, show_expenses, show_bank: whether a part is in the
+    """show_quotes, show_hours, show_expenses, show_bank: whether a part is in the
     sidebar and under "Nieuw" (#260, core.profile.parts_shown).
     menu_tab: what the tab bar's fourth place holds, "expenses", else "quotes",
     else "contacts" (huismus-intern/besluiten.md, 2026-11-22); the values
@@ -70,6 +70,9 @@ def parts(request):
     meer = {"reports", "imports", "business", "help", "articles"}
     if QUOTES in shown:
         meer.add("quotes")
+    # Never in the tab bar: its fourth place stays as decided at #260.
+    if HOURS in shown:
+        meer.add("hours")
     if EXPENSES in shown:
         meer.add("categories")
     if BANK in shown:
@@ -78,6 +81,7 @@ def parts(request):
     meer.discard(tab)
     return {
         "show_quotes": QUOTES in shown,
+        "show_hours": HOURS in shown,
         "show_expenses": EXPENSES in shown,
         "show_bank": BANK in shown,
         "menu_tab": tab,

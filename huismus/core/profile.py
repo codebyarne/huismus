@@ -31,6 +31,7 @@ OUTSIDE_EU = "buiten_eu"
 QUOTES = "offertes"
 EXPENSES = "uitgaven"
 BANK = "bank"
+HOURS = "uren"
 # Not a part of its own: a page under Facturen once there is a series (#82).
 RECURRING = "periodiek"
 
@@ -131,6 +132,7 @@ class Profile:
         Only the settings, no data."""
         choices = {
             QUOTES: self.settings.show_quotes,
+            HOURS: self.settings.show_hours,
             EXPENSES: self.settings.show_expenses,
             BANK: self.settings.show_bank,
         }
@@ -139,9 +141,10 @@ class Profile:
     @cached_property
     def parts_in_use(self) -> frozenset[str]:
         """The parts with data in them: a quote (a draft too), an expense or
-        a receipt waiting in the tray, a bank statement, a recurring series.
+        a receipt waiting in the tray, a bank statement, hours, a recurring
+        series.
         Categories don't count: they are there from the start."""
-        return self._with_data({QUOTES, EXPENSES, BANK, RECURRING})
+        return self._with_data({QUOTES, HOURS, EXPENSES, BANK, RECURRING})
 
     def _with_data(self, parts) -> frozenset[str]:
         """Those of `parts` with data in them; asks only about those."""
@@ -149,10 +152,13 @@ class Profile:
         from huismus.core.models import Attachment
         from huismus.documents.models import Document, RecurringInvoice
         from huismus.expenses.models import Expense
+        from huismus.hours.models import TimeEntry
 
         found = set()
         if QUOTES in parts and Document.objects.filter(kind="quote").exists():
             found.add(QUOTES)
+        if HOURS in parts and TimeEntry.objects.exists():
+            found.add(HOURS)
         if EXPENSES in parts and (
             Expense.objects.exists() or Attachment.objects.in_tray().exists()
         ):
@@ -171,7 +177,7 @@ class Profile:
         2026-11-21). Every page asks this, so only a part switched off is
         looked up in the data."""
         chosen = self.parts_chosen
-        return chosen | self._with_data({QUOTES, EXPENSES, BANK} - chosen)
+        return chosen | self._with_data({QUOTES, HOURS, EXPENSES, BANK} - chosen)
 
     @cached_property
     def origin(self) -> str:
