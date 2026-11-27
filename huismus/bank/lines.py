@@ -37,10 +37,26 @@ class StatementLine:
     bank_reference: str = ""
 
 
+@dataclass(frozen=True)
+class StatementBalance:
+    """What the bank says the account held at the start and at the end of
+    one statement (#159), in cents, negative when overdrawn. The dates are
+    the bank's own: some give the first day of the statement for the
+    opening balance, others the last day of the one before."""
+
+    account_iban: str
+    opening_on: date
+    opening_cents: int
+    closing_on: date
+    closing_cents: int
+
+
 @dataclass
 class Statement:
     format: str  # "camt053" or "mt940"
     lines: list[StatementLine] = field(default_factory=list)
+    # One per statement in the file that states both balances in euros.
+    balances: list[StatementBalance] = field(default_factory=list)
     accounts: set[str] = field(default_factory=set)
     # Credits in another currency than euros: Huismus skips them.
     other_currency: int = 0
