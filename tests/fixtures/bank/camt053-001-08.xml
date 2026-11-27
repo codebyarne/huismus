@@ -6,6 +6,18 @@
     <Stmt>
       <Id>TEST-0002-1</Id>
       <Acct><Id><IBAN>NL91ABNA0417164300</IBAN></Id></Acct>
+      <Bal>
+        <Tp><CdOrPrtry><Cd>PRCD</Cd></CdOrPrtry></Tp>
+        <Amt Ccy="EUR">855.00</Amt>
+        <CdtDbtInd>DBIT</CdtDbtInd>
+        <Dt><DtTm>2026-11-12T23:59:59+01:00</DtTm></Dt>
+      </Bal>
+      <Bal>
+        <Tp><CdOrPrtry><Cd>CLBD</Cd></CdOrPrtry></Tp>
+        <Amt Ccy="EUR">250.00</Amt>
+        <CdtDbtInd>DBIT</CdtDbtInd>
+        <Dt><Dt>2026-11-13</Dt></Dt>
+      </Bal>
       <Ntry>
         <Amt Ccy="EUR">605.00</Amt>
         <CdtDbtInd>CRDT</CdtDbtInd>

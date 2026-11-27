@@ -26,13 +26,25 @@ text, never a lost line.
 import re
 from datetime import date
 
-from .lines import Statement, StatementLine, StatementReadError, clean_iban, clean_text
+from .lines import (
+    Statement,
+    StatementBalance,
+    StatementLine,
+    StatementReadError,
+    clean_iban,
+    clean_text,
+)
 
 _FIELD = re.compile(r"^:(\d\d[A-Z]?):(.*)$")
 _LINE_61 = re.compile(
     r"^(?P<value>\d{6})(?P<booking>\d{4})?(?P<mark>R?[CD])(?P<funds>[A-Z])?"
     r"(?P<amount>\d+(?:,\d*)?)(?P<type>[NFS][A-Z0-9]{3})(?P<ref>.*?)(?://(?P<bank>.*))?$"
 )
+# :60F:/:60M: and :62F:/:62M: (#159): C or D, the date, the currency and
+# the amount, as in "C261113EUR000000001000,00". F is the statement's
+# first or final balance, M one of a statement in pages: both open or
+# close a stretch Huismus compares with the next.
+_BALANCE = re.compile(r"^(?P<mark>[CD])(?P<date>\d{6})(?P<ccy>[A-Z]{3})(?P<amount>\d+(?:,\d*)?)$")
 _IBAN = re.compile(r"^[A-Z]{2}\d{2}[A-Z0-9]{10,30}$")
 _FULL_LINE = 65
 # ING repeats a betalingskenmerk in :61:'s own reference; a betalingskenmerk
@@ -80,8 +92,18 @@ def read(data: bytes) -> Statement:
     statement = Statement(format="mt940")
     account = ""
     pending = None  # a :61: waiting for its :86:
+    opening = None  # (date, cents) of the last :60:, in euros
     for tag, lines in _fields(_decode(data)):
-        if tag == "25":
+        if tag == "20":
+            opening = None
+        elif tag in ("60F", "60M"):
+            opening = _balance(lines[0])
+        elif tag in ("62F", "62M"):
+            closing = _balance(lines[0])
+            if opening is not None and closing is not None:
+                statement.balances.append(StatementBalance(account, *opening, *closing))
+            opening = None
+        elif tag == "25":
             account = _account(lines[0])
             if account:
                 statement.accounts.add(account)
@@ -104,6 +126,17 @@ def _account(text: str) -> str:
     if text.endswith("EUR") and _IBAN.match(text[:-3]):
         text = text[:-3]
     return clean_iban(text) if _IBAN.match(text) else text
+
+
+def _balance(text: str) -> tuple[date, int] | None:
+    """(date, cents) of a balance field, None when not in euros."""
+    found = _BALANCE.match(text.strip())
+    if not found:
+        raise StatementReadError(f"balance {text!r}")
+    if found["ccy"] != "EUR":
+        return None
+    cents = _cents(found["amount"])
+    return _date(found["date"]), cents if found["mark"] == "C" else -cents
 
 
 def _date(yymmdd: str) -> date:

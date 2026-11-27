@@ -20,6 +20,7 @@ from defusedxml.common import DefusedXmlException
 
 from .lines import (
     Statement,
+    StatementBalance,
     StatementLine,
     StatementReadError,
     amount_to_cents,
@@ -67,9 +68,46 @@ def read(data: bytes) -> Statement:
         account = clean_iban(_text(stmt, "Acct", "Id", "IBAN"))
         if account:
             statement.accounts.add(account)
+        balance = _balance(stmt, account)
+        if balance is not None:
+            statement.balances.append(balance)
         for entry in _children(stmt, "Ntry"):
             _read_entry(entry, account, statement)
     return statement
+
+
+# Which balance (`Bal/Tp/CdOrPrtry/Cd`) opens and closes a statement, the
+# first one present wins: opening booked, else the previous closing booked;
+# closing booked, else interim booked (a statement in pages). Available
+# balances (CLAV, FWAV) are no bookings: left out.
+_OPENING = ("OPBD", "PRCD")
+_CLOSING = ("CLBD", "ITBD")
+
+
+def _balance(stmt, account: str) -> StatementBalance | None:
+    """The opening and closing balance of one `Stmt`, or None when it
+    doesn't state both in euros."""
+    found = {}
+    for bal in _children(stmt, "Bal"):
+        code = _text(bal, "Tp", "CdOrPrtry", "Cd")
+        amount = _child(bal, "Amt")
+        if amount is None or code in found:
+            continue
+        if amount.get("Ccy", "EUR") != "EUR":
+            return None
+        direction = _text(bal, "CdtDbtInd")
+        if direction not in ("CRDT", "DBIT"):
+            raise StatementReadError(f"balance CdtDbtInd {direction!r}")
+        cents = amount_to_cents(amount.text or "")
+        if cents < 0:
+            # CdtDbtInd gives the sign; a minus as well is refused (rule 6).
+            raise StatementReadError(f"signed balance {amount.text!r}")
+        found[code] = (_date(_child(bal, "Dt")), cents if direction == "CRDT" else -cents)
+    opening = next((found[code] for code in _OPENING if code in found), None)
+    closing = next((found[code] for code in _CLOSING if code in found), None)
+    if opening is None or closing is None:
+        return None
+    return StatementBalance(account, opening[0], opening[1], closing[0], closing[1])
 
 
 def _status(entry) -> str:
