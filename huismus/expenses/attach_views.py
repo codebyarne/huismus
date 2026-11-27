@@ -172,16 +172,24 @@ def _back_after_undo(url: str, receipt: Attachment) -> str:
     return batch.Item(batch.RECEIPT, receipt.pk).url(done)
 
 
-def _is_tray_or_process(url: str) -> bool:
-    """Only back to the tray or Verwerken, nowhere else."""
+# The pages "Ongedaan maken" may go back to.
+PLACES = ("expenses:tray", "expenses:process", "expenses:process_item")
+
+
+def _tray_or_process(url: str) -> str:
+    """Only back to the tray or Verwerken, nowhere else: the page as Huismus
+    builds it from the path and query, never the address as it came in, so
+    "//elders.example/..." can't lead to another site (#342). The tray when
+    `url` is no such page."""
+    parts = urlsplit(url)
     try:
-        match = resolve(urlsplit(url).path)
+        match = resolve(parts.path)
     except Resolver404:
-        return False
-    return url.startswith("/") and match.view_name in (
-        "expenses:tray",
-        "expenses:process",
-        "expenses:process_item",
+        match = None
+    if parts.scheme or parts.netloc or match is None or match.view_name not in PLACES:
+        return reverse("expenses:tray")
+    return reverse(match.view_name, args=match.args, kwargs=match.kwargs) + (
+        f"?{parts.query}" if parts.query else ""
     )
 
 
@@ -192,9 +200,7 @@ def undo(request, pk):
     The receipt and the expense come from the notice's form; detach_receipt
     checks that it still hangs there and came from the tray, so at most a
     receipt goes back where it was, never anything deleted."""
-    target = request.POST.get("plek", "")
-    if not _is_tray_or_process(target):
-        target = reverse("expenses:tray")
+    target = _tray_or_process(request.POST.get("plek", ""))
     if request.method != "POST":
         return redirect(target)
     receipt = get_object_or_404(Attachment, pk=pk)
