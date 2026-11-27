@@ -5,7 +5,7 @@
 {% block content_class %}content-wide{% endblock %}
 
 {% block content %}
-{% comment %}Bank (#77, #257, huismus.bank.views.statement_page), direction D approved by the owner 2026-11-21: tiles with what the statement held, then three sections that fold, with money in and out together. Niet herkend starts folded: it asks nothing of you.{% endcomment %}
+{% comment %}Bank (#77, #257, huismus.bank.views.statement_page), direction D approved by the owner 2026-11-21: tiles with what the statement held and the balance per account (#159), then three sections that fold, with money in and out together. Niet herkend starts folded: it asks nothing of you.{% endcomment %}
 <div class="page-head">
     <div class="titles">
         <h1>{% translate "Bank" %}</h1>
@@ -16,6 +16,7 @@
 
 {% if not statement %}{% include "bank/_read_in.html" with top=True %}{% else %}
 
+{% if gap_notices %}<div class="notices" id="saldo-gaten">{% for notice in gap_notices %}<div class="hint-banner is-warn"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{{ notice }}</span></div>{% endfor %}</div>{% endif %}
 {% if report %}
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--s-3)" id="rapport">
     <div class="card kpi">
@@ -34,6 +35,13 @@
         <span class="kpi-value">{{ report.outgoing_cents|money }}</span>
         <span class="kpi-sub">{% blocktranslate count count=report.outgoing %}{{ count }} betaling{% plural %}{{ count }} betalingen{% endblocktranslate %}</span>
     </div>
+    {% for item in balances %}
+    <div class="card kpi" data-saldo>
+        <span class="kpi-label">{% blocktranslate with date=item.balance.on|date:"SHORT_DATE_FORMAT" %}Saldo op {{ date }}{% endblocktranslate %}</span>
+        <span class="kpi-value">{{ item.balance.cents|money }}</span>
+        <span class="kpi-sub">{% if balances|length > 1 %}{{ item.iban }}{% else %}{% translate "volgens je afschrift" %}{% endif %}</span>
+    </div>
+    {% endfor %}
 </div>
 {% endif %}
 {% if summary %}<p class="small muted" id="samenvatting" style="margin-top:var(--s-3)">{{ summary }}</p>{% endif %}

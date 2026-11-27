@@ -91,6 +91,20 @@ privé? Laat hem staan onder **Niet herkend**, of klik op **Overslaan**.
 Noemt een overboeking meer dan één factuur? Registreer de betaling dan zelf
 op elke factuur, met **Betaling registreren**, en sla de regel hier over.
 
+## Je saldo
+
+Elk afschrift zegt wat er aan het begin en aan het eind op je rekening stond.
+Huismus neemt dat over. Bovenaan **Bank** zie je het laatste saldo: **Saldo
+op** met de datum van het afschrift. Heb je meer rekeningen, dan krijgt elke
+rekening een eigen vak. Je hoeft zelf niets in te vullen.
+
+Begint een afschrift met een ander saldo dan het vorige eindigde? Dan mist er
+een afschrift. Huismus zegt tussen welke dagen. Lees dat afschrift ook in, dan
+verdwijnt de melding.
+
+Huismus telt de betalingen niet zelf op. Het saldo is altijd het bedrag dat je
+bank op het afschrift zette.
+
 ## Terugdraaien
 
 Klopt een betaling toch niet? Klik op **Terugdraaien**, op de pagina van het

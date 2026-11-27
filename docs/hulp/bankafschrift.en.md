@@ -88,6 +88,20 @@ private, leave it under **Not recognized**, or click **Skip**.
 Does one transfer mention more than one invoice? Then record the payment on
 each invoice yourself, with **Record payment**, and skip the line here.
 
+## Your balance
+
+Every statement says what was in your account at the start and at the end.
+Huismus takes that over. At the top of **Bank** you see the latest balance:
+**Balance on** with the date of the statement. Do you have more accounts?
+Then each account gets a tile of its own. You don't fill in anything.
+
+Does a statement start with another balance than the one before ended with?
+Then a statement is missing. Huismus says between which days. Import that
+statement too, and the warning goes away.
+
+Huismus doesn't add up the payments itself. The balance is always the amount
+your bank put on the statement.
+
 ## Undoing
 
 Is a payment wrong after all? Click **Undo**, on the statement page or on the

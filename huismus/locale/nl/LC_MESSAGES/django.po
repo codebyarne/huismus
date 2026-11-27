@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-25 15:20+0100\n"
+"POT-Creation-Date: 2026-11-27 14:48+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -473,6 +473,24 @@ msgstr ""
 msgid "bankregels"
 msgstr ""
 
+msgid "datum beginsaldo"
+msgstr ""
+
+msgid "beginsaldo (cent)"
+msgstr ""
+
+msgid "datum eindsaldo"
+msgstr ""
+
+msgid "eindsaldo (cent)"
+msgstr ""
+
+msgid "banksaldo"
+msgstr ""
+
+msgid "banksaldi"
+msgstr ""
+
 msgid ""
 "Huismus herkent dit bestand niet als bankafschrift. Download het bij je bank "
 "als CAMT.053 of MT940."
@@ -533,6 +551,19 @@ msgstr[1] "%(count)s waren al ingelezen."
 
 #, python-format
 msgid ""
+"Er mist een afschrift van %(iban)s tussen %(end)s en %(start)s. Het saldo "
+"was %(closing)s en begint daarna op %(opening)s. Lees dat afschrift ook in."
+msgstr ""
+
+#, python-format
+msgid ""
+"Er missen afschriften van %(iban)s: het saldo sluit %(count)s keer niet aan. "
+"De eerste keer is tussen %(end)s en %(start)s. Lees de afschriften van die "
+"periodes in."
+msgstr ""
+
+#, python-format
+msgid ""
 "Deze zip is uitgepakt groter dan %(max_mb)s MB, te groot om in te lezen. "
 "Kies bij je bank een kortere periode."
 msgstr ""
@@ -540,6 +571,9 @@ msgstr ""
 "Kies bij je bank een kortere periode."
 
 msgid "Niets nieuws: alle betalingen in dit bestand waren al ingelezen."
+msgstr ""
+
+msgid "Het saldo is bijgewerkt."
 msgstr ""
 
 #, python-format
@@ -4299,6 +4333,13 @@ msgid "%(count)s hoort bij je administratie"
 msgid_plural "%(count)s horen bij je administratie"
 msgstr[0] "%(count)s hoort bij je administratie"
 msgstr[1] "%(count)s horen bij je administratie"
+
+#, python-format
+msgid "Saldo op %(date)s"
+msgstr ""
+
+msgid "volgens je afschrift"
+msgstr ""
 
 msgid "Te doen"
 msgstr ""
