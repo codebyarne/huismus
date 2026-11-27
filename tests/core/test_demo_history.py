@@ -77,6 +77,14 @@ def test_history_shows_every_kind_of_thing_huismus_keeps():
     assert mails.filter(reminder=True).exists()
     assert mails.filter(succeeded=False).exists()
 
+    from huismus.hours.models import TimeEntry
+
+    hours = TimeEntry.objects.all()
+    assert hours.count() > 100  # more than one page of the list
+    assert hours.filter(rate_cents=None).exists()
+    assert hours.filter(contact__archived=True).exists()
+    assert hours.filter(date__month=9, date__year=LAST_YEAR).exists()
+
     rates = set(ExpenseLine.objects.values_list("vat_rate", flat=True))
     assert {"21", "9", "reverse_eu", "reverse_non_eu"} <= rates
     assert ExpenseLine.objects.values("expense").annotate(n=Count("pk")).filter(n__gt=1).exists()

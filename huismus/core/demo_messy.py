@@ -24,6 +24,7 @@ from huismus.documents.models import Document, DocumentLine, Payment
 from huismus.documents.quoting import send_quote
 from huismus.expenses.lines import ExpenseLineInput, create_expense
 from huismus.expenses.models import ExpenseCategory, VatRate
+from huismus.hours.models import TimeEntry
 
 from .demo_history import FIRST_YEAR, LAST_DAY, LAST_YEAR
 
@@ -55,6 +56,22 @@ def add_mess(last_day: date = LAST_DAY) -> None:
             for i, name in enumerate([LONG, NO_SPACES, HTML, ACCENTS])
         )
         _forty_lines(long, last_day - timedelta(days=90))
+        # Hours at their extremes: a whole day at a rate in the thousands,
+        # a name without spaces and HTML, and a description of many lines.
+        TimeEntry.objects.create(
+            date=last_day - timedelta(days=2),
+            contact=no_spaces,
+            hours=Decimal("24"),
+            rate_cents=1_234_567,
+            description=NO_SPACES,
+        )
+        TimeEntry.objects.create(
+            date=last_day - timedelta(days=3),
+            contact=html,
+            hours=Decimal("0.01"),
+            rate_cents=1,
+            description=LONG_TEXT,
+        )
         # Over a million, never paid: the largest number on every screen.
         _invoice(no_spaces, date(first_year + 1, 6, 1), [(LONG_TEXT, None, 123_456_789, 2100)])
         # One cent, paid.

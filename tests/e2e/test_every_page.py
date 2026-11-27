@@ -26,6 +26,7 @@ from huismus.core import help
 from huismus.core.models import Attachment
 from huismus.documents.models import Document, RecurringInvoice
 from huismus.expenses.models import Expense, ExpenseCategory
+from huismus.hours.models import TimeEntry
 
 pytestmark = pytest.mark.django_db(transaction=True)
 
@@ -135,6 +136,14 @@ def _pages():
         # A new expense on a phone, the photo first (#188): any receipt in
         # the tray can be that photo.
         *(f"/uitgaven/nieuw/foto/{receipt.pk}/" for receipt in Attachment.objects.in_tray()[:1]),
+        # Uren (#80): this month, every month (weeks, totals, "Meer laden"),
+        # a customer, and an entry without a rate and one at its extremes
+        # (demo_messy); the flow: tests/e2e/test_hours.py.
+        "/uren/",
+        "/uren/?maand=alle",
+        f"/uren/?maand=alle&klant={_first(TimeEntry.objects, 'hours').contact_id}",
+        f"/uren/{_first(TimeEntry.objects.filter(rate_cents=None), 'hours without a rate').pk}/",
+        f"/uren/{_first(TimeEntry.objects.filter(hours=24), 'a day of hours').pk}/",
         "/rapporten/jaaroverzicht/",
         # The VAT return (SPEC.md M21, part 4): a year of the history, with
         # imports and lines without a rate under "Niet meegeteld".

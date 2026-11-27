@@ -22,6 +22,8 @@ What's in it, so a screen always has something to show:
 - expenses as they come: monthly subscriptions, train tickets, a laptop,
   receipts with lines at 21% and 9%, and VAT reverse charged from inside
   and outside the EU;
+- hours for the last year and a half (#80): most at the customer's rate,
+  some without one, a few on a customer that was archived since;
 - a logo, so the PDFs look like the user's own.
 
 huismus/core/demo_data.py is five documents and shows nothing about how
@@ -70,6 +72,7 @@ from huismus.documents.reopening import reopen
 from huismus.documents.totals import round_half_up_cents
 from huismus.expenses.lines import ExpenseLineInput, create_expense
 from huismus.expenses.models import ExpenseCategory, VatRate
+from huismus.hours.models import TimeEntry
 
 FIRST_YEAR = 2018
 LAST_YEAR = 2026
@@ -235,6 +238,7 @@ def _create(rng: random.Random, last_day: date) -> None:
     Contact.objects.filter(company_name__in=ARCHIVED).update(archived=True)
     _mails(rng, last_day)
     _expenses(rng, first_year, last_day)
+    _hours(rng, contacts, last_day)
 
 
 # -- The business and its customers ---------------------------------------
@@ -772,3 +776,44 @@ def _expense_day(rng: random.Random, year: int, last_day: date) -> date:
     if year == last_day.year:
         return _day(rng, year, last_day - timedelta(days=35))
     return _day(rng, year, last_day)
+
+
+# -- Hours (#80) -----------------------------------------------------------
+
+HOURS_WORK = {
+    "Studio Noordwind": ["Huisstijl: schetsen", "Huisstijl: logo-varianten", "Drukwerk nakijken"],
+    "Ooievaar Advies": ["Website: teksten", "Website: overleg met de bouwer", "Nieuwsbrief"],
+    "Zuiderlicht Fotografie": ["Fotoboek opmaken", "Beeldselectie", "Portfolio-site"],
+    "Hengelo Haven Horeca": ["Menukaart", "Menukaart: correcties"],
+}
+HOURS = [Decimal(h) for h in ("0.5", "0.75", "1", "1.5", "2", "2.5", "3", "3.5", "4", "6", "1.33")]
+
+
+def _hours(rng: random.Random, contacts: list[Contact], last_day: date) -> None:
+    """A year and a half of hours on a few customers, three or four days a
+    week. Now and then an hour of talking without a rate. The archived
+    customer has hours from before he was archived."""
+    by_name = {contact.company_name: contact for contact in contacts}
+    working = [by_name[name] for name in HOURS_WORK if name not in ARCHIVED]
+    archived = [by_name[name] for name in HOURS_WORK if name in ARCHIVED]
+    rate = _hour_rate(LAST_YEAR - FIRST_YEAR)
+    entries = []
+    day = last_day - timedelta(days=540)
+    while day <= last_day:
+        if day.weekday() < 5 and rng.random() < 0.7:
+            customers = working if day > last_day - timedelta(days=400) else working + archived
+            for contact in rng.sample(customers, rng.choice((1, 1, 2))):
+                no_rate = rng.random() < 0.1
+                entries.append(
+                    TimeEntry(
+                        date=day,
+                        contact=contact,
+                        description="Overleg"
+                        if no_rate
+                        else rng.choice(HOURS_WORK[contact.company_name]),
+                        hours=rng.choice(HOURS),
+                        rate_cents=None if no_rate else rate,
+                    )
+                )
+        day += timedelta(days=1)
+    TimeEntry.objects.bulk_create(entries)
