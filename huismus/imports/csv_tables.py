@@ -301,8 +301,27 @@ def is_complete(file_name: str, content: bytes) -> bool:
     return kind is not None and _has_required(kind, [normalised(name) for name in header])
 
 
+@cache
+def _hours_names() -> tuple[frozenset[str], ...]:
+    """The header row of uren.csv, per language."""
+    labels = [
+        export_format.in_both_languages(column.label) for column in export_format.HOURS_COLUMNS
+    ]
+    return tuple(frozenset(normalised(label[i]) for label in labels) for i in range(len(labels[0])))
+
+
+def is_hours_csv(file_name: str, content: bytes) -> bool:
+    """uren.csv from Huismus's own export (#80). Not read in yet (#358):
+    the import names it and goes on, instead of taking it for another file
+    because it has a "datum" and an "omschrijving"."""
+    header = {normalised(name) for name in _header(file_name, content)}
+    return any(names <= header for names in _hours_names())
+
+
 def kind_of(file_name: str, content: bytes) -> CsvKind | None:
     """Which of our files this CSV is, by its header row alone."""
+    if is_hours_csv(file_name, content):
+        return None
     header = _header(file_name, content)
     return recognise(header) if header else None
 
@@ -315,7 +334,7 @@ def _header(file_name: str, content: bytes) -> list[str]:
 def read_table(file_name: str, content: bytes) -> Table | None:
     """The table in a CSV file, or None when it isn't one of ours."""
     lines = _numbered_lines(file_name, content)
-    if not lines:
+    if not lines or is_hours_csv(file_name, content):
         return None
     header = [cell.strip() for cell in lines[0][1]]
     if len(header) == 1 and ("," in header[0] or "\t" in header[0]):

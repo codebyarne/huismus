@@ -54,3 +54,17 @@ def test_in_english_the_file_and_columns_are_english():
     with translation.override("en"):
         archive = _zip(2026)
     assert _rows(archive, "hours.csv")[0][4] == "hours"
+
+
+def test_the_import_of_its_own_export_names_the_hours_and_goes_on():
+    """uren.csv isn't read in yet (#358): never taken for another file
+    because it has a "datum" and an "omschrijving"."""
+    from huismus.imports.csv_tables import is_hours_csv, kind_of
+
+    studio = Contact.objects.create(company_name="Studio Noordlicht")
+    TimeEntry.objects.create(date=date(2026, 3, 2), contact=studio, hours=Decimal("1"))
+    for language, name in (("nl", "uren.csv"), ("en", "hours.csv")):
+        with translation.override(language):
+            content = _zip(2026).read(name)
+        assert is_hours_csv(name, content)
+        assert kind_of(name, content) is None

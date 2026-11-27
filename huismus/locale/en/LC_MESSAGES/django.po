@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 15:22+0100\n"
+"POT-Creation-Date: 2026-11-27 19:24+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3880,6 +3880,10 @@ msgstr "‘%(value)s’ is not the euro. Huismus imports euros only."
 
 msgid "een offerte hoort in het offertebestand."
 msgstr "a quote belongs in the quotes file."
+
+#, python-format
+msgid "Je uren (%(file)s) neemt Huismus nog niet mee. Ze blijven in je export."
+msgstr "Huismus doesn't bring your hours (%(file)s) over yet. They stay in your export."
 
 #, python-format
 msgid ""
