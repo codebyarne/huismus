@@ -46,7 +46,7 @@ from .csv_parse import (
     parse_invoices,
     parse_quotes,
 )
-from .csv_tables import CsvKind, Table, read_table
+from .csv_tables import CsvKind, Table, is_hours_csv, read_table
 from .expenses import RECEIPT_SUFFIXES
 from .models import ImportRun
 from .sources import Export, ImportSourceError, files_in_upload
@@ -109,7 +109,14 @@ def _tables(export: Export, notes: list) -> dict[CsvKind, Table]:
     tables: dict[CsvKind, Table] = {}
     for name, content in sorted(export.files.items()):
         path = PurePosixPath(name)
-        table = read_table(path.name, content) if path.suffix.lower() == ".csv" else None
+        is_csv = path.suffix.lower() == ".csv"
+        if is_csv and is_hours_csv(path.name, content):
+            notes.append(
+                _("Je uren (%(file)s) neemt Huismus nog niet mee. Ze blijven in je export.")
+                % {"file": path.name}
+            )
+            continue
+        table = read_table(path.name, content) if is_csv else None
         if table is None:
             continue
         if table.kind in tables:
@@ -152,6 +159,8 @@ def _keep_other_files(export: Export, tables: dict[CsvKind, Table], parsed: Pars
         if path.name in table_files or normalised(path.name) in _readme_names():
             continue
         if AUDITFILE_NAME.fullmatch(path.name):
+            continue
+        if path.suffix.lower() == ".csv" and is_hours_csv(path.name, content):
             continue
         if path.suffix.lower() == ".pdf" and folder in _pdf_kinds():
             parsed.pdfs[(_pdf_kinds()[folder], path.stem)] = content
