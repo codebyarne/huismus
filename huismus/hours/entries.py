@@ -16,7 +16,7 @@ import re
 from collections.abc import Iterable
 from decimal import ROUND_HALF_UP, Decimal
 
-from huismus.documents.totals import line_total_cents
+from huismus.documents.totals import LineInput, compute_totals, line_total_cents
 
 TWO_PLACES = Decimal("0.01")
 
@@ -57,14 +57,14 @@ def amount_cents(hours: Decimal, rate_cents: int | None) -> int | None:
 
 
 def period_total(entries: Iterable[tuple[Decimal, int | None]]) -> tuple[Decimal, int | None]:
-    """(hours, amount) of (hours, rate) pairs: the sum of the hours and the
-    sum of each entry's own amount. None as the amount when no entry has a
+    """(hours, amount) of (hours, rate) pairs: the sum of the hours, and as
+    the amount the subtotal the one totals function gives these entries as
+    lines without VAT (invariant 3): the sum of each entry's own amount, as
+    an invoice adds its line totals. None as the amount when no entry has a
     rate."""
-    hours_total = Decimal(0)
-    cents_total = None
-    for hours, rate_cents in entries:
-        hours_total += hours
-        cents = amount_cents(hours, rate_cents)
-        if cents is not None:
-            cents_total = (cents_total or 0) + cents
-    return hours_total, cents_total
+    entries = list(entries)
+    hours_total = sum((hours for hours, _rate in entries), Decimal(0))
+    billed = [LineInput(hours, rate, 0) for hours, rate in entries if rate is not None]
+    if not billed:
+        return hours_total, None
+    return hours_total, compute_totals(billed).subtotal_cents
