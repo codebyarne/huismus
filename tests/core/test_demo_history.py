@@ -120,5 +120,11 @@ def test_the_mess_for_the_browser_tests_goes_on_top_and_adds_up():
     assert invoices.filter(lines__position=39).exists()
     assert invoices.filter(total_cents__gt=100_000_000).exists()
     assert invoices.filter(contact__company_name=HTML).exists()
+
+    from huismus.mileage.models import Trip
+
+    trips = Trip.objects.all()
+    assert trips.filter(distance_km=2000).exists() and trips.filter(distance_km="0.1").exists()
+    assert trips.filter(purpose=HTML).exists()
     late = [d for d in invoices if d.is_overdue]
     assert len(late) > 15
