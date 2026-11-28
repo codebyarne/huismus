@@ -11,8 +11,15 @@ from huismus.business.models import Settings
 from huismus.core.form_messages import NOT_AN_EMAIL_ADDRESS
 from huismus.core.forms import EuroCentsField, HTML5DateInput
 
-from .models import FREQUENCY_CHOICES, Document, DocumentLine, Payment, RecurringInvoice
-from .vat import REVERSE_CHARGE, editor_value, rate_label
+from .models import (
+    FREQUENCY_CHOICES,
+    Article,
+    Document,
+    DocumentLine,
+    Payment,
+    RecurringInvoice,
+)
+from .vat import REVERSE_CHARGE, default_rate, editor_value, line_choices, rate_label
 
 
 def default_attention(contact) -> str:
@@ -200,6 +207,51 @@ DocumentLineFormSet = inlineformset_factory(
     extra=1,
     can_delete=True,
 )
+
+
+class ArticleForm(forms.ModelForm):
+    """An article (#167): the same fields and checks as a line of an
+    invoice, so every article is a valid line. The VAT choices are those of
+    a new invoice (documents.vat). With the KOR or no VAT there is no VAT
+    field: the stored rate stays, so it is back when the KOR stops
+    (product-owner agent, 2026-11-28)."""
+
+    unit_price_cents = EuroCentsField(label=_("prijs per eenheid"))
+    tax_rate_bp = forms.ChoiceField(label=_("btw"), choices=[])
+
+    class Meta:
+        model = Article
+        fields = ["description", "unit", "unit_price_cents", "tax_rate_bp"]
+        widgets = {"description": forms.TextInput()}
+
+    def __init__(self, *args, settings, **kwargs):
+        super().__init__(*args, **kwargs)
+        if settings.no_vat:
+            del self.fields["tax_rate_bp"]
+            return
+        # Prices are without VAT (huismus-intern/besluiten.md, 2026-11-28).
+        self.fields["unit_price_cents"].label = _("prijs per eenheid, zonder btw")
+        field = self.fields["tax_rate_bp"]
+        field.choices = [
+            (choice, _choice_label(choice))
+            for choice in line_choices(Document(kind="invoice"), settings)
+        ]
+        field.initial = str(default_rate(settings))
+        if self.instance.pk:
+            self.initial["tax_rate_bp"] = editor_value(self.instance)
+
+    def clean(self):
+        cleaned = super().clean()
+        choice = cleaned.get("tax_rate_bp")
+        if choice is not None:
+            cleaned["reverse_charge"] = choice == REVERSE_CHARGE
+            cleaned["tax_rate_bp"] = 0 if choice == REVERSE_CHARGE else int(choice)
+        return cleaned
+
+    def _post_clean(self):
+        super()._post_clean()
+        if "tax_rate_bp" in self.fields:
+            self.instance.reverse_charge = self.cleaned_data.get("reverse_charge", False)
 
 
 # Offered in the payment form; the field itself stays free text, so methods

@@ -3,7 +3,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import OuterRef, Q, Subquery, Sum
-from django.db.models.functions import Coalesce
+from django.db.models.functions import Coalesce, Lower
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -627,7 +627,8 @@ class Article(TimestampedModel):
     class Meta:
         verbose_name = _("artikel")
         verbose_name_plural = _("artikelen")
-        ordering = ["description", "pk"]
+        # Alphabetical, capitals or not (product-owner agent, 2026-11-28).
+        ordering = [Lower("description"), "pk"]
 
     def __str__(self):
         return self.description[:50]
