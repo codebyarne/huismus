@@ -15,7 +15,10 @@
    privé; de link staat in `huismus-intern/werkwijze.md`. Een kopie van 1, gemaakt met
    `scripts/design_system_export.py`, om in Claude nieuwe designs mee te maken.
    Het noemt zelf uit welke commit het gebouwd is (README daar, en
-   `lastChange`). Laatst bijgewerkt: 2026-11-18, uit commit `1793a7b` (tak `huisstijl`: richting Helder, logo Tegel, meldingen, geen geel).
+   `lastChange`). Laatst bijgewerkt: 2026-11-21, uit commit `88c96105` (de componenten van
+   Helder op `main`, iconen in de voorbeelden, het menu Licht/Donker werkt).
+   De voorbeelden zetten `color-scheme` zelf, omdat Claude Design dat anders doet
+   naar zijn eigen thema (`THEME_STYLE` in het script).
 
 Bekijken: start vanuit de root van de repo `python3 -m http.server 8000` en open
 http://localhost:8000/docs/design/componenten.html (de pagina laadt
@@ -52,7 +55,10 @@ tekening (`scripts/make_wordmark.py`).
 2. Werk het Design System in Claude bij:
    `uv run python scripts/design_system_export.py <map> <commit>` en publiceer de
    gewijzigde bestanden onder `project/` naar de link hierboven (met de Artifact-tool
-   van Claude Code: `url` de link, `root` de map). Nieuwe iconen eerst als asset
+   van Claude Code: `url` de link, `root` de map, `file_path` het volledige pad van een
+   van de bestanden). `project/design-system.json` maakt het script niet: lees hem uit het
+   Design System, pas alleen `lastChange` aan en stuur hem mee in de laatste publicatie.
+   Kijk daarna in de browser bij Components, in Licht en in Donker. Nieuwe iconen eerst als asset
    uploaden (`upload/Icons/<naam>.svg`) en in de index (`project/design-system.json`)
    opnemen. Pas de datum hierboven aan.
 3. Lukt stap 2 niet in je sessie, zeg dat dan in de melding aan de eigenaar.
