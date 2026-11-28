@@ -68,3 +68,49 @@ def test_every_template_string_finds_its_english_translation():
             if found == msgid and not re.fullmatch(r"[\W\d]*|[A-Z][\w-]*|\w+@\S+", text):
                 missing.append(f"{template.name}: {text}")
     assert missing == [], "not found in huismus/locale/en: " + "; ".join(missing[:10])
+
+
+# The Dutch catalog: Dutch is the source language, so a msgstr there is
+# empty or the msgid itself. A fuzzy entry carries a guess by makemessages
+# (the text of a similar string): harmless while it is fuzzy, wrong the day
+# someone removes the flag ("Deze uren staan op factuur" had "Betaling
+# geboekt op factuur" for a guess, 2026-11-28).
+DUTCH = Path(settings.CODE_DIR) / "locale" / "nl" / "LC_MESSAGES" / "django.po"
+
+
+def _value(block: str, key: str) -> str | None:
+    match = re.search(rf'^{re.escape(key)} (".*"(?:\n".*")*)', block, re.M)
+    if match is None:
+        return None
+    return "".join(part[1:-1] for part in match.group(1).split("\n"))
+
+
+def _dutch_entries():
+    for block in DUTCH.read_text().split("\n\n"):
+        text = "\n".join(line for line in block.splitlines() if not line.startswith("#~"))
+        if "msgid " in text and "Project-Id-Version" not in text:
+            yield text
+
+
+def test_the_dutch_catalog_has_no_fuzzy_entries():
+    fuzzy = [_value(block, "msgid") for block in _dutch_entries() if ", fuzzy" in block]
+    assert fuzzy == [], f"fuzzy in huismus/locale/nl (leeg maken): {fuzzy}"
+
+
+def test_a_dutch_translation_is_empty_or_the_source_itself():
+    different = []
+    for block in _dutch_entries():
+        msgid, plural = _value(block, "msgid"), _value(block, "msgid_plural")
+        expected = (
+            [("msgstr", msgid)]
+            if plural is None
+            else [
+                ("msgstr[0]", msgid),
+                ("msgstr[1]", plural),
+            ]
+        )
+        for key, source in expected:
+            text = _value(block, key)
+            if text and text != source:
+                different.append((source, text))
+    assert different == [], f"Dutch other than its source in huismus/locale/nl: {different[:5]}"
