@@ -25,6 +25,21 @@ uur het was en wat het waard is. De lijst begint bij deze maand. Kies een
 andere maand of een klant om alleen die te zien. Boven de lijst staat het
 totaal van wat je ziet.
 
+## Een factuur van je uren
+
+Van je uren maak je een factuur: kies op **Uren** **Factuur maken…**, de
+klant en de maand. Huismus zet de uren met een tarief op een conceptfactuur,
+die je daarna nakijkt en uitgeeft.
+
+Kies of de factuur een regel per omschrijving krijgt of een regel per dag.
+Huismus telt de uren van zo'n regel op. Daardoor kan het totaal een cent
+afwijken van Uren; dan staat dat erbij.
+
+Uren op een factuur kun je niet meer wijzigen of verwijderen. In de lijst
+staat bij die uren op welke factuur ze staan. Verwijder je de
+conceptfactuur, dan komen de uren weer vrij. Met een creditnota blijven ze
+op de factuur staan.
+
 ## Wijzigen of verwijderen
 
 Klik op een regel om hem te wijzigen. Daar kun je hem ook verwijderen.
