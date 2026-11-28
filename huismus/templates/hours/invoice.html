@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load i18n money hours %}
+
+{% block title %}{% translate "Factuur maken uit uren" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <a class="back" href="{{ back_url }}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Uren" %}</a>
+        <h1>{% translate "Factuur maken uit uren" %}</h1>
+    </div>
+</div>
+
+{% comment %}Design: no round of its own, existing components only
+(product-owner agent 2026-11-28, huismus-intern/besluiten.md, "Maandfactuur
+uit uren (#81)", point 14). The choices are a plain GET form; with HTMX a
+change refreshes #factuur-uit-uren, like the filter on Uren.{% endcomment %}
+<div id="factuur-uit-uren" class="stack" style="gap:var(--s-4)">
+<form class="card card-pad stack" method="get" action="{% url 'hours:invoice' %}" style="gap:var(--s-4)"
+      hx-get="{% url 'hours:invoice' %}" hx-trigger="change"
+      hx-target="#factuur-uit-uren" hx-select="#factuur-uit-uren" hx-swap="outerHTML" hx-push-url="true">
+    <div class="fieldset">
+        <div class="field span-3">
+            <label class="label" for="factuur-klant">{% translate "Klant" %}</label>
+            <select class="select" id="factuur-klant" name="klant">
+                {% for customer in customers %}<option value="{{ customer.pk }}"{% if customer == contact %} selected{% endif %}>{{ customer.display_name }}</option>{% endfor %}
+            </select>
+        </div>
+        <div class="field span-3">
+            <label class="label" for="factuur-maand">{% translate "Maand" %}</label>
+            <select class="select" id="factuur-maand" name="maand">
+                {% for value, label in month_options %}<option value="{{ value }}"{% if value == month %} selected{% endif %}>{{ label }}</option>{% endfor %}
+            </select>
+        </div>
+    </div>
+    <fieldset class="stack" style="gap:var(--s-2);border:0;padding:0;margin:0">
+        <legend class="label">{% translate "Regels op de factuur" %}</legend>
+        {% for value, label in per_choices %}
+        <label class="file-item"><span class="f-icon"><input type="radio" name="per" value="{{ value }}"{% if value == per %} checked{% endif %}></span><span class="f-name">{{ label }}</span></label>
+        {% endfor %}
+    </fieldset>
+    <noscript><div class="row"><button type="submit" class="btn btn-sm">{% translate "Tonen" %}</button></div></noscript>
+</form>
+
+<section class="card list-card" aria-labelledby="op-de-factuur">
+    {% if proposal.entries %}
+    <div class="card-head"><h2 id="op-de-factuur">{% translate "Op de factuur" %}</h2></div>
+    <div class="table-wrap">
+        <table class="table stackable">
+            <thead>
+                <tr>
+                    <th>{% translate "Omschrijving" %}</th>
+                    <th class="r">{% translate "Uren" %}</th>
+                    <th class="r">{% translate "Tarief per uur" %}</th>
+                    <th class="r">{% translate "Bedrag" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for line, cents in rows %}
+                <tr>
+                    <td data-cell="primary">{{ line.description }}</td>
+                    <td data-cell="status" class="r num">{{ line.hours|hours }}</td>
+                    <td data-cell="secondary" class="r amount">{{ line.rate_cents|money }}</td>
+                    <td data-cell="amount" class="r amount">{{ cents|money }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="hours-total">
+        <span>{% blocktranslate %}Totaal: <strong>{{ total }}</strong>{% endblocktranslate %}</span>
+        {% if with_vat %}<span class="small muted">{% translate "Bedragen zonder btw." %}</span>{% endif %}
+    </div>
+    {% else %}
+    <div class="empty">
+        <h2 id="op-de-factuur">{% if contact and month_name %}{% blocktranslate with customer=contact.display_name month=month_name %}Geen uren om te factureren voor {{ customer }} in {{ month }}.{% endblocktranslate %}{% else %}{% translate "Geen uren om te factureren." %}{% endif %}</h2>
+        <p>{% translate "Uren zonder tarief en uren die al op een factuur staan, tellen niet mee." %}</p>
+    </div>
+    {% endif %}
+</section>
+
+{% if proposal.unrated_hours or proposal.difference_cents is not None %}
+<div class="stack" style="gap:var(--s-2)">
+    {% if proposal.unrated_hours %}
+    <p class="hint-banner is-info"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{% blocktranslate with hours=proposal.unrated_hours|hours %}{{ hours }} zonder tarief komt niet op de factuur.{% endblocktranslate %}</span></p>
+    {% endif %}
+    {% if proposal.difference_cents is not None %}
+    <p class="hint-banner is-info"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{% blocktranslate with amount=proposal.difference_cents|money %}Op Uren is dit {{ amount }}. Het verschil komt doordat de factuur de uren per regel optelt.{% endblocktranslate %}</span></p>
+    {% endif %}
+</div>
+{% endif %}
+
+{% if proposal.entries %}
+<form method="post" action="{% url 'hours:invoice' %}" class="row" style="flex-wrap:wrap">
+    {% csrf_token %}
+    <input type="hidden" name="klant" value="{{ contact.pk }}">
+    <input type="hidden" name="maand" value="{{ month }}">
+    <input type="hidden" name="per" value="{{ per }}">
+    <button type="submit" class="btn btn-primary">{% translate "Conceptfactuur maken" %}<span class="spinner"></span></button>
+    <a class="btn btn-ghost" href="{{ back_url }}">{% translate "Annuleren" %}</a>
+</form>
+{% endif %}
+</div>
+{% endblock %}

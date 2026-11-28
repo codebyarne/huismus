@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-28 15:13+0100\n"
+"POT-Creation-Date: 2026-11-28 15:41+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2359,8 +2359,8 @@ msgid "Importeren uit andere pakketten en uit Excel"
 msgstr "Import from other bookkeeping apps and from Excel"
 
 msgid ""
-"Met het sjabloon, en een handleiding voor Rompslomp, Tellow, e-Boekhouden."
-"nl, Jortt en Excel."
+"Met het sjabloon, en een handleiding voor Rompslomp, Tellow, e-"
+"Boekhouden.nl, Jortt en Excel."
 msgstr ""
 "With the template, and a guide for Rompslomp, Tellow, e-Boekhouden.nl, Jortt "
 "and Excel."
@@ -2673,7 +2673,6 @@ msgstr "High rate"
 msgid "Laag tarief"
 msgstr "Low rate"
 
-#, python-format
 msgid "0% of niet bij jou belast"
 msgstr "0% or not taxed with you"
 
@@ -2722,7 +2721,6 @@ msgstr "Revenue 1a high rate"
 msgid "Omzet 1b laag tarief"
 msgstr "Revenue 1b low rate"
 
-#, python-format
 msgid "Omzet 1e 0% of niet bij jou belast"
 msgstr "Revenue 1e 0% or not taxed with you"
 
@@ -3410,7 +3408,6 @@ msgstr "Fill in the VAT amount. No VAT paid? Then fill in 0."
 msgid "Kies het btw-tarief."
 msgstr "Choose the VAT rate."
 
-#, python-format
 msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
 msgstr "With 0% or no VAT, the VAT amount is € 0.00."
 
@@ -3485,7 +3482,6 @@ msgstr "Saved. Huismus picks up new receipts from %(place)s by itself."
 msgid "Bonnetje verwijderd."
 msgstr "Receipt deleted."
 
-#, python-format
 msgid "0% of geen btw"
 msgstr "0% or no VAT"
 
@@ -3714,6 +3710,13 @@ msgid "Een tarief kan niet negatief zijn."
 msgstr "A rate can't be negative."
 
 #, python-format
+msgid "Uren %(month)s"
+msgstr "Hours %(month)s"
+
+msgid "uur"
+msgstr "hours"
+
+#, python-format
 msgid "%(hours)s uur"
 msgid_plural "%(hours)s uur"
 msgstr[0] "%(hours)s hour"
@@ -3731,6 +3734,19 @@ msgstr "Hours saved."
 
 msgid "Uren verwijderd."
 msgstr "Hours deleted."
+
+msgid "Deze uren staan al op een factuur."
+msgstr "These hours are already on an invoice."
+
+#, python-format
+msgid "Conceptfactuur gemaakt met %(hours)s."
+msgstr "Draft invoice created with %(hours)s."
+
+msgid "Een regel per omschrijving"
+msgstr "One line per description"
+
+msgid "Een regel per dag"
+msgstr "One line per day"
 
 msgid "de klanten"
 msgstr "the customers"
@@ -4123,9 +4139,6 @@ msgstr "Example Ltd"
 msgid "Advies"
 msgstr "Advice"
 
-msgid "uur"
-msgstr "hours"
-
 msgid "Voorbeeldweg 1"
 msgstr "1 Example Road"
 
@@ -4482,7 +4495,6 @@ msgstr "Supplies/services subject to the high VAT rate"
 msgid "Leveringen/diensten belast met laag tarief"
 msgstr "Supplies/services subject to the low VAT rate"
 
-#, python-format
 msgid "Leveringen/diensten belast met 0% of niet bij u belast"
 msgstr "Supplies/services taxed at 0% or not taxed to you"
 
@@ -6303,6 +6315,9 @@ msgstr ""
 "Huismus deletes the draft and all its lines. You can't undo this. It had no "
 "number yet, so your numbering gets no gap."
 
+msgid "De uren komen weer vrij op Uren."
+msgstr "The hours become free again in Hours."
+
 msgid "Verwijderen"
 msgstr "Delete"
 
@@ -7582,11 +7597,66 @@ msgstr ""
 msgid "Uren wijzigen"
 msgstr "Edit hours"
 
+#, python-format
+msgid "Deze uren staan op factuur %(number)s."
+msgstr "These hours are on invoice %(number)s."
+
+msgid "Open de factuur"
+msgstr "Open the invoice"
+
+msgid ""
+"Deze uren staan op een conceptfactuur. Verwijder het concept om ze te "
+"wijzigen."
+msgstr "These hours are on a draft invoice. Delete the draft to change them."
+
+msgid "Open het concept"
+msgstr "Open the draft"
+
 msgid "Deze uren verwijderen?"
 msgstr "Delete these hours?"
 
 msgid "Dat kun je niet ongedaan maken."
 msgstr "You can't undo this."
+
+msgid "Factuur maken uit uren"
+msgstr "Invoice from hours"
+
+msgid "Regels op de factuur"
+msgstr "Lines on the invoice"
+
+msgid "Tonen"
+msgstr "Show"
+
+msgid "Op de factuur"
+msgstr "On the invoice"
+
+#, python-format
+msgid "Totaal: <strong>%(total)s</strong>"
+msgstr "Total: <strong>%(total)s</strong>"
+
+msgid "Bedragen zonder btw."
+msgstr "Amounts excluding VAT."
+
+#, python-format
+msgid "Geen uren om te factureren voor %(customer)s in %(month)s."
+msgstr "No hours to invoice for %(customer)s in %(month)s."
+
+msgid "Geen uren om te factureren."
+msgstr "No hours to invoice."
+
+msgid ""
+"Uren zonder tarief en uren die al op een factuur staan, tellen niet mee."
+msgstr "Hours without a rate, and hours already on an invoice, don't count."
+
+#, python-format
+msgid "%(hours)s zonder tarief komt niet op de factuur."
+msgstr "%(hours)s without a rate stay off the invoice."
+
+#, python-format
+msgid ""
+"Op Uren is dit %(amount)s. Het verschil komt doordat de factuur de uren per "
+"regel optelt."
+msgstr "On Hours this is %(amount)s. The difference is because the invoice adds up the hours per line."
 
 msgid "Voeg eerst een klant toe."
 msgstr "Add a customer first."
@@ -7600,15 +7670,8 @@ msgstr "All customers"
 msgid "Alle maanden"
 msgstr "All months"
 
-msgid "Tonen"
-msgstr "Show"
-
-#, python-format
-msgid "Totaal: <strong>%(total)s</strong>"
-msgstr "Total: <strong>%(total)s</strong>"
-
-msgid "Bedragen zonder btw."
-msgstr "Amounts excluding VAT."
+msgid "Factuur maken…"
+msgstr "Create invoice…"
 
 msgid "Geen tarief"
 msgstr "No rate"
@@ -10015,12 +10078,12 @@ msgstr "Who makes Huismus"
 
 msgid ""
 "Huismus wordt gemaakt in Nederland door Arne Krijnsen. Over de maker en wat "
-"die nog meer doet, lees je op <a href=\"https://www.arnekrijnsen."
-"com\">arnekrijnsen.com</a>."
+"die nog meer doet, lees je op <a href=\"https://"
+"www.arnekrijnsen.com\">arnekrijnsen.com</a>."
 msgstr ""
 "Huismus is made in the Netherlands by Arne Krijnsen. You can read about him "
-"and his other work on <a href=\"https://www.arnekrijnsen.com\">arnekrijnsen."
-"com</a>."
+"and his other work on <a href=\"https://"
+"www.arnekrijnsen.com\">arnekrijnsen.com</a>."
 
 #~ msgid "Eén keer goed, in plaats van duizend keer"
 #~ msgstr "Made well once, instead of a thousand times"

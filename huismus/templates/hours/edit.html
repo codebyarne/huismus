@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n forms %}
+{% load i18n forms money hours %}
 
 {% block title %}{% translate "Uren wijzigen" %} — Huismus{% endblock %}
 {% block content_class %}content-narrow{% endblock %}
@@ -12,6 +12,20 @@
     </div>
 </div>
 
+{% if entry.locked %}
+{% comment %}On an invoice (#81): shown, not changed, and no Verwijderen
+(product-owner agent 2026-11-28). Deleting the draft frees them.{% endcomment %}
+<p class="hint-banner is-info" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#lock"></use></svg><span>{% if entry.invoice.number %}{% blocktranslate with number=entry.invoice.number %}Deze uren staan op factuur {{ number }}.{% endblocktranslate %} <a href="{% url 'documents:edit' entry.invoice.pk %}">{% translate "Open de factuur" %} →</a>{% else %}{% translate "Deze uren staan op een conceptfactuur. Verwijder het concept om ze te wijzigen." %} <a href="{% url 'documents:edit' entry.invoice.pk %}">{% translate "Open het concept" %} →</a>{% endif %}</span></p>
+<section class="card card-pad">
+    <dl class="doc-meta">
+        <dt>{% translate "Datum" %}</dt><dd>{{ entry.date|date:"j F Y" }}</dd>
+        <dt>{% translate "Klant" %}</dt><dd>{{ entry.contact.display_name }}</dd>
+        {% if entry.description %}<dt>{% translate "Omschrijving" %}</dt><dd>{{ entry.description }}</dd>{% endif %}
+        <dt>{% translate "Uren" %}</dt><dd class="num">{{ entry.hours|hours }}</dd>
+        <dt>{% translate "Tarief per uur" %}</dt><dd class="amount">{{ entry.rate_cents|money }}</dd>
+    </dl>
+</section>
+{% else %}
 {% form_errors form %}
 
 <form class="card card-pad stack" method="post" style="gap:var(--s-6)">
@@ -45,4 +59,5 @@
         </div>
     </form>
 </dialog>
+{% endif %}
 {% endblock %}

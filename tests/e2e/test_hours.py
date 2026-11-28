@@ -129,3 +129,61 @@ def test_on_a_phone_nieuw_uren_opens_the_form_and_says_what_is_wrong(app, custom
     # Uren lives behind "Meer" on a phone, never in the tab bar.
     expect(app.locator("nav.tabbar").get_by_role("link", name="Uren", exact=True)).to_have_count(0)
     assert TimeEntry.objects.filter(hours=8, date=timezone.localdate()).exists()
+
+
+def _hours_to_invoice(bakery):
+    """Three days of work for the bakery last month, at € 85 an hour."""
+    month = (timezone.localdate().replace(day=1) - timedelta(days=1)).replace(day=1)
+    for day, hours, description in ((3, "2", "Menukaart"), (4, "1.5", "Menukaart"), (5, "1", "")):
+        TimeEntry.objects.create(
+            date=month + timedelta(days=day - 1),
+            contact=bakery,
+            hours=Decimal(hours),
+            rate_cents=8500,
+            description=description,
+        )
+    return month
+
+
+@pytest.mark.parametrize("width", [1440, 390])
+def test_an_invoice_from_the_hours(app, customers, width):
+    """#81: Factuur maken… on Uren, choose a line per day with HTMX, make the
+    draft, see the hours on it, and free them by deleting the draft."""
+    bakery, _studio = customers
+    Settings.objects.filter(pk=1).update(show_hours=True)
+    month = _hours_to_invoice(bakery)
+    app.set_viewport_size({"width": width, "height": 900})
+    app.goto(app.base + "/uren/?maand=alle")
+
+    app.get_by_role("link", name="Factuur maken…").click()
+    expect(app.get_by_role("heading", name="Factuur maken uit uren")).to_be_visible()
+    lines = app.locator("#factuur-uit-uren table tbody tr")
+    expect(lines).to_have_count(2)
+    expect(lines.first).to_contain_text("Menukaart")
+    expect(app.locator(".hours-total")).to_contain_text("4,5 uur · € 382,50")
+
+    app.get_by_label("Een regel per dag").check()
+    expect(lines).to_have_count(3)
+    expect(lines.first).to_contain_text("3 ")
+    app.get_by_role("button", name="Conceptfactuur maken").click()
+    expect(app.get_by_text("Conceptfactuur gemaakt met 4,5 uur.")).to_be_visible()
+    invoice = TimeEntry.objects.filter(contact=bakery).first().invoice
+    assert invoice is not None and invoice.status == "draft"
+    assert invoice.lines.count() == 3
+
+    # On Uren the hours say where they are, and are fixed.
+    app.goto(app.base + f"/uren/?maand={month:%Y-%m}")
+    expect(app.get_by_role("link", name="Factuur maken…")).to_have_count(0)
+    app.get_by_role("link", name="Conceptfactuur").first.click()
+    expect(app.get_by_role("button", name="Uitgeven…")).to_be_visible()
+
+    # Deleting the draft frees them (on a phone behind "Meer").
+    if width < 720:
+        app.locator(".actionbar-more-toggle").click()
+    app.get_by_role("button", name="Verwijderen", exact=True).click()
+    dialog = app.get_by_role("dialog", name="Conceptfactuur verwijderen?")
+    expect(dialog).to_contain_text("De uren komen weer vrij op Uren.")
+    dialog.get_by_role("button", name="Verwijderen").click()
+    app.goto(app.base + f"/uren/?maand={month:%Y-%m}")
+    expect(app.get_by_role("link", name="Factuur maken…")).to_be_visible()
+    assert not TimeEntry.objects.exclude(invoice=None).exists()
