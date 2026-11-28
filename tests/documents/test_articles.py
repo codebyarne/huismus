@@ -41,6 +41,30 @@ def test_line_values_copy_the_article_with_quantity_one():
     }
 
 
+def test_with_prices_including_vat_the_line_gets_the_price_with_vat():
+    """Articles keep their price without VAT; in a document with prices
+    including VAT the server adds the line's VAT (huismus-intern/besluiten.md,
+    2026-11-28, point 7), rounded half-up to the cent."""
+    settings = _kor(False)
+    document = Document(kind="invoice")
+    assert (
+        line_values(_article(), document, settings, prices_include_vat=True)["unit_price_cents"]
+        == "1.149,50"
+    )
+    book = _article(unit_price_cents=3450, tax_rate_bp=900)
+    assert (
+        line_values(book, document, settings, prices_include_vat=True)["unit_price_cents"]
+        == "37,61"
+    )  # 34,50 × 1,09 = 37,605
+
+
+def test_with_prices_including_vat_a_reverse_charge_price_stays():
+    settings = _kor(False)
+    article = _article(tax_rate_bp=0, reverse_charge=True)
+    values = line_values(article, Document(kind="invoice"), settings, prices_include_vat=True)
+    assert values["unit_price_cents"] == "950,00"
+
+
 def test_reverse_charge_article_stays_reverse_charge_without_kor():
     settings = _kor(False)
     article = _article(tax_rate_bp=0, reverse_charge=True)
@@ -329,3 +353,21 @@ def test_the_article_button_without_an_article_saves(logged_in):
     )
     assert response.status_code == 302
     assert Document.objects.count() == 1
+
+
+def test_without_js_with_prices_including_vat_the_line_gets_the_price_with_vat(logged_in):
+    _kor(False)
+    article = _article()
+    response = logged_in.post(
+        reverse("documents:create"),
+        _editor_post(actie="artikel", artikel=str(article.pk), prices_include_vat="on"),
+    )
+    assert 'value="1.149,50"' in response.content.decode()
+
+
+def test_the_editor_offers_both_prices_for_the_checkbox_to_choose(logged_in):
+    _kor(False)
+    _article()
+    text = logged_in.get(reverse("documents:create")).content.decode()
+    assert "&quot;unit_price_cents&quot;: &quot;950,00&quot;" in text
+    assert "&quot;unit_price_cents&quot;: &quot;1.149,50&quot;" in text

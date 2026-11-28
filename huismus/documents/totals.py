@@ -56,6 +56,13 @@ def line_total_cents(quantity: Decimal | None, unit_price_cents: int) -> int:
     return round_half_up_cents(Decimal(quantity) * Decimal(unit_price_cents))
 
 
+def price_including_vat_cents(price_cents: int, rate_bp: int) -> int:
+    """A price without VAT as a price including it, rounded half-up to the
+    cent: an article (#167), always stored without VAT, picked in a document
+    whose prices include VAT."""
+    return round_half_up_cents(Decimal(price_cents) * Decimal(10000 + rate_bp) / Decimal(10000))
+
+
 def _group_tax_cents(group_cents: int, rate_bp: int, prices_include_vat: bool) -> int:
     """The VAT of one rate group: over the group, or out of it when its
     prices include VAT."""

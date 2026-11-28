@@ -9,35 +9,42 @@ document's default when the document doesn't offer that choice.
 
 Values come back as the editor's form fields want them (text, the price
 in Dutch notation), so the editor's JS can copy them as they are and
-compute nothing (CLAUDE.md, rule 4). Prices are without VAT
-(huismus-intern/besluiten.md, 2026-11-28).
+compute nothing (CLAUDE.md, rule 4). An article's price is without VAT;
+in a document with prices including VAT (#362) the line gets it with VAT
+(huismus-intern/besluiten.md, 2026-11-28, point 7).
 """
 
 from huismus.core.templatetags.money import euros
 
 from .drafts import LINES_PREFIX as PREFIX
+from .totals import price_including_vat_cents
 from .vat import REVERSE_CHARGE, default_rate, line_choices, vat_for_copy
 
 _FIELDS = ("description", "quantity", "unit", "unit_price_cents", "tax_rate_bp")
 
 
-def line_values(article, document, settings) -> dict[str, str]:
-    """The fields of a new line of `document` made from `article`."""
+def line_values(article, document, settings, *, prices_include_vat=False) -> dict[str, str]:
+    """The fields of a new line of `document` made from `article`. With
+    `prices_include_vat` (the document's checkbox, #362) the price gets the
+    line's VAT added."""
     vat = vat_for_copy(article, settings)
     choice = REVERSE_CHARGE if vat["reverse_charge"] else str(vat["tax_rate_bp"])
     if choice not in line_choices(document, settings):
         choice = str(default_rate(settings))
+    price = article.unit_price_cents
+    if prices_include_vat and choice != REVERSE_CHARGE:
+        price = price_including_vat_cents(price, int(choice))
     return {
         "description": article.description,
         # Always 1 (product-owner agent, 2026-11-28): you see it in the line.
         "quantity": "1",
         "unit": article.unit,
-        "unit_price_cents": euros(article.unit_price_cents),
+        "unit_price_cents": euros(price),
         "tax_rate_bp": choice,
     }
 
 
-def add_article_line(data, article, document, settings):
+def add_article_line(data, article, document, settings, *, prices_include_vat=False):
     """The posted editor `data` (a QueryDict or dict) with one more line made
     from `article`: in the last line if that one is still empty, else in a
     new one. For "Artikel toevoegen" without JS; `data` itself stays as it
@@ -49,7 +56,8 @@ def add_article_line(data, article, document, settings):
     else:
         index = total
         data[f"{PREFIX}-TOTAL_FORMS"] = str(total + 1)
-    for name, value in line_values(article, document, settings).items():
+    values = line_values(article, document, settings, prices_include_vat=prices_include_vat)
+    for name, value in values.items():
         data[f"{PREFIX}-{index}-{name}"] = value
     return data
 

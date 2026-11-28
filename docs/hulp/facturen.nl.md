@@ -32,7 +32,9 @@ het nog veranderen. Je ziet deze keuze alleen als je btw rekent.
 
 Gebruik je dezelfde regel vaak, zoals een uur advies of een workshop? Bewaar
 hem dan als artikel: bij **Facturen** klik je op **Artikelen**. Je vult een
-omschrijving, eenheid, prijs en btw-tarief in. De prijs is zonder btw.
+omschrijving, eenheid, prijs en btw-tarief in. De prijs is zonder btw. Staat
+**Prijzen inclusief btw** aan in je factuur, dan komt de prijs met btw in de
+regel.
 
 In een factuur of offerte kies je daarna bij **Artikel toevoegen** een
 artikel, en de regel staat er, met aantal 1. Daarna is het een gewone regel:

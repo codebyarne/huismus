@@ -137,14 +137,17 @@ document.addEventListener("click", (event) => {
 
 // "Artikel toevoegen" in the invoice editor (#167): picking an article
 // fills the last line if it is still empty, else a new one, with the values
-// the server put in the option's data-line (documents.articles). Copied as
+// the server put in the option's data-line or data-line-incl (documents.articles). Copied as
 // they are: nothing is computed here (CLAUDE.md, rule 4). The change event
 // afterwards lets the live preview fetch the totals. Without JS the
 // <noscript> button next to the picker does this on the server.
 document.addEventListener("change", (event) => {
   const picker = event.target.closest?.("select[data-article-picker]");
   if (!picker || !picker.value) return;
-  const values = JSON.parse(picker.selectedOptions[0].dataset.line);
+  // With "Prijzen inclusief btw" ticked (#362) the server's price with VAT.
+  const option = picker.selectedOptions[0];
+  const inclusive = picker.form?.querySelector("input[name=prices_include_vat]")?.checked;
+  const values = JSON.parse(inclusive ? option.dataset.lineIncl : option.dataset.line);
   const prefix = picker.dataset.articlePicker;
   const forms = document.querySelector(`[data-formset-forms="${prefix}"]`);
   // The same test as documents.articles._is_empty on the server.
