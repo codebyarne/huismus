@@ -39,8 +39,8 @@ line is there, with quantity 1. After that it's an ordinary line: you change
 it like any other. If you later change or delete a product, your invoices and
 quotes stay as they are.
 
-Under the KOR, or without VAT, Huismus doesn't ask for a VAT rate for a
-product.
+Under the small business scheme (KOR), or without VAT, Huismus doesn't ask
+for a VAT rate for a product.
 
 ## Issuing
 

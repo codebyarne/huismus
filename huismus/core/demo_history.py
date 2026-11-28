@@ -362,7 +362,7 @@ def _articles(index: int) -> None:
             description=dutch, unit=unit, unit_price_cents=price, tax_rate_bp=rate_bp
         )
     Article.objects.create(
-        description="Consultancy (EU, btw verlegd)",
+        description="Consultancy voor een EU-klant",
         unit="uur",
         unit_price_cents=_hour_rate(index),
         tax_rate_bp=0,
