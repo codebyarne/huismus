@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-28 14:41+0100\n"
+"POT-Creation-Date: 2026-11-28 15:13+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2359,8 +2359,8 @@ msgid "Importeren uit andere pakketten en uit Excel"
 msgstr "Import from other bookkeeping apps and from Excel"
 
 msgid ""
-"Met het sjabloon, en een handleiding voor Rompslomp, Tellow, e-"
-"Boekhouden.nl, Jortt en Excel."
+"Met het sjabloon, en een handleiding voor Rompslomp, Tellow, e-Boekhouden."
+"nl, Jortt en Excel."
 msgstr ""
 "With the template, and a guide for Rompslomp, Tellow, e-Boekhouden.nl, Jortt "
 "and Excel."
@@ -2673,6 +2673,7 @@ msgstr "High rate"
 msgid "Laag tarief"
 msgstr "Low rate"
 
+#, python-format
 msgid "0% of niet bij jou belast"
 msgstr "0% or not taxed with you"
 
@@ -2721,6 +2722,7 @@ msgstr "Revenue 1a high rate"
 msgid "Omzet 1b laag tarief"
 msgstr "Revenue 1b low rate"
 
+#, python-format
 msgid "Omzet 1e 0% of niet bij jou belast"
 msgstr "Revenue 1e 0% or not taxed with you"
 
@@ -3408,6 +3410,7 @@ msgstr "Fill in the VAT amount. No VAT paid? Then fill in 0."
 msgid "Kies het btw-tarief."
 msgstr "Choose the VAT rate."
 
+#, python-format
 msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
 msgstr "With 0% or no VAT, the VAT amount is € 0.00."
 
@@ -3482,6 +3485,7 @@ msgstr "Saved. Huismus picks up new receipts from %(place)s by itself."
 msgid "Bonnetje verwijderd."
 msgstr "Receipt deleted."
 
+#, python-format
 msgid "0% of geen btw"
 msgstr "0% or no VAT"
 
@@ -3913,7 +3917,9 @@ msgstr "a quote belongs in the quotes file."
 
 #, python-format
 msgid "Je uren (%(file)s) neemt Huismus nog niet mee. Ze blijven in je export."
-msgstr "Huismus doesn't bring your hours (%(file)s) over yet. They stay in your export."
+msgstr ""
+"Huismus doesn't bring your hours (%(file)s) over yet. They stay in your "
+"export."
 
 #, python-format
 msgid ""
@@ -4464,12 +4470,19 @@ msgstr[1] "%(count)s expenses"
 msgid "Import geannuleerd. Er is niets opgeslagen."
 msgstr "Import cancelled. Nothing was saved."
 
+msgid "periode"
+msgstr "period"
+
+msgid "btw-nummer ontbreekt"
+msgstr "VAT number missing"
+
 msgid "Leveringen/diensten belast met hoog tarief"
 msgstr "Supplies/services subject to the high VAT rate"
 
 msgid "Leveringen/diensten belast met laag tarief"
 msgstr "Supplies/services subject to the low VAT rate"
 
+#, python-format
 msgid "Leveringen/diensten belast met 0% of niet bij u belast"
 msgstr "Supplies/services taxed at 0% or not taxed to you"
 
@@ -4521,9 +4534,6 @@ msgstr ""
 "With the KOR off, you see the revenue and VAT from your invoices and "
 "expenses here, per box."
 
-msgid "periode"
-msgstr "period"
-
 msgid "rubriek"
 msgstr "box"
 
@@ -4547,6 +4557,21 @@ msgstr "not counted"
 
 msgid "land onbekend"
 msgstr "country unknown"
+
+msgid ""
+"De KOR staat aan. Dan telt Huismus geen btw, dus dit overzicht heeft geen "
+"bedragen. Of je een opgaaf ICP moet doen, lees je bij de Belastingdienst."
+msgstr ""
+"The KOR is on. Then Huismus counts no VAT, so this summary has no amounts. "
+"Whether you have to file an ICP declaration, you read at the Belastingdienst."
+
+msgid ""
+"Je rekent geen btw. Dan telt Huismus geen btw, dus dit overzicht heeft geen "
+"bedragen. Of je een opgaaf ICP moet doen, lees je bij de Belastingdienst."
+msgstr ""
+"You don't charge VAT. Then Huismus counts no VAT, so this summary has no "
+"amounts. Whether you have to file an ICP declaration, you read at the "
+"Belastingdienst."
 
 msgid "kwartaal"
 msgstr "quarter"
@@ -8259,6 +8284,13 @@ msgstr "Revenue"
 msgid "Btw-aangifte"
 msgstr "VAT return"
 
+msgid "Opgaaf ICP"
+msgstr "ICP declaration"
+
+msgctxt "page title"
+msgid "Opgaaf ICP"
+msgstr "ICP declaration (EU sales list)"
+
 msgid "Soort periode"
 msgstr "Kind of period"
 
@@ -8273,6 +8305,49 @@ msgstr "Next period"
 
 msgid "CSV downloaden"
 msgstr "Download CSV"
+
+msgid "Opgaaf ICP bij de Belastingdienst"
+msgstr "ICP declaration at the Belastingdienst"
+
+msgid ""
+"Per btw-nummer van je klant: wat je factureerde met btw verlegd aan klanten "
+"in een ander EU-land."
+msgstr ""
+"Per VAT number of your customer: what you invoiced, reverse charged, to "
+"customers in another EU country."
+
+msgid "Btw-nummer ontbreekt"
+msgstr "VAT number missing"
+
+msgid ""
+"Op deze facturen staat geen btw-nummer van je klant. Kijk ze na voordat je "
+"de opgaaf doet."
+msgstr ""
+"These invoices have no VAT number of your customer. Check them before you "
+"file the declaration."
+
+msgid ""
+"Geen diensten met btw verlegd aan klanten in een ander EU-land in deze "
+"maand. Dan hoef je over deze maand geen opgaaf ICP te doen."
+msgstr ""
+"No reverse charged services to customers in another EU country this month. "
+"Then you don't file an ICP declaration for this month."
+
+msgid ""
+"Geen diensten met btw verlegd aan klanten in een ander EU-land in dit "
+"kwartaal. Dan hoef je over dit kwartaal geen opgaaf ICP te doen."
+msgstr ""
+"No reverse charged services to customers in another EU country this quarter. "
+"Then you don't file an ICP declaration for this quarter."
+
+msgid ""
+"Het totaal is gelijk aan rubriek 3b van je btw-aangifte over dezelfde "
+"periode. Een dienst telt op de leverdatum, als je die invulde, anders op de "
+"factuurdatum. Een creditnota telt af."
+msgstr ""
+"The total equals box 3b of your VAT return for the same period. A service "
+"counts on its delivery date, if you filled one in, otherwise on the invoice "
+"date. A credit note counts negative."
 
 msgid "Btw-instellingen"
 msgstr "VAT settings"
@@ -9940,12 +10015,12 @@ msgstr "Who makes Huismus"
 
 msgid ""
 "Huismus wordt gemaakt in Nederland door Arne Krijnsen. Over de maker en wat "
-"die nog meer doet, lees je op <a href=\"https://"
-"www.arnekrijnsen.com\">arnekrijnsen.com</a>."
+"die nog meer doet, lees je op <a href=\"https://www.arnekrijnsen."
+"com\">arnekrijnsen.com</a>."
 msgstr ""
 "Huismus is made in the Netherlands by Arne Krijnsen. You can read about him "
-"and his other work on <a href=\"https://"
-"www.arnekrijnsen.com\">arnekrijnsen.com</a>."
+"and his other work on <a href=\"https://www.arnekrijnsen.com\">arnekrijnsen."
+"com</a>."
 
 #~ msgid "Eén keer goed, in plaats van duizend keer"
 #~ msgstr "Made well once, instead of a thousand times"

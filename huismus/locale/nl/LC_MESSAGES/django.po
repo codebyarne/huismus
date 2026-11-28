@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-28 14:41+0100\n"
+"POT-Creation-Date: 2026-11-28 15:13+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2250,8 +2250,8 @@ msgid "Importeren uit andere pakketten en uit Excel"
 msgstr ""
 
 msgid ""
-"Met het sjabloon, en een handleiding voor Rompslomp, Tellow, e-"
-"Boekhouden.nl, Jortt en Excel."
+"Met het sjabloon, en een handleiding voor Rompslomp, Tellow, e-Boekhouden."
+"nl, Jortt en Excel."
 msgstr ""
 
 msgid "Auditfile voor je boekhouder"
@@ -2548,6 +2548,7 @@ msgstr ""
 msgid "Laag tarief"
 msgstr ""
 
+#, python-format
 msgid "0% of niet bij jou belast"
 msgstr ""
 
@@ -2596,6 +2597,7 @@ msgstr ""
 msgid "Omzet 1b laag tarief"
 msgstr ""
 
+#, python-format
 msgid "Omzet 1e 0% of niet bij jou belast"
 msgstr ""
 
@@ -3259,6 +3261,7 @@ msgstr ""
 msgid "Kies het btw-tarief."
 msgstr ""
 
+#, python-format
 msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
 msgstr ""
 
@@ -3332,6 +3335,7 @@ msgstr ""
 msgid "Bonnetje verwijderd."
 msgstr ""
 
+#, python-format
 msgid "0% of geen btw"
 msgstr ""
 
@@ -4194,12 +4198,19 @@ msgstr[1] ""
 msgid "Import geannuleerd. Er is niets opgeslagen."
 msgstr ""
 
+msgid "periode"
+msgstr ""
+
+msgid "btw-nummer ontbreekt"
+msgstr ""
+
 msgid "Leveringen/diensten belast met hoog tarief"
 msgstr ""
 
 msgid "Leveringen/diensten belast met laag tarief"
 msgstr ""
 
+#, python-format
 msgid "Leveringen/diensten belast met 0% of niet bij u belast"
 msgstr ""
 
@@ -4245,9 +4256,6 @@ msgid ""
 "je facturen en uitgaven."
 msgstr ""
 
-msgid "periode"
-msgstr ""
-
 msgid "rubriek"
 msgstr ""
 
@@ -4270,6 +4278,16 @@ msgid "niet meegeteld"
 msgstr ""
 
 msgid "land onbekend"
+msgstr ""
+
+msgid ""
+"De KOR staat aan. Dan telt Huismus geen btw, dus dit overzicht heeft geen "
+"bedragen. Of je een opgaaf ICP moet doen, lees je bij de Belastingdienst."
+msgstr ""
+
+msgid ""
+"Je rekent geen btw. Dan telt Huismus geen btw, dus dit overzicht heeft geen "
+"bedragen. Of je een opgaaf ICP moet doen, lees je bij de Belastingdienst."
 msgstr ""
 
 msgid "kwartaal"
@@ -7686,6 +7704,13 @@ msgstr ""
 msgid "Btw-aangifte"
 msgstr ""
 
+msgid "Opgaaf ICP"
+msgstr ""
+
+msgctxt "page title"
+msgid "Opgaaf ICP"
+msgstr ""
+
 msgid "Soort periode"
 msgstr ""
 
@@ -7699,6 +7724,38 @@ msgid "Volgende periode"
 msgstr ""
 
 msgid "CSV downloaden"
+msgstr ""
+
+msgid "Opgaaf ICP bij de Belastingdienst"
+msgstr ""
+
+msgid ""
+"Per btw-nummer van je klant: wat je factureerde met btw verlegd aan klanten "
+"in een ander EU-land."
+msgstr ""
+
+msgid "Btw-nummer ontbreekt"
+msgstr ""
+
+msgid ""
+"Op deze facturen staat geen btw-nummer van je klant. Kijk ze na voordat je "
+"de opgaaf doet."
+msgstr ""
+
+msgid ""
+"Geen diensten met btw verlegd aan klanten in een ander EU-land in deze "
+"maand. Dan hoef je over deze maand geen opgaaf ICP te doen."
+msgstr ""
+
+msgid ""
+"Geen diensten met btw verlegd aan klanten in een ander EU-land in dit "
+"kwartaal. Dan hoef je over dit kwartaal geen opgaaf ICP te doen."
+msgstr ""
+
+msgid ""
+"Het totaal is gelijk aan rubriek 3b van je btw-aangifte over dezelfde "
+"periode. Een dienst telt op de leverdatum, als je die invulde, anders op de "
+"factuurdatum. Een creditnota telt af."
 msgstr ""
 
 msgid "Btw-instellingen"
@@ -9058,8 +9115,8 @@ msgstr ""
 
 msgid ""
 "Huismus wordt gemaakt in Nederland door Arne Krijnsen. Over de maker en wat "
-"die nog meer doet, lees je op <a href=\"https://"
-"www.arnekrijnsen.com\">arnekrijnsen.com</a>."
+"die nog meer doet, lees je op <a href=\"https://www.arnekrijnsen."
+"com\">arnekrijnsen.com</a>."
 msgstr ""
 
 #~ msgid "bijschrijving"
