@@ -40,9 +40,18 @@ def test_the_hours_of_the_year_with_their_amounts():
     TimeEntry.objects.create(date=date(2025, 3, 1), contact=studio, hours=Decimal("5"))
     rows = _rows(_zip(2026))
     assert rows == [
-        ["datum", "klantnummer", "klant", "omschrijving", "uren", "tarief per uur", "bedrag"],
-        ["2026-03-01", "7", "Studio Noordlicht", "", "2", "", ""],
-        ["2026-03-02", "7", "Studio Noordlicht", "'=Huisstijl", "1,33", "90,00", "119,70"],
+        [
+            "datum",
+            "klantnummer",
+            "klant",
+            "omschrijving",
+            "uren",
+            "tarief per uur",
+            "bedrag",
+            "factuur",
+        ],
+        ["2026-03-01", "7", "Studio Noordlicht", "", "2", "", "", ""],
+        ["2026-03-02", "7", "Studio Noordlicht", "'=Huisstijl", "1,33", "90,00", "119,70", ""],
     ]
     assert len(_rows(_zip())) == 4
     assert "uren.csv" not in _zip(2024).namelist()
@@ -68,3 +77,30 @@ def test_the_import_of_its_own_export_names_the_hours_and_goes_on():
             content = _zip(2026).read(name)
         assert is_hours_csv(name, content)
         assert kind_of(name, content) is None
+
+
+def test_the_invoice_the_hours_are_on_once_it_has_a_number():
+    """#81: the number of the invoice, empty while it is a draft."""
+    from huismus.documents.issuing import issue
+    from huismus.hours.invoicing import PER_DAY, create_invoice
+
+    studio = Contact.objects.create(company_name="Studio Noordlicht")
+    TimeEntry.objects.create(
+        date=date(2026, 3, 2), contact=studio, hours=Decimal("1"), rate_cents=9000
+    )
+    TimeEntry.objects.create(
+        date=date(2026, 4, 2), contact=studio, hours=Decimal("1"), rate_cents=9000
+    )
+    invoice = issue(create_invoice(studio, date(2026, 3, 1), PER_DAY))
+    create_invoice(studio, date(2026, 4, 1), PER_DAY)
+
+    rows = _rows(_zip(2026))
+
+    assert [row[7] for row in rows[1:]] == [invoice.number, ""]
+
+
+def test_an_export_from_before_the_invoice_column_is_still_hours():
+    from huismus.imports.csv_tables import is_hours_csv
+
+    old = "datum;klantnummer;klant;omschrijving;uren;tarief per uur;bedrag\n"
+    assert is_hours_csv("uren.csv", old.encode())

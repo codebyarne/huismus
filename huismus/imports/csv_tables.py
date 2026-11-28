@@ -303,9 +303,12 @@ def is_complete(file_name: str, content: bytes) -> bool:
 
 @cache
 def _hours_names() -> tuple[frozenset[str], ...]:
-    """The header row of uren.csv, per language."""
+    """The header row of uren.csv, per language, without the invoice
+    column (#81), so an export from before it is still recognised."""
     labels = [
-        export_format.in_both_languages(column.label) for column in export_format.HOURS_COLUMNS
+        export_format.in_both_languages(column.label)
+        for column in export_format.HOURS_COLUMNS
+        if column.key != "invoice"
     ]
     return tuple(frozenset(normalised(label[i]) for label in labels) for i in range(len(labels[0])))
 
