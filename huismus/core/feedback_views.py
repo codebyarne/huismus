@@ -31,9 +31,26 @@ HELP_PAGE = "hulp"
 SENT_PARAM = "verstuurd"
 
 
+def reply_address() -> forms.EmailField:
+    """The e-mail address in both forms: required, so the maker can answer
+    (owner, 2026-11-28, #368). It starts as the address of the business
+    (initial_email); nothing is remembered when the user changes it."""
+    return forms.EmailField(
+        label=_("E-mailadres"),
+        help_text=_("Hierop kan de appbouwer je antwoorden. Je adres komt niet op GitHub."),
+        max_length=feedback.MAX_EMAIL,
+        error_messages={"required": _("Vul je e-mailadres in.")},
+    )
+
+
+def initial_email(instance: Settings | None = None) -> dict:
+    """The address of Instellingen › Bedrijf, as the form's initial value."""
+    return {"email": (instance or Settings.load()).email}
+
+
 class FeedbackForm(forms.Form):
-    """Nothing is needed: the profile always goes along (#302). Skipping is
-    its own button."""
+    """Only the e-mail address is needed: the profile always goes along
+    (#302). Skipping is its own button."""
 
     wish = forms.CharField(
         label=_("Wat mis je, of wat wil je met Huismus doen?"),
@@ -42,12 +59,7 @@ class FeedbackForm(forms.Form):
         required=False,
         widget=forms.Textarea(attrs={"rows": 4}),
     )
-    email = forms.EmailField(
-        label=_("E-mailadres"),
-        help_text=_("Alleen als de appbouwer je er iets over mag vragen."),
-        max_length=feedback.MAX_EMAIL,
-        required=False,
-    )
+    email = reply_address()
 
     def clean_wish(self):
         # A browser sends a textarea's line breaks as \r\n, the hidden copy
@@ -60,7 +72,7 @@ def card_context(
 ) -> dict:
     """What _feedback.html shows. preview needs a valid form: the overview
     is made from its cleaned data."""
-    form = form or FeedbackForm()
+    form = form or FeedbackForm(initial=initial_email(instance))
     context = {
         "show_feedback_card": True,
         "feedback_form": form,
@@ -156,12 +168,7 @@ class QuickFeedbackForm(forms.Form):
         max_length=feedback.MAX_WISH,
         widget=forms.Textarea(attrs={"rows": 4}),
     )
-    email = forms.EmailField(
-        label=_("E-mailadres"),
-        help_text=_("Laat je e-mailadres achter als de appbouwer je over je bericht mag mailen."),
-        max_length=feedback.MAX_EMAIL,
-        required=False,
-    )
+    email = reply_address()
     page = forms.CharField(required=False, widget=forms.HiddenInput)
     image = forms.CharField(required=False, widget=forms.HiddenInput)
 
@@ -235,4 +242,4 @@ def quick(request):
         )
     except feedback.SendError:
         return _panel(request, form, "preview", failed=True)
-    return _panel(request, QuickFeedbackForm(), "sent")
+    return _panel(request, QuickFeedbackForm(initial=initial_email()), "sent")

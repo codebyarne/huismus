@@ -10,6 +10,7 @@ import email
 import email.policy
 import io
 import json
+import re
 import zlib
 
 import pytest
@@ -229,7 +230,7 @@ def _post(client, button=None, htmx=True, **answers):
     data = {
         "fb-kind": "probleem",
         "fb-message": "Knop doet niets",
-        "fb-email": "",
+        "fb-email": "lotte@example.com",
         "fb-page": "/facturen/",
     }
     data.update({f"fb-{key}": value for key, value in answers.items()})
@@ -275,7 +276,7 @@ def test_send_sends_the_picture_as_bytes(logged_in, sends):
     assert (kind, message, mail, page, image) == (
         "probleem",
         "Knop doet niets",
-        "",
+        "lotte@example.com",
         "/facturen/",
         png,
     )
@@ -303,6 +304,19 @@ def test_a_message_is_needed(logged_in, sends):
     response = _post(logged_in, "versturen", message="")
     assert 'class="error"' in response.content.decode()
     assert sends == []
+
+
+def test_an_email_address_is_needed(logged_in, sends):
+    # Owner, 2026-11-28 (#368): the maker must be able to answer.
+    response = _post(logged_in, "versturen", email="")
+    assert 'class="error"' in response.content.decode()
+    assert sends == []
+
+
+def test_the_button_fills_in_the_address_of_your_business(logged_in):
+    Settings.objects.filter(pk=Settings.load().pk).update(email="info@voorbeeld.nl")
+    page = logged_in.get(reverse("documents:list")).content.decode()
+    assert re.search(r'name="fb-email" value="info@voorbeeld.nl"[^>]*required', page)
 
 
 def test_change_goes_back_to_the_form_with_the_picture(logged_in, sends):
@@ -351,3 +365,11 @@ def test_the_panel_is_in_english(logged_in, sends):
 def test_a_refused_value_is_never_shown_as_a_picture(logged_in, sends):
     text = _post(logged_in, image="https://example.com/x.png").content.decode()
     assert 'src="https://example.com' not in text
+
+
+def test_without_an_address_it_says_so_in_english(logged_in, sends):
+    logged_in.cookies["django_language"] = "en"
+    text = _post(logged_in, "versturen", email="", htmx=False).content.decode()
+    assert "Enter your email address." in text
+    assert "The app&#x27;s maker can reply to you here." in text
+    assert sends == []

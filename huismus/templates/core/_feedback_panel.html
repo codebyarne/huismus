@@ -48,7 +48,7 @@
         </div>
         {% for error in fb_form.image.errors %}<p class="error">{{ error }}</p>{% endfor %}
     </div>
-    {% field fb_form.email optional=True %}
+    {% field fb_form.email %}
     {{ fb_form.page }}{{ fb_form.image }}
     <button class="btn btn-primary" type="submit">{% translate "Controleer wat er meegaat" %}</button>
 </form>

@@ -286,7 +286,7 @@ def sends(monkeypatch):
 
 
 def _post(client, button, place="welkom", **answers):
-    data = {"plek": place, "wish": "", "email": "", button: ""}
+    data = {"plek": place, "wish": "", "email": "a@example.com", button: ""}
     data.update(answers)
     return client.post(reverse("feedback"), data)
 
@@ -365,11 +365,27 @@ def test_change_goes_back_to_the_form_with_the_answers(logged_in, sends):
     assert 'id="vertel-wat-er-gaat"' not in page
 
 
-def test_nothing_is_needed(logged_in, sends):
-    # Both fields empty: only the profile goes.
+def test_only_the_email_address_is_needed(logged_in, sends):
+    # What you miss may stay empty: the profile and the address go.
     response = _post(logged_in, "versturen")
     assert response.status_code == 302
-    assert sends == [("", "")]
+    assert sends == [("", "a@example.com")]
+
+
+def test_without_an_email_address_nothing_goes(logged_in, sends):
+    # Owner, 2026-11-28 (#368): the maker must be able to answer.
+    response = _post(logged_in, "versturen", wish="Uren", email="")
+    page = response.content.decode()
+    assert 'aria-invalid="true"' in page
+    assert 'id="vertel-wat-er-gaat"' not in page
+    assert sends == []
+
+
+def test_the_card_fills_in_the_address_of_your_business(logged_in):
+    Settings.objects.filter(pk=Settings.load().pk).update(email="info@voorbeeld.nl")
+    for url in (reverse("onboarding_done"), reverse("help:page", args=["feedback"])):
+        page = logged_in.get(url).content.decode()
+        assert re.search(r'name="email" value="info@voorbeeld.nl"[^>]*required', page)
 
 
 def test_an_email_address_must_be_one(logged_in, sends):
