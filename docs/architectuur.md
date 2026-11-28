@@ -127,7 +127,7 @@ uit het diagram haalt:
   editor, dan kopieert `huismus/documents/articles.py` zijn waarden in een
   gewone regel; die wijst niet terug, dus een artikel wijzigen of verwijderen
   raakt geen document.
-- **`Trip`** is een zakelijke rit (M33): datum, van, naar, doel en
+- **`Trip`** is een zakelijke rit (M36): datum, van, naar, doel en
   kilometers. Geen document en geen geld: wijzigen en verwijderen mag, en
   Huismus rekent geen vergoeding uit.
 - `SPEC.md` noemt ook een `AuditLog`; die bestaat nog niet.
