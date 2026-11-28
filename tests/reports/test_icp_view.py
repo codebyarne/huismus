@@ -107,3 +107,30 @@ def test_the_tab_shows_only_with_vat_and_a_customer_in_the_eu(logged_in):
 
     _settings(kor=True)
     assert tab not in logged_in.get(year).content.decode()
+
+
+def test_without_vat_for_another_reason_it_says_so(logged_in):
+    settings = _settings(kor=False)
+    settings.vat_exempt = True
+    settings.save()
+
+    html = _page(logged_in)
+    assert 'id="kor-aan"' in html
+    assert "Je rekent geen btw." in html
+
+
+def test_a_month_and_its_empty_state(logged_in):
+    _invoice(date(2026, 7, 10), 20_00)
+
+    assert "20,00" in _page(logged_in, "2026-07")
+    html = _page(logged_in, "2026-08")
+    assert 'id="leeg"' in html and "deze maand" in html
+
+
+def test_a_credit_note_counts_negative_on_the_page(logged_in):
+    from .test_vat_return import _credit_note
+
+    invoice = _invoice(date(2026, 4, 1), 100_00)
+    _credit_note(invoice, date(2026, 8, 1))
+
+    assert "−\xa0€\xa0100,00" in _page(logged_in)

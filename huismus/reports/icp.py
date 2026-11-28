@@ -71,7 +71,8 @@ class IcpReport:
         return not self.customers and not self.without_vat_number
 
 
-def _name(document: Document) -> str:
+def customer_name(document: Document) -> str:
+    """The customer's name as on the document (invariant 4)."""
     snapshot = document.contact_snapshot or {}
     return snapshot.get("display_name") or snapshot.get("company_name") or ""
 
@@ -92,10 +93,10 @@ def compute_icp(period: Period) -> IcpReport:
             item.amount_cents += row.revenue_cents
             continue
         customer = customers.setdefault(
-            number, Customer(number, customer_country(document), _name(document))
+            number, Customer(number, customer_country(document), customer_name(document))
         )
         # Rows come by invoice date: the last one names the customer.
-        customer.name = _name(document) or customer.name
+        customer.name = customer_name(document) or customer.name
         customer.amount_cents += row.revenue_cents
 
     return IcpReport(

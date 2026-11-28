@@ -19,21 +19,21 @@ from .icp_csv import header as icp_header
 from .icp_csv import rows as icp_rows
 from .periods import MONTH, QUARTER, YEAR, Period
 from .vat_return import EXEMPT_NOTE, KOR_NOTE, NOT_COUNTED_TITLES, compute_vat_return
-
-# What the ICP page says instead of figures (huismus-intern/besluiten.md,
-# 2026-11-28): only what Huismus does, nothing about whether a return is
-# due; the source for that is missing (docs/belastingregels.md).
-KOR_NOTE_ICP = _(
-    "De KOR staat aan. Dan telt Huismus geen btw, ook geen btw verlegd, dus hier staan geen "
-    "bedragen. Of je een opgaaf ICP doet, lees je bij de Belastingdienst."
-)
-EXEMPT_NOTE_ICP = _(
-    "Je rekent geen btw. Dan telt Huismus geen btw, ook geen btw verlegd, dus hier staan geen "
-    "bedragen. Of je een opgaaf ICP doet, lees je bij de Belastingdienst."
-)
 from .vat_return_csv import header as vat_return_header
 from .vat_return_csv import rows as vat_return_rows
 from .year_overview import CHART_STEPS, chart_step, compute_year_overview
+
+# What the ICP page says instead of figures (huismus-intern/besluiten.md,
+# 2026-11-28, "Plan Opgaaf ICP" and "Opgaaf ICP (#168)"): only what Huismus does, nothing about whether a return is
+# due; the source for that is missing (docs/belastingregels.md).
+KOR_NOTE_ICP = _(
+    "De KOR staat aan. Dan telt Huismus geen btw, dus dit overzicht heeft geen bedragen. "
+    "Of je een opgaaf ICP moet doen, lees je bij de Belastingdienst."
+)
+EXEMPT_NOTE_ICP = _(
+    "Je rekent geen btw. Dan telt Huismus geen btw, dus dit overzicht heeft geen bedragen. "
+    "Of je een opgaaf ICP moet doen, lees je bij de Belastingdienst."
+)
 
 
 def _requested_year(request) -> int:
