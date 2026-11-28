@@ -1233,6 +1233,12 @@ form > div > .settings-section .card-head { border-bottom: 0; padding-bottom: 0;
    telefoon achter Van ("Utrecht → Zwolle"), op een breed scherm in een eigen kolom. */
 .quick-add.is-trip { grid-template-columns: 9.5rem minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.4fr) 7.5rem auto; }
 .trip-to { display: none; }
+/* Een plaats of doel zonder spaties breekt af in plaats van de tabel op te rekken:
+   vaste kolommen, Datum en Km smal, de rest deelt de ruimte. */
+.table.is-trips { table-layout: fixed; }
+.table.is-trips th:first-child { width: 8rem; }
+.table.is-trips th:last-child { width: 6.5rem; }
+.table.is-trips td { overflow-wrap: anywhere; }
 @media (max-width: 1180px) {
   .quick-add.is-trip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }

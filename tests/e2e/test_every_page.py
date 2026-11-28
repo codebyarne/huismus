@@ -448,6 +448,18 @@ def _problems_on(page, path, language, dutch, data):
     )
     if clipped:
         problems.append(f"tabel rechts afgeknipt: {clipped}")
+    # A word without spaces in one cell squeezed the cell next to it to a
+    # letter per line (Kilometers, verify-e2e 2026-11-28): a cell with text
+    # is never narrower than a few letters.
+    squeezed = page.evaluate(
+        """() => [...document.querySelectorAll('.table td')].filter(cell => {
+            const box = cell.getBoundingClientRect();
+            const text = cell.textContent.trim();
+            return box.width > 0 && box.width < 40 && text.length > 20;
+        }).map(cell => cell.textContent.trim().slice(0, 40))"""
+    )
+    if squeezed:
+        problems.append(f"tabelkolom samengedrukt: {sorted(set(squeezed))[:5]}")
     # The footer promised "/ zoeken" on every page, where "/" did nothing
     # (feedback 2026-10-31): a shortcut hint only where the shortcut works.
     hints_search = page.locator(".shortcut-hint .kbd", has_text="/").count() > 0

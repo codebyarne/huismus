@@ -119,3 +119,26 @@ def test_the_year_overview_shows_the_years_mileage(app):
     expect(card).to_contain_text("178 km in 1 rit")
     card.get_by_role("link", name="Bekijk de ritten").click()
     expect(app.locator(".hours-total")).to_contain_text("178 km")
+
+
+def test_a_place_without_spaces_wraps_instead_of_stretching_the_list(app):
+    """Found by hand (verify-e2e, 2026-11-28): a long Van and Doel without
+    spaces squeezed the other columns and pushed Km out of view."""
+    Settings.objects.filter(pk=1).update(show_mileage=True)
+    Trip.objects.create(
+        date=timezone.localdate(),
+        origin="A" * 200,
+        destination="Zwolle",
+        purpose="B" * 500,
+        distance_km=Decimal("12"),
+    )
+    for width in (1440, 1024):
+        app.set_viewport_size({"width": width, "height": 900})
+        app.goto(app.base + "/kilometers/")
+        km = app.get_by_role("cell", name="12 km", exact=True)
+        expect(km).to_be_in_viewport()
+        wrap = app.locator("#ritten-resultaat .table-wrap")
+        assert wrap.evaluate("el => el.scrollWidth <= el.clientWidth")
+        # Van keeps a column of its own instead of one letter per line.
+        origin = app.locator("tr.is-link td").nth(1)
+        assert origin.evaluate("el => el.getBoundingClientRect().width") > 120
