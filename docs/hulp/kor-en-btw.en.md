@@ -122,6 +122,18 @@ on, the report has no amounts and there is no CSV.
 You can also download an export for your accountant. See
 [Exporting](exporteren.en.md).
 
+## ICP return
+
+If you invoice services, reverse charged, to a business in another EU country,
+**Reports** also has **ICP return**. There you see per quarter or month the
+total per VAT number of your customer, as the ICP return (opgaaf ICP) asks.
+The total equals box 3b of your VAT return for the same period. A service
+counts on its delivery date, if you filled one in, and a credit note counts
+negative. If an invoice has no VAT number of the customer, Huismus lists it
+apart. With **Download CSV** you get the list as a file. You fill in the return
+yourself at the Belastingdienst; Huismus sends nothing. What goes in it, you
+read at the [Belastingdienst](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/zakendoen_met_het_buitenland/goederen_en_diensten_naar_andere_eu_landen/opgaaf_icp/opgaaf_icp).
+
 ## A credit note and a copy
 
 A credit note keeps the rates of the invoice it credits. If you copy an
