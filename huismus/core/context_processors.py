@@ -11,28 +11,34 @@ from huismus.core.desktop import has_no_password
 from huismus.core.feedback_views import QuickFeedbackForm
 from huismus.core.profile import BANK, EXPENSES, QUOTES, profile
 
-# Expense routes that have their own item in the sidebar's sub-navigation.
-# Every other expenses route (list, form, receipts, delete) belongs to the
-# "Uitgaven" item itself.
-EXPENSES_SUBSECTIONS = {
-    "category_list": "categories",
-    "category_edit": "categories",
-    "category_delete": "categories",
+# Routes that have their own item in the sidebar's sub-navigation, per
+# section. Every other route of the section (list, form, receipts, delete)
+# belongs to the section's item itself.
+SUBSECTIONS = {
+    "expenses": {
+        "category_list": "categories",
+        "category_edit": "categories",
+        "category_delete": "categories",
+    },
+    # Artikelen under Facturen (#167), like Categorieën under Uitgaven.
+    "documents": {
+        "article_list": "articles",
+        "article_edit": "articles",
+        "article_delete": "articles",
+    },
 }
 
 
 def navigation(request):
     """nav_section: the URL namespace ("documents", "expenses", ...), or
-    "home". nav_subsection: set only for EXPENSES_SUBSECTIONS, so the
-    sidebar marks either "Uitgaven" or one of its sub-items as the current
+    "home". nav_subsection: set only for SUBSECTIONS, so the sidebar marks
+    either a section ("Uitgaven") or one of its sub-items as the current
     page, never both."""
     match = request.resolver_match
     if match is None:
         return {"nav_section": None, "nav_subsection": None}
     section = match.namespace or match.url_name
-    subsection = None
-    if section == "expenses":
-        subsection = EXPENSES_SUBSECTIONS.get(match.url_name)
+    subsection = SUBSECTIONS.get(section, {}).get(match.url_name)
     return {"nav_section": section, "nav_subsection": subsection}
 
 
@@ -44,7 +50,8 @@ def parts(request):
     are URL namespaces, like nav_section. menu_more: the sections behind "Meer",
     everything the tab bar has no place for; it lists their links and is
     marked on their pages. Uitgaven's Categorieën is in it as "categories",
-    no section: its page marks the Uitgaven tab, like every expenses page."""
+    no section: its page marks the Uitgaven tab, like every expenses page;
+    Facturen's Artikelen likewise as "articles"."""
     if not getattr(request, "user", None) or not request.user.is_authenticated:
         return {}
     from huismus.business.models import Settings
@@ -60,7 +67,7 @@ def parts(request):
     else:
         tab = "contacts"
     # Named menu_*: a view's own "tab" (the tabs of Facturen) would win.
-    meer = {"reports", "imports", "business", "help"}
+    meer = {"reports", "imports", "business", "help", "articles"}
     if QUOTES in shown:
         meer.add("quotes")
     if EXPENSES in shown:
