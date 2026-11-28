@@ -17,10 +17,23 @@ from .forms import ArticleForm
 from .models import Article
 
 
+def _from_quotes(request) -> bool:
+    """Opened from Offertes (?terug=offertes, kept by every form and link on
+    the page): Terug and every redirect go back there (the owner,
+    2026-11-28: the button is on Facturen and on Offertes)."""
+    return (request.POST.get("terug") or request.GET.get("terug")) == "offertes"
+
+
+def _list_url(request) -> str:
+    url = reverse("documents:article_list")
+    return url + "?terug=offertes" if _from_quotes(request) else url
+
+
 def _render(request, *, new_form=None, editing=None, edit_form=None):
     """`editing` is the article shown as an inline form (from ?bewerk=<pk>,
     or after a failed save with its errors)."""
     settings = Settings.load()
+    from_quotes = _from_quotes(request)
     if editing is not None and edit_form is None:
         edit_form = ArticleForm(instance=editing, settings=settings)
     return render(
@@ -32,6 +45,8 @@ def _render(request, *, new_form=None, editing=None, edit_form=None):
             "editing_pk": editing.pk if editing else None,
             "edit_form": edit_form,
             "settings": settings,
+            "from_quotes": from_quotes,
+            "back_url": reverse("quotes:list" if from_quotes else "documents:list"),
         },
     )
 
@@ -43,7 +58,7 @@ def article_list(request):
         if form.is_valid():
             form.save()
             messages.success(request, _("Artikel toegevoegd."))
-            return redirect("documents:article_list")
+            return redirect(_list_url(request))
         return _render(request, new_form=form)
     # ?bewerk=<pk> fills the form with that article; an unknown one opens the
     # page as usual.
@@ -58,12 +73,14 @@ def article_edit(request, pk):
     list with this article's row in edit mode."""
     article = get_object_or_404(Article, pk=pk)
     if request.method != "POST":
-        return redirect(reverse("documents:article_list") + f"?bewerk={article.pk}")
+        return redirect(
+            _list_url(request) + ("&" if _from_quotes(request) else "?") + f"bewerk={article.pk}"
+        )
     form = ArticleForm(request.POST, instance=article, settings=Settings.load())
     if form.is_valid():
         form.save()
         messages.success(request, _("Artikel opgeslagen."))
-        return redirect("documents:article_list")
+        return redirect(_list_url(request))
     return _render(request, editing=article, edit_form=form)
 
 
@@ -75,4 +92,4 @@ def article_delete(request, pk):
     if request.method == "POST":
         article.delete()
         messages.success(request, _("Artikel verwijderd."))
-    return redirect("documents:article_list")
+    return redirect(_list_url(request))

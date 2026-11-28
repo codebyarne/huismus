@@ -7,7 +7,7 @@
 {% block content %}
 <div class="page-head">
     <div class="titles">
-        <a class="back" href="{% url 'documents:list' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Facturen" %}</a>
+        <a class="back" href="{{ back_url }}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% if from_quotes %}{% translate "Offertes" %}{% else %}{% translate "Facturen" %}{% endif %}</a>
         <h1>{% translate "Artikelen" %}</h1>
         <p class="lede">{% translate "Regels die je vaak gebruikt. In een factuur of offerte kies je een artikel en de regel staat er. Daarna pas je hem aan zoals elke regel." %}</p>
     </div>
@@ -33,12 +33,12 @@
                     <td data-cell="secondary"><span class="num">{{ article.unit_price_cents|money }}</span>{% if article.unit %} {% blocktranslate with unit=article.unit %}per {{ unit }}{% endblocktranslate %}{% endif %}{% if not settings.no_vat %} · {% if article.reverse_charge %}{% translate "btw verlegd" %}{% else %}{% blocktranslate with rate=article.tax_rate_bp|tax_percent %}{{ rate }} btw{% endblocktranslate %}{% endif %}{% endif %}</td>
                     <td data-cell="action" class="r w-min">
                         <div class="row" style="gap:4px;flex-wrap:nowrap">
-                            <a class="btn btn-ghost btn-sm" href="?bewerk={{ article.pk }}#artikel-formulier"><svg class="i i-sm" aria-hidden="true"><use href="#edit"></use></svg>{% translate "Bewerken" %}</a>
+                            <a class="btn btn-ghost btn-sm" href="?{% if from_quotes %}terug=offertes&amp;{% endif %}bewerk={{ article.pk }}#artikel-formulier"><svg class="i i-sm" aria-hidden="true"><use href="#edit"></use></svg>{% translate "Bewerken" %}</a>
                             <button type="button" class="btn btn-danger-quiet btn-sm btn-icon" command="show-modal" commandfor="verwijder-{{ article.pk }}"
                                     aria-label="{% blocktranslate with name=article.description|truncatechars:40 %}{{ name }} verwijderen{% endblocktranslate %}"><svg class="i i-sm" aria-hidden="true"><use href="#trash"></use></svg></button>
                             <dialog class="dialog" id="verwijder-{{ article.pk }}" aria-labelledby="verwijder-{{ article.pk }}-titel" style="text-align:left">
                                 <form method="post" action="{% url 'documents:article_delete' article.pk %}">
-                                    {% csrf_token %}
+                                    {% csrf_token %}{% if from_quotes %}<input type="hidden" name="terug" value="offertes">{% endif %}
                                     <div class="dialog-body">
                                         <div class="dialog-icon is-danger"><svg class="i" aria-hidden="true"><use href="#trash"></use></svg></div>
                                         <h2 id="verwijder-{{ article.pk }}-titel">{% blocktranslate with name=article.description|truncatechars:60 %}Artikel „{{ name }}” verwijderen?{% endblocktranslate %}</h2>
@@ -68,16 +68,16 @@
     <div class="card-head"><h2>{% if edit_form %}{% translate "Artikel wijzigen" %}{% else %}{% translate "Nieuw artikel" %}{% endif %}</h2></div>
     {% if edit_form %}{% with f=edit_form %}
     <form class="card-pad" method="post" action="{% url 'documents:article_edit' editing_pk %}">
-        {% csrf_token %}
+        {% csrf_token %}{% if from_quotes %}<input type="hidden" name="terug" value="offertes">{% endif %}
         {% include "documents/_article_fields.html" %}
         <div class="row" style="margin-top:var(--s-5);gap:var(--s-2)">
             <button class="btn btn-primary" type="submit">{% translate "Opslaan" %}</button>
-            <a class="btn" href="{% url 'documents:article_list' %}">{% translate "Annuleren" %}</a>
+            <a class="btn" href="{% url 'documents:article_list' %}{% if from_quotes %}?terug=offertes{% endif %}">{% translate "Annuleren" %}</a>
         </div>
     </form>
     {% endwith %}{% else %}{% with f=form %}
     <form class="card-pad" method="post" action="{% url 'documents:article_list' %}">
-        {% csrf_token %}
+        {% csrf_token %}{% if from_quotes %}<input type="hidden" name="terug" value="offertes">{% endif %}
         {% include "documents/_article_fields.html" %}
         <div class="row" style="margin-top:var(--s-5)">
             <button class="btn btn-secondary" type="submit"><svg class="i i-sm" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Toevoegen" %}</button>

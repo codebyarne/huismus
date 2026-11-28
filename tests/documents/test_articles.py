@@ -371,3 +371,24 @@ def test_the_editor_offers_both_prices_for_the_checkbox_to_choose(logged_in):
     text = logged_in.get(reverse("documents:create")).content.decode()
     assert "&quot;unit_price_cents&quot;: &quot;950,00&quot;" in text
     assert "&quot;unit_price_cents&quot;: &quot;1.149,50&quot;" in text
+
+
+def test_offertes_links_to_articles_too_and_comes_back_there(logged_in):
+    """The owner, 2026-11-28: articles are for quotes as much as invoices."""
+    _kor(False)
+    assert "artikelen" not in logged_in.get(reverse("quotes:list")).content.decode()
+    article = _article()
+    url = reverse("documents:article_list") + "?terug=offertes"
+    assert url.replace("&", "&amp;") in logged_in.get(reverse("quotes:list")).content.decode()
+    page = logged_in.get(url).content.decode()
+    assert f'href="{reverse("quotes:list")}"' in page
+    response = logged_in.post(
+        reverse("documents:article_edit", args=[article.pk]),
+        {
+            "description": "Workshop",
+            "unit_price_cents": "1",
+            "tax_rate_bp": "2100",
+            "terug": "offertes",
+        },
+    )
+    assert response["Location"] == url

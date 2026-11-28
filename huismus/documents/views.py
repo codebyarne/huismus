@@ -858,6 +858,7 @@ def quote_list(request):
             "tab": tab,
             "query": query,
             "has_any": Document.objects.filter(kind="quote").exists(),
+            "has_articles": Article.objects.exists(),
             "sort": sort_headers(sort, QUOTE_SORT_KEYS, lambda value: list_url(sorteer=value)),
             "sorted_by": sort,
         },

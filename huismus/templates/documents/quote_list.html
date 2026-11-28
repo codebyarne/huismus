@@ -13,6 +13,8 @@
         <p class="lede">{% translate "Verzend een offerte, mail hem naar je klant en leg het antwoord hier vast." %}</p>
     </div>
     <div class="actions">
+        {% comment %}Artikelen (#167): also here, as on Facturen (the owner, 2026-11-28); Terug comes back here.{% endcomment %}
+        {% if has_any or has_articles %}<a class="btn btn-ghost" href="{% url 'documents:article_list' %}?terug=offertes">{% translate "Artikelen" %}</a>{% endif %}
         <a class="btn btn-primary" href="{% url 'quotes:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuwe offerte" %}</a>
     </div>
 </div>
