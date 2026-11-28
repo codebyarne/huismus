@@ -147,6 +147,7 @@ document.addEventListener("change", (event) => {
   const values = JSON.parse(picker.selectedOptions[0].dataset.line);
   const prefix = picker.dataset.articlePicker;
   const forms = document.querySelector(`[data-formset-forms="${prefix}"]`);
+  // The same test as documents.articles._is_empty on the server.
   const isEmpty = (line) =>
     !line.querySelector(`input[name$="-id"]`)?.value &&
     [...line.querySelectorAll("textarea, input:not([type=hidden]):not([type=checkbox])")].every(
@@ -154,6 +155,8 @@ document.addEventListener("change", (event) => {
     );
   let line = forms.lastElementChild;
   if (!line || !isEmpty(line)) {
+    // The click handler above adds the line at once (no request), so it is
+    // the last one right after.
     document.querySelector(`[data-formset-add="${prefix}"]`).click();
     line = forms.lastElementChild;
   }
