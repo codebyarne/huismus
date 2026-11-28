@@ -373,3 +373,11 @@ def test_without_an_address_it_says_so_in_english(logged_in, sends):
     assert "Enter your email address." in text
     assert "The app&#x27;s maker can reply to you here." in text
     assert sends == []
+
+
+def test_without_a_business_address_the_field_starts_empty(logged_in):
+    # A fresh install: no settings row yet, and showing the button makes none.
+    Settings.objects.all().delete()
+    page = logged_in.get(reverse("documents:list")).content.decode()
+    assert re.search(r'name="fb-email"(?! value=)[^>]*required', page)
+    assert not Settings.objects.exists()

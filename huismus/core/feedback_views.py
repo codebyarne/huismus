@@ -43,9 +43,9 @@ def reply_address() -> forms.EmailField:
     )
 
 
-def initial_email(instance: Settings | None = None) -> dict:
+def initial_email(instance: Settings) -> dict:
     """The address of Instellingen › Bedrijf, as the form's initial value."""
-    return {"email": (instance or Settings.load()).email}
+    return {"email": instance.email}
 
 
 class FeedbackForm(forms.Form):
@@ -242,4 +242,4 @@ def quick(request):
         )
     except feedback.SendError:
         return _panel(request, form, "preview", failed=True)
-    return _panel(request, QuickFeedbackForm(initial=initial_email()), "sent")
+    return _panel(request, QuickFeedbackForm(initial=initial_email(Settings.load())), "sent")

@@ -42,6 +42,17 @@ def navigation(request):
     return {"nav_section": section, "nav_subsection": subsection}
 
 
+def stored_settings(request):
+    """The settings row as it is, read once per request and shared by the
+    context processors. Read, never write: a page (the import's dry run)
+    may leave the settings row unmade. Not there yet: the defaults."""
+    from huismus.business.models import Settings
+
+    if not hasattr(request, "_huismus_settings"):
+        request._huismus_settings = Settings.objects.filter(pk=1).first() or Settings()
+    return request._huismus_settings
+
+
 def parts(request):
     """show_quotes, show_hours, show_expenses, show_bank: whether a part is in the
     sidebar and under "Nieuw" (#260, core.profile.parts_shown).
@@ -54,12 +65,7 @@ def parts(request):
     Facturen's Artikelen likewise as "articles"."""
     if not getattr(request, "user", None) or not request.user.is_authenticated:
         return {}
-    from huismus.business.models import Settings
-
-    # Read, never write: a page (the import's dry run) may leave the
-    # settings row unmade. Not there yet: the defaults.
-    stored = Settings.objects.filter(pk=1).first() or Settings()
-    shown = profile(stored).parts_shown
+    shown = profile(stored_settings(request)).parts_shown
     if EXPENSES in shown:
         tab = "expenses"
     elif QUOTES in shown:
@@ -120,5 +126,5 @@ def feedback_panel(request):
     it is on and the address of the business (huismus/core/feedback_views.py)."""
     if not getattr(request, "user", None) or not request.user.is_authenticated:
         return {}
-    initial = {"page": request.path, **initial_email()}
+    initial = {"page": request.path, **initial_email(stored_settings(request))}
     return {"quick_feedback_form": QuickFeedbackForm(initial=initial)}
