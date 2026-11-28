@@ -167,7 +167,9 @@ def test_a_credit_note_keeps_its_invoices_choice():
 def test_the_pdf_says_the_prices_include_vat():
     _settings()
     invoice = issue(_draft())
-    text = " ".join(page.extract_text() for page in PdfReader(BytesIO(render_pdf(invoice))).pages)
+    pages = PdfReader(BytesIO(render_pdf(invoice))).pages
+    # One line: a head may take two lines on the PDF.
+    text = " ".join(" ".join(page.extract_text() for page in pages).split())
     assert "Bedrag incl. btw" in text
     assert "24,79" in text and "5,21" in text and "30,00" in text
 
