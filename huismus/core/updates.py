@@ -659,25 +659,40 @@ def start_from_store() -> None:
 
     Someone who moved from the installer may still have its update status:
     a downloaded installer, a version found or one that failed. None of it
-    applies here, so it goes.
+    applies here, so it goes. Then the backup before the migrations, as at
+    every start of the desktop app (backup_before_migrations): the Store
+    replaced the app while Huismus was closed."""
+    status = load_status()
+    _forget_download(status)
+    update_status(available={}, pending={}, not_installed="", auto_failed="", download_failed="")
+    backup_before_migrations()
 
-    The Store replaced the app while Huismus was closed, so the backup that
-    install() makes before an update is made here: when this version brings
-    migrations an existing administration lacks, as on Docker
-    (manage.py migrate_with_backup). Recorded as pending, so failing
-    migrations get the screen that offers this backup back (desktop/app.py),
-    and the first start that works clears it. SafetyBackupError when the
-    backup can't be made: then nothing is migrated."""
+
+def backup_before_migrations() -> None:
+    """Before the migrations at every start of the desktop app
+    (desktop/server.py).
+
+    A new version can come from outside Huismus: a downloaded installer or
+    .dmg, a package manager, the Store (issue #315). When it brings
+    migrations an existing administration lacks, the backup that install()
+    makes before an update is made here, as on Docker (manage.py
+    migrate_with_backup). Recorded as pending, so failing migrations get the
+    screen that offers this backup back (desktop/app.py), and the first
+    start that works clears it. Pending names this version when a backup of
+    the state before it exists already: install() made one, or an earlier
+    start of this version whose migrations failed. That one stays the way
+    back, not a backup of a half-migrated database. SafetyBackupError when
+    the backup can't be made: then nothing is migrated."""
     from . import auto_backups
     from .backup import sample_data_in_use
     from .management.commands.migrate_with_backup import has_administration, pending_migrations
 
     status = load_status()
-    _forget_download(status)
-    update_status(available={}, pending={}, not_installed="", auto_failed="", download_failed="")
+    if status.pending.get("to_version") == current_version():
+        return
     if not (pending_migrations() and has_administration() and not sample_data_in_use()):
         return
-    logger.info("Nieuwe versie uit de Store (%s): eerst een back-up", current_version())
+    logger.info("Nieuwe versie (%s): eerst een back-up", current_version())
     backup = auto_backups.safety_backup()
     update_status(
         pending={
