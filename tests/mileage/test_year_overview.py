@@ -55,3 +55,54 @@ def test_the_csv_stays_in_euros(client_in):
     _trip(date(2025, 1, 5), "12")
     csv = client_in.get(reverse("reports:year_overview_csv") + "?jaar=2025").content.decode()
     assert "km" not in csv
+
+
+# ---------- Het bedrag per kilometer (eigenaar 2026-11-28) ----------
+# docs/belastingregels.md, sectie 8: € 0,25 in 2026, € 0,23 in 2025 en 2024.
+
+
+@pytest.mark.parametrize(
+    ("year", "km", "cents"),
+    [
+        (2026, "1842", 46050),
+        (2025, "1842", 42366),
+        (2024, "0.1", 2),  # 2,3 cent, half-up
+        (2026, "0.1", 3),  # 2,5 cent, half-up
+    ],
+)
+def test_the_deduction_is_the_years_amount_per_km(year, km, cents):
+    from huismus.mileage.trips import deduction_cents
+
+    assert deduction_cents(year, Decimal(km)) == cents
+
+
+def test_a_year_without_a_source_has_no_amount():
+    from huismus.mileage.trips import deduction_cents
+
+    assert deduction_cents(2023, Decimal("100")) is None
+    assert deduction_cents(2027, Decimal("100")) is None
+
+
+def test_the_card_shows_the_amount_as_information_with_its_source(client_in):
+    _trip(date(2026, 1, 5), "1842")
+    html = _html(client_in, 2026).replace("\xa0", " ")
+    assert "€ 0,25 per kilometer" in html
+    assert "€ 460,50" in html
+    assert "Huismus telt dit niet mee in je winst." in html
+    assert "belastingdienst.nl" in html
+
+
+def test_the_amount_is_not_in_the_profit(client_in):
+    from huismus.reports.year_overview import compute_year_overview
+
+    _trip(date(2026, 1, 5), "1842")
+    overview = compute_year_overview(2026)
+    assert overview.expenses_cents == 0
+    assert overview.profit_cents == 0
+
+
+def test_without_a_source_for_the_year_only_the_kilometres(client_in):
+    _trip(date(2023, 1, 5), "100")
+    html = _html(client_in, 2023)
+    assert "100 km in 1 rit<" in html
+    assert "per kilometer" not in html

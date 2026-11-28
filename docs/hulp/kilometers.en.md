@@ -2,7 +2,7 @@
 
 With Mileage you keep track of your business trips: from where to where,
 why, and how many kilometres. Huismus adds them up per month and per year.
-It doesn't work out an allowance. Switch Mileage on at Settings › Menu.
+Switch Mileage on at Settings › Menu.
 
 ## Entering a trip
 
@@ -22,7 +22,12 @@ Your trips are listed per month, newest first. Each month shows how many
 kilometres it was. The list starts at this year. Pick another year or
 **All years**. Above the list is the total of what you see.
 
-The total per year is also on the year overview, under **Reports**.
+The total per year is also on the year overview, under **Reports**. It
+also shows what you may deduct with your own car, motorbike or bike: a fixed
+amount per business kilometre, € 0.25 in 2026 and € 0.23 in 2025. Huismus
+doesn't count it in your profit. See
+[Zakelijk gebruik privévervoermiddel](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijk-gebruik-privevervoermiddel)
+at the Belastingdienst (in Dutch).
 
 ## Changing or deleting
 

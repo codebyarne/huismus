@@ -14,6 +14,7 @@ from huismus.core.profile import profile
 from huismus.documents.models import Document
 from huismus.expenses.models import Expense
 from huismus.mileage.listing import year_mileage
+from huismus.mileage.trips import DEDUCTION_SOURCE
 
 from .icp import compute_icp
 from .icp_csv import header as icp_header
@@ -96,8 +97,10 @@ def year_overview(request):
             "credit_note_count": invoices.filter(kind="credit_note").count(),
             "expense_count": Expense.objects.filter(date__year=year).count(),
             "show_icp": profile().shows_icp,
-            # Kilometers (#125): no amount, only the distance and the trips.
+            # Kilometers (#125): the distance, the trips, and what you may
+            # deduct as information, never in the profit.
             "mileage": year_mileage(year),
+            "deduction_source": DEDUCTION_SOURCE,
         },
     )
 

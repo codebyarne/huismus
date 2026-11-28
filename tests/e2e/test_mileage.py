@@ -7,6 +7,8 @@ HTMX, change and delete, on a desktop and a phone."""
 from datetime import date
 from decimal import Decimal
 
+import re
+
 import pytest
 from django.utils import timezone
 from playwright.sync_api import expect
@@ -117,6 +119,12 @@ def test_the_year_overview_shows_the_years_mileage(app):
     card = app.locator("#kilometers")
     expect(card).to_contain_text("Zakelijke kilometers")
     expect(card).to_contain_text("178 km in 1 rit")
+    # What you may deduct, as information (owner 2026-11-28), with its source.
+    if last_year in (2024, 2025, 2026):
+        expect(card).to_contain_text("Huismus telt dit niet mee in je winst.")
+        expect(card.get_by_role("link", name="Bron: Belastingdienst")).to_have_attribute(
+            "href", re.compile("belastingdienst.nl")
+        )
     card.get_by_role("link", name="Bekijk de ritten").click()
     expect(app.locator(".hours-total")).to_contain_text("178 km")
 

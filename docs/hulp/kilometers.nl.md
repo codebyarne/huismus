@@ -1,9 +1,8 @@
 # Kilometers
 
 Met Kilometers houd je je zakelijke ritten bij: van waar naar waar, waarom,
-en hoeveel kilometer. Huismus telt ze op per maand en per jaar. Een
-vergoeding rekent Huismus niet uit. Zet Kilometers aan bij Instellingen ›
-Menu.
+en hoeveel kilometer. Huismus telt ze op per maand en per jaar. Zet
+Kilometers aan bij Instellingen › Menu.
 
 ## Een rit invullen
 
@@ -23,7 +22,12 @@ Je ritten staan per maand, de nieuwste bovenaan. Bij elke maand staat
 hoeveel kilometer het was. De lijst begint bij dit jaar. Kies een ander jaar
 of **Alle jaren**. Boven de lijst staat het totaal van wat je ziet.
 
-Het totaal per jaar staat ook in het jaaroverzicht, bij **Rapporten**.
+Het totaal per jaar staat ook in het jaaroverzicht, bij **Rapporten**. Daar
+zie je ook wat je met je eigen auto, motor of fiets mag aftrekken: een vast
+bedrag per zakelijke kilometer, € 0,25 in 2026 en € 0,23 in 2025. Huismus
+telt dat niet mee in je winst. Zie
+[Zakelijk gebruik privévervoermiddel](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijk-gebruik-privevervoermiddel)
+bij de Belastingdienst.
 
 ## Wijzigen of verwijderen
 

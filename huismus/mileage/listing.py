@@ -14,7 +14,7 @@ from django.db.models.functions import TruncMonth
 from django.utils import formats
 
 from .models import Trip
-from .trips import km_text
+from .trips import DEDUCTION_CENTS_PER_KM, deduction_cents, km_text
 
 
 @dataclass
@@ -63,6 +63,10 @@ def filter_total(everything) -> str:
 class YearMileage:
     km: str
     trips: int
+    # What you may deduct (mileage.trips.deduction_cents), or None without
+    # a source for the year.
+    rate_cents: int | None = None
+    deduction_cents: int | None = None
 
 
 def year_mileage(year: int) -> YearMileage | None:
@@ -73,4 +77,9 @@ def year_mileage(year: int) -> YearMileage | None:
     )
     if not totals["trips"]:
         return None
-    return YearMileage(km=km_text(totals["km"]), trips=totals["trips"])
+    return YearMileage(
+        km=km_text(totals["km"]),
+        trips=totals["trips"],
+        rate_cents=DEDUCTION_CENTS_PER_KM.get(year),
+        deduction_cents=deduction_cents(year, totals["km"]),
+    )

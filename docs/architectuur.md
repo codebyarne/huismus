@@ -156,7 +156,7 @@ tests):
 | `documents` | `core`, `business`, `contacts` |
 | `expenses` | `core`, `documents` |
 | `hours` | `core`, `business`, `contacts`, `documents` |
-| `mileage` | `core` |
+| `mileage` | `core`, `documents` (de afronding van een factuurregel, voor het bedrag per kilometer) |
 | `reports` | `core`, `business`, `documents`, `expenses`, `mileage` |
 | `imports` | `core`, `business`, `contacts`, `documents` |
 | `assistants` | `core`, `business`, `contacts`, `documents`, `expenses`, `reports` |
