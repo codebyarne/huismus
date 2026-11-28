@@ -4,10 +4,9 @@
 quick form (Van filled in, earlier places offered), filter on the year with
 HTMX, change and delete, on a desktop and a phone."""
 
+import re
 from datetime import date
 from decimal import Decimal
-
-import re
 
 import pytest
 from django.utils import timezone
