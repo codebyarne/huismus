@@ -37,7 +37,7 @@ def reply_address() -> forms.EmailField:
     (initial_email); nothing is remembered when the user changes it."""
     return forms.EmailField(
         label=_("E-mailadres"),
-        help_text=_("Hierop kan de appbouwer je antwoorden. Je adres komt niet op GitHub."),
+        help_text=_("Hierop kan de appbouwer je antwoorden."),
         max_length=feedback.MAX_EMAIL,
         error_messages={"required": _("Vul je e-mailadres in.")},
     )
