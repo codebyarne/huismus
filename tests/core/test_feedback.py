@@ -455,3 +455,10 @@ def test_on_hulp_the_card_skips_the_intro_the_help_text_already_gives(logged_in)
 def test_skipping_from_hulp_does_nothing(logged_in):
     logged_in.post(reverse("feedback"), {"plek": "hulp", "overslaan": ""})
     assert Settings.load().feedback_status == ""
+
+
+def test_the_address_help_says_only_that_the_maker_can_answer(logged_in):
+    # Owner, 2026-11-28: keep it simple, no line about GitHub under the address.
+    page = logged_in.get(reverse("onboarding_done")).content.decode()
+    assert "Hierop kan de appbouwer je antwoorden." in page
+    assert "Je adres komt niet op GitHub" not in page
