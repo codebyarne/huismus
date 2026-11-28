@@ -3548,10 +3548,9 @@ msgstr ""
 msgid "Een tarief kan niet negatief zijn."
 msgstr ""
 
-#, fuzzy, python-format
-#| msgid "open %(open)s"
+#, python-format
 msgid "Uren %(month)s"
-msgstr "open %(open)s"
+msgstr ""
 
 msgid "uur"
 msgstr ""
@@ -3585,10 +3584,8 @@ msgstr ""
 msgid "Een regel per omschrijving"
 msgstr ""
 
-#, fuzzy
-#| msgid "regelbedrag"
 msgid "Een regel per dag"
-msgstr "regelbedrag"
+msgstr ""
 
 msgid "de klanten"
 msgstr ""
@@ -7098,15 +7095,12 @@ msgstr ""
 msgid "Uren wijzigen"
 msgstr ""
 
-#, fuzzy, python-format
-#| msgid "Betaling geboekt op factuur %(number)s."
+#, python-format
 msgid "Deze uren staan op factuur %(number)s."
-msgstr "Betaling geboekt op factuur %(number)s."
+msgstr ""
 
-#, fuzzy
-#| msgid "Andere factuur"
 msgid "Open de factuur"
-msgstr "Andere factuur"
+msgstr ""
 
 msgid ""
 "Deze uren staan op een conceptfactuur. Verwijder het concept om ze te "
@@ -7125,18 +7119,14 @@ msgstr ""
 msgid "Factuur maken uit uren"
 msgstr ""
 
-#, fuzzy
-#| msgid "Bevestig of kies de factuur."
 msgid "Regels op de factuur"
-msgstr "Bevestig of kies de factuur."
+msgstr ""
 
 msgid "Tonen"
 msgstr ""
 
-#, fuzzy
-#| msgid "Andere factuur"
 msgid "Op de factuur"
-msgstr "Andere factuur"
+msgstr ""
 
 #, python-format
 msgid "Totaal: <strong>%(total)s</strong>"
