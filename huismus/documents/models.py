@@ -609,3 +609,25 @@ class RecurringInvoiceDocument(TimestampedModel):
                 fields=["series", "document"], name="documents_unique_recurring_link"
             )
         ]
+
+
+class Article(TimestampedModel):
+    """A line someone uses often (#167): picked in the editor, it becomes an
+    ordinary line with these values. A line keeps no link to its article,
+    so changing or deleting one never touches a document (invariant 1, 4).
+    The price is without VAT, like every line (huismus-intern/besluiten.md,
+    2026-11-28)."""
+
+    description = models.TextField(_("omschrijving"))
+    unit = models.CharField(_("eenheid"), max_length=20, blank=True)
+    unit_price_cents = models.BigIntegerField(_("prijs per eenheid (cent)"))
+    tax_rate_bp = models.PositiveIntegerField(_("btw-tarief (basispunten)"), default=2100)
+    reverse_charge = models.BooleanField(_("btw verlegd"), default=False)
+
+    class Meta:
+        verbose_name = _("artikel")
+        verbose_name_plural = _("artikelen")
+        ordering = ["description", "pk"]
+
+    def __str__(self):
+        return self.description[:50]
