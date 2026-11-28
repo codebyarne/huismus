@@ -239,13 +239,14 @@ def compute_vat_return(period: Period) -> VatReturn:
     sales = Document.objects.filter(kind__in=("invoice", "credit_note"))
     invoiced = Q(issue_date__gte=period.first_day, issue_date__lte=period.last_day)
     issued = _issued_in(period)
-    for row in rows_in_3b(period):
+    rows_3b = rows_in_3b(period)
+    for row in rows_3b:
         boxes["3b"].revenue_cents += row.revenue_cents
         boxes["3b"].tax_cents += row.tax_cents
 
-    # Whether the period has anything of its own: a document invoiced in
-    # it, or a 3b row delivered in it.
-    found_any = False
+    # Whether the period has anything of its own: a 3b row delivered in it,
+    # or a document invoiced in it.
+    found_any = bool(rows_3b)
     without_rows, other_rates, elsewhere, kor_documents = [], [], [], []
     for document in issued:
         sign = -1 if document.kind == "credit_note" else 1
@@ -274,8 +275,6 @@ def compute_vat_return(period: Period) -> VatReturn:
             code = sales_box(row.rate_bp, row.reverse_charge, country)
             if code == "3b":
                 # Added up by rows_in_3b() above, on its own date.
-                if _in(period, document.delivery_date or document.issue_date):
-                    found_any = True
                 continue
             # Every other row counts on the invoice date.
             if not invoiced_here:

@@ -9,7 +9,8 @@ from django.utils.translation import gettext as _
 
 from huismus.core.csv_files import Amount
 
-from .icp import IcpReport
+from .icp import IcpReport, customer_name
+from .vat_return import customer_country
 
 
 def header() -> list[str]:
@@ -28,8 +29,8 @@ def rows(report: IcpReport) -> list[list]:
             [
                 period,
                 _("btw-nummer ontbreekt"),
-                (document.contact_snapshot or {}).get("country", ""),
-                (document.contact_snapshot or {}).get("display_name", ""),
+                customer_country(document),
+                customer_name(document),
                 document.number,
                 Amount(item.amount_cents),
             ]
