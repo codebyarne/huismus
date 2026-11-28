@@ -3,6 +3,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from huismus.core.forms import HTML5DateInput
 
@@ -56,7 +57,8 @@ class TripForm(forms.ModelForm):
     (product-owner agent 2026-11-28)."""
 
     distance_km = DistanceField(
-        label=_("Kilometers"),
+        # Not the part's name: in English the part is "Mileage", this "Kilometres".
+        label=pgettext_lazy("trip field", "Kilometers"),
         help_text=_("Voor de hele rit, bijvoorbeeld 12,5."),
         error_messages={"required": _("Vul de kilometers in, bijvoorbeeld 12,5.")},
     )
