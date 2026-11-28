@@ -13,9 +13,11 @@
         <h1>{% translate "Facturen" %}</h1>
         <p class="lede">{% translate "Facturen en creditnota's. Een uitgegeven factuur staat vast. Corrigeren doe je met een creditnota." %}</p>
     </div>
-    {% if has_any %}<div class="actions">
+    {% comment %}Artikelen (#167): once there are invoices or articles, not in the empty state (product-owner agent, 2026-11-28).{% endcomment %}
+    {% if has_any or has_articles %}<div class="actions">
+        <a class="btn btn-ghost" href="{% url 'documents:article_list' %}">{% translate "Artikelen" %}</a>
         {% if has_recurring %}<a class="btn btn-secondary" href="{% url 'documents:recurring_list' %}"><svg class="i" aria-hidden="true"><use href="#refresh"></use></svg>{% translate "Periodiek" %}</a>{% endif %}
-        <a class="btn btn-primary" href="{% url 'documents:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuwe factuur" %}</a>
+        {% if has_any %}<a class="btn btn-primary" href="{% url 'documents:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuwe factuur" %}</a>{% endif %}
     </div>{% endif %}
 </div>
 

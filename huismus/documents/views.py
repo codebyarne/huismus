@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
+import json
 from urllib.parse import urlencode
 
 from django.contrib import messages
@@ -18,6 +19,7 @@ from huismus.contacts.models import Contact
 from huismus.core.sorting import chosen_sort, sort_headers, sorted_rows
 from huismus.core.templatetags.money import euros
 
+from .articles import add_article_line, line_values
 from .detail import contact_changed_since_issue, timeline_events
 from .drafts import (
     copy_document,
@@ -54,7 +56,7 @@ from .mailing import (
     default_recipients,
     send_document,
 )
-from .models import Document, RecurringInvoice
+from .models import Article, Document, RecurringInvoice
 from .payments import record_payment
 from .pdf import render_pdf
 from .preview import render_preview_pdf
@@ -146,6 +148,7 @@ def document_list(request):
             "years": years,
             "has_any": Document.objects.filter(kind__in=["invoice", "credit_note"]).exists(),
             "has_recurring": RecurringInvoice.objects.exists(),
+            "has_articles": Article.objects.exists(),
             "sort": sort_headers(
                 sort, INVOICE_SORT_KEYS, lambda value: list_url(sorteer=value), own_order="status"
             ),
@@ -282,7 +285,36 @@ def _editor_context(document, form, formset):
         "kor_crossed": kor_crossed,
         # A sent quote's history, mails included (SPEC.md M10).
         "timeline": timeline_events(document) if is_quote and document.number else None,
+        "articles": _article_choices(document, settings),
     }
+
+
+def _article_choices(document, settings):
+    """The articles the editor offers (#167), each with the line it makes
+    in this document (documents.articles), for the editor's JS to copy. A
+    credit note corrects an invoice: no articles there."""
+    if document.kind == "credit_note":
+        return []
+    return [
+        {"article": article, "line": json.dumps(line_values(article, document, settings))}
+        for article in Article.objects.all()
+    ]
+
+
+def _with_article(request, document):
+    """ "Artikel toevoegen" without JS: the editor again, unsaved, with one
+    more line made from the chosen article. None when no article was chosen,
+    so the button then saves like the others."""
+    if request.POST.get("actie") != "artikel" or document.kind == "credit_note":
+        return None
+    chosen = request.POST.get("artikel", "")
+    article = Article.objects.filter(pk=chosen).first() if chosen.isdigit() else None
+    if article is None:
+        return None
+    data = add_article_line(request.POST, article, document, Settings.load())
+    form = document_form(document, data)
+    formset = line_formset(document, data)
+    return render(request, "documents/edit.html", _editor_context(document, form, formset))
 
 
 def _edit_url(document):
@@ -317,6 +349,8 @@ def _new_document(request, kind):
     settings = Settings.load()
     document = Document(kind=kind, status="draft")
     if request.method == "POST":
+        if (response := _with_article(request, document)) is not None:
+            return response
         form = document_form(document, request.POST)
         formset = line_formset(document, request.POST)
         if form.is_valid() and formset.is_valid():
@@ -401,6 +435,8 @@ def document_edit(request, pk):
 
 def _edit_document(request, document):
     if request.method == "POST":
+        if (response := _with_article(request, document)) is not None:
+            return response
         form = document_form(document, request.POST)
         formset = line_formset(document, request.POST)
         if form.is_valid() and formset.is_valid():

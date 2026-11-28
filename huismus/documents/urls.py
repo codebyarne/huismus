@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 from django.urls import path
 
-from . import recurring_views, views
+from . import article_views, recurring_views, views
 
 app_name = "documents"
 
@@ -40,6 +40,10 @@ urlpatterns = [
     path("periodiek/", recurring_views.recurring_list, name="recurring_list"),
     path("periodiek/<int:pk>/", recurring_views.recurring_detail, name="recurring_detail"),
     path("periodiek/<int:pk>/stoppen/", recurring_views.recurring_stop, name="recurring_stop"),
+    # Articles (#167).
+    path("artikelen/", article_views.article_list, name="article_list"),
+    path("artikelen/<int:pk>/", article_views.article_edit, name="article_edit"),
+    path("artikelen/<int:pk>/verwijderen/", article_views.article_delete, name="article_delete"),
 ]
 
 # Quotes, mounted at offertes/ in huismus/config/urls.py under its own "quotes"

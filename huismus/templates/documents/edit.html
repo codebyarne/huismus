@@ -111,6 +111,19 @@
                 <template data-formset-empty="lines">{% include "documents/_line_form.html" with line_form=formset.empty_form cents=None %}</template>
                 <div class="row">
                     <button type="button" class="add-line" data-formset-add="lines"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Regel toevoegen" %}</button>
+                    {% if articles %}
+                    {% comment %}Artikelen (#167): picking one fills a new line with the values the
+                    server put in data-line (app.js copies them, computes nothing). Without JS
+                    the button below shows the editor again with that line added, unsaved.{% endcomment %}
+                    <div class="article-pick">
+                        <label class="sr-only" for="artikel">{% translate "Artikel toevoegen" %}</label>
+                        <select id="artikel" name="artikel" class="select input-sm" data-combobox="{% translate 'Artikel toevoegen' %}" data-article-picker="lines">
+                            <option value="">{% translate "Kies een artikel" %}</option>
+                            {% for choice in articles %}<option value="{{ choice.article.pk }}" data-line="{{ choice.line }}">{{ choice.article.description|truncatechars:60 }} · {{ choice.article.unit_price_cents|money_for:document }}</option>{% endfor %}
+                        </select>
+                        <noscript><button type="submit" class="btn btn-sm" name="actie" value="artikel" formnovalidate>{% translate "Toevoegen" %}</button></noscript>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
 
