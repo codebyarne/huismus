@@ -26,6 +26,7 @@ What's in it, so a screen always has something to show:
   some without one, a few on a customer that was archived since; every
   month before the last on an invoice made from them (#81), the last
   month partly on a draft;
+- business trips in four of the last five years (#125), one year without;
 - a logo, so the PDFs look like the user's own.
 
 huismus/core/demo_data.py is five documents and shows nothing about how
@@ -77,6 +78,7 @@ from huismus.expenses.lines import ExpenseLineInput, create_expense
 from huismus.expenses.models import ExpenseCategory, VatRate
 from huismus.hours import invoicing
 from huismus.hours.models import TimeEntry
+from huismus.mileage.models import Trip
 
 FIRST_YEAR = 2018
 LAST_YEAR = 2026
@@ -253,6 +255,7 @@ def _create(rng: random.Random, last_day: date) -> None:
     _expenses(rng, first_year, last_day)
     _hours(rng, contacts, last_day)
     _articles(LAST_YEAR - FIRST_YEAR)
+    _trips(rng, last_day)
 
 
 # -- The business and its customers ---------------------------------------
@@ -879,3 +882,42 @@ def _hours_invoiced(rng: random.Random, last_day: date) -> None:
     first = waiting.order_by("contact_id").first()
     if first is not None:
         invoicing.create_invoice(first.contact, last_month, invoicing.PER_DESCRIPTION)
+
+
+# -- Trips (#125) ----------------------------------------------------------
+
+HOME = "Utrecht"
+TRIPS = [
+    ("Amersfoort", "Workshop bij Studio Noordwind", "24.5"),
+    ("Zwolle", "Overleg met Ooievaar Advies", "89"),
+    ("Amsterdam", "Fotoshoot Zuiderlicht", "43.2"),
+    ("Hengelo", "Menukaart doorlopen", "142"),
+    ("Den Haag", "Beurs", "62.8"),
+    ("Rotterdam", "Drukker langs", "57"),
+]
+
+
+def _trips(rng: random.Random, last_day: date) -> None:
+    """Now and then a trip from home and back, in four of the last five
+    years; the year before last has none, so the list shows an empty
+    year."""
+    trips = []
+    for year in range(last_day.year - 4, last_day.year + 1):
+        if year == last_day.year - 1:
+            continue
+        day = date(year, 1, 2)
+        end = min(last_day, date(year, 12, 31))
+        while day <= end:
+            if day.weekday() < 5 and rng.random() < 0.3:
+                destination, purpose, km = rng.choice(TRIPS)
+                trips.append(
+                    Trip(
+                        date=day,
+                        origin=HOME,
+                        destination=destination,
+                        purpose=purpose,
+                        distance_km=Decimal(km) * 2,
+                    )
+                )
+            day += timedelta(days=1)
+    Trip.objects.bulk_create(trips)

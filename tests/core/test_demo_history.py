@@ -98,6 +98,13 @@ def test_history_shows_every_kind_of_thing_huismus_keeps():
     assert on_invoices.filter(invoice__status="draft").exists()
     assert hours.filter(invoice=None, rate_cents__isnull=False).exists()
 
+    from huismus.mileage.models import Trip
+
+    trips = Trip.objects.all()
+    assert trips.filter(date__year=LAST_YEAR).count() > 50  # more than one page of the list
+    assert not trips.filter(date__year=LAST_YEAR - 1).exists()  # a year without trips
+    assert trips.filter(date__year=LAST_YEAR - 2).exists()
+
     rates = set(ExpenseLine.objects.values_list("vat_rate", flat=True))
     assert {"21", "9", "reverse_eu", "reverse_non_eu"} <= rates
     assert ExpenseLine.objects.values("expense").annotate(n=Count("pk")).filter(n__gt=1).exists()

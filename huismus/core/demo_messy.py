@@ -25,6 +25,7 @@ from huismus.documents.quoting import send_quote
 from huismus.expenses.lines import ExpenseLineInput, create_expense
 from huismus.expenses.models import ExpenseCategory, VatRate
 from huismus.hours.models import TimeEntry
+from huismus.mileage.models import Trip
 
 from .demo_history import FIRST_YEAR, LAST_DAY, LAST_YEAR
 
@@ -84,6 +85,22 @@ def add_mess(last_day: date = LAST_DAY) -> None:
                 description=f"{LONG} {day + 1}",
             )
             for day in range(20)
+        )
+        # Trips at their extremes: the shortest and the longest, a place
+        # without spaces, and HTML in the purpose.
+        Trip.objects.create(
+            date=last_day - timedelta(days=2),
+            origin=NO_SPACES,
+            destination=LONG,
+            purpose=" ".join(LONG_TEXT.split()),
+            distance_km=Decimal("2000"),
+        )
+        Trip.objects.create(
+            date=last_day - timedelta(days=3),
+            origin=ACCENTS,
+            destination=NO_SPACES,
+            purpose=HTML,
+            distance_km=Decimal("0.1"),
         )
         # Over a million, never paid: the largest number on every screen.
         _invoice(no_spaces, date(first_year + 1, 6, 1), [(LONG_TEXT, None, 123_456_789, 2100)])
