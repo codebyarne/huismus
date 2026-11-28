@@ -12,9 +12,10 @@ MAX_HOURS = 24
 
 class TimeEntry(TimestampedModel):
     """Hours worked for a customer on a day (#80, SPEC.md section 4). Not a
-    document: it can be changed and deleted freely. The amount is never
-    stored (hours.entries.amount_cents); without a rate these are hours
-    you don't bill."""
+    document: it can be changed and deleted freely, until it is on an
+    invoice (#81, `locked`). The amount is never stored
+    (hours.entries.amount_cents); without a rate these are hours you don't
+    bill."""
 
     date = models.DateField(_("datum"))
     # PROTECT: a customer is archived, never deleted, and keeps his hours.
@@ -31,6 +32,18 @@ class TimeEntry(TimestampedModel):
     hours = models.DecimalField(_("uren"), max_digits=4, decimal_places=2)
     # Cents per hour, excluding VAT when you charge VAT. Empty: not billed.
     rate_cents = models.BigIntegerField(_("tarief per uur"), null=True, blank=True)
+    # The invoice these hours are on (#81, hours.invoicing): they go on no
+    # other one, and can't be changed while on it. SET_NULL: deleting a
+    # draft frees them again. An issued invoice is never deleted, and a
+    # credit note leaves them on the invoice (product-owner agent 2026-11-28).
+    invoice = models.ForeignKey(
+        "documents.Document",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="time_entries",
+        verbose_name=_("factuur"),
+    )
 
     class Meta:
         verbose_name = _("uren")
@@ -49,6 +62,13 @@ class TimeEntry(TimestampedModel):
 
     def __str__(self):
         return f"{self.date} {self.contact} {self.hours}"
+
+    @property
+    def locked(self) -> bool:
+        """On an invoice, draft or not: not to be changed or deleted, so
+        the invoice and Uren keep saying the same (product-owner agent
+        2026-11-28). Deleting the draft frees them."""
+        return self.invoice_id is not None
 
     @property
     def amount_cents(self) -> int | None:

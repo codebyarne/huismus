@@ -48,6 +48,8 @@ def clean_up_issued_documents_for_flush():
         # Recurring series point to their invoices (documents.recurring).
         cursor.execute("DELETE FROM documents_recurringinvoicedocument")
         cursor.execute("DELETE FROM documents_recurringinvoice")
+        # Hours point to the invoice they are on (hours.invoicing).
+        cursor.execute("UPDATE hours_timeentry SET invoice_id = NULL")
         cursor.execute("DELETE FROM documents_documentvatrow")
         cursor.execute("DELETE FROM documents_payment")
         cursor.execute("DELETE FROM core_attachment WHERE document_id IS NOT NULL")
