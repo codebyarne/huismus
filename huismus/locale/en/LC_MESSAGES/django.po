@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-28 15:41+0100\n"
+"POT-Creation-Date: 2026-11-28 16:54+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1895,22 +1895,14 @@ msgstr "none"
 msgid "Hoe je werkt"
 msgstr "How you work"
 
+msgid "Hierop kan de appbouwer je antwoorden."
+msgstr "The app's maker can reply to you here."
+
+msgid "Vul je e-mailadres in."
+msgstr "Enter your email address."
+
 msgid "Wat mis je, of wat wil je met Huismus doen?"
 msgstr "What are you missing, or what do you want to do with Huismus?"
-
-msgid ""
-"Komt als idee op GitHub, waar anderen het kunnen lezen. Je e-mailadres niet."
-msgstr ""
-"Goes on GitHub as an idea, where others can read it. Your email address "
-"doesn't."
-
-msgid "Alleen als de appbouwer je er iets over mag vragen."
-msgstr "Only if the app's maker may ask you about it."
-
-msgid ""
-"Laat je e-mailadres achter als de appbouwer je over je bericht mag mailen."
-msgstr ""
-"Leave your email address if the app's maker may email you about your message."
 
 msgid "Deze afbeelding kan niet mee. Maak hem opnieuw."
 msgstr "This picture can't be sent. Make it again."
@@ -2359,8 +2351,8 @@ msgid "Importeren uit andere pakketten en uit Excel"
 msgstr "Import from other bookkeeping apps and from Excel"
 
 msgid ""
-"Met het sjabloon, en een handleiding voor Rompslomp, Tellow, e-"
-"Boekhouden.nl, Jortt en Excel."
+"Met het sjabloon, en een handleiding voor Rompslomp, Tellow, e-Boekhouden."
+"nl, Jortt en Excel."
 msgstr ""
 "With the template, and a guide for Rompslomp, Tellow, e-Boekhouden.nl, Jortt "
 "and Excel."
@@ -2673,6 +2665,7 @@ msgstr "High rate"
 msgid "Laag tarief"
 msgstr "Low rate"
 
+#, python-format
 msgid "0% of niet bij jou belast"
 msgstr "0% or not taxed with you"
 
@@ -2721,6 +2714,7 @@ msgstr "Revenue 1a high rate"
 msgid "Omzet 1b laag tarief"
 msgstr "Revenue 1b low rate"
 
+#, python-format
 msgid "Omzet 1e 0% of niet bij jou belast"
 msgstr "Revenue 1e 0% or not taxed with you"
 
@@ -3408,6 +3402,7 @@ msgstr "Fill in the VAT amount. No VAT paid? Then fill in 0."
 msgid "Kies het btw-tarief."
 msgstr "Choose the VAT rate."
 
+#, python-format
 msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
 msgstr "With 0% or no VAT, the VAT amount is € 0.00."
 
@@ -3482,6 +3477,7 @@ msgstr "Saved. Huismus picks up new receipts from %(place)s by itself."
 msgid "Bonnetje verwijderd."
 msgstr "Receipt deleted."
 
+#, python-format
 msgid "0% of geen btw"
 msgstr "0% or no VAT"
 
@@ -4495,6 +4491,7 @@ msgstr "Supplies/services subject to the high VAT rate"
 msgid "Leveringen/diensten belast met laag tarief"
 msgstr "Supplies/services subject to the low VAT rate"
 
+#, python-format
 msgid "Leveringen/diensten belast met 0% of niet bij u belast"
 msgstr "Supplies/services taxed at 0% or not taxed to you"
 
@@ -5875,11 +5872,8 @@ msgstr "This goes to the app's maker"
 msgid "Wat wil je kwijt?"
 msgstr "What's on your mind?"
 
-msgid ""
-"Je bericht komt op GitHub, zonder je e-mailadres en zonder de afbeelding."
-msgstr ""
-"Your message goes on GitHub, without your email address and without the "
-"picture."
+msgid "Alleen de appbouwer leest het."
+msgstr "Only the app's maker reads it."
 
 msgid "Naar het overzicht"
 msgstr "To the overview"
@@ -5892,13 +5886,6 @@ msgid ""
 "grijs."
 msgstr ""
 "Only buttons, menus and field names can be read. Huismus turns the rest grey."
-
-msgid ""
-"Je bericht komt op GitHub, zodat anderen kunnen meelezen en meedenken. Je e-"
-"mailadres en de afbeelding blijven bij de appbouwer."
-msgstr ""
-"Your message goes on GitHub, so others can read along and think with you. "
-"Your email address and the picture stay with the app's maker."
 
 msgid "Wijs aan op het scherm"
 msgstr "Point at the screen"
@@ -7656,7 +7643,9 @@ msgstr "%(hours)s without a rate stay off the invoice."
 msgid ""
 "Op Uren is dit %(amount)s. Het verschil komt doordat de factuur de uren per "
 "regel optelt."
-msgstr "On Hours this is %(amount)s. The difference is because the invoice adds up the hours per line."
+msgstr ""
+"On Hours this is %(amount)s. The difference is because the invoice adds up "
+"the hours per line."
 
 msgid "Voeg eerst een klant toe."
 msgstr "Add a customer first."
@@ -10078,12 +10067,38 @@ msgstr "Who makes Huismus"
 
 msgid ""
 "Huismus wordt gemaakt in Nederland door Arne Krijnsen. Over de maker en wat "
-"die nog meer doet, lees je op <a href=\"https://"
-"www.arnekrijnsen.com\">arnekrijnsen.com</a>."
+"die nog meer doet, lees je op <a href=\"https://www.arnekrijnsen."
+"com\">arnekrijnsen.com</a>."
 msgstr ""
 "Huismus is made in the Netherlands by Arne Krijnsen. You can read about him "
-"and his other work on <a href=\"https://"
-"www.arnekrijnsen.com\">arnekrijnsen.com</a>."
+"and his other work on <a href=\"https://www.arnekrijnsen.com\">arnekrijnsen."
+"com</a>."
+
+#~ msgid ""
+#~ "Komt als idee op GitHub, waar anderen het kunnen lezen. Je e-mailadres "
+#~ "niet."
+#~ msgstr ""
+#~ "Goes on GitHub as an idea, where others can read it. Your email address "
+#~ "doesn't."
+
+#~ msgid ""
+#~ "Laat je e-mailadres achter als de appbouwer je over je bericht mag mailen."
+#~ msgstr ""
+#~ "Leave your email address if the app's maker may email you about your "
+#~ "message."
+
+#~ msgid ""
+#~ "Je bericht komt op GitHub, zonder je e-mailadres en zonder de afbeelding."
+#~ msgstr ""
+#~ "Your message goes on GitHub, without your email address and without the "
+#~ "picture."
+
+#~ msgid ""
+#~ "Je bericht komt op GitHub, zodat anderen kunnen meelezen en meedenken. Je "
+#~ "e-mailadres en de afbeelding blijven bij de appbouwer."
+#~ msgstr ""
+#~ "Your message goes on GitHub, so others can read along and think with you. "
+#~ "Your email address and the picture stay with the app's maker."
 
 #~ msgid "Eén keer goed, in plaats van duizend keer"
 #~ msgstr "Made well once, instead of a thousand times"

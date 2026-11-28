@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-28 15:41+0100\n"
+"POT-Creation-Date: 2026-11-28 16:54+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1815,18 +1815,13 @@ msgstr ""
 msgid "Hoe je werkt"
 msgstr ""
 
+msgid "Hierop kan de appbouwer je antwoorden."
+msgstr ""
+
+msgid "Vul je e-mailadres in."
+msgstr ""
+
 msgid "Wat mis je, of wat wil je met Huismus doen?"
-msgstr ""
-
-msgid ""
-"Komt als idee op GitHub, waar anderen het kunnen lezen. Je e-mailadres niet."
-msgstr ""
-
-msgid "Alleen als de appbouwer je er iets over mag vragen."
-msgstr ""
-
-msgid ""
-"Laat je e-mailadres achter als de appbouwer je over je bericht mag mailen."
 msgstr ""
 
 msgid "Deze afbeelding kan niet mee. Maak hem opnieuw."
@@ -2250,8 +2245,8 @@ msgid "Importeren uit andere pakketten en uit Excel"
 msgstr ""
 
 msgid ""
-"Met het sjabloon, en een handleiding voor Rompslomp, Tellow, e-"
-"Boekhouden.nl, Jortt en Excel."
+"Met het sjabloon, en een handleiding voor Rompslomp, Tellow, e-Boekhouden."
+"nl, Jortt en Excel."
 msgstr ""
 
 msgid "Auditfile voor je boekhouder"
@@ -2548,6 +2543,7 @@ msgstr ""
 msgid "Laag tarief"
 msgstr ""
 
+#, python-format
 msgid "0% of niet bij jou belast"
 msgstr ""
 
@@ -2596,6 +2592,7 @@ msgstr ""
 msgid "Omzet 1b laag tarief"
 msgstr ""
 
+#, python-format
 msgid "Omzet 1e 0% of niet bij jou belast"
 msgstr ""
 
@@ -3259,6 +3256,7 @@ msgstr ""
 msgid "Kies het btw-tarief."
 msgstr ""
 
+#, python-format
 msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
 msgstr ""
 
@@ -3332,6 +3330,7 @@ msgstr ""
 msgid "Bonnetje verwijderd."
 msgstr ""
 
+#, python-format
 msgid "0% of geen btw"
 msgstr ""
 
@@ -4226,6 +4225,7 @@ msgstr ""
 msgid "Leveringen/diensten belast met laag tarief"
 msgstr ""
 
+#, python-format
 msgid "Leveringen/diensten belast met 0% of niet bij u belast"
 msgstr ""
 
@@ -5500,8 +5500,7 @@ msgstr ""
 msgid "Wat wil je kwijt?"
 msgstr ""
 
-msgid ""
-"Je bericht komt op GitHub, zonder je e-mailadres en zonder de afbeelding."
+msgid "Alleen de appbouwer leest het."
 msgstr ""
 
 msgid "Naar het overzicht"
@@ -5513,11 +5512,6 @@ msgstr ""
 msgid ""
 "Alleen knoppen, menu's en veldnamen zijn leesbaar. De rest maakt Huismus "
 "grijs."
-msgstr ""
-
-msgid ""
-"Je bericht komt op GitHub, zodat anderen kunnen meelezen en meedenken. Je e-"
-"mailadres en de afbeelding blijven bij de appbouwer."
 msgstr ""
 
 msgid "Wijs aan op het scherm"
@@ -9188,8 +9182,8 @@ msgstr ""
 
 msgid ""
 "Huismus wordt gemaakt in Nederland door Arne Krijnsen. Over de maker en wat "
-"die nog meer doet, lees je op <a href=\"https://"
-"www.arnekrijnsen.com\">arnekrijnsen.com</a>."
+"die nog meer doet, lees je op <a href=\"https://www.arnekrijnsen."
+"com\">arnekrijnsen.com</a>."
 msgstr ""
 
 #~ msgid "bijschrijving"
