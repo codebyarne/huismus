@@ -7,12 +7,14 @@ agent 2026-11-28, huismus-intern/besluiten.md, "Kilometerregistratie
 anything up."""
 
 from dataclasses import dataclass, field
-from datetime import date
+from datetime import date, timedelta
 
 from django.db.models import Count, Sum
+from django.db.models.functions import TruncMonth
 from django.utils import formats
 
-from .trips import km_text, total_km
+from .models import Trip
+from .trips import km_text
 
 
 @dataclass
@@ -36,15 +38,21 @@ def months(shown, everything) -> list[Month]:
         start = trip.date.replace(day=1)
         by_month.setdefault(start, Month(start)).trips.append(trip)
     if by_month:
-        in_months: dict[date, list] = {start: [] for start in by_month}
-        rows = everything.filter(date__gte=min(by_month)).values_list("date", "distance_km")
-        for day, km in rows:
-            start = day.replace(day=1)
-            if start in in_months:
-                in_months[start].append(km)
-        for start, month in by_month.items():
-            month.total = km_text(total_km(in_months[start]))
+        totals = (
+            everything.filter(date__gte=min(by_month), date__lte=_last_day(max(by_month)))
+            .annotate(month=TruncMonth("date"))
+            .values("month")
+            .annotate(km=Sum("distance_km"))
+            .values_list("month", "km")
+        )
+        for start, km in totals:
+            if start in by_month:
+                by_month[start].total = km_text(km)
     return list(by_month.values())
+
+
+def _last_day(first: date) -> date:
+    return (first + timedelta(days=31)).replace(day=1) - timedelta(days=1)
 
 
 def filter_total(everything) -> str:
@@ -60,8 +68,6 @@ class YearMileage:
 def year_mileage(year: int) -> YearMileage | None:
     """The card Zakelijke kilometers on the year overview: the year's
     kilometres and trips, or None without trips that year."""
-    from .models import Trip
-
     totals = Trip.objects.filter(date__year=year).aggregate(
         km=Sum("distance_km"), trips=Count("pk")
     )

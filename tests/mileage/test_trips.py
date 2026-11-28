@@ -12,7 +12,13 @@ from django.utils import translation
 from hypothesis import given
 from hypothesis import strategies as st
 
-from huismus.mileage.trips import TooPrecise, UnclearDistance, km_text, parse_distance, total_km
+from huismus.mileage.trips import (
+    TooPrecise,
+    UnclearDistance,
+    distance_text,
+    km_text,
+    parse_distance,
+)
 
 
 @pytest.mark.parametrize(
@@ -69,6 +75,8 @@ def test_km_text(km, nl, en):
         assert km_text(km) == en
 
 
-def test_total_km_adds_up_without_rounding():
-    assert total_km([Decimal("0.1")] * 10) == Decimal("1.0")
-    assert total_km([]) == Decimal("0")
+def test_a_form_field_has_no_thousands_so_it_reads_back():
+    with translation.override("nl"):
+        assert distance_text(Decimal("1842.5"), grouping=False) == "1842,5"
+    with translation.override("en"):
+        assert parse_distance(distance_text(Decimal("1842.5"), grouping=False)) == Decimal("1842.5")

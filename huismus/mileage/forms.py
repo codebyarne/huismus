@@ -1,5 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
+from decimal import Decimal
+
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
@@ -8,7 +10,7 @@ from django.utils.translation import pgettext_lazy
 from huismus.core.forms import HTML5DateInput
 
 from .models import MAX_KM, Trip
-from .trips import TooPrecise, UnclearDistance, parse_distance
+from .trips import TooPrecise, UnclearDistance, distance_text, parse_distance
 
 # How many places the fields Van and Naar offer from earlier trips.
 PLACES_OFFERED = 30
@@ -23,11 +25,10 @@ class DistanceField(forms.CharField):
         super().__init__(**kwargs)
 
     def prepare_value(self, value):
-        # A stored Decimal ("12.0") in Dutch notation, without ",0": "12", "12,5".
-        if hasattr(value, "to_integral_value"):
-            if value == value.to_integral_value():
-                return str(int(value))
-            return format(value, "f").replace(".", ",")
+        # A stored distance ("12.0") as the list shows it: "12", "12,5". What
+        # was typed (a str, after an error) stays as it was.
+        if isinstance(value, Decimal):
+            return distance_text(value, grouping=False)
         return value
 
     def to_python(self, value):
@@ -99,7 +100,8 @@ def earlier_places() -> list[str]:
     at most PLACES_OFFERED: what the fields offer (a datalist; without JS a
     plain text field)."""
     places: dict[str, None] = {}
-    for origin, destination in Trip.objects.values_list("origin", "destination")[:200]:
+    newest_first = Trip.objects.order_by("-date", "-id").values_list("origin", "destination")
+    for origin, destination in newest_first[:200]:
         for place in (origin, destination):
             places.setdefault(place, None)
             if len(places) == PLACES_OFFERED:

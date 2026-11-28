@@ -46,7 +46,7 @@ from .csv_parse import (
     parse_invoices,
     parse_quotes,
 )
-from .csv_tables import CsvKind, Table, is_hours_csv, is_mileage_csv, read_table
+from .csv_tables import CsvKind, Table, is_hours_csv, is_mileage_csv, is_unread_csv, read_table
 from .expenses import RECEIPT_SUFFIXES
 from .models import ImportRun
 from .sources import Export, ImportSourceError, files_in_upload
@@ -163,9 +163,7 @@ def _keep_other_files(export: Export, tables: dict[CsvKind, Table], parsed: Pars
             continue
         if AUDITFILE_NAME.fullmatch(path.name):
             continue
-        if path.suffix.lower() == ".csv" and (
-            is_hours_csv(path.name, content) or is_mileage_csv(path.name, content)
-        ):
+        if path.suffix.lower() == ".csv" and is_unread_csv(path.name, content):
             continue
         if path.suffix.lower() == ".pdf" and folder in _pdf_kinds():
             parsed.pdfs[(_pdf_kinds()[folder], path.stem)] = content
