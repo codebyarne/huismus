@@ -23,10 +23,12 @@ import pytest
 from huismus.business.models import Settings
 from huismus.contacts.models import Contact
 from huismus.core import help
+from huismus.core.demo_history import LAST_YEAR
 from huismus.core.models import Attachment
 from huismus.documents.models import Article, Document, RecurringInvoice
 from huismus.expenses.models import Expense, ExpenseCategory
 from huismus.hours.models import TimeEntry
+from huismus.mileage.models import Trip
 
 pytestmark = pytest.mark.django_db(transaction=True)
 
@@ -153,6 +155,14 @@ def _pages():
         + str(_first(TimeEntry.objects.filter(rate_cents=8750), "a month of hours").contact_id),
         f"/uren/{_first(TimeEntry.objects.filter(invoice__status='issued'), 'invoiced').pk}/",
         f"/uren/{_first(TimeEntry.objects.filter(invoice__status='draft'), 'on a draft').pk}/",
+        # Kilometers (#125): this year, every year ("Meer laden"), the year
+        # without trips, and the trips at their extremes (demo_messy); the
+        # flow: tests/e2e/test_mileage.py.
+        "/kilometers/",
+        "/kilometers/?jaar=alle",
+        f"/kilometers/?jaar={LAST_YEAR - 1}",
+        f"/kilometers/{_first(Trip.objects.filter(distance_km=2000), 'the longest trip').pk}/",
+        f"/kilometers/{_first(Trip.objects.filter(distance_km__lt=1), 'a short trip').pk}/",
         "/rapporten/jaaroverzicht/",
         # The VAT return (SPEC.md M21, part 4): a year of the history, with
         # imports and lines without a rate under "Niet meegeteld".
