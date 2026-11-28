@@ -20,8 +20,7 @@
             <thead>
                 <tr>
                     <th>{% translate "Omschrijving" %}</th>
-                    <th>{% if settings.no_vat %}{% translate "Eenheid" %}{% else %}{% translate "Eenheid en btw" %}{% endif %}</th>
-                    <th class="r">{% if settings.no_vat %}{% translate "Prijs" %}{% else %}{% translate "Prijs zonder btw" %}{% endif %}</th>
+                    <th>{% if settings.no_vat %}{% translate "Prijs" %}{% else %}{% translate "Prijs zonder btw" %}{% endif %}</th>
                     <th class="r"><span class="sr-only">{% translate "Acties" %}</span></th>
                 </tr>
             </thead>
@@ -29,8 +28,9 @@
                 {% for article in articles %}
                 <tr{% if article.pk == editing_pk %} class="is-editing"{% endif %}>
                     <td data-cell="primary">{{ article.description }}</td>
-                    <td data-cell="secondary">{% if article.unit %}{% blocktranslate with unit=article.unit %}per {{ unit }}{% endblocktranslate %}{% endif %}{% if not settings.no_vat %}{% if article.unit %} · {% endif %}{{ article|line_vat }}{% endif %}</td>
-                    <td data-cell="amount" class="r num">€ {{ article.unit_price_cents|money }}</td>
+                    {% comment %}Price, unit and VAT in one cell: stacked on a phone it is the row's
+                    second line, and the actions keep the right-hand side to themselves.{% endcomment %}
+                    <td data-cell="secondary"><span class="num">{{ article.unit_price_cents|money }}</span>{% if article.unit %} {% blocktranslate with unit=article.unit %}per {{ unit }}{% endblocktranslate %}{% endif %}{% if not settings.no_vat %} · {% if article.reverse_charge %}{% translate "btw verlegd" %}{% else %}{% blocktranslate with rate=article.tax_rate_bp|tax_percent %}{{ rate }} btw{% endblocktranslate %}{% endif %}{% endif %}</td>
                     <td data-cell="action" class="r w-min">
                         <div class="row" style="gap:4px;flex-wrap:nowrap">
                             <a class="btn btn-ghost btn-sm" href="?bewerk={{ article.pk }}#artikel-formulier"><svg class="i i-sm" aria-hidden="true"><use href="#edit"></use></svg>{% translate "Bewerken" %}</a>

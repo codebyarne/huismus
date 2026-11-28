@@ -59,3 +59,22 @@ def test_on_a_phone_the_picker_sits_under_regel_toevoegen(app, contact):
     picker = app.locator(".article-pick").bounding_box()
     assert picker["y"] > add["y"]
     assert picker["x"] + picker["width"] <= 390
+
+
+def test_on_a_phone_a_row_of_artikelen_keeps_price_and_buttons_apart(app):
+    """A short description left the price on the buttons' side of the row,
+    over Bewerken (BUGS-BY-HAND.md, 2026-11-28)."""
+    Article.objects.create(description="Advies", unit="uur", unit_price_cents=8500)
+    app.set_viewport_size({"width": 390, "height": 844})
+    app.goto(app.base + "/facturen/artikelen/")
+    row = app.locator("tbody tr").first
+    actions = row.locator("td[data-cell=action]").bounding_box()
+    for cell in row.locator("td:not([data-cell=action])").all():
+        box = cell.bounding_box()
+        if box is None or not box["width"]:
+            continue  # not shown on a phone
+        apart = (
+            box["x"] + box["width"] <= actions["x"] or box["y"] >= actions["y"] + actions["height"]
+        )
+        assert apart, f"{cell.inner_text()!r} lies over the buttons"
+    expect(row).to_contain_text("€ 85,00 per uur · 21% btw")
