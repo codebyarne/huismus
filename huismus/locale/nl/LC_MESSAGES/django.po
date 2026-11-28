@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-28 20:32+0100\n"
+"POT-Creation-Date: 2026-11-28 21:03+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -656,6 +656,9 @@ msgstr ""
 msgid "Je hebt uitgaven of bonnetjes, dus Uitgaven blijft in het menu."
 msgstr ""
 
+msgid "Je hebt ritten ingevuld, dus Kilometers blijft in het menu."
+msgstr ""
+
 msgid "Je hebt een bankafschrift ingelezen, dus Bank blijft in het menu."
 msgstr ""
 
@@ -723,6 +726,9 @@ msgid "Met je bonnetjes en categorieën."
 msgstr ""
 
 msgid "Je uren per klant, met je tarief."
+msgstr ""
+
+msgid "Je zakelijke ritten, met een totaal per jaar."
 msgstr ""
 
 #, python-format
@@ -920,6 +926,9 @@ msgid "Bank"
 msgstr ""
 
 msgid "Uren"
+msgstr ""
+
+msgid "Kilometers"
 msgstr ""
 
 msgid "instellingen"
@@ -1581,6 +1590,10 @@ msgctxt "export file"
 msgid "uren"
 msgstr ""
 
+msgctxt "export file"
+msgid "kilometers"
+msgstr ""
+
 msgctxt "export folder"
 msgid "bonnetjes"
 msgstr ""
@@ -1714,6 +1727,18 @@ msgid "tarief per uur"
 msgstr ""
 
 msgid "bedrag"
+msgstr ""
+
+msgid "van"
+msgstr ""
+
+msgid "naar"
+msgstr ""
+
+msgid "doel"
+msgstr ""
+
+msgid "kilometers"
 msgstr ""
 
 msgid "Eenmanszaak of vof met KOR"
@@ -2154,9 +2179,6 @@ msgid "Categorieën"
 msgstr ""
 
 msgid "Je deelt je kosten in zoals jij dat wilt."
-msgstr ""
-
-msgid "Kilometers"
 msgstr ""
 
 msgid "Je ritten bij je administratie."
@@ -3751,6 +3773,10 @@ msgid "Je uren (%(file)s) neemt Huismus nog niet mee. Ze blijven in je export."
 msgstr ""
 
 #, python-format
+msgid "%(file)s: je ritten neemt Huismus nog niet mee."
+msgstr ""
+
+#, python-format
 msgid ""
 "In %(export)s staan twee bestanden met dezelfde soort gegevens (%(first)s en "
 "%(second)s). Zip elke export apart, of importeer ze één voor één."
@@ -4207,6 +4233,58 @@ msgstr[1] ""
 msgid "Import geannuleerd. Er is niets opgeslagen."
 msgstr ""
 
+msgid "Hoogstens één cijfer achter de komma."
+msgstr ""
+
+msgid "Vul de kilometers in, bijvoorbeeld 12,5."
+msgstr ""
+
+msgid "Vul meer dan 0 km in."
+msgstr ""
+
+msgid "Eén rit kan hoogstens 2.000 km zijn."
+msgstr ""
+
+msgctxt "trip field"
+msgid "Kilometers"
+msgstr ""
+
+msgid "Voor de hele rit, bijvoorbeeld 12,5."
+msgstr ""
+
+msgid "Van"
+msgstr ""
+
+msgid "Naar"
+msgstr ""
+
+msgid "Doel"
+msgstr ""
+
+msgid "Vul in waar de rit begon."
+msgstr ""
+
+msgid "Vul in waar de rit naartoe ging."
+msgstr ""
+
+msgid "Vul het doel van de rit in."
+msgstr ""
+
+msgid "rit"
+msgstr ""
+
+msgid "ritten"
+msgstr ""
+
+msgid "Rit toegevoegd."
+msgstr ""
+
+msgid "Rit opgeslagen."
+msgstr ""
+
+msgid "Rit verwijderd."
+msgstr ""
+
 msgid "periode"
 msgstr ""
 
@@ -4614,6 +4692,9 @@ msgid "Nieuw"
 msgstr ""
 
 msgid "Meer"
+msgstr ""
+
+msgid "Rit"
 msgstr ""
 
 msgid ""
@@ -7686,6 +7767,22 @@ msgstr ""
 msgid "De bonnetjes komen bij je uitgaven."
 msgstr ""
 
+msgid "Rit wijzigen"
+msgstr ""
+
+msgid "Deze rit verwijderen?"
+msgstr ""
+
+msgid "Km"
+msgstr ""
+
+msgid "Nog geen ritten"
+msgstr ""
+
+#, python-format
+msgid "Geen ritten in %(year)s"
+msgstr ""
+
 msgid "VOORBEELD"
 msgstr ""
 
@@ -7923,6 +8020,27 @@ msgid "Kosten per categorie"
 msgstr ""
 
 msgid "Je hebt dit jaar geen uitgaven."
+msgstr ""
+
+msgid "Zakelijke kilometers"
+msgstr ""
+
+#, python-format
+msgid "%(km)s in %(trips)s rit"
+msgid_plural "%(km)s in %(trips)s ritten"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Bekijk de ritten"
+msgstr ""
+
+#, python-format
+msgid ""
+"Met je eigen auto, motor of fiets mag je %(rate)s per kilometer van je winst "
+"aftrekken: %(amount)s. Huismus telt dit niet mee in je winst."
+msgstr ""
+
+msgid "Bron: Belastingdienst"
 msgstr ""
 
 #, python-format
