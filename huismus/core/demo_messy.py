@@ -72,6 +72,19 @@ def add_mess(last_day: date = LAST_DAY) -> None:
             rate_cents=1,
             description=LONG_TEXT,
         )
+        # A month of hours for one invoice (#81): twenty days, each with a
+        # long description, so "Een regel per dag" makes twenty long lines.
+        month = (last_day.replace(day=1) - timedelta(days=1)).replace(day=1)
+        TimeEntry.objects.bulk_create(
+            TimeEntry(
+                date=month + timedelta(days=day),
+                contact=long,
+                hours=Decimal("7.5"),
+                rate_cents=8750,
+                description=f"{LONG} {day + 1}",
+            )
+            for day in range(20)
+        )
         # Over a million, never paid: the largest number on every screen.
         _invoice(no_spaces, date(first_year + 1, 6, 1), [(LONG_TEXT, None, 123_456_789, 2100)])
         # One cent, paid.

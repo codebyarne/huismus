@@ -23,8 +23,10 @@ def test_history_is_the_size_of_a_real_administration():
 def test_the_draft_shows_its_total_like_one_made_in_the_editor():
     create_history()
 
-    draft = Document.objects.get(kind="invoice", status="draft")
-    assert draft.total_cents > 0
+    drafts = Document.objects.filter(kind="invoice", status="draft")
+    # The draft from the editor, and the one from last month's hours (#81).
+    assert drafts.count() == 2
+    assert all(draft.total_cents > 0 for draft in drafts)
 
 
 def test_history_shows_every_kind_of_thing_huismus_keeps():
@@ -89,6 +91,12 @@ def test_history_shows_every_kind_of_thing_huismus_keeps():
     assert hours.filter(rate_cents=None).exists()
     assert hours.filter(contact__archived=True).exists()
     assert hours.filter(date__month=9, date__year=LAST_YEAR).exists()
+    # Invoices from the hours (#81): issued and paid, one still a draft, and
+    # this month's hours still free.
+    on_invoices = hours.exclude(invoice=None)
+    assert on_invoices.filter(invoice__status="issued", invoice__payments__isnull=False).exists()
+    assert on_invoices.filter(invoice__status="draft").exists()
+    assert hours.filter(invoice=None, rate_cents__isnull=False).exists()
 
     rates = set(ExpenseLine.objects.values_list("vat_rate", flat=True))
     assert {"21", "9", "reverse_eu", "reverse_non_eu"} <= rates
