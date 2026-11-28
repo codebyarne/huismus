@@ -123,29 +123,39 @@ def test_add_article_line_leaves_the_posted_data_alone():
     assert data["lines-TOTAL_FORMS"] == "0"
 
 
-def test_changing_or_deleting_an_article_leaves_an_issued_line_alone():
+@pytest.mark.parametrize("kor", [False, True])
+def test_changing_or_deleting_an_article_leaves_an_issued_invoice_alone(logged_in, kor):
+    """The line comes from the article through the editor (without JS), the
+    invoice is issued, then the article changes and goes: the line and the
+    PDF stay as they were."""
     from huismus.documents.issuing import issue
+    from huismus.documents.pdf import render_pdf
     from tests.documents.test_issuing import _draft_invoice, _settings
+    from tests.documents.test_pdf import _pdf_text
 
-    _settings(kor_enabled=False)
-    article = _article()
+    _settings(kor_enabled=kor, kor_text="Vrijgesteld van btw (KOR).")
+    article = _article(tax_rate_bp=900)
     invoice = _draft_invoice()
-    values = line_values(article, invoice, Settings.load())
-    DocumentLine.objects.create(
-        document=invoice,
-        description=values["description"],
-        quantity=1,
-        unit=values["unit"],
-        unit_price_cents=article.unit_price_cents,
-        tax_rate_bp=2100,
-    )
+    data = _posted_editor()
+    data.update({"issue_date": "", "due_date": "", "delivery_date": "", "reference": ""})
+    data.update({"attention": "", "intro_text": "", "footer_text": "", "notes": ""})
+    data["contact"] = str(invoice.contact_id)
+    data = add_article_line(data, article, invoice, Settings.load())
+    logged_in.post(reverse("documents:edit", args=[invoice.pk]), data)
+    line = invoice.lines.get()
+    assert line.tax_rate_bp == (0 if kor else 900)
     issue(invoice)
+    before = _pdf_text(render_pdf(invoice))
+    assert "Workshop" in before
+
     article.description = "Iets anders"
     article.unit_price_cents = 1
     article.save()
     article.delete()
-    line = DocumentLine.objects.get(document=invoice)
+    invoice.refresh_from_db()
+    line = invoice.lines.get()
     assert (line.description, line.unit_price_cents) == ("Workshop", 95000)
+    assert _pdf_text(render_pdf(invoice)) == before
 
 
 # The page Artikelen and the picker in the editor.
