@@ -21,13 +21,13 @@ def test_choose_no_vat_for_another_reason_fill_in_the_text_and_issue(app, contac
 
     expect(app.locator("h1")).to_have_text("Btw")
     # "Ja" is chosen: only the card for btw verlegd shows.
-    expect(app.locator('[data-group="btw-ja"]')).to_be_visible()
+    expect(app.locator('[data-group="btw-ja"]').first).to_be_visible()
     expect(app.locator('[data-group="btw-kor"]')).to_be_hidden()
     expect(app.locator('[data-group="btw-anders"]')).to_be_hidden()
 
     app.get_by_label("Nee, om een andere reden").check()
     expect(app.locator('[data-group="btw-anders"]')).to_be_visible()
-    expect(app.locator('[data-group="btw-ja"]')).to_be_hidden()
+    expect(app.locator('[data-group="btw-ja"]').first).to_be_hidden()
     expect(app.locator("main")).to_contain_text("zoals sommige zorg of onderwijs")
     # With the keyboard: on a short page the Feedback button covers Opslaan
     # (issue #280, not of this page).

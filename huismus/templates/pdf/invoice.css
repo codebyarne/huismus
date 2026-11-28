@@ -52,6 +52,9 @@
 .pdf .lines .tax { padding-right: 1.4mm; }
 /* "verlegd" / "reverse charge" (M18) may wrap within the narrow VAT column. */
 .pdf .lines td.tax { white-space: normal; }
+/* A head may take two lines ("Bedrag incl. btw", #362), at the bottom. */
+.pdf .lines th { vertical-align: bottom; }
+.pdf .lines th.r { white-space: normal; }
 
 /* Totalen onder Bedrag en Totaal; een lijn boven het eindtotaal. */
 .pdf .totals td { padding-top: 1mm; padding-bottom: 1mm; }

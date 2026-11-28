@@ -64,7 +64,7 @@ the document's own footer text and the KOR text, as one paragraph.{% endcomment 
 heading, as in Moneybird; empty for a line that counts once.{% endcomment %}
 <table class="lines{% if lines|has_quantities %} with-quantities{% endif %}">
     <colgroup><col class="qty"><col><col class="price"><col class="total"><col class="tax"></colgroup>
-    <thead><tr><th class="qty"></th><th class="desc">{% translate "Omschrijving" %}</th><th class="r price">{% translate "Bedrag" %}</th><th class="r total">{% translate "Totaal" %}</th><th class="r tax">{% translate "Btw" %}</th></tr></thead>
+    <thead><tr><th class="qty"></th><th class="desc">{% translate "Omschrijving" %}</th><th class="r price">{% if document.prices_include_vat %}{% translate "Bedrag incl. btw" %}{% else %}{% translate "Bedrag" %}{% endif %}</th><th class="r total">{% if document.prices_include_vat %}{% translate "Totaal incl. btw" %}{% else %}{% translate "Totaal" %}{% endif %}</th><th class="r tax">{% translate "Btw" %}</th></tr></thead>
     <tbody class="items">
         {% for line in lines %}
         <tr>

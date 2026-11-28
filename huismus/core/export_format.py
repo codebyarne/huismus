@@ -77,6 +77,9 @@ INVOICE_COLUMNS_AFTER_RATES = (
     Column("outstanding", gettext_noop("openstaand")),
     Column("paid_on", gettext_noop("laatst betaald op")),
     Column("source", gettext_noop("bron")),
+    # The line prices include VAT (#362): "prijs per eenheid" and
+    # "regelbedrag" in the lines file are then amounts including VAT.
+    Column("prices_include_vat", gettext_noop("prijzen incl. btw")),
 )
 RATE_REVENUE = gettext_noop("omzet %(rate)s%%")
 RATE_TAX = gettext_noop("btw %(rate)s%%")
@@ -95,6 +98,7 @@ QUOTE_COLUMNS = (
     Column("tax", gettext_noop("btw"), required=True),
     Column("total", gettext_noop("totaal incl. btw"), required=True),
     Column("invoice", gettext_noop("factuur")),
+    Column("prices_include_vat", gettext_noop("prijzen incl. btw")),
 )
 
 LINE_COLUMNS = (
@@ -107,7 +111,9 @@ LINE_COLUMNS = (
     Column("unit_price", gettext_noop("prijs per eenheid"), required=True),
     Column("tax_rate", gettext_noop("btw-tarief (%)"), required=True),
     Column("reverse_charge", gettext_noop("btw verlegd")),
-    Column("line_total", gettext_noop("bedrag excl. btw")),
+    # Without VAT, or with when the document's prices include VAT (#362).
+    # Called "bedrag excl. btw" before #362; files with that name still read.
+    Column("line_total", gettext_noop("regelbedrag"), also=(gettext_noop("bedrag excl. btw"),)),
 )
 
 CONTACT_COLUMNS = (

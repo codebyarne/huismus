@@ -184,9 +184,10 @@ def test_query_count_does_not_grow_with_the_number_of_invoices(
 ):
     for number in range(10):
         _invoice(f"Klant {number}", paid=5000)
-    # 8, plus two that never grow (#82): is a recurring draft due, and is
-    # there a series for the button Periodiek.
-    with django_assert_max_num_queries(10):
+    # 8, plus three that never grow: is a recurring draft due, and is
+    # there a series for the button Periodiek (#82); and are there hours,
+    # for Uren in the menu while it is switched off (#80).
+    with django_assert_max_num_queries(11):
         _get(client_in)
 
 

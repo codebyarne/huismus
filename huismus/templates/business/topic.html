@@ -88,6 +88,15 @@
                 {% field form.reverse_charge_text label=reverse_label help=reverse_help optional=True %}
             </div>
         </section>
+        <section class="card settings-section" data-group="btw-ja">
+            <div class="card-head"><h2>{% translate "Prijzen" %}</h2></div>
+            <div class="card-pad">
+                <div class="field">
+                    <label class="switch"><input type="checkbox" name="prices_include_vat" role="switch" aria-describedby="prijzen-incl-hulp"{% if form.prices_include_vat.value %} checked{% endif %}>{% translate "Prijzen standaard inclusief btw" %}</label>
+                    <p class="help" id="prijzen-incl-hulp">{% translate "Voor nieuwe facturen en offertes. Per factuur kun je het nog veranderen." %}</p>
+                </div>
+            </div>
+        </section>
         {% elif topic.slug == "facturen" %}
         <section class="card settings-section">
             <div class="card-pad"><div class="fieldset">

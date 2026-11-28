@@ -20,7 +20,7 @@ from django.db import transaction
 
 from huismus.contacts.models import Contact
 from huismus.documents.issuing import issue
-from huismus.documents.models import Document, DocumentLine, Payment
+from huismus.documents.models import Article, Document, DocumentLine, Payment
 from huismus.documents.quoting import send_quote
 from huismus.expenses.lines import ExpenseLineInput, create_expense
 from huismus.expenses.models import ExpenseCategory, VatRate
@@ -97,6 +97,11 @@ def add_mess(last_day: date = LAST_DAY) -> None:
             document=quote, description=LONG_TEXT, quantity=1, unit_price_cents=4_999_900
         )
         send_quote(quote)
+
+        # Articles (#167): a long one, one without spaces, HTML, and a million.
+        Article.objects.create(description=LONG_TEXT, unit="dagdeel", unit_price_cents=4_999_900)
+        Article.objects.create(description=NO_SPACES, unit_price_cents=1)
+        Article.objects.create(description=HTML, unit="<b>", unit_price_cents=123_456_789)
 
         category = ExpenseCategory.objects.create(
             name="Representatie, relatiegeschenken en zakelijke etentjes met klanten",

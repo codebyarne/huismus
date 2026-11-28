@@ -8,6 +8,12 @@ document per tax-rate group, not per line (matches Dutch practice and
 Moneybird's own behaviour), then summed. Every code path that needs a document
 total — the draft-editing UI, PDF rendering, Moneybird import validation — must call this, never
 recompute it inline.
+
+With prices including VAT (Document.prices_include_vat, #362) the prices
+as typed include the VAT: total = Σ line totals, and the tax of each rate
+group is taken out of the group, group × rate / (100% + rate), rounded
+half-up to the cent. The subtotal is total − tax. So the total is exactly
+what the user typed, and each group's revenue + VAT is that group.
 """
 
 from dataclasses import dataclass
@@ -50,10 +56,28 @@ def line_total_cents(quantity: Decimal | None, unit_price_cents: int) -> int:
     return round_half_up_cents(Decimal(quantity) * Decimal(unit_price_cents))
 
 
-def compute_totals(lines) -> Totals:
+def price_including_vat_cents(price_cents: int, rate_bp: int) -> int:
+    """A price without VAT as a price including it, rounded half-up to the
+    cent: an article (#167), always stored without VAT, picked in a document
+    whose prices include VAT."""
+    return round_half_up_cents(Decimal(price_cents) * Decimal(10000 + rate_bp) / Decimal(10000))
+
+
+def _group_tax_cents(group_cents: int, rate_bp: int, prices_include_vat: bool) -> int:
+    """The VAT of one rate group: over the group, or out of it when its
+    prices include VAT."""
+    if prices_include_vat:
+        return round_half_up_cents(Decimal(group_cents) * rate_bp / Decimal(10000 + rate_bp))
+    return round_half_up_cents(Decimal(group_cents) * Decimal(rate_bp) / Decimal(10000))
+
+
+def compute_totals(lines, *, prices_include_vat: bool = False) -> Totals:
     """`lines`: any iterable of objects with .quantity (Decimal),
     .unit_price_cents (int) and .tax_rate_bp (int) — DocumentLine instances
-    or LineInput for tests/previews of not-yet-saved lines."""
+    or LineInput for tests/previews of not-yet-saved lines.
+    `prices_include_vat`: the document's Document.prices_include_vat. The
+    line totals are then amounts including VAT, and subtotal_per_rate is
+    each group without its VAT."""
     line_totals = []
     subtotal_by_rate: dict[int, int] = {}
     for line in lines:
@@ -61,19 +85,27 @@ def compute_totals(lines) -> Totals:
         line_totals.append(cents)
         subtotal_by_rate[line.tax_rate_bp] = subtotal_by_rate.get(line.tax_rate_bp, 0) + cents
 
-    subtotal_cents = sum(line_totals)
+    groups = sorted(subtotal_by_rate.items())
     tax_per_rate = [
-        (rate_bp, round_half_up_cents(Decimal(group_subtotal) * Decimal(rate_bp) / Decimal(10000)))
-        for rate_bp, group_subtotal in sorted(subtotal_by_rate.items())
+        (rate_bp, _group_tax_cents(group_cents, rate_bp, prices_include_vat))
+        for rate_bp, group_cents in groups
     ]
     tax_cents = sum(cents for _rate_bp, cents in tax_per_rate)
+    if prices_include_vat:
+        subtotal_per_rate = [
+            (rate_bp, group_cents - tax)
+            for (rate_bp, group_cents), (_rate_bp, tax) in zip(groups, tax_per_rate, strict=True)
+        ]
+    else:
+        subtotal_per_rate = groups
+    subtotal_cents = sum(cents for _rate_bp, cents in subtotal_per_rate)
     return Totals(
         line_totals_cents=line_totals,
         subtotal_cents=subtotal_cents,
         tax_cents=tax_cents,
         total_cents=subtotal_cents + tax_cents,
         tax_per_rate=tax_per_rate,
-        subtotal_per_rate=sorted(subtotal_by_rate.items()),
+        subtotal_per_rate=subtotal_per_rate,
     )
 
 
@@ -83,7 +115,7 @@ def tax_rows(document, lines) -> list[tuple[int | None, int]]:
     own totals, which can differ from that (a discount, a rounding cent;
     see imports.commit). Then the rows wouldn't add up to the total shown,
     so there is one row without a rate (None) with the stored VAT."""
-    per_rate = compute_totals(lines).tax_per_rate
+    per_rate = compute_totals(lines, prices_include_vat=document.prices_include_vat).tax_per_rate
     if sum(cents for _rate_bp, cents in per_rate) != document.tax_cents:
         return [(None, document.tax_cents)]
     return per_rate
@@ -101,7 +133,9 @@ class VatRow:
     tax_cents: int
 
 
-def vat_rows(lines, *, subtotal_cents: int, tax_cents: int) -> list[VatRow] | None:
+def vat_rows(
+    lines, *, subtotal_cents: int, tax_cents: int, prices_include_vat: bool = False
+) -> list[VatRow] | None:
     """Revenue and VAT per rate, with the reverse charge lines in a row of
     their own, lowest rate first and reverse charge after plain 0%, from
     compute_totals(): the VAT is still computed per rate group (invariant
@@ -112,9 +146,13 @@ def vat_rows(lines, *, subtotal_cents: int, tax_cents: int) -> list[VatRow] | No
     those of its lines (an import with Moneybird's own totals, the one
     "Btw" row of tax_rows()): Huismus doesn't guess a split that doesn't
     add up to the totals shown (CLAUDE.md, hard rule 6). `subtotal_cents`
-    and `tax_cents`: the document's stored totals."""
+    and `tax_cents`: the document's stored totals.
+
+    The revenue is always without VAT: with prices including VAT, the VAT
+    of a rate group comes off the revenue of that rate. A reverse charge
+    line has 0%, so it never shares a rate that has VAT."""
     lines = list(lines)
-    totals = compute_totals(lines)
+    totals = compute_totals(lines, prices_include_vat=prices_include_vat)
     if (totals.subtotal_cents, totals.tax_cents) != (subtotal_cents, tax_cents):
         return None
     revenue: dict[tuple[int, bool], int] = {}
@@ -122,6 +160,14 @@ def vat_rows(lines, *, subtotal_cents: int, tax_cents: int) -> list[VatRow] | No
         key = (line.tax_rate_bp, bool(line.reverse_charge))
         revenue[key] = revenue.get(key, 0) + cents
     tax_by_rate = dict(totals.tax_per_rate)
+    if prices_include_vat:
+        # The lines as typed include VAT: a rate's revenue is its lines
+        # without the VAT of their group. One key per rate has VAT (the
+        # reverse charge lines of 0% are apart, and have none).
+        revenue = {
+            (rate_bp, reverse_charge): cents - (0 if reverse_charge else tax_by_rate[rate_bp])
+            for (rate_bp, reverse_charge), cents in revenue.items()
+        }
     return [
         VatRow(
             rate_bp=rate_bp,
@@ -146,7 +192,12 @@ def revenue_by_rate(document, lines) -> RevenueByRate | None:
     for the export (SPEC.md M19), from vat_rows(). Reverse charge lines
     count only in reverse_charge_cents, not also at 0%. None when
     vat_rows() is None."""
-    rows = vat_rows(lines, subtotal_cents=document.subtotal_cents, tax_cents=document.tax_cents)
+    rows = vat_rows(
+        lines,
+        subtotal_cents=document.subtotal_cents,
+        tax_cents=document.tax_cents,
+        prices_include_vat=document.prices_include_vat,
+    )
     if rows is None:
         return None
     return RevenueByRate(

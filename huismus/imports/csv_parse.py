@@ -147,6 +147,8 @@ class CsvDocument:
     paid_on: date | None = None
     # unpaid, partial, paid or credited as the file says, "" if it doesn't.
     payment_state: str = ""
+    # The line prices include VAT (Document.prices_include_vat, #362).
+    prices_include_vat: bool = False
     lines: tuple[CsvLine, ...] = ()
 
 
@@ -362,10 +364,16 @@ def parse_invoices(table: Table, lines: dict) -> list[CsvDocument]:
                 paid_cents=row.amount("paid") or 0,
                 paid_on=row.date("paid_on"),
                 payment_state=state or "",
+                prices_include_vat=_prices_include_vat(row),
                 lines=tuple(line for _row, line in lines.get((kind, number), [])),
             )
         )
     return documents
+
+
+def _prices_include_vat(row: Row) -> bool:
+    """ "prijzen incl. btw": an empty cell, or no such column, is no."""
+    return bool(row.choice("prices_include_vat", _yes_no(), examples=_("ja, nee")))
 
 
 def parse_quotes(table: Table, lines: dict) -> list[CsvDocument]:
@@ -395,6 +403,7 @@ def parse_quotes(table: Table, lines: dict) -> list[CsvDocument]:
                 stated_subtotal_cents=subtotal,
                 stated_tax_cents=tax,
                 stated_total_cents=total,
+                prices_include_vat=_prices_include_vat(row),
                 lines=tuple(line for _row, line in lines.get(("quote", number), [])),
             )
         )

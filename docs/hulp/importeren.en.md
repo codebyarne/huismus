@@ -69,7 +69,8 @@ required column is missing, the import stops and says which one.
   belongs to in **credited invoice**.
 - **lines.csv**: the lines of your invoices, credit notes and quotes.
   Required: **kind**, **number**, **description**, **unit price** and **VAT
-  rate (%)**. An empty **quantity** is a fixed price.
+  rate (%)**. An empty **quantity** is a fixed price. When the invoice or
+  quote has yes in **prices incl. VAT**, the unit price includes VAT.
 - **quotes.csv**: required are **number**, **date**, **customer number**,
   **status** (sent, accepted, declined or expired) and the three amounts.
 - **expenses.csv**: required are **expense number**, **date** and **amount

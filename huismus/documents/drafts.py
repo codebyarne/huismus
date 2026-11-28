@@ -16,6 +16,10 @@ from .numbering import peek_next_number
 from .totals import compute_totals
 from .vat import default_rate, line_choices, vat_for_copy
 
+# The line formset's prefix: field names are lines-<n>-<field>
+# (documents.articles writes them too).
+LINES_PREFIX = "lines"
+
 
 def line_formset(document, data=None):
     # Which rates a line may have, and what a new line starts with:
@@ -24,7 +28,7 @@ def line_formset(document, data=None):
     return DocumentLineFormSet(
         data,
         instance=document,
-        prefix="lines",
+        prefix=LINES_PREFIX,
         form_kwargs={
             "choices": line_choices(document, settings),
             "default_rate": default_rate(settings),
@@ -102,7 +106,7 @@ def recompute_stored_totals(document):
     """Stores compute_totals() of the document's saved lines on the lines
     and the document (invariant 3)."""
     lines = list(document.lines.all())
-    totals = compute_totals(lines)
+    totals = compute_totals(lines, prices_include_vat=document.prices_include_vat)
     for line, cents in zip(lines, totals.line_totals_cents, strict=True):
         if line.line_total_cents != cents:
             line.line_total_cents = cents
@@ -128,6 +132,7 @@ def create_credit_note(invoice):
         reference=invoice.reference,
         language=invoice.language,
         currency=invoice.currency,
+        prices_include_vat=invoice.prices_include_vat,
     )
     if invoice.credited_cents == 0:
         for line in invoice.lines.all():
@@ -166,6 +171,7 @@ def copy_document(document):
             footer_text=document.footer_text,
             attention=document.attention,
             reference=document.reference,
+            prices_include_vat=document.prices_include_vat,
         )
         for line in lines:
             DocumentLine.objects.create(

@@ -10,20 +10,25 @@ compute_totals() like everything else (invariant 3); nothing is saved.
 from .totals import LineInput, Totals, compute_totals
 
 
-def preview_totals(formset) -> tuple[Totals, dict[str, int | None]]:
+def preview_totals(
+    formset, *, prices_include_vat: bool = False
+) -> tuple[Totals, dict[str, int | None]]:
     """Totals for the lines as the editor shows them right now.
 
     Counted: every line form that is filled in, valid and not marked for
     deletion — the same lines saving would keep. Returns the totals and,
     per line form (by prefix), its line total in cents, or None for a line
-    that isn't counted.
+    that isn't counted. `prices_include_vat`: the choice as the form
+    shows it now (Document.prices_include_vat).
 
     An unbound formset (the page's first load) has nothing typed in yet:
     then the saved lines are what the editor shows, so those are counted.
     """
     if not formset.is_bound:
         saved = [form for form in formset.forms if form.instance.pk]
-        totals = compute_totals(form.instance for form in saved)
+        totals = compute_totals(
+            (form.instance for form in saved), prices_include_vat=prices_include_vat
+        )
         line_totals = {form.prefix: None for form in formset.forms}
         for form, cents in zip(saved, totals.line_totals_cents, strict=True):
             line_totals[form.prefix] = cents
@@ -42,7 +47,9 @@ def preview_totals(formset) -> tuple[Totals, dict[str, int | None]]:
         )
         counted.append((form.prefix, line))
 
-    totals = compute_totals(line for _prefix, line in counted)
+    totals = compute_totals(
+        (line for _prefix, line in counted), prices_include_vat=prices_include_vat
+    )
     for (prefix, _line), cents in zip(counted, totals.line_totals_cents, strict=True):
         line_totals[prefix] = cents
     return totals, line_totals

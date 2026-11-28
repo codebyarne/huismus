@@ -509,3 +509,34 @@ def test_the_command_reads_this_format_too(tmp_path):
     call_command("import_moneybird", str(path), "--commit")
 
     assert Document.objects.get().number == "2025-0001"
+
+
+def test_prices_including_vat_come_in_and_are_checked_to_the_cent(tmp_path):
+    # #362: "prijzen incl. btw" on the invoice, the line prices with VAT,
+    # and the old name of the lines' amount column still read.
+    header = INVOICE_HEADER.replace("gecrediteerde factuur", "prijzen incl. btw")
+    invoice = "factuur;2025-0001;2025-03-10;7;24,79;5,21;30,00;24,79;5,21;;;;ja\n"
+    line_header = LINE_HEADER + ";bedrag excl. btw"
+    line = "factuur;2025-0001;Workshop;3;10,00;21;30,00\n"
+    files = {
+        "klanten.csv": CONTACTS,
+        "facturen.csv": f"{header}\n{invoice}",
+        "regels.csv": f"{line_header}\n{line}",
+    }
+    run = _run(tmp_path, files)
+    assert run.report["sales_invoices"]["discrepancies"] == []
+    assert run.report["sales_invoices"]["refused"] == []
+    document = Document.objects.get()
+    assert document.prices_include_vat
+    assert (document.subtotal_cents, document.tax_cents, document.total_cents) == (2479, 521, 3000)
+    assert document.vat_rows.get().revenue_cents == 2479
+
+    # The same file again changes nothing.
+    again = _run(tmp_path, files)
+    assert again.report["sales_invoices"]["new"] == 0
+    assert Document.objects.count() == 1
+
+
+def test_without_the_column_prices_are_without_vat(tmp_path):
+    _run(tmp_path, _invoice_files())
+    assert not Document.objects.get().prices_include_vat

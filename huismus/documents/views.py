@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: 2026 Huismus contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
+import json
 from urllib.parse import urlencode
 
 from django.contrib import messages
@@ -18,6 +19,7 @@ from huismus.contacts.models import Contact
 from huismus.core.sorting import chosen_sort, sort_headers, sorted_rows
 from huismus.core.templatetags.money import euros
 
+from .articles import add_article_line, line_values
 from .detail import contact_changed_since_issue, timeline_events
 from .drafts import (
     copy_document,
@@ -54,7 +56,7 @@ from .mailing import (
     default_recipients,
     send_document,
 )
-from .models import Document, RecurringInvoice
+from .models import Article, Document, RecurringInvoice
 from .payments import record_payment
 from .pdf import render_pdf
 from .preview import render_preview_pdf
@@ -146,6 +148,7 @@ def document_list(request):
             "years": years,
             "has_any": Document.objects.filter(kind__in=["invoice", "credit_note"]).exists(),
             "has_recurring": RecurringInvoice.objects.exists(),
+            "has_articles": Article.objects.exists(),
             "sort": sort_headers(
                 sort, INVOICE_SORT_KEYS, lambda value: list_url(sorteer=value), own_order="status"
             ),
@@ -169,12 +172,24 @@ def document_delete(request, pk, kind="invoice"):
     return redirect("quotes:list" if kind == "quote" else "documents:list")
 
 
+def _chosen_prices_include_vat(form, document) -> bool:
+    """ "Prijzen inclusief btw" as the editor shows it now (#362): as ticked
+    in a posted form, as the form starts otherwise (the document's, or the
+    setting for a new one), and the document's own when the form doesn't
+    offer the choice (documents.forms.DocumentForm)."""
+    if "prices_include_vat" not in form.fields:
+        return document.prices_include_vat
+    if form.is_bound:
+        form.is_valid()
+        return bool(form.cleaned_data.get("prices_include_vat"))
+    return bool(form["prices_include_vat"].value())
+
+
 def _editor_context(document, form, formset):
     """Everything the draft editor shows besides the form itself: the live
     totals (documents.editing.preview_totals), the customer's address, and
     the issue dialog's summary with the number the document would get."""
     settings = Settings.load()
-    totals, line_totals = preview_totals(formset)
     if form.is_bound:
         # cleaned_data also holds the valid fields of a form with errors
         # elsewhere, so the address stays right while one field is wrong.
@@ -184,6 +199,8 @@ def _editor_context(document, form, formset):
     else:
         contact = document.contact if document.pk else form.initial.get("contact")
         issue_date = document.issue_date or form.initial.get("issue_date")
+    prices_include_vat = _chosen_prices_include_vat(form, document)
+    totals, line_totals = preview_totals(formset, prices_include_vat=prices_include_vat)
     # The T.a.v. line: as typed, as saved, or the new customer's own.
     if form.is_bound:
         attention = form.cleaned_data.get("attention", "")
@@ -253,6 +270,9 @@ def _editor_context(document, form, formset):
         "formset": formset,
         "totals": totals,
         "line_totals": line_totals,
+        "prices_include_vat": prices_include_vat,
+        # Only for who charges VAT, or a document that has it on (forms.py).
+        "show_prices_include_vat": "prices_include_vat" in form.fields,
         "contact": contact,
         "attention": attention_context,
         "settings": settings,
@@ -265,7 +285,47 @@ def _editor_context(document, form, formset):
         "kor_crossed": kor_crossed,
         # A sent quote's history, mails included (SPEC.md M10).
         "timeline": timeline_events(document) if is_quote and document.number else None,
+        "articles": _article_choices(document, settings),
     }
+
+
+def _article_choices(document, settings):
+    """The articles the editor offers (#167), each with the line it makes
+    in this document (documents.articles), for the editor's JS to copy:
+    with prices without VAT and including VAT (#362), as the checkbox may
+    change before the pick. A credit note corrects an invoice: no articles
+    there."""
+    if document.kind == "credit_note":
+        return []
+    return [
+        {
+            "article": article,
+            "line": json.dumps(line_values(article, document, settings)),
+            "line_incl": json.dumps(
+                line_values(article, document, settings, prices_include_vat=True)
+            ),
+        }
+        for article in Article.objects.all()
+    ]
+
+
+def _with_article(request, document):
+    """ "Artikel toevoegen" without JS: the editor again, unsaved, with one
+    more line made from the chosen article. None when no article was chosen,
+    so the button then saves like the others."""
+    if request.POST.get("actie") != "artikel" or document.kind == "credit_note":
+        return None
+    chosen = request.POST.get("artikel", "")
+    article = Article.objects.filter(pk=chosen).first() if chosen.isdigit() else None
+    if article is None:
+        return None
+    prices_include_vat = _chosen_prices_include_vat(document_form(document, request.POST), document)
+    data = add_article_line(
+        request.POST, article, document, Settings.load(), prices_include_vat=prices_include_vat
+    )
+    form = document_form(document, data)
+    formset = line_formset(document, data)
+    return render(request, "documents/edit.html", _editor_context(document, form, formset))
 
 
 def _edit_url(document):
@@ -300,6 +360,8 @@ def _new_document(request, kind):
     settings = Settings.load()
     document = Document(kind=kind, status="draft")
     if request.method == "POST":
+        if (response := _with_article(request, document)) is not None:
+            return response
         form = document_form(document, request.POST)
         formset = line_formset(document, request.POST)
         if form.is_valid() and formset.is_valid():
@@ -311,6 +373,7 @@ def _new_document(request, kind):
                 "issue_date": timezone.localdate(),
                 "language": settings.default_language,
                 "footer_text": settings.default_footer_text,
+                "prices_include_vat": settings.default_prices_include_vat,
                 # ?contact=<pk>: back from "Nieuw contact" (contacts.views
                 # ._back_to_invoice) with the new customer chosen.
                 "contact": Contact.objects.filter(pk=_int_param(request, "contact", None)).first(),
@@ -383,6 +446,8 @@ def document_edit(request, pk):
 
 def _edit_document(request, document):
     if request.method == "POST":
+        if (response := _with_article(request, document)) is not None:
+            return response
         form = document_form(document, request.POST)
         formset = line_formset(document, request.POST)
         if form.is_valid() and formset.is_valid():
@@ -793,6 +858,7 @@ def quote_list(request):
             "tab": tab,
             "query": query,
             "has_any": Document.objects.filter(kind="quote").exists(),
+            "has_articles": Article.objects.exists(),
             "sort": sort_headers(sort, QUOTE_SORT_KEYS, lambda value: list_url(sorteer=value)),
             "sorted_by": sort,
         },

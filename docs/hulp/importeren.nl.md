@@ -71,7 +71,9 @@ geeft. Ontbreekt een verplichte kolom, dan stopt de import en zegt hij welke.
   nummer van de factuur waar hij bij hoort.
 - **regels.csv**: de regels van je facturen, creditnota's en offertes.
   Verplicht: **soort**, **nummer**, **omschrijving**, **prijs per eenheid**
-  en **btw-tarief (%)**. Een leeg **aantal** is een vaste prijs.
+  en **btw-tarief (%)**. Een leeg **aantal** is een vaste prijs. Staat bij de
+  factuur of offerte **prijzen incl. btw** op ja, dan is de prijs per eenheid
+  inclusief btw.
 - **offertes.csv**: verplicht zijn **nummer**, **datum**, **klantnummer**,
   **status** (verzonden, geaccepteerd, afgewezen of verlopen) en de drie
   bedragen.

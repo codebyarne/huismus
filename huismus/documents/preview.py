@@ -50,7 +50,7 @@ def render_preview_pdf(form, formset) -> bytes:
         )
         for _form, data in counted_forms(formset)
     ]
-    totals = compute_totals(typed)
+    totals = compute_totals(typed, prices_include_vat=document.prices_include_vat)
     for line, cents in zip(typed, totals.line_totals_cents, strict=True):
         line.line_total_cents = cents
 

@@ -194,7 +194,12 @@ def _split_mismatches(parsed: CsvDocument, totals) -> list[str]:
     only when the row fills in at least one of them."""
     if parsed.stated_split is None:
         return []
-    rows = vat_rows(parsed.lines, subtotal_cents=totals.subtotal_cents, tax_cents=totals.tax_cents)
+    rows = vat_rows(
+        parsed.lines,
+        subtotal_cents=totals.subtotal_cents,
+        tax_cents=totals.tax_cents,
+        prices_include_vat=parsed.prices_include_vat,
+    )
     computed: dict = {}
     for row in rows or []:
         if row.reverse_charge:
@@ -256,7 +261,7 @@ def import_documents(
             report.skipped_missing_contact.append(parsed.number)
             continue
 
-        totals = compute_totals(parsed.lines)
+        totals = compute_totals(parsed.lines, prices_include_vat=parsed.prices_include_vat)
         wrong_split = _split_mismatches(parsed, totals)
         if wrong_split:
             report.refused.append(f"{_label(parsed)}: {', '.join(wrong_split)}")
@@ -337,6 +342,7 @@ def _create(parsed: CsvDocument, contact, settings, related) -> Document:
         source=SOURCE,
         external_id=parsed.external_id,
         reference=parsed.reference,
+        prices_include_vat=parsed.prices_include_vat,
     )
     for position, line in enumerate(parsed.lines):
         DocumentLine.objects.create(
@@ -376,6 +382,7 @@ def _create(parsed: CsvDocument, contact, settings, related) -> Document:
             lines,
             subtotal_cents=document.subtotal_cents,
             tax_cents=document.tax_cents,
+            prices_include_vat=document.prices_include_vat,
         )
     document.status = parsed.status
     document.save()

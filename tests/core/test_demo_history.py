@@ -32,7 +32,7 @@ def test_history_shows_every_kind_of_thing_huismus_keeps():
     feature that keeps something gets a line here and in demo_history.py."""
     from huismus.business.models import Settings
     from huismus.contacts.models import Contact, ContactPerson
-    from huismus.documents.models import EmailLog, RecurringInvoice
+    from huismus.documents.models import Article, EmailLog, RecurringInvoice
     from huismus.expenses.models import ExpenseLine
 
     create_history()
@@ -49,6 +49,8 @@ def test_history_shows_every_kind_of_thing_huismus_keeps():
     lines = DocumentLine.objects.filter(document__in=invoices)
     assert {2100, 900} <= set(lines.values_list("tax_rate_bp", flat=True))
     assert lines.filter(reverse_charge=True).exists()
+    # Prices including VAT (#362), for a private customer.
+    assert invoices.filter(prices_include_vat=True).exists()
     assert lines.filter(quantity=None).exists()
     assert {"uur", "dag", "stuk", "km"} <= set(lines.values_list("unit", flat=True))
     assert invoices.filter(language="en").exists()
@@ -64,6 +66,9 @@ def test_history_shows_every_kind_of_thing_huismus_keeps():
         "expired",
     }
     assert RecurringInvoice.objects.filter(stopped_on=None).exists()
+    articles = Article.objects.all()
+    assert articles.filter(reverse_charge=True).exists()
+    assert {2100, 900} <= set(articles.values_list("tax_rate_bp", flat=True))
     assert RecurringInvoice.objects.exclude(stopped_on=None).exists()
 
     contacts = Contact.objects.all()

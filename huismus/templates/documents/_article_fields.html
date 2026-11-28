@@ -1,0 +1,13 @@
+{% load i18n forms %}
+{% comment %}The fields of an article form `f` (documents/article_list.html). Without a VAT field (KOR, no VAT) unit and price share the row.{% endcomment %}
+<div class="fieldset">
+    {% field f.description label=_("Omschrijving") %}
+    {% if not settings.no_vat %}
+    {% field f.unit span=2 label=_("Eenheid") optional=True %}
+    {% field f.unit_price_cents span=2 money=True label=_("Prijs per eenheid, zonder btw") %}
+    {% field f.tax_rate_bp span=2 label=_("Btw") %}
+    {% else %}
+    {% field f.unit span=3 label=_("Eenheid") optional=True %}
+    {% field f.unit_price_cents span=3 money=True label=_("Prijs per eenheid") %}
+    {% endif %}
+</div>

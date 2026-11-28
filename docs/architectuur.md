@@ -29,6 +29,7 @@ flowchart TB
         RecurringInvoiceDocument --> |document| Document
         Document --> |related_document| Document
         NumberSequence
+        Article["Article<br/>(vaste regel, geen koppeling)"]
     end
     subgraph core
         Attachment
@@ -119,6 +120,10 @@ uit het diagram haalt:
   document: wijzigen en verwijderen mag. Het bedrag wordt nooit bewaard,
   maar is altijd `line_total_cents(uren, tarief)`, de regel van een
   factuurregel (`huismus/hours/entries.py`).
+- **`Article`** is een regel die je vaak gebruikt (M31). Kies je hem in de
+  editor, dan kopieert `huismus/documents/articles.py` zijn waarden in een
+  gewone regel; die wijst niet terug, dus een artikel wijzigen of verwijderen
+  raakt geen document.
 - `SPEC.md` noemt ook een `AuditLog`; die bestaat nog niet.
 
 ## Wat doet welke app

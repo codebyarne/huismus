@@ -49,3 +49,15 @@ def test_a_link_to_a_csv_says_download():
             ):
                 offenders.append(f"{path.relative_to(template_dir)}: {tag[:80]}")
     assert offenders == []
+
+
+def test_no_euro_sign_before_an_amount_that_has_one():
+    # The money filters write "€ 95,00" themselves; a "€" in front made
+    # "€ € 95,00" on Artikelen (BUGS-BY-HAND.md, 2026-11-28).
+    template_dir = Path(settings.CODE_DIR) / "templates"
+    offenders = []
+    for path in template_dir.rglob("*.html"):
+        for number, line in enumerate(path.read_text().splitlines(), start=1):
+            if re.search(r"(€|&euro;)\s*\{\{[^}]*\|\s*money(_for)?\b", line):
+                offenders.append(f"{path.relative_to(template_dir)}:{number}")
+    assert offenders == []

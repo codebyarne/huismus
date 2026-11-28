@@ -3,7 +3,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import OuterRef, Q, Subquery, Sum
-from django.db.models.functions import Coalesce
+from django.db.models.functions import Coalesce, Lower
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -186,6 +186,11 @@ class Document(TimestampedModel):
     intro_text = models.TextField(_("introductietekst"), blank=True)
     footer_text = models.TextField(_("voettekst"), blank=True)
     notes = models.TextField(_("notities"), blank=True)
+
+    # The prices of the lines include VAT (#362): the total is then the
+    # sum of the lines as typed, and compute_totals() takes the VAT out
+    # per rate group. Part of the document, locked with it once issued.
+    prices_include_vat = models.BooleanField(_("prijzen inclusief btw"), default=False)
 
     # Computed by documents.totals.compute_totals() and stored only at
     # issue time (invariant 3) — 0 while still a draft.
@@ -604,3 +609,29 @@ class RecurringInvoiceDocument(TimestampedModel):
                 fields=["series", "document"], name="documents_unique_recurring_link"
             )
         ]
+
+
+class Article(TimestampedModel):
+    """A line someone uses often (#167): picked in the editor, it becomes an
+    ordinary line with these values. A line keeps no link to its article,
+    so changing or deleting one never touches a document (invariant 1, 4).
+    The price is without VAT, like every line (huismus-intern/besluiten.md,
+    2026-11-28)."""
+
+    description = models.TextField(_("omschrijving"))
+    unit = models.CharField(_("eenheid"), max_length=20, blank=True)
+    unit_price_cents = models.BigIntegerField(_("prijs per eenheid (cent)"))
+    # 21% also for one made under the KOR, where the form has no VAT field:
+    # the rate is back when the KOR stops (product-owner agent, 2026-11-28).
+    # In a document the rate follows documents.articles.line_values.
+    tax_rate_bp = models.PositiveIntegerField(_("btw-tarief (basispunten)"), default=2100)
+    reverse_charge = models.BooleanField(_("btw verlegd"), default=False)
+
+    class Meta:
+        verbose_name = _("artikel")
+        verbose_name_plural = _("artikelen")
+        # Alphabetical, capitals or not (product-owner agent, 2026-11-28).
+        ordering = [Lower("description"), "pk"]
+
+    def __str__(self):
+        return self.description[:50]

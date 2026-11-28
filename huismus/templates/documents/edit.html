@@ -96,8 +96,14 @@
             <label class="sr-only" for="{{ form.intro_text.id_for_label }}">{% translate "Introductietekst" %}</label>
             <textarea id="{{ form.intro_text.id_for_label }}" name="{{ form.intro_text.html_name }}" class="textarea input-quiet" rows="2" style="min-height:0;margin:0 -12px;width:calc(100% + 24px)" placeholder="{% translate 'Introductietekst (optioneel)' %}">{{ form.intro_text.value|default:'' }}</textarea>
 
+            {% if show_prices_include_vat %}
+            <div class="field" style="margin-top:var(--s-3)">
+                <label class="check small"><input type="checkbox" name="{{ form.prices_include_vat.html_name }}" id="{{ form.prices_include_vat.id_for_label }}" aria-describedby="prijzen-incl-hulp"{% if prices_include_vat %} checked{% endif %}{% if form.prices_include_vat.field.disabled %} disabled{% endif %}>{% translate "Prijzen inclusief btw" %}</label>
+                <p class="help" id="prijzen-incl-hulp">{% translate "Het totaal is dan precies wat je invult. Huismus rekent de btw eruit." %}</p>
+            </div>
+            {% endif %}
             <div class="doc-lines">
-                <div class="line-head"><span></span><span>{% translate "Omschrijving" %}</span><span class="r">{% translate "Aantal" %}</span><span>{% translate "Eenheid" %}</span><span class="r">{% translate "Prijs" %}</span><span>{% translate "Btw" %}</span><span class="r">{% translate "Totaal" %}</span><span></span></div>
+                {% include "documents/_line_head.html" %}
                 {{ formset.management_form }}
                 <div data-formset-forms="lines">
                     {% for line_form in formset.forms %}{% with cents=line_totals|get:line_form.prefix %}{% include "documents/_line_form.html" %}{% endwith %}{% endfor %}
@@ -105,6 +111,19 @@
                 <template data-formset-empty="lines">{% include "documents/_line_form.html" with line_form=formset.empty_form cents=None %}</template>
                 <div class="row">
                     <button type="button" class="add-line" data-formset-add="lines"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Regel toevoegen" %}</button>
+                    {% if articles %}
+                    {% comment %}Artikelen (#167): picking one fills a new line with the values the
+                    server put in data-line, or in data-line-incl with prices including VAT (#362); app.js copies them and computes nothing. Without JS
+                    the button below shows the editor again with that line added, unsaved.{% endcomment %}
+                    <div class="article-pick">
+                        <label class="sr-only" for="artikel">{% translate "Artikel toevoegen" %}</label>
+                        <select id="artikel" name="artikel" class="select input-sm" data-combobox="{% translate 'Artikel toevoegen' %}" data-article-picker="lines">
+                            <option value="">{% translate "Kies een artikel" %}</option>
+                            {% for choice in articles %}<option value="{{ choice.article.pk }}" data-line="{{ choice.line }}" data-line-incl="{{ choice.line_incl }}">{{ choice.article.description|truncatechars:60 }} · {{ choice.article.unit_price_cents|money_for:document }}</option>{% endfor %}
+                        </select>
+                        <noscript><button type="submit" class="btn btn-sm" name="actie" value="artikel" formnovalidate>{% translate "Toevoegen" %}</button></noscript>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
 

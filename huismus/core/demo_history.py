@@ -54,6 +54,7 @@ from huismus.documents.drafts import create_credit_note, recompute_stored_totals
 from huismus.documents.issuing import issue
 from huismus.documents.mailing import default_message
 from huismus.documents.models import (
+    Article,
     Document,
     DocumentLine,
     EmailLog,
@@ -98,6 +99,8 @@ class Customer:
     persons: list[tuple[str, str]] = field(default_factory=list)  # (name, department)
     # Abroad, in the EU: the customer accounts for the VAT (SPEC.md M18).
     reverse_charge: bool = False
+    # A private customer is quoted prices with VAT in them (#362).
+    prices_include_vat: bool = False
     language: str = "nl"
     # Pays this many days after the due date at most; a government is slow.
     pays_late: int = 10
@@ -154,7 +157,13 @@ CUSTOMERS = [
     Customer("Dierenartsenpraktijk De Hoefslag", city="Apeldoorn", years=(5, 8)),
     Customer("Zeilmakerij Windkracht 7", city="Harlingen", years=(6, 8)),
     # Private customers: a name, no company, and a short term.
-    Customer(first_name="Sanne", last_name="de Boer", city="Utrecht", payment_terms_days=8),
+    Customer(
+        first_name="Sanne",
+        last_name="de Boer",
+        city="Utrecht",
+        payment_terms_days=8,
+        prices_include_vat=True,
+    ),
     Customer(
         first_name="Joost",
         last_name="van Leeuwen",
@@ -162,6 +171,7 @@ CUSTOMERS = [
         years=(4, 8),
         payment_terms_days=8,
         delivery_method="post",
+        prices_include_vat=True,
     ),
     # Abroad, in the EU: btw verlegd.
     Customer(
@@ -239,6 +249,7 @@ def _create(rng: random.Random, last_day: date) -> None:
     _mails(rng, last_day)
     _expenses(rng, first_year, last_day)
     _hours(rng, contacts, last_day)
+    _articles(LAST_YEAR - FIRST_YEAR)
 
 
 # -- The business and its customers ---------------------------------------
@@ -342,6 +353,27 @@ def _lines(rng: random.Random, document: Document, index: int) -> None:
         )
 
 
+def _articles(index: int) -> None:
+    """The services as articles (#167), at this year's rates, plus one that
+    is reverse charged. No random numbers: the rest of the history stays the
+    same."""
+    for dutch, _english, unit, _quantities, price, rate_bp in SERVICES:
+        if price == "hour":
+            price = _hour_rate(index)
+        elif price == "day":
+            price = _hour_rate(index) * 8
+        Article.objects.create(
+            description=dutch, unit=unit, unit_price_cents=price, tax_rate_bp=rate_bp
+        )
+    Article.objects.create(
+        description="Consultancy voor een EU-klant",
+        unit="uur",
+        unit_price_cents=_hour_rate(index),
+        tax_rate_bp=0,
+        reverse_charge=True,
+    )
+
+
 def _new(kind: str, contact: Contact, day: date | None, **fields) -> Document:
     customer = _customer(contact)
     return Document.objects.create(
@@ -351,6 +383,7 @@ def _new(kind: str, contact: Contact, day: date | None, **fields) -> Document:
         issue_date=day,
         language=customer.language,
         reference=f"{customer.reference}{day.year % 100:02d}" if customer.reference and day else "",
+        prices_include_vat=customer.prices_include_vat,
         **fields,
     )
 

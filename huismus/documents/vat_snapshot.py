@@ -15,12 +15,20 @@ from .models import DocumentVatRow
 from .totals import vat_rows
 
 
-def store_vat_rows(document, lines, *, subtotal_cents: int, tax_cents: int) -> None:
+def store_vat_rows(
+    document, lines, *, subtotal_cents: int, tax_cents: int, prices_include_vat: bool
+) -> None:
     """Replaces the document's rows with those of `lines` and the totals it
-    is issued with. The document must still be a draft in the database:
+    is issued with, its prices including VAT or not (#362). The document
+    must still be a draft in the database:
     the triggers refuse rows of an issued one."""
     DocumentVatRow.objects.filter(document=document).delete()
-    rows = vat_rows(lines, subtotal_cents=subtotal_cents, tax_cents=tax_cents)
+    rows = vat_rows(
+        lines,
+        subtotal_cents=subtotal_cents,
+        tax_cents=tax_cents,
+        prices_include_vat=prices_include_vat,
+    )
     if rows is None:
         # Totals that are not the lines' (an import with Moneybird's own
         # totals): no rows rather than a guessed split. Having none is how

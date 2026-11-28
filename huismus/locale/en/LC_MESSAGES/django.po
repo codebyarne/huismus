@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 19:24+0100\n"
+"POT-Creation-Date: 2026-11-28 14:41+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -855,6 +855,9 @@ msgstr "no-VAT text"
 
 msgid "tekst bij btw verlegd"
 msgstr "reverse charge text"
+
+msgid "prijzen standaard inclusief btw"
+msgstr "prices include VAT by default"
 
 msgid "waarschuw vanaf (%)"
 msgstr "warn from (%)"
@@ -1719,6 +1722,9 @@ msgstr "outstanding"
 msgid "laatst betaald op"
 msgstr "last paid on"
 
+msgid "prijzen incl. btw"
+msgstr "prices incl. VAT"
+
 #, python-format
 msgid "omzet %(rate)s%%"
 msgstr "revenue %(rate)s%%"
@@ -1756,6 +1762,9 @@ msgstr "VAT rate (%)"
 
 msgid "btw verlegd"
 msgstr "reverse charge"
+
+msgid "regelbedrag"
+msgstr "line amount"
 
 msgid "btw ter info"
 msgstr "VAT for information"
@@ -2737,11 +2746,23 @@ msgstr "Amount without an expense line"
 msgid "Kosten zonder categorie"
 msgstr "Costs without a category"
 
+msgid "Artikel toegevoegd."
+msgstr "Product added."
+
+msgid "Artikel opgeslagen."
+msgstr "Product saved."
+
+msgid "Artikel verwijderd."
+msgstr "Product deleted."
+
 msgid "Vul een getal in, zoals 2 of 1,5."
 msgstr "Enter a number, like 2 or 1.5."
 
 msgid "verlegd"
 msgstr "reverse charge"
+
+msgid "prijs per eenheid, zonder btw"
+msgstr "unit price, excluding VAT"
 
 msgid "Overboeking"
 msgstr "Bank transfer"
@@ -2983,6 +3004,9 @@ msgstr "intro text"
 msgid "voettekst"
 msgstr "footer text"
 
+msgid "prijzen inclusief btw"
+msgstr "prices include VAT"
+
 msgid "subtotaal (cent)"
 msgstr "subtotal (cents)"
 
@@ -3123,6 +3147,12 @@ msgstr "invoice in a recurring series"
 
 msgid "facturen in een periodieke reeks"
 msgstr "invoices in a recurring series"
+
+msgid "artikel"
+msgstr "product"
+
+msgid "artikelen"
+msgstr "products"
 
 msgid "[klantnummer]"
 msgstr "[customer number]"
@@ -5411,6 +5441,16 @@ msgid "Komt onder elke factuur, offerte en creditnota met een regel “verlegd�
 msgstr ""
 "Goes under every invoice, quote and credit note with a “reverse charge” line."
 
+msgid "Prijzen"
+msgstr "Prices"
+
+msgid "Prijzen standaard inclusief btw"
+msgstr "Prices include VAT by default"
+
+msgid ""
+"Voor nieuwe facturen en offertes. Per factuur kun je het nog veranderen."
+msgstr "For new invoices and quotes. You can still change it per invoice."
+
 msgid "dagen"
 msgstr "days"
 
@@ -6122,6 +6162,15 @@ msgstr ""
 msgid "Leegmaken"
 msgstr "Clear"
 
+msgid "Eenheid"
+msgstr "Unit"
+
+msgid "Prijs per eenheid, zonder btw"
+msgstr "Unit price, excluding VAT"
+
+msgid "Prijs per eenheid"
+msgstr "Unit price"
+
 msgid "T.a.v."
 msgstr "Attn."
 
@@ -6275,14 +6324,17 @@ msgstr ""
 msgid "Aantal"
 msgstr "Quantity"
 
-msgid "Eenheid"
-msgstr "Unit"
-
-msgid "Prijs per eenheid"
-msgstr "Unit price"
-
 msgid "Regel verwijderen"
 msgstr "Remove line"
+
+msgid "Prijs incl. btw"
+msgstr "Price incl. VAT"
+
+msgid "Prijs"
+msgstr "Price"
+
+msgid "Totaal incl. btw"
+msgstr "Total incl. VAT"
 
 #, python-format
 msgid "Herinnering voor factuur %(number)s"
@@ -6439,6 +6491,55 @@ msgstr "Subtotal"
 msgid "Berekend door Huismus"
 msgstr "Worked out by Huismus"
 
+msgid ""
+"Regels die je vaak gebruikt. In een factuur of offerte kies je een artikel "
+"en de regel staat er. Daarna pas je hem aan zoals elke regel."
+msgstr ""
+"Lines you use often. In an invoice or quote you pick a product and the line "
+"is there. Then you change it like any other line."
+
+msgid "Prijs zonder btw"
+msgstr "Price excluding VAT"
+
+msgid "Acties"
+msgstr "Actions"
+
+#, python-format
+msgid "per %(unit)s"
+msgstr "per %(unit)s"
+
+msgid "Bewerken"
+msgstr "Edit"
+
+#, python-format
+msgid "%(name)s verwijderen"
+msgstr "Delete %(name)s"
+
+#, python-format
+msgid "Artikel „%(name)s” verwijderen?"
+msgstr "Delete product “%(name)s”?"
+
+msgid "Facturen en offertes met deze regel blijven zoals ze zijn."
+msgstr "Invoices and quotes with this line stay as they are."
+
+msgid "Nog geen artikelen"
+msgstr "No products yet"
+
+msgid ""
+"Voeg hieronder je eerste artikel toe, bijvoorbeeld een uur advies of een "
+"workshop."
+msgstr ""
+"Add your first product below, for example an hour of advice or a workshop."
+
+msgid "Artikel wijzigen"
+msgstr "Edit product"
+
+msgid "Nieuw artikel"
+msgstr "New product"
+
+msgid "Toevoegen"
+msgstr "Add"
+
 msgid "Definitief"
 msgstr "Final"
 
@@ -6497,9 +6598,6 @@ msgstr "Delivery date"
 
 msgid "Vervaldatum"
 msgstr "Due date"
-
-msgid "Prijs"
-msgstr "Price"
 
 #, python-format
 msgid "Graag overmaken naar %(iban)s o.v.v. %(number)s."
@@ -6765,8 +6863,22 @@ msgstr "Introduction"
 msgid "Introductietekst (optioneel)"
 msgstr "Introduction (optional)"
 
+msgid "Prijzen inclusief btw"
+msgstr "Prices include VAT"
+
+msgid "Het totaal is dan precies wat je invult. Huismus rekent de btw eruit."
+msgstr ""
+"The total is then exactly what you enter. Huismus works out the VAT inside "
+"it."
+
 msgid "Regel toevoegen"
 msgstr "Add line"
+
+msgid "Artikel toevoegen"
+msgstr "Add product"
+
+msgid "Kies een artikel"
+msgstr "Choose a product"
 
 msgid "Tekst aanpassen"
 msgstr "Edit text"
@@ -7118,14 +7230,8 @@ msgstr ""
 msgid "Volgorde"
 msgstr "Order"
 
-msgid "Acties"
-msgstr "Actions"
-
 msgid "geen uitgaven"
 msgstr "no expenses"
-
-msgid "Bewerken"
-msgstr "Edit"
 
 #, python-format
 msgid "%(name)s verwijderen: niet mogelijk, er horen uitgaven bij"
@@ -7133,10 +7239,6 @@ msgstr "Delete %(name)s: not possible, it has expenses"
 
 msgid "Er horen uitgaven bij, dus verwijderen kan niet"
 msgstr "It has expenses, so you can't delete it"
-
-#, python-format
-msgid "%(name)s verwijderen"
-msgstr "Delete %(name)s"
 
 #, python-format
 msgid "Categorie „%(name)s” verwijderen?"
@@ -7154,9 +7256,6 @@ msgstr "Add your first category below, for example Software or Travel."
 
 msgid "Bijvoorbeeld Verzekeringen"
 msgstr "For example Insurance"
-
-msgid "Toevoegen"
-msgstr "Add"
 
 msgid ""
 "Geef die uitgaven eerst een andere categorie, of geef deze categorie een "
@@ -8126,6 +8225,9 @@ msgstr "Quote date"
 
 msgid "Crediteert factuur"
 msgstr "Credits invoice"
+
+msgid "Bedrag incl. btw"
+msgstr "Amount incl. VAT"
 
 msgid "Inloggen"
 msgstr "Log in"

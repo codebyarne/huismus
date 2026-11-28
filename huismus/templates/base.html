@@ -36,7 +36,12 @@
         <a class="btn {% block panel_new_class %}btn-quiet{% endblock %} btn-new btn-block" href="{% url 'documents:create' %}"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Nieuwe factuur" %}</a>
         <nav class="nav" aria-label="{% translate 'Hoofdmenu' %}">
             <a href="{% url 'home' %}"{% if nav_section == "home" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#home"></use></svg>{% translate "Overzicht" %}</a>
-            <a href="{% url 'documents:list' %}"{% if nav_section == "documents" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#file"></use></svg>{% translate "Facturen" %}</a>
+            <a href="{% url 'documents:list' %}"{% if nav_section == "documents" and not nav_subsection %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#file"></use></svg>{% translate "Facturen" %}</a>
+            {% if nav_section == "documents" %}
+            <div class="sub">
+                <a href="{% url 'documents:article_list' %}"{% if nav_subsection == "articles" %} aria-current="page"{% endif %}>{% translate "Artikelen" %}</a>
+            </div>
+            {% endif %}
             {% comment %}Offertes, Uitgaven and Bank only when shown (#260, Instellingen › Menu; core.context_processors.parts).{% endcomment %}
             {% if show_quotes %}<a href="{% url 'quotes:list' %}"{% if nav_section == "quotes" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#tag"></use></svg>{% translate "Offertes" %}</a>{% endif %}
             {% if show_hours %}<a href="{% url 'hours:list' %}"{% if nav_section == "hours" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% translate "Uren" %}</a>{% endif %}
@@ -93,6 +98,7 @@
     <div id="meer-menu" class="menu" popover="auto">
         {% if "quotes" in menu_more %}<a href="{% url 'quotes:list' %}"><svg class="i" aria-hidden="true"><use href="#tag"></use></svg>{% translate "Offertes" %}</a>{% endif %}
         {% if "hours" in menu_more %}<a href="{% url 'hours:list' %}"><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% translate "Uren" %}</a>{% endif %}
+        {% if "articles" in menu_more %}<a href="{% url 'documents:article_list' %}"><svg class="i" aria-hidden="true"><use href="#table"></use></svg>{% translate "Artikelen" %}</a>{% endif %}
         {% if "categories" in menu_more %}<a href="{% url 'expenses:category_list' %}"><svg class="i" aria-hidden="true"><use href="#archive"></use></svg>{% translate "Categorieën" %}</a>{% endif %}
         {% if "bank" in menu_more %}<a href="{% url 'bank:statement' %}"><svg class="i" aria-hidden="true"><use href="#euro"></use></svg>{% translate "Bank" %}</a>{% endif %}
         {% if "contacts" in menu_more %}<a href="{% url 'contacts:list' %}"><svg class="i" aria-hidden="true"><use href="#users"></use></svg>{% translate "Klanten" %}</a>{% endif %}

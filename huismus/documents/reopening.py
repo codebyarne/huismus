@@ -83,6 +83,7 @@ _RESTORED_FIELDS = (
     "notes",
     "attention",
     "reference",
+    "prices_include_vat",
     "subtotal_cents",
     "tax_cents",
     "total_cents",
@@ -143,6 +144,8 @@ def undo_reopen(document: Document) -> Document:
         fields = dict(copy["fields"])
         # Reopened before the document had a T.a.v. line: it had none.
         fields.setdefault("attention", "")
+        # Reopened before prices could include VAT (#362): they didn't.
+        fields.setdefault("prices_include_vat", False)
         for name in _DATE_FIELDS:
             fields[name] = date.fromisoformat(fields[name]) if fields[name] else None
         previous = copy["reopened_at"]
@@ -170,6 +173,7 @@ def undo_reopen(document: Document) -> Document:
                 restored,
                 subtotal_cents=fields["subtotal_cents"],
                 tax_cents=fields["tax_cents"],
+                prices_include_vat=fields["prices_include_vat"],
             )
         Document.objects.filter(pk=document.pk).update(
             **fields,
