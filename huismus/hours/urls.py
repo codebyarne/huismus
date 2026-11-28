@@ -8,6 +8,7 @@ app_name = "hours"
 
 urlpatterns = [
     path("", views.hours_list, name="list"),
+    path("factuur/", views.hours_invoice, name="invoice"),
     path("<int:pk>/", views.hours_edit, name="edit"),
     path("<int:pk>/verwijderen/", views.hours_delete, name="delete"),
 ]

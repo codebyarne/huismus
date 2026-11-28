@@ -65,6 +65,7 @@ stay in view below.{% endcomment %}
         <div class="hours-total">
             <span>{% blocktranslate %}Totaal: <strong>{{ total }}</strong>{% endblocktranslate %}</span>
             {% if with_vat %}<span class="small muted">{% translate "Bedragen zonder btw." %}</span>{% endif %}
+            {% if invoice_url %}<span class="spacer"></span><a class="btn btn-sm" href="{{ invoice_url }}">{% translate "Factuur maken…" %}</a>{% endif %}
         </div>
         <div class="table-wrap">
             <table class="table stackable">
@@ -87,7 +88,7 @@ stay in view below.{% endcomment %}
                     <tr class="is-link">
                         <td data-cell="secondary" class="num">{{ entry.date|date:day_format }}</td>
                         <td data-cell="primary"><a class="row-link" href="{% url 'hours:edit' entry.pk %}">{{ entry.contact.display_name }}</a></td>
-                        <td data-cell="order"><span class="small">{{ entry.description }}</span></td>
+                        <td data-cell="order"><span class="small">{{ entry.description }}</span>{% if entry.invoice %} <a class="small invoice-link" href="{% url 'documents:edit' entry.invoice.pk %}">{% if entry.invoice.number %}{% blocktranslate with number=entry.invoice.number %}Factuur {{ number }}{% endblocktranslate %}{% else %}{% translate "Conceptfactuur" %}{% endif %}</a>{% endif %}</td>
                         <td data-cell="status" class="r num">{{ entry.hours|hours }}</td>
                         <td data-cell="amount" class="r amount">{% if entry.rate_cents is None %}<span class="no-rate">{% translate "Geen tarief" %}</span>{% else %}{{ entry.amount_cents|money }}{% endif %}</td>
                     </tr>

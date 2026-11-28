@@ -146,6 +146,13 @@ def _pages():
         f"/uren/?maand=alle&klant={_first(TimeEntry.objects, 'hours').contact_id}",
         f"/uren/{_first(TimeEntry.objects.filter(rate_cents=None), 'hours without a rate').pk}/",
         f"/uren/{_first(TimeEntry.objects.filter(hours=24), 'a day of hours').pk}/",
+        # An invoice from the hours (#81): the oldest month still to invoice,
+        # twenty long lines per day (demo_messy), and hours on an invoice.
+        "/uren/factuur/",
+        "/uren/factuur/?per=dag&klant="
+        + str(_first(TimeEntry.objects.filter(rate_cents=8750), "a month of hours").contact_id),
+        f"/uren/{_first(TimeEntry.objects.filter(invoice__status='issued'), 'invoiced').pk}/",
+        f"/uren/{_first(TimeEntry.objects.filter(invoice__status='draft'), 'on a draft').pk}/",
         "/rapporten/jaaroverzicht/",
         # The VAT return (SPEC.md M21, part 4): a year of the history, with
         # imports and lines without a rate under "Niet meegeteld".

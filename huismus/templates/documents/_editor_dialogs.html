@@ -43,6 +43,7 @@ issued or sent (documents.views._after_save).{% endcomment %}
             <span class="dialog-icon"><svg class="i i-lg" aria-hidden="true"><use href="#trash"></use></svg></span>
             <h2 id="verwijderen-titel">{% if is_quote %}{% translate "Concept-offerte verwijderen?" %}{% elif document.kind == "credit_note" %}{% translate "Concept-creditnota verwijderen?" %}{% else %}{% translate "Conceptfactuur verwijderen?" %}{% endif %}</h2>
             <p class="muted">{% translate "Huismus verwijdert het concept met al zijn regels. Dat kun je niet ongedaan maken. Het had nog geen nummer, dus je nummering krijgt geen gat." %}</p>
+            {% if document.pk and document.time_entries.exists %}<p class="muted">{% translate "De uren komen weer vrij op Uren." %}</p>{% endif %}
         </div>
         <div class="dialog-foot"><button type="button" class="btn btn-secondary" command="close" commandfor="verwijderen">{% translate "Nog niet" %}</button><button type="submit" class="btn btn-danger">{% translate "Verwijderen" %}</button></div>
     </form>

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-28 15:13+0100\n"
+"POT-Creation-Date: 2026-11-28 15:41+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2250,8 +2250,8 @@ msgid "Importeren uit andere pakketten en uit Excel"
 msgstr ""
 
 msgid ""
-"Met het sjabloon, en een handleiding voor Rompslomp, Tellow, e-Boekhouden."
-"nl, Jortt en Excel."
+"Met het sjabloon, en een handleiding voor Rompslomp, Tellow, e-"
+"Boekhouden.nl, Jortt en Excel."
 msgstr ""
 
 msgid "Auditfile voor je boekhouder"
@@ -2548,7 +2548,6 @@ msgstr ""
 msgid "Laag tarief"
 msgstr ""
 
-#, python-format
 msgid "0% of niet bij jou belast"
 msgstr ""
 
@@ -2597,7 +2596,6 @@ msgstr ""
 msgid "Omzet 1b laag tarief"
 msgstr ""
 
-#, python-format
 msgid "Omzet 1e 0% of niet bij jou belast"
 msgstr ""
 
@@ -3261,7 +3259,6 @@ msgstr ""
 msgid "Kies het btw-tarief."
 msgstr ""
 
-#, python-format
 msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
 msgstr ""
 
@@ -3335,7 +3332,6 @@ msgstr ""
 msgid "Bonnetje verwijderd."
 msgstr ""
 
-#, python-format
 msgid "0% of geen btw"
 msgstr ""
 
@@ -3552,6 +3548,14 @@ msgstr ""
 msgid "Een tarief kan niet negatief zijn."
 msgstr ""
 
+#, fuzzy, python-format
+#| msgid "open %(open)s"
+msgid "Uren %(month)s"
+msgstr "open %(open)s"
+
+msgid "uur"
+msgstr ""
+
 #, python-format
 msgid "%(hours)s uur"
 msgid_plural "%(hours)s uur"
@@ -3570,6 +3574,21 @@ msgstr ""
 
 msgid "Uren verwijderd."
 msgstr ""
+
+msgid "Deze uren staan al op een factuur."
+msgstr ""
+
+#, python-format
+msgid "Conceptfactuur gemaakt met %(hours)s."
+msgstr ""
+
+msgid "Een regel per omschrijving"
+msgstr ""
+
+#, fuzzy
+#| msgid "regelbedrag"
+msgid "Een regel per dag"
+msgstr "regelbedrag"
 
 msgid "de klanten"
 msgstr ""
@@ -3903,9 +3922,6 @@ msgstr ""
 msgid "Advies"
 msgstr ""
 
-msgid "uur"
-msgstr ""
-
 msgid "Voorbeeldweg 1"
 msgstr ""
 
@@ -4210,7 +4226,6 @@ msgstr ""
 msgid "Leveringen/diensten belast met laag tarief"
 msgstr ""
 
-#, python-format
 msgid "Leveringen/diensten belast met 0% of niet bij u belast"
 msgstr ""
 
@@ -5884,6 +5899,9 @@ msgid ""
 "maken. Het had nog geen nummer, dus je nummering krijgt geen gat."
 msgstr ""
 
+msgid "De uren komen weer vrij op Uren."
+msgstr ""
+
 msgid "Verwijderen"
 msgstr ""
 
@@ -7080,10 +7098,72 @@ msgstr ""
 msgid "Uren wijzigen"
 msgstr ""
 
+#, fuzzy, python-format
+#| msgid "Betaling geboekt op factuur %(number)s."
+msgid "Deze uren staan op factuur %(number)s."
+msgstr "Betaling geboekt op factuur %(number)s."
+
+#, fuzzy
+#| msgid "Andere factuur"
+msgid "Open de factuur"
+msgstr "Andere factuur"
+
+msgid ""
+"Deze uren staan op een conceptfactuur. Verwijder het concept om ze te "
+"wijzigen."
+msgstr ""
+
+msgid "Open het concept"
+msgstr ""
+
 msgid "Deze uren verwijderen?"
 msgstr ""
 
 msgid "Dat kun je niet ongedaan maken."
+msgstr ""
+
+msgid "Factuur maken uit uren"
+msgstr ""
+
+#, fuzzy
+#| msgid "Bevestig of kies de factuur."
+msgid "Regels op de factuur"
+msgstr "Bevestig of kies de factuur."
+
+msgid "Tonen"
+msgstr ""
+
+#, fuzzy
+#| msgid "Andere factuur"
+msgid "Op de factuur"
+msgstr "Andere factuur"
+
+#, python-format
+msgid "Totaal: <strong>%(total)s</strong>"
+msgstr ""
+
+msgid "Bedragen zonder btw."
+msgstr ""
+
+#, python-format
+msgid "Geen uren om te factureren voor %(customer)s in %(month)s."
+msgstr ""
+
+msgid "Geen uren om te factureren."
+msgstr ""
+
+msgid ""
+"Uren zonder tarief en uren die al op een factuur staan, tellen niet mee."
+msgstr ""
+
+#, python-format
+msgid "%(hours)s zonder tarief komt niet op de factuur."
+msgstr ""
+
+#, python-format
+msgid ""
+"Op Uren is dit %(amount)s. Het verschil komt doordat de factuur de uren per "
+"regel optelt."
 msgstr ""
 
 msgid "Voeg eerst een klant toe."
@@ -7098,14 +7178,7 @@ msgstr ""
 msgid "Alle maanden"
 msgstr ""
 
-msgid "Tonen"
-msgstr ""
-
-#, python-format
-msgid "Totaal: <strong>%(total)s</strong>"
-msgstr ""
-
-msgid "Bedragen zonder btw."
+msgid "Factuur maken…"
 msgstr ""
 
 msgid "Geen tarief"
@@ -9115,8 +9188,8 @@ msgstr ""
 
 msgid ""
 "Huismus wordt gemaakt in Nederland door Arne Krijnsen. Over de maker en wat "
-"die nog meer doet, lees je op <a href=\"https://www.arnekrijnsen."
-"com\">arnekrijnsen.com</a>."
+"die nog meer doet, lees je op <a href=\"https://"
+"www.arnekrijnsen.com\">arnekrijnsen.com</a>."
 msgstr ""
 
 #~ msgid "bijschrijving"
@@ -9150,9 +9223,6 @@ msgstr ""
 
 #~ msgid "Betaling teruggedraaid. Hij staat weer bij Zelf kiezen."
 #~ msgstr "Betaling teruggedraaid. Hij staat weer bij Zelf kiezen."
-
-#~ msgid "Bevestig of kies de factuur."
-#~ msgstr "Bevestig of kies de factuur."
 
 #~ msgid "Bankafschrift inlezen"
 #~ msgstr "Bankafschrift inlezen"
