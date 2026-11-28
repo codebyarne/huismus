@@ -177,7 +177,9 @@ RECEIPT_SEPARATOR = " | "
 
 # Uren (#80): only exported, not read by the import yet (product-owner
 # agent 2026-11-27: reading them back comes with the Moneybird import of
-# hours). The amount is empty for hours without a rate.
+# hours). The amount is empty for hours without a rate. The invoice (#81)
+# is the number of the invoice the hours are on, empty while that is a
+# draft or when they are on none; exports from before #81 lack it.
 HOURS_COLUMNS = (
     Column("date", gettext_noop("datum"), required=True),
     Column("customer_number", gettext_noop("klantnummer")),
@@ -186,6 +188,7 @@ HOURS_COLUMNS = (
     Column("hours", gettext_noop("uren"), required=True),
     Column("rate", gettext_noop("tarief per uur")),
     Column("amount", gettext_noop("bedrag")),
+    Column("invoice", gettext_noop("factuur")),
 )
 
 

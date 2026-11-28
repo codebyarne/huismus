@@ -338,8 +338,9 @@ def _expenses(year):
 
 def _hours(year):
     """uren.csv (#80): every entry of the period, oldest first. The amount
-    is the entry's own (hours.entries), empty without a rate."""
-    entries = TimeEntry.objects.select_related("contact").order_by("date", "pk")
+    is the entry's own (hours.entries), empty without a rate; the invoice
+    the number of the one it is on (#81), empty on a draft or none."""
+    entries = TimeEntry.objects.select_related("contact", "invoice").order_by("date", "pk")
     if year:
         entries = entries.filter(date__year=year)
     table = [
@@ -351,6 +352,7 @@ def _hours(year):
             entry.hours,
             None if entry.rate_cents is None else Amount(entry.rate_cents),
             None if entry.amount_cents is None else Amount(entry.amount_cents),
+            entry.invoice.number if entry.invoice else "",
         ]
         for entry in entries
     ]
