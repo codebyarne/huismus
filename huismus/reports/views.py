@@ -152,6 +152,7 @@ def profit_and_loss(request):
     year = _requested_year(request)
     context = _profit_and_loss_context(year)
     context["this_year"] = timezone.localdate().year
+    context["show_icp"] = profile().shows_icp
     return render(request, "reports/profit_and_loss.html", context)
 
 
