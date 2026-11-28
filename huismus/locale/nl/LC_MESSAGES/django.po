@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-28 13:19+0100\n"
+"POT-Creation-Date: 2026-11-28 13:47+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -795,6 +795,9 @@ msgstr ""
 
 msgid "tekst bij btw verlegd"
 msgstr ""
+
+msgid "prijzen standaard inclusief btw"
+msgstr "prijzen standaard inclusief btw"
 
 msgid "waarschuw vanaf (%)"
 msgstr ""
@@ -1626,6 +1629,9 @@ msgstr ""
 msgid "laatst betaald op"
 msgstr ""
 
+msgid "prijzen incl. btw"
+msgstr "prijzen incl. btw"
+
 #, python-format
 msgid "omzet %(rate)s%%"
 msgstr ""
@@ -1663,6 +1669,9 @@ msgstr ""
 
 msgid "btw verlegd"
 msgstr ""
+
+msgid "regelbedrag"
+msgstr "regelbedrag"
 
 msgid "btw ter info"
 msgstr ""
@@ -2846,6 +2855,9 @@ msgstr ""
 
 msgid "voettekst"
 msgstr ""
+
+msgid "prijzen inclusief btw"
+msgstr "prijzen inclusief btw"
 
 msgid "subtotaal (cent)"
 msgstr ""
@@ -5021,6 +5033,16 @@ msgstr ""
 msgid "Komt onder elke factuur, offerte en creditnota met een regel “verlegd”."
 msgstr ""
 
+msgid "Prijzen"
+msgstr "Prijzen"
+
+msgid "Prijzen standaard inclusief btw"
+msgstr "Prijzen standaard inclusief btw"
+
+msgid ""
+"Voor nieuwe facturen en offertes. Per factuur kun je het nog veranderen."
+msgstr ""
+
 msgid "dagen"
 msgstr ""
 
@@ -5828,6 +5850,15 @@ msgstr ""
 msgid "Regel verwijderen"
 msgstr ""
 
+msgid "Prijs incl. btw"
+msgstr "Prijs incl. btw"
+
+msgid "Prijs"
+msgstr ""
+
+msgid "Totaal incl. btw"
+msgstr "Totaal incl. btw"
+
 #, python-format
 msgid "Herinnering voor factuur %(number)s"
 msgstr ""
@@ -5984,9 +6015,6 @@ msgstr ""
 msgid ""
 "Regels die je vaak gebruikt. In een factuur of offerte kies je een artikel "
 "en de regel staat er. Daarna pas je hem aan zoals elke regel."
-msgstr ""
-
-msgid "Prijs"
 msgstr ""
 
 msgid "Prijs zonder btw"
@@ -6323,6 +6351,12 @@ msgid "Introductietekst"
 msgstr ""
 
 msgid "Introductietekst (optioneel)"
+msgstr ""
+
+msgid "Prijzen inclusief btw"
+msgstr "Prijzen inclusief btw"
+
+msgid "Het totaal is dan precies wat je invult. Huismus rekent de btw eruit."
 msgstr ""
 
 msgid "Regel toevoegen"
@@ -7514,6 +7548,9 @@ msgstr ""
 
 msgid "Crediteert factuur"
 msgstr ""
+
+msgid "Bedrag incl. btw"
+msgstr "Bedrag incl. btw"
 
 msgid "Inloggen"
 msgstr ""
@@ -9044,39 +9081,3 @@ msgstr ""
 #~ msgid_plural "%(count)s afschrijvingen"
 #~ msgstr[0] "%(count)s afschrijving"
 #~ msgstr[1] "%(count)s afschrijvingen"
-
-msgid "prijzen inclusief btw"
-msgstr "prijzen inclusief btw"
-
-msgid "prijzen standaard inclusief btw"
-msgstr "prijzen standaard inclusief btw"
-
-msgid "prijzen incl. btw"
-msgstr "prijzen incl. btw"
-
-msgid "regelbedrag"
-msgstr "regelbedrag"
-
-msgid "Prijzen inclusief btw"
-msgstr "Prijzen inclusief btw"
-
-msgid "Het totaal is dan precies wat je invult. Huismus rekent de btw eruit."
-msgstr ""
-
-msgid "Prijs incl. btw"
-msgstr "Prijs incl. btw"
-
-msgid "Totaal incl. btw"
-msgstr "Totaal incl. btw"
-
-msgid "Bedrag incl. btw"
-msgstr "Bedrag incl. btw"
-
-msgid "Prijzen"
-msgstr "Prijzen"
-
-msgid "Prijzen standaard inclusief btw"
-msgstr "Prijzen standaard inclusief btw"
-
-msgid "Voor nieuwe facturen en offertes. Per factuur kun je het nog veranderen."
-msgstr ""
