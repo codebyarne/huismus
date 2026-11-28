@@ -371,7 +371,6 @@ def test_without_an_address_it_says_so_in_english(logged_in, sends):
     logged_in.cookies["django_language"] = "en"
     text = _post(logged_in, "versturen", email="", htmx=False).content.decode()
     assert "Enter your email address." in text
-    assert "The app&#x27;s maker can reply to you here." in text
     assert sends == []
 
 

@@ -456,8 +456,8 @@ def test_skipping_from_hulp_does_nothing(logged_in):
     assert Settings.load().feedback_status == ""
 
 
-def test_the_address_help_says_only_that_the_maker_can_answer(logged_in):
-    # Owner, 2026-11-28: keep it simple, no line about GitHub under the address.
+def test_the_address_has_no_help_text(logged_in):
+    # Owner, 2026-11-28: keep it simple, nothing under the address.
     page = logged_in.get(reverse("onboarding_done")).content.decode()
-    assert "Hierop kan de appbouwer je antwoorden." in page
-    assert "Je adres komt niet op GitHub" not in page
+    assert 'id="id_email-help"' not in page
+    assert "Hierop kan de appbouwer je antwoorden" not in page
