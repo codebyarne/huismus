@@ -80,6 +80,8 @@ _ELSEWHERE = (
     "{{ authorize_url }}",
     "{{ release.page_url }}",
     "{{ belastingdienst_url }}",
+    # The Belastingdienst's page under the mileage card (#125).
+    "{{ deduction_source }}",
 )
 
 
