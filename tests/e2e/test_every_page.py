@@ -444,6 +444,9 @@ def _problems_on(page, path, language, dutch, data):
     under_feedback = page.evaluate(UNDER_THE_FEEDBACK_BUTTON)
     if under_feedback:
         problems.append(f"onder de knop Feedback: {sorted(set(under_feedback))}")
+    overlapping = page.evaluate(CELLS_OVER_EACH_OTHER)
+    if overlapping:
+        problems.append(f"tabelcellen over elkaar: {sorted(set(overlapping))}")
     return problems
 
 
@@ -508,6 +511,43 @@ def test_the_tab_check_reports_a_row_that_cuts_tabs_off_and_not_one_that_breaks(
 # below it), and the button lay on "Opslaan": you couldn't click it (#280).
 # Nothing you can press in the action bar is under the button, at the top of
 # the page and at its end.
+# Two cells of one row on the same spot: stacked on a phone, the price of an
+# article lay over Bewerken, because both took the right-hand column
+# (BUGS-BY-HAND.md, 2026-11-28).
+CELLS_OVER_EACH_OTHER = """() => {
+    const problems = [];
+    for (const row of document.querySelectorAll('.table tr')) {
+        const boxes = [...row.children]
+            .map(cell => [cell, cell.getBoundingClientRect()])
+            .filter(([, box]) => box.width > 0 && box.height > 0);
+        for (let i = 0; i < boxes.length; i++) {
+            for (let j = i + 1; j < boxes.length; j++) {
+                const [a, b] = [boxes[i][1], boxes[j][1]];
+                // 1px slack: positions are fractions and round differently.
+                const across = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+                const down = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+                if (across > 1 && down > 1) {
+                    problems.push(boxes[i][0].textContent.trim().slice(0, 30));
+                }
+            }
+        }
+    }
+    return problems;
+}"""
+
+
+def test_the_cell_check_reports_two_cells_on_one_spot_and_only_that(page):
+    grid = "display: grid; grid-template-columns: 100px 100px"
+    page.set_content(
+        '<table class="table"><tbody>'
+        f'<tr style="{grid}"><td>apart</td><td>ook apart</td></tr>'
+        f'<tr style="{grid}"><td style="grid-column: 2; grid-row: 1">erover</td>'
+        '<td style="grid-column: 2; grid-row: 1">eronder</td></tr>'
+        "</tbody></table>"
+    )
+    assert page.evaluate(CELLS_OVER_EACH_OTHER) == ["erover"]
+
+
 UNDER_THE_FEEDBACK_BUTTON = """async () => {
     const button = document.getElementById('feedback-knop');
     if (!button || !button.checkVisibility()) return [];
