@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load i18n money %}
+
+{% block title %}{% translate "Opgaaf ICP" %}{% if not report.kor_on %} {{ period_name }}{% endif %} — Huismus{% endblock %}
+
+{% block content %}
+{% comment %}The summary for the ICP return (issue #168; docs/belastingregels.md, "Opgaaf ICP").{% endcomment %}
+<div class="page-head">
+    <div class="titles"><span class="small muted">{% translate "Rapporten" %}</span><h1>{% translate "Opgaaf ICP" %}{% if not report.kor_on %} {{ period_name }}{% endif %}</h1></div>
+    {% if not report.kor_on %}<div class="actions">
+        <nav class="year-nav" aria-label="{% translate 'Soort periode' %}">
+            {% for choice, label in kinds %}<a href="?periode={{ choice }}"{% if choice.kind == period.kind %} aria-current="page"{% endif %}>{{ label }}</a>{% endfor %}
+        </nav>
+        <nav class="year-nav" aria-label="{% translate 'Periode' %}">
+            <a href="?periode={{ period.previous }}" aria-label="{% translate 'Vorige periode' %}"><svg class="i i-sm" aria-hidden="true"><use href="#chevron-left"></use></svg></a>
+            <a href="?periode={{ period }}" aria-current="page">{{ period_name }}</a>
+            {% if period.next %}<a href="?periode={{ period.next }}" aria-label="{% translate 'Volgende periode' %}"><svg class="i i-sm" aria-hidden="true"><use href="#chevron-right"></use></svg></a>{% endif %}
+        </nav>
+        <a class="btn btn-secondary" href="{% url 'reports:icp_csv' %}?periode={{ period }}" hx-boost="false" data-file download><svg class="i" aria-hidden="true"><use href="#download"></use></svg>{% translate "CSV downloaden" %}</a>
+    </div>{% endif %}
+</div>
+
+{% include "reports/_tabs.html" with current="icp" %}
+
+{% if report.kor_on %}
+<p class="hint-banner is-info" id="kor-aan" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{{ kor_note }} <a href="{{ source }}" target="_blank" rel="noopener">{% translate "Opgaaf ICP bij de Belastingdienst" %}</a></span></p>
+{% else %}
+<p class="muted" style="margin-bottom:var(--s-4)">{% translate "Per btw-nummer van je klant: wat je factureerde met btw verlegd aan klanten in een ander EU-land." %}</p>
+
+{% if report.without_vat_number %}
+<a class="hint-banner is-warn" href="#btw-nummer-ontbreekt" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><span>{% blocktranslate count count=report.without_vat_number|length %}{{ count }} factuur zonder btw-nummer van de klant.{% plural %}{{ count }} facturen zonder btw-nummer van de klant.{% endblocktranslate %}</span><span class="spacer"></span><span>{% translate "Bekijk welke" %} →</span></a>
+{% endif %}
+
+{% if report.is_empty %}
+<p class="muted" id="leeg" style="margin-bottom:var(--s-4)">{% translate "Geen diensten met btw verlegd aan klanten in een ander EU-land in deze periode. Dan hoef je over deze periode geen opgaaf ICP te doen." %}</p>
+{% else %}
+<section class="card" style="margin-bottom:var(--s-5)">
+    <div class="table-wrap">
+        <table class="table" id="per-btw-nummer">
+            <thead><tr><th>{% translate "Btw-nummer" %}</th><th class="r">{% translate "Bedrag" %}</th></tr></thead>
+            <tbody>
+                {% for customer in report.customers %}
+                <tr><td style="overflow-wrap:anywhere"><span class="num">{{ customer.vat_number }}</span><br><span class="muted small">{{ customer.name }} · {{ customer.country }}</span></td><td class="r amount">{{ customer.amount_cents|money }}</td></tr>
+                {% endfor %}
+                {% if report.without_vat_number %}
+                <tr><td><a href="#btw-nummer-ontbreekt">{% translate "Btw-nummer ontbreekt" %}</a></td><td class="r amount">{{ report.without_vat_number_cents|money }}</td></tr>
+                {% endif %}
+            </tbody>
+            <tfoot><tr><td>{% translate "Totaal" %}</td><td class="r amount">{{ report.total_cents|money }}</td></tr></tfoot>
+        </table>
+    </div>
+</section>
+{% endif %}
+
+<p class="muted small" style="margin-bottom:var(--s-6)">{% translate "Het totaal is gelijk aan rubriek 3b van je btw-aangifte over dezelfde periode. Een dienst telt op de leverdatum, als je die invulde, anders op de factuurdatum. Een creditnota telt af." %} <a href="{% url 'reports:vat_return' %}?periode={{ period }}">{% translate "Btw-aangifte" %} →</a> · <a href="{{ source }}" target="_blank" rel="noopener">{% translate "Opgaaf ICP bij de Belastingdienst" %}</a></p>
+
+{% if report.without_vat_number %}
+<section class="card" id="btw-nummer-ontbreekt" style="margin-bottom:var(--s-5);scroll-margin-top:72px">
+    <div class="card-pad"><h2>{% translate "Btw-nummer ontbreekt" %}</h2><p class="muted small">{% translate "Op deze facturen staat geen btw-nummer van de klant. Ze tellen mee in het totaal, maar de opgaaf vraagt per klant het btw-nummer." %}</p></div>
+    <div class="table-wrap"><table class="table">
+        <thead><tr><th>{% translate "Factuur" %}</th><th class="r">{% translate "Bedrag" %}</th></tr></thead>
+        <tbody>{% for item in report.without_vat_number %}<tr><td style="overflow-wrap:anywhere"><a href="{% url 'documents:edit' item.document.pk %}">{{ item.document.number }}</a><br><span class="muted small">{{ item.document.issue_date|date:"SHORT_DATE_FORMAT" }}{% if item.document.contact_snapshot.display_name %} · {{ item.document.contact_snapshot.display_name }}{% endif %}</span></td><td class="r amount">{{ item.amount_cents|money }}</td></tr>{% endfor %}</tbody>
+    </table></div>
+</section>
+{% endif %}
+{% endif %}
+{% endblock %}

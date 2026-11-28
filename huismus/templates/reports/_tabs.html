@@ -2,4 +2,5 @@
 <nav class="tabs" aria-label="{% translate 'Rapporten' %}" style="margin-bottom:var(--s-5)">
     <a class="tab" href="{% url 'reports:year_overview' %}"{% if current == "year_overview" %} aria-current="page"{% endif %}>{% translate "Jaaroverzicht" %}</a>
     <a class="tab" href="{% url 'reports:vat_return' %}"{% if current == "vat_return" %} aria-current="page"{% endif %}>{% translate "Btw-aangifte" %}</a>
+    {% if show_icp %}<a class="tab" href="{% url 'reports:icp' %}"{% if current == "icp" %} aria-current="page"{% endif %}>{% translate "Opgaaf ICP" %}</a>{% endif %}
 </nav>

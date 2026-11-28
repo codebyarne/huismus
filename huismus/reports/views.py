@@ -10,11 +10,27 @@ from django.utils.translation import gettext_lazy as _
 from huismus.business.kor_limit import kor_limit_status
 from huismus.business.models import Settings
 from huismus.core.csv_files import Amount, csv_response
+from huismus.core.profile import profile
 from huismus.documents.models import Document
 from huismus.expenses.models import Expense
 
+from .icp import compute_icp
+from .icp_csv import header as icp_header
+from .icp_csv import rows as icp_rows
 from .periods import MONTH, QUARTER, YEAR, Period
 from .vat_return import EXEMPT_NOTE, KOR_NOTE, NOT_COUNTED_TITLES, compute_vat_return
+
+# What the ICP page says instead of figures (huismus-intern/besluiten.md,
+# 2026-11-28): only what Huismus does, nothing about whether a return is
+# due; the source for that is missing (docs/belastingregels.md).
+KOR_NOTE_ICP = _(
+    "De KOR staat aan. Dan telt Huismus geen btw, ook geen btw verlegd, dus hier staan geen "
+    "bedragen. Of je een opgaaf ICP doet, lees je bij de Belastingdienst."
+)
+EXEMPT_NOTE_ICP = _(
+    "Je rekent geen btw. Dan telt Huismus geen btw, ook geen btw verlegd, dus hier staan geen "
+    "bedragen. Of je een opgaaf ICP doet, lees je bij de Belastingdienst."
+)
 from .vat_return_csv import header as vat_return_header
 from .vat_return_csv import rows as vat_return_rows
 from .year_overview import CHART_STEPS, chart_step, compute_year_overview
@@ -77,6 +93,7 @@ def year_overview(request):
             "invoice_count": invoices.filter(kind="invoice").count(),
             "credit_note_count": invoices.filter(kind="credit_note").count(),
             "expense_count": Expense.objects.filter(date__year=year).count(),
+            "show_icp": profile().shows_icp,
         },
     )
 
@@ -165,6 +182,7 @@ def vat_return(request):
             "period_name": _period_name(period),
             "kor_note": EXEMPT_NOTE if Settings.load().vat_exempt else KOR_NOTE,
             "titles": NOT_COUNTED_TITLES,
+            "show_icp": profile().shows_icp,
             "kinds": [
                 (period.as_kind(QUARTER), _("Kwartaal")),
                 (period.as_kind(MONTH), _("Maand")),
@@ -183,3 +201,54 @@ def vat_return_csv(request):
     if report.kor_on:
         return redirect(f"{reverse('reports:vat_return')}?periode={period}")
     return csv_response(f"btw-aangifte-{period}.csv", vat_return_header(), vat_return_rows(report))
+
+
+# The source of the ICP page: where the user checks their own case
+# (docs/belastingregels.md, "Opgaaf ICP").
+ICP_SOURCE = (
+    "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/"
+    "btw/zakendoen_met_het_buitenland/goederen_en_diensten_naar_andere_eu_landen/"
+    "opgaaf_icp/opgaaf_icp"
+)
+
+
+def _icp_period(request, today) -> Period:
+    """A quarter or a month: the services may go "per maand, per kwartaal
+    of per jaar", but a year needs a licence, so Huismus offers no year
+    (huismus-intern/product/profiel-en-functies.md, row Opgaaf ICP)."""
+    period = Period.parse(request.GET.get("periode"), today=today)
+    return period.as_kind(QUARTER) if period.kind == YEAR else period
+
+
+@login_required
+def icp(request):
+    """The summary for the ICP return (issue #168)."""
+    period = _icp_period(request, timezone.localdate())
+    report = compute_icp(period)
+    return render(
+        request,
+        "reports/icp.html",
+        {
+            "report": report,
+            "period": period,
+            "period_name": _period_name(period),
+            "kor_note": EXEMPT_NOTE_ICP if Settings.load().vat_exempt else KOR_NOTE_ICP,
+            "source": ICP_SOURCE,
+            "show_icp": profile().shows_icp,
+            "kinds": [
+                (period.as_kind(QUARTER), _("Kwartaal")),
+                (period.as_kind(MONTH), _("Maand")),
+            ],
+        },
+    )
+
+
+@login_required
+def icp_csv(request):
+    """The page as a CSV. With the KOR on the page has no figures and no
+    button; this address then leads back to it."""
+    period = _icp_period(request, timezone.localdate())
+    report = compute_icp(period)
+    if report.kor_on:
+        return redirect(f"{reverse('reports:icp')}?periode={period}")
+    return csv_response(f"opgaaf-icp-{period}.csv", icp_header(), icp_rows(report))
