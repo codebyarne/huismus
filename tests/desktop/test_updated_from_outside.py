@@ -39,9 +39,7 @@ def new_migrations():
         yield
 
 
-def test_a_version_installed_from_outside_backs_up_before_its_migrations(
-    desktop, new_migrations
-):
+def test_a_version_installed_from_outside_backs_up_before_its_migrations(desktop, new_migrations):
     updates.update_status(seen_version="1.3.0")
 
     updates.backup_before_migrations()
