@@ -28,6 +28,19 @@ Wil je dit voor elke nieuwe factuur en offerte, zet dan bij **Instellingen →
 Btw** het vinkje **Prijzen standaard inclusief btw** aan. Per factuur kun je
 het nog veranderen. Je ziet deze keuze alleen als je btw rekent.
 
+## Artikelen
+
+Gebruik je dezelfde regel vaak, zoals een uur advies of een workshop? Bewaar
+hem dan als artikel: bij **Facturen** klik je op **Artikelen**. Je vult een
+omschrijving, eenheid, prijs en btw-tarief in. De prijs is zonder btw.
+
+In een factuur of offerte kies je daarna bij **Artikel toevoegen** een
+artikel, en de regel staat er, met aantal 1. Daarna is het een gewone regel:
+je past hem aan zoals elke andere. Wijzig of verwijder je later een artikel,
+dan blijven je facturen en offertes zoals ze zijn.
+
+Met de KOR, of zonder btw, vraagt Huismus bij een artikel geen btw-tarief.
+
 ## Uitgeven
 
 Klaar? Klik op **Uitgeven…**. Je ziet eerst een samenvatting: de klant, het

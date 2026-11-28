@@ -82,6 +82,9 @@ One table for quotes, invoices and credit notes.
 ### DocumentLine
 `document` FK, `position`, `description`, `quantity` (Decimal, 3 dp, optional: empty = fixed price, counts as 1), `unit`, `unit_price_cents`, `tax_rate_bp` (0 for KOR; which rates a line may have: `huismus/documents/vat.py`, invariant 6), `reverse_charge` ("verlegd": the line has 0% and the PDF says so, M18), `line_total_cents`.
 
+### Article
+`description`, `unit`, `unit_price_cents` (without VAT), `tax_rate_bp`, `reverse_charge`: a line someone uses often, picked in the editor (M32). A line copies it and keeps no link to it.
+
 ### DocumentVatRow
 `document` FK, `rate_bp`, `reverse_charge`, `revenue_cents`, `tax_cents`: the revenue (without VAT) and VAT of one rate on an issued invoice or credit note, reverse charge apart, as on its PDF (M21). Stored once, when the document is issued, from the one totals function (invariant 3); positive on a credit note, like its totals. Immutable like the lines (invariant 1). None for an import whose stated totals are not those of its lines.
 
@@ -470,6 +473,15 @@ From user feedback; accepted by the product-owner agent and the way of computing
 - **Export and import of Huismus's own format.** `facturen.csv` and `offertes.csv` get a last column "prijzen incl. btw" (yes/no) that the import reads (empty or missing is no); see M19 for `regels.csv`.
 - **Not in this milestone:** importing Moneybird's prices including VAT as such (they are still converted through the UBL, section 7), items (#167) with a price including VAT, and the e-invoice (#169).
 - **Every platform:** the same in Docker, the Mac app and the Windows app.
+
+### M32 — Articles: saved lines to pick in an invoice or quote
+Issue #167; plan and six questions decided by the product-owner agent on 2026-11-28 (`huismus-intern/besluiten.md`).
+- **Model** (`documents.Article`): description, unit, unit price in cents, VAT rate in basis points and reverse charge, the same fields and checks as a line (`ArticleForm`). The price is without VAT (`huismus-intern/besluiten.md`, 2026-11-28, prices including VAT, point 7). Sorted alphabetically, capitals or not.
+- **A copy, never a link.** A picked article becomes an ordinary line (`documents.articles.line_values`): description, quantity 1, unit, price, and the VAT by the rule of a copied line (`documents.vat.vat_for_copy`), else the document's default rate when the document doesn't offer that choice. Changing or deleting an article never touches a document, so deleting is always allowed.
+- **Screens:** Facturen gets a ghost button "Artikelen" once there are invoices or articles (not in the empty state, not in the menu). The page Artikelen works like Categorieën: the list, a form under it to add, Bewerken fills that form, delete after a confirmation. With the KOR or no VAT there is no VAT field and no VAT column; saving keeps the stored rate, so it is back when the KOR stops. The editor of an invoice or quote (not a credit note) gets "Artikel toevoegen" beside "Regel toevoegen" once there is an article: the customer picker's combobox. Picking fills the last line if it is still empty, else a new one; the values come from the server, JS copies them and computes nothing. Without JS a button beside the picker shows the editor again with the line added, unsaved.
+- **Every platform:** the same in Docker, the Mac app and the Windows app; nothing runs in the background. No new axis in `profile()`, nothing in the feedback.
+- **Not in this milestone** (own issues): importing Moneybird's products, articles through the AI connection, "Bewaar als artikel" from a line, articles in a full export. Not in the export for the accountant (an article is no record); they are in the backup.
+*Done when:* tests, written first, cover the line values (VAT with and without the KOR, reverse charge), filling an empty last line, adding without JS (nothing saved), an issued invoice that stays the same after its article is changed and deleted, the page with and without VAT, and a browser test that picks an article and gets the server's totals.
 
 ## 7. Moneybird import (M5)
 
