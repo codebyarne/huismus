@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% comment %}Instellingen › Op je telefoon, desktop app only (issue #143,
+core.phone_views; texts: huismus-intern/besluiten.md, 2026-11-28).{% endcomment %}
+
+{% block title %}{% translate "Op je telefoon" %} — {% translate "Instellingen" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <a class="back" href="{% url 'business:overview' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Instellingen" %}</a>
+        <h1>{% translate "Op je telefoon" %}</h1>
+    </div>
+</div>
+
+{% if no_network %}
+<div class="flash flash-warning" role="status" id="geen-netwerk"><svg class="i" aria-hidden="true"><use href="#alert"></use></svg><div class="flash-body small">{% translate "Je laptop zit nu niet op een netwerk waar je telefoon hem kan vinden. Verbind je laptop met je wifi, dan probeert Huismus het vanzelf opnieuw." %}</div></div>
+{% endif %}
+
+{% if qr %}
+<section class="card settings-section" id="koppelcode">
+    <div class="card-pad stack" style="gap:var(--s-3)">
+        <h2>{% translate "Scan de code" %}</h2>
+        <p>{% translate "Scan de code met de camera van je telefoon. Die moet op hetzelfde wifi-netwerk zitten als je laptop." %}</p>
+        {% comment %}Always dark on white with a white edge, also in the dark theme: scanners don't read an inverted code (PO).{% endcomment %}
+        <div role="img" aria-label="{% translate 'QR-code om je telefoon te koppelen' %}" style="background:#fff;padding:var(--s-2);border-radius:var(--r-2);align-self:flex-start;line-height:0">{{ qr|safe }}</div>
+        <p class="small">{% translate "Adres" %}: <code>{{ link_address }}</code></p>
+        {% include "business/phones_status.html" with state="waiting" telefoons=count %}
+        <p class="small muted">{% translate "Vraagt je computer of Huismus verbindingen mag ontvangen? Kies Toestaan." %}</p>
+        <p class="small muted">{% translate "Werkt het later niet op je telefoon? Dan staat Huismus op je laptop dicht, of zit je telefoon op een ander wifi-netwerk." %}</p>
+    </div>
+</section>
+{% elif not devices %}
+<section class="card settings-section" id="uit">
+    <form method="post" class="card-pad stack" style="gap:var(--s-3)">
+        {% csrf_token %}
+        <p>{% translate "Open Huismus op je telefoon, zolang je laptop open staat en je telefoon op hetzelfde wifi-netwerk zit. Je hoeft niet in te loggen of iets over te typen." %}</p>
+        <div class="row" style="flex-wrap:wrap"><button type="submit" class="btn btn-primary" name="action" value="link">{% translate "Koppelen" %}</button><span class="spacer"></span><a href="{% url 'help:page' 'desktop-app' %}#op-je-telefoon">{% translate "Zo werkt het" %} →</a></div>
+    </form>
+</section>
+{% endif %}
+
+{% if devices %}
+<section class="card settings-section" id="telefoons">
+    <div class="card-pad stack" style="gap:var(--s-3)">
+        <h2>{% translate "Gekoppelde telefoons" %}</h2>
+        {% if address and not qr %}<p class="small muted">{% translate "Adres" %}: <code>{{ address }}</code></p>{% endif %}
+        {% for device in devices %}
+        <form method="post" class="row" style="flex-wrap:wrap;justify-content:space-between;gap:var(--s-2)">
+            {% csrf_token %}
+            <input type="hidden" name="device" value="{{ device.id }}">
+            <div><strong>{{ device.name }}</strong><br><span class="small muted">{% blocktranslate with linked=device.linked_at|date:"j F Y" seen=device.seen_at|date:"j F Y" %}Gekoppeld op {{ linked }}, laatst gebruikt op {{ seen }}{% endblocktranslate %}</span></div>
+            <button type="submit" class="btn btn-secondary" name="action" value="unpair">{% translate "Ontkoppelen" %}</button>
+        </form>
+        {% endfor %}
+        <form method="post" class="row" style="flex-wrap:wrap">
+            {% csrf_token %}
+            {% if not qr %}<button type="submit" class="btn btn-secondary" name="action" value="link">{% translate "Nog een telefoon koppelen" %}</button>{% endif %}
+            <button type="submit" class="btn btn-ghost" name="action" value="off">{% translate "Koppelen uitzetten" %}</button>
+        </form>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

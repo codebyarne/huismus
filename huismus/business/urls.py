@@ -9,6 +9,7 @@ from huismus.core import (
     cloud_views,
     export_views,
     password_views,
+    phone_views,
     update_views,
 )
 from huismus.expenses import inbox_views, reading_views
@@ -36,6 +37,8 @@ urlpatterns = [
     path("updates/bijwerken/", update_views.install, name="updates_install"),
     path("updates/zoeken/", update_views.check, name="updates_check"),
     path("wachtwoord/", password_views.page, name="password"),
+    path("telefoon/", phone_views.page, name="phones"),
+    path("telefoon/status/", phone_views.status, name="phones_status"),
     path("ai-assistenten/", assistant_views.page, name="assistants"),
     path("weergave/", appearance_views.page, name="appearance"),
     path("<slug:slug>/", views.topic_page, name="topic"),

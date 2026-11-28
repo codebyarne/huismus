@@ -174,3 +174,14 @@ def test_a_phone_is_named_by_its_kind_only(agent, name):
 )
 def test_only_a_home_or_office_network_counts(address, private):
     assert phones.is_home_network(address) is private
+
+
+def test_the_port_is_kept_also_after_turning_off():
+    assert phones.saved_port() is None
+    phones.save_port(8767)
+    _paired()
+
+    phones.turn_off()
+
+    assert phones.saved_port() == 8767
+    assert not phones.is_on()

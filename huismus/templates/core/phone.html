@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% comment %}What a phone over Wi-Fi sees when Huismus can't show it the page
+(issue #143, core.desktop.phone_page). Like the login page: no menu, short,
+works without JS. Texts: huismus-intern/besluiten.md, 2026-11-28.{% endcomment %}
+
+{% block title %}Huismus{% endblock %}
+
+{% block body %}
+<body>
+{% include "icons.svg" %}
+<main class="login">
+    <div class="card login-card">
+        <div class="login-brand">
+            <svg class="mark" width="64" height="64" aria-hidden="true"><use href="#mus"></use></svg>
+            <h1>Huismus</h1>
+        </div>
+        <p id="telefoon-melding">{% if state == "code_invalid" %}{% translate "Deze code werkt niet meer. Klik op je laptop opnieuw op Koppelen." %}{% elif state == "laptop_only" %}{% translate "Dit kan alleen in Huismus op je laptop." %}{% else %}{% translate "Deze telefoon is niet gekoppeld. Koppel hem in Huismus op je laptop, bij Instellingen › Op je telefoon." %}{% endif %}</p>
+        {% if state == "laptop_only" %}
+        <p><a class="btn btn-secondary" href="/">{% translate "Naar het overzicht" %}</a></p>
+        {% endif %}
+    </div>
+</main>
+</body>
+{% endblock %}

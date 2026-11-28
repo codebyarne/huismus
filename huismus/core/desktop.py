@@ -22,9 +22,35 @@ import secrets
 from django.conf import settings
 from django.contrib.auth import get_user_model, login
 from django.http import HttpResponseForbidden, HttpResponseRedirect
+from django.shortcuts import render
 from django.utils.translation import gettext
 
+from . import phone_server, phones
+from .phone_server import PHONE_ENVIRON
+
 START_PATH = "/desktop/start/"
+PAIR_PATH = "/telefoon/koppelen/"
+PHONE_COOKIE = "huismus_phone"
+# Browsers keep a cookie at most 400 days; it moves along with use, and a
+# phone unused for 90 days must link again (core.phones).
+PHONE_COOKIE_AGE = 400 * 24 * 60 * 60
+PHONE_EXACT = {"/", "/favicon.ico", "/bijgewerkt/gezien/", "/vertel/", "/feedback/"}
+PHONE_PATHS = (
+    "/login/",
+    "/logout/",
+    "/i18n/",
+    "/data/",
+    "/static/",
+    "/contacten/",
+    "/bank/",
+    "/facturen/",
+    "/offertes/",
+    "/uitgaven/",
+    "/uren/",
+    "/kilometers/",
+    "/rapporten/",
+    "/hulp/",
+)
 MCP_PATH = "/mcp"
 COOKIE = "huismus_window"
 # Created on the first start; the name is never shown in the app.
@@ -39,9 +65,19 @@ class WindowTokenMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
+        if not settings.DESKTOP:
+            return self.get_response(request)
+        # A linked phone over Wi-Fi (issue #143): its own cookie, never the
+        # window's, and only the pages in PHONE_PATHS.
+        if request.META.get(PHONE_ENVIRON):
+            return self._phone(request)
+        # The window's server listens on 127.0.0.1 only; the Wi-Fi address
+        # in ALLOWED_HOSTS (core.phone_server) counts only on its own listener.
+        if phone_server.is_wifi_host(request.get_host()):
+            return HttpResponseForbidden()
         # The AI connection has its own key instead (assistants.views); only
         # that exact address, /mcp/ and the rest still need the window.
-        if not settings.DESKTOP or request.path == MCP_PATH:
+        if request.path == MCP_PATH:
             return self.get_response(request)
         if request.path == START_PATH and _is_token(request.GET.get("token")):
             response = HttpResponseRedirect("/")
@@ -60,6 +96,49 @@ class WindowTokenMiddleware:
         # Also after the session ran out, not only at the start.
         _sign_in_without_password(request)
         return self.get_response(request)
+
+    def _phone(self, request):
+        if request.path == PAIR_PATH:
+            # The view checks the code (core.phone_views).
+            return self.get_response(request)
+        device = phones.device_for(request.COOKIES.get(PHONE_COOKIE))
+        if device is None:
+            return phone_page(request, "not_linked")
+        if not phone_may_open(request.path):
+            return phone_page(request, "laptop_only")
+        request.phone = device
+        _sign_in_without_password(request)
+        response = self.get_response(request)
+        if device["refreshed"]:
+            set_phone_cookie(response, request.COOKIES[PHONE_COOKIE])
+        return response
+
+
+def is_phone(request) -> bool:
+    """A request from a linked phone over Wi-Fi (core.phone_server)."""
+    return bool(request.META.get(PHONE_ENVIRON))
+
+
+def phone_may_open(path: str) -> bool:
+    """Only what a phone needs to work in the administration. All of
+    Instellingen (secrets, backups, updates, linking), importing and the
+    first start stay in the window, so a copied cookie gives no more than
+    that (review-veiligheid and PO, 2026-11-28). A new top-level address
+    needs a choice here: tests/core/test_phone_access.py checks it."""
+    return path in PHONE_EXACT or path.startswith(PHONE_PATHS)
+
+
+def set_phone_cookie(response, token):
+    # Lax: the phone opens the link from its camera app, another origin.
+    # Not Secure: plain HTTP on the Wi-Fi (huismus-intern/besluiten.md).
+    response.set_cookie(
+        PHONE_COOKIE, token, max_age=PHONE_COOKIE_AGE, httponly=True, samesite="Lax"
+    )
+
+
+def phone_page(request, state, status=403):
+    """The phone's own short pages, in plain words (PO, 2026-11-28)."""
+    return render(request, "core/phone.html", {"state": state}, status=status)
 
 
 def has_no_password(user) -> bool:
@@ -98,3 +177,9 @@ def _sign_in_without_password(request):
     # Without a backend argument: Django takes the one in the settings, and a
     # session naming another one counts as signed out on the next request.
     login(request, user)
+
+
+def sign_in_phone(request):
+    """A phone that just linked: signed in as the window would be, so
+    with a password it gets the login page (PO, 2026-11-28)."""
+    _sign_in_without_password(request)

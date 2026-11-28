@@ -141,12 +141,16 @@ def device_for(token, now=None) -> dict | None:
         data = _load()
         changed = _drop_unused(data, now)
         found = next((d for d in data["devices"] if _matches(token, d["hash"])), None)
+        refreshed = False
         if found and now - datetime.fromisoformat(found["last_seen"]) >= LAST_SEEN_STEP:
             found["last_seen"] = now.isoformat()
-            changed = True
+            changed = refreshed = True
         if changed:
             _save(data)
-    return dict(found) if found else None
+    if found is None:
+        return None
+    # refreshed: the cookie can move along too (core.desktop).
+    return {key: value for key, value in found.items() if key != "hash"} | {"refreshed": refreshed}
 
 
 def devices(now=None) -> list[dict]:
@@ -170,9 +174,28 @@ def unpair(device_id: str) -> None:
 
 def turn_off() -> None:
     """Every link and the waiting code gone: linking again means scanning
-    again (PO, 2026-11-28)."""
+    again (PO, 2026-11-28). The port stays, see saved_port."""
     with _lock:
-        _path().unlink(missing_ok=True)
+        port = _load().get("port")
+        if port:
+            _save({"code": None, "devices": [], "port": port})
+        else:
+            _path().unlink(missing_ok=True)
+
+
+def saved_port() -> int | None:
+    """The port Huismus listened on last time, tried first the next time,
+    so a bookmark on the phone breaks as little as possible (PO, 2026-11-28)."""
+    port = _load().get("port")
+    return port if isinstance(port, int) and 0 < port < 65536 else None
+
+
+def save_port(port: int) -> None:
+    with _lock:
+        data = _load()
+        if data.get("port") != port:
+            data["port"] = port
+            _save(data)
 
 
 def phone_name(user_agent: str):
