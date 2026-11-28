@@ -168,13 +168,12 @@ def undo_reopen(document: Document) -> Document:
         # document reopened before rows were kept gets them now, from what
         # it was issued with. Still a draft here, so the triggers allow it.
         if not document.vat_rows.exists():
-            # The rows of what it was issued with, not of the edited draft.
-            document.prices_include_vat = fields["prices_include_vat"]
             store_vat_rows(
                 document,
                 restored,
                 subtotal_cents=fields["subtotal_cents"],
                 tax_cents=fields["tax_cents"],
+                prices_include_vat=fields["prices_include_vat"],
             )
         Document.objects.filter(pk=document.pk).update(
             **fields,

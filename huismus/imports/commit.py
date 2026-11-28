@@ -336,6 +336,9 @@ def import_sales_invoices(
                 document.lines.order_by("position"),
                 subtotal_cents=document.subtotal_cents,
                 tax_cents=document.tax_cents,
+                # Moneybird's prices are always converted to without VAT
+                # (SPEC.md section 7).
+                prices_include_vat=False,
             )
             document.status = "issued"
             document.save()

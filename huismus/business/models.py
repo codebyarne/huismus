@@ -223,6 +223,12 @@ class Settings(TimestampedModel):
         return self.kor_enabled or self.vat_exempt
 
     @property
+    def default_prices_include_vat(self) -> bool:
+        """Whether a new invoice or quote starts with prices including VAT
+        (#362): the setting, only for who charges VAT."""
+        return self.prices_include_vat and not self.no_vat
+
+    @property
     def no_vat_text(self) -> str:
         """The text under a document without VAT, for the choice made."""
         if self.kor_enabled:

@@ -169,6 +169,19 @@ def document_delete(request, pk, kind="invoice"):
     return redirect("quotes:list" if kind == "quote" else "documents:list")
 
 
+def _chosen_prices_include_vat(form, document) -> bool:
+    """ "Prijzen inclusief btw" as the editor shows it now (#362): as ticked
+    in a posted form, as the form starts otherwise (the document's, or the
+    setting for a new one), and the document's own when the form doesn't
+    offer the choice (documents.forms.DocumentForm)."""
+    if "prices_include_vat" not in form.fields:
+        return document.prices_include_vat
+    if form.is_bound:
+        form.is_valid()
+        return bool(form.cleaned_data.get("prices_include_vat"))
+    return bool(form["prices_include_vat"].value())
+
+
 def _editor_context(document, form, formset):
     """Everything the draft editor shows besides the form itself: the live
     totals (documents.editing.preview_totals), the customer's address, and
@@ -180,18 +193,11 @@ def _editor_context(document, form, formset):
         form.is_valid()
         contact = form.cleaned_data.get("contact")
         issue_date = form.cleaned_data.get("issue_date")
-        prices_include_vat = form.cleaned_data.get(
-            "prices_include_vat", document.prices_include_vat
-        )
     else:
         contact = document.contact if document.pk else form.initial.get("contact")
         issue_date = document.issue_date or form.initial.get("issue_date")
-        prices_include_vat = (
-            form["prices_include_vat"].value()
-            if "prices_include_vat" in form.fields
-            else document.prices_include_vat
-        )
-    totals, line_totals = preview_totals(formset, prices_include_vat=bool(prices_include_vat))
+    prices_include_vat = _chosen_prices_include_vat(form, document)
+    totals, line_totals = preview_totals(formset, prices_include_vat=prices_include_vat)
     # The T.a.v. line: as typed, as saved, or the new customer's own.
     if form.is_bound:
         attention = form.cleaned_data.get("attention", "")
@@ -261,7 +267,7 @@ def _editor_context(document, form, formset):
         "formset": formset,
         "totals": totals,
         "line_totals": line_totals,
-        "prices_include_vat": bool(prices_include_vat),
+        "prices_include_vat": prices_include_vat,
         # Only for who charges VAT, or a document that has it on (forms.py).
         "show_prices_include_vat": "prices_include_vat" in form.fields,
         "contact": contact,
@@ -322,7 +328,7 @@ def _new_document(request, kind):
                 "issue_date": timezone.localdate(),
                 "language": settings.default_language,
                 "footer_text": settings.default_footer_text,
-                "prices_include_vat": settings.prices_include_vat and not settings.no_vat,
+                "prices_include_vat": settings.default_prices_include_vat,
                 # ?contact=<pk>: back from "Nieuw contact" (contacts.views
                 # ._back_to_invoice) with the new customer chosen.
                 "contact": Contact.objects.filter(pk=_int_param(request, "contact", None)).first(),
