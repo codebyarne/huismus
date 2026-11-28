@@ -98,7 +98,10 @@ def trip_list(request):
             toon=shown + LIST_PAGE_SIZE,
         )
 
+    # The year shown is always a choice, also one without trips (?jaar=2025).
     years = {d.year for d in Trip.objects.dates("date", "year")} | {this_year}
+    if year is not None:
+        years.add(year)
     return render(
         request,
         "mileage/list.html",

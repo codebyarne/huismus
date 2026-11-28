@@ -154,6 +154,15 @@ def test_an_empty_year_says_so_and_offers_all_years(client_in):
     assert '<option value="2024"' in html
 
 
+def test_a_year_without_trips_is_the_choice_it_shows(client_in):
+    """verify-e2e 2026-11-28: ?jaar=2025 showed "Geen ritten in 2025" while
+    the choice said 2026, because 2025 had no trips."""
+    _trip(date(2024, 6, 1))
+    html = _page(client_in, f"{LIST}?jaar=2025")
+    assert "Geen ritten in 2025" in html
+    assert re.search(r'<option value="2025" selected', html)
+
+
 def test_all_years_and_another_year(client_in):
     _trip(date(2024, 6, 1), "7")
     _trip(date(2026, 6, 1), "8")
