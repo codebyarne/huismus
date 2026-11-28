@@ -5,18 +5,19 @@
 {% block content_class %}content-narrow{% endblock %}
 
 {% block content %}
-<div class="page-head">
-    <div class="titles">
-        <a class="back" href="{{ back_url }}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Uren" %}</a>
-        <h1>{% translate "Factuur maken uit uren" %}</h1>
-    </div>
-</div>
 
 {% comment %}Design: no round of its own, existing components only
 (product-owner agent 2026-11-28, huismus-intern/besluiten.md, "Maandfactuur
 uit uren (#81)", point 14). The choices are a plain GET form; with HTMX a
 change refreshes #factuur-uit-uren, like the filter on Uren.{% endcomment %}
 <div id="factuur-uit-uren" class="stack" style="gap:var(--s-4)">
+{% comment %}Inside the part HTMX swaps, so "Uren" goes back to the choice made.{% endcomment %}
+<div class="page-head">
+    <div class="titles">
+        <a class="back" href="{{ back_url }}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Uren" %}</a>
+        <h1>{% translate "Factuur maken uit uren" %}</h1>
+    </div>
+</div>
 <form class="card card-pad stack" method="get" action="{% url 'hours:invoice' %}" style="gap:var(--s-4)"
       hx-get="{% url 'hours:invoice' %}" hx-trigger="change"
       hx-target="#factuur-uit-uren" hx-select="#factuur-uit-uren" hx-swap="outerHTML" hx-push-url="true">
