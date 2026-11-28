@@ -142,3 +142,19 @@ def test_a_place_without_spaces_wraps_instead_of_stretching_the_list(app):
         # Van keeps a column of its own instead of one letter per line.
         origin = app.locator("tr.is-link td").nth(1)
         assert origin.evaluate("el => el.getBoundingClientRect().width") > 120
+        # Van and Naar weigh the same (product-owner agent 2026-11-28).
+        weights = [
+            app.locator("tr.is-link .row-link").first.evaluate(
+                "el => getComputedStyle(el).fontWeight"
+            ),
+            app.locator("tr.is-link .trip-place").first.evaluate(
+                "el => getComputedStyle(el).fontWeight"
+            ),
+        ]
+        assert weights[0] == weights[1]
+    # The month's head stays on one line on a phone, beside a long place too.
+    app.set_viewport_size({"width": 390, "height": 844})
+    app.goto(app.base + "/kilometers/")
+    head = app.locator("tr.week-head th").first
+    line = head.evaluate("el => parseFloat(getComputedStyle(el).lineHeight)")
+    assert head.evaluate("el => el.getBoundingClientRect().height") < line * 1.5

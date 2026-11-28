@@ -1236,8 +1236,10 @@ form > div > .settings-section .card-head { border-bottom: 0; padding-bottom: 0;
 /* Een plaats of doel zonder spaties breekt af in plaats van de tabel op te rekken:
    vaste kolommen, Datum en Km smal, de rest deelt de ruimte. */
 .table.is-trips { table-layout: fixed; }
-.table.is-trips th:first-child { width: 8rem; }
-.table.is-trips th:last-child { width: 6.5rem; }
+.table.is-trips thead th:first-child { width: 8rem; }
+.table.is-trips thead th:last-child { width: 6.5rem; }
+/* Van en Naar even zwaar: Van is de rijlink, Naar krijgt dezelfde stijl. */
+.table.is-trips .trip-place { color: var(--text); font-weight: var(--fw-semibold); }
 .table.is-trips td { overflow-wrap: anywhere; }
 @media (max-width: 1180px) {
   .quick-add.is-trip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
