@@ -29,6 +29,7 @@ flowchart TB
         RecurringInvoiceDocument --> |document| Document
         Document --> |related_document| Document
         NumberSequence
+        Article["Article<br/>(vaste regel, geen koppeling)"]
     end
     subgraph core
         Attachment
@@ -111,6 +112,10 @@ uit het diagram haalt:
   bestand is dezelfde rij. Huismus telt nooit regels op tot een saldo;
   `huismus/bank/balances.py` geeft het laatste saldo, het saldo op een dag en
   waar een afschrift mist.
+- **`Article`** is een regel die je vaak gebruikt (M31). Kies je hem in de
+  editor, dan kopieert `huismus/documents/articles.py` zijn waarden in een
+  gewone regel; die wijst niet terug, dus een artikel wijzigen of verwijderen
+  raakt geen document.
 - `SPEC.md` noemt ook een `AuditLog`; die bestaat nog niet.
 
 ## Wat doet welke app

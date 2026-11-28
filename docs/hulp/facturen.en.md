@@ -28,6 +28,20 @@ Want this for every new invoice and quote? Turn on **Prices include VAT by
 default** under **Settings → VAT**. You can still change it per invoice. You
 only see this choice if you charge VAT.
 
+## Products
+
+Do you use the same line often, like an hour of advice or a workshop? Save it
+as a product: on **Invoices**, click **Products**. You fill in a description,
+unit, price and VAT rate. The price is without VAT.
+
+In an invoice or quote you then pick a product under **Add product**, and the
+line is there, with quantity 1. After that it's an ordinary line: you change
+it like any other. If you later change or delete a product, your invoices and
+quotes stay as they are.
+
+Under the KOR, or without VAT, Huismus doesn't ask for a VAT rate for a
+product.
+
 ## Issuing
 
 Ready? Click **Issue…**. You first see a summary: the customer, the amount and
