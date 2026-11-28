@@ -48,7 +48,8 @@ Moneybird.
 - **Je export:** de zips zelf bewaart Huismus ook, en ze gaan mee in je
   back-ups.
 
-Uren uit Moneybird neemt Huismus nog niet mee.
+Uren uit Moneybird neemt Huismus nog niet mee. Ritten uit Moneybird neemt
+Huismus ook nog niet mee.
 
 ## Nog een keer importeren
 

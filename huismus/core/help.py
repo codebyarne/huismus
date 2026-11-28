@@ -77,6 +77,8 @@ GROUPS = (
             "mailen",
             "uitgaven",
             "bonnetjes",
+            # After Uitgaven, as in the menu (#125).
+            "kilometers",
             "kor-en-btw",
             "back-ups",
             "ai-assistenten",
