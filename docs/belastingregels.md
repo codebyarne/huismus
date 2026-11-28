@@ -299,6 +299,62 @@ Nagekeken op 7 november 2026 voor het btw-aangifterapport (SPEC.md M21, deel
   factuurdatum of iets anders): **Bron ontbreekt** in de nagekeken
   toelichting.
 
+### Opgaaf ICP
+
+Nagekeken op 28 november 2026 voor het overzicht bij de opgaaf ICP (issue
+#168). Letterlijk uit de pagina's en de toelichting hieronder.
+
+- Wanneer: "U doet naast uw btw-aangifte een opgaaf ICP als u:
+  intracommunautair goederen of diensten levert aan klanten in andere
+  EU-landen die hun juiste btw-identificatienummer aan u hebben verstrekt"
+  (toelichting 2024, blz. 2). Bij een dienst aan een ondernemer in een ander
+  EU-land: "U stuurt een factuur zonder btw waarop u noteert: 'btw
+  verlegd'.", "U geeft deze dienst aan in uw btw-aangifte." en "U geeft deze
+  dienst op in uw 'Opgaaf intracommunautaire prestaties'." (pagina Btw
+  berekenen bij diensten).
+- Wat erin komt: "Vermeld per afnemer: het btw-identificatienummer [en] het
+  totaalbedrag van de leveringen van goederen of diensten in het tijdvak"
+  (toelichting, blz. 8, rubriek 3).
+- Creditnota's: "Creditnota's (bijvoorbeeld door annulering of
+  prijsvermindering) vermeldt u in rubriek 3 'Gegevens intracommunautaire
+  prestaties'." (blz. 8). Een fout in een eerdere opgaaf: "U corrigeert die
+  door in de volgende opgaaf ICP de juiste gegevens in te vullen." (pagina
+  Opgaaf ICP), per regel met tijdvak, btw-identificatienummer en een bedrag
+  met "'+' of een '-'" (toelichting, blz. 7, rubriek 2).
+- Tijdvak van een dienst: "Intracommunautaire diensten geeft u aan in het
+  tijdvak waarin u de dienst hebt geleverd. U hoeft geen opgaaf ICP te doen
+  als u in een tijdvak niets hebt geleverd." (pagina Opgaaf ICP). "De
+  factuurdatum is hierbij niet van belang." (toelichting, blz. 8).
+- Hoe vaak: "De opgaaf ICP over uw diensten mag u per maand, per kwartaal of
+  per jaar doen. Wilt u per jaar uw opgaaf ICP doen, dan moet u daarvoor een
+  vergunning hebben." (pagina Tijdvak opgaaf ICP).
+- Gelijk aan 3b: "Het totaal van de opgaaf ICP moet dus gelijk zijn aan het
+  bedrag dat u over dezelfde periode invult in uw btw-aangifte bij Rubriek 3b
+  'Leveringen naar/diensten in landen binnen de EU'." (pagina Opgaaf ICP).
+  "Denk er daarbij aan dat het tijdvak waarover u uw btw-aangifte moet doen,
+  niet gelijk hoeft te zijn aan de periode waarover u deze opgaaf ICP doet."
+  (toelichting, blz. 8).
+- Niet in de opgaaf: "intracommunautaire diensten die in het land van uw
+  afnemer zijn vrijgesteld van btw", "[...] belast met 0%", diensten onder
+  het éénloketsysteem (OSS), "diensten die te maken hebben met onroerend
+  goed", toegang tot evenementen, en "diensten die restaurants en
+  cateringbedrijven leveren" (toelichting, blz. 5).
+- Waar: via Mijn Belastingdienst Zakelijk, "ruimte voor maximaal 100
+  regels" (toelichting, blz. 3).
+- Afronden op hele euro's: **Bron ontbreekt** in de nagekeken pagina's en
+  toelichting.
+- De opgaaf ICP met de KOR: **Bron ontbreekt**. De nagekeken pagina's van de
+  Belastingdienst over de KOR en over de opgaaf ICP zeggen er niets over.
+- Wanneer de opgaaf binnen moet zijn: **Bron ontbreekt** in de nagekeken
+  pagina's (de toelichting heeft een tabel, maar die is voor het
+  overzicht niet nodig).
+
+Bron: [Opgaaf ICP bij zakendoen met andere EU-landen](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/zakendoen_met_het_buitenland/goederen_en_diensten_naar_andere_eu_landen/opgaaf_icp/opgaaf_icp)
+(Belastingdienst), [Tijdvak opgaaf intracommunautaire prestaties (ICP)](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/zakendoen_met_het_buitenland/goederen_en_diensten_naar_andere_eu_landen/opgaaf_icp/tijdvak_opgaaf_icp/tijdvak_opgaaf_icp)
+(Belastingdienst), [Btw berekenen bij diensten leveren aan afnemers in andere EU-landen](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/zakendoen_met_het_buitenland/goederen_en_diensten_naar_andere_eu_landen/btw_berekenen_bij_diensten/btw_berekenen_bij_diensten_aan_afnemers_in_andere_eu_landen)
+(Belastingdienst), [Toelichting bij de opgaaf intracommunautaire prestaties 2024](https://download.belastingdienst.nl/belastingdienst/docs/toelichting-digitale-opgaaf-intracomm-pres-ob1291t41fd.pdf)
+(Belastingdienst, pdf)
+
 ### Landen van de EU
 
 De 27 lidstaten volgens de EU zelf: België, Bulgarije, Cyprus, Denemarken,
