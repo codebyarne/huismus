@@ -302,28 +302,43 @@ def is_complete(file_name: str, content: bytes) -> bool:
 
 
 @cache
-def _hours_names() -> tuple[frozenset[str], ...]:
-    """The header row of uren.csv, per language, without the invoice
-    column (#81), so an export from before it is still recognised."""
+def _header_names(columns) -> tuple[frozenset[str], ...]:
+    """The header row of an exported file, per language. Without uren.csv's
+    invoice column (#81), so an export from before it is still recognised."""
     labels = [
         export_format.in_both_languages(column.label)
-        for column in export_format.HOURS_COLUMNS
+        for column in columns
         if column.key != "invoice"
     ]
     return tuple(frozenset(normalised(label[i]) for label in labels) for i in range(len(labels[0])))
+
+
+def _has_header_of(columns, file_name: str, content: bytes) -> bool:
+    header = {normalised(name) for name in _header(file_name, content)}
+    return any(names <= header for names in _header_names(columns))
 
 
 def is_hours_csv(file_name: str, content: bytes) -> bool:
     """uren.csv from Huismus's own export (#80). Not read in yet (#358):
     the import names it and goes on, instead of taking it for another file
     because it has a "datum" and an "omschrijving"."""
-    header = {normalised(name) for name in _header(file_name, content)}
-    return any(names <= header for names in _hours_names())
+    return _has_header_of(export_format.HOURS_COLUMNS, file_name, content)
+
+
+def is_mileage_csv(file_name: str, content: bytes) -> bool:
+    """kilometers.csv from Huismus's own export (#125). Not read in yet,
+    like uren.csv."""
+    return _has_header_of(export_format.MILEAGE_COLUMNS, file_name, content)
+
+
+def is_unread_csv(file_name: str, content: bytes) -> bool:
+    """One of the export's files the import doesn't read in yet."""
+    return is_hours_csv(file_name, content) or is_mileage_csv(file_name, content)
 
 
 def kind_of(file_name: str, content: bytes) -> CsvKind | None:
     """Which of our files this CSV is, by its header row alone."""
-    if is_hours_csv(file_name, content):
+    if is_unread_csv(file_name, content):
         return None
     header = _header(file_name, content)
     return recognise(header) if header else None
@@ -337,7 +352,7 @@ def _header(file_name: str, content: bytes) -> list[str]:
 def read_table(file_name: str, content: bytes) -> Table | None:
     """The table in a CSV file, or None when it isn't one of ours."""
     lines = _numbered_lines(file_name, content)
-    if not lines or is_hours_csv(file_name, content):
+    if not lines or is_unread_csv(file_name, content):
         return None
     header = [cell.strip() for cell in lines[0][1]]
     if len(header) == 1 and ("," in header[0] or "\t" in header[0]):

@@ -192,6 +192,17 @@ HOURS_COLUMNS = (
 )
 
 
+# Kilometers (#125): only exported, not read by the import yet
+# (product-owner agent 2026-11-28).
+MILEAGE_COLUMNS = (
+    Column("date", gettext_noop("datum"), required=True),
+    Column("from", gettext_noop("van")),
+    Column("to", gettext_noop("naar")),
+    Column("purpose", gettext_noop("doel")),
+    Column("kilometres", gettext_noop("kilometers"), required=True),
+)
+
+
 def expense_labels(columns, *, kor_enabled: bool) -> list[str]:
     """The header row of an expense file: its VAT column says "ter info"
     under the KOR, as on the expense page."""
