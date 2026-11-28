@@ -233,7 +233,7 @@ def icp(request):
             "period": period,
             "period_name": _period_name(period),
             "kor_note": EXEMPT_NOTE_ICP if Settings.load().vat_exempt else KOR_NOTE_ICP,
-            "source": ICP_SOURCE,
+            "belastingdienst_url": ICP_SOURCE,
             "show_icp": profile().shows_icp,
             "kinds": [
                 (period.as_kind(QUARTER), _("Kwartaal")),

@@ -23,7 +23,7 @@
 {% include "reports/_tabs.html" with current="icp" %}
 
 {% if report.kor_on %}
-<p class="hint-banner is-info" id="kor-aan" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{{ kor_note }} <a href="{{ source }}" target="_blank" rel="noopener">{% translate "Opgaaf ICP bij de Belastingdienst" %}</a></span></p>
+<p class="hint-banner is-info" id="kor-aan" style="margin-bottom:var(--s-4)"><svg class="i" aria-hidden="true"><use href="#info"></use></svg><span>{{ kor_note }} <a href="{{ belastingdienst_url }}" target="_blank" rel="noopener">{% translate "Opgaaf ICP bij de Belastingdienst" %}</a></span></p>
 {% else %}
 <p class="muted" style="margin-bottom:var(--s-4)">{% translate "Per btw-nummer van je klant: wat je factureerde met btw verlegd aan klanten in een ander EU-land." %}</p>
 
@@ -59,7 +59,7 @@
 </section>
 {% endif %}
 
-<p class="muted small" style="margin-bottom:var(--s-6)">{% translate "Het totaal is gelijk aan rubriek 3b van je btw-aangifte over dezelfde periode. Een dienst telt op de leverdatum, als je die invulde, anders op de factuurdatum. Een creditnota telt af." %} <a href="{% url 'reports:vat_return' %}?periode={{ period }}">{% translate "Btw-aangifte" %} →</a> · <a href="{{ source }}" target="_blank" rel="noopener">{% translate "Opgaaf ICP bij de Belastingdienst" %}</a></p>
+<p class="muted small" style="margin-bottom:var(--s-6)">{% translate "Het totaal is gelijk aan rubriek 3b van je btw-aangifte over dezelfde periode. Een dienst telt op de leverdatum, als je die invulde, anders op de factuurdatum. Een creditnota telt af." %} <a href="{% url 'reports:vat_return' %}?periode={{ period }}">{% translate "Btw-aangifte" %} →</a> · <a href="{{ belastingdienst_url }}" target="_blank" rel="noopener">{% translate "Opgaaf ICP bij de Belastingdienst" %}</a></p>
 
 {% endif %}
 {% endblock %}
