@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-28 13:19+0100\n"
+"POT-Creation-Date: 2026-11-28 13:47+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -849,6 +849,9 @@ msgstr "no-VAT text"
 
 msgid "tekst bij btw verlegd"
 msgstr "reverse charge text"
+
+msgid "prijzen standaard inclusief btw"
+msgstr "prices include VAT by default"
 
 msgid "waarschuw vanaf (%)"
 msgstr "warn from (%)"
@@ -1706,6 +1709,9 @@ msgstr "outstanding"
 msgid "laatst betaald op"
 msgstr "last paid on"
 
+msgid "prijzen incl. btw"
+msgstr "prices incl. VAT"
+
 #, python-format
 msgid "omzet %(rate)s%%"
 msgstr "revenue %(rate)s%%"
@@ -1743,6 +1749,9 @@ msgstr "VAT rate (%)"
 
 msgid "btw verlegd"
 msgstr "reverse charge"
+
+msgid "regelbedrag"
+msgstr "line amount"
 
 msgid "btw ter info"
 msgstr "VAT for information"
@@ -2977,6 +2986,9 @@ msgstr "intro text"
 
 msgid "voettekst"
 msgstr "footer text"
+
+msgid "prijzen inclusief btw"
+msgstr "prices include VAT"
 
 msgid "subtotaal (cent)"
 msgstr "subtotal (cents)"
@@ -5359,6 +5371,16 @@ msgid "Komt onder elke factuur, offerte en creditnota met een regel “verlegd�
 msgstr ""
 "Goes under every invoice, quote and credit note with a “reverse charge” line."
 
+msgid "Prijzen"
+msgstr "Prices"
+
+msgid "Prijzen standaard inclusief btw"
+msgstr "Prices include VAT by default"
+
+msgid ""
+"Voor nieuwe facturen en offertes. Per factuur kun je het nog veranderen."
+msgstr "For new invoices and quotes. You can still change it per invoice."
+
 msgid "dagen"
 msgstr "days"
 
@@ -6241,6 +6263,15 @@ msgstr "Quantity"
 msgid "Regel verwijderen"
 msgstr "Remove line"
 
+msgid "Prijs incl. btw"
+msgstr "Price incl. VAT"
+
+msgid "Prijs"
+msgstr "Price"
+
+msgid "Totaal incl. btw"
+msgstr "Total incl. VAT"
+
 #, python-format
 msgid "Herinnering voor factuur %(number)s"
 msgstr "Reminder for invoice %(number)s"
@@ -6402,9 +6433,6 @@ msgid ""
 msgstr ""
 "Lines you use often. In an invoice or quote you pick a product and the line "
 "is there. Then you change it like any other line."
-
-msgid "Prijs"
-msgstr "Price"
 
 msgid "Prijs zonder btw"
 msgstr "Price excluding VAT"
@@ -6770,6 +6798,14 @@ msgstr "Introduction"
 
 msgid "Introductietekst (optioneel)"
 msgstr "Introduction (optional)"
+
+msgid "Prijzen inclusief btw"
+msgstr "Prices include VAT"
+
+msgid "Het totaal is dan precies wat je invult. Huismus rekent de btw eruit."
+msgstr ""
+"The total is then exactly what you enter. Huismus works out the VAT inside "
+"it."
 
 msgid "Regel toevoegen"
 msgstr "Add line"
@@ -8081,6 +8117,9 @@ msgstr "Quote date"
 
 msgid "Crediteert factuur"
 msgstr "Credits invoice"
+
+msgid "Bedrag incl. btw"
+msgstr "Amount incl. VAT"
 
 msgid "Inloggen"
 msgstr "Log in"
@@ -11091,39 +11130,3 @@ msgstr ""
 #~ msgid_plural "%(count)s afschrijvingen"
 #~ msgstr[0] "%(count)s payment going out"
 #~ msgstr[1] "%(count)s payments going out"
-
-msgid "prijzen inclusief btw"
-msgstr "prices include VAT"
-
-msgid "prijzen standaard inclusief btw"
-msgstr "prices include VAT by default"
-
-msgid "prijzen incl. btw"
-msgstr "prices incl. VAT"
-
-msgid "regelbedrag"
-msgstr "line amount"
-
-msgid "Prijzen inclusief btw"
-msgstr "Prices include VAT"
-
-msgid "Het totaal is dan precies wat je invult. Huismus rekent de btw eruit."
-msgstr "The total is then exactly what you enter. Huismus works out the VAT inside it."
-
-msgid "Prijs incl. btw"
-msgstr "Price incl. VAT"
-
-msgid "Totaal incl. btw"
-msgstr "Total incl. VAT"
-
-msgid "Bedrag incl. btw"
-msgstr "Amount incl. VAT"
-
-msgid "Prijzen"
-msgstr "Prices"
-
-msgid "Prijzen standaard inclusief btw"
-msgstr "Prices include VAT by default"
-
-msgid "Voor nieuwe facturen en offertes. Per factuur kun je het nog veranderen."
-msgstr "For new invoices and quotes. You can still change it per invoice."
