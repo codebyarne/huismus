@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-28 16:54+0100\n"
+"POT-Creation-Date: 2026-11-28 20:32+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1894,9 +1894,6 @@ msgstr "none"
 
 msgid "Hoe je werkt"
 msgstr "How you work"
-
-msgid "Hierop kan de appbouwer je antwoorden."
-msgstr "The app's maker can reply to you here."
 
 msgid "Vul je e-mailadres in."
 msgstr "Enter your email address."
@@ -10073,6 +10070,9 @@ msgstr ""
 "Huismus is made in the Netherlands by Arne Krijnsen. You can read about him "
 "and his other work on <a href=\"https://www.arnekrijnsen.com\">arnekrijnsen."
 "com</a>."
+
+#~ msgid "Hierop kan de appbouwer je antwoorden."
+#~ msgstr "The app's maker can reply to you here."
 
 #~ msgid ""
 #~ "Komt als idee op GitHub, waar anderen het kunnen lezen. Je e-mailadres "
