@@ -39,7 +39,8 @@ artikel, en de regel staat er, met aantal 1. Daarna is het een gewone regel:
 je past hem aan zoals elke andere. Wijzig of verwijder je later een artikel,
 dan blijven je facturen en offertes zoals ze zijn.
 
-Met de KOR, of zonder btw, vraagt Huismus bij een artikel geen btw-tarief.
+Met de kleineondernemersregeling (KOR), of zonder btw, vraagt Huismus bij een
+artikel geen btw-tarief.
 
 ## Uitgeven
 
