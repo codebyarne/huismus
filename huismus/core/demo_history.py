@@ -52,6 +52,7 @@ from huismus.documents.drafts import create_credit_note, recompute_stored_totals
 from huismus.documents.issuing import issue
 from huismus.documents.mailing import default_message
 from huismus.documents.models import (
+    Article,
     Document,
     DocumentLine,
     EmailLog,
@@ -244,6 +245,7 @@ def _create(rng: random.Random, last_day: date) -> None:
     Contact.objects.filter(company_name__in=ARCHIVED).update(archived=True)
     _mails(rng, last_day)
     _expenses(rng, first_year, last_day)
+    _articles(LAST_YEAR - FIRST_YEAR)
 
 
 # -- The business and its customers ---------------------------------------
@@ -345,6 +347,27 @@ def _lines(rng: random.Random, document: Document, index: int) -> None:
             tax_rate_bp=0 if customer.reverse_charge else rate_bp,
             reverse_charge=customer.reverse_charge,
         )
+
+
+def _articles(index: int) -> None:
+    """The services as articles (#167), at this year's rates, plus one that
+    is reverse charged. No random numbers: the rest of the history stays the
+    same."""
+    for dutch, _english, unit, _quantities, price, rate_bp in SERVICES:
+        if price == "hour":
+            price = _hour_rate(index)
+        elif price == "day":
+            price = _hour_rate(index) * 8
+        Article.objects.create(
+            description=dutch, unit=unit, unit_price_cents=price, tax_rate_bp=rate_bp
+        )
+    Article.objects.create(
+        description="Consultancy (EU, btw verlegd)",
+        unit="uur",
+        unit_price_cents=_hour_rate(index),
+        tax_rate_bp=0,
+        reverse_charge=True,
+    )
 
 
 def _new(kind: str, contact: Contact, day: date | None, **fields) -> Document:
