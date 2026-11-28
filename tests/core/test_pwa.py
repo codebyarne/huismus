@@ -75,7 +75,12 @@ def test_pages_link_the_manifest_and_the_home_screen_icon(client):
 
 # Addresses outside Huismus: in the installed app iOS opens those in a sheet
 # with "Gereed", so a new tab there is fine.
-_ELSEWHERE = ("{{ whats_new_url }}", "{{ authorize_url }}", "{{ release.page_url }}")
+_ELSEWHERE = (
+    "{{ whats_new_url }}",
+    "{{ authorize_url }}",
+    "{{ release.page_url }}",
+    "{{ belastingdienst_url }}",
+)
 
 
 def test_every_new_tab_inside_huismus_has_a_way_back_in_the_installed_app():
