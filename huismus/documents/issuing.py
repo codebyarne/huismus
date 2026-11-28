@@ -96,7 +96,7 @@ def issue(document: Document) -> Document:
     if missing:
         raise IssueError(missing)
 
-    totals = compute_totals(lines)
+    totals = compute_totals(lines, prices_include_vat=document.prices_include_vat)
 
     with transaction.atomic():
         issue_date = document.issue_date or timezone.localdate()

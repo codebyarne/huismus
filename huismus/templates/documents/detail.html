@@ -73,7 +73,7 @@ the live settings or contact.{% endcomment %}
         </div>
         {% if document.intro_text %}<p style="margin-bottom:var(--s-5)">{{ document.intro_text|linebreaksbr }}</p>{% endif %}
         <table class="doc-table">
-            <thead><tr><th>{% translate "Omschrijving" %}</th><th class="r">{% translate "Aantal" %}</th><th class="r">{% translate "Prijs" %}</th><th class="r">{% translate "Btw" %}</th><th class="r">{% translate "Totaal" %}</th></tr></thead>
+            <thead><tr><th>{% translate "Omschrijving" %}</th><th class="r">{% translate "Aantal" %}</th><th class="r">{% if document.prices_include_vat %}{% translate "Prijs incl. btw" %}{% else %}{% translate "Prijs" %}{% endif %}</th><th class="r">{% translate "Btw" %}</th><th class="r">{% if document.prices_include_vat %}{% translate "Totaal incl. btw" %}{% else %}{% translate "Totaal" %}{% endif %}</th></tr></thead>
             <tbody>
                 {% for line in document.lines.all %}
                 <tr>

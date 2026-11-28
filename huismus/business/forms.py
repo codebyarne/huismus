@@ -127,6 +127,7 @@ class SettingsForm(forms.ModelForm):
             "kor_limit_cents",
             "kor_warning_percent",
             "reverse_charge_text",
+            "prices_include_vat",
             "logo",
             "default_payment_terms_days",
             "invoice_number_format",

@@ -173,6 +173,7 @@ def _invoices(year):
             else:
                 row += [None, None, None, None]
             row.append(SOURCE_NAMES.get(document.source, document.source))
+            row.append(_yes_no(document.prices_include_vat))
             yield row
 
     return rows, header, table()
@@ -203,6 +204,7 @@ def _quotes(year):
             Amount(quote.tax_cents),
             Amount(quote.total_cents),
             ", ".join(invoice.number for invoice in quote.invoices),
+            _yes_no(quote.prices_include_vat),
         ]
         for quote in rows
     )
@@ -216,7 +218,9 @@ def _lines(documents):
         for document in documents:
             sign = -1 if document.kind == "credit_note" else 1
             lines = list(document.lines.all())
-            line_totals = compute_totals(lines).line_totals_cents
+            line_totals = compute_totals(
+                lines, prices_include_vat=document.prices_include_vat
+            ).line_totals_cents
             for position, (line, cents) in enumerate(zip(lines, line_totals, strict=True), 1):
                 yield [
                     document.get_kind_display(),

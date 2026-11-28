@@ -8975,3 +8975,39 @@ msgstr ""
 #~ msgid_plural "%(count)s afschrijvingen"
 #~ msgstr[0] "%(count)s afschrijving"
 #~ msgstr[1] "%(count)s afschrijvingen"
+
+msgid "prijzen inclusief btw"
+msgstr "prijzen inclusief btw"
+
+msgid "prijzen standaard inclusief btw"
+msgstr "prijzen standaard inclusief btw"
+
+msgid "prijzen incl. btw"
+msgstr "prijzen incl. btw"
+
+msgid "regelbedrag"
+msgstr "regelbedrag"
+
+msgid "Prijzen inclusief btw"
+msgstr "Prijzen inclusief btw"
+
+msgid "Het totaal is dan precies wat je invult. Huismus rekent de btw eruit."
+msgstr ""
+
+msgid "Prijs incl. btw"
+msgstr "Prijs incl. btw"
+
+msgid "Totaal incl. btw"
+msgstr "Totaal incl. btw"
+
+msgid "Bedrag incl. btw"
+msgstr "Bedrag incl. btw"
+
+msgid "Prijzen"
+msgstr "Prijzen"
+
+msgid "Prijzen standaard inclusief btw"
+msgstr "Prijzen standaard inclusief btw"
+
+msgid "Voor nieuwe facturen en offertes. Per factuur kun je het nog veranderen."
+msgstr ""

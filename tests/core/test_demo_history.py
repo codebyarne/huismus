@@ -49,6 +49,8 @@ def test_history_shows_every_kind_of_thing_huismus_keeps():
     lines = DocumentLine.objects.filter(document__in=invoices)
     assert {2100, 900} <= set(lines.values_list("tax_rate_bp", flat=True))
     assert lines.filter(reverse_charge=True).exists()
+    # Prices including VAT (#362), for a private customer.
+    assert invoices.filter(prices_include_vat=True).exists()
     assert lines.filter(quantity=None).exists()
     assert {"uur", "dag", "stuk", "km"} <= set(lines.values_list("unit", flat=True))
     assert invoices.filter(language="en").exists()

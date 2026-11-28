@@ -44,7 +44,7 @@ def send_quote(document: Document) -> Document:
     missing = missing_reverse_charge_text(document, lines, settings)
     if missing:
         raise QuoteError(missing)
-    totals = compute_totals(lines)
+    totals = compute_totals(lines, prices_include_vat=document.prices_include_vat)
 
     with transaction.atomic():
         send_date = document.issue_date or timezone.localdate()
@@ -145,6 +145,7 @@ def convert_to_invoice(quote: Document) -> Document:
             attention=quote.attention,
             reference=quote.reference,
             related_document=quote,
+            prices_include_vat=quote.prices_include_vat,
         )
         for position, line in enumerate(quote.lines.all()):
             DocumentLine.objects.create(

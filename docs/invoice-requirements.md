@@ -34,6 +34,15 @@ Bron: [Aan welke eisen moeten facturen voldoen voor uw btw-administratie?](https
 - Het btw-tarief dat van toepassing is.
 - Het btw-bedrag.
 
+Op dezelfde pagina (nagekeken 28 november 2026): "Vermeld ook de
+eenheidsprijs, als dit van toepassing is." En: "Levert u goederen of
+diensten met verschillende btw-tarieven? Vermeld dan de aparte bedragen."
+Of die eenheidsprijs exclusief btw moet zijn, zegt de pagina niet (Bron
+ontbreekt). Huismus zegt er daarom niets over. Met "Prijzen inclusief btw"
+(#362) staan op de pdf de prijzen per regel inclusief btw, met de kop
+"Bedrag incl. btw", en daaronder blijven het bedrag exclusief btw, het
+tarief en het btw-bedrag per tarief staan.
+
 ### Vereenvoudigde factuur
 
 Voor bedragen tot en met €100 (inclusief btw) gelden minder eisen. Zie

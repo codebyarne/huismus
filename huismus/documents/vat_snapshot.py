@@ -20,7 +20,12 @@ def store_vat_rows(document, lines, *, subtotal_cents: int, tax_cents: int) -> N
     is issued with. The document must still be a draft in the database:
     the triggers refuse rows of an issued one."""
     DocumentVatRow.objects.filter(document=document).delete()
-    rows = vat_rows(lines, subtotal_cents=subtotal_cents, tax_cents=tax_cents)
+    rows = vat_rows(
+        lines,
+        subtotal_cents=subtotal_cents,
+        tax_cents=tax_cents,
+        prices_include_vat=document.prices_include_vat,
+    )
     if rows is None:
         # Totals that are not the lines' (an import with Moneybird's own
         # totals): no rows rather than a guessed split. Having none is how
