@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 14:52+0100\n"
+"POT-Creation-Date: 2026-11-28 13:10+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2328,8 +2328,8 @@ msgid "Importeren uit andere pakketten en uit Excel"
 msgstr "Import from other bookkeeping apps and from Excel"
 
 msgid ""
-"Met het sjabloon, en een handleiding voor Rompslomp, Tellow, e-"
-"Boekhouden.nl, Jortt en Excel."
+"Met het sjabloon, en een handleiding voor Rompslomp, Tellow, e-Boekhouden."
+"nl, Jortt en Excel."
 msgstr ""
 "With the template, and a guide for Rompslomp, Tellow, e-Boekhouden.nl, Jortt "
 "and Excel."
@@ -2642,6 +2642,7 @@ msgstr "High rate"
 msgid "Laag tarief"
 msgstr "Low rate"
 
+#, python-format
 msgid "0% of niet bij jou belast"
 msgstr "0% or not taxed with you"
 
@@ -2690,6 +2691,7 @@ msgstr "Revenue 1a high rate"
 msgid "Omzet 1b laag tarief"
 msgstr "Revenue 1b low rate"
 
+#, python-format
 msgid "Omzet 1e 0% of niet bij jou belast"
 msgstr "Revenue 1e 0% or not taxed with you"
 
@@ -2715,11 +2717,23 @@ msgstr "Amount without an expense line"
 msgid "Kosten zonder categorie"
 msgstr "Costs without a category"
 
+msgid "Artikel toegevoegd."
+msgstr "Product added."
+
+msgid "Artikel opgeslagen."
+msgstr "Product saved."
+
+msgid "Artikel verwijderd."
+msgstr "Product deleted."
+
 msgid "Vul een getal in, zoals 2 of 1,5."
 msgstr "Enter a number, like 2 or 1.5."
 
 msgid "verlegd"
 msgstr "reverse charge"
+
+msgid "prijs per eenheid, zonder btw"
+msgstr "unit price, excluding VAT"
 
 msgid "Overboeking"
 msgstr "Bank transfer"
@@ -3105,6 +3119,12 @@ msgstr "invoice in a recurring series"
 msgid "facturen in een periodieke reeks"
 msgstr "invoices in a recurring series"
 
+msgid "artikel"
+msgstr "product"
+
+msgid "artikelen"
+msgstr "products"
+
 msgid "[klantnummer]"
 msgstr "[customer number]"
 
@@ -3359,6 +3379,7 @@ msgstr "Fill in the VAT amount. No VAT paid? Then fill in 0."
 msgid "Kies het btw-tarief."
 msgstr "Choose the VAT rate."
 
+#, python-format
 msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
 msgstr "With 0% or no VAT, the VAT amount is € 0.00."
 
@@ -3433,6 +3454,7 @@ msgstr "Saved. Huismus picks up new receipts from %(place)s by itself."
 msgid "Bonnetje verwijderd."
 msgstr "Receipt deleted."
 
+#, python-format
 msgid "0% of geen btw"
 msgstr "0% or no VAT"
 
@@ -4365,6 +4387,7 @@ msgstr "Supplies/services subject to the high VAT rate"
 msgid "Leveringen/diensten belast met laag tarief"
 msgstr "Supplies/services subject to the low VAT rate"
 
+#, python-format
 msgid "Leveringen/diensten belast met 0% of niet bij u belast"
 msgstr "Supplies/services taxed at 0% or not taxed to you"
 
@@ -6050,6 +6073,18 @@ msgstr ""
 msgid "Leegmaken"
 msgstr "Clear"
 
+msgid "Omschrijving"
+msgstr "Description"
+
+msgid "Eenheid"
+msgstr "Unit"
+
+msgid "Prijs per eenheid, zonder btw"
+msgstr "Unit price, excluding VAT"
+
+msgid "Prijs per eenheid"
+msgstr "Unit price"
+
 msgid "T.a.v."
 msgstr "Attn."
 
@@ -6200,17 +6235,8 @@ msgid ""
 msgstr ""
 "Huismus saves your business details and the customer's as they are now."
 
-msgid "Omschrijving"
-msgstr "Description"
-
 msgid "Aantal"
 msgstr "Quantity"
-
-msgid "Eenheid"
-msgstr "Unit"
-
-msgid "Prijs per eenheid"
-msgstr "Unit price"
 
 msgid "Regel verwijderen"
 msgstr "Remove line"
@@ -6370,6 +6396,58 @@ msgstr "Subtotal"
 msgid "Berekend door Huismus"
 msgstr "Worked out by Huismus"
 
+msgid ""
+"Regels die je vaak gebruikt. In een factuur of offerte kies je een artikel "
+"en de regel staat er. Daarna pas je hem aan zoals elke regel."
+msgstr "Lines you use often. In an invoice or quote you pick a product and the line is there. Then you change it like any other line."
+
+msgid "Eenheid en btw"
+msgstr "Unit and VAT"
+
+msgid "Prijs"
+msgstr "Price"
+
+msgid "Prijs zonder btw"
+msgstr "Price excluding VAT"
+
+msgid "Acties"
+msgstr "Actions"
+
+#, python-format
+msgid "per %(unit)s"
+msgstr "per %(unit)s"
+
+msgid "Bewerken"
+msgstr "Edit"
+
+#, python-format
+msgid "%(name)s verwijderen"
+msgstr "Delete %(name)s"
+
+#, python-format
+msgid "Artikel „%(name)s” verwijderen?"
+msgstr "Delete product “%(name)s”?"
+
+msgid "Facturen en offertes met deze regel blijven zoals ze zijn."
+msgstr "Invoices and quotes with this line stay as they are."
+
+msgid "Nog geen artikelen"
+msgstr "No products yet"
+
+msgid ""
+"Voeg hieronder je eerste artikel toe, bijvoorbeeld een uur advies of een "
+"workshop."
+msgstr "Add your first product below, for example an hour of advice or a workshop."
+
+msgid "Artikel wijzigen"
+msgstr "Edit product"
+
+msgid "Nieuw artikel"
+msgstr "New product"
+
+msgid "Toevoegen"
+msgstr "Add"
+
 msgid "Definitief"
 msgstr "Final"
 
@@ -6428,9 +6506,6 @@ msgstr "Delivery date"
 
 msgid "Vervaldatum"
 msgstr "Due date"
-
-msgid "Prijs"
-msgstr "Price"
 
 #, python-format
 msgid "Graag overmaken naar %(iban)s o.v.v. %(number)s."
@@ -6698,6 +6773,12 @@ msgstr "Introduction (optional)"
 
 msgid "Regel toevoegen"
 msgstr "Add line"
+
+msgid "Artikel toevoegen"
+msgstr "Add product"
+
+msgid "Kies een artikel"
+msgstr "Choose a product"
 
 msgid "Tekst aanpassen"
 msgstr "Edit text"
@@ -7049,14 +7130,8 @@ msgstr ""
 msgid "Volgorde"
 msgstr "Order"
 
-msgid "Acties"
-msgstr "Actions"
-
 msgid "geen uitgaven"
 msgstr "no expenses"
-
-msgid "Bewerken"
-msgstr "Edit"
 
 #, python-format
 msgid "%(name)s verwijderen: niet mogelijk, er horen uitgaven bij"
@@ -7064,10 +7139,6 @@ msgstr "Delete %(name)s: not possible, it has expenses"
 
 msgid "Er horen uitgaven bij, dus verwijderen kan niet"
 msgstr "It has expenses, so you can't delete it"
-
-#, python-format
-msgid "%(name)s verwijderen"
-msgstr "Delete %(name)s"
 
 #, python-format
 msgid "Categorie „%(name)s” verwijderen?"
@@ -7085,9 +7156,6 @@ msgstr "Add your first category below, for example Software or Travel."
 
 msgid "Bijvoorbeeld Verzekeringen"
 msgstr "For example Insurance"
-
-msgid "Toevoegen"
-msgstr "Add"
 
 msgid ""
 "Geef die uitgaven eerst een andere categorie, of geef deze categorie een "
@@ -9725,12 +9793,12 @@ msgstr "Who makes Huismus"
 
 msgid ""
 "Huismus wordt gemaakt in Nederland door Arne Krijnsen. Over de maker en wat "
-"die nog meer doet, lees je op <a href=\"https://"
-"www.arnekrijnsen.com\">arnekrijnsen.com</a>."
+"die nog meer doet, lees je op <a href=\"https://www.arnekrijnsen."
+"com\">arnekrijnsen.com</a>."
 msgstr ""
 "Huismus is made in the Netherlands by Arne Krijnsen. You can read about him "
-"and his other work on <a href=\"https://"
-"www.arnekrijnsen.com\">arnekrijnsen.com</a>."
+"and his other work on <a href=\"https://www.arnekrijnsen.com\">arnekrijnsen."
+"com</a>."
 
 #~ msgid "Eén keer goed, in plaats van duizend keer"
 #~ msgstr "Made well once, instead of a thousand times"
