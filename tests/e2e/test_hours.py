@@ -4,6 +4,7 @@
 form (the rate of another customer filled in by JS), filter with HTMX,
 change and delete, on a desktop and a phone."""
 
+import re
 from datetime import timedelta
 from decimal import Decimal
 
@@ -164,6 +165,8 @@ def test_an_invoice_from_the_hours(app, customers, width):
 
     app.get_by_label("Een regel per dag").check()
     expect(lines).to_have_count(3)
+    # The way back follows the choice, also after HTMX swapped the page.
+    expect(app.locator("a.back")).to_have_attribute("href", re.compile(f"maand={month:%Y-%m}"))
     expect(lines.first).to_contain_text("3 ")
     app.get_by_role("button", name="Conceptfactuur maken").click()
     expect(app.get_by_text("Conceptfactuur gemaakt met 4,5 uur.")).to_be_visible()
