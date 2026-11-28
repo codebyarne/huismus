@@ -151,6 +151,10 @@ def _pages():
         # imports and lines without a rate under "Niet meegeteld".
         "/rapporten/btw-aangifte/",
         "/rapporten/btw-aangifte/?periode=2025",
+        # The summary for the ICP return (#168): the history has customers
+        # in Belgium and Ireland, reverse charged.
+        "/rapporten/opgaaf-icp/",
+        "/rapporten/opgaaf-icp/?periode=2025-03",
         "/uitgaven/categorieen/",
         f"/uitgaven/categorieen/?bewerk={_first(ExpenseCategory.objects, 'category').pk}",
         f"/uitgaven/categorieen/{_first(ExpenseCategory.objects, 'category').pk}/",

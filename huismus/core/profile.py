@@ -127,6 +127,13 @@ class Profile:
         return frozenset(found or {NL})
 
     @property
+    def shows_icp(self) -> bool:
+        """Whether Rapporten has the tab "Opgaaf ICP" (#168): only with VAT
+        and customers in another EU country. Under the KOR, or without VAT,
+        Huismus counts no VAT, so there is nothing to show."""
+        return self.vat == VAT and EU in self.customers
+
+    @property
     def parts_chosen(self) -> frozenset[str]:
         """The parts you want in the menu: Instellingen › Menu (#260).
         Only the settings, no data."""
