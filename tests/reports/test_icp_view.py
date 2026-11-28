@@ -104,6 +104,7 @@ def test_the_tab_shows_only_with_vat_and_a_customer_in_the_eu(logged_in):
     Contact.objects.create(company_name="Kunde GmbH", country="DE")
     assert tab in logged_in.get(year).content.decode()
     assert tab in logged_in.get(reverse("reports:vat_return")).content.decode()
+    assert tab in logged_in.get(reverse("reports:profit_and_loss")).content.decode()
 
     _settings(kor=True)
     assert tab not in logged_in.get(year).content.decode()

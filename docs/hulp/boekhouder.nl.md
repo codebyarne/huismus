@@ -14,6 +14,12 @@ jij downloadt.
 - **Het jaaroverzicht**: je omzet, je kosten en wat je overhoudt, ook per
   kwartaal. Open **Rapporten → Jaaroverzicht**, kies het jaar en klik op
   **CSV downloaden**.
+- **De winst-en-verliesrekening**: je omzet, je bedrijfskosten per categorie
+  en je winst, zoals een boekhouder hem kent. Open **Rapporten → Winst en
+  verlies**, kies het jaar en klik op **Pdf downloaden** of **CSV
+  downloaden**. Inkoop van voorraad, afschrijvingen en rente staan er niet
+  apart in: alle uitgaven staan onder bedrijfskosten, in je eigen
+  categorieën.
 - **De btw-aangifte**, als je btw rekent: de bedragen per rubriek. Open
   **Rapporten → Btw-aangifte**, kies de periode en klik op **CSV downloaden**.
   Zie [Kleineondernemersregeling (KOR) en btw](kor-en-btw.nl.md#btw-aangifte).

@@ -11,6 +11,9 @@ urlpatterns = [
     # "Rapporten" in the menu opens the year overview; tabs lead to the others.
     path("", RedirectView.as_view(pattern_name="reports:year_overview"), name="index"),
     path("jaaroverzicht/", views.year_overview, name="year_overview"),
+    path("winst-en-verlies/", views.profit_and_loss, name="profit_and_loss"),
+    path("winst-en-verlies/pdf/", views.profit_and_loss_pdf, name="profit_and_loss_pdf"),
+    path("winst-en-verlies/csv/", views.profit_and_loss_csv, name="profit_and_loss_csv"),
     path("btw-aangifte/", views.vat_return, name="vat_return"),
     path("jaaroverzicht/csv/", views.year_overview_csv, name="year_overview_csv"),
     path("btw-aangifte/csv/", views.vat_return_csv, name="vat_return_csv"),
