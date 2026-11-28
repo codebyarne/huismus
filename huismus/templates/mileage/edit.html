@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load i18n forms %}
+
+{% block title %}{% translate "Rit wijzigen" %} — Huismus{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <a class="back" href="{% url 'mileage:list' %}"><svg class="i i-sm" aria-hidden="true"><use href="#arrow-left"></use></svg>{% translate "Kilometers" %}</a>
+        <h1>{% translate "Rit wijzigen" %}</h1>
+    </div>
+</div>
+
+{% form_errors form %}
+
+<form class="card card-pad stack" method="post" style="gap:var(--s-6)">
+    {% csrf_token %}
+    <div class="fieldset">
+        {% field form.date span=2 %}
+        {% field form.origin span=2 %}
+        {% field form.destination span=2 %}
+        {% field form.purpose %}
+        {% field form.distance_km span=3 %}
+    </div>
+    {% include "mileage/_places.html" %}
+    <div class="row" style="flex-wrap:wrap">
+        <button type="submit" class="btn btn-primary">{% translate "Opslaan" %}<span class="spinner"></span></button>
+        <a class="btn btn-ghost" href="{% url 'mileage:list' %}">{% translate "Annuleren" %}</a>
+        <span class="spacer"></span>
+        <button class="btn btn-danger-quiet" type="button" command="show-modal" commandfor="verwijder-rit"><svg class="i" aria-hidden="true"><use href="#trash"></use></svg>{% translate "Verwijderen…" %}</button>
+    </div>
+</form>
+
+<dialog class="dialog" id="verwijder-rit" aria-labelledby="verwijder-rit-titel">
+    <form method="post" action="{% url 'mileage:delete' trip.pk %}">
+        {% csrf_token %}
+        <div class="dialog-body">
+            <div class="dialog-icon is-danger"><svg class="i" aria-hidden="true"><use href="#trash"></use></svg></div>
+            <h2 id="verwijder-rit-titel">{% translate "Deze rit verwijderen?" %}</h2>
+            <p class="muted">{% translate "Dat kun je niet ongedaan maken." %}</p>
+        </div>
+        <div class="dialog-foot">
+            <button type="button" class="btn" command="close" commandfor="verwijder-rit">{% translate "Annuleren" %}</button>
+            <button type="submit" class="btn btn-danger">{% translate "Verwijderen" %}</button>
+        </div>
+    </form>
+</dialog>
+{% endblock %}

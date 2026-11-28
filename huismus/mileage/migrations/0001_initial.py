@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = []
@@ -30,9 +29,7 @@ class Migration(migrations.Migration):
                 ("purpose", models.CharField(max_length=500, verbose_name="doel")),
                 (
                     "distance_km",
-                    models.DecimalField(
-                        decimal_places=1, max_digits=5, verbose_name="kilometers"
-                    ),
+                    models.DecimalField(decimal_places=1, max_digits=5, verbose_name="kilometers"),
                 ),
             ],
             options={
@@ -41,9 +38,7 @@ class Migration(migrations.Migration):
                 "ordering": ["-date", "-id"],
                 "constraints": [
                     models.CheckConstraint(
-                        condition=models.Q(
-                            ("distance_km__gt", 0), ("distance_km__lte", 2000)
-                        ),
+                        condition=models.Q(("distance_km__gt", 0), ("distance_km__lte", 2000)),
                         name="trip_more_than_0_at_most_2000_km",
                     )
                 ],

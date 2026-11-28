@@ -37,6 +37,7 @@ urlpatterns = [
     path("importeren/", include("huismus.imports.urls")),
     path("uitgaven/", include("huismus.expenses.urls")),
     path("uren/", include("huismus.hours.urls")),
+    path("kilometers/", include("huismus.mileage.urls")),
     path("rapporten/", include("huismus.reports.urls")),
     path("hulp/", include("huismus.core.help_urls")),
     path("", include("huismus.core.urls")),
