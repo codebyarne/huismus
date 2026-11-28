@@ -15,9 +15,8 @@ you're missing. If you'd like to say, you can do it below.
    you've set a text for reverse charge (yes or no, not the text itself) and
    the language of your invoices.
 3. Press **Send**. Only then does Huismus send it to a form on
-   arnekrijnsen.com. Huismus doesn't keep your email address or what you're
-   missing. What you're missing then goes on GitHub as an idea, where others
-   can read it. Your email address doesn't go there.
+   arnekrijnsen.com. Only the app's maker reads it. Huismus doesn't keep your
+   email address or what you're missing.
 
 ## The Feedback button
 
@@ -37,8 +36,7 @@ the moment you notice it.
    along: the page, the version, where Huismus runs, and how you work (your
    legal form, KOR or VAT, reverse charge and the language of your
    invoices).
-5. Press **Send**. Your message goes on GitHub, so others can read along and
-   think with you. The picture and your email address stay with the app's
-   maker.
+5. Press **Send**. Only the app's maker reads your message and sees the
+   picture.
 
 Don't include customer details, IBANs or amounts.

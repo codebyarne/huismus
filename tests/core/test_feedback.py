@@ -303,11 +303,10 @@ def test_the_done_page_asks_how_you_use_huismus(logged_in):
     assert "Krijnsen" not in page
 
 
-def test_the_card_says_what_you_miss_goes_on_github_and_your_email_not(logged_in):
-    # The site turns what you miss into a public issue (plugin
-    # Huismus-formulier); the card has to say so before anyone types it.
+def test_the_card_no_longer_says_anything_goes_on_github(logged_in):
+    # Owner, 2026-11-28: ideas go to the maker only, not to a public issue.
     page = logged_in.get(reverse("onboarding_done")).content.decode()
-    assert "Komt als idee op GitHub, waar anderen het kunnen lezen. Je e-mailadres niet." in page
+    assert "GitHub" not in page
 
 
 def test_see_what_goes_shows_everything_and_sends_nothing(logged_in, sends):

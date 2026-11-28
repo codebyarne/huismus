@@ -261,9 +261,8 @@ def test_check_shows_everything_and_sends_nothing(logged_in, sends):
     assert "Knop doet niets" in text
     assert "/facturen/" in text
     assert "btw op facturen, of nog niet gekozen" in text
-    # "Iets werkt niet" is no idea: the line below says where it goes, for every kind.
-    assert "als idee" not in text
-    assert "Je bericht komt op GitHub, zodat anderen kunnen meelezen en meedenken." in text
+    # Owner, 2026-11-28: it goes to the maker only, not to GitHub.
+    assert "GitHub" not in text
     assert 'src="data:image/png;base64,' in text
     assert sends == []
 
@@ -272,6 +271,7 @@ def test_send_sends_the_picture_as_bytes(logged_in, sends):
     png = _png(2)
     response = _post(logged_in, "versturen", image=_data_url(png))
     assert 'id="fb-verstuurd"' in response.content.decode()
+    assert "Alleen de appbouwer leest het." in response.content.decode()
     ((instance, kind, message, mail, page, image),) = sends
     assert (kind, message, mail, page, image) == (
         "probleem",

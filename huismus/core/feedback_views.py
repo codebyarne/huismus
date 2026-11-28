@@ -54,7 +54,6 @@ class FeedbackForm(forms.Form):
 
     wish = forms.CharField(
         label=_("Wat mis je, of wat wil je met Huismus doen?"),
-        help_text=_("Komt als idee op GitHub, waar anderen het kunnen lezen. Je e-mailadres niet."),
         max_length=feedback.MAX_WISH,
         required=False,
         widget=forms.Textarea(attrs={"rows": 4}),

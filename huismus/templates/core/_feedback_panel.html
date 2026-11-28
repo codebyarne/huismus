@@ -8,7 +8,7 @@
 {% if fb_state == "sent" %}
 <div class="fb-verstuurd" id="fb-verstuurd" role="status">
     <span class="fb-vink" aria-hidden="true"><svg class="i i-lg"><use href="#check"></use></svg></span>
-    <p class="help">{% translate "Je bericht komt op GitHub, zonder je e-mailadres en zonder de afbeelding." %}</p>
+    <p class="help">{% translate "Alleen de appbouwer leest het." %}</p>
     {% if fb_in_page %}<a class="btn" href="{% url 'home' %}">{% translate "Naar het overzicht" %}</a>{% else %}<button class="btn" type="button" popovertarget="feedback-paneel" popovertargetaction="hide">{% translate "Sluiten" %}</button>{% endif %}
 </div>
 {% elif fb_state == "preview" %}
@@ -30,7 +30,6 @@
         <button class="btn btn-ghost" type="submit" name="aanpassen">{% translate "Aanpassen" %}</button>
     </div>
 </form>
-<p class="small muted">{% translate "Je bericht komt op GitHub, zodat anderen kunnen meelezen en meedenken. Je e-mailadres en de afbeelding blijven bij de appbouwer." %}</p>
 {% else %}
 <form class="fb-form" method="post" action="{{ fb_url }}" hx-post="{{ fb_url }}" hx-target="#feedback-inhoud" hx-swap="innerHTML">
     {% csrf_token %}
