@@ -180,7 +180,11 @@ def issue(document: Document) -> Document:
         # The VAT per rate, as on the PDF, kept as it is now (decided by the
         # owner on 2026-11-06); also while the document is still a draft.
         store_vat_rows(
-            document, lines, subtotal_cents=totals.subtotal_cents, tax_cents=totals.tax_cents
+            document,
+            lines,
+            subtotal_cents=totals.subtotal_cents,
+            tax_cents=totals.tax_cents,
+            prices_include_vat=document.prices_include_vat,
         )
 
         document.status = "issued"

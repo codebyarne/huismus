@@ -382,6 +382,7 @@ def _create(parsed: CsvDocument, contact, settings, related) -> Document:
             lines,
             subtotal_cents=document.subtotal_cents,
             tax_cents=document.tax_cents,
+            prices_include_vat=document.prices_include_vat,
         )
     document.status = parsed.status
     document.save()

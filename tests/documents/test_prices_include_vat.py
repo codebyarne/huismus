@@ -206,3 +206,64 @@ def test_the_export_says_which_documents_have_prices_including_vat(monkeypatch):
     assert invoices[without.number]["prijzen incl. btw"] == "nee"
     assert lines[without.number]["regelbedrag"] == "30,00"
     assert invoices[without.number]["totaal incl. btw"] == "36,30"
+
+
+def test_toch_bewerken_and_annuleren_bring_back_the_choice_and_its_vat():
+    from huismus.documents.reopening import reopen, undo_reopen
+
+    _settings()
+    invoice = issue(_draft())
+    draft = reopen(invoice)
+    draft.prices_include_vat = False
+    draft.save()
+    draft.vat_rows.all().delete()  # as a document reopened before rows were kept
+    restored = undo_reopen(draft)
+    restored.refresh_from_db()
+    assert restored.status == "issued" and restored.prices_include_vat
+    assert restored.total_cents == 3000
+    row = restored.vat_rows.get()
+    assert (row.revenue_cents, row.tax_cents) == (2479, 521)
+
+
+def test_an_issued_document_keeps_its_choice_in_the_database():
+    from django.db import IntegrityError, connection, transaction
+
+    from huismus.documents.models import ImmutableDocumentError
+
+    _settings()
+    invoice = issue(_draft())
+    invoice.prices_include_vat = False
+    with pytest.raises(ImmutableDocumentError):
+        invoice.save()
+    with pytest.raises(IntegrityError), transaction.atomic(), connection.cursor() as cursor:
+        cursor.execute(
+            "UPDATE documents_document SET prices_include_vat = 0 WHERE id = %s", [invoice.pk]
+        )
+
+
+def test_a_recurring_invoice_takes_the_choice_of_the_last_one():
+    import datetime
+
+    from huismus.documents.recurring import make_due_drafts, start_series
+
+    _settings()
+    invoice = issue(_draft())
+    start_series(invoice, "month", datetime.date(2026, 11, 1))
+    (draft,) = make_due_drafts(datetime.date(2026, 11, 1))
+    assert draft.prices_include_vat and draft.total_cents == 3000
+
+
+def test_the_ai_connection_starts_a_draft_with_the_setting():
+    from huismus.assistants import tools
+
+    _settings(prices_include_vat=True)
+    contact = Contact.objects.create(company_name="Klant BV")
+    detail = tools.create_draft(
+        {
+            "kind": "invoice",
+            "contact_id": contact.pk,
+            "lines": [{"description": "Workshop", "quantity": 3, "unit_price": "10"}],
+        }
+    )
+    assert detail["prices_include_vat"] is True
+    assert Document.objects.get().total_cents == 3000

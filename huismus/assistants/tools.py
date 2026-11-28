@@ -865,7 +865,7 @@ def create_draft(arguments):
         "currency": settings.currency,
         "footer_text": settings.default_footer_text,
     }
-    if settings.prices_include_vat and not settings.no_vat:
+    if settings.default_prices_include_vat:
         data["prices_include_vat"] = "on"
     data.update({name: arguments[name] for name in DOCUMENT_FIELDS if name in arguments})
     data.update(_line_data(arguments["lines"], []))

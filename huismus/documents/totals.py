@@ -154,9 +154,13 @@ def vat_rows(
         revenue[key] = revenue.get(key, 0) + cents
     tax_by_rate = dict(totals.tax_per_rate)
     if prices_include_vat:
-        for rate_bp, reverse_charge in revenue:
-            if not reverse_charge:
-                revenue[(rate_bp, reverse_charge)] -= tax_by_rate[rate_bp]
+        # The lines as typed include VAT: a rate's revenue is its lines
+        # without the VAT of their group. One key per rate has VAT (the
+        # reverse charge lines of 0% are apart, and have none).
+        revenue = {
+            (rate_bp, reverse_charge): cents - (0 if reverse_charge else tax_by_rate[rate_bp])
+            for (rate_bp, reverse_charge), cents in revenue.items()
+        }
     return [
         VatRow(
             rate_bp=rate_bp,
