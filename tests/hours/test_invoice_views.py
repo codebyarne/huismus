@@ -185,7 +185,24 @@ def test_a_second_click_makes_nothing(client_in, studio):
 
     response = client_in.post(PAGE, data, follow=True)
 
+    # Afterwards (not at the same moment, see test_invoicing) the page says
+    # there are none left.
     assert Document.objects.count() == 1
+    assert "Geen uren om te factureren voor Studio Noordlicht" in response.content.decode()
+
+
+def test_a_click_at_the_same_moment_says_the_hours_are_taken(client_in, studio, monkeypatch):
+    from huismus.hours import invoicing
+
+    _entry(studio, date(2026, 11, 3), "2")
+
+    def taken(*args):
+        raise invoicing.AlreadyInvoiced
+
+    monkeypatch.setattr(invoicing, "create_invoice", taken)
+    data = {"klant": studio.pk, "maand": "2026-11", "per": "dag"}
+    response = client_in.post(PAGE, data, follow=True)
+
     assert "Deze uren staan al op een factuur." in response.content.decode()
 
 

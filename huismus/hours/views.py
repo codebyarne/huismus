@@ -132,6 +132,11 @@ def hours_list(request):
         for m in sorted(months | {this_month}, reverse=True)
     ]
     customers = Contact.objects.filter(time_entries__isnull=False).distinct()
+    # "Factuur maken…" (#81): whenever what the filter shows has hours to
+    # invoice, with the filter carried over.
+    invoice_url = None
+    if everything.filter(pk__in=invoicing.billable()).exists():
+        invoice_url = reverse("hours:invoice") + _query(klant=contact_pk, maand=_month_param(month))
     return render(
         request,
         "hours/list.html",
@@ -148,12 +153,7 @@ def hours_list(request):
             "contact_pk": contact_pk,
             "customers": customers,
             "filtered": month != this_month or contact_pk is not None,
-            # "Factuur maken…" (#81): whenever what the filter shows has
-            # hours to invoice, with the filter carried over.
-            "invoice_url": reverse("hours:invoice")
-            + _query(klant=contact_pk, maand=_month_param(month))
-            if everything.filter(pk__in=invoicing.billable()).exists()
-            else None,
+            "invoice_url": invoice_url,
             "all_months_url": _query(maand=ALL_MONTHS, klant=contact_pk),
             "with_vat": not Settings.load().no_vat,
             # "wo 30 sep" in Dutch, "Wed 30 Sep" in English.
@@ -166,7 +166,9 @@ def hours_list(request):
 def hours_edit(request, pk):
     entry = get_object_or_404(TimeEntry.objects.select_related("contact", "invoice"), pk=pk)
     if entry.locked:
-        # On an invoice (#81): shown, not changed. A POST changes nothing.
+        # On an invoice (#81): shown, not changed; the page says why.
+        if request.method == "POST":
+            return redirect("hours:edit", pk=entry.pk)
         return render(request, "hours/edit.html", {"entry": entry})
     form = TimeEntryForm(request.POST or None, instance=entry)
     if request.method == "POST" and form.is_valid():
@@ -188,10 +190,12 @@ def hours_delete(request, pk):
 
 
 def _invoice_choice(request) -> tuple[Contact | None, date | None, str]:
-    """The customer, month and grouping "Factuur maken uit uren" shows:
-    what was asked when it has hours to invoice, else the oldest hours to
-    invoice within what was asked (product-owner agent 2026-11-28). A
-    customer and month that have none stay chosen, so the page can say so."""
+    """The customer, month and grouping "Factuur maken uit uren" shows
+    (product-owner agent 2026-11-28). What was asked, filled in step by
+    step: no customer, the one with the oldest hours to invoice (in the
+    month asked, if any); no month, that customer's oldest month with hours
+    to invoice. A customer and month asked that have none stay, so the page
+    can say so."""
     params = request.POST if request.method == "POST" else request.GET
     contact = Contact.objects.filter(pk=_int(params.get("klant"))).first()
     value = params.get("maand")
@@ -199,22 +203,16 @@ def _invoice_choice(request) -> tuple[Contact | None, date | None, str]:
     per = params.get("per")
     if per not in (invoicing.PER_DAY, invoicing.PER_DESCRIPTION):
         per = invoicing.PER_DESCRIPTION
-    candidates = invoicing.billable()
-    if contact is not None:
-        candidates = candidates.filter(contact=contact)
-    if month is not None:
-        candidates = candidates.filter(date__year=month.year, date__month=month.month)
-    oldest = candidates.select_related("contact").order_by("date", "pk").first()
-    if oldest is not None and (contact is None or month is None):
-        contact = contact or oldest.contact
-        if month is None:
-            month = oldest.date.replace(day=1)
-        elif (
-            not invoicing.billable()
-            .filter(contact=contact, date__year=month.year, date__month=month.month)
-            .exists()
-        ):
-            month = oldest.date.replace(day=1)
+
+    if contact is None:
+        candidates = invoicing.billable()
+        if month is not None:
+            candidates = candidates.filter(date__year=month.year, date__month=month.month)
+        oldest = candidates.select_related("contact").order_by("date", "pk").first()
+        contact = oldest.contact if oldest else None
+    if contact is not None and month is None:
+        months = invoicing.billable_months(contact)  # newest first
+        month = months[-1] if months else None
     return contact, month, per
 
 
@@ -226,14 +224,17 @@ def hours_invoice(request):
     never from what the page showed."""
     contact, month, per = _invoice_choice(request)
     if request.method == "POST" and contact is not None and month is not None:
+        again = reverse("hours:invoice") + _query(
+            klant=contact.pk, maand=_month_param(month), per=per
+        )
         try:
             invoice = invoicing.create_invoice(contact, month, per)
         except invoicing.NothingToInvoice:
+            # The page says there are none.
+            return redirect(again)
+        except invoicing.AlreadyInvoiced:
             messages.error(request, _("Deze uren staan al op een factuur."))
-            return redirect(
-                reverse("hours:invoice")
-                + _query(klant=contact.pk, maand=_month_param(month), per=per)
-            )
+            return redirect(again)
         hours = sum(invoice.time_entries.values_list("hours", flat=True))
         messages.success(
             request,
@@ -251,7 +252,15 @@ def hours_invoice(request):
     months = invoicing.billable_months(contact) if contact else []
     if month is not None and month not in months:
         months = sorted([*months, month], reverse=True)
-    proposal = invoicing.propose(contact, month, per) if contact and month else None
+    proposal, rows, total = None, [], ""
+    if contact is not None and month is not None:
+        proposal = invoicing.propose(contact, month, per)
+        rows = list(zip(proposal.lines, proposal.totals.line_totals_cents, strict=True))
+        if proposal.entries:
+            total = listing.total_text(proposal.hours, proposal.totals.subtotal_cents)
+    back_url = reverse("hours:list") + _query(
+        klant=contact.pk if contact else None, maand=_month_param(month) if month else None
+    )
     return render(
         request,
         "hours/invoice.html",
@@ -267,16 +276,9 @@ def hours_invoice(request):
                 (invoicing.PER_DAY, _("Een regel per dag")),
             ],
             "proposal": proposal,
-            "rows": zip(proposal.lines, proposal.totals.line_totals_cents, strict=True)
-            if proposal
-            else [],
-            "total": listing.total_text(proposal.hours, proposal.totals.subtotal_cents)
-            if proposal and proposal.entries
-            else "",
+            "rows": rows,
+            "total": total,
             "with_vat": not Settings.load().no_vat,
-            "back_url": reverse("hours:list")
-            + _query(
-                klant=contact.pk if contact else None, maand=_month_param(month) if month else None
-            ),
+            "back_url": back_url,
         },
     )
