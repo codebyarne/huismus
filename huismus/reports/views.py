@@ -24,8 +24,9 @@ from .vat_return_csv import rows as vat_return_rows
 from .year_overview import CHART_STEPS, chart_step, compute_year_overview
 
 # What the ICP page says instead of figures (huismus-intern/besluiten.md,
-# 2026-11-28, "Plan Opgaaf ICP" and "Opgaaf ICP (#168)"): only what Huismus does, nothing about whether a return is
-# due; the source for that is missing (docs/belastingregels.md).
+# 2026-11-28, "Plan Opgaaf ICP" and "Opgaaf ICP (#168)"): only what Huismus
+# does, nothing about whether a return is due; the source for that is
+# missing (docs/belastingregels.md).
 KOR_NOTE_ICP = _(
     "De KOR staat aan. Dan telt Huismus geen btw, dus dit overzicht heeft geen bedragen. "
     "Of je een opgaaf ICP moet doen, lees je bij de Belastingdienst."
