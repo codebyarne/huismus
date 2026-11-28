@@ -189,19 +189,59 @@ def _in(period: Period, day: date) -> bool:
     return period.first_day <= day <= period.last_day
 
 
+def _issued_in(period: Period):
+    """The issued invoices and credit notes invoiced in the period, or
+    delivered in it: a 3b row counts in the period of its delivery date
+    when there is one (issue #113; docs/belastingregels.md, "Rubrieken in
+    detail", 3b), so a document invoiced in another period can still have
+    a row here."""
+    invoiced = Q(issue_date__gte=period.first_day, issue_date__lte=period.last_day)
+    delivered = Q(delivery_date__gte=period.first_day, delivery_date__lte=period.last_day)
+    return (
+        Document.objects.filter(kind__in=("invoice", "credit_note"), status="issued")
+        .filter(invoiced | delivered)
+        .prefetch_related("vat_rows")
+        .order_by("issue_date", "number")
+    )
+
+
+@dataclass
+class Row3b:
+    """One VAT row of a sale in box 3b, negative for a credit note."""
+
+    document: Document
+    revenue_cents: int
+    tax_cents: int
+
+
+def rows_in_3b(period: Period) -> list[Row3b]:
+    """The VAT rows that box 3b adds up for the period. The VAT return and
+    the summary for the ICP return (reports.icp) both read these, so the
+    ICP total is always that of 3b (docs/belastingregels.md, "Opgaaf ICP")."""
+    found = []
+    for document in _issued_in(period):
+        if document.kor_text_snapshot:
+            continue
+        # 3b: the date that counts is the delivery date, and without one
+        # the invoice date.
+        if not _in(period, document.delivery_date or document.issue_date):
+            continue
+        sign = -1 if document.kind == "credit_note" else 1
+        country = customer_country(document)
+        for row in document.vat_rows.all():
+            if sales_box(row.rate_bp, row.reverse_charge, country) == "3b":
+                found.append(Row3b(document, sign * row.revenue_cents, sign * row.tax_cents))
+    return found
+
+
 def compute_vat_return(period: Period) -> VatReturn:
     boxes = {code: Box(code) for code in BOX_ORDER}
     sales = Document.objects.filter(kind__in=("invoice", "credit_note"))
     invoiced = Q(issue_date__gte=period.first_day, issue_date__lte=period.last_day)
-    # A 3b row counts in the period of its delivery date when there is one
-    # (issue #113; docs/belastingregels.md, "Rubrieken in detail", 3b), so
-    # a document invoiced in another period can still have a row here.
-    delivered = Q(delivery_date__gte=period.first_day, delivery_date__lte=period.last_day)
-    issued = (
-        sales.filter(invoiced | delivered, status="issued")
-        .prefetch_related("vat_rows")
-        .order_by("issue_date", "number")
-    )
+    issued = _issued_in(period)
+    for row in rows_in_3b(period):
+        boxes["3b"].revenue_cents += row.revenue_cents
+        boxes["3b"].tax_cents += row.tax_cents
 
     # Whether the period has anything of its own: a document invoiced in
     # it, or a 3b row delivered in it.
@@ -233,11 +273,8 @@ def compute_vat_return(period: Period) -> VatReturn:
             revenue, tax = sign * row.revenue_cents, sign * row.tax_cents
             code = sales_box(row.rate_bp, row.reverse_charge, country)
             if code == "3b":
-                # 3b: the date that counts is the delivery date, and
-                # without one the invoice date.
+                # Added up by rows_in_3b() above, on its own date.
                 if _in(period, document.delivery_date or document.issue_date):
-                    boxes["3b"].revenue_cents += revenue
-                    boxes["3b"].tax_cents += tax
                     found_any = True
                 continue
             # Every other row counts on the invoice date.
