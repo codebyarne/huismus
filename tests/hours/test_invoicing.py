@@ -22,11 +22,13 @@ from huismus.contacts.models import Contact
 from huismus.documents.drafts import create_credit_note, delete_draft
 from huismus.documents.issuing import issue
 from huismus.documents.models import Document
+from huismus.documents.reopening import reopen
 from huismus.documents.totals import line_total_cents
 from huismus.hours.entries import period_total
 from huismus.hours.invoicing import (
     PER_DAY,
     PER_DESCRIPTION,
+    AlreadyInvoiced,
     NothingToInvoice,
     billable_months,
     create_invoice,
@@ -274,6 +276,36 @@ def test_an_issued_and_credited_invoice_keeps_its_hours(studio):
     assert propose(studio, NOVEMBER, PER_DAY).entries == []
 
 
+def test_reopening_the_invoice_keeps_its_hours(studio):
+    entry = _entry(studio, 3, "2")
+    invoice = issue(create_invoice(studio, NOVEMBER, PER_DAY))
+
+    reopen(invoice)
+
+    entry.refresh_from_db()
+    assert entry.invoice == invoice
+    assert entry.locked
+
+
+def test_hours_changed_between_reading_and_claiming_make_nothing(studio, monkeypatch):
+    """The claim takes only hours as they were read: a change in another
+    tab at that moment makes no draft with the old number of hours."""
+    from huismus.hours import invoicing
+
+    entry = _entry(studio, 3, "2")
+    read = invoicing.propose
+
+    def read_then_changed(*args, **kwargs):
+        proposal = read(*args, **kwargs)
+        TimeEntry.objects.filter(pk=entry.pk).update(hours=Decimal("3"))
+        return proposal
+
+    monkeypatch.setattr(invoicing, "propose", read_then_changed)
+    with pytest.raises(AlreadyInvoiced):
+        create_invoice(studio, NOVEMBER, PER_DAY)
+    assert Document.objects.count() == 0
+
+
 def test_an_archived_customer_can_be_invoiced(studio):
     _entry(studio, 3, "2")
     studio.archived = True
@@ -302,7 +334,7 @@ def test_two_requests_at_once_put_the_hours_on_one_invoice():
         try:
             barrier.wait()
             made.append(create_invoice(contact, NOVEMBER, PER_DAY))
-        except NothingToInvoice as exc:
+        except AlreadyInvoiced as exc:
             refused.append(exc)
         except Exception as exc:  # pragma: no cover - reported below
             errors.append(exc)

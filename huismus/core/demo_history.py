@@ -75,8 +75,7 @@ from huismus.documents.reopening import reopen
 from huismus.documents.totals import round_half_up_cents
 from huismus.expenses.lines import ExpenseLineInput, create_expense
 from huismus.expenses.models import ExpenseCategory, VatRate
-from huismus.hours.invoicing import PER_DAY, PER_DESCRIPTION, billable_months, create_invoice
-from huismus.hours.invoicing import billable as billable_hours
+from huismus.hours import invoicing
 from huismus.hours.models import TimeEntry
 
 FIRST_YEAR = 2018
@@ -861,21 +860,22 @@ def _hours_invoiced(rng: random.Random, last_day: date) -> None:
     """Invoices from the hours (#81), as the user makes them: every month
     before the last one on an issued invoice early in the month after,
     most paid; the last month partly on a draft, this month still free
-    (product-owner agent 2026-11-28)."""
+    (product-owner agent 2026-11-28). Mostly a line per description, now
+    and then one per day."""
     this_month = last_day.replace(day=1)
     last_month = (this_month - timedelta(days=1)).replace(day=1)
-    for month in sorted(billable_months()):
-        if month >= last_month:
-            continue
-        in_month = billable_hours().filter(date__year=month.year, date__month=month.month)
+    for month in sorted(m for m in invoicing.billable_months() if m < last_month):
+        in_month = invoicing.billable().filter(date__year=month.year, date__month=month.month)
+        next_month = (month + timedelta(days=31)).replace(day=1)
         for contact in Contact.objects.filter(pk__in=in_month.values("contact_id")):
-            per = rng.choice((PER_DESCRIPTION, PER_DESCRIPTION, PER_DAY))
-            invoice = create_invoice(contact, month, per)
-            next_month = (month + timedelta(days=32)).replace(day=1)
+            per = invoicing.PER_DAY if rng.random() < 1 / 3 else invoicing.PER_DESCRIPTION
+            invoice = invoicing.create_invoice(contact, month, per)
+            # issue() keeps an issue date that is set (documents.issuing).
             invoice.issue_date = next_month + timedelta(days=rng.randint(0, 4))
             invoice.save()
             _pay(rng, issue(invoice), last_day)
-    waiting = billable_hours().filter(date__gte=last_month, date__lt=this_month)
-    first = waiting.order_by("contact_id").values_list("contact_id", flat=True).first()
+    # Last month: the hours of one customer (the first made) on a draft.
+    waiting = invoicing.billable().filter(date__gte=last_month, date__lt=this_month)
+    first = waiting.order_by("contact_id").first()
     if first is not None:
-        create_invoice(Contact.objects.get(pk=first), last_month, PER_DESCRIPTION)
+        invoicing.create_invoice(first.contact, last_month, invoicing.PER_DESCRIPTION)
