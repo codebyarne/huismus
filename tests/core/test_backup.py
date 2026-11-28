@@ -240,6 +240,20 @@ def test_the_ai_connections_key_is_not_archived(settings, tmp_path):
         assert not any(name.startswith(key.FILE_NAME) for name in tar.getnames())
 
 
+def test_linked_phones_are_not_archived(settings, tmp_path):
+    # Issue #143: a link belongs to this computer, and a restored backup
+    # must not let an old phone in.
+    from huismus.core import phones
+
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    settings.DATA_DIR = data_dir
+    phones.pair(phones.new_code(), "iPhone")
+
+    with tarfile.open(create_backup(tmp_path / "out")) as tar:
+        assert not any(name.startswith(phones.FILE_NAME) for name in tar.getnames())
+
+
 def test_an_old_archive_with_a_backups_folder_leaves_data_backups_alone(settings, tmp_path):
     # Archives made before data/backups was left out carry it; restoring
     # one must keep the backup made just before (core.auto_backups).
@@ -298,6 +312,8 @@ def test_restoring_unpacks_inside_the_data_dir(settings, tmp_path):
         "receipts-folder.json",
         "voor-nepdata.tar.gz",
         "import-staging",
+        "telefoons.json",
+        "telefoons.json.tmp",
     ],
 )
 def test_a_restore_never_takes_what_a_backup_leaves_out(settings, tmp_path, name):

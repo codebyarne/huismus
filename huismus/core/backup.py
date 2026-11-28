@@ -23,6 +23,7 @@ from django.utils import timezone
 from huismus.assistants import key as assistant_key
 from huismus.business import smtp
 from huismus.config import secret_key
+from huismus.core import phones
 from huismus.expenses import ai_service
 
 DB_NAME_IN_ARCHIVE = "db.sqlite3"
@@ -137,6 +138,10 @@ def _belongs_to_this_installation(name: str) -> bool:
     # secrets of this installation, and a backup encrypted with a code must
     # never carry that code.
     if name.startswith(CLOUD_FILE_PREFIX):
+        return True
+    # Phones linked over Wi-Fi (core.phones, issue #143): a link belongs to
+    # this computer, and a crafted archive must not bring its own phone.
+    if name.startswith(phones.FILE_NAME):
         return True
     # The desktop app's backup folder and status, and its update setting,
     # belong to this computer, not to the administration (core.auto_backups,
