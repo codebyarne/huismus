@@ -41,7 +41,7 @@ def test_fill_in_see_what_goes_and_send(app, sends):
 
     card.get_by_role("button", name="Versturen").click()
     expect(card.locator("#vertel-verstuurd")).to_have_text("Verstuurd. Dank je wel!")
-    assert sends == [("Uren bijhouden\nper project", "")]
+    assert sends == [("Uren bijhouden\nper project", "info@example.invalid")]
     # The only primary button on the page stays "Eerste klant toevoegen".
     expect(app.locator("main .btn-primary")).to_have_count(1)
 
@@ -69,15 +69,26 @@ def test_a_failed_send_says_so(app, monkeypatch):
     expect(card.get_by_role("button", name="Versturen")).to_be_visible()
 
 
-def test_with_nothing_filled_in_the_profile_goes(app, sends):
+def test_with_only_the_address_of_your_business_the_profile_goes(app, sends):
+    # Both forms start with the address of the business (owner, 2026-11-28, #368).
     app.goto(app.base + "/welkom/klaar/")
     card = app.locator("#vertel")
+    expect(card.get_by_label("E-mailadres")).to_have_value("info@example.invalid")
     card.get_by_role("button", name="Controleer gegevens").click()
     overview = card.locator("#vertel-wat-er-gaat")
     expect(overview).to_contain_text("niet ingevuld")
     card.get_by_role("button", name="Versturen").click()
     expect(card.locator("#vertel-verstuurd")).to_be_visible()
-    assert sends == [("", "")]
+    assert sends == [("", "info@example.invalid")]
+
+
+def test_without_an_address_the_card_does_not_go_on(app, sends):
+    app.goto(app.base + "/welkom/klaar/")
+    card = app.locator("#vertel")
+    card.get_by_label("E-mailadres").fill("")
+    card.get_by_role("button", name="Controleer gegevens").click()
+    expect(card.locator("#vertel-wat-er-gaat")).to_have_count(0)
+    assert sends == []
 
 
 def test_skip_and_the_done_page_no_longer_asks(app):
@@ -106,6 +117,7 @@ def test_the_button_opens_the_panel_point_check_and_send(app, contact, quick_sen
     app.get_by_role("button", name="Feedback").click()
     panel = app.locator("#feedback-paneel")
     expect(panel.get_by_role("heading")).to_have_text("Wat wil je kwijt?")
+    expect(panel.get_by_label("E-mailadres")).to_have_value("info@example.invalid")
     panel.get_by_text("Idee", exact=True).click()
     panel.get_by_label("Bericht").fill("Klanten op plaats sorteren")
 
@@ -131,8 +143,13 @@ def test_the_button_opens_the_panel_point_check_and_send(app, contact, quick_sen
 
     panel.get_by_role("button", name="Versturen").click()
     expect(panel.locator("#fb-verstuurd")).to_be_visible()
-    ((_instance, kind, message, _email, page, png),) = quick_sends
-    assert (kind, message, page) == ("idee", "Klanten op plaats sorteren", "/contacten/")
+    ((_instance, kind, message, address, page, png),) = quick_sends
+    assert (kind, message, address, page) == (
+        "idee",
+        "Klanten op plaats sorteren",
+        "info@example.invalid",
+        "/contacten/",
+    )
     assert png.startswith(feedback.PNG_SIGNATURE)
 
 

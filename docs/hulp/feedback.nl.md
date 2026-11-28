@@ -6,8 +6,8 @@ Wil je het vertellen, dan kan dat hieronder.
 
 ## Zo gaat het
 
-1. Schrijf wat je mist, en je e-mailadres als je wilt. Beide mogen leeg
-   blijven.
+1. Schrijf wat je mist. Dat mag leeg blijven. Je e-mailadres staat al
+   ingevuld; pas het aan als je liever op een ander adres antwoord krijgt.
 2. Druk op **Controleer gegevens**. Je ziet alles wat meegaat, ook wat Huismus
    zelf invult: je rechtsvorm (uit **Instellingen → Bedrijf**), KOR of btw, waar
    het draait, de versie, de taal van de app, of je een tekst bij btw verlegd
@@ -24,7 +24,8 @@ een rond knopje boven de balk onderin. Zo vertel je iets op het moment dat
 het je opvalt.
 
 1. Kies **Iets werkt niet**, **Idee** of **Vraag**, en schrijf wat je wilt
-   zeggen. Je e-mailadres mag leeg blijven.
+   zeggen. Je e-mailadres staat al ingevuld, zodat de appbouwer je kan
+   antwoorden.
 2. Wil je laten zien waar het om gaat? Druk op **Wijs aan op het scherm** en
    klik of tik op het stuk dat je bedoelt, of sleep er een kader omheen. **Hele
    scherm** neemt alles. Met **Esc** stop je.

@@ -27,7 +27,7 @@
         <input type="hidden" name="plek" value="{{ place }}">
         <div class="fieldset">
             {% field feedback_form.wish span=6 optional=True %}
-            {% field feedback_form.email span=6 optional=True %}
+            {% field feedback_form.email span=6 %}
         </div>
         <div class="row" style="gap:var(--s-3);flex-wrap:wrap;margin-top:var(--s-4)">
             <button class="btn btn-secondary" type="submit">{% translate "Controleer gegevens" %}</button>

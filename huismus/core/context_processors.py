@@ -8,7 +8,7 @@ from django.conf import settings
 from huismus.core import auto_backups
 from huismus.core.appearance import theme_of
 from huismus.core.desktop import has_no_password
-from huismus.core.feedback_views import QuickFeedbackForm
+from huismus.core.feedback_views import QuickFeedbackForm, initial_email
 from huismus.core.profile import BANK, EXPENSES, HOURS, QUOTES, profile
 
 # Routes that have their own item in the sidebar's sub-navigation, per
@@ -117,7 +117,8 @@ def theme(request):
 
 def feedback_panel(request):
     """The empty form of the feedback button, for base.html, with the page
-    it is on (huismus/core/feedback_views.py)."""
+    it is on and the address of the business (huismus/core/feedback_views.py)."""
     if not getattr(request, "user", None) or not request.user.is_authenticated:
         return {}
-    return {"quick_feedback_form": QuickFeedbackForm(initial={"page": request.path})}
+    initial = {"page": request.path, **initial_email()}
+    return {"quick_feedback_form": QuickFeedbackForm(initial=initial)}

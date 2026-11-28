@@ -6,8 +6,9 @@ you're missing. If you'd like to say, you can do it below.
 
 ## How it works
 
-1. Write what you're missing, and your email address if you like. Both can
-   stay empty.
+1. Write what you're missing. That can stay empty. Your email address is
+   already filled in; change it if you'd rather get a reply at another
+   address.
 2. Press **Check details**. You see everything that goes along, including
    what Huismus fills in itself: your legal form (from **Settings → Business**),
    KOR or VAT, where it runs, the version, the language of the app, whether
@@ -25,7 +26,8 @@ a round button above the bar at the bottom. That way you can say something
 the moment you notice it.
 
 1. Choose **Something is broken**, **Idea** or **Question**, and write what
-   you want to say. Your email address can stay empty.
+   you want to say. Your email address is already filled in, so the app's
+   maker can reply to you.
 2. Want to show where it is? Press **Point at the screen** and click or tap the part
    you mean, or drag a box around it. **Whole screen** takes everything.
    **Esc** stops.
