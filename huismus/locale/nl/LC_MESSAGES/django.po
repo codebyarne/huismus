@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 14:52+0100\n"
+"POT-Creation-Date: 2026-11-28 13:10+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2219,8 +2219,8 @@ msgid "Importeren uit andere pakketten en uit Excel"
 msgstr ""
 
 msgid ""
-"Met het sjabloon, en een handleiding voor Rompslomp, Tellow, e-"
-"Boekhouden.nl, Jortt en Excel."
+"Met het sjabloon, en een handleiding voor Rompslomp, Tellow, e-Boekhouden."
+"nl, Jortt en Excel."
 msgstr ""
 
 msgid "Auditfile voor je boekhouder"
@@ -2517,6 +2517,7 @@ msgstr ""
 msgid "Laag tarief"
 msgstr ""
 
+#, python-format
 msgid "0% of niet bij jou belast"
 msgstr ""
 
@@ -2565,6 +2566,7 @@ msgstr ""
 msgid "Omzet 1b laag tarief"
 msgstr ""
 
+#, python-format
 msgid "Omzet 1e 0% of niet bij jou belast"
 msgstr ""
 
@@ -2590,10 +2592,24 @@ msgstr ""
 msgid "Kosten zonder categorie"
 msgstr ""
 
+msgid "Artikel toegevoegd."
+msgstr ""
+
+#, fuzzy
+#| msgid "Je hebt niets overgeslagen."
+msgid "Artikel opgeslagen."
+msgstr "Je hebt niets overgeslagen."
+
+msgid "Artikel verwijderd."
+msgstr ""
+
 msgid "Vul een getal in, zoals 2 of 1,5."
 msgstr ""
 
 msgid "verlegd"
+msgstr ""
+
+msgid "prijs per eenheid, zonder btw"
 msgstr ""
 
 msgid "Overboeking"
@@ -2972,6 +2988,12 @@ msgstr ""
 msgid "facturen in een periodieke reeks"
 msgstr ""
 
+msgid "artikel"
+msgstr ""
+
+msgid "artikelen"
+msgstr ""
+
 msgid "[klantnummer]"
 msgstr ""
 
@@ -3210,6 +3232,7 @@ msgstr ""
 msgid "Kies het btw-tarief."
 msgstr ""
 
+#, python-format
 msgid "Bij 0% of geen btw is het btw-bedrag € 0,00."
 msgstr ""
 
@@ -3283,6 +3306,7 @@ msgstr ""
 msgid "Bonnetje verwijderd."
 msgstr ""
 
+#, python-format
 msgid "0% of geen btw"
 msgstr ""
 
@@ -4095,6 +4119,7 @@ msgstr ""
 msgid "Leveringen/diensten belast met laag tarief"
 msgstr ""
 
+#, python-format
 msgid "Leveringen/diensten belast met 0% of niet bij u belast"
 msgstr ""
 
@@ -5647,6 +5672,18 @@ msgstr ""
 msgid "Leegmaken"
 msgstr ""
 
+msgid "Omschrijving"
+msgstr ""
+
+msgid "Eenheid"
+msgstr ""
+
+msgid "Prijs per eenheid, zonder btw"
+msgstr ""
+
+msgid "Prijs per eenheid"
+msgstr ""
+
 msgid "T.a.v."
 msgstr ""
 
@@ -5785,16 +5822,7 @@ msgid ""
 "Huismus legt je bedrijfsgegevens en die van de klant vast zoals ze nu zijn."
 msgstr ""
 
-msgid "Omschrijving"
-msgstr ""
-
 msgid "Aantal"
-msgstr ""
-
-msgid "Eenheid"
-msgstr ""
-
-msgid "Prijs per eenheid"
 msgstr ""
 
 msgid "Regel verwijderen"
@@ -5953,6 +5981,58 @@ msgstr ""
 msgid "Berekend door Huismus"
 msgstr ""
 
+msgid ""
+"Regels die je vaak gebruikt. In een factuur of offerte kies je een artikel "
+"en de regel staat er. Daarna pas je hem aan zoals elke regel."
+msgstr ""
+
+msgid "Eenheid en btw"
+msgstr ""
+
+msgid "Prijs"
+msgstr ""
+
+msgid "Prijs zonder btw"
+msgstr ""
+
+msgid "Acties"
+msgstr ""
+
+#, python-format
+msgid "per %(unit)s"
+msgstr ""
+
+msgid "Bewerken"
+msgstr ""
+
+#, python-format
+msgid "%(name)s verwijderen"
+msgstr ""
+
+#, python-format
+msgid "Artikel „%(name)s” verwijderen?"
+msgstr ""
+
+msgid "Facturen en offertes met deze regel blijven zoals ze zijn."
+msgstr ""
+
+msgid "Nog geen artikelen"
+msgstr ""
+
+msgid ""
+"Voeg hieronder je eerste artikel toe, bijvoorbeeld een uur advies of een "
+"workshop."
+msgstr ""
+
+msgid "Artikel wijzigen"
+msgstr ""
+
+msgid "Nieuw artikel"
+msgstr ""
+
+msgid "Toevoegen"
+msgstr ""
+
 msgid "Definitief"
 msgstr ""
 
@@ -6007,9 +6087,6 @@ msgid "Leverdatum"
 msgstr ""
 
 msgid "Vervaldatum"
-msgstr ""
-
-msgid "Prijs"
 msgstr ""
 
 #, python-format
@@ -6253,6 +6330,14 @@ msgstr ""
 
 msgid "Regel toevoegen"
 msgstr ""
+
+msgid "Artikel toevoegen"
+msgstr ""
+
+#, fuzzy
+#| msgid "Kies een factuur."
+msgid "Kies een artikel"
+msgstr "Kies een factuur."
 
 msgid "Tekst aanpassen"
 msgstr ""
@@ -6578,13 +6663,7 @@ msgstr ""
 msgid "Volgorde"
 msgstr ""
 
-msgid "Acties"
-msgstr ""
-
 msgid "geen uitgaven"
-msgstr ""
-
-msgid "Bewerken"
 msgstr ""
 
 #, python-format
@@ -6592,10 +6671,6 @@ msgid "%(name)s verwijderen: niet mogelijk, er horen uitgaven bij"
 msgstr ""
 
 msgid "Er horen uitgaven bij, dus verwijderen kan niet"
-msgstr ""
-
-#, python-format
-msgid "%(name)s verwijderen"
 msgstr ""
 
 #, python-format
@@ -6613,9 +6688,6 @@ msgid ""
 msgstr ""
 
 msgid "Bijvoorbeeld Verzekeringen"
-msgstr ""
-
-msgid "Toevoegen"
 msgstr ""
 
 msgid ""
@@ -8848,8 +8920,8 @@ msgstr ""
 
 msgid ""
 "Huismus wordt gemaakt in Nederland door Arne Krijnsen. Over de maker en wat "
-"die nog meer doet, lees je op <a href=\"https://"
-"www.arnekrijnsen.com\">arnekrijnsen.com</a>."
+"die nog meer doet, lees je op <a href=\"https://www.arnekrijnsen."
+"com\">arnekrijnsen.com</a>."
 msgstr ""
 
 #~ msgid "bijschrijving"
