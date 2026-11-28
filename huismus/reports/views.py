@@ -13,6 +13,7 @@ from huismus.core.csv_files import Amount, csv_response
 from huismus.core.profile import profile
 from huismus.documents.models import Document
 from huismus.expenses.models import Expense
+from huismus.mileage.listing import year_mileage
 
 from .icp import compute_icp
 from .icp_csv import header as icp_header
@@ -95,6 +96,8 @@ def year_overview(request):
             "credit_note_count": invoices.filter(kind="credit_note").count(),
             "expense_count": Expense.objects.filter(date__year=year).count(),
             "show_icp": profile().shows_icp,
+            # Kilometers (#125): no amount, only the distance and the trips.
+            "mileage": year_mileage(year),
         },
     )
 

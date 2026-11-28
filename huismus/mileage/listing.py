@@ -9,7 +9,7 @@ anything up."""
 from dataclasses import dataclass, field
 from datetime import date
 
-from django.db.models import Sum
+from django.db.models import Count, Sum
 from django.utils import formats
 
 from .trips import km_text, total_km
@@ -49,3 +49,22 @@ def months(shown, everything) -> list[Month]:
 
 def filter_total(everything) -> str:
     return km_text(everything.aggregate(km=Sum("distance_km"))["km"] or 0)
+
+
+@dataclass
+class YearMileage:
+    km: str
+    trips: int
+
+
+def year_mileage(year: int) -> YearMileage | None:
+    """The card Zakelijke kilometers on the year overview: the year's
+    kilometres and trips, or None without trips that year."""
+    from .models import Trip
+
+    totals = Trip.objects.filter(date__year=year).aggregate(
+        km=Sum("distance_km"), trips=Count("pk")
+    )
+    if not totals["trips"]:
+        return None
+    return YearMileage(km=km_text(totals["km"]), trips=totals["trips"])
