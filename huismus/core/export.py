@@ -5,8 +5,8 @@ read without Huismus. A backup is for putting Huismus back; this is for the
 accountant, and for keeping invoices readable anywhere else.
 
 In the ZIP: a CSV each for invoices and credit notes, quotes, their lines,
-customers, their contact persons, expenses and expense lines, and hours when
-there are any in the period (core.csv_files), the
+customers, their contact persons, expenses and expense lines, and hours and
+trips when there are any in the period (core.csv_files), the
 PDF of every document and every receipt, and an auditfile per year
 (core.xaf). Never a draft, nor a document back in
 draft through "Toch bewerken". A year counts by document date, as on the
@@ -36,6 +36,7 @@ from huismus.documents.pdf import render_pdf
 from huismus.documents.totals import compute_totals, revenue_by_rate
 from huismus.expenses.models import Expense
 from huismus.hours.models import TimeEntry
+from huismus.mileage.models import Trip
 
 from . import export_format, xaf
 from .csv_files import Amount, csv_bytes
@@ -359,6 +360,17 @@ def _hours(year):
     return labels(export_format.HOURS_COLUMNS), table
 
 
+def _trips(year):
+    """kilometers.csv (#125): every trip of the period, oldest first."""
+    trips = Trip.objects.order_by("date", "pk")
+    if year:
+        trips = trips.filter(date__year=year)
+    table = [
+        [trip.date, trip.origin, trip.destination, trip.purpose, trip.distance_km] for trip in trips
+    ]
+    return labels(export_format.MILEAGE_COLUMNS), table
+
+
 def pdf_folder(kind: str) -> str:
     return {
         "invoice": pgettext("export folder", "facturen"),
@@ -398,6 +410,9 @@ def write_zip(file, year: int | None) -> None:
     hours_header, hours_table = _hours(year)
     if hours_table:
         tables.append((pgettext("export file", "uren"), hours_header, hours_table))
+    trips_header, trips_table = _trips(year)
+    if trips_table:
+        tables.append((pgettext("export file", "kilometers"), trips_header, trips_table))
 
     with zipfile.ZipFile(file, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         for stem, header, table in tables:

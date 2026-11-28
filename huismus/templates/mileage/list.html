@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load i18n forms mileage %}
+
+{% block title %}{% translate "Kilometers" %} — Huismus{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div class="titles">
+        <h1>{% translate "Kilometers" %}</h1>
+    </div>
+</div>
+
+{% comment %}The quick form, as on Uren (huismus-intern/besluiten.md,
+2026-11-28, "Kilometerregistratie (#125)"). A plain POST to this page.
+"Nieuw › Rit" links to #rit-toevoegen, which puts the focus on it.{% endcomment %}
+<section class="card hours-add-card" id="rit-toevoegen" tabindex="-1" data-focus-first>
+    {% form_errors form %}
+    <form class="quick-add is-trip" method="post" action="{{ request.get_full_path }}">
+        {% csrf_token %}
+        {% field form.date %}
+        {% field form.origin %}
+        {% field form.destination %}
+        {% field form.purpose %}
+        {% field form.distance_km %}
+        <button type="submit" class="btn btn-primary"><svg class="i" aria-hidden="true"><use href="#plus"></use></svg>{% translate "Toevoegen" %}</button>
+    </form>
+    {% include "mileage/_places.html" %}
+</section>
+
+<section class="card list-card">
+    {% if has_any %}
+    {% comment %}Plain GET form; with HTMX the list refreshes on a choice,
+    and only #ritten-resultaat is swapped.{% endcomment %}
+    <form class="toolbar" role="search" method="get"
+          hx-get="{% url 'mileage:list' %}" hx-trigger="change"
+          hx-target="#ritten-resultaat" hx-select="#ritten-resultaat" hx-select-oob="#ritten-filters-wissen"
+          hx-swap="outerHTML" hx-push-url="true">
+        <select class="select input-sm" style="width:auto" aria-label="{% translate 'Jaar' %}" name="jaar">
+            {% for option in years %}<option value="{{ option }}"{% if option|stringformat:"d" == year %} selected{% endif %}>{{ option }}</option>{% endfor %}
+            <option value="alle"{% if year == "alle" %} selected{% endif %}>{% translate "Alle jaren" %}</option>
+        </select>
+        <span id="ritten-filters-wissen">{% if filtered %}<a class="btn btn-ghost btn-sm" href="{% url 'mileage:list' %}">{% translate "Filters wissen" %}</a>{% endif %}</span>
+        <noscript><button type="submit" class="btn btn-sm">{% translate "Tonen" %}</button></noscript>
+    </form>
+    {% endif %}
+    <div id="ritten-resultaat">
+        {% if months %}
+        <div class="hours-total">
+            <span>{% blocktranslate %}Totaal: <strong>{{ total }}</strong>{% endblocktranslate %}</span>
+        </div>
+        <div class="table-wrap">
+            <table class="table stackable is-trips">
+                <thead>
+                    <tr>
+                        <th>{% translate "Datum" %}</th>
+                        <th>{% translate "Van" %}</th>
+                        <th>{% translate "Naar" %}</th>
+                        <th>{% translate "Doel" %}</th>
+                        <th class="r">{% translate "Km" %}</th>
+                    </tr>
+                </thead>
+                {% for month in months %}
+                <tbody>
+                    <tr class="week-head">
+                        <th colspan="5" scope="colgroup" data-cell="primary">{{ month.label }}</th>
+                    </tr>
+                    {% for trip in month.trips %}
+                    <tr class="is-link">
+                        <td data-cell="secondary" class="num">{{ trip.date|date:day_format }}</td>
+                        {% comment %}Stacked on a phone, Naar's own cell goes and the trip reads "Van → Naar".{% endcomment %}
+                        <td data-cell="primary"><a class="row-link" href="{% url 'mileage:edit' trip.pk %}">{{ trip.origin }}<span class="trip-to"> → {{ trip.destination }}</span></a></td>
+                        <td data-cell="hide" class="trip-place">{{ trip.destination }}</td>
+                        <td data-cell="order"><span class="small">{{ trip.purpose }}</span></td>
+                        <td data-cell="amount" class="r num">{{ trip.distance_km|km }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                {% endfor %}
+            </table>
+        </div>
+        {% if more_url %}
+        <div class="sum-row">
+            <a class="btn btn-ghost btn-sm" href="{{ more_url }}"
+               hx-get="{{ more_url }}" hx-target="#ritten-resultaat" hx-select="#ritten-resultaat"
+               hx-swap="outerHTML show:none" hx-push-url="true">{% translate "Meer laden" %}<span class="spinner"></span></a>
+        </div>
+        {% endif %}
+        {% elif not has_any %}
+        <div class="empty">
+            <h2>{% translate "Nog geen ritten" %}</h2>
+            <p>{% translate "Vul ze hierboven in." %}</p>
+        </div>
+        {% else %}
+        <div class="empty">
+            <h2>{% blocktranslate with year=year_shown %}Geen ritten in {{ year }}{% endblocktranslate %}</h2>
+            <div class="row"><a class="btn" href="{{ all_years_url }}">{% translate "Alle jaren" %}</a></div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

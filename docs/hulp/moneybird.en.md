@@ -46,7 +46,7 @@ Then everything is in Huismus, with the numbers as they were in Moneybird.
 - **Your export:** Huismus keeps the zips themselves too, and they go along
   in your backups.
 
-Huismus doesn't bring your hours over from Moneybird yet.
+Huismus doesn't bring your hours over from Moneybird yet. Nor your trips.
 
 ## Importing again
 

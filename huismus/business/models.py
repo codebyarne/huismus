@@ -193,6 +193,7 @@ class Settings(TimestampedModel):
     # Off by default, unlike the three above (huismus-intern/besluiten.md,
     # 2026-11-22, "Uren en Kilometers standaard uit").
     show_hours = models.BooleanField(_("Uren"), default=False)
+    show_mileage = models.BooleanField(_("Kilometers"), default=False)
 
     class Meta:
         verbose_name = _("instellingen")

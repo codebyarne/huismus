@@ -8,7 +8,7 @@ kunnen wijzigen na het nakijken. Controleer bij twijfel de bronpagina's zelf
 of vraag een boekhouder.
 
 Nagekeken op 6 november 2026; sectie 6 op 22 november 2026; sectie 7 op 23
-november 2026. Op 22 november
+november 2026; sectie 8 op 28 november 2026. Op 22 november
 2026 ook opnieuw nagekeken, voor de pagina's van Uitleg op de site
 (`docs/uitleg/`, issue #308): de bronpagina's van sectie 1 (voorwaarden,
 meedoen, aanmelden, afmelden), sectie 4 (de eerste twee bronpagina's) en
@@ -610,3 +610,258 @@ Bron: [Ondernemer? Bekijk welke cijfers nodig zijn voor uw belastingaangifte 202
 (Belastingdienst), [Kleineondernemersregeling (KOR)](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/hoe_werkt_de_btw/kleineondernemersregeling/)
 (Belastingdienst), [Winst-en-verliesrekening en balans](https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/winst_en_verliesrekening_en_balans)
 (Belastingdienst, Fiscale informatie 2026)
+
+## 8. Kilometers en rittenregistratie
+
+Nagekeken op 28 november 2026. Wat de Belastingdienst zegt over zakelijke
+kilometers van een ondernemer (inkomstenbelasting en btw) en over de
+rittenregistratie. Bijtellingspercentages en de waarde van de auto staan hier
+niet; zie de bronpagina "Privégebruik auto".
+
+### Privévervoermiddel zakelijk gebruikt
+
+- "Gebruikt u in uw onderneming een vervoermiddel dat uw privé-eigendom is of
+  dat u privé huurt, bijvoorbeeld een auto, motor of een fiets? Dan mag u voor
+  de zakelijke ritten € 0,25 per kilometer aftrekken van uw winst. In 2024 en
+  2025 was dit bedrag € 0,23."
+- Per jaar: "Dan mag u in 2026 voor de zakelijke ritten € 0,25 per kilometer
+  van uw winst aftrekken. In 2025 was dit € 0,23." En: "Dan mag u in 2025 voor
+  de zakelijke ritten € 0,23 per kilometer van uw winst aftrekken. In 2024 was
+  dit ook € 0,23."
+- "U mag geen kosten (zoals brandstof, verzekering, tol, parkeren) afzonderlijk
+  aftrekken van uw winst. Deze kosten zijn verwerkt in het aftrekbare bedrag
+  per kilometer."
+- Woon-werkverkeer, inkomstenbelasting: "Woon-werkverkeer valt voor de
+  inkomstenbelasting onder zakelijke kilometers." Ondernemersplein: "Woon-werkverkeer
+  is voor de inkomstenbelasting zakelijk, dus deze kilometers kunt u aftrekken
+  van de winst."
+- Hoe je de zakelijke kilometers bijhoudt, voor de inkomstenbelasting:
+  Ondernemersplein: "U mag zelf kiezen hoe u deze kilometers bijhoudt." Een
+  vorm (rittenregistratie of iets anders) of een lijst met gegevens voor de
+  € 0,25-aftrek: **Bron ontbreekt**. De pagina "Zakelijk gebruik
+  privévervoermiddel" noemt er geen.
+- Privé of zakelijk vermogen (inkomstenbelasting), volgens Ondernemersplein:
+  "Rijdt u voor 90% of meer privé in uw auto? Dan hoort uw auto voor de
+  inkomstenbelasting verplicht bij uw privévermogen." "Rijdt u voor 90% of meer
+  zakelijk in uw auto? Dan heeft u een auto van de zaak." "Rijdt u meer
+  zakelijke kilometers dan privékilometers? En rijdt u niet meer dan 500
+  kilometer per jaar privé met uw auto? Ook dan hoort uw auto bij uw zakelijke
+  vermogen." "In andere gevallen mag u zelf kiezen [...]."
+
+Bron: [Zakelijk gebruik privévervoermiddel](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijk-gebruik-privevervoermiddel)
+(Belastingdienst), [Zakelijk gebruik privévervoermiddel 2026](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/veranderingen-inkomstenbelasting-2026/zakelijk-gebruik-privevervoermiddel-2026)
+(Belastingdienst), [Zakelijk gebruik privévervoermiddel 2025](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/zakelijk-gebruik-privevervoermiddel-2025)
+(Belastingdienst), [Uw privéauto zakelijk gebruiken](https://ondernemersplein.overheid.nl/geldzaken-en-belastingen/aftrekposten-en-fiscale-regelingen/uw-priveauto-zakelijk-gebruiken/)
+(Ondernemersplein, gepubliceerd door de Belastingdienst)
+
+### Privéauto zakelijk gebruikt: de btw
+
+- "Gebruikt u een auto die tot uw privévermogen behoort, ook voor zakelijke
+  doeleinden? [...] Dan kunt u de btw over het onderhoud en gebruik aftrekken.
+  U kunt de btw alleen aftrekken over het gedeelte dat voor belaste omzet wordt
+  gebruikt. Over het gedeelte dat voor privédoeleinden wordt gebruikt, kunt u
+  geen btw aftrekken. Hierbij geldt woon-werkverkeer voor de btw als
+  privégebruik."
+- "Voor het bepalen van het privégebruik maakt het uit of u een
+  kilometeradministratie bijhoudt."
+- Met: "Houdt u een sluitende kilometeradministratie bij? Dan kunt u met behulp
+  hiervan berekenen wat de verhouding is tussen zakelijk gebruik en
+  privégebruik. Daarnaast kunt u berekenen of dat zakelijk gebruik betrekking
+  heeft op belaste of vrijgestelde omzet." Het voorbeeld op de pagina: € 945
+  btw × 45.000/60.000 km = € 709, "Vul dat bedrag in bij rubriek 5b
+  (voorbelasting) van uw btw-aangifte."
+- Zonder sluitende kilometeradministratie mag het "op een andere manier",
+  "Bijvoorbeeld met gegevens in uw administratie over: de aard van uw
+  onderneming; de zakelijke doeleinden waarvoor de auto wordt gebruikt; de
+  functie en werkzaamheden van de gebruiker van de auto; de wijze waarop de auto
+  voor privédoeleinden mag worden gebruikt of is gebruikt, bijvoorbeeld voor
+  woon-werkverkeer". "U kunt ook statistische gegevens gebruiken [...]. U moet
+  deze statistische gegevens dan wel combineren met andere gegevens uit uw
+  administratie."
+- Helemaal geen administratie: "Dan mag u alle btw over het onderhoud en
+  gebruik aftrekken. Vervolgens moet u aan het einde van het jaar de afgetrokken
+  btw corrigeren wegens het privégebruik. Dit doet u door 1,5% van de
+  catalogusprijs van de auto (inclusief btw en bpm) aan te geven als
+  verschuldigde btw." In rubriek 1d, linkerkolom "0". "De correctie van het
+  privégebruik is nooit hoger dan het btw-bedrag dat u voor het gebruik en
+  onderhoud in dat jaar hebt afgetrokken."
+- Onder de KOR trek je geen btw af (sectie 1); dit stuk speelt dan niet.
+
+Bron: [Btw en zakelijk gebruik van de privéauto](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aftrekken/btw_en_de_auto/zakelijk_gebruik_van_de_priveauto/zakelijk_gebruik_van_de_priveauto)
+(Belastingdienst), [Uw privéauto zakelijk gebruiken](https://ondernemersplein.overheid.nl/geldzaken-en-belastingen/aftrekposten-en-fiscale-regelingen/uw-priveauto-zakelijk-gebruiken/)
+(Ondernemersplein, gepubliceerd door de Belastingdienst)
+
+### Auto van de zaak: bijtelling en rittenregistratie
+
+- "Rijdt u in een auto van uw onderneming? En gebruikt u die auto ook privé?
+  Dan moet u voor het privégebruik een bedrag verrekenen met de autokosten van
+  uw onderneming. Dit noemen we ook wel 'bijtelling'."
+- "De verrekening is maximaal het bedrag dat u aan autokosten (inclusief
+  afschrijving) hebt."
+- De grens: "Alleen als u (bijvoorbeeld met een rittenregistratie) kunt
+  aantonen dat u op jaarbasis niet meer dan 500 kilometer privé rijdt, hoeft u
+  niets te verrekenen."
+- Woon-werkverkeer: "Woon-werkverkeer valt voor de inkomstenbelasting onder
+  zakelijke kilometers."
+- Korter dan een jaar: "Het privégebruik op jaarbasis rekent u uit door het
+  privégebruik te herrekenen. Als u bijvoorbeeld in 5 maanden tijd 100
+  kilometer privé hebt gereden, dan is het privégebruik op jaarbasis: 12/5 x 100
+  = 240 kilometer."
+- Wat erin moet, letterlijk van de pagina "Rittenregistratie": "Met een
+  rittenregistratie in uw administratie kunt u aantonen dat u op jaarbasis niet
+  meer dan 500 kilometer privé hebt gereden. In de rittenregistratie moet u het
+  volgende vermelden:
+  - het merk van de auto
+  - het type auto
+  - het kenteken van de auto
+  - de periode waarin u de auto hebt gebruikt
+  - de ritgegevens
+
+  U vermeldt per rit:
+  - de datum
+  - de begin- en eindstand van de kilometerteller
+  - het vertrek- en aankomstadres. Had u een afspraak en reed u daar vanaf uw
+    werkadres heen en daarna weer terug, dan hebt u 2 ritten gemaakt.
+  - de route die u hebt gereden, als u niet de meest gebruikelijke route hebt
+    genomen
+  - of het een privérit is of een zakelijke rit
+  - de privé-omrijkilometers als tijdens een rit zowel zakelijke als
+    privékilometers worden gereden"
+- "Als uw rittenregistratie niet voldoet aan deze eisen of als u geen
+  rittenregistratie hebt bijgehouden, dan moet u de bijtelling privégebruik
+  auto verrekenen met de autokosten van uw onderneming. Kunt u echter op een
+  andere manier aantonen dat u op jaarbasis niet meer dan 500 kilometer privé
+  hebt gereden, dan hoeft u niets te verrekenen." Ondernemersplein: "U mag zelf
+  weten hoe u dit aan de Belastingdienst laat zien. Bijvoorbeeld met een
+  ritregistratiesysteem of een eigen systeem."
+- "Een ondernemer of resultaatgenieter kan geen 'Verklaring geen privégebruik
+  auto' aanvragen."
+- Keurmerk: "Gebruikt u een rittenregistratiesysteem met het Keurmerk
+  RitRegistratieSystemen, dan gaan wij er vanuit dat uw rittenregistratie
+  sluitend is. Wij kunnen nog wel een controle instellen en onderzoeken of een
+  rit zakelijk of privé is." Huismus heeft dat keurmerk niet; zeg dan ook niet
+  dat het daaraan voldoet.
+- Btw bij een auto van de zaak (los van de bijtelling): "U betaalt btw over het
+  werkelijke privégebruik van de auto. Dit werkelijke privégebruik kunt u
+  aantonen met een sluitende kilometeradministratie." "Voor de btw geldt
+  woon-werkverkeer namelijk als privégebruik." Zonder administratie: "2,7% van
+  de catalogusprijs van de auto, inclusief btw en bpm" (1,5% later dan 4 jaar na
+  het jaar van ingebruikname, of bij aankoop zonder btw-aftrek). Woon-werkverkeer
+  voor de btw: "het heen en weer reizen van de woon- of verblijfplaats naar een
+  vaste werkplaats"; reizen naar "de bouwplaats of het adres van een klant" is
+  "geen woon-werkverkeer. Tenzij is afgesproken dat dit een vaste werkplaats
+  is."
+- Vof: "Maakt u deel uit van een samenwerkingsverband, zoals een maatschap of
+  vof? En hebt u privé een auto gekocht? Dan mag de maatschap of vof de 2,7 of
+  1,5%-regeling toepassen. Daarvoor gelden wel voorwaarden." Welke: zie de
+  bronpagina.
+
+Bron: [Privégebruik auto](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_auto/privegebruik_auto)
+(Belastingdienst), [Rittenregistratie](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_auto/rittenregistratie)
+(Belastingdienst), [Keurmerk voor rittenregistratie](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/administratie/keurmerk-voor-rittenregistratie)
+(Belastingdienst), [Btw en privégebruik auto van de zaak](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aftrekken/btw_en_de_auto/privegebruik_auto_van_de_zaak/privegebruik_auto_van_de_zaak)
+(Belastingdienst), [Btw en privégebruik auto van de zaak: woon-werkverkeer](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aftrekken/btw_en_de_auto/privegebruik_auto_van_de_zaak/woon_werkverkeer)
+(Belastingdienst), [Auto van de zaak](https://ondernemersplein.overheid.nl/geldzaken-en-belastingen/aftrekposten-en-fiscale-regelingen/auto-van-de-zaak/)
+(Ondernemersplein, gepubliceerd door de Belastingdienst)
+
+### Bestelauto
+
+- "De regels voor privégebruik gelden ook voor bijna alle bestelauto's.
+  Uitzondering hierop zijn bestelauto's die bijna uitsluitend geschikt zijn voor
+  het vervoer van goederen. [...] In zulke gevallen verrekent u het aantal
+  privékilometers maal de werkelijke kilometerprijs met de autokosten."
+- Alleen zakelijk: met een 'Verklaring uitsluitend zakelijk gebruik bestelauto'
+  "U hoeft bij uw winstberekening geen rekening te houden met de correctie voor
+  het privégebruik van de bestelauto." en "U hoeft geen rittenregistratie bij
+  te houden." Voorwaarden: je mag de bestelauto niet privé gebruiken, en je hebt
+  "een meldingsplicht om veranderingen rond het zakelijk gebruik van de
+  bestelauto aan ons door te geven." Indienen via Mijn Belastingdienst Zakelijk;
+  "De verklaring is voor onbepaalde tijd geldig." Ondernemersplein: "Bewaar
+  werkbonnen en afspraken in uw administratie. Dan kunt u makkelijker bewijzen
+  dat u de bestelauto alleen zakelijk gebruikt."
+- Vereenvoudigde rittenregistratie: "Bent u ondernemer of resultaatgenieter en
+  rijdt u met uw bestelauto vaak veel ritten op een dag voor uw werk, dan kunt
+  u het bewijs dat u niet meer dan 500 privékilometers rijdt, leveren met een
+  combinatie van: een vereenvoudigde rittenregistratie [en] de zakelijke
+  adressen in uw administratie". "Privégebruik tijdens werk- en lunchtijd is
+  niet toegestaan."
+- Wat erin moet, volgens de voorbeeldafspraak (geschreven voor werkgever en
+  werknemer; de pagina "Rittenregistratie" verwijst ondernemers ernaar):
+  van de bestelauto "het merk", "het type", "het kenteken"; per dag "de datum",
+  "de werktijd", "de begin- en eindkilometerstand (begin en einde werktijd)",
+  en "een verwijzing naar de zakelijke adressen in de (project)administratie
+  [...] als de volgorde waarin de werknemer deze adressen heeft bezocht, in de
+  (project)administratie ontbreekt". Bij privéritten: "de datum", "de begin- en
+  eindkilometerstand van de privérit", "het vertrek- en aankomstadres". "De
+  werknemer hoeft in de vereenvoudigde ritten­registratie de zakelijke ritten
+  niet te vermelden". Ook daar: "Kilometers voor woon‑werkverkeer zijn
+  zakelijke kilometers."
+- Ondernemersplein vat het anders samen ("Hier moet in elk geval in staan: de
+  zakelijke adressen van klanten (die moet u in uw administratie bewaren); het
+  aantal bezoeken aan klanten op een dag; de volgorde van de bezoeken"). Volg
+  bij twijfel de voorbeeldafspraak van de Belastingdienst.
+- Rijinstructeurs: "Dan hoeft u per werkdag alleen de begin- en eindstand van
+  de kilometerteller te vermelden."
+
+Bron: [Privégebruik auto](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_auto/privegebruik_auto)
+(Belastingdienst), [Rittenregistratie](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_auto/rittenregistratie)
+(Belastingdienst), [Uitsluitend zakelijk gebruik bestelauto](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_auto/uitsluitend_zakelijk_gebruik_bestelauto/uitsluitend_zakelijk_gebruik_bestelauto)
+(Belastingdienst), [Voorbeeldafspraak vereenvoudigde rittenregistratie voor bestelauto's](https://download.belastingdienst.nl/belastingdienst/docs/voorbeeldafspraak_over_vereenvoudigde%20rittenregistratie_bestelauto_lh581z4pl.pdf)
+(Belastingdienst, pdf, LH 058-1Z*4PL), [Bestelauto](https://ondernemersplein.overheid.nl/geldzaken-en-belastingen/aftrekposten-en-fiscale-regelingen/bestelauto/)
+(Ondernemersplein, gepubliceerd door de Belastingdienst)
+
+### Fiets, ov, taxi en andere vervoermiddelen
+
+- Een privéfiets of -motor valt onder het privévervoermiddel hierboven
+  ("bijvoorbeeld een auto, motor of een fiets"): ook € 0,25 per zakelijke
+  kilometer in 2026, € 0,23 in 2025.
+- Een elektrische fiets apart: **Bron ontbreekt**. De nagekeken pagina's
+  noemen hem niet.
+- Fiets van de zaak: "Rijdt u privé met een fiets die tot uw
+  ondernemingsvermogen behoort? Dan moet u een bedrag bij de winst tellen voor
+  het privégebruik. De bijtelling is 7% van de adviesprijs van de fiets."
+- Ander vervoermiddel van de zaak, "bijvoorbeeld een scooter of motor": "De
+  kosten van dit vervoermiddel zijn aftrekbaar. Als u ook privé rijdt, moet u
+  een bedrag verrekenen voor de privéritten. Deze verrekening is het aantal
+  privékilometers maal de werkelijke kilometerprijs."
+- Ov, taxi, vliegtuig: "Zakelijke reiskosten openbaar vervoer, taxi en
+  vliegtuig": "100% van de werkelijk gemaakte kosten". "U moet kunnen aantonen
+  dat u deze kosten werkelijk gemaakt hebt. Bewaar bijvoorbeeld uw
+  treinkaartje. Reist u met een OV-chipkaart? Maak dan een uitdraai van uw
+  reizen." Voor de btw: het vervoersbewijs geldt als factuur (sectie 3).
+- Een kilometerbedrag voor ov of taxi: geen; het zijn werkelijke kosten, dus
+  gewone uitgaven.
+
+Bron: [Zakelijk gebruik privévervoermiddel](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijk-gebruik-privevervoermiddel)
+(Belastingdienst), [Privégebruik van andere vervoermiddelen dan auto's](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_andere_vervoermiddelen/privegebruik_van_andere_vervoermiddelen_dan_autos)
+(Belastingdienst), [Overzicht mogelijk aftrekbare zakelijke kosten](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijke_kosten/overzicht-mogelijk-aftrekbare-zakelijke-kosten)
+(Belastingdienst)
+
+### Bewaren
+
+- De rittenregistratie hoort bij de administratie ("Met een rittenregistratie
+  in uw administratie kunt u aantonen [...]"). Een eigen bewaartermijn of vorm
+  voor een rittenregistratie: **Bron ontbreekt**. Geen nagekeken pagina voor
+  ondernemers noemt er een.
+- Dan gelden de algemene regels (sectie 5): "Basisgegevens: 7 jaar"; "Andere
+  gegevens: 7 jaar, of korter als u hierover met ons afspraken maakt." Of een
+  rittenregistratie een basisgegeven is: de lijst met basisgegevens noemt hem
+  niet ("het grootboek, de debiteuren- en crediteurenadministratie, de
+  voorraadadministratie, de in- en verkoopadministratie, de loonadministratie,
+  gegevens die van belang zijn voor de belastingheffing van derden").
+- Start: "Zolang gegevens actueel blijven, horen zij bij de administratie.
+  Vervalt de actualiteitswaarde? Dan begint de bewaartermijn."
+- Digitaal mag: "U bewaart de gegevens uit uw administratie in de originele
+  vorm: digitaal of op papier." En "Het is niet voldoende als u uw bestanden
+  uitsluitend in afgedrukte vorm bewaart." (sectie 5)
+- Uit de brochure over de geautomatiseerde administratie: "Volgens de fiscale
+  bewaarplicht moet u alles wat van belang is voor de bedrijfsvoering bewaren.
+  En wel in de vorm waarin het deel is gaan uitmaken van uw administratie." En
+  over vroegere standen: "Wij controleren achteraf. En voor ons is ook de
+  vroegere stand van zaken van belang. Deze moet u dus ook bewaren."
+
+Bron: [Hoelang moet u gegevens bewaren?](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/administratie/hoelang-moet-u-gegevens-bewaren)
+(Belastingdienst), [Rittenregistratie](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_auto/rittenregistratie)
+(Belastingdienst), [Hoe bewaart u uw administratie?](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/administratie_bijhouden/administratie_bewaren/hoe_bewaart_u_uw_administratie)
+(Belastingdienst), [Uw geautomatiseerde administratie en de fiscale bewaarplicht](https://download.belastingdienst.nl/belastingdienst/docs/geautomatiseerde_administratie_en_fiscale_bewaarplicht_al0401z14fd.pdf)
+(Belastingdienst, pdf, juli 2026)

@@ -95,6 +95,10 @@ PART_FIELDS = {
         profile_axes.EXPENSES,
         _("Je hebt uitgaven of bonnetjes, dus Uitgaven blijft in het menu."),
     ),
+    "show_mileage": (
+        profile_axes.MILEAGE,
+        _("Je hebt ritten ingevuld, dus Kilometers blijft in het menu."),
+    ),
     "show_bank": (
         profile_axes.BANK,
         _("Je hebt een bankafschrift ingelezen, dus Bank blijft in het menu."),
@@ -386,6 +390,10 @@ class SettingsPartForm(SettingsForm):
             self.fields["show_expenses"].help_text = _("Met je bonnetjes en categorieën.")
         if "show_hours" in self.fields and "show_hours" not in self.parts_kept:
             self.fields["show_hours"].help_text = _("Je uren per klant, met je tarief.")
+        if "show_mileage" in self.fields and "show_mileage" not in self.parts_kept:
+            self.fields["show_mileage"].help_text = _(
+                "Je zakelijke ritten, met een totaal per jaar."
+            )
         # The next number by hand (issue #141), where the fields name it
         # (Facturen en nummering, the start's Facturen step), and only for a
         # kind Huismus never gave a number yet (invariant 3).

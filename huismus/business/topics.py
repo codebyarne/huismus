@@ -117,7 +117,7 @@ TOPICS += (
         "menu",
         _("Menu"),
         _("Kies wat je in het menu ziet. Waar al iets in staat, blijft erin."),
-        ("show_quotes", "show_hours", "show_expenses", "show_bank"),
+        ("show_quotes", "show_hours", "show_expenses", "show_mileage", "show_bank"),
     ),
 )
 
@@ -128,6 +128,7 @@ PART_NAMES = (
     (profile_axes.QUOTES, _("Offertes")),
     (profile_axes.HOURS, _("Uren")),
     (profile_axes.EXPENSES, _("Uitgaven")),
+    (profile_axes.MILEAGE, _("Kilometers")),
     (profile_axes.BANK, _("Bank")),
 )
 

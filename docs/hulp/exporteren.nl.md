@@ -27,6 +27,8 @@ op haar eigen datum. Klanten gaan altijd allemaal mee, ook gearchiveerde.
   categorie.
 - **uren.csv**: je uren, met de klant, het tarief en het bedrag. Alleen als
   je in die periode uren hebt.
+- **kilometers.csv**: je ritten, met van, naar, doel en kilometers. Alleen
+  als je in die periode ritten hebt.
 - **pdf/facturen**, **pdf/creditnotas** en **pdf/offertes**: elke pdf, met
   het nummer als naam. Het is dezelfde pdf als die je met **Downloaden**
   krijgt. Voor een factuur uit Moneybird is dat de originele pdf.

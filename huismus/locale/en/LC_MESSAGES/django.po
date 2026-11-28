@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: huismus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-28 20:32+0100\n"
+"POT-Creation-Date: 2026-11-28 21:03+0100\n"
 "PO-Revision-Date: 2026-09-25 08:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -702,6 +702,9 @@ msgstr "You've entered hours, so Hours stays in the menu."
 msgid "Je hebt uitgaven of bonnetjes, dus Uitgaven blijft in het menu."
 msgstr "You have expenses or receipts, so Expenses stays in the menu."
 
+msgid "Je hebt ritten ingevuld, dus Kilometers blijft in het menu."
+msgstr "You've entered trips, so Mileage stays in the menu."
+
 msgid "Je hebt een bankafschrift ingelezen, dus Bank blijft in het menu."
 msgstr "You've imported a bank statement, so Bank stays in the menu."
 
@@ -776,6 +779,9 @@ msgstr "Including your receipts and categories."
 
 msgid "Je uren per klant, met je tarief."
 msgstr "Your hours per customer, at your rate."
+
+msgid "Je zakelijke ritten, met een totaal per jaar."
+msgstr "Your business trips, with a total per year."
 
 #, python-format
 msgid "Dit logo is groter dan %(max_mb)s MB. Kies een kleiner bestand."
@@ -975,6 +981,9 @@ msgstr "Bank"
 
 msgid "Uren"
 msgstr "Hours"
+
+msgid "Kilometers"
+msgstr "Mileage"
 
 msgid "instellingen"
 msgstr "settings"
@@ -1661,6 +1670,10 @@ msgctxt "export file"
 msgid "uren"
 msgstr "hours"
 
+msgctxt "export file"
+msgid "kilometers"
+msgstr "mileage"
+
 msgctxt "export folder"
 msgid "bonnetjes"
 msgstr "receipts"
@@ -1795,6 +1808,18 @@ msgstr "rate per hour"
 
 msgid "bedrag"
 msgstr "amount"
+
+msgid "van"
+msgstr "from"
+
+msgid "naar"
+msgstr "to"
+
+msgid "doel"
+msgstr "purpose"
+
+msgid "kilometers"
+msgstr "kilometres"
 
 msgid "Eenmanszaak of vof met KOR"
 msgstr "Sole trader or partnership using the KOR"
@@ -2252,9 +2277,6 @@ msgstr "Categories"
 
 msgid "Je deelt je kosten in zoals jij dat wilt."
 msgstr "You sort your costs the way you want."
-
-msgid "Kilometers"
-msgstr "Mileage"
 
 msgid "Je ritten bij je administratie."
 msgstr "Your trips, with your records."
@@ -3931,6 +3953,10 @@ msgstr ""
 "export."
 
 #, python-format
+msgid "%(file)s: je ritten neemt Huismus nog niet mee."
+msgstr "%(file)s: Huismus doesn't bring your trips over yet."
+
+#, python-format
 msgid ""
 "In %(export)s staan twee bestanden met dezelfde soort gegevens (%(first)s en "
 "%(second)s). Zip elke export apart, of importeer ze één voor één."
@@ -4476,6 +4502,58 @@ msgstr[1] "%(count)s expenses"
 msgid "Import geannuleerd. Er is niets opgeslagen."
 msgstr "Import cancelled. Nothing was saved."
 
+msgid "Hoogstens één cijfer achter de komma."
+msgstr "One decimal at most."
+
+msgid "Vul de kilometers in, bijvoorbeeld 12,5."
+msgstr "Enter the kilometres, for example 12.5."
+
+msgid "Vul meer dan 0 km in."
+msgstr "Enter more than 0 km."
+
+msgid "Eén rit kan hoogstens 2.000 km zijn."
+msgstr "One trip can be 2,000 km at most."
+
+msgctxt "trip field"
+msgid "Kilometers"
+msgstr "Kilometres"
+
+msgid "Voor de hele rit, bijvoorbeeld 12,5."
+msgstr "For the whole trip, for example 12.5."
+
+msgid "Van"
+msgstr "From"
+
+msgid "Naar"
+msgstr "To"
+
+msgid "Doel"
+msgstr "Purpose"
+
+msgid "Vul in waar de rit begon."
+msgstr "Enter where the trip started."
+
+msgid "Vul in waar de rit naartoe ging."
+msgstr "Enter where the trip went."
+
+msgid "Vul het doel van de rit in."
+msgstr "Enter the purpose of the trip."
+
+msgid "rit"
+msgstr "trip"
+
+msgid "ritten"
+msgstr "trips"
+
+msgid "Rit toegevoegd."
+msgstr "Trip added."
+
+msgid "Rit opgeslagen."
+msgstr "Trip saved."
+
+msgid "Rit verwijderd."
+msgstr "Trip deleted."
+
 msgid "periode"
 msgstr "period"
 
@@ -4909,6 +4987,9 @@ msgstr "New"
 
 msgid "Meer"
 msgstr "More"
+
+msgid "Rit"
+msgstr "Trip"
 
 msgid ""
 "Dit is een voorbeeld met verzonnen gegevens. Wat je hier maakt, verdwijnt "
@@ -8256,6 +8337,22 @@ msgstr ""
 msgid "De bonnetjes komen bij je uitgaven."
 msgstr "The receipts go with your expenses."
 
+msgid "Rit wijzigen"
+msgstr "Edit trip"
+
+msgid "Deze rit verwijderen?"
+msgstr "Delete this trip?"
+
+msgid "Km"
+msgstr "Km"
+
+msgid "Nog geen ritten"
+msgstr "No trips yet"
+
+#, python-format
+msgid "Geen ritten in %(year)s"
+msgstr "No trips in %(year)s"
+
 msgid "VOORBEELD"
 msgstr "PREVIEW"
 
@@ -8517,6 +8614,27 @@ msgstr "Costs per category"
 
 msgid "Je hebt dit jaar geen uitgaven."
 msgstr "You have no expenses this year."
+
+msgid "Zakelijke kilometers"
+msgstr "Business mileage"
+
+#, python-format
+msgid "%(km)s in %(trips)s rit"
+msgid_plural "%(km)s in %(trips)s ritten"
+msgstr[0] "%(km)s in %(trips)s trip"
+msgstr[1] "%(km)s in %(trips)s trips"
+
+msgid "Bekijk de ritten"
+msgstr "See the trips"
+
+#, python-format
+msgid ""
+"Met je eigen auto, motor of fiets mag je %(rate)s per kilometer van je winst "
+"aftrekken: %(amount)s. Huismus telt dit niet mee in je winst."
+msgstr "With your own car, motorbike or bike you may deduct %(rate)s per kilometre from your profit: %(amount)s. Huismus doesn't count it in your profit."
+
+msgid "Bron: Belastingdienst"
+msgstr "Source: Belastingdienst (in Dutch)"
 
 #, python-format
 msgid ""

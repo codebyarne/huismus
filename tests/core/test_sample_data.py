@@ -138,6 +138,7 @@ def test_clearing_puts_back_how_it_was_before(data_dir, flushable):
     ]
     assert _restored(data_dir, "SELECT count(*) FROM documents_document") == [(0,)]
     assert _restored(data_dir, "SELECT count(*) FROM contacts_contact") == [(0,)]
+    assert _restored(data_dir, "SELECT count(*) FROM mileage_trip") == [(0,)]
 
 
 # -- Backups while the sample data is in use ---------------------------------

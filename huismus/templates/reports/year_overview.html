@@ -88,6 +88,22 @@
     {% endif %}
 </section>
 
+{% if mileage %}
+{% comment %}Kilometers (#125): the distance and the trips, and what you may deduct with your
+own vehicle as information (owner 2026-11-28; docs/belastingregels.md, section 8). Never in
+the profit above.{% endcomment %}
+<section class="card card-pad" id="kilometers" style="margin-bottom:var(--s-5)">
+    <h2 style="margin-bottom:var(--s-3)">{% translate "Zakelijke kilometers" %}</h2>
+    <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:var(--s-2)">
+        <span class="amount">{% blocktranslate count trips=mileage.trips with km=mileage.km %}{{ km }} in {{ trips }} rit{% plural %}{{ km }} in {{ trips }} ritten{% endblocktranslate %}</span>
+        <a href="{% url 'mileage:list' %}?jaar={{ year }}">{% translate "Bekijk de ritten" %} →</a>
+    </div>
+    {% if mileage.deduction_cents is not None %}
+    <p class="muted small" style="margin-top:var(--s-3)">{% blocktranslate with rate=mileage.rate_cents|money amount=mileage.deduction_cents|money %}Met je eigen auto, motor of fiets mag je {{ rate }} per kilometer van je winst aftrekken: {{ amount }}. Huismus telt dit niet mee in je winst.{% endblocktranslate %} <a href="{{ deduction_source }}" target="_blank" rel="noopener">{% translate "Bron: Belastingdienst" %}</a></p>
+    {% endif %}
+</section>
+{% endif %}
+
 <div class="stack" style="gap:var(--s-2)">
     <p class="disclaimer"><svg class="i i-sm" aria-hidden="true"><use href="#info"></use></svg>{% if overview.shows_input_vat %}{% translate "Huismus telt omzet zonder btw, op de factuurdatum, niet op de dag dat er betaald is. Kosten zijn zonder de btw die je bij een uitgave invulde, bij 21, 9 of 0%. Bij btw verlegd of zonder tarief is het wat je betaald hebt." %}{% else %}{% translate "Huismus telt omzet zonder btw, op de factuurdatum, niet op de dag dat er betaald is. Kosten zijn bruto: wat je echt betaald hebt." %}{% endif %}</p>
 </div>

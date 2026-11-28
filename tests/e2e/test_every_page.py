@@ -23,10 +23,12 @@ import pytest
 from huismus.business.models import Settings
 from huismus.contacts.models import Contact
 from huismus.core import help
+from huismus.core.demo_history import LAST_YEAR
 from huismus.core.models import Attachment
 from huismus.documents.models import Article, Document, RecurringInvoice
 from huismus.expenses.models import Expense, ExpenseCategory
 from huismus.hours.models import TimeEntry
+from huismus.mileage.models import Trip
 
 pytestmark = pytest.mark.django_db(transaction=True)
 
@@ -153,6 +155,14 @@ def _pages():
         + str(_first(TimeEntry.objects.filter(rate_cents=8750), "a month of hours").contact_id),
         f"/uren/{_first(TimeEntry.objects.filter(invoice__status='issued'), 'invoiced').pk}/",
         f"/uren/{_first(TimeEntry.objects.filter(invoice__status='draft'), 'on a draft').pk}/",
+        # Kilometers (#125): this year, every year ("Meer laden"), the year
+        # without trips, and the trips at their extremes (demo_messy); the
+        # flow: tests/e2e/test_mileage.py.
+        "/kilometers/",
+        "/kilometers/?jaar=alle",
+        f"/kilometers/?jaar={LAST_YEAR - 1}",
+        f"/kilometers/{_first(Trip.objects.filter(distance_km=2000), 'the longest trip').pk}/",
+        f"/kilometers/{_first(Trip.objects.filter(distance_km__lt=1), 'a short trip').pk}/",
         "/rapporten/jaaroverzicht/",
         # The VAT return (SPEC.md M21, part 4): a year of the history, with
         # imports and lines without a rate under "Niet meegeteld".
@@ -438,6 +448,18 @@ def _problems_on(page, path, language, dutch, data):
     )
     if clipped:
         problems.append(f"tabel rechts afgeknipt: {clipped}")
+    # A word without spaces in one cell squeezed the cell next to it to a
+    # letter per line (Kilometers, verify-e2e 2026-11-28): a cell with text
+    # is never narrower than a few letters.
+    squeezed = page.evaluate(
+        """() => [...document.querySelectorAll('.table td')].filter(cell => {
+            const box = cell.getBoundingClientRect();
+            const text = cell.textContent.trim();
+            return box.width > 0 && box.width < 40 && text.length > 20;
+        }).map(cell => cell.textContent.trim().slice(0, 40))"""
+    )
+    if squeezed:
+        problems.append(f"tabelkolom samengedrukt: {sorted(set(squeezed))[:5]}")
     # The footer promised "/ zoeken" on every page, where "/" did nothing
     # (feedback 2026-10-31): a shortcut hint only where the shortcut works.
     hints_search = page.locator(".shortcut-hint .kbd", has_text="/").count() > 0
