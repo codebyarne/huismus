@@ -123,6 +123,18 @@ aan, dan heeft het rapport geen bedragen en is er geen CSV.
 Voor je boekhouder kun je ook een export downloaden. Zie
 [Exporteren](exporteren.nl.md).
 
+## Opgaaf ICP
+
+Factureer je diensten met btw verlegd aan een ondernemer in een ander EU-land,
+dan staat onder **Rapporten** ook **Opgaaf ICP**. Daar zie je per kwartaal of
+maand per btw-nummer van je klant het totaal, zoals de opgaaf ICP het vraagt.
+Het totaal is gelijk aan rubriek 3b van je btw-aangifte over dezelfde periode.
+Een dienst telt op de leverdatum, als je die invulde, en een creditnota telt
+af. Staat er op een factuur geen btw-nummer van de klant, dan noemt Huismus
+die apart. Met **CSV downloaden** krijg je de lijst als bestand. Je vult de
+opgaaf zelf in bij de Belastingdienst; Huismus verstuurt niets. Wat erin hoort,
+lees je bij de [Belastingdienst](https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/zakendoen_met_het_buitenland/goederen_en_diensten_naar_andere_eu_landen/opgaaf_icp/opgaaf_icp).
+
 ## Een creditnota en een kopie
 
 Een creditnota houdt de tarieven van de factuur die hij crediteert. Kopieer
