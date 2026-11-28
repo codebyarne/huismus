@@ -13,9 +13,8 @@ Wil je het vertellen, dan kan dat hieronder.
    het draait, de versie, de taal van de app, of je een tekst bij btw verlegd
    hebt ingesteld (ja of nee, niet de tekst zelf) en de taal van je facturen.
 3. Druk op **Versturen**. Pas dan stuurt Huismus het naar een formulier op
-   arnekrijnsen.com. Je e-mailadres en wat je mist bewaart Huismus niet.
-   Wat je mist komt daarna als idee op GitHub, waar anderen het kunnen lezen.
-   Je e-mailadres komt daar niet.
+   arnekrijnsen.com. Alleen de appbouwer leest het. Je e-mailadres en wat je
+   mist bewaart Huismus niet.
 
 ## De knop Feedback
 
@@ -35,8 +34,7 @@ het je opvalt.
 4. Druk op **Controleer wat er meegaat**. Je ziet de afbeelding en alles wat
    meegaat: de pagina, de versie, waar Huismus draait, en hoe je werkt (je
    rechtsvorm, KOR of btw, btw verlegd en de taal van je facturen).
-5. Druk op **Versturen**. Je bericht komt op GitHub, zodat anderen kunnen
-   meelezen en meedenken. De afbeelding en je e-mailadres blijven bij de
-   appbouwer.
+5. Druk op **Versturen**. Alleen de appbouwer leest je bericht en ziet de
+   afbeelding.
 
 Stuur geen klantgegevens, IBAN's of bedragen mee.
