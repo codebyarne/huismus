@@ -32,6 +32,7 @@ QUOTES = "offertes"
 EXPENSES = "uitgaven"
 BANK = "bank"
 HOURS = "uren"
+MILEAGE = "kilometers"
 # Not a part of its own: a page under Facturen once there is a series (#82).
 RECURRING = "periodiek"
 
@@ -141,6 +142,7 @@ class Profile:
             QUOTES: self.settings.show_quotes,
             HOURS: self.settings.show_hours,
             EXPENSES: self.settings.show_expenses,
+            MILEAGE: self.settings.show_mileage,
             BANK: self.settings.show_bank,
         }
         return frozenset(part for part, chosen in choices.items() if chosen)
@@ -148,10 +150,10 @@ class Profile:
     @cached_property
     def parts_in_use(self) -> frozenset[str]:
         """The parts with data in them: a quote (a draft too), an expense or
-        a receipt waiting in the tray, a bank statement, hours, a recurring
-        series.
+        a receipt waiting in the tray, a bank statement, hours, a trip, a
+        recurring series.
         Categories don't count: they are there from the start."""
-        return self._with_data({QUOTES, HOURS, EXPENSES, BANK, RECURRING})
+        return self._with_data({QUOTES, HOURS, EXPENSES, MILEAGE, BANK, RECURRING})
 
     def _with_data(self, parts) -> frozenset[str]:
         """Those of `parts` with data in them; asks only about those."""
@@ -160,6 +162,7 @@ class Profile:
         from huismus.documents.models import Document, RecurringInvoice
         from huismus.expenses.models import Expense
         from huismus.hours.models import TimeEntry
+        from huismus.mileage.models import Trip
 
         found = set()
         if QUOTES in parts and Document.objects.filter(kind="quote").exists():
@@ -170,6 +173,8 @@ class Profile:
             Expense.objects.exists() or Attachment.objects.in_tray().exists()
         ):
             found.add(EXPENSES)
+        if MILEAGE in parts and Trip.objects.exists():
+            found.add(MILEAGE)
         if BANK in parts and BankStatement.objects.exists():
             found.add(BANK)
         if RECURRING in parts and RecurringInvoice.objects.exists():
@@ -184,7 +189,7 @@ class Profile:
         2026-11-21). Every page asks this, so only a part switched off is
         looked up in the data."""
         chosen = self.parts_chosen
-        return chosen | self._with_data({QUOTES, HOURS, EXPENSES, BANK} - chosen)
+        return chosen | self._with_data({QUOTES, HOURS, EXPENSES, MILEAGE, BANK} - chosen)
 
     @cached_property
     def origin(self) -> str:

@@ -51,6 +51,7 @@
                 <a href="{% url 'expenses:category_list' %}"{% if nav_subsection == "categories" %} aria-current="page"{% endif %}>{% translate "Categorieën" %}</a>
             </div>
             {% endif %}{% endif %}
+            {% if show_mileage %}<a href="{% url 'mileage:list' %}"{% if nav_section == "mileage" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#car"></use></svg>{% translate "Kilometers" %}</a>{% endif %}
             {% if show_bank %}<a href="{% url 'bank:statement' %}"{% if nav_section == "bank" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#euro"></use></svg>{% translate "Bank" %}</a>{% endif %}
             <a href="{% url 'contacts:list' %}"{% if nav_section == "contacts" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#users"></use></svg>{% translate "Klanten" %}</a>
             <a href="{% url 'reports:index' %}"{% if nav_section == "reports" %} aria-current="page"{% endif %}><svg class="i" aria-hidden="true"><use href="#chart"></use></svg>{% translate "Rapporten" %}</a>
@@ -93,6 +94,7 @@
         {% if show_hours %}<a href="{% url 'hours:list' %}#uren-toevoegen"><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% translate "Uren" %}</a>{% endif %}
         <a href="{% url 'contacts:create' %}"><svg class="i" aria-hidden="true"><use href="#users"></use></svg>{% translate "Klant" %}</a>
         {% if show_expenses %}<a href="{% url 'expenses:create' %}"><svg class="i" aria-hidden="true"><use href="#receipt"></use></svg>{% translate "Uitgave" %}</a>{% endif %}
+        {% if show_mileage %}<a href="{% url 'mileage:list' %}#rit-toevoegen"><svg class="i" aria-hidden="true"><use href="#car"></use></svg>{% translate "Rit" %}</a>{% endif %}
     </div>
     {# Everything the tab bar has no place for. #}
     <div id="meer-menu" class="menu" popover="auto">
@@ -100,6 +102,7 @@
         {% if "hours" in menu_more %}<a href="{% url 'hours:list' %}"><svg class="i" aria-hidden="true"><use href="#clock"></use></svg>{% translate "Uren" %}</a>{% endif %}
         {% if "articles" in menu_more %}<a href="{% url 'documents:article_list' %}"><svg class="i" aria-hidden="true"><use href="#table"></use></svg>{% translate "Artikelen" %}</a>{% endif %}
         {% if "categories" in menu_more %}<a href="{% url 'expenses:category_list' %}"><svg class="i" aria-hidden="true"><use href="#archive"></use></svg>{% translate "Categorieën" %}</a>{% endif %}
+        {% if "mileage" in menu_more %}<a href="{% url 'mileage:list' %}"><svg class="i" aria-hidden="true"><use href="#car"></use></svg>{% translate "Kilometers" %}</a>{% endif %}
         {% if "bank" in menu_more %}<a href="{% url 'bank:statement' %}"><svg class="i" aria-hidden="true"><use href="#euro"></use></svg>{% translate "Bank" %}</a>{% endif %}
         {% if "contacts" in menu_more %}<a href="{% url 'contacts:list' %}"><svg class="i" aria-hidden="true"><use href="#users"></use></svg>{% translate "Klanten" %}</a>{% endif %}
         <a href="{% url 'reports:index' %}"><svg class="i" aria-hidden="true"><use href="#chart"></use></svg>{% translate "Rapporten" %}</a>
