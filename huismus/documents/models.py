@@ -187,6 +187,11 @@ class Document(TimestampedModel):
     footer_text = models.TextField(_("voettekst"), blank=True)
     notes = models.TextField(_("notities"), blank=True)
 
+    # The prices of the lines include VAT (#362): the total is then the
+    # sum of the lines as typed, and compute_totals() takes the VAT out
+    # per rate group. Part of the document, locked with it once issued.
+    prices_include_vat = models.BooleanField(_("prijzen inclusief btw"), default=False)
+
     # Computed by documents.totals.compute_totals() and stored only at
     # issue time (invariant 3) — 0 while still a draft.
     subtotal_cents = models.BigIntegerField(_("subtotaal (cent)"), default=0)

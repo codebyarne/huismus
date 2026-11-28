@@ -74,6 +74,9 @@ class Settings(TimestampedModel):
     # Under every document with a "verlegd" line (SPEC.md M18). The user's
     # own words: Huismus suggests no legal text.
     reverse_charge_text = models.TextField(_("tekst bij btw verlegd"), blank=True)
+    # What a new invoice or quote starts with (Document.prices_include_vat,
+    # #362); per document it can still be changed.
+    prices_include_vat = models.BooleanField(_("prijzen standaard inclusief btw"), default=False)
 
     # The revenue at which Huismus warns (business.kor_limit). A setting, not
     # a rule this app knows: the user sets the amount that applies to them.

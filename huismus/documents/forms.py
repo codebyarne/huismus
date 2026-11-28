@@ -7,6 +7,7 @@ from django.core.validators import validate_email
 from django.forms import inlineformset_factory
 from django.utils.translation import gettext_lazy as _
 
+from huismus.business.models import Settings
 from huismus.core.form_messages import NOT_AN_EMAIL_ADDRESS
 from huismus.core.forms import EuroCentsField, HTML5DateInput
 
@@ -54,6 +55,7 @@ class DocumentForm(forms.ModelForm):
             "intro_text",
             "footer_text",
             "notes",
+            "prices_include_vat",
         ]
         widgets = {
             "issue_date": HTML5DateInput(),
@@ -77,6 +79,13 @@ class DocumentForm(forms.ModelForm):
             or document.reopened_at is not None
         ):
             self.fields["contact"].disabled = True
+        # "Prijzen inclusief btw" (#362): only for who charges VAT, and
+        # always on a document that already has it on. A credit note keeps
+        # its invoice's choice, so its amounts mirror the invoice's.
+        if Settings.load().no_vat and not document.prices_include_vat:
+            del self.fields["prices_include_vat"]
+        elif document.kind == "credit_note":
+            self.fields["prices_include_vat"].disabled = True
 
     def clean(self):
         cleaned_data = super().clean()

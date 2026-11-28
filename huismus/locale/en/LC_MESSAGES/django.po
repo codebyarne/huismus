@@ -11023,3 +11023,39 @@ msgstr ""
 #~ msgid_plural "%(count)s afschrijvingen"
 #~ msgstr[0] "%(count)s payment going out"
 #~ msgstr[1] "%(count)s payments going out"
+
+msgid "prijzen inclusief btw"
+msgstr "prices include VAT"
+
+msgid "prijzen standaard inclusief btw"
+msgstr "prices include VAT by default"
+
+msgid "prijzen incl. btw"
+msgstr "prices incl. VAT"
+
+msgid "regelbedrag"
+msgstr "line amount"
+
+msgid "Prijzen inclusief btw"
+msgstr "Prices include VAT"
+
+msgid "Het totaal is dan precies wat je invult. Huismus rekent de btw eruit."
+msgstr "The total is then exactly what you enter. Huismus works out the VAT inside it."
+
+msgid "Prijs incl. btw"
+msgstr "Price incl. VAT"
+
+msgid "Totaal incl. btw"
+msgstr "Total incl. VAT"
+
+msgid "Bedrag incl. btw"
+msgstr "Amount incl. VAT"
+
+msgid "Prijzen"
+msgstr "Prices"
+
+msgid "Prijzen standaard inclusief btw"
+msgstr "Prices include VAT by default"
+
+msgid "Voor nieuwe facturen en offertes. Per factuur kun je het nog veranderen."
+msgstr "For new invoices and quotes. You can still change it per invoice."

@@ -243,6 +243,8 @@ def _detail(document) -> dict:
     return {
         **_summary(document),
         "contact_id": document.contact_id,
+        # The line prices include VAT (#362): the total is their sum.
+        "prices_include_vat": document.prices_include_vat,
         "attention": document.attention,
         "reference": document.reference,
         "due_date": _date(document.due_date),
@@ -863,6 +865,8 @@ def create_draft(arguments):
         "currency": settings.currency,
         "footer_text": settings.default_footer_text,
     }
+    if settings.prices_include_vat and not settings.no_vat:
+        data["prices_include_vat"] = "on"
     data.update({name: arguments[name] for name in DOCUMENT_FIELDS if name in arguments})
     data.update(_line_data(arguments["lines"], []))
     return _save(document, data)
@@ -1395,7 +1399,7 @@ def preview_issue(arguments):
     document = _document(arguments, status="draft")
     settings = Settings.load()
     # As issue() will compute them, like the issue dialog in the editor.
-    totals = compute_totals(document.lines.all())
+    totals = compute_totals(document.lines.all(), prices_include_vat=document.prices_include_vat)
     issue_date = document.issue_date or timezone.localdate()
     year = issue_date.year if settings.number_reset_yearly else None
     if document.kind == "quote":
@@ -1736,7 +1740,10 @@ _LINES = {
             "unit": {"type": "string", "description": "For example uur, stuk."},
             "unit_price": {
                 "type": ["string", "number"],
-                "description": 'In euros, for example "85" or "1.250,00".',
+                "description": (
+                    'In euros, for example "85" or "1.250,00". Without VAT, unless the '
+                    "document has prices_include_vat: then including VAT."
+                ),
             },
             "vat_percent": {
                 "type": "integer",

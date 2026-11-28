@@ -95,6 +95,8 @@ class Customer:
     persons: list[tuple[str, str]] = field(default_factory=list)  # (name, department)
     # Abroad, in the EU: the customer accounts for the VAT (SPEC.md M18).
     reverse_charge: bool = False
+    # A private customer is quoted prices with VAT in them (#362).
+    prices_include_vat: bool = False
     language: str = "nl"
     # Pays this many days after the due date at most; a government is slow.
     pays_late: int = 10
@@ -151,7 +153,13 @@ CUSTOMERS = [
     Customer("Dierenartsenpraktijk De Hoefslag", city="Apeldoorn", years=(5, 8)),
     Customer("Zeilmakerij Windkracht 7", city="Harlingen", years=(6, 8)),
     # Private customers: a name, no company, and a short term.
-    Customer(first_name="Sanne", last_name="de Boer", city="Utrecht", payment_terms_days=8),
+    Customer(
+        first_name="Sanne",
+        last_name="de Boer",
+        city="Utrecht",
+        payment_terms_days=8,
+        prices_include_vat=True,
+    ),
     Customer(
         first_name="Joost",
         last_name="van Leeuwen",
@@ -159,6 +167,7 @@ CUSTOMERS = [
         years=(4, 8),
         payment_terms_days=8,
         delivery_method="post",
+        prices_include_vat=True,
     ),
     # Abroad, in the EU: btw verlegd.
     Customer(
@@ -347,6 +356,7 @@ def _new(kind: str, contact: Contact, day: date | None, **fields) -> Document:
         issue_date=day,
         language=customer.language,
         reference=f"{customer.reference}{day.year % 100:02d}" if customer.reference and day else "",
+        prices_include_vat=customer.prices_include_vat,
         **fields,
     )
 

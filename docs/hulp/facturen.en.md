@@ -17,6 +17,17 @@ look like.
 If you leave the due date empty, Huismus uses the customer's payment term, or
 otherwise the one from your settings.
 
+### Prices including VAT
+
+Do you give your customer a price with VAT in it? Then turn on **Prices
+include VAT** above the lines. The total is then exactly what you enter, and
+Huismus works out the VAT per rate inside it. The PDF then shows the prices
+with VAT, and below them the amount without VAT, the VAT and the total.
+
+Want this for every new invoice and quote? Turn on **Prices include VAT by
+default** under **Settings → VAT**. You can still change it per invoice. You
+only see this choice if you charge VAT.
+
 ## Issuing
 
 Ready? Click **Issue…**. You first see a summary: the customer, the amount and

@@ -174,16 +174,24 @@ def _editor_context(document, form, formset):
     totals (documents.editing.preview_totals), the customer's address, and
     the issue dialog's summary with the number the document would get."""
     settings = Settings.load()
-    totals, line_totals = preview_totals(formset)
     if form.is_bound:
         # cleaned_data also holds the valid fields of a form with errors
         # elsewhere, so the address stays right while one field is wrong.
         form.is_valid()
         contact = form.cleaned_data.get("contact")
         issue_date = form.cleaned_data.get("issue_date")
+        prices_include_vat = form.cleaned_data.get(
+            "prices_include_vat", document.prices_include_vat
+        )
     else:
         contact = document.contact if document.pk else form.initial.get("contact")
         issue_date = document.issue_date or form.initial.get("issue_date")
+        prices_include_vat = (
+            form["prices_include_vat"].value()
+            if "prices_include_vat" in form.fields
+            else document.prices_include_vat
+        )
+    totals, line_totals = preview_totals(formset, prices_include_vat=bool(prices_include_vat))
     # The T.a.v. line: as typed, as saved, or the new customer's own.
     if form.is_bound:
         attention = form.cleaned_data.get("attention", "")
@@ -253,6 +261,9 @@ def _editor_context(document, form, formset):
         "formset": formset,
         "totals": totals,
         "line_totals": line_totals,
+        "prices_include_vat": bool(prices_include_vat),
+        # Only for who charges VAT, or a document that has it on (forms.py).
+        "show_prices_include_vat": "prices_include_vat" in form.fields,
         "contact": contact,
         "attention": attention_context,
         "settings": settings,
@@ -311,6 +322,7 @@ def _new_document(request, kind):
                 "issue_date": timezone.localdate(),
                 "language": settings.default_language,
                 "footer_text": settings.default_footer_text,
+                "prices_include_vat": settings.prices_include_vat and not settings.no_vat,
                 # ?contact=<pk>: back from "Nieuw contact" (contacts.views
                 # ._back_to_invoice) with the new customer chosen.
                 "contact": Contact.objects.filter(pk=_int_param(request, "contact", None)).first(),

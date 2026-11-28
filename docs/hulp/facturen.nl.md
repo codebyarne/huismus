@@ -17,6 +17,17 @@ kun je zo vaak wijzigen als je wilt, of weer verwijderen. Met
 Laat je de vervaldatum leeg, dan neemt Huismus de betalingstermijn van de
 klant, en anders die uit je instellingen.
 
+### Prijzen inclusief btw
+
+Noem je je klant een prijs met btw erin? Zet dan boven de regels
+**Prijzen inclusief btw** aan. Het totaal is dan precies wat je invult, en
+Huismus rekent de btw per tarief eruit. Op de pdf staan de prijzen dan met
+btw, en daaronder het bedrag zonder btw, de btw en het totaal.
+
+Wil je dit voor elke nieuwe factuur en offerte, zet dan bij **Instellingen →
+Btw** het vinkje **Prijzen standaard inclusief btw** aan. Per factuur kun je
+het nog veranderen. Je ziet deze keuze alleen als je btw rekent.
+
 ## Uitgeven
 
 Klaar? Klik op **Uitgeven…**. Je ziet eerst een samenvatting: de klant, het

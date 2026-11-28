@@ -132,7 +132,7 @@ def test_a_credit_note_is_negative_in_the_invoices_and_the_lines():
     assert row["omzet 21%"] == "-100,00"
     assert row["btw 21%"] == "-21,00"
     assert line["soort"] == "creditnota"
-    assert line["bedrag excl. btw"] == "-100,00"
+    assert line["regelbedrag"] == "-100,00"
 
 
 def test_a_credit_note_without_its_invoice_has_an_empty_credited_invoice():

@@ -83,6 +83,7 @@ _RESTORED_FIELDS = (
     "notes",
     "attention",
     "reference",
+    "prices_include_vat",
     "subtotal_cents",
     "tax_cents",
     "total_cents",
@@ -143,6 +144,8 @@ def undo_reopen(document: Document) -> Document:
         fields = dict(copy["fields"])
         # Reopened before the document had a T.a.v. line: it had none.
         fields.setdefault("attention", "")
+        # Reopened before prices could include VAT (#362): they didn't.
+        fields.setdefault("prices_include_vat", False)
         for name in _DATE_FIELDS:
             fields[name] = date.fromisoformat(fields[name]) if fields[name] else None
         previous = copy["reopened_at"]
@@ -165,6 +168,8 @@ def undo_reopen(document: Document) -> Document:
         # document reopened before rows were kept gets them now, from what
         # it was issued with. Still a draft here, so the triggers allow it.
         if not document.vat_rows.exists():
+            # The rows of what it was issued with, not of the edited draft.
+            document.prices_include_vat = fields["prices_include_vat"]
             store_vat_rows(
                 document,
                 restored,

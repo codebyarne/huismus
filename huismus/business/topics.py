@@ -69,6 +69,7 @@ TOPICS = (
             "kor_limit_cents",
             "kor_warning_percent",
             "reverse_charge_text",
+            "prices_include_vat",
         ),
     ),
     Topic(

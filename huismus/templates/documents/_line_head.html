@@ -1,0 +1,5 @@
+{% load i18n %}
+{% comment %}The column heads above the lines. With prices including VAT (#362) the
+amounts in the lines include VAT, so the heads say so; swapped by the live
+preview when the choice changes.{% endcomment %}
+<div class="line-head" id="regelkop"{% if oob %} hx-swap-oob="true"{% endif %}><span></span><span>{% translate "Omschrijving" %}</span><span class="r">{% translate "Aantal" %}</span><span>{% translate "Eenheid" %}</span><span class="r">{% if prices_include_vat %}{% translate "Prijs incl. btw" %}{% else %}{% translate "Prijs" %}{% endif %}</span><span>{% translate "Btw" %}</span><span class="r">{% if prices_include_vat %}{% translate "Totaal incl. btw" %}{% else %}{% translate "Totaal" %}{% endif %}</span><span></span></div>
