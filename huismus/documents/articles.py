@@ -15,9 +15,9 @@ compute nothing (CLAUDE.md, rule 4). Prices are without VAT
 
 from huismus.core.templatetags.money import euros
 
+from .drafts import LINES_PREFIX as PREFIX
 from .vat import REVERSE_CHARGE, default_rate, line_choices, vat_for_copy
 
-PREFIX = "lines"
 _FIELDS = ("description", "quantity", "unit", "unit_price_cents", "tax_rate_bp")
 
 
@@ -55,7 +55,8 @@ def add_article_line(data, article, document, settings):
 
 
 def _is_empty(data, index) -> bool:
-    """A new line (no id) with nothing typed in it but its rate."""
+    """A new line (no id) with nothing typed in it but its rate. app.js
+    ("Artikel toevoegen") asks the same of the line on the screen."""
     if data.get(f"{PREFIX}-{index}-id"):
         return False
     return not any(

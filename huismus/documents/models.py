@@ -621,6 +621,9 @@ class Article(TimestampedModel):
     description = models.TextField(_("omschrijving"))
     unit = models.CharField(_("eenheid"), max_length=20, blank=True)
     unit_price_cents = models.BigIntegerField(_("prijs per eenheid (cent)"))
+    # 21% also for one made under the KOR, where the form has no VAT field:
+    # the rate is back when the KOR stops (product-owner agent, 2026-11-28).
+    # In a document the rate follows documents.articles.line_values.
     tax_rate_bp = models.PositiveIntegerField(_("btw-tarief (basispunten)"), default=2100)
     reverse_charge = models.BooleanField(_("btw verlegd"), default=False)
 

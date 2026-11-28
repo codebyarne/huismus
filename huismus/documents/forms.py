@@ -249,6 +249,9 @@ class ArticleForm(forms.ModelForm):
         return cleaned
 
     def _post_clean(self):
+        # As DocumentLineForm: Django copies cleaned_data onto the instance
+        # here, after clean(), so tax_rate_bp is already the number clean()
+        # made of the choice; reverse_charge is no field and is set by hand.
         super()._post_clean()
         if "tax_rate_bp" in self.fields:
             self.instance.reverse_charge = self.cleaned_data.get("reverse_charge", False)

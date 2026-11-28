@@ -36,13 +36,6 @@ def _render(request, *, new_form=None, editing=None, edit_form=None):
     )
 
 
-def _int_param(request, name):
-    try:
-        return int(request.GET.get(name, ""))
-    except ValueError:
-        return None
-
-
 @login_required
 def article_list(request):
     if request.method == "POST":
@@ -52,9 +45,10 @@ def article_list(request):
             messages.success(request, _("Artikel toegevoegd."))
             return redirect("documents:article_list")
         return _render(request, new_form=form)
-    editing = None
-    if "bewerk" in request.GET:
-        editing = Article.objects.filter(pk=_int_param(request, "bewerk")).first()
+    # ?bewerk=<pk> fills the form with that article; an unknown one opens the
+    # page as usual.
+    chosen = request.GET.get("bewerk", "")
+    editing = Article.objects.filter(pk=chosen).first() if chosen.isdigit() else None
     return _render(request, editing=editing)
 
 
@@ -75,6 +69,8 @@ def article_edit(request, pk):
 
 @login_required
 def article_delete(request, pk):
+    """Only from the confirmation dialog (POST); an old link (GET) just opens
+    the list, like Categorieën."""
     article = get_object_or_404(Article, pk=pk)
     if request.method == "POST":
         article.delete()

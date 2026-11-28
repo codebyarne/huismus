@@ -16,6 +16,10 @@ from .numbering import peek_next_number
 from .totals import compute_totals
 from .vat import default_rate, line_choices, vat_for_copy
 
+# The line formset's prefix: field names are lines-<n>-<field>
+# (documents.articles writes them too).
+LINES_PREFIX = "lines"
+
 
 def line_formset(document, data=None):
     # Which rates a line may have, and what a new line starts with:
@@ -24,7 +28,7 @@ def line_formset(document, data=None):
     return DocumentLineFormSet(
         data,
         instance=document,
-        prefix="lines",
+        prefix=LINES_PREFIX,
         form_kwargs={
             "choices": line_choices(document, settings),
             "default_rate": default_rate(settings),
