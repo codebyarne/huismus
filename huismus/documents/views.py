@@ -291,12 +291,20 @@ def _editor_context(document, form, formset):
 
 def _article_choices(document, settings):
     """The articles the editor offers (#167), each with the line it makes
-    in this document (documents.articles), for the editor's JS to copy. A
-    credit note corrects an invoice: no articles there."""
+    in this document (documents.articles), for the editor's JS to copy:
+    with prices without VAT and including VAT (#362), as the checkbox may
+    change before the pick. A credit note corrects an invoice: no articles
+    there."""
     if document.kind == "credit_note":
         return []
     return [
-        {"article": article, "line": json.dumps(line_values(article, document, settings))}
+        {
+            "article": article,
+            "line": json.dumps(line_values(article, document, settings)),
+            "line_incl": json.dumps(
+                line_values(article, document, settings, prices_include_vat=True)
+            ),
+        }
         for article in Article.objects.all()
     ]
 
@@ -311,7 +319,10 @@ def _with_article(request, document):
     article = Article.objects.filter(pk=chosen).first() if chosen.isdigit() else None
     if article is None:
         return None
-    data = add_article_line(request.POST, article, document, Settings.load())
+    prices_include_vat = _chosen_prices_include_vat(document_form(document, request.POST), document)
+    data = add_article_line(
+        request.POST, article, document, Settings.load(), prices_include_vat=prices_include_vat
+    )
     form = document_form(document, data)
     formset = line_formset(document, data)
     return render(request, "documents/edit.html", _editor_context(document, form, formset))

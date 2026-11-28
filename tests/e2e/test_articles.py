@@ -78,3 +78,17 @@ def test_on_a_phone_a_row_of_artikelen_keeps_price_and_buttons_apart(app):
         )
         assert apart, f"{cell.inner_text()!r} lies over the buttons"
     expect(row).to_contain_text("€ 85,00 per uur · 21% btw")
+
+
+def test_with_prices_including_vat_ticked_a_picked_article_has_its_price_with_vat(app, contact):
+    """Ticked in the editor, not saved yet: the price with VAT the server
+    put ready, and the total is exactly that (#362)."""
+    Article.objects.create(description="Workshop", unit="dag", unit_price_cents=95000)
+    app.goto(app.base + "/facturen/nieuw/")
+    app.get_by_label("Prijzen inclusief btw").check()
+    picker = app.locator(".article-pick input[role=combobox]")
+    picker.fill("works")
+    picker.press("Enter")
+    line = app.locator("[data-formset-forms=lines] .line").first
+    expect(line.locator("input[name$=-unit_price_cents]")).to_have_value("1.149,50")
+    expect(app.locator("#totalen")).to_contain_text("1.149,50")
