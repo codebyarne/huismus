@@ -31,8 +31,8 @@ only see this choice if you charge VAT.
 ## Products
 
 Do you use the same line often, like an hour of advice or a workshop? Save it
-as a product: on **Invoices**, click **Products**. You fill in a description,
-unit, price and VAT rate. The price is without VAT. If **Prices include VAT** is
+as a product: on **Invoices** or **Quotes**, click **Products**. You fill in a
+description, unit, price and VAT rate. The price is without VAT. If **Prices include VAT** is
 on in your invoice, the line gets the price with VAT.
 
 In an invoice or quote you then pick a product under **Add product**, and the

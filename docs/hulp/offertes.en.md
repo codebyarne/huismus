@@ -7,7 +7,8 @@ customer's answer, and turn it into an invoice with one click.
 
 Under **Quotes**, click **New quote**. Choose a customer and fill in the
 lines, as with an invoice. Under **Valid until**, fill in how long your offer
-stands.
+stands. A line you use often, you pick under **Add product**; see
+[Products](facturen.en.md#products).
 
 Ready? Click **Send…**. The quote then gets a number. After that you download
 the PDF or mail it to the customer. See [Mail](mailen.en.md).

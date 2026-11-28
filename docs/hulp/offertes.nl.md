@@ -7,7 +7,8 @@ klant antwoordt, en zet hem met één klik om naar een factuur.
 
 Klik bij **Offertes** op **Nieuwe offerte**. Kies een klant en vul de regels
 in, net als bij een factuur. Vul bij **Geldig tot** in tot wanneer je aanbod
-staat.
+staat. Een regel die je vaak gebruikt, kies je bij **Artikel toevoegen**; zie
+[Artikelen](facturen.nl.md#artikelen).
 
 Klaar? Klik op **Verzenden…**. De offerte krijgt dan een nummer. Daarna
 download je de pdf of mail je hem naar de klant. Zie
