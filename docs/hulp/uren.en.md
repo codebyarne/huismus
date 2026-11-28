@@ -25,6 +25,20 @@ it was and what they're worth. The list starts at this month. Choose another
 month or a customer to see only those. Above the list is the total of what
 you see.
 
+## An invoice from your hours
+
+You turn your hours into an invoice: choose **Create invoice…** in
+**Hours**, then the customer and the month. Huismus puts the hours with a
+rate on a draft invoice, which you check and then issue.
+
+Choose whether the invoice gets one line per description or one line per
+day. Huismus adds up the hours of such a line. That can make the total a
+cent different from Hours; the page then says so.
+
+Hours on an invoice can't be changed or deleted any more. The list shows
+which invoice they're on. If you delete the draft invoice, the hours become
+free again. With a credit note they stay on the invoice.
+
 ## Changing or deleting
 
 Click a row to change it. You can also delete it there.
