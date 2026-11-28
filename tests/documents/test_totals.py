@@ -192,7 +192,9 @@ class _Line:
 def _stored(lines):
     """A document with the totals issuing stores (compute_totals())."""
     totals = compute_totals(lines)
-    return SimpleNamespace(subtotal_cents=totals.subtotal_cents, tax_cents=totals.tax_cents)
+    return SimpleNamespace(
+        subtotal_cents=totals.subtotal_cents, tax_cents=totals.tax_cents, prices_include_vat=False
+    )
 
 
 def test_revenue_by_rate_splits_revenue_and_vat_per_rate_and_reverse_charge():
@@ -221,8 +223,8 @@ def test_revenue_by_rate_is_none_when_the_stored_totals_differ_from_the_lines():
     # An import with Moneybird's own totals: one "Btw" row (tax_rows), and
     # no split per rate that would not add up.
     lines = [_Line(Decimal("1"), 10000, 2100)]
-    assert revenue_by_rate(SimpleNamespace(subtotal_cents=10000, tax_cents=2099), lines) is None
-    assert revenue_by_rate(SimpleNamespace(subtotal_cents=9900, tax_cents=2100), lines) is None
+    assert revenue_by_rate(_doc(10000, 2099), lines) is None
+    assert revenue_by_rate(_doc(9900, 2100), lines) is None
 
 
 @given(
@@ -243,3 +245,9 @@ def test_revenue_by_rate_adds_up_to_the_totals(raw):
     revenue_sum = sum(cents for _rate, cents, _tax in revenue.per_rate)
     assert revenue_sum + revenue.reverse_charge_cents == totals.subtotal_cents
     assert sum(tax for _rate, _cents, tax in revenue.per_rate) == totals.tax_cents
+
+
+def _doc(subtotal_cents, tax_cents):
+    return SimpleNamespace(
+        subtotal_cents=subtotal_cents, tax_cents=tax_cents, prices_include_vat=False
+    )
