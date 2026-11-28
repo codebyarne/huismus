@@ -269,11 +269,22 @@ def test_editing_and_deleting(logged_in):
     assert not Article.objects.exists()
 
 
+def _page_head(client, url):
+    """The page's own buttons, without the sidebar and Meer (which always
+    have Artikelen, like Categorieën)."""
+    return (
+        client.get(url)
+        .content.decode()
+        .split('class="page-head"', 1)[1]
+        .split("</div>\n</div>", 1)[0]
+    )
+
+
 def test_facturen_links_to_articles_once_there_are_invoices_or_articles(logged_in):
     url = reverse("documents:article_list")
-    assert url not in logged_in.get(reverse("documents:list")).content.decode()
+    assert url not in _page_head(logged_in, reverse("documents:list"))
     _article()
-    assert url in logged_in.get(reverse("documents:list")).content.decode()
+    assert url in _page_head(logged_in, reverse("documents:list"))
 
 
 def test_editor_offers_articles_only_when_there_are_some(logged_in):
@@ -376,10 +387,10 @@ def test_the_editor_offers_both_prices_for_the_checkbox_to_choose(logged_in):
 def test_offertes_links_to_articles_too_and_comes_back_there(logged_in):
     """The owner, 2026-11-28: articles are for quotes as much as invoices."""
     _kor(False)
-    assert "artikelen" not in logged_in.get(reverse("quotes:list")).content.decode()
-    article = _article()
     url = reverse("documents:article_list") + "?terug=offertes"
-    assert url.replace("&", "&amp;") in logged_in.get(reverse("quotes:list")).content.decode()
+    assert url not in _page_head(logged_in, reverse("quotes:list"))
+    article = _article()
+    assert url in _page_head(logged_in, reverse("quotes:list"))
     page = logged_in.get(url).content.decode()
     assert f'href="{reverse("quotes:list")}"' in page
     response = logged_in.post(

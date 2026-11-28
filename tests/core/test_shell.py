@@ -32,6 +32,21 @@ def test_expenses_subnavigation_only_shows_inside_expenses(logged_in):
     assert f'href="{categories}" aria-current="page"' in html
 
 
+def test_artikelen_is_a_sub_item_of_facturen_like_categorieen_of_uitgaven(logged_in):
+    """The owner, 2026-11-28: shown the way Categorieën is (#167)."""
+    articles = reverse("documents:article_list")
+    html = logged_in.get(reverse("documents:list")).content.decode()
+    sidebar = html.split('class="sidebar"', 1)[1].split("</aside>", 1)[0]
+    assert f'href="{articles}"' in sidebar
+    assert f'href="{reverse("documents:list")}" aria-current="page"' in sidebar
+    html = logged_in.get(articles).content.decode()
+    sidebar = html.split('class="sidebar"', 1)[1].split("</aside>", 1)[0]
+    assert f'href="{articles}" aria-current="page"' in sidebar
+    assert f'href="{reverse("documents:list")}" aria-current="page"' not in sidebar
+    meer = html.split('id="meer-menu"', 1)[1].split("</div>", 1)[0]
+    assert f'href="{articles}"' in meer
+
+
 def test_the_year_overview_is_under_rapporten_not_under_uitgaven(logged_in):
     html = logged_in.get(reverse("reports:year_overview")).content.decode()
     sidebar = html.split('class="sidebar"', 1)[1].split("</aside>", 1)[0]
@@ -107,6 +122,8 @@ def test_file_downloads_are_not_boosted(logged_in):
         ("expenses:receipt_upload", {"pk": 1}, "expenses", None),
         ("reports:year_overview_csv", {}, "reports", None),
         ("expenses:category_delete", {"pk": 1}, "expenses", "categories"),
+        ("documents:article_list", {}, "documents", "articles"),
+        ("documents:edit", {"pk": 1}, "documents", None),
     ],
 )
 def test_navigation_marks_one_section_and_at_most_one_subsection(
