@@ -22,7 +22,9 @@ Wanneer en hoeveel: `huismus/core/auto_backups.py`; maken en terugzetten:
 Huismus een map die niet aan de container gekoppeld is (`/proc/self/mountinfo`).
 
 Voor een update: de desktop-app maakt een back-up voordat hij een nieuwe
-versie installeert (`huismus/core/updates.py`). Docker draait bij elke start
+versie installeert (`huismus/core/updates.py`), en bij het openen nog een als
+een versie van buitenaf (een installer, `.dmg`, winget of de Store) migraties
+meebrengt (`updates.backup_before_migrations`). Docker draait bij elke start
 `manage.py migrate_with_backup` (`docker/entrypoint.sh`): staan er migraties
 klaar op een bestaande administratie, dan eerst dezelfde back-up
 (`auto_backups.safety_backup`), en lukt die niet, dan migreert hij niet en

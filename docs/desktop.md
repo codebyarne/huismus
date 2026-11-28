@@ -15,7 +15,13 @@ Hulp.
 ## Wat er gebeurt als je de app opent
 
 1. Het venster toont "Huismus start…".
-2. De app voert de migraties uit en start de server op `127.0.0.1`, op poort
+2. Brengt deze versie migraties mee die de administratie nog mist, dan maakt
+   de app eerst een back-up, ook als hij niet door Huismus zelf is bijgewerkt
+   (een gedownloade installer of `.dmg`, winget, de Store;
+   `updates.backup_before_migrations`). Na een eigen update is die er al. Lukt
+   de back-up niet, dan migreert hij niets en toont het foutscherm.
+   Mislukken de migraties, dan biedt het scherm die back-up aan.
+   Daarna voert de app de migraties uit en start de server op `127.0.0.1`, op poort
    8765 (zo blijft het adres voor AI-assistenten hetzelfde,
    `docs/hulp/ai-assistenten.nl.md`) of een vrije poort als die bezet is. Van buiten
    de computer is hij niet bereikbaar.
@@ -256,8 +262,9 @@ Wat anders is dan bij de installer:
   update), gaat bij de eerste start weg (`updates.start_from_store`).
 - **Back-up vóór de migraties.** De Store vervangt de app terwijl Huismus
   dicht is. Brengt de nieuwe versie migraties mee, dan maakt Huismus bij het
-  openen eerst een back-up, net als bij een eigen update. Mislukken de
-  migraties, dan biedt het scherm die back-up aan.
+  openen eerst een back-up, zoals bij elke start van de app (zie "Wat er
+  gebeurt als je de app opent"). Mislukken de migraties, dan biedt het
+  scherm die back-up aan.
 - **Dezelfde administratie.** Het manifest zet de virtualisatie van
   `%APPDATA%` uit (`FileSystemWriteVirtualization`, met de beperkte
   capability `unvirtualizedResources`). Zo blijft de administratie in
